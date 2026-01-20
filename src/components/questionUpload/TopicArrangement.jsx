@@ -1,101 +1,77 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
-import { Reorder } from "framer-motion";
+import { Reorder, useDragControls } from "framer-motion";
+
+// Helper component for drag handle
+const DragHandle = () => (
+    <span style={{ cursor: 'grab', color: '#999', padding: '0 10px', fontSize: '1.2em' }}>
+        ☰
+    </span>
+);
 
 const TopicArrangement = () => {
     const [grade, setGrade] = useState(1);
-    const [items, setItems] = useState([]); // This will be our list of categories/topics
+    const [syllabusData, setSyllabusData] = useState({ categories: [] });
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState(null);
 
-    // Fetch Data
+    // Fetch Syllabus Hierarchical Data
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchSyllabus = async () => {
             setLoading(true);
             setMessage(null);
             try {
-                // 1. Fetch Templates (source of truth for existence)
-                const templatesData = await api.getQuestionTemplates();  // Ideally filtered by grade
-
-                // 2. Fetch Config (source of truth for order)
-                const configData = await api.getSyllabusConfig(grade);
-
-                // --- Process Data ---
-                // Filter templates for this grade
-                const currentGradeTemplates = (templatesData.templates || []).filter(t => {
-                    const grades = Array.isArray(t.grade_level) ? t.grade_level : [t.grade_level];
-                    return grades.includes(grade);
-                });
-
-                // Build unique Categories -> Topics structure
-                // We will just arrange Topics flatly under Categories or just Arrange Categories?
-                // Request says "topics and subtopics".
-                // Let's create a flat list of sortable items that represent topics.
-                // Or maybe a nested structure? Simpler is Reorder.Group which is flat.
-                // Let's try grouping by Category first.
-
-                // Structure: [{ id: 'cat-Math', label: 'Math', type: 'category', children: [...] }]
-
-                // Let's extract all unique topics and categories
-                const rawItems = [];
-                const seen = new Set();
-
-                currentGradeTemplates.forEach(t => {
-                    const key = `${t.category} - ${t.topic}`;
-                    if (!seen.has(key)) {
-                        seen.add(key);
-                        rawItems.push({
-                            id: key,
-                            label: `${t.category} > ${t.topic}`,
-                            category: t.category,
-                            topic: t.topic
-                        });
-                    }
-                });
-
-                // If we have saved config, use it to sort/order
-                let finalItems = [];
-                if (configData && configData.config) {
-                    const configIds = configData.config.map(c => c.id);
-                    // Add items from config if they still exist in rawItems
-                    configData.config.forEach(c => {
-                        const exists = rawItems.find(r => r.id === c.id);
-                        if (exists) {
-                            finalItems.push(exists);
-                        }
-                    });
-                    // Append new items that aren't in config
-                    rawItems.forEach(r => {
-                        if (!configIds.includes(r.id)) {
-                            finalItems.push(r);
-                        }
-                    });
-                } else {
-                    finalItems = rawItems.sort((a, b) => a.label.localeCompare(b.label));
-                }
-
-                setItems(finalItems);
+                // Use the new hierarchical endpoint
+                const data = await api.getGradeSyllabus(grade);
+                setSyllabusData(data);
             } catch (err) {
                 console.error(err);
-                setMessage({ type: 'error', text: 'Failed to load data.' });
+                setMessage({ type: 'error', text: 'Failed to load syllabus.' });
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchData();
+        fetchSyllabus();
     }, [grade]);
 
     const handleSave = async () => {
         setSaving(true);
         try {
-            // Save the current order of items
-            // We only need to save the IDs primarily, but saving full object is okay too
-            const configToSave = items.map(item => ({ id: item.id }));
+            // The backend expects the exact JSON structure of 'categories'
+            // We strip out the hydrated 'skills' to save space? 
+            // Actually, the backend hydration logic reconstructs skills from IDs.
+            // But for saving 'order', we need to save the structure.
+            // Let's send the whole categories tree back.
+            // The backend model 'SyllabusConfig' stores 'config' as JSON.
+            // We should strip minimal info? No, explicit is better.
 
-            await api.saveSyllabusConfig(grade, configToSave);
-            setMessage({ type: 'success', text: 'Order saved successfully!' });
+            // However, we must ensure we don't duplicate data excessively.
+            // Ideally we save the "Skeleton": Categories -> Children (Topics) -> Skills (References)
+
+            const cleanStructure = syllabusData.categories.map(cat => ({
+                id: cat.id,
+                name: cat.name,
+                code: cat.code,
+                // Nested Topics
+                children: (cat.children || []).map(topic => ({
+                    id: topic.id,
+                    name: topic.name,
+                    // Nested Skills (Templates)
+                    skills: (topic.skills || []).map(skill => ({
+                        id: skill.id,
+                        // Minimal reference
+                    }))
+                })),
+                // Direct Skills (if any)
+                skills: (cat.skills || []).map(skill => ({
+                    id: skill.id
+                }))
+            }));
+
+            await api.saveSyllabusConfig(grade, cleanStructure);
+            setMessage({ type: 'success', text: 'Syllabus order saved!' });
         } catch (err) {
             console.error(err);
             setMessage({ type: 'error', text: 'Failed to save order.' });
@@ -104,15 +80,30 @@ const TopicArrangement = () => {
         }
     };
 
+    // Handlers for reordering
+    const handleCategoryReorder = (newCategories) => {
+        setSyllabusData(prev => ({ ...prev, categories: newCategories }));
+    };
+
+    const handleTopicReorder = (catId, newTopics) => {
+        setSyllabusData(prev => ({
+            ...prev,
+            categories: prev.categories.map(cat =>
+                cat.id === catId ? { ...cat, children: newTopics } : cat
+            )
+        }));
+    };
+
+    // Recursive renderer? Or nested Reorder.Group
     return (
-        <div className="arrangement-container" style={{ padding: '20px' }}>
+        <div className="arrangement-container" style={{ padding: '20px', maxWidth: '800px' }}>
             <div className="controls" style={{ marginBottom: '20px', display: 'flex', gap: '20px', alignItems: 'center' }}>
                 <div>
-                    <label style={{ marginRight: '10px', fontWeight: 'bold' }}>Select Grade:</label>
+                    <label style={{ marginRight: '10px', fontWeight: 'bold' }}>Grade:</label>
                     <select
                         value={grade}
                         onChange={(e) => setGrade(parseInt(e.target.value))}
-                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                        style={{ padding: '8px', borderRadius: '4px' }}
                     >
                         {[...Array(12)].map((_, i) => (
                             <option key={i + 1} value={i + 1}>Grade {i + 1}</option>
@@ -123,9 +114,9 @@ const TopicArrangement = () => {
                     onClick={handleSave}
                     disabled={saving || loading}
                     className="save-btn"
-                    style={{ background: '#28a745', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', cursor: 'pointer' }}
+                    style={{ background: '#007bff', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '4px', cursor: 'pointer' }}
                 >
-                    {saving ? 'Saving...' : 'Save Order'}
+                    {saving ? 'Saving...' : 'Save Layout'}
                 </button>
             </div>
 
@@ -142,26 +133,59 @@ const TopicArrangement = () => {
             )}
 
             {loading ? (
-                <div>Loading...</div>
-            ) : items.length === 0 ? (
-                <p>No topics found for this grade.</p>
+                <div>Loading structure...</div>
+            ) : !syllabusData || !syllabusData.categories ? (
+                <div>No data available</div>
             ) : (
-                <Reorder.Group axis="y" values={items} onReorder={setItems} style={{ listStyle: 'none', padding: 0 }}>
-                    {items.map((item) => (
-                        <Reorder.Item key={item.id} value={item} style={{ marginBottom: '10px' }}>
-                            <div style={{
-                                padding: '15px',
-                                background: 'white',
+                <Reorder.Group axis="y" values={syllabusData.categories} onReorder={handleCategoryReorder} style={{ listStyle: 'none', padding: 0 }}>
+                    {syllabusData.categories.map((category) => (
+                        <Reorder.Item key={category.id} value={category} style={{ marginBottom: '15px' }}>
+                            <div className="category-card" style={{
                                 border: '1px solid #ddd',
                                 borderRadius: '8px',
-                                cursor: 'grab',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                                background: '#f9f9f9',
+                                overflow: 'hidden'
                             }}>
-                                <span style={{ fontWeight: '500' }}>{item.label}</span>
-                                <span style={{ color: '#999' }}>☰</span>
+                                {/* Category Header */}
+                                <div style={{
+                                    padding: '15px',
+                                    background: '#eee',
+                                    borderBottom: '1px solid #ddd',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    fontWeight: 'bold'
+                                }}>
+                                    <span>{category.name}</span>
+                                    <DragHandle />
+                                </div>
+
+                                {/* Nested Topics */}
+                                <div style={{ padding: '10px 20px' }}>
+                                    {category.children && category.children.length > 0 ? (
+                                        <Reorder.Group axis="y" values={category.children} onReorder={(newOrder) => handleTopicReorder(category.id, newOrder)} style={{ listStyle: 'none', padding: 0 }}>
+                                            {category.children.map(topic => (
+                                                <Reorder.Item key={topic.id} value={topic} style={{ marginBottom: '8px' }}>
+                                                    <div style={{
+                                                        padding: '10px',
+                                                        background: 'white',
+                                                        border: '1px solid #eee',
+                                                        borderRadius: '4px',
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                                                    }}>
+                                                        <span>{topic.name} <small style={{ color: '#888' }}>({(topic.skills || []).length} skills)</small></span>
+                                                        <DragHandle />
+                                                    </div>
+                                                </Reorder.Item>
+                                            ))}
+                                        </Reorder.Group>
+                                    ) : (
+                                        <p style={{ color: '#aaa', fontStyle: 'italic', margin: 0 }}>No topics</p>
+                                    )}
+                                </div>
                             </div>
                         </Reorder.Item>
                     ))}

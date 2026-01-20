@@ -63,6 +63,14 @@ export const api = {
         return handleResponse(response);
     },
 
+    getGradeSyllabus: async (gradeId) => {
+        const id = typeof gradeId === 'string' ? gradeId.replace('grade', '') : gradeId;
+        const response = await fetch(`${BASE_URL}/api/v1/question-templates/syllabus/${id}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     getSyllabusConfig: async (grade) => {
         const response = await fetch(`${BASE_URL}/api/v1/question-templates/syllabus-config/${grade}`, {
             headers: getHeaders()
@@ -137,6 +145,7 @@ export const api = {
         if (filters.jobId) params.append('job_id', filters.jobId);
         if (filters.templateId) params.append('template_id', filters.templateId);
         if (filters.limit) params.append('limit', filters.limit);
+        if (filters.random) params.append('random', 'true');
 
         const url = `${BASE_URL}/api/v1/generated-questions?${params.toString()}`;
 

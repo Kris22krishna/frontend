@@ -21,7 +21,7 @@ const PracticeSession = () => {
         setLoading(true);
         try {
             // Fetch questions for this template
-            const data = await api.getGeneratedQuestions({ templateId, limit: 20 });
+            const data = await api.getGeneratedQuestions({ templateId, limit: 20, random: true });
             setQuestions(data.questions || []);
         } catch (err) {
             setError(err.message);

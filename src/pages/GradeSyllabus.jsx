@@ -64,66 +64,9 @@ const GradeSyllabus = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const gradeIdStr = grade.replace('grade', '');
-                const gradeId = parseInt(gradeIdStr) || 1; // Default to 1 if parsing fails
-
-                // Fetch real templates
-                const response = await api.getQuestionTemplates();
-                // Note: ideally backend supports filtering by grade_level directly
-                // const response = await api.getQuestionTemplates({ grade_level: gradeId }); if we update api.js to pass query params
-
-                // Client-side filtering/transforming for now to match UI structure
-                // Client-side filtering/transforming for now to match UI structure
-                const templates = (response.templates || []).filter(t => {
-                    const grades = Array.isArray(t.grade_level) ? t.grade_level : [t.grade_level];
-                    return grades.includes(gradeId) && t.status === 'active';
-                });
-
-                // Transform flat templates into Category -> Topic -> Template structure
-                const categoriesMap = {};
-
-                templates.forEach(t => {
-                    // Normalize category and topic names
-                    const categoryName = t.category || "General";
-                    const topicName = t.topic || "Misc"; // Acts as sub-category
-
-                    if (!categoriesMap[categoryName]) {
-                        categoriesMap[categoryName] = {
-                            id: `cat-${categoryName}`,
-                            name: categoryName,
-                            code: categoryName.charAt(0).toUpperCase(), // Simple code generation
-                            children: [], // Sub-categories (Topics)
-                            skills: [] // Direct skills (if any, but we'll use topics as grouping)
-                        };
-                    }
-
-                    // Find or create topic node (sub-category)
-                    let topicNode = categoriesMap[categoryName].children.find(c => c.name === topicName);
-                    if (!topicNode) {
-                        topicNode = {
-                            id: `topic-${categoryName}-${topicName}`,
-                            name: topicName,
-                            children: [],
-                            skills: []
-                        };
-                        categoriesMap[categoryName].children.push(topicNode);
-                    }
-
-                    // Add template as a skill
-                    topicNode.skills.push({
-                        id: t.template_id,
-                        code: `${topicName.charAt(0)}.${t.template_id}`, // Pseudo-code
-                        title: t.subtopic || t.topic // Use subtopic as title if available
-                    });
-                });
-
-                const transformedData = {
-                    gradeId: gradeId,
-                    gradeName: `Class ${gradeId}`,
-                    categories: Object.values(categoriesMap)
-                };
-
-                setData(transformedData);
+                // Fetch hierarchical syllabus from backend
+                const response = await api.getGradeSyllabus(grade);
+                setData(response);
             } catch (error) {
                 console.error("Failed to fetch syllabus", error);
             } finally {
