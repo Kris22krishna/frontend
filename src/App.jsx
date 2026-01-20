@@ -5,6 +5,8 @@ import AdminLogin from './pages/AdminLogin';
 import MathSelection from './pages/MathSelection';
 import GradeSyllabus from './pages/GradeSyllabus';
 import ContentPage from './pages/ContentPage';
+import DynamicQuestionsDashboard from './pages/DynamicQuestionsDashboard';
+import PracticeSession from './pages/PracticeSession';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         </Route>
         <Route path="/admin-login" element={<AdminLogin />} />
         {/* Add more standalone routes here */}
+        <Route path="/uploading-dynamic-questions" element={<DynamicQuestionsDashboard />} />
+        <Route path="/practice/:templateId" element={<PracticeSession />} />
       </Routes>
     </Router>
   );
