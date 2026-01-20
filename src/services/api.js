@@ -63,6 +63,23 @@ export const api = {
         return handleResponse(response);
     },
 
+    getSyllabusConfig: async (grade) => {
+        const response = await fetch(`${BASE_URL}/api/v1/question-templates/syllabus-config/${grade}`, {
+            headers: getHeaders()
+        });
+        // API returns { success: true, data: ... } or null data
+        return handleResponse(response);
+    },
+
+    saveSyllabusConfig: async (grade, config) => {
+        const response = await fetch(`${BASE_URL}/api/v1/question-templates/syllabus-config/${grade}`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ config }),
+        });
+        return handleResponse(response);
+    },
+
     updateQuestionTemplate: async (templateId, data) => {
         const response = await fetch(`${BASE_URL}/api/v1/question-templates/${templateId}`, {
             method: 'PATCH',
@@ -96,13 +113,20 @@ export const api = {
         const response = await fetch(`${BASE_URL}/api/v1/question-generation-jobs`, {
             method: 'POST',
             headers: getHeaders(),
-            body: JSON.stringify({ template_id: templateId, count }),
+            body: JSON.stringify({ template_id: templateId, requested_count: count }),
         });
         return handleResponse(response);
     },
 
     getGenerationJob: async (jobId) => {
         const response = await fetch(`${BASE_URL}/api/v1/question-generation-jobs/${jobId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getGeneratedQuestionStats: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/generated-questions/stats`, {
             headers: getHeaders()
         });
         return handleResponse(response);

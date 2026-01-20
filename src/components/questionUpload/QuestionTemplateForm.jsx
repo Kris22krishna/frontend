@@ -3,7 +3,7 @@ import { api } from '../../services/api';
 import PropTypes from 'prop-types';
 
 const COMPONENT_DEFAULT = {
-    grade_level: 1,
+    grade_level: "1",
     module: "",
     category: "",
     topic: "",
@@ -26,7 +26,7 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
             // Destructure to avoid passing internal fields if we ever send this back whole
             // But for state, we just copy specific fields we care about
             setFormData({
-                grade_level: template.grade_level || 1,
+                grade_level: (template.grade_level || [1]).join(', '),
                 module: template.module || '',
                 category: template.category || '',
                 topic: template.topic || '',
@@ -49,8 +49,8 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
     const saveTemplate = async () => {
         const payload = {
             ...formData,
-            // Ensure grade_level is an integer
-            grade_level: parseInt(formData.grade_level)
+            // Ensure grade_level is an array of integers
+            grade_level: formData.grade_level.toString().split(',').map(g => parseInt(g.trim())).filter(g => !isNaN(g))
         };
 
         if (template && template.template_id) {
@@ -91,6 +91,41 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
         }
     };
 
+    const handleGenerateClick = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            // 1. Save Template first
+            const savedTemplate = await saveTemplate();
+
+            // 2. Prompt for count
+            const countStr = window.prompt("How many questions would you like to generate?", "10");
+            if (!countStr) {
+                setLoading(false);
+                return; // User cancelled
+            }
+
+            const count = parseInt(countStr);
+            if (isNaN(count) || count <= 0) {
+                alert("Please enter a valid number greater than 0.");
+                setLoading(false);
+                return;
+            }
+
+            // 3. Call Generation API
+            await api.createGenerationJob(savedTemplate.template_id, count);
+
+            alert(`Successfully started generation of ${count} questions!`);
+
+            // Optional: Call onSave to refresh parent list or just stay here
+            onSave();
+        } catch (err) {
+            setError("Generation failed: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="template-form-container">
             <h3>{template ? 'Edit Template' : 'Create New Template'}</h3>
@@ -104,11 +139,11 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
                         <div className="form-group half">
                             <label>Grade Level</label>
                             <input
-                                type="number"
+                                type="text"
                                 name="grade_level"
                                 value={formData.grade_level}
                                 onChange={handleChange}
-                                min="1" max="12"
+                                placeholder="e.g. 1, 2, 3"
                                 required
                             />
                         </div>
@@ -240,6 +275,9 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
                     <button type="button" onClick={onCancel} className="cancel-btn">Cancel</button>
                     <button type="button" onClick={handlePreviewClick} className="cancel-btn" style={{ background: '#17a2b8', color: 'white', marginRight: '10px' }}>
                         Save & Preview
+                    </button>
+                    <button type="button" onClick={handleGenerateClick} className="cancel-btn" style={{ background: '#28a745', color: 'white', marginRight: '10px' }}>
+                        Generate Questions
                     </button>
                     <button type="submit" disabled={loading} className="save-btn">
                         {loading ? 'Saving...' : 'Save Template'}

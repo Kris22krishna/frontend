@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import QuestionTemplatesList from '../components/questionUpload/QuestionTemplatesList';
 import QuestionTemplateForm from '../components/questionUpload/QuestionTemplateForm';
 import TemplatePreview from '../components/questionUpload/TemplatePreview';
-import GenerationJobMonitor from '../components/questionUpload/GenerationJobMonitor';
 import GeneratedQuestionsList from '../components/questionUpload/GeneratedQuestionsList';
+import TopicArrangement from '../components/questionUpload/TopicArrangement';
 import SEO from '../components/common/SEO';
 import { api } from '../services/api';
 import '../styles/DynamicQuestionsDashboard.css';
@@ -132,10 +132,10 @@ const DynamicQuestionsDashboard = () => {
                     Templates
                 </button>
                 <button
-                    className={`nav-tab ${activeTab === 'generate' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('generate')}
+                    className={`nav-tab ${activeTab === 'arrange' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('arrange')}
                 >
-                    Generate
+                    Arrange
                 </button>
                 <button
                     className={`nav-tab ${activeTab === 'questions' ? 'active' : ''}`}
@@ -165,11 +165,8 @@ const DynamicQuestionsDashboard = () => {
                     </>
                 )}
 
-                {activeTab === 'generate' && (
-                    <GenerationJobMonitor
-                        onJobCreated={handleJobCreated}
-                        onQuestionsGenerated={handleQuestionsGenerated}
-                    />
+                {activeTab === 'arrange' && (
+                    <TopicArrangement />
                 )}
 
                 {activeTab === 'questions' && (

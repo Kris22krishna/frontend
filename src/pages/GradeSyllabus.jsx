@@ -73,7 +73,11 @@ const GradeSyllabus = () => {
                 // const response = await api.getQuestionTemplates({ grade_level: gradeId }); if we update api.js to pass query params
 
                 // Client-side filtering/transforming for now to match UI structure
-                const templates = (response.templates || []).filter(t => t.grade_level === gradeId && t.status === 'active');
+                // Client-side filtering/transforming for now to match UI structure
+                const templates = (response.templates || []).filter(t => {
+                    const grades = Array.isArray(t.grade_level) ? t.grade_level : [t.grade_level];
+                    return grades.includes(gradeId) && t.status === 'active';
+                });
 
                 // Transform flat templates into Category -> Topic -> Template structure
                 const categoriesMap = {};

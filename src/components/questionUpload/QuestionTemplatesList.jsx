@@ -54,7 +54,7 @@ const QuestionTemplatesList = ({ onEdit, onPreview }) => {
                         <div key={template.template_id} className="template-card">
                             <div className="template-info">
                                 <h4>{template.module} - {template.topic}</h4>
-                                <span className="template-id">ID: {template.template_id}</span>
+                                <span className="template-id">Grades: {(Array.isArray(template.grade_level) ? template.grade_level : [template.grade_level]).join(', ')} | ID: {template.template_id}</span>
                             </div>
                             <div className="template-actions">
                                 <button onClick={() => onPreview(template)} title="Preview">
