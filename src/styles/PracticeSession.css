@@ -1,0 +1,131 @@
+.practice-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.practice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.question-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.question-text {
+    font-size: 1.2em;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.answer-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.answer-input {
+    flex: 1;
+    padding: 12px;
+    font-size: 1em;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+}
+
+.answer-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.check-btn {
+    padding: 12px 24px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.check-btn:hover {
+    background: #218838;
+}
+
+.feedback {
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.feedback.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.feedback.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.show-solution-btn {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.solution-display {
+    margin-top: 10px;
+    padding: 10px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 4px;
+}
+
+.navigation-controls {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.nav-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.loading,
+.error,
+.empty {
+    text-align: center;
+    color: #666;
+    margin-top: 50px;
+}
