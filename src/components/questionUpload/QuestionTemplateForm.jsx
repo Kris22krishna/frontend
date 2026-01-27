@@ -80,6 +80,7 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
         try {
             // Save first to get valid ID or update content
             const savedTemplate = await saveTemplate();
+            console.log("DEBUG: savedTemplate used for preview:", savedTemplate);
             // Trigger preview with the saved template data (including the ID)
             // If Create, api returns the new object with ID. If Update, likewise.
             // OnPreview callback expects the template object.
