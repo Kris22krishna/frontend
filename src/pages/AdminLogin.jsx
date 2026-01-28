@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/common/SEO';
 import '../styles/AdminLogin.css'; // We'll create this
+import { api } from '../services/api';
 
 const AdminLogin = () => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -11,14 +12,15 @@ const AdminLogin = () => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Placeholder authentication logic
-        if (credentials.username === 'admin' && credentials.password === 'admin') {
-            alert('Login Successful');
-            navigate('/admin/dashboard'); // Or wherever
-        } else {
-            alert('Invalid credentials');
+        try {
+            await api.login(credentials.username, credentials.password);
+            // alert('Login Successful'); 
+            navigate('/admin'); // Redirect to dashboard
+        } catch (error) {
+            console.error(error);
+            alert(error.message || 'Invalid credentials');
         }
     };
 

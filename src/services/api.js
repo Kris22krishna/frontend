@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000'; // Adjust if backend runs elsewhere
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, ''); // Adjust if backend runs elsewhere
 
 const getHeaders = () => {
     const token = localStorage.getItem('authToken');
