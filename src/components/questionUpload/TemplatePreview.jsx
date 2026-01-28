@@ -1,70 +1,408 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, X, Sparkles } from 'lucide-react';
+import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
 import PropTypes from 'prop-types';
+
+const MathRenderer = ({ html }) => {
+    if (typeof html !== 'string') {
+        console.warn("MathRenderer received non-string html:", html);
+        return null;
+    }
+
+    try {
+        // Split by block math $$...$$
+        const parts = html.split(/(\$\$[\s\S]*?\$\$)/g);
+
+        return (
+            <div style={{ fontSize: 'inherit', color: 'inherit', lineHeight: '1.6' }}>
+                {parts.map((part, index) => {
+                    if (!part) return null;
+
+                    if (part.startsWith('$$') && part.endsWith('$$')) {
+                        const math = part.slice(2, -2).trim();
+                        try {
+                            return <BlockMath key={index} math={math} errorColor={'#cc0000'} />;
+                        } catch (e) {
+                            console.error("Katex Block rendering error:", e);
+                            return <div key={index} style={{ color: 'red' }}>Error rendering math</div>;
+                        }
+                    }
+
+                    // Inline math parsing
+                    const inlineParts = part.split(/(\$[\s\S]*?\$)/g);
+                    return (
+                        <span key={index}>
+                            {inlineParts.map((subPart, subIdx) => {
+                                if (!subPart) return null;
+
+                                if (subPart.startsWith('$') && subPart.endsWith('$') && subPart.length > 2 && !subPart.includes('<')) {
+                                    // Basic heuristic: Don't treat $ in HTML attributes as math
+                                    const math = subPart.slice(1, -1).trim();
+                                    try {
+                                        return <InlineMath key={subIdx} math={math} errorColor={'#cc0000'} />;
+                                    } catch (e) {
+                                        console.error("Katex Inline rendering error:", e);
+                                        return <span key={subIdx} style={{ color: 'red' }}>$...$</span>;
+                                    }
+                                }
+                                return (
+                                    <span
+                                        key={subIdx}
+                                        dangerouslySetInnerHTML={{ __html: subPart }}
+                                    />
+                                );
+                            })}
+                        </span>
+                    );
+                })}
+            </div>
+        );
+    } catch (err) {
+        console.error("MathRenderer fatal error:", err);
+        return <div dangerouslySetInnerHTML={{ __html: html }} />; // Fallback
+    }
+};
 
 const TemplatePreview = ({ template, onClose }) => {
     const [previewData, setPreviewData] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [parameters, setParameters] = useState('{}');
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        handlePreview();
+    }, []);
 
     const handlePreview = async () => {
         setLoading(true);
         try {
-            let params = {};
-            try {
-                params = JSON.parse(parameters);
-            } catch (e) {
-                alert('Invalid JSON parameters');
-                setLoading(false);
-                return;
-            }
-
-            const data = await api.previewQuestionTemplate(template.id, params);
+            const data = await api.previewQuestionTemplate(template, {});
             setPreviewData(data);
+            setCurrentIndex(0);
         } catch (err) {
-            alert('Preview failed: ' + err.message);
+            console.error(err);
         } finally {
             setLoading(false);
         }
     };
 
+    const currentSample = previewData?.preview_samples?.[currentIndex];
+    const totalSamples = previewData?.preview_samples?.length || 0;
+
     return (
-        <div className="preview-modal-overlay">
-            <div className="preview-modal">
-                <div className="modal-header">
-                    <h3>Preview: {template.name || template.id}</h3>
-                    <button onClick={onClose} className="close-btn">&times;</button>
+        <div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '20px'
+        }}>
+            <div style={{
+                background: 'linear-gradient(145deg, #ffffff, #f8fafc)',
+                borderRadius: '24px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.1)',
+                width: '100%',
+                maxWidth: '600px',
+                overflow: 'hidden',
+                animation: 'slideUp 0.3s ease-out'
+            }}>
+                {/* Header */}
+                <div style={{
+                    background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                    padding: '20px 24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <Sparkles size={24} color="#fff" />
+                        <h3 style={{ margin: 0, color: '#fff', fontSize: '18px', fontWeight: '600' }}>
+                            Question Preview
+                        </h3>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        style={{
+                            background: 'rgba(255,255,255,0.2)',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '36px',
+                            height: '36px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
+                        onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+                    >
+                        <X size={20} color="#fff" />
+                    </button>
                 </div>
 
-                <div className="preview-body">
-                    <div className="preview-params">
-                        <label>Test Parameters (JSON):</label>
-                        <textarea
-                            value={parameters}
-                            onChange={(e) => setParameters(e.target.value)}
-                            rows={3}
-                        />
-                        <button onClick={handlePreview} disabled={loading} className="refresh-btn">
-                            <RefreshCw size={16} /> Refresh Preview
-                        </button>
-                    </div>
-
-                    <div className="preview-result">
-                        {loading ? (
-                            <div className="loading-spinner">Generating preview...</div>
-                        ) : previewData ? (
-                            <div className="rendered-question">
-                                <h4>Rendered Question:</h4>
-                                <pre className="json-display">{JSON.stringify(previewData, null, 2)}</pre>
-                                {/* Later we can implement actual React rendering of the question here if we have a renderer component */}
+                {/* Content */}
+                <div style={{ padding: '32px', maxHeight: '60vh', overflowY: 'auto' }}>
+                    {loading ? (
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '60px 20px',
+                            color: '#64748b'
+                        }}>
+                            <RefreshCw size={32} style={{ animation: 'spin 1s linear infinite', marginBottom: '16px' }} />
+                            <p style={{ margin: 0, fontSize: '16px' }}>Generating preview...</p>
+                        </div>
+                    ) : currentSample ? (
+                        <div>
+                            {/* Question Card */}
+                            <div style={{
+                                background: 'linear-gradient(135deg, #f8fafc, #f1f5f9)',
+                                borderRadius: '16px',
+                                padding: '32px',
+                                marginBottom: '24px',
+                                border: '1px solid #e2e8f0',
+                                textAlign: 'center'
+                            }}>
+                                <div
+                                    style={{
+                                        fontSize: '32px',
+                                        fontWeight: '700',
+                                        color: '#1e293b',
+                                        lineHeight: '1.4'
+                                    }}
+                                >
+                                    <MathRenderer html={currentSample.question_html} />
+                                </div>
                             </div>
-                        ) : (
-                            <div className="placeholder-text">Click refresh to see preview</div>
-                        )}
-                    </div>
+
+                            {/* MCQ Options (if present) */}
+                            {(currentSample.options || currentSample.variables_used?.options) && (
+                                <div style={{ marginBottom: '24px' }}>
+                                    <div style={{ fontSize: '14px', color: '#64748b', marginBottom: '12px', fontWeight: '600' }}>
+                                        OPTIONS:
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                        {(currentSample.options || currentSample.variables_used.options).map((option, idx) => (
+                                            <div
+                                                key={idx}
+                                                style={{
+                                                    padding: '12px 20px',
+                                                    background: option.toString() === currentSample.answer_value?.toString()
+                                                        ? 'linear-gradient(135deg, #10b981, #059669)'
+                                                        : '#fff',
+                                                    color: option.toString() === currentSample.answer_value?.toString()
+                                                        ? '#fff'
+                                                        : '#334155',
+                                                    border: '1px solid #e2e8f0',
+                                                    borderRadius: '8px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '12px'
+                                                }}
+                                            >
+                                                <span style={{
+                                                    width: '28px',
+                                                    height: '28px',
+                                                    borderRadius: '50%',
+                                                    background: option.toString() === currentSample.answer_value?.toString()
+                                                        ? 'rgba(255,255,255,0.3)'
+                                                        : '#4f46e5',
+                                                    color: '#fff',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontWeight: '700',
+                                                    fontSize: '14px'
+                                                }}>
+                                                    {String.fromCharCode(65 + idx)}
+                                                </span>
+                                                <span style={{ fontSize: '18px' }}>{option}</span>
+                                                {option.toString() === currentSample.answer_value?.toString() && (
+                                                    <span style={{ marginLeft: 'auto', fontSize: '14px' }}>✓ Correct</span>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Answer Card */}
+                            <div style={{
+                                background: 'linear-gradient(135deg, #10b981, #059669)',
+                                borderRadius: '12px',
+                                padding: '20px 24px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '12px',
+                                marginBottom: '24px'
+                            }}>
+                                <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px', fontWeight: '500' }}>
+                                    Answer:
+                                </span>
+                                <span style={{ color: '#fff', fontSize: '24px', fontWeight: '700' }}>
+                                    {currentSample.answer_value}
+                                </span>
+                            </div>
+
+                            {/* Solution Card (if present) */}
+                            {currentSample.solution_html && (
+                                <div style={{
+                                    background: '#fff',
+                                    borderRadius: '16px',
+                                    border: '1px solid #e2e8f0',
+                                    padding: '24px',
+                                    marginTop: '24px',
+                                    textAlign: 'left'
+                                }}>
+                                    <div style={{
+                                        fontSize: '14px',
+                                        color: '#64748b',
+                                        marginBottom: '12px',
+                                        fontWeight: '600',
+                                        borderBottom: '1px solid #f1f5f9',
+                                        paddingBottom: '8px'
+                                    }}>
+                                        SOLUTION:
+                                    </div>
+                                    <div
+                                        style={{
+                                            fontSize: '16px',
+                                            color: '#334155',
+                                            lineHeight: '1.6'
+                                        }}
+                                    >
+                                        <MathRenderer html={currentSample.solution_html} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Navigation */}
+                            {totalSamples > 1 && (
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '16px',
+                                    marginTop: '24px'
+                                }}>
+                                    <button
+                                        onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
+                                        disabled={currentIndex === 0}
+                                        style={{
+                                            padding: '10px 20px',
+                                            borderRadius: '8px',
+                                            border: 'none',
+                                            background: currentIndex === 0 ? '#e2e8f0' : '#4f46e5',
+                                            color: currentIndex === 0 ? '#94a3b8' : '#fff',
+                                            cursor: currentIndex === 0 ? 'not-allowed' : 'pointer',
+                                            fontWeight: '600',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        ← Previous
+                                    </button>
+                                    <span style={{ color: '#64748b', fontWeight: '500' }}>
+                                        {currentIndex + 1} / {totalSamples}
+                                    </span>
+                                    <button
+                                        onClick={() => setCurrentIndex(Math.min(totalSamples - 1, currentIndex + 1))}
+                                        disabled={currentIndex === totalSamples - 1}
+                                        style={{
+                                            padding: '10px 20px',
+                                            borderRadius: '8px',
+                                            border: 'none',
+                                            background: currentIndex === totalSamples - 1 ? '#e2e8f0' : '#4f46e5',
+                                            color: currentIndex === totalSamples - 1 ? '#94a3b8' : '#fff',
+                                            cursor: currentIndex === totalSamples - 1 ? 'not-allowed' : 'pointer',
+                                            fontWeight: '600',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        Next →
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '60px 20px',
+                            color: '#94a3b8'
+                        }}>
+                            <p style={{ margin: 0, fontSize: '16px' }}>No preview available</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div style={{
+                    borderTop: '1px solid #e2e8f0',
+                    padding: '16px 24px',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    gap: '12px',
+                    background: '#f8fafc'
+                }}>
+                    <button
+                        onClick={handlePreview}
+                        disabled={loading}
+                        style={{
+                            padding: '10px 20px',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0',
+                            background: '#fff',
+                            color: '#475569',
+                            cursor: 'pointer',
+                            fontWeight: '500',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        <RefreshCw size={16} />
+                        Regenerate
+                    </button>
+                    <button
+                        onClick={onClose}
+                        style={{
+                            padding: '10px 24px',
+                            borderRadius: '8px',
+                            border: 'none',
+                            background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                            color: '#fff',
+                            cursor: 'pointer',
+                            fontWeight: '600',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
+
+            <style>{`
+                @keyframes slideUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
         </div>
     );
 };

@@ -4,13 +4,7 @@ import '../styles/MainLayout.css'; // We'll create this
 const MainLayout = () => {
     return (
         <div className="main-layout">
-            {/* Header will go here */}
-            <header className="main-header">
-                <div className="logo">Learner's Hub</div>
-                <nav>
-                    {/* Navigation links */}
-                </nav>
-            </header>
+            {/* Header removed as per user request */}
 
             <main className="content-wrapper">
                 <Outlet />

@@ -2,28 +2,40 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background-color: #fff;
 }
 
 .syllabus-header {
-    margin-bottom: 3rem;
-    border-bottom: 2px solid #eee;
+    margin-bottom: 2rem;
     padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
 }
 
 .syllabus-header h1 {
     font-size: 2.5rem;
-    color: #e0e0e0;
+    color: #4CAF50;
+    /* Green header like reference */
     margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.syllabus-header p {
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 800px;
 }
 
 .syllabus-grid {
     column-count: 1;
+    column-gap: 2rem;
 }
 
 @media (min-width: 768px) {
     .syllabus-grid {
         column-count: 2;
-        column-gap: 3rem;
     }
 }
 
@@ -35,77 +47,78 @@
 
 .category-block {
     break-inside: avoid;
-    margin-bottom: 2rem;
-    background: #1e1e1e;
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 2.5rem;
+    background: transparent;
+    padding: 0;
+    /* Clean look, no borders/backgrounds for categories */
 }
 
 .category-title {
     font-size: 1.25rem;
-    color: #92FE9D;
-    margin-bottom: 1rem;
-    font-weight: 600;
+    color: #4CAF50;
+    /* Green to match header */
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    border-bottom: none;
 }
 
 .category-content {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 
-/* Identation for nested categories */
+/* Nested categories - indentation */
 .category-block .category-block {
     margin-bottom: 0.5rem;
-    background: transparent;
-    border: none;
-    padding: 0;
     padding-left: 1rem;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0;
+    border-left: 2px solid #eee;
 }
 
 .category-block .category-block .category-title {
     font-size: 1.1rem;
-    color: #00C9FF;
-    /* Different color for subheaders */
+    color: #66bb6a;
     margin-bottom: 0.5rem;
 }
 
 .skills-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 
 .skill-item {
     display: flex;
     align-items: baseline;
     text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: background 0.2s;
+    padding: 2px 0;
+    transition: color 0.1s;
+    line-height: 1.4;
 }
 
 .skill-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: transparent;
 }
 
 .skill-code {
     font-weight: 700;
-    color: #00C9FF;
+    color: #333;
     margin-right: 8px;
-    min-width: 30px;
-    font-size: 0.9rem;
+    min-width: 35px;
+    font-size: 0.95rem;
 }
 
 .skill-title {
-    color: #ccc;
+    color: #333;
     font-size: 0.95rem;
 }
 
 .skill-item:hover .skill-title {
-    color: white;
+    color: #1a73e8;
+    /* Blue link color on hover */
     text-decoration: underline;
+}
+
+.skill-item:hover .skill-code {
+    color: #000;
 }

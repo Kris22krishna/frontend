@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import UploaderManagement from '../components/admin/UploaderManagement';
 import QuestionTemplatesList from '../components/questionUpload/QuestionTemplatesList';
 import QuestionTemplateForm from '../components/questionUpload/QuestionTemplateForm';
 import TemplatePreview from '../components/questionUpload/TemplatePreview';
-import GenerationJobMonitor from '../components/questionUpload/GenerationJobMonitor';
 import GeneratedQuestionsList from '../components/questionUpload/GeneratedQuestionsList';
+import TopicArrangement from '../components/questionUpload/TopicArrangement';
 import SEO from '../components/common/SEO';
 import { api } from '../services/api';
 import '../styles/DynamicQuestionsDashboard.css';
@@ -13,16 +14,19 @@ const DynamicQuestionsDashboard = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(api.isAuthenticated());
     const [authLoading, setAuthLoading] = useState(false);
     const [credentials, setCredentials] = useState({
-        username: 'admin@learners.com', // Pre-filled based on user request
+        username: 'admin@learners.com',
         password: 'admin123'
     });
 
     // Dashboard State
-    const [activeTab, setActiveTab] = useState('templates');
-    const [viewMode, setViewMode] = useState('list'); // 'list', 'edit', 'create'
+    const userType = localStorage.getItem('userType');
+    const [activeTab, setActiveTab] = useState('overview');
+    const [viewMode, setViewMode] = useState('list');
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [previewTemplate, setPreviewTemplate] = useState(null);
     const [selectedJobId, setSelectedJobId] = useState(null);
+    // Add state for created uploader
+    const [createdUploader, setCreatedUploader] = useState(null);
 
     // --- Auth Handlers ---
 
@@ -44,16 +48,76 @@ const DynamicQuestionsDashboard = () => {
         setIsAuthenticated(false);
     };
 
-    // --- Template Handlers ---
-
-    const handleEditTemplate = (template) => {
-        setSelectedTemplate(template);
-        setViewMode(template ? 'edit' : 'create');
+    // --- Uploader Management Handlers ---
+    const handleCreateUploader = async (name) => {
+        try {
+            const data = await api.createUploader(name);
+            setCreatedUploader(data);
+        } catch (error) {
+            alert('Error creating uploader: ' + error.message);
+        }
     };
 
-    const handleSaveTemplate = () => {
-        setViewMode('list');
+    // --- Navigation Items ---
+    const allNavItems = [
+        { id: 'overview', label: 'Overview', icon: '📊', roles: ['admin'] },
+        { id: 'uploaders', label: 'User Management', icon: '👥', roles: ['admin'] },
+        {
+            id: 'generation', label: 'Question Generation', icon: '⚡', roles: ['admin'], children: [
+                { id: 'templates', label: 'Templates', icon: '📝' },
+                { id: 'arrange', label: 'Arrangement', icon: '🔢' },
+                { id: 'questions', label: 'Generated Questions', icon: '❓' }
+            ]
+        }
+    ];
+
+    const navItems = allNavItems;
+
+    // Add state for stats
+    const [totalTemplates, setTotalTemplates] = useState(null);
+
+    // Fetch stats when overview is active
+    useEffect(() => {
+        if (activeTab === 'overview' && isAuthenticated) {
+            const fetchStats = async () => {
+                try {
+                    // Fetch just 1 to get the total count in metadata
+                    const data = await api.getQuestionTemplates({ limit: 1 });
+                    if (data && typeof data.total !== 'undefined') {
+                        setTotalTemplates(data.total);
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch template stats:", err);
+                }
+            };
+            fetchStats();
+        }
+    }, [activeTab, isAuthenticated]);
+
+
+    // --- Template Handlers ---
+    const handleEditTemplate = (template) => {
+        setSelectedTemplate(template);
+        setViewMode('edit');
+    };
+
+    const handleCreateTemplate = () => {
         setSelectedTemplate(null);
+        setViewMode('create');
+    };
+
+    const handleSaveTemplate = async (data) => {
+        try {
+            if (selectedTemplate) {
+                await api.updateQuestionTemplate(selectedTemplate.template_id, data);
+            } else {
+                await api.createQuestionTemplate(data);
+            }
+            setViewMode('list');
+            setSelectedTemplate(null);
+        } catch (error) {
+            alert('Error saving template: ' + error.message);
+        }
     };
 
     const handleCancelEdit = () => {
@@ -69,25 +133,20 @@ const DynamicQuestionsDashboard = () => {
         setPreviewTemplate(null);
     };
 
-    // --- Generation Handlers ---
-
-    const handleJobCreated = (job) => {
-        // Optional: switch tab or notify
-    };
-
-    const handleQuestionsGenerated = (jobId) => {
-        setSelectedJobId(jobId);
-        setActiveTab('questions');
-    };
+    // ... (existing helper functions)
 
     if (!isAuthenticated) {
+        // ... (login form)
         return (
-            <div className="dashboard-container center-content">
-                <SEO title="Login - Dynamic Questions" />
-                <div className="login-box" style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-                    <h2>Admin Login</h2>
-                    <p>Please log in to access the dashboard.</p>
-                    <form onSubmit={handleLogin}>
+            <div className="login-container">
+                <SEO title="Admin Login - skill100.AI" />
+                <div className="login-card">
+                    <div className="login-header">
+                        <h1 className="brand-title">skill100.AI</h1>
+                        <p className="login-subtitle">Admin Portal Access</p>
+                    </div>
+
+                    <form onSubmit={handleLogin} className="form-grid" style={{ gap: '20px' }}>
                         <div className="form-group">
                             <label>Email</label>
                             <input
@@ -95,6 +154,7 @@ const DynamicQuestionsDashboard = () => {
                                 value={credentials.username}
                                 onChange={e => setCredentials({ ...credentials, username: e.target.value })}
                                 required
+                                placeholder="admin@learners.com"
                             />
                         </div>
                         <div className="form-group">
@@ -104,9 +164,10 @@ const DynamicQuestionsDashboard = () => {
                                 value={credentials.password}
                                 onChange={e => setCredentials({ ...credentials, password: e.target.value })}
                                 required
+                                placeholder="••••••••"
                             />
                         </div>
-                        <button type="submit" disabled={authLoading} className="save-btn" style={{ width: '100%' }}>
+                        <button type="submit" disabled={authLoading} className="save-btn" style={{ width: '100%', marginTop: '10px' }}>
                             {authLoading ? 'Logging in...' : 'Login'}
                         </button>
                     </form>
@@ -116,66 +177,123 @@ const DynamicQuestionsDashboard = () => {
     }
 
     return (
-        <div className="dashboard-container">
-            <SEO title="Dynamic Questions Dashboard" description="Manage templates and generate questions" />
+        <div className="admin-layout">
+            <SEO title="Admin Dashboard - Learner's Hub" description="Admin control panel" />
 
-            <div className="list-header">
-                <h1>Dynamic Questions Dashboard</h1>
-                <button onClick={handleLogout} className="cancel-btn">Logout</button>
-            </div>
+            {/* Sidebar */}
+            <aside className="admin-sidebar">
+                {/* ... (sidebar content) */}
+                <div className="sidebar-header">
+                    <h1 style={{
+                        margin: 0,
+                        fontSize: '1.5rem',
+                        fontWeight: '800',
+                        background: 'linear-gradient(to right, #818cf8, #f472b6)',
+                        WebkitBackgroundClip: 'text',
+                        backgroundClip: 'text',
+                        color: 'transparent'
+                    }}>
+                        skill100.AI
+                    </h1>
+                </div>
+                <nav className="sidebar-nav">
+                    {navItems.map(item => (
+                        <div key={item.id} className="nav-group">
+                            {item.children ? (
+                                <>
+                                    <div className="nav-group-label">{item.icon} {item.label}</div>
+                                    <div className="nav-group-children">
+                                        {item.children.map(child => (
+                                            <button
+                                                key={child.id}
+                                                className={`nav-item ${activeTab === child.id ? 'active' : ''}`}
+                                                onClick={() => setActiveTab(child.id)}
+                                            >
+                                                <span className="nav-icon">{child.icon}</span>
+                                                {child.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </>
+                            ) : (
+                                <button
+                                    className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+                                    onClick={() => setActiveTab(item.id)}
+                                >
+                                    <span className="nav-icon">{item.icon}</span>
+                                    {item.label}
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                </nav>
+                <div className="sidebar-footer">
+                    <button onClick={handleLogout} className="logout-btn">
+                        <span className="nav-icon">🚪</span> Logout
+                    </button>
+                </div>
+            </aside>
 
-            <div className="dashboard-nav">
-                <button
-                    className={`nav-tab ${activeTab === 'templates' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('templates')}
-                >
-                    Templates
-                </button>
-                <button
-                    className={`nav-tab ${activeTab === 'generate' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('generate')}
-                >
-                    Generate
-                </button>
-                <button
-                    className={`nav-tab ${activeTab === 'questions' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('questions')}
-                >
-                    Questions
-                </button>
-            </div>
+            {/* Main Content */}
+            <main className="admin-main">
+                <header className="admin-header">
+                    <h3>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h3>
+                    <div className="user-profile">
+                        <span className="user-info">Admin</span>
+                        <div className="avatar-placeholder">A</div>
+                    </div>
+                </header>
 
-            <div className="dashboard-content">
-                {activeTab === 'templates' && (
-                    <>
-                        {viewMode === 'list' && (
-                            <QuestionTemplatesList
-                                onEdit={handleEditTemplate}
-                                onPreview={handlePreviewTemplate}
-                            />
-                        )}
-                        {(viewMode === 'create' || viewMode === 'edit') && (
-                            <QuestionTemplateForm
-                                template={selectedTemplate}
-                                onSave={handleSaveTemplate}
-                                onCancel={handleCancelEdit}
-                                onPreview={handlePreviewTemplate}
-                            />
-                        )}
-                    </>
-                )}
+                <div className="admin-content-area">
+                    {activeTab === 'overview' && (
+                        <div className="overview-container">
+                            {/* ... (existing overview) */}
+                            <div className="stat-card">
+                                <h3>Total Templates</h3>
+                                <p className="stat-value">{totalTemplates !== null ? totalTemplates : '--'}</p>
+                            </div>
+                            <div className="stat-card">
+                                <h3>Recent Activity</h3>
+                                <p>System functioning normally.</p>
+                            </div>
+                        </div>
+                    )}
 
-                {activeTab === 'generate' && (
-                    <GenerationJobMonitor
-                        onJobCreated={handleJobCreated}
-                        onQuestionsGenerated={handleQuestionsGenerated}
-                    />
-                )}
+                    {activeTab === 'uploaders' && (
+                        <UploaderManagement
+                            onCreateUploader={handleCreateUploader}
+                            createdUploader={createdUploader}
+                        />
+                    )}
 
-                {activeTab === 'questions' && (
-                    <GeneratedQuestionsList jobId={selectedJobId} />
-                )}
-            </div>
+                    {activeTab === 'templates' && (
+                        <>
+                            {viewMode === 'list' && (
+                                <QuestionTemplatesList
+                                    onEdit={handleEditTemplate}
+                                    onPreview={handlePreviewTemplate}
+                                />
+                            )}
+                            {(viewMode === 'create' || viewMode === 'edit') && (
+                                <QuestionTemplateForm
+                                    template={selectedTemplate}
+                                    onSave={handleSaveTemplate}
+                                    onCancel={handleCancelEdit}
+                                    onPreview={handlePreviewTemplate}
+                                />
+                            )}
+                        </>
+                    )}
+
+                    {activeTab === 'arrange' && (
+                        <TopicArrangement />
+                    )}
+
+                    {activeTab === 'questions' && (
+                        <GeneratedQuestionsList jobId={selectedJobId} />
+                    )}
+                </div>
+            </main>
 
             {previewTemplate && (
                 <TemplatePreview

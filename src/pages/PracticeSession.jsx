@@ -12,6 +12,7 @@ const PracticeSession = () => {
     const [userAnswer, setUserAnswer] = useState('');
     const [feedback, setFeedback] = useState(null); // { type: 'success' | 'error', message: '' }
     const [showSolution, setShowSolution] = useState(false);
+    const [finished, setFinished] = useState(false);
 
     useEffect(() => {
         fetchQuestions();
@@ -20,9 +21,28 @@ const PracticeSession = () => {
     const fetchQuestions = async () => {
         setLoading(true);
         try {
-            // Fetch questions for this template
-            const data = await api.getGeneratedQuestions({ templateId, limit: 20 });
-            setQuestions(data.questions || []);
+            // First try to get pre-generated questions
+            const data = await api.getGeneratedQuestions({ templateId, limit: 20, random: true });
+
+            if (data.questions && data.questions.length > 0) {
+                setQuestions(data.questions);
+            } else {
+                // No pre-generated questions, use public practice endpoint
+                const practiceData = await api.getPracticeQuestions(templateId, 10);
+
+                if (practiceData.preview_samples && practiceData.preview_samples.length > 0) {
+                    // Convert practice samples to question format
+                    const dynamicQuestions = practiceData.preview_samples.map((sample, idx) => ({
+                        generated_question_id: `dynamic-${idx}`,
+                        question_html: sample.question_html,
+                        answer_value: sample.answer_value,
+                        variables_used: sample.variables_used
+                    }));
+                    setQuestions(dynamicQuestions);
+                } else {
+                    setQuestions([]);
+                }
+            }
         } catch (err) {
             setError(err.message);
         } finally {
@@ -75,6 +95,48 @@ const PracticeSession = () => {
     );
 
     const question = questions[currentIndex];
+    const isLastQuestion = currentIndex === questions.length - 1;
+
+    const handleFinish = () => {
+        setFinished(true);
+    };
+
+    if (finished) {
+        return (
+            <div className="practice-container">
+                <div className="finish-screen" style={{
+                    textAlign: 'center',
+                    padding: '60px 20px'
+                }}>
+                    <div style={{ fontSize: '64px', marginBottom: '20px' }}>🎉</div>
+                    <h2 style={{ color: '#10b981', marginBottom: '16px' }}>Practice Complete!</h2>
+                    <p style={{ color: '#64748b', marginBottom: '32px' }}>
+                        You have completed all {questions.length} questions.
+                    </p>
+                    <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                        <button
+                            onClick={() => {
+                                setFinished(false);
+                                setCurrentIndex(0);
+                                setUserAnswer('');
+                                setFeedback(null);
+                            }}
+                            className="nav-btn"
+                            style={{ background: '#4f46e5', color: '#fff' }}
+                        >
+                            Practice Again
+                        </button>
+                        <button
+                            onClick={() => window.history.back()}
+                            className="nav-btn"
+                        >
+                            Back to Topics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="practice-container">
@@ -120,7 +182,13 @@ const PracticeSession = () => {
 
             <div className="navigation-controls">
                 <button onClick={handlePrev} disabled={currentIndex === 0} className="nav-btn">Previous</button>
-                <button onClick={handleNext} disabled={currentIndex === questions.length - 1} className="nav-btn">Next</button>
+                {isLastQuestion ? (
+                    <button onClick={handleFinish} className="nav-btn" style={{ background: '#10b981', color: '#fff' }}>
+                        Finish
+                    </button>
+                ) : (
+                    <button onClick={handleNext} className="nav-btn">Next</button>
+                )}
             </div>
         </div>
     );
