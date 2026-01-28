@@ -68,6 +68,7 @@ const MathRenderer = ({ html }) => {
 const TemplatePreview = ({ template, onClose }) => {
     const [previewData, setPreviewData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null); // Add error state
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
@@ -76,12 +77,14 @@ const TemplatePreview = ({ template, onClose }) => {
 
     const handlePreview = async () => {
         setLoading(true);
+        setError(null); // Clear error on retry
         try {
             const data = await api.previewQuestionTemplate(template, {});
             setPreviewData(data);
             setCurrentIndex(0);
         } catch (err) {
             console.error(err);
+            setError(err.message || "Failed to load preview"); // Set error
         } finally {
             setLoading(false);
         }
@@ -142,7 +145,7 @@ const TemplatePreview = ({ template, onClose }) => {
                         onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.3)'}
                         onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
                     >
-                        <X size={20} color="#fff" />
+                        <span style={{ fontSize: '24px', lineHeight: '1', color: '#fff' }}>&times;</span>
                     </button>
                 </div>
 
@@ -156,6 +159,25 @@ const TemplatePreview = ({ template, onClose }) => {
                         }}>
                             <RefreshCw size={32} style={{ animation: 'spin 1s linear infinite', marginBottom: '16px' }} />
                             <p style={{ margin: 0, fontSize: '16px' }}>Generating preview...</p>
+                        </div>
+                    ) : error ? (
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '40px 20px',
+                            color: '#ef4444'
+                        }}>
+                            <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>Preview Error</p>
+                            <div style={{
+                                background: '#fef2f2',
+                                padding: '12px',
+                                borderRadius: '8px',
+                                fontFamily: 'monospace',
+                                fontSize: '14px',
+                                textAlign: 'left',
+                                whiteSpace: 'pre-wrap'
+                            }}>
+                                {error}
+                            </div>
                         </div>
                     ) : currentSample ? (
                         <div>

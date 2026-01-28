@@ -84,13 +84,12 @@ a = random.randint(1, 10)
 b = random.randint(1, 10)
 ans = a + b
 
-question = f"<div className='question-container'><p>What is {a} + {b}?</p></div>"
-answer = ans`;
+question = f"<div className='question-container'><p>What is {a} + {b}?</p></div>"`;
 
         const exampleAnswerTemplate = `# Use variables from Question Template
 # answer variable is already set generally, but you can override specifically if needed
 # basically just return nothing if you set 'answer' above, or format it here.
-pass`;
+answer = ans`;
 
         const exampleSolutionTemplate = `# Explain logic
 solution = f"""
@@ -102,41 +101,51 @@ solution = f"""
 
         setFormData(prev => ({
             ...prev,
+            skill_id: 1, // Dummy ID
+            grade: 5,
+            category: "Mathematics",
+            skill_name: "Addition Practice",
+            type: "MCQ",
+            format: 1,
+            difficulty: "Easy",
             question_template: exampleQuestionTemplate,
             answer_template: exampleAnswerTemplate,
             solution_template: exampleSolutionTemplate
         }));
     };
 
-    const saveTemplate = async () => {
-        const payload = {
-            skill_id: parseInt(formData.skill_id),
-            grade: parseInt(formData.grade),
-            category: formData.category,
-            skill_name: formData.skill_name,
-            type: formData.type,
-            format: parseInt(formData.format),
-            difficulty: formData.difficulty,
-            question_template: formData.question_template,
-            answer_template: formData.answer_template,
-            solution_template: formData.solution_template
+    const getPayload = () => {
+        return {
+            skill_id: parseInt(formData.skill_id) || 0,
+            grade: parseInt(formData.grade) || 0,
+            category: formData.category || "",
+            skill_name: formData.skill_name || "",
+            type: formData.type || "MCQ",
+            format: parseInt(formData.format) || 1,
+            difficulty: formData.difficulty || "Easy",
+            question_template: formData.question_template || "",
+            answer_template: formData.answer_template || "",
+            solution_template: formData.solution_template || ""
         };
-
-        if (template && template.template_id) {
-            return await api.updateQuestionTemplate(template.template_id, payload);
-        } else {
-            return await api.createQuestionTemplate(payload);
-        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validation
+        if (!formData.skill_id) return setError("Skill ID is required");
+        if (!formData.grade) return setError("Grade is required");
+        if (!formData.category) return setError("Category is required");
+        if (!formData.skill_name) return setError("Skill Name is required");
+
         setLoading(true);
         setError(null);
         try {
-            await saveTemplate();
-            onSave();
+            const payload = getPayload();
+            console.log("Submitting payload to parent:", payload);
+            await onSave(payload);
         } catch (err) {
+            console.error("Save error:", err);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -144,37 +153,24 @@ solution = f"""
     };
 
     const handlePreviewClick = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            // Use current form data directly, no need to save first
-            const payload = {
-                skill_id: parseInt(formData.skill_id) || 0,
-                grade: parseInt(formData.grade) || 0,
-                category: formData.category || 'Preview',
-                skill_name: formData.skill_name || 'Preview',
-                type: formData.type,
-                format: parseInt(formData.format),
-                difficulty: formData.difficulty,
-                question_template: formData.question_template,
-                answer_template: formData.answer_template,
-                solution_template: formData.solution_template
-            };
+        // Use current form data directly
+        const payload = {
+            skill_id: parseInt(formData.skill_id) || 0,
+            grade: parseInt(formData.grade) || 0,
+            category: formData.category || 'Preview',
+            skill_name: formData.skill_name || 'Preview',
+            type: formData.type,
+            format: parseInt(formData.format),
+            difficulty: formData.difficulty,
+            question_template: formData.question_template,
+            answer_template: formData.answer_template,
+            solution_template: formData.solution_template,
+            is_v2: true // Important for TemplatePreview to know which API to use
+        };
 
-            console.log("DEBUG: sending preview payload:", payload);
-            try {
-                const data = await api.previewQuestionGeneration(payload);
-                onPreview(data); // Pass distinct data, not the template object
-            } catch (innerErr) {
-                // Fallback or better error handling
-                throw innerErr;
-            }
-
-        } catch (err) {
-            setError("Cannot preview: " + err.message);
-        } finally {
-            setLoading(false);
-        }
+        // Pass the payload to the parent/dashboard, which renders TemplatePreview.
+        // TemplatePreview will handle the API call and loading state.
+        onPreview(payload);
     };
 
     return (
@@ -217,12 +213,12 @@ solution = f"""
                         <div className="form-group third">
                             <label><span className="field-icon">◈</span> Grade</label>
                             <input
-                                type="text"
+                                type="number"
                                 name="grade"
                                 value={formData.grade}
-                                readOnly
-                                placeholder="Auto-filled"
-                                className="readonly-field"
+                                onChange={handleChange}
+                                placeholder="Grade Level"
+                                required
                             />
                         </div>
                         <div className="form-group third">
@@ -231,9 +227,9 @@ solution = f"""
                                 type="text"
                                 name="category"
                                 value={formData.category}
-                                readOnly
-                                placeholder="Auto-filled"
-                                className="readonly-field"
+                                onChange={handleChange}
+                                placeholder="Category"
+                                required
                             />
                         </div>
                         <div className="form-group third">
@@ -242,9 +238,9 @@ solution = f"""
                                 type="text"
                                 name="skill_name"
                                 value={formData.skill_name}
-                                readOnly
-                                placeholder="Auto-filled"
-                                className="readonly-field"
+                                onChange={handleChange}
+                                placeholder="Skill Name"
+                                required
                             />
                         </div>
                     </div>

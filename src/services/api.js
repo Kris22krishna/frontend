@@ -24,9 +24,14 @@ const handleResponse = async (response) => {
     if (!response.ok) {
         // Handle FastAPI style errors (detail array or string)
         if (json.detail) {
-            const msg = Array.isArray(json.detail)
-                ? json.detail.map(d => `${d.loc ? d.loc.join('.') + ': ' : ''}${d.msg}`).join('\n')
-                : json.detail;
+            let msg;
+            if (Array.isArray(json.detail)) {
+                msg = json.detail.map(d => `${d.loc ? d.loc.join('.') + ': ' : ''}${d.msg}`).join('\n');
+            } else if (typeof json.detail === 'object') {
+                msg = json.detail.message || JSON.stringify(json.detail);
+            } else {
+                msg = json.detail;
+            }
             throw new Error(msg);
         }
         // Handle APIResponse style errors
@@ -120,6 +125,12 @@ export const api = {
     },
 
     createQuestionTemplate: async (data) => {
+        console.log("API: createQuestionTemplate called with:", data);
+        if (!data) {
+            console.error("API Error: data is null/undefined");
+            throw new Error("Cannot save: data is missing");
+        }
+
         // Always creates v2 now
         const response = await fetch(`${BASE_URL}/api/v1/question-generation-templates`, {
             method: 'POST',
