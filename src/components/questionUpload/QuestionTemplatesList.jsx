@@ -24,11 +24,11 @@ const QuestionTemplatesList = ({ onEdit, onPreview }) => {
         fetchTemplates();
     }, []);
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (template) => {
         if (!window.confirm('Are you sure you want to delete this template?')) return;
         try {
-            await api.deleteQuestionTemplate(id);
-            setTemplates(templates.filter(t => t.template_id !== id));
+            await api.deleteQuestionTemplate(template.template_id, template.is_v2);
+            setTemplates(templates.filter(t => t.template_id !== template.template_id));
         } catch (err) {
             alert('Failed to delete: ' + err.message);
         }
@@ -63,7 +63,7 @@ const QuestionTemplatesList = ({ onEdit, onPreview }) => {
                                 <button onClick={() => onEdit(template)} title="Edit">
                                     <Edit size={18} />
                                 </button>
-                                <button onClick={() => handleDelete(template.template_id)} title="Delete" className="delete-btn">
+                                <button onClick={() => handleDelete(template)} title="Delete" className="delete-btn">
                                     <Trash2 size={18} />
                                 </button>
                             </div>

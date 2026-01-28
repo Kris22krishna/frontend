@@ -1,7 +1,69 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../services/api';
 import { RefreshCw, X, Sparkles } from 'lucide-react';
+import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
 import PropTypes from 'prop-types';
+
+const MathRenderer = ({ html }) => {
+    if (typeof html !== 'string') {
+        console.warn("MathRenderer received non-string html:", html);
+        return null;
+    }
+
+    try {
+        // Split by block math $$...$$
+        const parts = html.split(/(\$\$[\s\S]*?\$\$)/g);
+
+        return (
+            <div style={{ fontSize: 'inherit', color: 'inherit', lineHeight: '1.6' }}>
+                {parts.map((part, index) => {
+                    if (!part) return null;
+
+                    if (part.startsWith('$$') && part.endsWith('$$')) {
+                        const math = part.slice(2, -2).trim();
+                        try {
+                            return <BlockMath key={index} math={math} errorColor={'#cc0000'} />;
+                        } catch (e) {
+                            console.error("Katex Block rendering error:", e);
+                            return <div key={index} style={{ color: 'red' }}>Error rendering math</div>;
+                        }
+                    }
+
+                    // Inline math parsing
+                    const inlineParts = part.split(/(\$[\s\S]*?\$)/g);
+                    return (
+                        <span key={index}>
+                            {inlineParts.map((subPart, subIdx) => {
+                                if (!subPart) return null;
+
+                                if (subPart.startsWith('$') && subPart.endsWith('$') && subPart.length > 2 && !subPart.includes('<')) {
+                                    // Basic heuristic: Don't treat $ in HTML attributes as math
+                                    const math = subPart.slice(1, -1).trim();
+                                    try {
+                                        return <InlineMath key={subIdx} math={math} errorColor={'#cc0000'} />;
+                                    } catch (e) {
+                                        console.error("Katex Inline rendering error:", e);
+                                        return <span key={subIdx} style={{ color: 'red' }}>$...$</span>;
+                                    }
+                                }
+                                return (
+                                    <span
+                                        key={subIdx}
+                                        dangerouslySetInnerHTML={{ __html: subPart }}
+                                    />
+                                );
+                            })}
+                        </span>
+                    );
+                })}
+            </div>
+        );
+    } catch (err) {
+        console.error("MathRenderer fatal error:", err);
+        return <div dangerouslySetInnerHTML={{ __html: html }} />; // Fallback
+    }
+};
 
 const TemplatePreview = ({ template, onClose }) => {
     const [previewData, setPreviewData] = useState(null);
@@ -15,7 +77,7 @@ const TemplatePreview = ({ template, onClose }) => {
     const handlePreview = async () => {
         setLoading(true);
         try {
-            const data = await api.previewQuestionTemplate(template.template_id, {});
+            const data = await api.previewQuestionTemplate(template, {});
             setPreviewData(data);
             setCurrentIndex(0);
         } catch (err) {
@@ -113,18 +175,19 @@ const TemplatePreview = ({ template, onClose }) => {
                                         color: '#1e293b',
                                         lineHeight: '1.4'
                                     }}
-                                    dangerouslySetInnerHTML={{ __html: currentSample.question_html }}
-                                />
+                                >
+                                    <MathRenderer html={currentSample.question_html} />
+                                </div>
                             </div>
 
                             {/* MCQ Options (if present) */}
-                            {currentSample.variables_used?.options && (
+                            {(currentSample.options || currentSample.variables_used?.options) && (
                                 <div style={{ marginBottom: '24px' }}>
                                     <div style={{ fontSize: '14px', color: '#64748b', marginBottom: '12px', fontWeight: '600' }}>
                                         OPTIONS:
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        {currentSample.variables_used.options.map((option, idx) => (
+                                        {(currentSample.options || currentSample.variables_used.options).map((option, idx) => (
                                             <div
                                                 key={idx}
                                                 style={{
@@ -176,7 +239,8 @@ const TemplatePreview = ({ template, onClose }) => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: '12px'
+                                gap: '12px',
+                                marginBottom: '24px'
                             }}>
                                 <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px', fontWeight: '500' }}>
                                     Answer:
@@ -185,6 +249,38 @@ const TemplatePreview = ({ template, onClose }) => {
                                     {currentSample.answer_value}
                                 </span>
                             </div>
+
+                            {/* Solution Card (if present) */}
+                            {currentSample.solution_html && (
+                                <div style={{
+                                    background: '#fff',
+                                    borderRadius: '16px',
+                                    border: '1px solid #e2e8f0',
+                                    padding: '24px',
+                                    marginTop: '24px',
+                                    textAlign: 'left'
+                                }}>
+                                    <div style={{
+                                        fontSize: '14px',
+                                        color: '#64748b',
+                                        marginBottom: '12px',
+                                        fontWeight: '600',
+                                        borderBottom: '1px solid #f1f5f9',
+                                        paddingBottom: '8px'
+                                    }}>
+                                        SOLUTION:
+                                    </div>
+                                    <div
+                                        style={{
+                                            fontSize: '16px',
+                                            color: '#334155',
+                                            lineHeight: '1.6'
+                                        }}
+                                    >
+                                        <MathRenderer html={currentSample.solution_html} />
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Navigation */}
                             {totalSamples > 1 && (

@@ -70,7 +70,17 @@ export const api = {
         return !!localStorage.getItem('authToken');
     },
 
+    // --- Skills ---
+    getSkillById: async (skillId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/skills/${skillId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     // --- Question Templates ---
+
+    // --- Question Templates (Unified v1 & v2) ---
 
     getQuestionTemplates: async (filters = {}) => {
         const params = new URLSearchParams();
@@ -78,18 +88,40 @@ export const api = {
         if (filters.module) params.append('module', filters.module);
         if (filters.limit) params.append('limit', filters.limit);
         if (filters.offset) params.append('offset', filters.offset);
-
-        // Filter empty params
         const queryString = params.toString() ? `?${params.toString()}` : '';
 
-        const response = await fetch(`${BASE_URL}/api/v1/question-templates${queryString}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
+        // Fetch v1 Templates
+        const p1 = fetch(`${BASE_URL}/api/v1/question-templates${queryString}`, { headers: getHeaders() })
+            .then(res => handleResponse(res))
+            .then(data => data.templates || [])
+            .catch(err => { console.error("v1 fetch error", err); return []; });
+
+        // Fetch v2 Templates
+        // Note: v2 list endpoint might have different filter params, adapting best effort
+        const p2 = fetch(`${BASE_URL}/api/v1/question-generation-templates`, { headers: getHeaders() })
+            .then(res => handleResponse(res))
+            .then(data => data.templates || [])
+            .catch(err => { console.error("v2 fetch error", err); return []; });
+
+        const [v1Templates, v2Templates] = await Promise.all([p1, p2]);
+
+        // Normalize v2 to look like v1 for the UI
+        const normalizedV2 = v2Templates.map(t => ({
+            ...t,
+            // Map v2 fields to v1 UI expectations
+            module: t.category,       // v2 category -> v1 module
+            topic: t.skill_name,      // v2 skill_name -> v1 topic
+            grade_level: [t.grade],   // v2 int grade -> v1 array
+            is_v2: true               // Flag to identify source
+        }));
+
+        // Combine
+        return { templates: [...normalizedV2, ...v1Templates] };
     },
 
     createQuestionTemplate: async (data) => {
-        const response = await fetch(`${BASE_URL}/api/v1/question-templates`, {
+        // Always creates v2 now
+        const response = await fetch(`${BASE_URL}/api/v1/question-generation-templates`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify(data),
@@ -123,7 +155,21 @@ export const api = {
     },
 
     updateQuestionTemplate: async (templateId, data) => {
-        const response = await fetch(`${BASE_URL}/api/v1/question-templates/${templateId}`, {
+        // Check if v2 (data usually comes from form, but form might not know. 
+        // Best reliance is if we pass a flag or check structure.
+        // However, the `templateId` is the key. 
+        // If the caller (QuestionTemplateForm) preserves the `is_v2` flag in the `template` object it received, 
+        // we can use likely check `data.is_v2` if we pass it, OR try one endpoint then the other?
+        // Better: The LIST passes the full object to Edit Form. Form saves it.
+        // We will assume `data` contains `is_v2` if it was edit.
+
+        let endpoint = `api/v1/question-templates/${templateId}`; // Default v1
+        if (data.is_v2 || (data.question_template && data.answer_template)) {
+            // Presence of v2 fields implies v2
+            endpoint = `api/v1/question-generation-templates/${templateId}`;
+        }
+
+        const response = await fetch(`${BASE_URL}/${endpoint}`, {
             method: 'PATCH',
             headers: getHeaders(),
             body: JSON.stringify(data),
@@ -131,8 +177,12 @@ export const api = {
         return handleResponse(response);
     },
 
-    deleteQuestionTemplate: async (templateId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/question-templates/${templateId}`, {
+    deleteQuestionTemplate: async (templateId, isV2 = false) => {
+        const endpoint = isV2
+            ? `api/v1/question-generation-templates/${templateId}`
+            : `api/v1/question-templates/${templateId}`;
+
+        const response = await fetch(`${BASE_URL}/${endpoint}`, {
             method: 'DELETE',
             headers: getHeaders()
         });
@@ -140,11 +190,26 @@ export const api = {
         return handleResponse(response);
     },
 
-    previewQuestionTemplate: async (templateId, parameters = {}) => {
-        const response = await fetch(`${BASE_URL}/api/v1/question-templates/${templateId}/preview`, {
+    previewQuestionTemplate: async (template, parameters = {}) => {
+        if (template.is_v2) {
+            return api.previewQuestionGeneration(template, parameters.count || 3);
+        }
+        const response = await fetch(`${BASE_URL}/api/v1/question-templates/${template.template_id}/preview`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify(parameters),
+        });
+        return handleResponse(response);
+    },
+
+    previewQuestionGeneration: async (data, count = 3) => {
+        const url = new URL(`${BASE_URL}/api/v1/question-generation-templates/preview`);
+        url.searchParams.append('count', count);
+
+        const response = await fetch(url.toString(), {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(data),
         });
         return handleResponse(response);
     },

@@ -3,40 +3,38 @@ import { api } from '../../services/api';
 import PropTypes from 'prop-types';
 
 const COMPONENT_DEFAULT = {
-    grade_level: "1",
-    module: "",
+    skill_id: "",
+    grade: "",
     category: "",
-    topic: "",
-    subtopic: "",
-    format: "",
-    difficulty: "medium",
-    type: "mcq",
-    dynamic_question: "",
-    logical_answer: "",
-    status: "draft"
+    skill_name: "",
+    type: "MCQ",
+    format: 1,
+    difficulty: "Easy",
+    question_template: "",
+    answer_template: "",
+    solution_template: ""
 };
 
 const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
     const [formData, setFormData] = useState(COMPONENT_DEFAULT);
     const [loading, setLoading] = useState(false);
+    const [fetchingSkill, setFetchingSkill] = useState(false);
     const [error, setError] = useState(null);
+    const [skillError, setSkillError] = useState(null);
 
     useEffect(() => {
         if (template) {
-            // Destructure to avoid passing internal fields if we ever send this back whole
-            // But for state, we just copy specific fields we care about
             setFormData({
-                grade_level: (template.grade_level || [1]).join(', '),
-                module: template.module || '',
+                skill_id: template.skill_id || '',
+                grade: template.grade || '',
                 category: template.category || '',
-                topic: template.topic || '',
-                subtopic: template.subtopic || '',
-                format: template.format || '',
-                difficulty: template.difficulty || 'medium',
-                type: template.type || 'mcq',
-                dynamic_question: template.dynamic_question || '',
-                logical_answer: template.logical_answer || '',
-                status: template.status || 'draft'
+                skill_name: template.skill_name || '',
+                type: template.type || 'MCQ',
+                format: template.format || 1,
+                difficulty: template.difficulty || 'Easy',
+                question_template: template.question_template || '',
+                answer_template: template.answer_template || '',
+                solution_template: template.solution_template || ''
             });
         }
     }, [template]);
@@ -46,11 +44,82 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
         setFormData({ ...formData, [e.target.name]: value });
     };
 
+    const fetchSkillDetails = async () => {
+        if (!formData.skill_id) {
+            setSkillError("Please enter a Skill ID");
+            return;
+        }
+
+        setFetchingSkill(true);
+        setSkillError(null);
+
+        try {
+            const response = await api.getSkillById(formData.skill_id);
+            if (response) {
+                setFormData(prev => ({
+                    ...prev,
+                    grade: response.grade || '',
+                    category: response.topic || '',
+                    skill_name: response.skill_name || ''
+                }));
+            }
+        } catch (err) {
+            setSkillError("Skill not found. Please check the ID.");
+            setFormData(prev => ({
+                ...prev,
+                grade: '',
+                category: '',
+                skill_name: ''
+            }));
+        } finally {
+            setFetchingSkill(false);
+        }
+    };
+
+    const loadExample = () => {
+        const exampleQuestionTemplate = `# Define vars -> question, answer, solution, options (optional)
+import random
+
+a = random.randint(1, 10)
+b = random.randint(1, 10)
+ans = a + b
+
+question = f"<div className='question-container'><p>What is {a} + {b}?</p></div>"
+answer = ans`;
+
+        const exampleAnswerTemplate = `# Use variables from Question Template
+# answer variable is already set generally, but you can override specifically if needed
+# basically just return nothing if you set 'answer' above, or format it here.
+pass`;
+
+        const exampleSolutionTemplate = `# Explain logic
+solution = f"""
+<div className="solution">
+    <p>To add {a} and {b}:</p>
+    <p>{a} + {b} = {ans}</p>
+</div>
+"""`;
+
+        setFormData(prev => ({
+            ...prev,
+            question_template: exampleQuestionTemplate,
+            answer_template: exampleAnswerTemplate,
+            solution_template: exampleSolutionTemplate
+        }));
+    };
+
     const saveTemplate = async () => {
         const payload = {
-            ...formData,
-            // Ensure grade_level is an array of integers
-            grade_level: formData.grade_level.toString().split(',').map(g => parseInt(g.trim())).filter(g => !isNaN(g))
+            skill_id: parseInt(formData.skill_id),
+            grade: parseInt(formData.grade),
+            category: formData.category,
+            skill_name: formData.skill_name,
+            type: formData.type,
+            format: parseInt(formData.format),
+            difficulty: formData.difficulty,
+            question_template: formData.question_template,
+            answer_template: formData.answer_template,
+            solution_template: formData.solution_template
         };
 
         if (template && template.template_id) {
@@ -78,13 +147,29 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
         setLoading(true);
         setError(null);
         try {
-            // Save first to get valid ID or update content
-            const savedTemplate = await saveTemplate();
-            console.log("DEBUG: savedTemplate used for preview:", savedTemplate);
-            // Trigger preview with the saved template data (including the ID)
-            // If Create, api returns the new object with ID. If Update, likewise.
-            // OnPreview callback expects the template object.
-            onPreview(savedTemplate);
+            // Use current form data directly, no need to save first
+            const payload = {
+                skill_id: parseInt(formData.skill_id) || 0,
+                grade: parseInt(formData.grade) || 0,
+                category: formData.category || 'Preview',
+                skill_name: formData.skill_name || 'Preview',
+                type: formData.type,
+                format: parseInt(formData.format),
+                difficulty: formData.difficulty,
+                question_template: formData.question_template,
+                answer_template: formData.answer_template,
+                solution_template: formData.solution_template
+            };
+
+            console.log("DEBUG: sending preview payload:", payload);
+            try {
+                const data = await api.previewQuestionGeneration(payload);
+                onPreview(data); // Pass distinct data, not the template object
+            } catch (innerErr) {
+                // Fallback or better error handling
+                throw innerErr;
+            }
+
         } catch (err) {
             setError("Cannot preview: " + err.message);
         } finally {
@@ -92,196 +177,154 @@ const QuestionTemplateForm = ({ template, onSave, onCancel, onPreview }) => {
         }
     };
 
-    const handleGenerateClick = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            // 1. Save Template first
-            const savedTemplate = await saveTemplate();
-
-            // 2. Prompt for count
-            const countStr = window.prompt("How many questions would you like to generate?", "10");
-            if (!countStr) {
-                setLoading(false);
-                return; // User cancelled
-            }
-
-            const count = parseInt(countStr);
-            if (isNaN(count) || count <= 0) {
-                alert("Please enter a valid number greater than 0.");
-                setLoading(false);
-                return;
-            }
-
-            // 3. Call Generation API
-            await api.createGenerationJob(savedTemplate.template_id, count);
-
-            alert(`Successfully started generation of ${count} questions!`);
-
-            // Optional: Call onSave to refresh parent list or just stay here
-            onSave();
-        } catch (err) {
-            setError("Generation failed: " + err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     return (
         <div className="template-form-container">
-            <h3>{template ? 'Edit Template' : 'Create New Template'}</h3>
+            {/* Header with Load Example button */}
+            <div className="form-header">
+                <h3>{template ? 'Edit Template' : 'Create New Template'}</h3>
+                <button type="button" onClick={loadExample} className="load-example-btn">
+                    <span className="icon">↻</span> Load Example
+                </button>
+            </div>
+
             {error && <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 
             <form onSubmit={handleSubmit} className="form-grid">
-                {/* --- Classification --- */}
-                <div className="form-section">
-                    <h4>Classification</h4>
-                    <div className="form-row">
-                        <div className="form-group half">
-                            <label>Grade Level</label>
-                            <input
-                                type="text"
-                                name="grade_level"
-                                value={formData.grade_level}
-                                onChange={handleChange}
-                                placeholder="e.g. 1, 2, 3"
-                                required
-                            />
-                        </div>
-                        <div className="form-group half">
-                            <label>Module</label>
-                            <input
-                                type="text"
-                                name="module"
-                                value={formData.module}
-                                onChange={handleChange}
-                                placeholder="e.g. Math Skill"
-                                required
-                            />
-                        </div>
+                {/* --- Skill Configuration --- */}
+                <div className="form-section skill-config-section">
+                    <div className="section-header">
+                        <span className="section-icon">#</span>
+                        <h4>Skill Configuration</h4>
                     </div>
-                    <div className="form-row">
-                        <div className="form-group half">
-                            <label>Category</label>
+
+                    <div className="form-group">
+                        <label>Skill ID</label>
+                        <input
+                            type="number"
+                            name="skill_id"
+                            value={formData.skill_id}
+                            onChange={handleChange}
+                            onBlur={fetchSkillDetails}
+                            placeholder="Enter skill ID"
+                            required
+                        />
+                        <small className="helper-text">Enter ID and click outside to fetch details.</small>
+                        {fetchingSkill && <small className="info-text">Fetching skill details...</small>}
+                        {skillError && <small className="error-text">{skillError}</small>}
+                    </div>
+
+                    <div className="form-row three-cols">
+                        <div className="form-group third">
+                            <label><span className="field-icon">◈</span> Grade</label>
+                            <input
+                                type="text"
+                                name="grade"
+                                value={formData.grade}
+                                readOnly
+                                placeholder="Auto-filled"
+                                className="readonly-field"
+                            />
+                        </div>
+                        <div className="form-group third">
+                            <label><span className="field-icon">☐</span> Category</label>
                             <input
                                 type="text"
                                 name="category"
                                 value={formData.category}
-                                onChange={handleChange}
-                                placeholder="e.g. Fundamentals"
-                                required
+                                readOnly
+                                placeholder="Auto-filled"
+                                className="readonly-field"
                             />
                         </div>
-                        <div className="form-group half">
-                            <label>Topic</label>
+                        <div className="form-group third">
+                            <label><span className="field-icon">T</span> Skill Name</label>
                             <input
                                 type="text"
-                                name="topic"
-                                value={formData.topic}
-                                onChange={handleChange}
-                                placeholder="e.g. Addition"
-                                required
+                                name="skill_name"
+                                value={formData.skill_name}
+                                readOnly
+                                placeholder="Auto-filled"
+                                className="readonly-field"
                             />
                         </div>
-                    </div>
-                    <div className="form-group">
-                        <label>Subtopic</label>
-                        <input
-                            type="text"
-                            name="subtopic"
-                            value={formData.subtopic}
-                            onChange={handleChange}
-                            placeholder="e.g. Two digit addition"
-                            required
-                        />
                     </div>
                 </div>
 
-                {/* --- Configuration --- */}
-                <div className="form-section">
-                    <h4>Configuration</h4>
-                    <div className="form-row">
-                        <div className="form-group half">
-                            <label>Question Type</label>
-                            <select name="type" value={formData.type} onChange={handleChange}>
-                                <option value="mcq">MCQ</option>
-                                <option value="user_input">User Input</option>
-                                <option value="image_based">Image Based</option>
-                                <option value="code_based">Code Based</option>
-                            </select>
-                        </div>
-                        <div className="form-group half">
-                            <label>Difficulty</label>
-                            <select name="difficulty" value={formData.difficulty} onChange={handleChange}>
-                                <option value="easy">Easy</option>
-                                <option value="medium">Medium</option>
-                                <option value="hard">Hard</option>
-                            </select>
-                        </div>
+                {/* --- Question Type and Difficulty --- */}
+                <div className="form-row two-cols">
+                    <div className="form-group half">
+                        <label>Question Type</label>
+                        <select name="type" value={formData.type} onChange={handleChange}>
+                            <option value="MCQ">MCQ</option>
+                            <option value="User Input">User Input</option>
+                            <option value="Image Based">Image Based</option>
+                            <option value="Code Based">Code Based</option>
+                        </select>
                     </div>
-                    <div className="form-group">
-                        <label>Display Format (Text Template)</label>
-                        <input
-                            type="text"
-                            name="format"
-                            value={formData.format}
-                            onChange={handleChange}
-                            placeholder="What is {{a}} + {{b}}?"
-                            required
-                        />
-                        <small>Use {'{{variable}}'} syntax for dynamic values.</small>
-                    </div>
-                    <div className="form-group">
-                        <label>Status</label>
-                        <select name="status" value={formData.status} onChange={handleChange}>
-                            <option value="draft">Draft</option>
-                            <option value="active">Active</option>
-                            <option value="archived">Archived</option>
+                    <div className="form-group half">
+                        <label><span className="field-icon">‖</span> Difficulty</label>
+                        <select name="difficulty" value={formData.difficulty} onChange={handleChange}>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
                         </select>
                     </div>
                 </div>
 
-                {/* --- Logic --- */}
-                <div className="form-section full-width">
-                    <h4>Logic (Python)</h4>
+                {/* --- Code Templates --- */}
+                <div className="form-section code-templates-section">
+                    <div className="section-header">
+                        <span className="section-icon">&lt;&gt;</span>
+                        <h4>Code Templates (Python)</h4>
+                        <button type="button" onClick={handlePreviewClick} className="run-preview-btn" disabled={loading}>
+                            <span>▷</span> Run Preview
+                        </button>
+                    </div>
+
                     <div className="form-group">
-                        <label>Dynamic Question Generator</label>
+                        <label>Question Template<small>(Python script. Set `question` variable.)</small></label>
                         <textarea
-                            name="dynamic_question"
-                            value={formData.dynamic_question}
+                            name="question_template"
+                            value={formData.question_template}
                             onChange={handleChange}
-                            rows={15}
+                            rows={10}
                             className="code-editor"
-                            placeholder="Python code to generate variables..."
+                            placeholder="# Import random, math... \n# Set 'question' = HTML string"
                             required
                         />
-                        <small>Must return a dictionary.</small>
                     </div>
+
                     <div className="form-group">
-                        <label>Logical Answer Validator</label>
+                        <label>Answer Template<small>(Python script. Shared scope. Set `answer` variable.)</small></label>
                         <textarea
-                            name="logical_answer"
-                            value={formData.logical_answer}
+                            name="answer_template"
+                            value={formData.answer_template}
                             onChange={handleChange}
                             rows={5}
                             className="code-editor"
-                            placeholder="Python code to calculate answer (e.g. return a + b)"
+                            placeholder="# Set 'answer' variable"
                             required
                         />
-                        <small>Return the correct answer value.</small>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Solution Template<small>(Python script. Shared scope. Set `solution` variable.)</small></label>
+                        <textarea
+                            name="solution_template"
+                            value={formData.solution_template}
+                            onChange={handleChange}
+                            rows={5}
+                            className="code-editor"
+                            placeholder="# Set 'solution' = HTML string"
+                            required
+                        />
                     </div>
                 </div>
 
                 <div className="form-actions">
                     <button type="button" onClick={onCancel} className="cancel-btn">Cancel</button>
-                    <button type="button" onClick={handlePreviewClick} className="cancel-btn" style={{ background: '#17a2b8', color: 'white', marginRight: '10px' }}>
-                        Save & Preview
-                    </button>
-                    <button type="button" onClick={handleGenerateClick} className="cancel-btn" style={{ background: '#28a745', color: 'white', marginRight: '10px' }}>
-                        Generate Questions
-                    </button>
                     <button type="submit" disabled={loading} className="save-btn">
-                        {loading ? 'Saving...' : 'Save Template'}
+                        {loading ? 'Creating...' : 'Create Template'}
                     </button>
                 </div>
             </form>
