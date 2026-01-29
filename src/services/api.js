@@ -89,7 +89,10 @@ export const api = {
 
     getQuestionTemplates: async (filters = {}) => {
         const params = new URLSearchParams();
-        if (filters.grade) params.append('grade_level', filters.grade);
+        if (filters.grade) {
+            params.append('grade_level', filters.grade); // For V1
+            params.append('grade', filters.grade);       // For V2
+        }
         if (filters.module) params.append('module', filters.module);
         if (filters.limit) params.append('limit', filters.limit);
         if (filters.offset) params.append('offset', filters.offset);
@@ -103,7 +106,7 @@ export const api = {
 
         // Fetch v2 Templates
         // Note: v2 list endpoint might have different filter params, adapting best effort
-        const p2 = fetch(`${BASE_URL}/api/v1/question-generation-templates`, { headers: getHeaders() })
+        const p2 = fetch(`${BASE_URL}/api/v1/question-generation-templates${queryString}`, { headers: getHeaders() })
             .then(res => handleResponse(res))
             .then(data => data.templates || [])
             .catch(err => { console.error("v2 fetch error", err); return []; });
