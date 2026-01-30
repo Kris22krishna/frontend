@@ -127,6 +127,19 @@ const TemplatePreview = ({ template, onClose }) => {
     const currentSample = previewData?.preview_samples?.[currentIndex];
     const totalSamples = previewData?.preview_samples?.length || 0;
 
+    const isCorrectAnswer = (option, answer) => {
+        if (!option || !answer) return false;
+        const normalize = (str) => {
+            let s = str.toString().trim();
+            if (s.startsWith('$$') && s.endsWith('$$')) s = s.slice(2, -2);
+            else if (s.startsWith('\\[') && s.endsWith('\\]')) s = s.slice(2, -2);
+            else if (s.startsWith('\\(') && s.endsWith('\\)')) s = s.slice(2, -2);
+            else if (s.startsWith('$') && s.endsWith('$')) s = s.slice(1, -1);
+            return s.trim();
+        };
+        return normalize(option) === normalize(answer);
+    };
+
     return (
         <div style={{
             position: 'fixed',
@@ -243,46 +256,49 @@ const TemplatePreview = ({ template, onClose }) => {
                                         OPTIONS:
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                        {(currentSample.options || currentSample.variables_used.options).map((option, idx) => (
-                                            <div
-                                                key={idx}
-                                                style={{
-                                                    padding: '12px 20px',
-                                                    background: option.toString() === currentSample.answer_value?.toString()
-                                                        ? 'linear-gradient(135deg, #10b981, #059669)'
-                                                        : '#fff',
-                                                    color: option.toString() === currentSample.answer_value?.toString()
-                                                        ? '#fff'
-                                                        : '#334155',
-                                                    border: '1px solid #e2e8f0',
-                                                    borderRadius: '8px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '12px'
-                                                }}
-                                            >
-                                                <span style={{
-                                                    width: '28px',
-                                                    height: '28px',
-                                                    borderRadius: '50%',
-                                                    background: option.toString() === currentSample.answer_value?.toString()
-                                                        ? 'rgba(255,255,255,0.3)'
-                                                        : '#4f46e5',
-                                                    color: '#fff',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    fontWeight: '700',
-                                                    fontSize: '14px'
-                                                }}>
-                                                    {String.fromCharCode(65 + idx)}
-                                                </span>
-                                                <span style={{ fontSize: '18px' }}><MathRenderer html={option.toString()} /></span>
-                                                {option.toString() === currentSample.answer_value?.toString() && (
-                                                    <span style={{ marginLeft: 'auto', fontSize: '14px' }}>✓ Correct</span>
-                                                )}
-                                            </div>
-                                        ))}
+                                        {(currentSample.options || currentSample.variables_used.options).map((option, idx) => {
+                                            const isCorrect = isCorrectAnswer(option, currentSample.answer_value);
+                                            return (
+                                                <div
+                                                    key={idx}
+                                                    style={{
+                                                        padding: '12px 20px',
+                                                        background: isCorrect
+                                                            ? 'linear-gradient(135deg, #10b981, #059669)'
+                                                            : '#fff',
+                                                        color: isCorrect
+                                                            ? '#fff'
+                                                            : '#334155',
+                                                        border: '1px solid #e2e8f0',
+                                                        borderRadius: '8px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '12px'
+                                                    }}
+                                                >
+                                                    <span style={{
+                                                        width: '28px',
+                                                        height: '28px',
+                                                        borderRadius: '50%',
+                                                        background: isCorrect
+                                                            ? 'rgba(255,255,255,0.3)'
+                                                            : '#4f46e5',
+                                                        color: '#fff',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontWeight: '700',
+                                                        fontSize: '14px'
+                                                    }}>
+                                                        {String.fromCharCode(65 + idx)}
+                                                    </span>
+                                                    <span style={{ fontSize: '18px' }}><MathRenderer html={option.toString()} /></span>
+                                                    {isCorrect && (
+                                                        <span style={{ marginLeft: 'auto', fontSize: '14px' }}>✓ Correct</span>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}
