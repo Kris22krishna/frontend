@@ -12,16 +12,33 @@ const MathRenderer = ({ html }) => {
     }
 
     try {
-        // Split by block math $$...$$
-        const parts = html.split(/(\$\$[\s\S]*?\$\$)/g);
+        // First, we need to decode HTML entities because the content might have been sanitized
+        // For example &lt; should become < for the math parser to work correctly
+        const decodeHtml = (html) => {
+            const txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+        };
+
+        // We use a regex to split the content by various math delimiters
+        // Supported:
+        // $$ ... $$ (Display)
+        // \[ ... \] (Display)
+        // $ ... $ (Inline)
+        // \( ... \) (Inline)
+
+        // The regex captures the delimiter and the content
+        // Note: The order matters. We check for display math first.
+        const parts = html.split(/(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$[\s\S]*?\$)/g);
 
         return (
             <div style={{ fontSize: 'inherit', color: 'inherit', lineHeight: '1.6' }}>
                 {parts.map((part, index) => {
                     if (!part) return null;
 
-                    if (part.startsWith('$$') && part.endsWith('$$')) {
-                        const math = part.slice(2, -2).trim();
+                    // Display Mode: $$ ... $$
+                    if (part.startsWith('$$') && part.endsWith('$$') && part.length >= 4) {
+                        const math = decodeHtml(part.slice(2, -2).trim());
                         try {
                             return <BlockMath key={index} math={math} errorColor={'#cc0000'} />;
                         } catch (e) {
@@ -30,31 +47,48 @@ const MathRenderer = ({ html }) => {
                         }
                     }
 
-                    // Inline math parsing
-                    const inlineParts = part.split(/(\$[\s\S]*?\$)/g);
-                    return (
-                        <span key={index}>
-                            {inlineParts.map((subPart, subIdx) => {
-                                if (!subPart) return null;
+                    // Display Mode: \[ ... \]
+                    if (part.startsWith('\\[') && part.endsWith('\\]') && part.length >= 4) {
+                        const math = decodeHtml(part.slice(2, -2).trim());
+                        try {
+                            return <BlockMath key={index} math={math} errorColor={'#cc0000'} />;
+                        } catch (e) {
+                            console.error("Katex Block rendering error:", e);
+                            return <div key={index} style={{ color: 'red' }}>Error rendering math</div>;
+                        }
+                    }
 
-                                if (subPart.startsWith('$') && subPart.endsWith('$') && subPart.length > 2 && !subPart.includes('<')) {
-                                    // Basic heuristic: Don't treat $ in HTML attributes as math
-                                    const math = subPart.slice(1, -1).trim();
-                                    try {
-                                        return <InlineMath key={subIdx} math={math} errorColor={'#cc0000'} />;
-                                    } catch (e) {
-                                        console.error("Katex Inline rendering error:", e);
-                                        return <span key={subIdx} style={{ color: 'red' }}>$...$</span>;
-                                    }
-                                }
-                                return (
-                                    <span
-                                        key={subIdx}
-                                        dangerouslySetInnerHTML={{ __html: subPart }}
-                                    />
-                                );
-                            })}
-                        </span>
+                    // Inline Mode: \( ... \)
+                    if (part.startsWith('\\(') && part.endsWith('\\)') && part.length >= 4) {
+                        const math = decodeHtml(part.slice(2, -2).trim());
+                        try {
+                            return <InlineMath key={index} math={math} errorColor={'#cc0000'} />;
+                        } catch (e) {
+                            console.error("Katex Inline rendering error:", e);
+                            return <span key={index} style={{ color: 'red' }}>Error</span>;
+                        }
+                    }
+
+                    // Inline Mode: $ ... $
+                    // We need a bit of care here to not capture random $ signs (like prices) too aggressively if they aren't matching
+                    // But for now, we assume if the split worked, it matched the regex which pairs them.
+                    if (part.startsWith('$') && part.endsWith('$') && part.length >= 2) {
+                        const math = decodeHtml(part.slice(1, -1).trim());
+                        try {
+                            return <InlineMath key={index} math={math} errorColor={'#cc0000'} />;
+                        } catch (e) {
+                            console.error("Katex Inline rendering error:", e);
+                            // Fallback to text if it fails, assuming it wasn't math
+                            return <span key={index}>{part}</span>;
+                        }
+                    }
+
+                    // Regular text (HTML)
+                    return (
+                        <span
+                            key={index}
+                            dangerouslySetInnerHTML={{ __html: part }}
+                        />
                     );
                 })}
             </div>

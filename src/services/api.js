@@ -94,6 +94,7 @@ export const api = {
             params.append('grade', filters.grade);       // For V2
         }
         if (filters.module) params.append('module', filters.module);
+        if (filters.search) params.append('search', filters.search); // Search param
         if (filters.limit) params.append('limit', filters.limit);
         if (filters.offset) params.append('offset', filters.offset);
         const queryString = params.toString() ? `?${params.toString()}` : '';
@@ -101,20 +102,20 @@ export const api = {
         // Fetch v1 Templates
         const p1 = fetch(`${BASE_URL}/api/v1/question-templates${queryString}`, { headers: getHeaders() })
             .then(res => handleResponse(res))
-            .then(data => data.templates || [])
-            .catch(err => { console.error("v1 fetch error", err); return []; });
+            .then(data => ({ templates: data.templates || [], total: data.total || 0 }))
+            .catch(err => { console.error("v1 fetch error", err); return { templates: [], total: 0 }; });
 
         // Fetch v2 Templates
         // Note: v2 list endpoint might have different filter params, adapting best effort
         const p2 = fetch(`${BASE_URL}/api/v1/question-generation-templates${queryString}`, { headers: getHeaders() })
             .then(res => handleResponse(res))
-            .then(data => data.templates || [])
-            .catch(err => { console.error("v2 fetch error", err); return []; });
+            .then(data => ({ templates: data.templates || [], total: data.total || 0 }))
+            .catch(err => { console.error("v2 fetch error", err); return { templates: [], total: 0 }; });
 
-        const [v1Templates, v2Templates] = await Promise.all([p1, p2]);
+        const [v1Data, v2Data] = await Promise.all([p1, p2]);
 
         // Normalize v2 to look like v1 for the UI
-        const normalizedV2 = v2Templates.map(t => ({
+        const normalizedV2 = v2Data.templates.map(t => ({
             ...t,
             // Map v2 fields to v1 UI expectations
             module: t.category,       // v2 category -> v1 module
@@ -124,7 +125,10 @@ export const api = {
         }));
 
         // Combine
-        return { templates: [...normalizedV2, ...v1Templates] };
+        return {
+            templates: [...normalizedV2, ...v1Data.templates],
+            total: v1Data.total + v2Data.total
+        };
     },
 
     createQuestionTemplate: async (data) => {
