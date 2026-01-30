@@ -302,7 +302,7 @@ const TemplatePreview = ({ template, onClose }) => {
                                     Answer:
                                 </span>
                                 <span style={{ color: '#fff', fontSize: '24px', fontWeight: '700' }}>
-                                    {currentSample.answer_value}
+                                    <MathRenderer html={currentSample.answer_value.toString()} />
                                 </span>
                             </div>
 
