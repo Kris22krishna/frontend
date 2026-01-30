@@ -316,6 +316,20 @@ export const api = {
         return data;
     },
 
+    uploadImage: async (file, grade) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        if (grade) {
+            formData.append('grade', grade);
+        }
+        const response = await fetch(`${BASE_URL}/api/v1/upload`, {
+            method: 'POST',
+            // headers: getHeaders(), // Content-Type multipart/form-data is set automatically
+            body: formData,
+        });
+        return handleResponse(response);
+    },
+
     getUploaders: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/auth/uploaders`, {
             headers: getHeaders()
