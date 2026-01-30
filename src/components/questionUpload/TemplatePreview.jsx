@@ -277,7 +277,7 @@ const TemplatePreview = ({ template, onClose }) => {
                                                 }}>
                                                     {String.fromCharCode(65 + idx)}
                                                 </span>
-                                                <span style={{ fontSize: '18px' }}>{option}</span>
+                                                <span style={{ fontSize: '18px' }}><MathRenderer html={option.toString()} /></span>
                                                 {option.toString() === currentSample.answer_value?.toString() && (
                                                     <span style={{ marginLeft: 'auto', fontSize: '14px' }}>✓ Correct</span>
                                                 )}
