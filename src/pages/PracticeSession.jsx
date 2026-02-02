@@ -109,6 +109,17 @@ const PracticeSession = () => {
         fetchQuestions();
     }, [templateId]);
 
+    // Rerender MathJax when question changes
+    useEffect(() => {
+        if (window.MathJax && questions.length > 0) {
+            // Slight delay to ensure DOM is ready
+            setTimeout(() => {
+                window.MathJax.typesetPromise && window.MathJax.typesetPromise()
+                    .catch(err => console.log('MathJax error:', err));
+            }, 100);
+        }
+    }, [questions, currentIndex, feedback, showSolution]);
+
     // Helper to extract options from legacy text format like "Question? A) Option1 B) Option2"
     const parseQuestion = (sample, idx) => {
         let questionHtml = sample.question_html;
@@ -147,12 +158,23 @@ const PracticeSession = () => {
         };
     };
 
-    const fetchQuestions = async () => {
+    const [selectionMode, setSelectionMode] = useState(false);
+    const [availableTypes, setAvailableTypes] = useState([]);
+
+    // ...
+
+    const fetchQuestions = async (typeOverride = null) => {
         setLoading(true);
         try {
-            // First try to fetch questions by SKILL ID (since we linked from syllabus)
-            // The templateId param is actually a skillId in this context
-            const skillData = await api.getPracticeQuestionsBySkill(templateId, 10);
+            // Fetch with optional type param
+            const skillData = await api.getPracticeQuestionsBySkill(templateId, 10, typeOverride);
+
+            if (skillData && skillData.selection_needed) {
+                setAvailableTypes(skillData.available_types);
+                setSelectionMode(true);
+                setLoading(false);
+                return;
+            }
 
             if (skillData && skillData.preview_samples && skillData.preview_samples.length > 0) {
                 const dynamicQuestions = skillData.preview_samples.map((sample, idx) => parseQuestion(sample, idx));
@@ -162,32 +184,16 @@ const PracticeSession = () => {
                     setSkillMetadata(skillData.template_metadata);
                 }
 
+                // Ensure we exit selection mode if we were in it
+                setSelectionMode(false);
                 setLoading(false);
                 return;
             }
-
-            // Fallback: Try to get pre-generated questions (Legacy behavior)
-            const data = await api.getGeneratedQuestions({ templateId, limit: 20, random: true });
-
-            if (data.questions && data.questions.length > 0) {
-                setQuestions(data.questions);
-            } else {
-                // No pre-generated questions, try legacy public practice endpoint (treating param as actual template ID)
-                try {
-                    const practiceData = await api.getPracticeQuestions(templateId, 10);
-                    if (practiceData.preview_samples && practiceData.preview_samples.length > 0) {
-                        const dynamicQuestions = practiceData.preview_samples.map((sample, idx) => parseQuestion(sample, idx));
-                        setQuestions(dynamicQuestions);
-                    } else {
-                        setQuestions([]);
-                    }
-                } catch (e) {
-                    setQuestions([]);
-                }
-            }
+            // ... (fallback warning code)
+            console.warn("No V2 practice content found for skill:", templateId);
+            setQuestions([]);
         } catch (err) {
-            console.error("Error fetching practice questions:", err);
-            // Don't set global error immediately, as we might want to show empty state/fallback
+            // ...
             setQuestions([]);
         } finally {
             setLoading(false);
@@ -198,7 +204,40 @@ const PracticeSession = () => {
         const currentQuestion = questions[currentIndex];
         if (!currentQuestion) return;
 
-        // Normalize answers
+        // Check for inline inputs first
+        const inlineInputs = document.querySelectorAll('.zen-question-text .inline-input');
+
+        if (inlineInputs.length > 0) {
+            // Multi-part validation
+            const userValues = Array.from(inlineInputs).map(input => input.value.trim().toLowerCase());
+
+            // Expected answer format: "val1|val2"
+            const correctRaw = currentQuestion.answer_value?.toString().trim();
+            const correctValues = correctRaw.split('|').map(v => v.trim().toLowerCase());
+
+            // Validate each input
+            let allCorrect = true;
+            inlineInputs.forEach((input, idx) => {
+                const isFieldCorrect = userValues[idx] === correctValues[idx];
+                if (isFieldCorrect) {
+                    input.classList.add('correct');
+                    input.classList.remove('wrong');
+                } else {
+                    input.classList.add('wrong');
+                    input.classList.remove('correct');
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect) {
+                setFeedback({ type: 'success', message: 'Correct!' });
+            } else {
+                setFeedback({ type: 'error', message: 'Some answers are incorrect. Try again.' });
+            }
+            return;
+        }
+
+        // Standard Validation (Code for MCQ and Single Input)
         const correctRaw = currentQuestion.answer_value?.toString().trim();
         const correct = correctRaw?.toLowerCase();
         const user = userAnswer.toString().trim().toLowerCase();
@@ -240,8 +279,6 @@ const PracticeSession = () => {
         }
     };
 
-    // ... prev/next handlers ...
-
     const handlePrev = () => {
         if (currentIndex > 0) {
             setCurrentIndex(currentIndex - 1);
@@ -252,6 +289,83 @@ const PracticeSession = () => {
     };
 
     if (loading) return <div className="practice-container loading">Loading practice session...</div>;
+
+    if (selectionMode) {
+        return (
+            <div className="practice-container">
+                <div className="selection-screen" style={{ textAlign: 'center', padding: '60px 20px' }}>
+                    <h2>Choose Practice Mode</h2>
+                    <p style={{ marginBottom: '40px', color: '#64748b' }}>Select how you want to practice this topic:</p>
+
+                    <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        {availableTypes.includes('MCQ') && (
+                            <button
+                                onClick={() => fetchQuestions('MCQ')}
+                                className="mode-card"
+                                style={{
+                                    padding: '30px',
+                                    border: '2px solid #e2e8f0',
+                                    borderRadius: '12px',
+                                    background: 'white',
+                                    cursor: 'pointer',
+                                    minWidth: '200px',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                <div style={{ fontSize: '40px', marginBottom: '10px' }}>📝</div>
+                                <h3>Multiple Choice</h3>
+                                <p style={{ fontSize: '14px', color: '#64748b' }}>Select the correct option</p>
+                            </button>
+                        )}
+
+                        {availableTypes.some(t => t.toLowerCase() === 'user_input' || t.toLowerCase() === 'user input') && (
+                            <button
+                                onClick={() => fetchQuestions('User Input')}
+                                className="mode-card"
+                                style={{
+                                    padding: '30px',
+                                    border: '2px solid #e2e8f0',
+                                    borderRadius: '12px',
+                                    background: 'white',
+                                    cursor: 'pointer',
+                                    minWidth: '200px',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                <div style={{ fontSize: '40px', marginBottom: '10px' }}>⌨️</div>
+                                <h3>Type Answer</h3>
+                                <p style={{ fontSize: '14px', color: '#64748b' }}>Enter the answer directly</p>
+                            </button>
+                        )}
+
+                        {/* Fallback for other types */}
+                        {availableTypes.map(t => {
+                            if (t === 'MCQ' || t.toLowerCase().includes('user input')) return null;
+                            return (
+                                <button
+                                    key={t}
+                                    onClick={() => fetchQuestions(t)}
+                                    className="mode-card"
+                                    style={{
+                                        padding: '30px',
+                                        border: '2px solid #e2e8f0',
+                                        borderRadius: '12px',
+                                        background: 'white',
+                                        cursor: 'pointer',
+                                        minWidth: '200px'
+                                    }}
+                                >
+                                    <h3>{t}</h3>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) return <div className="practice-container error">Error: {error}</div>;
     if (error) return <div className="practice-container error">Error: {error}</div>;
     if (questions.length === 0) return (
         <div className="practice-container empty">
@@ -409,22 +523,28 @@ const PracticeSession = () => {
                                         })}
                                     </div>
                                 ) : (
-                                    <div className="zen-input-wrapper">
-                                        <input
-                                            type="text"
-                                            value={userAnswer}
-                                            onChange={(e) => setUserAnswer(e.target.value)}
-                                            placeholder="Type your answer..."
-                                            className="zen-text-input"
-                                            onKeyDown={(e) => e.key === 'Enter' && !feedback && handleCheckAnswer()}
-                                            disabled={!!feedback}
-                                        />
-                                    </div>
+                                    <>
+                                        {/* Only show bottom input if NO inline inputs are detected in HTML */}
+                                        {!question.question_html.includes('inline-input') && (
+                                            <div className="zen-input-wrapper">
+                                                <input
+                                                    type="text"
+                                                    value={userAnswer}
+                                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                                    placeholder="Type your answer..."
+                                                    className="zen-text-input"
+                                                    onKeyDown={(e) => e.key === 'Enter' && !feedback && handleCheckAnswer()}
+                                                    disabled={!!feedback}
+                                                />
+                                            </div>
+                                        )}
+                                        {/* If inline inputs exist, we don't need the bottom input, but we might need a hint or just the check button */}
+                                    </>
                                 )}
 
                                 <div className="zen-actions">
                                     {!feedback && (
-                                        <button onClick={handleCheckAnswer} className="zen-btn primary" disabled={!userAnswer}>
+                                        <button onClick={handleCheckAnswer} className="zen-btn primary">
                                             Check Answer
                                         </button>
                                     )}
