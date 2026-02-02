@@ -19,7 +19,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="learn-to-learn" element={<ContentPage topic="learn-to-learn" />} />
           <Route path="math" element={<MathSelection />} />
-          <Route path="math/:grade" element={<GradeSyllabus />} />
+          <Route path="math/grade/:grade" element={<GradeSyllabus />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>
         <Route path="/admin-login" element={<AdminLogin />} />

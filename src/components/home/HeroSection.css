@@ -1,0 +1,288 @@
+.hero {
+    min-height: 40vh;
+    /* Reduced from 80vh to pull content up */
+    display: flex;
+    align-items: flex-start;
+    /* Align to top instead of center */
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    padding-top: 2rem;
+    /* Adjusted top padding */
+    /* Background update: Left-aligned soft blue glow fading to right */
+    background: linear-gradient(90deg, rgba(235, 248, 255, 0.8) 0%, rgba(255, 255, 255, 0) 50%);
+}
+
+.hero::after {
+    display: none;
+}
+
+.hero-content {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: flex-start;
+    /* Changed from center to align components to top */
+    justify-content: space-between;
+}
+
+/* Left Column */
+.hero-left {
+    text-align: left;
+    margin-top: 1rem;
+    /* Branding adjustment: move branding up a little as requested, but flex-start already does this. Adding margin for fine tuning if needed */
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0, 149, 255, 0.1);
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 149, 255, 0.2);
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    color: #1e293b;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+    /* Increased space for search bar */
+}
+
+/* Right Column */
+.hero-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Role Selection Cards */
+.hero-role-selection {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+    background: transparent;
+}
+
+.role-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+    text-align: left;
+}
+
+.role-card {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Specific styling for the colored text feeling */
+.role-card span {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.role-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    background: #f8fbff;
+}
+
+.role-card svg {
+    color: var(--primary);
+}
+
+.role-footer {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.link-primary {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.link-primary:hover {
+    color: var(--primary-hover);
+}
+
+/* Search Bar Styles */
+.hero-search-wrapper {
+    width: 100%;
+    max-width: 750px;
+    /* Wide search bar */
+    margin-top: 1rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+    border-radius: 100px;
+    /* Pill shape */
+    transition: all 0.3s ease;
+}
+
+.glass-opaque {
+    background: rgba(255, 255, 255, 0.65);
+    /* Opaque texture */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.search-icon {
+    color: var(--text-muted);
+    min-width: 24px;
+}
+
+.search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-family: var(--font-body);
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.search-btn {
+    background: #ea580c;
+    /* Orange color from image */
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    transition: background 0.2s;
+}
+
+.search-btn:hover {
+    background: #c2410c;
+    cursor: pointer;
+}
+
+/* Info Box Styles */
+.brand-info-box {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 600px;
+    backdrop-filter: blur(8px);
+}
+
+.info-icon-placeholder {
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    /* Placeholder color */
+    border-radius: 12px;
+    opacity: 0.2;
+}
+
+.info-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-main);
+}
+
+.info-content p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+
+@media (max-width: 900px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 3rem;
+    }
+
+    .hero-left {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-right {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-search-wrapper {
+        margin-top: 1rem;
+    }
+
+    .search-bar {
+        padding: 0.5rem;
+        flex-direction: column;
+        border-radius: 20px;
+        gap: 0.5rem;
+    }
+
+    .search-input {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem;
+    }
+
+    .search-btn {
+        width: 100%;
+    }
+}

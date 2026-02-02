@@ -6,9 +6,9 @@ import SEO from '../components/common/SEO';
 import '../styles/GradeSyllabus.css';
 
 const SkillItem = ({ skill }) => (
-    <Link to={`/practice/${skill.id}`} className="skill-item">
-        <span className="skill-code">{skill.code}</span>
-        <span className="skill-title">{skill.title}</span>
+    <Link to={`/practice/${skill.skill_id}`} className="skill-item">
+        <span className="skill-code">&bull;</span>
+        <span className="skill-title">{skill.skill_name}</span>
     </Link>
 );
 
@@ -16,59 +16,21 @@ SkillItem.propTypes = {
     skill: PropTypes.object.isRequired
 };
 
-const getSortKey = (item) => {
-    if (item.code) return item.code;
-    if (item.skills && item.skills.length > 0) return item.skills[0].code;
-    if (item.children && item.children.length > 0) return getSortKey(item.children[0]);
-    return '';
-};
-
-const CategoryNode = ({ category }) => {
-    const mixedContent = [
-        ...(category.children || []).map(c => ({ ...c, type: 'category' })),
-        ...(category.skills || []).map(s => ({ ...s, type: 'skill' }))
-    ];
-
-    mixedContent.sort((a, b) => {
-        const keyA = getSortKey(a);
-        const keyB = getSortKey(b);
-        return keyA.localeCompare(keyB, undefined, { numeric: true, sensitivity: 'base' });
-    });
-
-    return (
-        <div className="category-block">
-            <h3 className="category-title">{category.name}</h3>
-            <div className="category-content">
-                {mixedContent.map(item => {
-                    if (item.type === 'category') {
-                        return <CategoryNode key={item.id} category={item} />;
-                    } else {
-                        return <SkillItem key={item.id} skill={item} />;
-                    }
-                })}
-            </div>
-        </div>
-    );
-};
-
-CategoryNode.propTypes = {
-    category: PropTypes.object.isRequired
-};
-
 const GradeSyllabus = () => {
     const { grade } = useParams();
-    const [data, setData] = useState(null);
+    const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // Fetch hierarchical syllabus from backend
-                const response = await api.getGradeSyllabus(grade);
-                setData(response);
+                // Parse grade number from param (e.g., "1" from "grade1" or just "1")
+                const gradeNum = grade.replace('grade', '');
+                const response = await api.getSkills(gradeNum);
+                setSkills(response || []);
             } catch (error) {
-                console.error("Failed to fetch syllabus", error);
+                console.error("Failed to fetch skills", error);
             } finally {
                 setLoading(false);
             }
@@ -77,8 +39,18 @@ const GradeSyllabus = () => {
         fetchData();
     }, [grade]);
 
+    // Group skills by topic for better display
+    const skillsByTopic = skills.reduce((acc, skill) => {
+        const topic = skill.topic || 'General';
+        if (!acc[topic]) acc[topic] = [];
+        acc[topic].push(skill);
+        return acc;
+    }, {});
+
     if (loading) return <div className="loading-container">Loading syllabus...</div>;
-    if (!data || data.categories.length === 0) return (
+
+    // Display if no skills found
+    if (!skills || skills.length === 0) return (
         <div className="grade-syllabus-container">
             <header className="syllabus-header">
                 <h1>Class {grade.replace('grade', '')} Maths</h1>
@@ -89,16 +61,23 @@ const GradeSyllabus = () => {
 
     return (
         <div className="grade-syllabus-container">
-            <SEO title={`${data.gradeName} Maths - Skill100`} description={`Complete syllabus for ${data.gradeName}`} />
+            <SEO title={`Class ${grade.replace('grade', '')} Maths - Skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
 
             <header className="syllabus-header">
-                <h1>{data.gradeName} Maths</h1>
-                <p>Here is a list of all of the maths skills students learn in {data.gradeName}! Click any skill to start practising.</p>
+                <h1>Class {grade.replace('grade', '')} Maths</h1>
+                <p>Here is a list of all of the maths skills students learn in Class {grade.replace('grade', '')}!</p>
             </header>
 
             <div className="syllabus-grid">
-                {data.categories.map(category => (
-                    <CategoryNode key={category.id} category={category} />
+                {Object.entries(skillsByTopic).map(([topic, topicSkills]) => (
+                    <div key={topic} className="category-block">
+                        <h3 className="category-title">{topic}</h3>
+                        <div className="category-content">
+                            {topicSkills.map(skill => (
+                                <SkillItem key={skill.skill_id} skill={skill} />
+                            ))}
+                        </div>
+                    </div>
                 ))}
             </div>
         </div>

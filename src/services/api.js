@@ -76,6 +76,15 @@ export const api = {
     },
 
     // --- Skills ---
+    getSkills: async (grade) => {
+        const params = new URLSearchParams();
+        if (grade) params.append('grade', grade);
+        const response = await fetch(`${BASE_URL}/api/v1/skills?${params.toString()}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     getSkillById: async (skillId) => {
         const response = await fetch(`${BASE_URL}/api/v1/skills/${skillId}`, {
             headers: getHeaders()
@@ -236,6 +245,13 @@ export const api = {
     getPracticeQuestions: async (templateId, count = 10) => {
         const response = await fetch(`${BASE_URL}/api/v1/question-templates/${templateId}/practice?count=${count}`, {
             headers: { 'Content-Type': 'application/json' }  // No auth token
+        });
+        return handleResponse(response);
+    },
+
+    getPracticeQuestionsBySkill: async (skillId, count = 10) => {
+        const response = await fetch(`${BASE_URL}/api/v1/question-generation-templates/by-skill/${skillId}/practice?count=${count}`, {
+            headers: { 'Content-Type': 'application/json' }
         });
         return handleResponse(response);
     },

@@ -30,7 +30,8 @@
 
 .syllabus-grid {
     column-count: 1;
-    column-gap: 2rem;
+    column-gap: 3rem;
+    /* Increased gap */
 }
 
 @media (min-width: 768px) {
@@ -50,13 +51,11 @@
     margin-bottom: 2.5rem;
     background: transparent;
     padding: 0;
-    /* Clean look, no borders/backgrounds for categories */
 }
 
 .category-title {
     font-size: 1.25rem;
     color: #4CAF50;
-    /* Green to match header */
     margin-bottom: 0.75rem;
     font-weight: 700;
     border-bottom: none;
@@ -65,60 +64,39 @@
 .category-content {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-}
-
-/* Nested categories - indentation */
-.category-block .category-block {
-    margin-bottom: 0.5rem;
-    padding-left: 1rem;
-    border-left: 2px solid #eee;
-}
-
-.category-block .category-block .category-title {
-    font-size: 1.1rem;
-    color: #66bb6a;
-    margin-bottom: 0.5rem;
-}
-
-.skills-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
+    /* Tighter list */
 }
 
 .skill-item {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
+    /* Align top for multi-line */
     text-decoration: none;
     padding: 2px 0;
     transition: color 0.1s;
     line-height: 1.4;
+    cursor: pointer;
 }
 
-.skill-item:hover {
-    background: transparent;
+.skill-item:hover .skill-title {
+    color: #1a73e8;
+    text-decoration: underline;
 }
 
 .skill-code {
     font-weight: 700;
-    color: #333;
+    color: #ccc;
+    /* Subtle bullet */
     margin-right: 8px;
-    min-width: 35px;
-    font-size: 0.95rem;
+    min-width: 15px;
+    /* Reduced specific width */
+    font-size: 1.2rem;
+    /* Larger bullet */
+    line-height: 1.2;
 }
 
 .skill-title {
     color: #333;
     font-size: 0.95rem;
-}
-
-.skill-item:hover .skill-title {
-    color: #1a73e8;
-    /* Blue link color on hover */
-    text-decoration: underline;
-}
-
-.skill-item:hover .skill-code {
-    color: #000;
 }
