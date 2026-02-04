@@ -52,7 +52,8 @@ const handleResponse = async (response) => {
 
 export const api = {
     // --- Auth ---
-    login: async (username, password) => {
+    // Admin Login
+    adminLogin: async (username, password) => {
         const response = await fetch(`${BASE_URL}/api/v1/auth/admin-login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -64,15 +65,84 @@ export const api = {
         }
         const data = await response.json();
         localStorage.setItem('authToken', data.access_token);
+        window.dispatchEvent(new Event('auth-change'));
         return data;
+    },
+
+    // User Login (Standard)
+    login: async (email, password) => {
+        const formData = new URLSearchParams();
+        formData.append('username', email); // FASTAPI OAuth2 expects 'username' field even for emails
+        formData.append('password', password);
+
+        const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Login failed');
+        }
+
+        const data = await response.json();
+        localStorage.setItem('authToken', data.access_token);
+        if (data.user_id) localStorage.setItem('userId', data.user_id);
+        if (data.user_type) localStorage.setItem('userType', data.user_type);
+        if (data.first_name) localStorage.setItem('firstName', data.first_name);
+        if (data.email) localStorage.setItem('userEmail', data.email);
+        window.dispatchEvent(new Event('auth-change'));
+        return data;
+    },
+
+    googleLogin: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Google Login failed');
+        }
+
+        const resData = await response.json();
+        localStorage.setItem('authToken', resData.access_token);
+        if (resData.user_id) localStorage.setItem('userId', resData.user_id);
+        window.dispatchEvent(new Event('auth-change'));
+        return resData;
+    },
+
+    register: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        return handleResponse(response);
     },
 
     logout: () => {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userType');
+        localStorage.removeItem('firstName');
+        localStorage.removeItem('userEmail');
+        window.dispatchEvent(new Event('auth-change'));
     },
 
     isAuthenticated: () => {
         return !!localStorage.getItem('authToken');
+    },
+
+    // --- Student ---
+    getStudentStats: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/student/stats`, {
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
     },
 
     // --- Skills ---
@@ -242,6 +312,15 @@ export const api = {
     },
 
     // Public practice endpoint (no auth required)
+    createReport: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/reports`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(data),
+        });
+        return handleResponse(response);
+    },
+
     getPracticeQuestions: async (templateId, count = 10) => {
         const response = await fetch(`${BASE_URL}/api/v1/question-templates/${templateId}/practice?count=${count}`, {
             headers: { 'Content-Type': 'application/json' }  // No auth token
@@ -352,6 +431,88 @@ export const api = {
 
     getUploaders: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/auth/uploaders`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    // --- Parent ---
+    getLinkedChildren: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/children`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response) || [];
+    },
+
+    linkChild: async (username) => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/link-child`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ student_username: username }),
+        });
+        return handleResponse(response);
+    },
+
+    getParentStats: async (studentId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/stats/${studentId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getParentProgress: async (studentId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/progress/${studentId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getParentQuizzes: async (studentId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/quizzes/${studentId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getParentSkills: async (studentId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/skills/${studentId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getParentReportSummary: async (studentId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/reports-summary/${studentId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    // --- Teacher ---
+    getTeacherProfile: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/teacher/profile`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getTeacherDashboardStats: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/teacher/dashboard-stats`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getTeacherStudents: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/teacher/students`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    // --- Admin ---
+    getAdminDashboardOverview: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/overview`, {
             headers: getHeaders()
         });
         return handleResponse(response);

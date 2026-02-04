@@ -1,131 +1,183 @@
 import React, { useState } from 'react';
-import { ArrowLeft, CheckSquare, Square } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/auth';
-import './RegistrationForm.css';
+import '../../styles/AuthStyles.css'; // Use shared styles
 
-const RegistrationForm = ({ role, onBack }) => {
+
+const RegistrationForm = ({ role = 'student', onBack }) => {
+    const [selectedRole, setSelectedRole] = useState(role.toLowerCase());
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    // const [agreed, setAgreed] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-
-    // Rate limiting / Debounce simulation (simple manual flag, for more robust use a library like lodash)
     const [isRateLimited, setIsRateLimited] = useState(false);
+    const [username, setUsername] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [grade, setGrade] = useState('');
+    const navigate = useNavigate();
+
+    const roles = ['Student', 'Teacher', 'Parent', 'Guest'];
+    const grades = ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8'];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isRateLimited) return;
 
-        // Basic Validation
-        if (!email || !password) {
-            setError('All fields are required.');
+        if (!email || !password || !username) {
+            setError('Please fill in all required fields.');
             return;
         }
-        // if (!agreed) {
-        //     setError('You must agree to the Terms of Service.');
-        //     return;
-        // }
         if (password.length < 8) {
             setError('Password must be at least 8 characters.');
+            return;
+        }
+        if (selectedRole === 'student' && !grade) {
+            setError('Please select your grade.');
             return;
         }
 
         setIsLoading(true);
         setError('');
 
-        // Scalable Handler
         try {
-            const response = await authService.registerWithEmail({ email, password, role });
+            const response = await authService.registerWithEmail({
+                email,
+                password,
+                role: selectedRole,
+                username,
+                phoneNumber,
+                grade: selectedRole === 'student' ? grade : undefined
+            });
             console.log('Registration Success:', response);
-            alert(`Welcome ${role}! Registration successful.`);
-            // Navigate to next steps...
+
+            // Auto-login after registration
+            await authService.loginWithEmail(email, password);
+
+            // Redirect to specific dashboard based on role
+            const dashboardMap = {
+                'student': '/student-dashboard',
+                'teacher': '/teacher-dashboard',
+                'parent': '/parent-dashboard',
+                'guest': '/guest-dashboard'
+            };
+
+            const targetPath = dashboardMap[selectedRole] || '/';
+            navigate(targetPath);
+
         } catch (err) {
-            setError(err.message || 'Registration failed.');
+            console.error("Registration Error:", err);
+            setError(err.message || (typeof err === 'string' ? err : 'Registration failed.'));
         } finally {
             setIsLoading(false);
-            // Simple rate limit reset
             setIsRateLimited(true);
             setTimeout(() => setIsRateLimited(false), 2000);
         }
     };
 
-    const handleGoogleLogin = () => {
-        authService.loginWithGoogle();
-    };
-
     return (
-        <div className="registration-form animate-fade-in">
-            <button onClick={onBack} className="back-button">
-                <ArrowLeft size={16} /> Choose a different role
-            </button>
+        <div className="registration-form">
+            <h2 className="auth-title">Create Account</h2>
 
-            <h3 className="form-title">Sign up as a {role} today!</h3>
-
-            {/* <div className="agreement-checkbox">
-                <button
-                    type="button"
-                    className="checkbox-custom"
-                    onClick={() => setAgreed(!agreed)}
-                >
-                    {agreed ? <CheckSquare size={20} color="var(--primary)" /> : <Square size={20} color="#cbd5e1" />}
-                </button>
-                <span className="agreement-text">
-                    By checking this box, I agree to the <a href="#" className="link-primary">Terms of Service</a> and <a href="#" className="link-primary">Privacy Policy</a>.
-                </span>
-            </div> */}
-
-            <button className="btn-google" onClick={handleGoogleLogin}>
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width={20} />
-                Continue with Google
-            </button>
-
-            <div className="divider">
-                <span>Or sign up with email</span>
+            {/* Role Selection Row */}
+            <div className="role-selection-group">
+                {roles.map((r) => (
+                    <button
+                        key={r}
+                        type="button"
+                        className={`role-btn ${selectedRole === r.toLowerCase() ? 'active' : ''}`}
+                        onClick={() => setSelectedRole(r.toLowerCase())}
+                    >
+                        {r}
+                    </button>
+                ))}
             </div>
 
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>
-                        Email
-                        <span className="required-label">required</span>
-                    </label>
+                <div className="auth-form-group">
+                    <label className="auth-label">Username</label>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="auth-input"
+                        placeholder="Your Name"
+                        required
+                        disabled={isLoading}
+                    />
+                </div>
+
+                {/* Grade Selection - Only for Students */}
+                {selectedRole === 'student' && (
+                    <div className="auth-form-group">
+                        <label className="auth-label">Grade *</label>
+                        <select
+                            value={grade}
+                            onChange={(e) => setGrade(e.target.value)}
+                            className="auth-input"
+                            required
+                            disabled={isLoading}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <option value="">Select your grade</option>
+                            {grades.map((g) => (
+                                <option key={g} value={g}>{g}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+
+                <div className="auth-form-group">
+                    <label className="auth-label">Phone Number (Optional)</label>
+                    <input
+                        type="tel"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        className="auth-input"
+                        placeholder="+1 (555) 000-0000"
+                        disabled={isLoading}
+                    />
+                </div>
+
+                <div className="auth-form-group">
+                    <label className="auth-label">Email</label>
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="form-input"
+                        className="auth-input"
+                        placeholder="name@example.com"
+                        required
                         disabled={isLoading}
                     />
                 </div>
 
-                <div className="form-group">
-                    <label>
-                        Password
-                        <span className="required-label">required</span>
-                    </label>
+                <div className="auth-form-group">
+                    <label className="auth-label">Password</label>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        className="auth-input"
                         placeholder="At least 8 characters"
-                        className="form-input"
+                        required
                         disabled={isLoading}
                     />
                 </div>
 
-                {error && <p className="error-message">{error}</p>}
+                {error && <p className="error-message" style={{ color: '#ef4444', fontSize: '0.9rem', marginTop: '0.5rem' }}>{error}</p>}
 
-                <button type="submit" className="btn-submit" disabled={isLoading}>
-                    {isLoading ? 'Signing up...' : 'Sign up'}
+                <button type="submit" className="auth-btn-primary" disabled={isLoading}>
+                    {isLoading ? 'Creating Account...' : 'Sign Up'}
                 </button>
             </form>
 
-            <p className="role-footer">
-                Already have an account? <a href="/login" className="link-primary">Log in</a>
+            <p className="auth-footer">
+                Already have an account? <a href="/login" className="auth-link">Log in</a>
             </p>
         </div>
     );
 };
 
 export default RegistrationForm;
+

@@ -1,3 +1,6 @@
+import { api } from './api';
+import { auth, googleProvider, signInWithPopup } from '../firebase';
+
 export const authService = {
     /**
      * Registers a new user with email and password.
@@ -5,33 +8,62 @@ export const authService = {
      * @returns {Promise} - Response from the server
      */
     async registerWithEmail(data) {
-        // START: Scalable API Pattern
-        // In a real app, you would use axios or fetch with a base URL from environment variables.
-        // Example: const response = await api.post('/auth/register', data);
+        try {
+            // Map frontend data to backend schema
+            const payload = {
+                user_type: data.role,
+                first_name: data.username, // Mapping username to first_name
+                email: data.email,
+                password: data.password,
+                phone_number: data.phoneNumber,
+                grade: data.grade, // For students
+                // Optional: last_name can be handled if added to form
+            };
 
-        console.log('Simulating API call for:', data);
+            const response = await api.register(payload);
+            return response.data;
+        } catch (error) {
+            // Rethrow the error to be handled by the component
+            throw error;
+        }
+    },
 
-        return new Promise((resolve, reject) => {
-            // Simulate network delay
-            setTimeout(() => {
-                // Simulate basic validation check on "server"
-                if (data.email.includes("error")) {
-                    reject(new Error("Email already exists"));
-                } else {
-                    resolve({ success: true, userId: "user_" + Math.random().toString(36).substr(2, 9), role: data.role });
-                }
-            }, 1000);
-        });
-        // END: Scalable API Pattern
+    async loginWithEmail(email, password) {
+        try {
+            const response = await api.login(email, password);
+            // Store the token (api.login does this, but good to be explicit or if we need side effects)
+            return response;
+        } catch (error) {
+            throw error;
+        }
     },
 
     /**
      * Initiates Google OAuth flow.
      * This is where you would integrate with @react-oauth/google or similar.
      */
+    /**
+     * Initiates Google OAuth flow.
+     */
     async loginWithGoogle() {
-        console.log('Initiating Google Login...');
-        // Implementation depends on the library used.
-        // Usually involves redirecting or opening a popup.
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+
+            // Send user details to backend
+            const payload = {
+                email: user.email,
+                first_name: user.displayName ? user.displayName.split(' ')[0] : 'User',
+                last_name: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
+                google_id: user.uid,
+                photo_url: user.photoURL
+            };
+
+            const response = await api.googleLogin(payload);
+            return response;
+        } catch (error) {
+            console.error("Google Login Error:", error);
+            throw error;
+        }
     }
 };

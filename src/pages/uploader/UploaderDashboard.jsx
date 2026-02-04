@@ -5,6 +5,7 @@ import TemplatePreview from '../../components/questionUpload/TemplatePreview';
 import GeneratedQuestionsList from '../../components/questionUpload/GeneratedQuestionsList';
 import TopicArrangement from '../../components/questionUpload/TopicArrangement';
 import SEO from '../../components/common/SEO';
+import Navbar from '../../components/Navbar';
 import { api } from '../../services/api';
 import '../../styles/DynamicQuestionsDashboard.css'; // Reusing existing styles
 
@@ -86,104 +87,107 @@ const UploaderDashboard = () => {
     if (!isAuthenticated) return null; // Or loading spinner
 
     return (
-        <div className="admin-layout">
-            <SEO title="Uploader Dashboard - Learner's Hub" description="Question Upload Panel" />
+        <>
+            <Navbar />
+            <div className="admin-layout" style={{ paddingTop: '80px' }}>
+                <SEO title="Uploader Dashboard - Learner's Hub" description="Question Upload Panel" />
 
-            {/* Sidebar */}
-            <aside className="admin-sidebar">
-                <div className="sidebar-header">
-                    <h1 style={{
-                        margin: 0,
-                        fontSize: '1.5rem',
-                        fontWeight: '800',
-                        background: 'linear-gradient(to right, #818cf8, #f472b6)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent'
-                    }}>
-                        skill100.AI
-                    </h1>
-                </div>
-                <nav className="sidebar-nav">
-                    <div className="nav-group">
-                        <div className="nav-group-label">Question Generation</div>
-                        <div className="nav-group-children">
-                            {navItems.map(item => (
-                                <button
-                                    key={item.id}
-                                    className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
-                                    onClick={() => setActiveTab(item.id)}
-                                >
-                                    <span className="nav-icon">{item.icon}</span>
-                                    {item.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </nav>
-                <div className="sidebar-footer">
-                    <button onClick={handleLogout} className="logout-btn">
-                        <span className="nav-icon">🚪</span> Logout
-                    </button>
-                </div>
-            </aside>
-
-            {/* Main Content */}
-            <main className="admin-main">
-                <header className="admin-header">
-                    <h3>{navItems.find(i => i.id === activeTab)?.label}</h3>
-                    <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <div className="user-info" style={{ fontWeight: 'bold' }}>
-                            {localStorage.getItem('userName') || 'Uploader'}
-                        </div>
-                        <div className="avatar-placeholder" style={{
-                            width: '32px', height: '32px', borderRadius: '50%',
-                            background: '#3498db', color: 'white',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '14px'
+                {/* Sidebar */}
+                <aside className="admin-sidebar">
+                    <div className="sidebar-header">
+                        <h1 style={{
+                            margin: 0,
+                            fontSize: '1.5rem',
+                            fontWeight: '800',
+                            background: 'linear-gradient(to right, #818cf8, #f472b6)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
                         }}>
-                            {(localStorage.getItem('userName') || 'U')[0].toUpperCase()}
-                        </div>
+                            skill100.AI
+                        </h1>
                     </div>
-                </header>
+                    <nav className="sidebar-nav">
+                        <div className="nav-group">
+                            <div className="nav-group-label">Question Generation</div>
+                            <div className="nav-group-children">
+                                {navItems.map(item => (
+                                    <button
+                                        key={item.id}
+                                        className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+                                        onClick={() => setActiveTab(item.id)}
+                                    >
+                                        <span className="nav-icon">{item.icon}</span>
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </nav>
+                    <div className="sidebar-footer">
+                        <button onClick={handleLogout} className="logout-btn">
+                            <span className="nav-icon">🚪</span> Logout
+                        </button>
+                    </div>
+                </aside>
 
-                <div className="admin-content-area">
-                    {activeTab === 'templates' && (
-                        <>
-                            {viewMode === 'list' && (
-                                <QuestionTemplatesList
-                                    onEdit={handleEditTemplate}
-                                    onPreview={handlePreviewTemplate}
-                                    onCreate={handleCreateTemplate} // Pass create handler if list has button
-                                />
-                            )}
-                            {(viewMode === 'create' || viewMode === 'edit') && (
-                                <QuestionTemplateForm
-                                    template={selectedTemplate}
-                                    onSave={handleSaveTemplate}
-                                    onCancel={handleCancelEdit}
-                                    onPreview={handlePreviewTemplate}
-                                />
-                            )}
-                        </>
-                    )}
+                {/* Main Content */}
+                <main className="admin-main">
+                    <header className="admin-header">
+                        <h3>{navItems.find(i => i.id === activeTab)?.label}</h3>
+                        <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <div className="user-info" style={{ fontWeight: 'bold' }}>
+                                {localStorage.getItem('userName') || 'Uploader'}
+                            </div>
+                            <div className="avatar-placeholder" style={{
+                                width: '32px', height: '32px', borderRadius: '50%',
+                                background: '#3498db', color: 'white',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: '14px'
+                            }}>
+                                {(localStorage.getItem('userName') || 'U')[0].toUpperCase()}
+                            </div>
+                        </div>
+                    </header>
 
-                    {activeTab === 'arrange' && (
-                        <TopicArrangement />
-                    )}
+                    <div className="admin-content-area">
+                        {activeTab === 'templates' && (
+                            <>
+                                {viewMode === 'list' && (
+                                    <QuestionTemplatesList
+                                        onEdit={handleEditTemplate}
+                                        onPreview={handlePreviewTemplate}
+                                        onCreate={handleCreateTemplate} // Pass create handler if list has button
+                                    />
+                                )}
+                                {(viewMode === 'create' || viewMode === 'edit') && (
+                                    <QuestionTemplateForm
+                                        template={selectedTemplate}
+                                        onSave={handleSaveTemplate}
+                                        onCancel={handleCancelEdit}
+                                        onPreview={handlePreviewTemplate}
+                                    />
+                                )}
+                            </>
+                        )}
 
-                    {activeTab === 'questions' && (
-                        <GeneratedQuestionsList jobId={selectedJobId} />
-                    )}
-                </div>
-            </main>
+                        {activeTab === 'arrange' && (
+                            <TopicArrangement />
+                        )}
 
-            {previewTemplate && (
-                <TemplatePreview
-                    template={previewTemplate}
-                    onClose={handleClosePreview}
-                />
-            )}
-        </div>
+                        {activeTab === 'questions' && (
+                            <GeneratedQuestionsList jobId={selectedJobId} />
+                        )}
+                    </div>
+                </main>
+
+                {previewTemplate && (
+                    <TemplatePreview
+                        template={previewTemplate}
+                        onClose={handleClosePreview}
+                    />
+                )}
+            </div>
+        </>
     );
 };
 

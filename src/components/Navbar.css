@@ -13,12 +13,14 @@
 
 .navbar-content {
     display: flex !important;
-    /* Force flex */
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 3rem;
-    /* Add side padding */
+    max-width: 1280px;
+    /* Constrain content width */
+    margin: 0 auto;
+    /* Center the content */
+    padding: 0 2rem;
 }
 
 .logo {
@@ -28,7 +30,7 @@
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 1.25rem;
-    color: var(--text-main);
+    color: hsl(var(--foreground));
     text-decoration: none;
     min-width: 150px;
     /* Ensure logo has space */
@@ -58,7 +60,7 @@
 }
 
 .nav-link-item {
-    color: var(--text-muted);
+    color: hsl(var(--muted-foreground));
     font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: 100px;
@@ -67,10 +69,23 @@
     text-decoration: none;
 }
 
+.nav-link-item.active {
+    color: hsl(var(--primary));
+    background: hsla(258, 86%, 58%, 0.12);
+    font-weight: 600;
+}
+
 .nav-link-item:hover {
-    color: var(--primary);
-    background: rgba(124, 58, 237, 0.08);
+    color: hsl(var(--primary));
+    background: hsla(258, 86%, 58%, 0.08);
+    /* Fallback or specific color */
     /* Hint of primary color on hover */
+}
+
+.portal-link {
+    background: linear-gradient(135deg, #4FB7B3, #637AB9);
+    color: white !important;
+    font-weight: 600;
 }
 
 /* Right Actions */
@@ -84,31 +99,47 @@
 
 .btn-ghost {
     background: transparent;
-    color: var(--text-muted);
+    color: hsl(var(--muted-foreground));
     font-weight: 500;
     padding: 0.6rem 1rem;
     transition: color 0.2s;
+    text-decoration: none;
+    /* For Links */
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-ghost:hover {
-    color: var(--text-main);
+    color: hsl(var(--foreground));
 }
 
 .btn-primary {
-    background: var(--primary);
-    color: white;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
     padding: 0.6rem 1.4rem;
     border-radius: 100px;
-    /* Pill shape button */
     font-weight: 600;
     transition: all 0.2s;
     box-shadow: 0 0 0 0px rgba(99, 102, 241, 0);
+    text-decoration: none;
+    /* For Links */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-primary:hover {
-    background: var(--primary-hover);
+    background: hsl(var(--primary));
+    /* Need darker shade ideally */
+    filter: brightness(0.9);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px var(--primary-glow);
+    box-shadow: 0 4px 12px rgba(79, 183, 179, 0.3);
+    color: hsl(var(--primary-foreground));
+    /* Ensure text stays white on hover */
 }
 
 @media (max-width: 768px) {

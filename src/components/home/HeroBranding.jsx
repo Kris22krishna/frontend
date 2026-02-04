@@ -1,35 +1,29 @@
 import React from 'react';
 import './HeroSection.css';
-import CourseCarousel from './CourseCarousel';
-
-import { Search } from 'lucide-react';
+import { Sparkles, BarChart3, Atom } from 'lucide-react';
 
 const HeroBranding = ({ selectedRole }) => {
     return (
-        <div className="hero-left">
-            <h1 className="hero-title">
-                <span className="gradient-text">Skill100.AI</span><br />
-            </h1>
-            {/* <p className="hero-subtitle">
-                An Initiative of Learners Digital
-            </p> */}
+        <div className="hero-left relative-container">
+            <h1 className="hero-title serif-font">
+                Go Beyond
+                <span className="highlight-text"> 100</span>
 
-            {selectedRole ? (
-                // Role Information Box (Placeholder)
-                <div className="brand-info-box animate-fade-in">
-                    <div className="info-icon-wrapper">
-                        {/* Placeholder for role specific icon */}
-                        <div className="info-icon-placeholder" />
-                    </div>
-                    <div className="info-content">
-                        <h3>{selectedRole === 'learner' ? 'For Learners' : selectedRole === 'teacher' ? 'For Teachers' : 'For Parents'}</h3>
-                        <p>Unlock personalized tools and resources tailored for your journey.</p>
-                    </div>
+                {/* Decorative Elements */}
+                <div className="deco-icon float-1">
+                    <BarChart3 size={32} strokeWidth={2.5} />
                 </div>
-            ) : (
-                // Empty state as requested
-                null
-            )}
+                <div className="deco-icon float-2">
+                    <Atom size={32} strokeWidth={2.5} />
+                </div>
+                <div className="deco-icon float-3">
+                    <Sparkles size={28} strokeWidth={2.5} />
+                </div>
+            </h1>
+            <p className="hero-subtitle">
+                With personalized, expert-led guidance <br />
+                at every grade
+            </p>
         </div>
     );
 };

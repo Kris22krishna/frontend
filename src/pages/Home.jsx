@@ -6,14 +6,12 @@ import HeroRegistration from '../components/home/HeroRegistration';
 import GradeSection from '../components/math100/GradeSection';
 
 const Home = () => {
-    const [selectedRole, setSelectedRole] = React.useState(null);
-
     return (
         <div className="home-page">
-            <section className="hero container">
+            <section className="hero">
                 <div className="hero-content animate-fade-in">
-                    <HeroBranding selectedRole={selectedRole} />
-                    <HeroRegistration selectedRole={selectedRole} setSelectedRole={setSelectedRole} />
+                    <HeroBranding />
+                    <HeroRegistration />
                 </div>
             </section>
 

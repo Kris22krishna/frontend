@@ -3,6 +3,16 @@
     line-height: 1.5;
     font-weight: 400;
 
+    /* Theme Variables */
+    --primary: #0f172a;
+    /* Slate 900 */
+    --primary-hover: #1e293b;
+    --primary-glow: rgba(15, 23, 42, 0.3);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --font-heading: 'Times New Roman', serif;
+
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
     background-color: #242424;
