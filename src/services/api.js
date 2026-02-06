@@ -65,6 +65,8 @@ export const api = {
         }
         const data = await response.json();
         localStorage.setItem('authToken', data.access_token);
+        localStorage.setItem('userType', 'admin');
+        if (data.username) localStorage.setItem('firstName', data.username);
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },
@@ -157,6 +159,13 @@ export const api = {
 
     getSkillById: async (skillId) => {
         const response = await fetch(`${BASE_URL}/api/v1/skills/${skillId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getStudentStats: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/student/stats`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -436,6 +445,110 @@ export const api = {
         return handleResponse(response);
     },
 
+    // --- Assessment Uploaders ---
+    createAssessmentUploader: async (email) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/create-assessment-uploader`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getHeaders()
+            },
+            body: JSON.stringify({ email })
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to create assessment uploader');
+        }
+        return response.json();
+    },
+
+    assessmentUploaderLogin: async (email, accessCode) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/assessment-uploader-login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, access_code: accessCode })
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Login failed');
+        }
+        const data = await response.json();
+        localStorage.setItem('authToken', data.access_token);
+        localStorage.setItem('userType', data.user_type);
+        if (data.username) {
+            localStorage.setItem('userName', data.username);
+        }
+        if (data.email) {
+            localStorage.setItem('userEmail', data.email);
+        }
+        return data;
+    },
+
+    getAssessmentUploaders: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/assessment-uploaders`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    uploadStudents: async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/upload-students`, {
+            method: 'POST',
+            headers: {
+                'Authorization': getHeaders()['Authorization'] // Explicitly adding auth, content-type is auto for formData
+            },
+            body: formData,
+        });
+        return handleResponse(response);
+    },
+
+    getUploadedStudents: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/uploaded-students`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    studentAccess: async (serialNumber) => {
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/student-access`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ serial_number: serialNumber })
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Access failed');
+        }
+        const data = await response.json();
+        // Store student token
+        localStorage.setItem('studentToken', data.access_token);
+        localStorage.setItem('studentToken', data.access_token);
+        localStorage.setItem('studentName', data.student_name);
+        localStorage.setItem('studentGrade', data.grade);
+        localStorage.setItem('studentSchool', data.school_name);
+        return data;
+    },
+
+    startAssessment: async () => {
+        const token = localStorage.getItem('studentToken');
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/start-assessment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to start assessment');
+        }
+        return response.json();
+    },
+
     // --- Parent ---
     getLinkedChildren: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/parent/children`, {
@@ -513,6 +626,34 @@ export const api = {
     // --- Admin ---
     getAdminDashboardOverview: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/admin/overview`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getAdminStudents: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/students`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getAdminTeachers: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/teachers`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getAdminParents: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/parents`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getAdminGuests: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/guests`, {
             headers: getHeaders()
         });
         return handleResponse(response);

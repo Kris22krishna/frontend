@@ -5,7 +5,7 @@ import AlertCard from './components/AlertCard';
 import { api } from '../../../services/api';
 import {
     Users, GraduationCap, UserCheck, Eye, FileQuestion, Database,
-    Activity, BookOpen, CheckCircle, Loader2, RefreshCw, AlertCircle
+    Activity, BookOpen, CheckCircle, Loader2, RefreshCw, AlertCircle, Upload
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -17,6 +17,7 @@ const AdminDashboard = () => {
         'Total Students': <GraduationCap className="h-5 w-5" />,
         'Total Teachers': <Users className="h-5 w-5" />,
         'Total Parents': <UserCheck className="h-5 w-5" />,
+        'Total Uploaders': <Upload className="h-5 w-5" />,
         'Guest Users Today': <Eye className="h-5 w-5" />,
         'Quizzes Attempted': <FileQuestion className="h-5 w-5" />,
         'Questions in Bank': <Database className="h-5 w-5" />,

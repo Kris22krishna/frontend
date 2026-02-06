@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import AdminLogin from './pages/AdminLogin';
 import MathSelection from './pages/MathSelection';
 import GradeSyllabus from './pages/GradeSyllabus';
+import PracticePage from './pages/PracticePage';
 import ContentPage from './pages/ContentPage';
 import DynamicQuestionsDashboard from './pages/DynamicQuestionsDashboard';
 import PracticeSession from './pages/PracticeSession';
@@ -11,6 +12,9 @@ import UploaderLogin from './pages/UploaderLogin';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+
+// Components
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Dashboards
 import StudentDashboard from './pages/dashboards/student/StudentDashboard';
@@ -39,6 +43,7 @@ import AdminTeachersPage from './pages/dashboards/admin/pages/TeachersPage';
 import AdminParentsPage from './pages/dashboards/admin/pages/ParentsPage';
 import AdminGuestsPage from './pages/dashboards/admin/pages/GuestsPage';
 import AdminUploadersPage from './pages/dashboards/admin/pages/UploadersPage';
+import AdminAssessmentUploadersPage from './pages/dashboards/admin/pages/AssessmentUploadersPage';
 import AdminClassesPage from './pages/dashboards/admin/pages/ClassesPage';
 import AdminQuizzesPage from './pages/dashboards/admin/pages/QuizzesPage';
 import AdminQuestionBankPage from './pages/dashboards/admin/pages/QuestionBankPage';
@@ -53,6 +58,23 @@ import AdminActivityLogPage from './pages/dashboards/admin/pages/ActivityLogPage
 import AdminSettingsPage from './pages/dashboards/admin/pages/SettingsPage';
 
 import UploaderDashboard from './pages/uploader/UploaderDashboard';
+import AssessmentUploaderLogin from './pages/AssessmentUploaderLogin';
+import AssessmentUploaderDashboard from './pages/dashboards/AssessmentUploaderDashboard';
+import AssessmentAccessPage from './pages/AssessmentAccessPage';
+import AssessmentStudentDashboard from './pages/dashboards/AssessmentStudentDashboard';
+import AssessmentRunner from './pages/AssessmentRunner';
+
+// Junior Pages (Grades 1-4 child-friendly design)
+import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
+import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
+import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+
+// Middle Pages (Grades 5-7 professional design)
+import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
+import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
+
+// High School Pages (Grades 8-10 professional design)
+import HighPracticeSession from './pages/high/HighPracticeSession';
 
 function App() {
   return (
@@ -62,9 +84,21 @@ function App() {
           <Route index element={<Home />} />
           <Route path="learn-to-learn" element={<ContentPage topic="learn-to-learn" />} />
           <Route path="math" element={<MathSelection />} />
+          <Route path="practice" element={<PracticePage />} />
           <Route path="math/grade/:grade" element={<GradeSyllabus />} />
+          {/* Middle Routes (Grades 5-7 professional design) */}
+          <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
+          {/* Practice Session moved to top level for full screen */}
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>
+
+        {/* Junior Routes (Grades 1-4 child-friendly design) */}
+        <Route path="/junior/grade/:grade" element={<JuniorGradeSyllabus />} />
+        <Route path="/junior/grade/:grade/topic/:topic" element={<JuniorSubtopics />} />
+        <Route path="/junior/grade/:grade/practice" element={<JuniorPracticeSession />} />
+
+        {/* Middle Routes (Grades 5-7 separate professional design) */}
+
 
         {/* Auth Routes */}
         <Route path="/login" element={<LoginPage />} />
@@ -93,8 +127,12 @@ function App() {
           <Route path="notifications" element={<NotificationsPage />} />
         </Route>
 
-        {/* Admin Dashboard with Nested Layout */}
-        <Route path="/admin" element={<AdminLayout />}>
+        {/* Admin Dashboard with Nested Layout - Protected */}
+        <Route path="/admin" element={
+          <ProtectedRoute allowedRoles={['admin']} redirectTo="/admin-login">
+            <AdminLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<AdminDashboard />} />
           {/* User Management */}
           <Route path="students" element={<AdminStudentsPage />} />
@@ -102,6 +140,7 @@ function App() {
           <Route path="parents" element={<AdminParentsPage />} />
           <Route path="guests" element={<AdminGuestsPage />} />
           <Route path="uploaders" element={<AdminUploadersPage />} />
+          <Route path="assessment-uploaders" element={<AdminAssessmentUploadersPage />} />
           <Route path="classes" element={<AdminClassesPage />} />
           {/* Content */}
           <Route path="quizzes" element={<AdminQuizzesPage />} />
@@ -125,10 +164,21 @@ function App() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/uploader-login" element={<UploaderLogin />} />
         <Route path="/uploader-dashboard" element={<UploaderDashboard />} />
+
+        <Route path="/assessment-uploader-login" element={<AssessmentUploaderLogin />} />
+        <Route path="/assessment-uploader-dashboard" element={<AssessmentUploaderDashboard />} />
+        <Route path="/assessment-access" element={<AssessmentAccessPage />} />
+        <Route path="/assessment-student-dashboard" element={<AssessmentStudentDashboard />} />
+        <Route path="/assessment-runner" element={<AssessmentRunner />} />
+
+        {/* Full Screen Practice Sessions */}
         <Route path="/practice/:templateId" element={<PracticeSession />} />
+        <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
+        <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+

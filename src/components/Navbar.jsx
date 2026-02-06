@@ -73,7 +73,7 @@ const Navbar = () => {
                     <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>Home</Link>
                     <Link to="/math" className={`nav-link-item ${isActive('/math') && !location.pathname.includes('/grade/') ? 'active' : ''}`}>Math</Link>
                     <Link to="/learn-to-learn" className={`nav-link-item ${isActive('/learn-to-learn') ? 'active' : ''}`}>Learn</Link>
-                    <Link to="/math/grade/5" className={`nav-link-item ${location.pathname.includes('/grade/') || location.pathname.includes('/practice') ? 'active' : ''}`}>Practice</Link>
+                    <Link to="/practice" className={`nav-link-item ${isActive('/practice') || location.pathname.includes('/grade/') ? 'active' : ''}`}>Practice</Link>
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
                     )}

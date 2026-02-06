@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Star, Zap, Trophy, Sparkles } from 'lucide-react';
+import { ChevronRight, Star, Zap, Trophy, Sparkles, BookOpen, Target, Award } from 'lucide-react';
 import SEO from '../components/common/SEO';
-import '../styles/MathSelection.css';
+import Navbar from '../components/Navbar';
+import '../styles/Practice.css';
 
 // Custom SVG Illustrations for each category
 const JuniorIllustration = () => (
@@ -65,7 +66,7 @@ const HighSchoolIllustration = () => (
     </svg>
 );
 
-const MathSelection = () => {
+const PracticePage = () => {
     const navigate = useNavigate();
     const [hoveredCategory, setHoveredCategory] = useState(null);
 
@@ -73,75 +74,90 @@ const MathSelection = () => {
         {
             id: 'junior',
             title: 'Junior School',
-            subtitle: 'Foundation & Fun',
-            description: 'Build strong math foundations with interactive games and colorful activities',
+            subtitle: 'Grades 1-4',
+            tagline: 'Foundation & Fun',
+            description: 'Build strong math foundations with interactive games and colorful activities designed for young learners.',
             grades: [
-                { id: '1', label: 'Grade 1' },
-                { id: '2', label: 'Grade 2' },
-                { id: '3', label: 'Grade 3' },
-                { id: '4', label: 'Grade 4' },
+                { id: '1', label: 'Grade 1', topics: 45 },
+                { id: '2', label: 'Grade 2', topics: 52 },
+                { id: '3', label: 'Grade 3', topics: 58 },
+                { id: '4', label: 'Grade 4', topics: 65 },
             ],
             color: 'junior',
             gradient: 'linear-gradient(135deg, #fbbf24 0%, #f97316 100%)',
             bgLight: '#fef3c7',
+            accentColor: '#f97316',
             icon: <Star className="category-icon" />,
             illustration: <JuniorIllustration />,
-            features: ['Counting & Numbers', 'Basic Operations', 'Fun Puzzles'],
+            features: ['Counting & Numbers', 'Basic Operations', 'Fun Puzzles', 'Shape Recognition'],
+            stats: { students: '2.5K+', rating: '4.9' }
         },
         {
             id: 'middle',
             title: 'Middle School',
-            subtitle: 'Explore & Discover',
-            description: 'Dive deeper into algebra, geometry, and problem-solving techniques',
+            subtitle: 'Grades 5-7',
+            tagline: 'Explore & Discover',
+            description: 'Dive deeper into algebra, geometry, and problem-solving techniques with engaging challenges.',
             grades: [
-                { id: '5', label: 'Grade 5' },
-                { id: '6', label: 'Grade 6' },
-                { id: '7', label: 'Grade 7' },
+                { id: '5', label: 'Grade 5', topics: 72 },
+                { id: '6', label: 'Grade 6', topics: 78 },
+                { id: '7', label: 'Grade 7', topics: 85 },
             ],
             color: 'middle',
             gradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%)',
             bgLight: '#e0f2fe',
+            accentColor: '#3b82f6',
             icon: <Zap className="category-icon" />,
             illustration: <MiddleSchoolIllustration />,
-            features: ['Algebra Basics', 'Geometry', 'Data & Graphs'],
+            features: ['Algebra Basics', 'Geometry', 'Data & Graphs', 'Fractions & Decimals'],
+            stats: { students: '3.2K+', rating: '4.8' }
         },
         {
             id: 'high',
             title: 'High School',
-            subtitle: 'Master & Excel',
-            description: 'Advanced concepts, exam preparation, and competitive math challenges',
+            subtitle: 'Grades 8-10',
+            tagline: 'Master & Excel',
+            description: 'Advanced concepts, exam preparation, and competitive math challenges to boost your scores.',
             grades: [
-                { id: '8', label: 'Grade 8' },
-                { id: '9', label: 'Grade 9' },
-                { id: '10', label: 'Grade 10' },
+                { id: '8', label: 'Grade 8', topics: 92 },
+                { id: '9', label: 'Grade 9', topics: 98 },
+                { id: '10', label: 'Grade 10', topics: 105 },
             ],
             color: 'high',
             gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
             bgLight: '#d1fae5',
+            accentColor: '#059669',
             icon: <Trophy className="category-icon" />,
             illustration: <HighSchoolIllustration />,
-            features: ['Advanced Algebra', 'Trigonometry', 'Calculus Prep'],
+            features: ['Advanced Algebra', 'Trigonometry', 'Calculus Prep', 'Board Exam Ready'],
+            stats: { students: '4.1K+', rating: '4.9' }
         },
     ];
 
     return (
-        <div className="math-selection-page">
-            <SEO title="Math - Choose Your Level" description="Select your grade level to start learning mathematics." />
+        <div className="practice-page">
+            <SEO title="Practice Math | Skill100.AI" description="Choose your grade level and start practicing math with interactive exercises." />
+            <Navbar />
 
-            {/* Hero Section */}
-            <section className="math-hero">
-                <div className="hero-content">
-                    <div className="hero-badge">
-                        <Sparkles className="badge-icon" />
-                        <span>Interactive Learning</span>
-                    </div>
-                    <h1>Choose Your <span className="gradient-text">Math Journey</span></h1>
-                    <p>Select your grade level and embark on an exciting mathematical adventure tailored just for you!</p>
+            {/* Header Section */}
+            <section className="practice-header">
+                <div className="header-left">
+                    <h1>🎯 Practice Makes Perfect</h1>
+                    <p>Choose your level and master mathematics step by step</p>
                 </div>
-                <div className="hero-decoration">
-                    <div className="floating-shape shape-1"></div>
-                    <div className="floating-shape shape-2"></div>
-                    <div className="floating-shape shape-3"></div>
+                <div className="header-stats">
+                    <div className="header-stat">
+                        <span className="stat-number">750+</span>
+                        <span className="stat-text">Topics</span>
+                    </div>
+                    <div className="header-stat">
+                        <span className="stat-number">50K+</span>
+                        <span className="stat-text">Questions</span>
+                    </div>
+                    <div className="header-stat">
+                        <span className="stat-number">10</span>
+                        <span className="stat-text">Grades</span>
+                    </div>
                 </div>
             </section>
 
@@ -157,13 +173,20 @@ const MathSelection = () => {
                         >
                             {/* Card Header with Illustration */}
                             <div className="card-header" style={{ background: category.gradient }}>
-                                <div className="header-content">
+                                <div className="header-badge">
                                     {category.icon}
+                                    <span>{category.tagline}</span>
+                                </div>
+                                <div className="header-content">
                                     <h2>{category.title}</h2>
                                     <span className="subtitle">{category.subtitle}</span>
                                 </div>
                                 <div className="illustration-wrapper">
                                     {category.illustration}
+                                </div>
+                                <div className="header-stats">
+                                    <span>⭐ {category.stats.rating}</span>
+                                    <span>👨‍🎓 {category.stats.students} learners</span>
                                 </div>
                             </div>
 
@@ -174,7 +197,7 @@ const MathSelection = () => {
                                 {/* Features */}
                                 <div className="features-list">
                                     {category.features.map((feature, idx) => (
-                                        <span key={idx} className="feature-tag" style={{ backgroundColor: category.bgLight }}>
+                                        <span key={idx} className="feature-tag" style={{ backgroundColor: category.bgLight, color: category.accentColor }}>
                                             {feature}
                                         </span>
                                     ))}
@@ -182,26 +205,31 @@ const MathSelection = () => {
 
                                 {/* Grade Buttons */}
                                 <div className="grades-list">
-                                    {category.grades.map((grade) => (
-                                        <button
-                                            key={grade.id}
-                                            className="grade-btn"
-                                            onClick={() => {
-                                                const id = parseInt(grade.id);
-                                                if (id >= 1 && id <= 4) {
-                                                    navigate(`/junior/grade/${grade.id}`);
-                                                } else if (id >= 5 && id <= 7) {
-                                                    navigate(`/middle/grade/${grade.id}`);
-                                                } else {
-                                                    navigate(`/math/grade/${grade.id}`);
-                                                }
-                                            }}
-                                            style={{ '--accent-gradient': category.gradient }}
-                                        >
-                                            <span>{grade.label}</span>
-                                            <ChevronRight className="btn-arrow" />
-                                        </button>
-                                    ))}
+                                    <div className="grades-header">
+                                        <span>Select Grade</span>
+                                        <span className="topics-hint">Topics available</span>
+                                    </div>
+                                    {category.grades.map((grade) => {
+                                        // Use junior routes for grades 1-4
+                                        const isJunior = category.id === 'junior';
+                                        const routePath = isJunior
+                                            ? `/junior/grade/${grade.id}`
+                                            : `/math/grade/${grade.id}`;
+                                        return (
+                                            <button
+                                                key={grade.id}
+                                                className="grade-btn"
+                                                onClick={() => navigate(routePath)}
+                                                style={{ '--accent-gradient': category.gradient, '--accent-color': category.accentColor }}
+                                            >
+                                                <div className="grade-info">
+                                                    <span className="grade-name">{grade.label}</span>
+                                                    <span className="grade-topics">{grade.topics} topics</span>
+                                                </div>
+                                                <ChevronRight className="btn-arrow" />
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
@@ -211,10 +239,14 @@ const MathSelection = () => {
 
             {/* Bottom CTA */}
             <section className="bottom-cta">
-                <p>🎯 Pick your grade and start solving problems today!</p>
+                <div className="cta-content">
+                    <span className="cta-emoji">🚀</span>
+                    <h3>Ready to become a math champion?</h3>
+                    <p>Pick your grade and start solving problems today!</p>
+                </div>
             </section>
         </div>
     );
 };
 
-export default MathSelection;
+export default PracticePage;

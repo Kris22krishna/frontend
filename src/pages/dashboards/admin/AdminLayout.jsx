@@ -4,7 +4,7 @@ import { api } from '../../../services/api';
 import {
     LayoutDashboard, Users, GraduationCap, UserCircle, Eye, Upload, School,
     FileText, HelpCircle, Brain, Settings, LogOut, Menu, X,
-    AlertTriangle, BarChart3, Activity, ScrollText, FileQuestion, ListChecks, Grid3X3
+    AlertTriangle, BarChart3, Activity, ScrollText, FileQuestion, ListChecks, Grid3X3, UploadCloud
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -27,6 +27,7 @@ const AdminLayout = () => {
                 { name: 'Parents', icon: Users, path: '/admin/parents' },
                 { name: 'Guests', icon: Eye, path: '/admin/guests' },
                 { name: 'Uploaders', icon: Upload, path: '/admin/uploaders' },
+                { name: 'Assessment Uploader', icon: UploadCloud, path: '/admin/assessment-uploaders' },
                 { name: 'Classes', icon: School, path: '/admin/classes' },
             ]
         },

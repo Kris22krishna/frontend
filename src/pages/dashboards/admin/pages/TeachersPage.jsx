@@ -1,37 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, MoreVertical, Download, Filter, Loader2 } from 'lucide-react';
+import { Search, Plus, MoreVertical, Download, Filter, Loader2, RefreshCw } from 'lucide-react';
+import { api } from '../../../../services/api';
 
 const TeachersPage = () => {
     const [loading, setLoading] = useState(true);
+    const [teachers, setTeachers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 800);
-        return () => clearTimeout(timer);
-    }, []);
-
-    const teachers = [
-        { id: 1, name: 'Rahul Mehta', email: 'rahul@school.com', classes: 3, quizzes: 24, avgScore: '68%', lastActive: '1h ago', status: 'Active' },
-        { id: 2, name: 'Sarah Khan', email: 'sarah.k@school.com', classes: 5, quizzes: 45, avgScore: '72%', lastActive: '2d ago', status: 'Active' },
-        { id: 3, name: 'Mike Chen', email: 'mike@school.com', classes: 2, quizzes: 8, avgScore: '65%', lastActive: '12d ago', status: 'Idle' },
-        { id: 4, name: 'Priya Sharma', email: 'priya@school.com', classes: 4, quizzes: 32, avgScore: '75%', lastActive: '3h ago', status: 'Active' },
-    ];
-
-    const stats = [
-        { label: 'Total Teachers', value: 48 },
-        { label: 'Active (Last 7d)', value: 32 },
-        { label: 'Inactive', value: 16 },
-    ];
-
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'Active': return 'bg-green-100 text-green-700';
-            case 'Idle': return 'bg-yellow-100 text-yellow-700';
-            default: return 'bg-gray-100 text-gray-700';
+    const fetchTeachers = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await api.getAdminTeachers();
+            setTeachers(data || []);
+        } catch (err) {
+            console.error('Failed to fetch teachers:', err);
+            setError('Failed to load teachers');
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (loading) {
+    useEffect(() => {
+        fetchTeachers();
+    }, []);
+
+    // Calculate stats from real data
+    const stats = [
+        { label: 'Total Teachers', value: teachers.length },
+        { label: 'Active (Last 7d)', value: teachers.filter(t => t.lastActive !== 'Never' && !t.lastActive?.includes('w ago')).length },
+        { label: 'Inactive', value: teachers.filter(t => t.lastActive === 'Never' || t.lastActive?.includes('w ago')).length },
+    ];
+
+    // Filter teachers
+    const filteredTeachers = teachers.filter(teacher => {
+        const matchesSearch = teacher.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            teacher.email?.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesSearch;
+    });
+
+    const getStatusColor = (lastActive) => {
+        if (lastActive === 'Today' || lastActive?.includes('h ago') || lastActive?.includes('min ago')) {
+            return 'bg-green-100 text-green-700';
+        } else if (lastActive?.includes('d ago')) {
+            const days = parseInt(lastActive);
+            if (days <= 7) return 'bg-green-100 text-green-700';
+            return 'bg-yellow-100 text-yellow-700';
+        }
+        return 'bg-red-100 text-red-700';
+    };
+
+    const getStatusText = (lastActive) => {
+        if (lastActive === 'Today' || lastActive?.includes('h ago') || lastActive?.includes('min ago')) {
+            return 'Active';
+        } else if (lastActive?.includes('d ago')) {
+            const days = parseInt(lastActive);
+            if (days <= 7) return 'Active';
+            return 'Idle';
+        }
+        return 'Inactive';
+    };
+
+    if (loading && teachers.length === 0) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -43,11 +74,26 @@ const TeachersPage = () => {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-gray-900">Teachers</h1>
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                    <Plus className="h-5 w-5" />
-                    Add Teacher
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={fetchTeachers}
+                        className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-blue-600"
+                        disabled={loading}
+                    >
+                        <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                    </button>
+                    <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <Plus className="h-5 w-5" />
+                        Add Teacher
+                    </button>
+                </div>
             </div>
+
+            {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
+                    {error}
+                </div>
+            )}
 
             <div className="grid grid-cols-3 gap-6">
                 {stats.map((stat, index) => (
@@ -85,33 +131,31 @@ const TeachersPage = () => {
                         <tr>
                             <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Name</th>
                             <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Email</th>
+                            <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Students</th>
                             <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Classes</th>
-                            <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Quizzes</th>
-                            <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Avg Score</th>
                             <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Last Active</th>
                             <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Status</th>
                             <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {teachers.map((teacher) => (
+                        {filteredTeachers.map((teacher) => (
                             <tr key={teacher.id} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer">
                                 <td className="py-4 px-6">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-medium">
-                                            {teacher.name.split(' ').map(n => n[0]).join('')}
+                                            {teacher.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
                                         </div>
-                                        <span className="font-medium text-gray-900">{teacher.name}</span>
+                                        <span className="font-medium text-gray-900">{teacher.name || 'Unknown'}</span>
                                     </div>
                                 </td>
-                                <td className="py-4 px-6 text-gray-700">{teacher.email}</td>
-                                <td className="py-4 px-6 text-gray-700">{teacher.classes}</td>
-                                <td className="py-4 px-6 text-gray-700">{teacher.quizzes}</td>
-                                <td className="py-4 px-6 text-gray-700">{teacher.avgScore}</td>
-                                <td className="py-4 px-6 text-gray-700">{teacher.lastActive}</td>
+                                <td className="py-4 px-6 text-gray-700">{teacher.email || 'N/A'}</td>
+                                <td className="py-4 px-6 text-gray-700">{teacher.studentCount || 0}</td>
+                                <td className="py-4 px-6 text-gray-700">{teacher.classesCount || 0}</td>
+                                <td className="py-4 px-6 text-gray-700">{teacher.lastActive || 'Never'}</td>
                                 <td className="py-4 px-6">
-                                    <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(teacher.status)}`}>
-                                        {teacher.status}
+                                    <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(teacher.lastActive)}`}>
+                                        {getStatusText(teacher.lastActive)}
                                     </span>
                                 </td>
                                 <td className="py-4 px-6">
@@ -121,6 +165,13 @@ const TeachersPage = () => {
                                 </td>
                             </tr>
                         ))}
+                        {filteredTeachers.length === 0 && !loading && (
+                            <tr>
+                                <td colSpan="7" className="py-8 text-center text-gray-500">
+                                    No teachers found.
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>

@@ -21,8 +21,31 @@ const GradeSyllabus = () => {
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
+    // Add logic to redirect to specialized views if applicable
     useEffect(() => {
+        const gradeNum = parseInt(grade.replace('grade', ''));
+
+        // Redirect logic for specialized grade designs
+        if (gradeNum >= 1 && gradeNum <= 4) {
+            // Junior Grades (1-4) Use the new Junior Design
+            // We use window.location to force a full redirect if needed, but navigate is smoother
+            // However, to ensure they see the new route clearly:
+            if (!window.location.href.includes('/junior/')) {
+                window.location.href = `/junior/grade/${gradeNum}`;
+                return;
+            }
+        }
+        else if (gradeNum >= 5 && gradeNum <= 7) {
+            // Middle Grades (5-7) Use the new Professional Design
+            if (!window.location.href.includes('/middle/')) {
+                window.location.href = `/middle/grade/${gradeNum}`;
+                return;
+            }
+        }
+
         const fetchData = async () => {
+
             setLoading(true);
             try {
                 // Parse grade number from param (e.g., "1" from "grade1" or just "1")
