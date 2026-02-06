@@ -513,6 +513,27 @@ export const api = {
         return handleResponse(response);
     },
 
+    getAssessmentDashboardStats: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/dashboard-stats`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getAssessmentReports: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/reports`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getAssessmentReportDetail: async (sessionId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/reports/${sessionId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     studentAccess: async (serialNumber) => {
         const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/student-access`, {
             method: 'POST',
@@ -545,6 +566,31 @@ export const api = {
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.detail || 'Failed to start assessment');
+        }
+        return response.json();
+    },
+
+    submitAssessment: async (sessionId, answers) => {
+        const token = localStorage.getItem('studentToken');
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/submit-assessment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                session_id: sessionId,
+                answers: answers
+            })
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            // Handle FastAPI validation errors (array of objects)
+            let errorMessage = error.detail;
+            if (typeof errorMessage === 'object') {
+                errorMessage = JSON.stringify(errorMessage, null, 2);
+            }
+            throw new Error(errorMessage || 'Failed to submit assessment');
         }
         return response.json();
     },
