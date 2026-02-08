@@ -151,7 +151,7 @@ export const api = {
     getSkills: async (grade) => {
         const params = new URLSearchParams();
         if (grade) params.append('grade', grade);
-        const response = await fetch(`${BASE_URL}/api/v1/skills?${params.toString()}`, {
+        const response = await fetch(`${BASE_URL}/api/v1/skills/?${params.toString()}`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -597,7 +597,7 @@ export const api = {
 
     // --- Parent ---
     getLinkedChildren: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/children`, {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/children/`, {
             headers: getHeaders()
         });
         return handleResponse(response) || [];
@@ -663,7 +663,7 @@ export const api = {
     },
 
     getTeacherStudents: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/teacher/students`, {
+        const response = await fetch(`${BASE_URL}/api/v1/teacher/students/`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -678,28 +678,28 @@ export const api = {
     },
 
     getAdminStudents: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/students`, {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/students/`, {
             headers: getHeaders()
         });
         return handleResponse(response);
     },
 
     getAdminTeachers: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/teachers`, {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/teachers/`, {
             headers: getHeaders()
         });
         return handleResponse(response);
     },
 
     getAdminParents: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/parents`, {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/parents/`, {
             headers: getHeaders()
         });
         return handleResponse(response);
     },
 
     getAdminGuests: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/guests`, {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/guests/`, {
             headers: getHeaders()
         });
         return handleResponse(response);
