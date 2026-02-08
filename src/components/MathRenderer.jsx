@@ -12,23 +12,29 @@ const MathRenderer = ({ text, inline = true }) => {
     // Ensure string
     const stringText = String(text);
 
-    // Split by $$ ... $$ pattern
-    // The regex captures the content inside $$
-    const parts = stringText.split(/\$\$(.*?)\$\$/g);
+    // Split by delimiters: $$...$$, \[...\], \(...\)
+    const regex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))/g;
+
+    const parts = stringText.split(regex);
 
     return (
         <span>
             {parts.map((part, index) => {
-                // Odd indices are the captured math expressions
-                if (index % 2 === 1) {
-                    return inline ? (
-                        <InlineMath key={index} math={part} />
-                    ) : (
-                        <BlockMath key={index} math={part} />
-                    );
+                if (!part) return null;
+
+                // Check for delimiters and render appropriately
+                if (part.startsWith('$$') && part.endsWith('$$')) {
+                    const content = part.slice(2, -2);
+                    return inline ? <InlineMath key={index} math={content} /> : <BlockMath key={index} math={content} />;
+                } else if (part.startsWith('\\(') && part.endsWith('\\)')) {
+                    const content = part.slice(2, -2);
+                    return <InlineMath key={index} math={content} />;
+                } else if (part.startsWith('\\[') && part.endsWith('\\]')) {
+                    const content = part.slice(2, -2);
+                    return <BlockMath key={index} math={content} />;
+                } else {
+                    return <span key={index}>{part}</span>;
                 }
-                // Even indices are regular text
-                return <span key={index}>{part}</span>;
             })}
         </span>
     );
