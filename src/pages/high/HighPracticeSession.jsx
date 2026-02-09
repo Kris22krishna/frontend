@@ -138,25 +138,6 @@ const HighPracticeSession = () => {
         }
     };
 
-    const handleSkip = () => {
-        const currentQ = questions[currentIndex];
-        const attempt = {
-            question: currentQ,
-            userVal: 'Skipped',
-            status: 'skipped',
-            solution: currentQ.solution
-        };
-
-        setHistory(prev => [...prev, attempt]);
-        setStats(prev => ({
-            ...prev,
-            skipped: prev.skipped + 1,
-            total: prev.total + 1,
-            streak: 0
-        }));
-
-        handleNextStep();
-    };
 
     const handleNextStep = () => {
         if (currentIndex < questions.length - 1) {
@@ -347,31 +328,6 @@ const HighPracticeSession = () => {
     return (
         <div className="high-practice-page">
             <div className="high-practice-layout">
-                {/* Sidebar */}
-                <aside className="high-sidebar">
-                    <div className="high-logo">
-                        <BookOpen size={24} />
-                        <span>Skill100</span>
-                    </div>
-
-                    <div>
-                        <span className="high-palette-label">Question Palette</span>
-                        <div className="high-palette-grid">
-                            {questions.map((_, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`high-palette-item ${getQuestionStatus(idx)}`}
-                                    onClick={() => setCurrentIndex(idx)}
-                                >
-                                    {idx + 1}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <Link to="/math" className="high-exit-btn">Exit Session</Link>
-                </aside>
-
                 {/* Main Content */}
                 <main className="high-main-content">
                     <div className="high-header">
@@ -381,9 +337,35 @@ const HighPracticeSession = () => {
                                 <span className="high-badge">Practice Mode</span>
                             </div>
                         </div>
-                        <div className="high-subtitle">
-                            <Clock size={16} />
-                            {formatTime(elapsedTime)}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div className="high-subtitle">
+                                <Clock size={16} />
+                                {formatTime(elapsedTime)}
+                            </div>
+
+                            {/* Action Button moved to Header */}
+                            {!feedback ? (
+                                <button
+                                    className="high-btn primary"
+                                    onClick={handleCheck}
+                                    disabled={!userAnswer}
+                                    style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}
+                                >
+                                    Submit
+                                </button>
+                            ) : (
+                                <button
+                                    className="high-btn primary"
+                                    onClick={handleNextStep}
+                                    style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}
+                                >
+                                    {currentIndex < questions.length - 1 ? 'Next Question' : 'Finish'}
+                                </button>
+                            )}
+
+                            <Link to="/math" className="high-btn secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
+                                Exit
+                            </Link>
                         </div>
                     </div>
 
@@ -437,27 +419,24 @@ const HighPracticeSession = () => {
                         )}
 
                         {feedback && (
-                            <div className="high-feedback-row">
-                                <span className={`high-feedback-msg ${feedback}`}>
-                                    {feedback === 'correct' ? 'Correct Answer' : 'Incorrect Answer'}
-                                </span>
-                                {feedback === 'incorrect' && (
-                                    <span style={{ fontSize: '0.9rem', color: '#64748b' }}>
-                                        Correct: {currentQ.correctAnswer}
+                            <div className="high-feedback-container">
+                                <div className={`high-feedback-row ${feedback}`}>
+                                    <span className="high-feedback-msg">
+                                        {feedback === 'correct' ? 'Correct Answer!' : 'Incorrect Answer'}
                                     </span>
+                                </div>
+
+                                {feedback && currentQ.solution && (
+                                    <div className={`high-explanation-box ${feedback}`}>
+                                        <h4>Explanation</h4>
+                                        <div dangerouslySetInnerHTML={{ __html: currentQ.solution }} />
+                                    </div>
                                 )}
                             </div>
                         )}
 
                         <div className="high-actions">
-                            {!feedback ? (
-                                <>
-                                    <button className="high-btn secondary" onClick={handleSkip}>Skip</button>
-                                    <button className="high-btn primary" onClick={handleCheck} disabled={!userAnswer}>Submit</button>
-                                </>
-                            ) : (
-                                <button className="high-btn primary" onClick={handleNextStep}>Next Question</button>
-                            )}
+                            {/* Skip button removed */}
                         </div>
                     </div>
                 </main>

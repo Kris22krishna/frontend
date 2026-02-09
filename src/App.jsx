@@ -73,7 +73,8 @@ import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
 
-// High School Pages (Grades 8-10 professional design)
+// Senior Pages (Grades 8-10 professional design)
+import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
 import HighPracticeSession from './pages/high/HighPracticeSession';
 
 function App() {
@@ -88,6 +89,8 @@ function App() {
           <Route path="math/grade/:grade" element={<GradeSyllabus />} />
           {/* Middle Routes (Grades 5-7 professional design) */}
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
+          {/* Senior Routes (Grades 8-10 professional design) */}
+          <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
           {/* Practice Session moved to top level for full screen */}
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>

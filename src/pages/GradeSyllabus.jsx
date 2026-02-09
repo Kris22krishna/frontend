@@ -43,6 +43,13 @@ const GradeSyllabus = () => {
                 return;
             }
         }
+        else if (gradeNum >= 8 && gradeNum <= 10) {
+            // Senior Grades (8-10) Use the new Professional Sidebar Design
+            if (!window.location.href.includes('/senior/')) {
+                window.location.href = `/senior/grade/${gradeNum}`;
+                return;
+            }
+        }
 
         const fetchData = async () => {
 

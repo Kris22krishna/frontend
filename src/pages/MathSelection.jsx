@@ -193,7 +193,7 @@ const MathSelection = () => {
                                                 } else if (id >= 5 && id <= 7) {
                                                     navigate(`/middle/grade/${grade.id}`);
                                                 } else {
-                                                    navigate(`/math/grade/${grade.id}`);
+                                                    navigate(`/senior/grade/${grade.id}`);
                                                 }
                                             }}
                                             style={{ '--accent-gradient': category.gradient }}

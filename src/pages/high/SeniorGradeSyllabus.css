@@ -1,0 +1,362 @@
+/* Senior Grade Syllabus (Grade 8-10) - Grid + Modal Design */
+
+.senior-syllabus-page {
+    min-height: 100vh;
+    background-color: #F8FAFC;
+    /* Slate 50 */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1E293B;
+    /* Slate 800 */
+    padding-bottom: 4rem;
+}
+
+/* Header Section */
+.senior-header-container {
+    background: white;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 2rem 0;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.header-inner {
+    max-width: 1400px;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.breadcrumb {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #64748B;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.home-link {
+    color: #64748B;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.home-link:hover {
+    color: #4F46E5;
+}
+
+.page-title h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+}
+
+.page-subtitle {
+    color: #64748B;
+    font-size: 1.1rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* Main Content - Grid Layout */
+.senior-content-grid {
+    max-width: 1400px;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Topic Grid (5 Columns) */
+.topics-grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+}
+
+/* Topic Card */
+.topic-card {
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    height: 100%;
+}
+
+.topic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #818CF8;
+}
+
+.topic-card-icon {
+    width: 64px;
+    height: 64px;
+    background: #EEF2FF;
+    color: #4F46E5;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.topic-card:hover .topic-card-icon {
+    background: #4F46E5;
+    color: white;
+    transform: scale(1.1) rotate(5deg);
+}
+
+.topic-card h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.topic-meta {
+    margin-top: auto;
+    font-size: 0.875rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.75);
+    /* Slate 900 with opacity */
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal Content */
+.skills-modal {
+    background: white;
+    width: 100%;
+    max-width: 900px;
+    max-height: 85vh;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1E293B;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modal-close-btn {
+    background: #F1F5F9;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: #E2E8F0;
+    color: #0F172A;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+    background: #F8FAFC;
+}
+
+/* Skills Grid in Modal */
+.modal-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.skill-card-modal {
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+}
+
+.skill-card-modal:hover {
+    border-color: #818CF8;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.skill-card-modal h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.skill-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.skill-badge {
+    font-size: 0.75rem;
+    color: #64748B;
+    background: #F1F5F9;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.start-btn {
+    color: #4F46E5;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Loading */
+.senior-loading {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    font-weight: 500;
+    background: #F8FAFC;
+}
+
+/* Responsive */
+@media (max-width: 1280px) {
+    .topics-grid-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .topics-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .topics-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header-inner,
+    .senior-content-grid {
+        padding: 0 1rem;
+    }
+
+    .modal-overlay {
+        padding: 0;
+        /* Full screen on mobile */
+    }
+
+    .skills-modal {
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .topics-grid-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Text Close Button */
+.modal-close-btn-text {
+    background: #F1F5F9;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-close-btn-text:hover {
+    background: #E2E8F0;
+    color: #0F172A;
+    transform: translateY(-1px);
+}
