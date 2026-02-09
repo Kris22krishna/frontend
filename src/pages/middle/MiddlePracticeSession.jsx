@@ -1,36 +1,39 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Check, X, RefreshCw, Zap, Award, Star, Cloud, ArrowRight } from 'lucide-react';
-import Whiteboard from '../../components/Whiteboard';
 import { api } from '../../services/api';
 import './MiddlePracticeSession.css';
+
+// Components
+import { QuestionCard } from '../../components/QuestionCard';
+import { BottomBar } from '../../components/BottomBar';
+import { SunTimer } from '../../components/SunTimer';
+import { InlineScratchpad } from '../../components/InlineScratchpad';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
 
 const MiddlePracticeSession = () => {
     const { skillId } = useParams();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [userAnswer, setUserAnswer] = useState('');
-    const [feedback, setFeedback] = useState(null);
+    const [userAnswers, setUserAnswers] = useState({});
+    const [showExplanation, setShowExplanation] = useState(false);
+    const [elapsedTime, setElapsedTime] = useState(0); // Starts from 0
     const [stats, setStats] = useState({ correct: 0, wrong: 0, skipped: 0, total: 0, streak: 0 });
     const [completed, setCompleted] = useState(false);
     const [skillName, setSkillName] = useState('Math Practice');
     const [history, setHistory] = useState([]);
 
-    // Time Tracking
     const startTimeRef = useRef(Date.now());
-    const [timeTaken, setTimeTaken] = useState(0);
-
-    // Format time helper
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}m ${secs}s`;
-    };
 
     useEffect(() => {
         fetchQuestions();
         startTimeRef.current = Date.now();
+
+        const timer = setInterval(() => {
+            setElapsedTime((prev) => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
     }, [skillId]);
 
     const fetchQuestions = async () => {
@@ -47,12 +50,14 @@ const MiddlePracticeSession = () => {
             if (!Array.isArray(rawQuestions)) rawQuestions = [];
 
             const normalized = rawQuestions.map((q, idx) => ({
-                id: q.id || q.question_id || idx,
+                id: q.id || q.question_id || idx + 1,
                 text: q.question_text || q.question || q.question_html || "Question Text Missing",
                 options: q.options || [],
                 correctAnswer: q.correct_answer || q.answer || q.answer_value,
-                solution: q.solution || q.solution_html || q.explanation || "No detailed explanation available.",
-                type: q.type || q.question_type || 'MCQ'
+                explanation: q.solution || q.solution_html || q.explanation || "No detailed explanation available.",
+                type: (q.type || q.question_type || 'mcq').toLowerCase(),
+                image: q.imageUrl || q.image,
+                hint: q.hint
             }));
 
             setQuestions(normalized);
@@ -65,185 +70,128 @@ const MiddlePracticeSession = () => {
         }
     };
 
-    const handleCheck = () => {
+    const handleAnswer = (answer) => {
         const currentQ = questions[currentIndex];
-        if (!currentQ) return;
-
-        const isCorrect = userAnswer.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
-
-        setFeedback(isCorrect ? 'correct' : 'incorrect');
-
-        // Record history
-        const attempt = {
-            question: currentQ,
-            userVal: userAnswer,
-            status: isCorrect ? 'correct' : 'wrong',
-            solution: currentQ.solution
-        };
-
-        if (!history.find(h => h.question.id === currentQ.id)) {
-            setHistory(prev => [...prev, attempt]);
-        }
-
-        if (isCorrect) {
-            setStats(prev => ({
-                ...prev,
-                correct: prev.correct + 1,
-                total: prev.total + 1,
-                streak: prev.streak + 1
-            }));
-        } else {
-            setStats(prev => ({
-                ...prev,
-                wrong: prev.wrong + 1,
-                total: prev.total + 1,
-                streak: 0
-            }));
-        }
+        setUserAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
     };
 
-    const handleSkip = () => {
+    const handleClear = () => {
         const currentQ = questions[currentIndex];
-
-        // Record skip
-        const attempt = {
-            question: currentQ,
-            userVal: 'Skipped',
-            status: 'skipped',
-            solution: currentQ.solution
-        };
-
-        setHistory(prev => [...prev, attempt]);
-        setStats(prev => ({
-            ...prev,
-            skipped: prev.skipped + 1,
-            total: prev.total + 1,
-            streak: 0
-        }));
-
-        handleNextStep();
+        const newAnswers = { ...userAnswers };
+        delete newAnswers[currentQ.id];
+        setUserAnswers(newAnswers);
     };
 
-    const handleNextStep = () => {
+    const handleNext = () => {
+        const currentQ = questions[currentIndex];
+        const userAnswer = userAnswers[currentQ.id];
+
+        if (userAnswer && currentQ.correctAnswer) {
+            const isCorrect = userAnswer.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
+
+            if (!history.find(h => h.question.id === currentQ.id)) {
+                setHistory(prev => [...prev, {
+                    question: currentQ,
+                    userVal: userAnswer,
+                    status: isCorrect ? 'correct' : 'wrong'
+                }]);
+
+                setStats(prev => ({
+                    ...prev,
+                    correct: isCorrect ? prev.correct + 1 : prev.correct,
+                    wrong: !isCorrect ? prev.wrong + 1 : prev.wrong,
+                    total: prev.total + 1,
+                    streak: isCorrect ? prev.streak + 1 : 0
+                }));
+            }
+
+            if (!isCorrect) {
+                setShowExplanation(true);
+                return;
+            }
+        } else if (!userAnswer) {
+            if (!history.find(h => h.question.id === currentQ.id)) {
+                setHistory(prev => [...prev, {
+                    question: currentQ,
+                    userVal: 'Skipped',
+                    status: 'skipped'
+                }]);
+                setStats(prev => ({ ...prev, skipped: prev.skipped + 1, total: prev.total + 1, streak: 0 }));
+            }
+        }
+
+        proceedToNext();
+    };
+
+    const proceedToNext = () => {
+        setShowExplanation(false);
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(prev => prev + 1);
-            setUserAnswer('');
-            setFeedback(null);
         } else {
-            finishSession();
+            setCompleted(true);
         }
     };
 
-    const finishSession = () => {
-        const endTime = Date.now();
-        const durationSeconds = Math.floor((endTime - startTimeRef.current) / 1000);
-        setTimeTaken(durationSeconds);
-        setCompleted(true);
+    const handlePrev = () => {
+        if (currentIndex > 0) {
+            setCurrentIndex(prev => prev - 1);
+            setShowExplanation(false);
+        }
     };
 
-    // Live Timer
-    const [elapsedTime, setElapsedTime] = useState(0);
-
-    useEffect(() => {
-        let timer;
-        if (!loading && !completed) {
-            timer = setInterval(() => {
-                const seconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
-                setElapsedTime(seconds);
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [loading, completed]);
-
-    const getQuestionStatus = (idx) => {
-        if (idx === currentIndex) return 'current';
-        const historyItem = history.find(h => h.question.id === questions[idx]?.id);
-        if (historyItem) return historyItem.status; // 'correct', 'wrong', 'skipped'
-        return 'pending';
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}m ${secs}s`;
     };
 
     if (loading) return <div className="middle-loading">Generating problems...</div>;
 
     if (completed) {
-        // ... (Completion view remains same, but maybe use TimeTaken from ref/state)
-        const accuracy = Math.round((stats.correct / stats.total) * 100) || 0;
-
+        const accuracy = Math.round((stats.correct / (stats.total || 1)) * 100);
         return (
-            <div className="middle-practice-page">
-                <div className="middle-practice-container completed-view-full">
-                    <div className="report-card">
-                        <div className="report-header">
-                            <div className="report-title">
-                                <h1>Session Report</h1>
-                                <p>{skillName}</p>
-                            </div>
-                            <div className="report-score">
-                                <div className="score-circle">
-                                    <span className="score-number">{accuracy}%</span>
-                                    <span className="score-sub">Accuracy</span>
+            <div className="middle-practice-page overflow-y-auto">
+                <div className="report-container p-6 max-w-4xl mx-auto">
+                    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                        <div className="bg-[#31326F] p-8 text-white text-center">
+                            <h1 className="text-3xl font-bold mb-2">Practice Complete!</h1>
+                            <p className="opacity-80">{skillName}</p>
+                            <div className="mt-6 flex justify-center gap-8">
+                                <div>
+                                    <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Accuracy</p>
+                                    <p className="text-3xl font-bold">{accuracy}%</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Time</p>
+                                    <p className="text-3xl font-bold">{formatTime(elapsedTime)}</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Stats Grid */}
-                        <div className="stats-grid">
-                            <div className="stat-box">
-                                <span className="stat-label">Time Taken</span>
-                                <span className="stat-val">{formatTime(timeTaken || elapsedTime)}</span>
-                            </div>
-                            <div className="stat-box correct">
-                                <span className="stat-label">Correct</span>
-                                <span className="stat-val">{stats.correct}</span>
-                            </div>
-                            <div className="stat-box wrong">
-                                <span className="stat-label">Wrong</span>
-                                <span className="stat-val">{stats.wrong}</span>
-                            </div>
-                            <div className="stat-box skipped">
-                                <span className="stat-label">Skipped</span>
-                                <span className="stat-val">{stats.skipped}</span>
-                            </div>
-                        </div>
-
-                        <div className="question-analysis">
-                            <h3>Detailed Analysis</h3>
-                            {history.map((item, idx) => (
-                                <div key={idx} className={`analysis-item ${item.status}`}>
-                                    <div className="analysis-header">
-                                        <div className={`status-badge ${item.status}`}>
-                                            {item.status === 'correct' && <Check size={16} />}
-                                            {item.status === 'wrong' && <X size={16} />}
-                                            {item.status === 'skipped' && <RefreshCw size={16} />}
-                                            <span>{item.status.toUpperCase()}</span>
-                                        </div>
-                                        <span className="q-number">Question {idx + 1}</span>
-                                    </div>
-
-                                    <div className="analysis-content">
-                                        <div className="q-text" dangerouslySetInnerHTML={{ __html: item.question.text }} />
-
-                                        <div className="ans-comparison">
-                                            <div className="ans-block user">
-                                                <span className="label">Your Answer:</span>
-                                                <span className="val">{item.userVal}</span>
-                                            </div>
-                                            <div className="ans-block correct">
-                                                <span className="label">Correct Answer:</span>
-                                                <span className="val">{item.question.correctAnswer}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="explanation-block">
-                                            <h4><Zap size={16} /> Explanation:</h4>
-                                            <div dangerouslySetInnerHTML={{ __html: item.question.solution }} />
-                                        </div>
-                                    </div>
+                        <div className="p-8">
+                            <div className="grid grid-cols-4 gap-4 mb-8">
+                                <div className="bg-green-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-green-600 font-bold uppercase mb-1">Correct</p>
+                                    <p className="text-2xl font-bold text-green-700">{stats.correct}</p>
                                 </div>
-                            ))}
-                        </div>
+                                <div className="bg-red-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-red-600 font-bold uppercase mb-1">Wrong</p>
+                                    <p className="text-2xl font-bold text-red-700">{stats.wrong}</p>
+                                </div>
+                                <div className="bg-yellow-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-yellow-600 font-bold uppercase mb-1">Skipped</p>
+                                    <p className="text-2xl font-bold text-yellow-700">{stats.skipped}</p>
+                                </div>
+                                <div className="bg-blue-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-blue-600 font-bold uppercase mb-1">Total</p>
+                                    <p className="text-2xl font-bold text-blue-700">{stats.total}</p>
+                                </div>
+                            </div>
 
-                        <div className="report-actions">
-                            <Link to="/math" className="middle-btn primary">Back to Topics</Link>
+                            <div className="flex justify-center gap-4">
+                                <Link to="/math" className="px-8 py-3 bg-[#31326F] text-white rounded-xl font-bold hover:bg-[#25265E] transition-all">Back to Topics</Link>
+                                <button onClick={() => window.location.reload()} className="px-8 py-3 border-2 border-[#31326F] text-[#31326F] rounded-xl font-bold hover:bg-gray-50 transition-all">Try Again</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -253,145 +201,91 @@ const MiddlePracticeSession = () => {
 
     const currentQ = questions[currentIndex];
 
-    // Whiteboard placeholder
     return (
-        <div className="middle-practice-page full-screen-mode">
-            {/* Animated Background Elements */}
-            <div className="bg-decoration circle-1"></div>
-            <div className="bg-decoration circle-2"></div>
-            <div className="bg-decoration circle-3"></div>
-
-            {/* Floating Stickers */}
-            <div className="sticker star-1"><Star size={40} fill="#ffd700" color="#b45309" /></div>
-            <div className="sticker cloud-1"><Cloud size={60} fill="white" color="#cbd5e1" /></div>
-
-            <div className="middle-practice-layout three-col-grid">
-
-                {/* COL 1: Sidebar Stats & Palette */}
-                <aside className="middle-sidebar glass-panel">
-                    <div className="sidebar-header">
-                        <h2>{skillName}</h2>
-                        <div className="timer-display">
-                            <RefreshCw size={16} className="spin-slow" />
-                            <span>{formatTime(elapsedTime)}</span>
-                        </div>
+        <div className="h-screen w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
+            <header className="flex items-center justify-between px-6 py-2 shrink-0 z-20 h-20">
+                <SunTimer timeLeft={elapsedTime} />
+                <div className="flex items-center gap-4">
+                    <div className="mascot-container w-14 h-14 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/20">
+                        <img src="/assets/mascot-placeholder.png" alt="Mascot" className="w-10 h-10 object-contain" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<span class=\"text-2xl\">🐯</span>' }} />
                     </div>
+                </div>
+            </header>
 
-                    <div className="question-palette">
-                        <span className="palette-label">Question Palette</span>
-                        <div className="palette-grid">
-                            {questions.map((_, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`palette-item ${getQuestionStatus(idx)}`}
-                                >
-                                    {idx + 1}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="stats-panel-compact">
-                        <div className="stat-row">
-                            <Zap size={18} className="stat-icon streak" />
-                            <span>Streak: <strong>{stats.streak}</strong></span>
-                        </div>
-                        <div className="stat-row">
-                            <Check size={18} className="stat-icon correct" />
-                            <span>Score: <strong>{stats.correct}</strong>/10</span>
-                        </div>
-                    </div>
-
-                    <Link to="/math" className="exit-btn">Exit Practice</Link>
-                </aside>
-
-                {/* COL 2: Main Question Area */}
-                <main className="middle-question-area">
-                    <div className="question-card glass-card pop-in">
-                        <span className="topic-tag">Problem {currentIndex + 1}</span>
-                        <div className="question-text">
-                            {currentQ?.text && (
-                                <div dangerouslySetInnerHTML={{ __html: currentQ.text }} />
+            <div className="flex-1 flex gap-6 px-6 pb-6 overflow-hidden max-w-[1400px] mx-auto w-full">
+                {/* Left Column: Question Card */}
+                <main className="flex-[3] relative h-full min-h-0">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentQ?.id}
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.2 }}
+                            className="h-full"
+                        >
+                            {currentQ && (
+                                <QuestionCard
+                                    question={currentQ}
+                                    selectedAnswer={userAnswers[currentQ.id]}
+                                    onAnswer={handleAnswer}
+                                    onClear={handleClear}
+                                />
                             )}
-                        </div>
-
-                        {currentQ?.imageUrl && (
-                            <div className="question-image">
-                                <img src={currentQ.imageUrl} alt="Question visual" />
-                            </div>
-                        )}
-
-                        <div className={`options-grid ${currentQ?.type === 'true_false' ? 'tf-grid' : ''}`}>
-                            {currentQ?.options?.map((opt, idx) => {
-                                const isSelected = userAnswer === opt;
-
-                                let btnClass = `option-btn ${isSelected ? 'selected' : ''}`;
-                                if (feedback) {
-                                    if (opt === currentQ.correctAnswer) btnClass += ' correct';
-                                    else if (isSelected && feedback === 'incorrect') btnClass += ' wrong';
-                                }
-
-                                return (
-                                    <button
-                                        key={idx}
-                                        className={btnClass}
-                                        onClick={() => !feedback && setUserAnswer(opt)}
-                                        disabled={!!feedback}
-                                    >
-                                        <div className="opt-letter">{String.fromCharCode(65 + idx)}</div>
-                                        <span>{opt}</span>
-                                        {feedback && opt === currentQ.correctAnswer && <Check size={20} className="ml-auto text-green-600" />}
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        {/* Only for input type */}
-                        {currentQ?.type === 'input' && (
-                            <input
-                                type="text"
-                                className="middle-input"
-                                value={userAnswer}
-                                onChange={(e) => setUserAnswer(e.target.value)}
-                                placeholder="Type your answer..."
-                                disabled={!!feedback}
-                            />
-                        )}
-
-                        <div className="action-bar">
-                            {feedback ? (
-                                <div className="feedback-display">
-                                    <span className={`feedback-msg ${feedback}`}>
-                                        {feedback === 'correct' ? 'Excellent!' : 'Keep trying!'}
-                                    </span>
-                                    <button className="middle-btn next" onClick={handleNextStep}>
-                                        Next Problem <ArrowRight size={20} />
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex gap-4">
-                                    <button className="middle-btn secondary" onClick={handleSkip}>
-                                        Skip
-                                    </button>
-                                    <button
-                                        className="middle-btn primary"
-                                        onClick={handleCheck}
-                                        disabled={!userAnswer}
-                                    >
-                                        Check Answer
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </main>
 
-                {/* COL 3: Whiteboard */}
-                <aside className="middle-whiteboard-col">
-                    <Whiteboard isOpen={true} />
+                {/* Right Column: Inline Scratchpad */}
+                <aside className="flex-[2] h-full min-h-0">
+                    <InlineScratchpad />
                 </aside>
-
             </div>
+
+            {/* Bottom Navigation */}
+            <div className="shrink-0 px-6 pb-6 max-w-[1400px] mx-auto w-full">
+                <BottomBar
+                    mode="junior"
+                    onClear={handleClear}
+                    onNext={handleNext}
+                    onPrev={handlePrev}
+                    canGoNext={true}
+                    canGoPrev={currentIndex > 0}
+                />
+            </div>
+
+            {/* Explanation Modal */}
+            <AnimatePresence>
+                {showExplanation && (
+                    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl border-2 border-red-100"
+                        >
+                            <div className="flex items-center gap-3 text-red-500 mb-4">
+                                <X className="w-8 h-8 p-1 bg-red-100 rounded-full" />
+                                <h3 className="text-2xl font-bold">Incorrect!</h3>
+                            </div>
+                            <div className="mb-6">
+                                <p className="text-gray-400 text-xs font-bold uppercase mb-1">Correct Answer</p>
+                                <p className="text-xl font-bold text-green-600">{currentQ.correctAnswer}</p>
+                            </div>
+                            <div className="mb-8">
+                                <p className="text-gray-400 text-xs font-bold uppercase mb-1">Explanation</p>
+                                <div className="text-gray-700 leading-relaxed max-h-40 overflow-y-auto" dangerouslySetInnerHTML={{ __html: currentQ.explanation }} />
+                            </div>
+                            <button
+                                onClick={proceedToNext}
+                                className="w-full py-4 bg-[#31326F] text-white rounded-2xl font-bold shadow-lg hover:bg-[#25265E] transition-all"
+                            >
+                                Next Question
+                            </button>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
