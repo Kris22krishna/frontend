@@ -9,7 +9,10 @@ import { BottomBar } from '../../components/BottomBar';
 import { SunTimer } from '../../components/SunTimer';
 import { InlineScratchpad } from '../../components/InlineScratchpad';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, CheckCircle2, ChevronRight } from 'lucide-react';
+
+// Assets
+import mascotImg from '../../assets/mascot.png';
 
 const MiddlePracticeSession = () => {
     const { skillId } = useParams();
@@ -18,7 +21,7 @@ const MiddlePracticeSession = () => {
     const [loading, setLoading] = useState(true);
     const [userAnswers, setUserAnswers] = useState({});
     const [showExplanation, setShowExplanation] = useState(false);
-    const [elapsedTime, setElapsedTime] = useState(0); // Starts from 0
+    const [elapsedTime, setElapsedTime] = useState(0);
     const [stats, setStats] = useState({ correct: 0, wrong: 0, skipped: 0, total: 0, streak: 0 });
     const [completed, setCompleted] = useState(false);
     const [skillName, setSkillName] = useState('Math Practice');
@@ -73,54 +76,30 @@ const MiddlePracticeSession = () => {
     const handleAnswer = (answer) => {
         const currentQ = questions[currentIndex];
         setUserAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
-    };
 
-    const handleClear = () => {
-        const currentQ = questions[currentIndex];
-        const newAnswers = { ...userAnswers };
-        delete newAnswers[currentQ.id];
-        setUserAnswers(newAnswers);
-    };
+        // Check if wrong immediately to pop modal
+        const isCorrect = String(answer).trim().toLowerCase() === String(currentQ.correctAnswer).trim().toLowerCase();
 
-    const handleNext = () => {
-        const currentQ = questions[currentIndex];
-        const userAnswer = userAnswers[currentQ.id];
+        // Update stats
+        if (!history.find(h => h.question.id === currentQ.id)) {
+            setHistory(prev => [...prev, {
+                question: currentQ,
+                userVal: answer,
+                status: isCorrect ? 'correct' : 'wrong'
+            }]);
 
-        if (userAnswer && currentQ.correctAnswer) {
-            const isCorrect = userAnswer.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
-
-            if (!history.find(h => h.question.id === currentQ.id)) {
-                setHistory(prev => [...prev, {
-                    question: currentQ,
-                    userVal: userAnswer,
-                    status: isCorrect ? 'correct' : 'wrong'
-                }]);
-
-                setStats(prev => ({
-                    ...prev,
-                    correct: isCorrect ? prev.correct + 1 : prev.correct,
-                    wrong: !isCorrect ? prev.wrong + 1 : prev.wrong,
-                    total: prev.total + 1,
-                    streak: isCorrect ? prev.streak + 1 : 0
-                }));
-            }
-
-            if (!isCorrect) {
-                setShowExplanation(true);
-                return;
-            }
-        } else if (!userAnswer) {
-            if (!history.find(h => h.question.id === currentQ.id)) {
-                setHistory(prev => [...prev, {
-                    question: currentQ,
-                    userVal: 'Skipped',
-                    status: 'skipped'
-                }]);
-                setStats(prev => ({ ...prev, skipped: prev.skipped + 1, total: prev.total + 1, streak: 0 }));
-            }
+            setStats(prev => ({
+                ...prev,
+                correct: isCorrect ? prev.correct + 1 : prev.correct,
+                wrong: !isCorrect ? prev.wrong + 1 : prev.wrong,
+                total: prev.total + 1,
+                streak: isCorrect ? prev.streak + 1 : 0
+            }));
         }
 
-        proceedToNext();
+        if (!isCorrect) {
+            setShowExplanation(true);
+        }
     };
 
     const proceedToNext = () => {
@@ -200,15 +179,17 @@ const MiddlePracticeSession = () => {
     }
 
     const currentQ = questions[currentIndex];
+    const userAnswer = userAnswers[currentQ?.id];
+    const isAnswerCorrect = userAnswer && String(userAnswer).trim().toLowerCase() === String(currentQ?.correctAnswer).trim().toLowerCase();
 
     return (
         <div className="h-screen w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
-            <header className="flex items-center justify-between px-6 py-2 shrink-0 z-20 h-20">
-                <SunTimer timeLeft={elapsedTime} />
-                <div className="flex items-center gap-4">
-                    <div className="mascot-container w-14 h-14 bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/20">
-                        <img src="/assets/mascot-placeholder.png" alt="Mascot" className="w-10 h-10 object-contain" onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<span class=\"text-2xl\">🐯</span>' }} />
-                    </div>
+            <header className="flex items-center justify-between px-8 py-4 shrink-0 z-20 h-32">
+                <div className="flex items-center">
+                    <SunTimer timeLeft={elapsedTime} />
+                </div>
+                <div className="flex items-center">
+                    <img src={mascotImg} alt="Mascot" className="w-24 h-24 object-contain drop-shadow-lg" />
                 </div>
             </header>
 
@@ -229,7 +210,7 @@ const MiddlePracticeSession = () => {
                                     question={currentQ}
                                     selectedAnswer={userAnswers[currentQ.id]}
                                     onAnswer={handleAnswer}
-                                    onClear={handleClear}
+                                    onViewExplanation={() => setShowExplanation(true)}
                                 />
                             )}
                         </motion.div>
@@ -246,10 +227,12 @@ const MiddlePracticeSession = () => {
             <div className="shrink-0 px-6 pb-6 max-w-[1400px] mx-auto w-full">
                 <BottomBar
                     mode="junior"
-                    onClear={handleClear}
-                    onNext={handleNext}
+                    onClear={() => { }}
+                    onNext={proceedToNext}
                     onPrev={handlePrev}
-                    canGoNext={true}
+                    onViewExplanation={() => setShowExplanation(true)}
+                    showViewExplanation={!!userAnswer && isAnswerCorrect}
+                    canGoNext={!!userAnswer}
                     canGoPrev={currentIndex > 0}
                 />
             </div>
@@ -262,26 +245,61 @@ const MiddlePracticeSession = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl border-2 border-red-100"
+                            className="bg-white rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex min-h-[500px]"
                         >
-                            <div className="flex items-center gap-3 text-red-500 mb-4">
-                                <X className="w-8 h-8 p-1 bg-red-100 rounded-full" />
-                                <h3 className="text-2xl font-bold">Incorrect!</h3>
+                            {/* Left Side: Mascot Area */}
+                            <div className="flex-[4] bg-[#E0FBEF] flex flex-col items-center justify-center p-8 relative">
+                                <img src={mascotImg} alt="Mascot" className="w-64 h-64 object-contain drop-shadow-xl" />
+                                <div className="mt-8 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#4FB7B3]/30">
+                                    <span className="text-[#31326F] font-bold">Keep going!</span>
+                                </div>
                             </div>
-                            <div className="mb-6">
-                                <p className="text-gray-400 text-xs font-bold uppercase mb-1">Correct Answer</p>
-                                <p className="text-xl font-bold text-green-600">{currentQ.correctAnswer}</p>
+
+                            {/* Right Side: Explanation Content */}
+                            <div className="flex-[6] p-12 flex flex-col">
+                                <div className="flex items-center gap-3 mb-8">
+                                    {!isAnswerCorrect ? (
+                                        <>
+                                            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                                <X className="w-6 h-6 text-red-500" />
+                                            </div>
+                                            <h3 className="text-3xl font-black text-[#31326F]">Not quite right</h3>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                                <CheckCircle2 className="w-6 h-6 text-green-500" />
+                                            </div>
+                                            <h3 className="text-3xl font-black text-[#31326F]">Excellent!</h3>
+                                        </>
+                                    )}
+                                </div>
+
+                                <div className="mb-8">
+                                    <p className="text-[#4FB7B3] text-sm font-black uppercase tracking-widest mb-3">Correct Answer</p>
+                                    <div className="bg-[#E0FBEF]/50 p-4 rounded-2xl flex items-center gap-3 border border-[#4FB7B3]/20">
+                                        <div className="w-6 h-6 rounded-full border-2 border-[#4FB7B3] flex items-center justify-center shadow-sm">
+                                            <div className="w-3 h-3 bg-[#4FB7B3] rounded-full" />
+                                        </div>
+                                        <span className="text-xl font-bold text-[#31326F]">{currentQ.correctAnswer}</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex-1">
+                                    <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
+                                    <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin" dangerouslySetInnerHTML={{ __html: currentQ.explanation }} />
+                                </div>
+
+                                <div className="mt-8 flex justify-end">
+                                    <button
+                                        onClick={() => setShowExplanation(false)}
+                                        className="flex items-center gap-2 px-10 py-4 bg-[#31326F] text-white rounded-2xl font-black text-lg shadow-lg hover:shadow-xl hover:bg-[#25265E] transition-all"
+                                    >
+                                        Got it
+                                        <ChevronRight size={24} />
+                                    </button>
+                                </div>
                             </div>
-                            <div className="mb-8">
-                                <p className="text-gray-400 text-xs font-bold uppercase mb-1">Explanation</p>
-                                <div className="text-gray-700 leading-relaxed max-h-40 overflow-y-auto" dangerouslySetInnerHTML={{ __html: currentQ.explanation }} />
-                            </div>
-                            <button
-                                onClick={proceedToNext}
-                                className="w-full py-4 bg-[#31326F] text-white rounded-2xl font-bold shadow-lg hover:bg-[#25265E] transition-all"
-                            >
-                                Next Question
-                            </button>
                         </motion.div>
                     </div>
                 )}

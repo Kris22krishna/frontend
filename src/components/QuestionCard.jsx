@@ -1,11 +1,9 @@
 import { motion } from 'framer-motion';
 import { ImageWithFallback } from './ImageWithFallback';
-import { Eye } from 'lucide-react';
 
-export function QuestionCard({ question, selectedAnswer, onAnswer, onViewExplanation }) {
+export function QuestionCard({ question, selectedAnswer, onAnswer }) {
     const isImageQuestion = question.type === 'image' && !!question.image;
     const hasAnswered = !!selectedAnswer;
-    const isCorrect = hasAnswered && String(selectedAnswer).trim().toLowerCase() === String(question.correctAnswer).trim().toLowerCase();
 
     const OptionButton = ({ option, idx }) => {
         const isSelected = selectedAnswer === option;
@@ -53,7 +51,7 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onViewExplana
     };
 
     return (
-        <div className="bg-white rounded-3xl shadow-sm border border-[#A8FBD3]/50 overflow-hidden flex flex-col h-full relative">
+        <div className="bg-white rounded-3xl shadow-sm border border-[#A8FBD3]/50 overflow-hidden flex flex-col h-full">
             <div className="flex-1 flex flex-col p-6 h-full overflow-hidden">
 
                 {isImageQuestion ? (
@@ -114,7 +112,7 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onViewExplana
                                         placeholder="Type your answer here..."
                                         className={`w-full p-5 text-xl rounded-xl border-2 outline-none transition-all text-[#31326F] placeholder-gray-400
                                             ${hasAnswered
-                                                ? (isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50')
+                                                ? (String(selectedAnswer).trim().toLowerCase() === String(question.correctAnswer).trim().toLowerCase() ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50')
                                                 : 'border-gray-200 focus:border-[#637AB9] focus:ring-4 focus:ring-[#637AB9]/10'
                                             }`}
                                     />
@@ -137,19 +135,6 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onViewExplana
                     </>
                 )}
             </div>
-
-            {/* View Explanation Button (Only if correct) */}
-            {hasAnswered && isCorrect && (
-                <div className="absolute top-4 right-6">
-                    <button
-                        onClick={onViewExplanation}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#637AB9]/10 text-[#637AB9] rounded-xl font-bold border-2 border-[#637AB9]/20 hover:bg-[#637AB9]/20 transition-all text-sm"
-                    >
-                        <Eye size={16} />
-                        View Explanation
-                    </button>
-                </div>
-            )}
         </div>
     );
 }
