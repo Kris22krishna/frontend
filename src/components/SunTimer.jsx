@@ -7,13 +7,21 @@ export function SunTimer({ timeLeft }) {
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
+    // Animation variants for the rotating sun rays
+    const spinTransition = {
+        repeat: Infinity,
+        ease: "linear",
+        duration: 10
+    };
+
     return (
+        // Enlarged container (w-28 h-28) for better visibility in the header
         <div className="relative w-28 h-28 flex items-center justify-center">
-            {/* Sun Rays - Orbiting Container */}
+            {/* Spinning Sun Rays Background */}
             <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0"
+                transition={spinTransition}
+                className="absolute inset-0 w-full h-full"
             >
                 {[...Array(12)].map((_, i) => (
                     <div
