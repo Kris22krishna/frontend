@@ -280,7 +280,9 @@ const MiddlePracticeSession = () => {
                                         <div className="w-6 h-6 rounded-full border-2 border-[#4FB7B3] flex items-center justify-center shadow-sm">
                                             <div className="w-3 h-3 bg-[#4FB7B3] rounded-full" />
                                         </div>
-                                        <span className="text-xl font-bold text-[#31326F]">{currentQ.correctAnswer}</span>
+                                        <span className="text-xl font-bold text-[#31326F]">
+                                            <LatexText text={currentQ.correctAnswer} />
+                                        </span>
                                     </div>
                                 </div>
 
