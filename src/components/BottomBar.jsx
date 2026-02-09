@@ -1,14 +1,12 @@
-import { ChevronLeft, ChevronRight, Eraser, Eye } from 'lucide-react';
+import { ChevronRight, Eraser, Eye } from 'lucide-react';
 import clsx from 'clsx';
 
 export function BottomBar({
     mode,
     onClear,
     onNext,
-    onPrev,
     onViewExplanation,
     canGoNext,
-    canGoPrev,
     showViewExplanation
 }) {
     const isJunior = mode === 'junior';
@@ -57,20 +55,11 @@ export function BottomBar({
             {/* Right Group (Navigation) */}
             <div className="flex items-center gap-4">
                 <button
-                    onClick={onPrev}
-                    disabled={!canGoPrev}
-                    className={clsx(buttonBase, secondaryBtn)}
-                >
-                    <ChevronLeft size={20} />
-                    <span className="hidden sm:inline">Previous</span>
-                </button>
-
-                <button
                     onClick={onNext}
                     disabled={!canGoNext}
                     className={clsx(buttonBase, primaryBtn)}
                 >
-                    <span className="hidden sm:inline">Next</span>
+                    <span>Next</span>
                     <ChevronRight size={20} />
                 </button>
             </div>

@@ -229,11 +229,9 @@ const MiddlePracticeSession = () => {
                     mode="junior"
                     onClear={() => { }}
                     onNext={proceedToNext}
-                    onPrev={handlePrev}
                     onViewExplanation={() => setShowExplanation(true)}
-                    showViewExplanation={!!userAnswer && isAnswerCorrect}
+                    showViewExplanation={!!userAnswer}
                     canGoNext={!!userAnswer}
-                    canGoPrev={currentIndex > 0}
                 />
             </div>
 
