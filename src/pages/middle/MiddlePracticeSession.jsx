@@ -181,15 +181,20 @@ const MiddlePracticeSession = () => {
 
     const currentQ = questions[currentIndex];
     const userAnswer = userAnswers[currentQ?.id];
+    // Check if the user's answer matches the correct answer (case-insensitive)
     const isAnswerCorrect = userAnswer && String(userAnswer).trim().toLowerCase() === String(currentQ?.correctAnswer).trim().toLowerCase();
 
     return (
         <div className="h-screen w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
+            {/* Header Section: Contains SunTimer and Mascot */}
+            {/* Increased height to h-32 to prevent clipping and improve layout */}
             <header className="flex items-center justify-between px-8 py-4 shrink-0 z-20 h-32">
                 <div className="flex items-center">
+                    {/* Enlarged SunTimer for better visibility */}
                     <SunTimer timeLeft={elapsedTime} />
                 </div>
                 <div className="flex items-center">
+                    {/* Enlarged Mascot Image aligned with timer */}
                     <img src={mascotImg} alt="Mascot" className="w-24 h-24 object-contain drop-shadow-lg" />
                 </div>
             </header>
@@ -290,6 +295,7 @@ const MiddlePracticeSession = () => {
                                 <div className="flex-1">
                                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
                                     <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin">
+                                        {/* Render explanation text with LaTeX support */}
                                         <LatexText text={currentQ.explanation} />
                                     </div>
                                 </div>

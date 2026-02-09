@@ -6,10 +6,10 @@ export function LatexText({ text, className = "" }) {
     if (!text) return null;
 
     // Regex to match math delimiters:
-    // 1. $$ ... $$ (Display/Inline)
-    // 2. \[ ... \] (Display)
-    // 3. \( ... \) (Inline)
-    // 4. $ ... $ (Inline) - Negative lookbehind (?<!\\) ensures we don't match escaped \$
+    // 1. $$ ... $$ (Display/Inline) - Standard LaTeX display math
+    // 2. \[ ... \] (Display) - Standard LaTeX display math
+    // 3. \( ... \) (Inline) - Standard LaTeX inline math
+    // 4. $ ... $ (Inline) - Common markdown inline math (Negative lookbehind (?<!\\) ensures we don't match escaped \$)
     const regex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\(.*?\\\)|(?<!\\)\$[\s\S]*?(?<!\\)\$)/g;
 
     const parts = text.split(regex);

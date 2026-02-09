@@ -1,6 +1,10 @@
 import { ChevronRight, Eraser, Eye } from 'lucide-react';
 import clsx from 'clsx';
 
+// BottomBar Component
+// Renders the bottom navigation bar with context-aware buttons.
+// - "View Explanation" button logic: Centered and only shown when allowed.
+// - "Next" button logic: Shows "Finish" on the last question.
 export function BottomBar({
     mode,
     onClear,
@@ -24,24 +28,21 @@ export function BottomBar({
     const explanationBtn = "bg-[#637AB9]/10 text-[#637AB9] border-2 border-[#637AB9]/30 rounded-xl hover:bg-[#637AB9]/20 hover:border-[#637AB9]/50 font-bold";
 
     return (
-        <div className={clsx(
-            "h-20 px-6 md:px-8 flex items-center justify-between z-10",
-            isJunior
-                ? "bg-white/90 backdrop-blur-md border-t border-[#A8FBD3]/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-2xl"
-                : "bg-white border-t border-gray-200"
-        )}>
+        <div className="h-24 bg-white rounded-3xl shadow-sm border border-[#A8FBD3]/50 px-8 flex items-center justify-between relative">
 
-            {/* Left Group */}
+            {/* Left Side: Scratchpad Toggle (Clear button - Hidden on small screens if needed, logic preserved) */}
             <div className="flex items-center gap-4">
+                {/* Previous button removed as per user request */}
                 <button onClick={onClear} className={clsx(buttonBase, secondaryBtn, "hidden md:flex")}>
                     <Eraser size={18} />
                     Clear Answer
                 </button>
             </div>
 
-            {/* Center Group - View Explanation */}
-            <div className="flex items-center justify-center">
-                {showViewExplanation && onViewExplanation && (
+            {/* Center: View Explanation Button */}
+            {/* Centered absolutely to ensure it stays in the middle regardless of other buttons */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                {showViewExplanation && (
                     <button
                         onClick={onViewExplanation}
                         className={clsx(buttonBase, explanationBtn)}
@@ -63,7 +64,6 @@ export function BottomBar({
                     <ChevronRight size={20} />
                 </button>
             </div>
-
         </div>
     );
 }

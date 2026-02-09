@@ -4,8 +4,15 @@ import { ImageWithFallback } from './ImageWithFallback';
 import { Send } from 'lucide-react';
 import { LatexText } from './LatexText';
 
+/**
+ * OptionButton Component
+ * Renders a single option for multiple-choice questions.
+ * Extracted outside QuestionCard to prevent unnecessary re-renders and state resets.
+ */
 const OptionButton = ({ option, idx, selectedAnswer, question, onAnswer, hasAnswered }) => {
     const isSelected = selectedAnswer === option;
+
+    // Style determination based on selection and correctness
     let ringColor = 'border-gray-400';
     let bgColor = 'bg-white hover:border-[#637AB9] hover:bg-[#637AB9]/5';
     let borderColor = 'border-gray-300';
@@ -43,17 +50,23 @@ const OptionButton = ({ option, idx, selectedAnswer, question, onAnswer, hasAnsw
                 {isSelected && <div className={`w-3 h-3 rounded-full ${dotColor}`} />}
             </div>
             <span className={`text-base md:text-lg font-semibold leading-snug ${textColor}`}>
+                {/* Render option text with Latex support */}
                 <LatexText text={option} />
             </span>
         </motion.button>
     );
 };
 
+/**
+ * InputSection Component
+ * Renders an input field for questions without options.
+ * Manages its own local state to ensure smooth typing without re-renders from parent.
+ */
 const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
     const [inputValue, setInputValue] = useState('');
     const inputRef = useRef(null);
 
-    // Focus input on mount
+    // Focus input on mount or when the question changes (handled by parent key)
     useEffect(() => {
         if (!hasAnswered) {
             setTimeout(() => inputRef.current?.focus(), 100);
@@ -78,6 +91,7 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
                 <input
                     ref={inputRef}
                     type="text"
+                    // Show selected answer if already answered, otherwise show local input
                     value={hasAnswered ? selectedAnswer : inputValue}
                     onChange={(e) => !hasAnswered && setInputValue(e.target.value)}
                     disabled={hasAnswered}
