@@ -1,16 +1,15 @@
-import { ChevronLeft, ChevronRight, Eraser, PenTool } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Eraser, Eye } from 'lucide-react';
 import clsx from 'clsx';
 
 export function BottomBar({
     mode,
     onClear,
-    onRoughWork,
     onNext,
     onPrev,
-    onMarkReview,
-    isMarked,
+    onViewExplanation,
     canGoNext,
-    canGoPrev
+    canGoPrev,
+    showViewExplanation
 }) {
     const isJunior = mode === 'junior';
 
@@ -24,11 +23,13 @@ export function BottomBar({
         ? "bg-[#4FB7B3] text-white rounded-xl shadow-md hover:bg-[#3da09c] hover:shadow-lg transform active:scale-95"
         : "bg-[#637AB9] text-white rounded-sm hover:bg-[#5266a0]";
 
+    const explanationBtn = "bg-[#637AB9]/10 text-[#637AB9] border-2 border-[#637AB9]/30 rounded-xl hover:bg-[#637AB9]/20 hover:border-[#637AB9]/50 font-bold";
+
     return (
         <div className={clsx(
             "h-20 px-6 md:px-8 flex items-center justify-between z-10",
             isJunior
-                ? "bg-white/90 backdrop-blur-md border-t border-[#A8FBD3]/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]"
+                ? "bg-white/90 backdrop-blur-md border-t border-[#A8FBD3]/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-2xl"
                 : "bg-white border-t border-gray-200"
         )}>
 
@@ -38,26 +39,17 @@ export function BottomBar({
                     <Eraser size={18} />
                     Clear Answer
                 </button>
+            </div>
 
-                {onRoughWork && (
-                    <button onClick={onRoughWork} className={clsx(buttonBase, secondaryBtn)}>
-                        <PenTool size={18} />
-                        <span className="hidden sm:inline">Rough Work</span>
-                    </button>
-                )}
-
-                {onMarkReview && (
+            {/* Center Group - View Explanation */}
+            <div className="flex items-center justify-center">
+                {showViewExplanation && onViewExplanation && (
                     <button
-                        onClick={onMarkReview}
-                        className={clsx(
-                            buttonBase,
-                            isMarked
-                                ? (isJunior ? "bg-[#4300FF]/10 text-[#4300FF] border-2 border-[#4300FF] rounded-xl" : "bg-[#4300FF] text-white rounded-sm")
-                                : secondaryBtn
-                        )}
+                        onClick={onViewExplanation}
+                        className={clsx(buttonBase, explanationBtn)}
                     >
-                        <span className="hidden sm:inline">{isMarked ? "Unmark Review" : "Mark for Review"}</span>
-                        <span className="sm:hidden">{isMarked ? "Unmark" : "Mark"}</span>
+                        <Eye size={18} />
+                        View Explanation
                     </button>
                 )}
             </div>
