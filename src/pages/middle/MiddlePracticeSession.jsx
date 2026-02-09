@@ -8,6 +8,7 @@ import { QuestionCard } from '../../components/QuestionCard';
 import { BottomBar } from '../../components/BottomBar';
 import { SunTimer } from '../../components/SunTimer';
 import { InlineScratchpad } from '../../components/InlineScratchpad';
+import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight } from 'lucide-react';
 
@@ -283,9 +284,12 @@ const MiddlePracticeSession = () => {
                                     </div>
                                 </div>
 
+
                                 <div className="flex-1">
                                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
-                                    <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin" dangerouslySetInnerHTML={{ __html: currentQ.explanation }} />
+                                    <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin">
+                                        <LatexText text={currentQ.explanation} />
+                                    </div>
                                 </div>
 
                                 <div className="mt-8 flex justify-end">

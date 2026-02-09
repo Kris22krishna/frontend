@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ImageWithFallback } from './ImageWithFallback';
 import { Send } from 'lucide-react';
+import { LatexText } from './LatexText';
 
 const OptionButton = ({ option, idx, selectedAnswer, question, onAnswer, hasAnswered }) => {
     const isSelected = selectedAnswer === option;
@@ -42,7 +43,7 @@ const OptionButton = ({ option, idx, selectedAnswer, question, onAnswer, hasAnsw
                 {isSelected && <div className={`w-3 h-3 rounded-full ${dotColor}`} />}
             </div>
             <span className={`text-base md:text-lg font-semibold leading-snug ${textColor}`}>
-                {option}
+                <LatexText text={option} />
             </span>
         </motion.button>
     );
@@ -100,7 +101,7 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
             </form>
             {question.hint && !hasAnswered && (
                 <p className="mt-4 text-[#637AB9] text-sm bg-[#637AB9]/5 p-3 rounded-lg inline-block font-medium">
-                    <span className="font-bold mr-1">Hint:</span> {question.hint}
+                    <span className="font-bold mr-1">Hint:</span> <LatexText text={question.hint} />
                 </p>
             )}
         </div>
@@ -135,10 +136,9 @@ export function QuestionCard({ question, selectedAnswer, onAnswer }) {
                             {/* Question Header */}
                             <div className="shrink-0 flex items-start gap-2 mb-4">
                                 <span className="text-xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
-                                <div
-                                    className="text-lg md:text-xl font-bold text-[#31326F] leading-snug"
-                                    dangerouslySetInnerHTML={{ __html: question.text }}
-                                />
+                                <div className="text-lg md:text-xl font-bold text-[#31326F] leading-snug">
+                                    <LatexText text={question.text} />
+                                </div>
                             </div>
 
                             {/* Options List or Input */}
@@ -175,10 +175,9 @@ export function QuestionCard({ question, selectedAnswer, onAnswer }) {
                         {/* Header */}
                         <div className="shrink-0 flex items-start gap-4 mb-6">
                             <span className="text-2xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
-                            <div
-                                className="text-xl md:text-2xl font-bold text-[#31326F] leading-snug"
-                                dangerouslySetInnerHTML={{ __html: question.text }}
-                            />
+                            <div className="text-xl md:text-2xl font-bold text-[#31326F] leading-snug">
+                                <LatexText text={question.text} />
+                            </div>
                         </div>
 
                         <div className="flex-1 flex flex-col min-h-0">
