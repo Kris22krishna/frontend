@@ -464,3 +464,100 @@
 body {
     overflow-y: auto;
 }
+
+/* Premium Loading Screen */
+.high-loading-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+}
+
+.high-loading-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+.high-loading-icon {
+    color: #6366f1;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.high-spin {
+    animation: high-spin 2s linear infinite;
+}
+
+@keyframes high-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.high-loading-msg {
+    font-family: 'Merriweather', serif;
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 2rem;
+    min-height: 2.25rem;
+    animation: high-fade-in-out 2.5s ease-in-out infinite;
+}
+
+@keyframes high-fade-in-out {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: translateY(5px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.high-loading-bar {
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.high-loading-progress {
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #a855f7);
+    border-radius: 10px;
+    position: absolute;
+    animation: high-progress-slide 2s infinite ease-in-out;
+}
+
+@keyframes high-progress-slide {
+    0% {
+        left: -40%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+/* Ensure main body doesn't force double scroll */
+body {
+    overflow-y: auto;
+}

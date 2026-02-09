@@ -2,6 +2,7 @@ import React from 'react';
 import './Home.css';
 import HeroBranding from '../components/home/HeroBranding';
 import HeroRegistration from '../components/home/HeroRegistration';
+import Testimonials from '../components/home/Testimonials';
 
 import GradeSection from '../components/math100/GradeSection';
 
@@ -16,6 +17,7 @@ const Home = () => {
             </section>
 
             <GradeSection />
+            <Testimonials />
         </div>
     );
 };

@@ -337,10 +337,13 @@ export const api = {
         return handleResponse(response);
     },
 
-    getPracticeQuestionsBySkill: async (skillId, count = 10, type = null) => {
+    getPracticeQuestionsBySkill: async (skillId, count = 10, type = null, difficulty = null) => {
         let url = `${BASE_URL}/api/v1/question-generation-templates/by-skill/${skillId}/practice?count=${count}`;
         if (type) {
             url += `&type=${encodeURIComponent(type)}`;
+        }
+        if (difficulty) {
+            url += `&difficulty=${encodeURIComponent(difficulty)}`;
         }
         const response = await fetch(url, {
             headers: { 'Content-Type': 'application/json' }
