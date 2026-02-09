@@ -31,6 +31,8 @@ const AssessmentUploaderDashboard = () => {
     const [selectedReport, setSelectedReport] = useState(null);
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
     const [loadingDetail, setLoadingDetail] = useState(false);
+    const [exporting, setExporting] = useState(false);
+
 
     useEffect(() => {
         const email = localStorage.getItem('userEmail');
@@ -81,6 +83,26 @@ const AssessmentUploaderDashboard = () => {
             setIsReportModalOpen(false);
         } finally {
             setLoadingDetail(false);
+        }
+    };
+
+    const handleExportExcel = async () => {
+        setExporting(true);
+        try {
+            const blob = await api.exportAssessmentReports();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Assessment_Reports_${new Date().toISOString().split('T')[0]}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error("Failed to export excel:", error);
+            alert("Export failed: " + error.message);
+        } finally {
+            setExporting(false);
         }
     };
 
@@ -346,7 +368,32 @@ const AssessmentUploaderDashboard = () => {
                             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
                                 <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
                                     <h3 className="font-bold text-gray-900">Assessment Reports</h3>
-                                    <button onClick={fetchReports} className="text-xs text-indigo-600 font-bold hover:underline">Refresh Reports</button>
+                                    <div className="flex items-center gap-4">
+                                        <button
+                                            onClick={handleExportExcel}
+                                            disabled={exporting || loadingReports}
+                                            className="flex items-center gap-2 text-xs text-green-600 font-bold hover:underline disabled:opacity-50 disabled:no-underline"
+                                        >
+                                            {exporting ? (
+                                                <Loader2 className="h-3 w-3 animate-spin" />
+                                            ) : (
+                                                <FileSpreadsheet className="h-3.5 w-3.5" />
+                                            )}
+                                            {exporting ? 'Exporting...' : 'Export Excel'}
+                                        </button>
+                                        <button
+                                            onClick={fetchReports}
+                                            disabled={loadingReports}
+                                            className="flex items-center gap-2 text-xs text-indigo-600 font-bold hover:underline disabled:opacity-50 disabled:no-underline"
+                                        >
+                                            {loadingReports ? (
+                                                <Loader2 className="h-3 w-3 animate-spin" />
+                                            ) : (
+                                                <FileText className="h-3.5 w-3.5" />
+                                            )}
+                                            Refresh Reports
+                                        </button>
+                                    </div>
                                 </div>
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm text-left">

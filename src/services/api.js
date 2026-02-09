@@ -534,6 +534,17 @@ export const api = {
         return handleResponse(response);
     },
 
+    exportAssessmentReports: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/reports/export`, {
+            headers: getHeaders()
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.detail || 'Failed to export reports');
+        }
+        return response.blob();
+    },
+
     studentAccess: async (serialNumber) => {
         const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/student-access`, {
             method: 'POST',
