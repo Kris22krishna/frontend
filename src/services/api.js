@@ -140,8 +140,8 @@ export const api = {
     },
 
     // --- Student ---
-    getStudentStats: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/stats`, {
+    getStudentProfile: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/student/profile`, {
             headers: getHeaders(),
         });
         return handleResponse(response);
@@ -159,13 +159,6 @@ export const api = {
 
     getSkillById: async (skillId) => {
         const response = await fetch(`${BASE_URL}/api/v1/skills/${skillId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getStudentStats: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/stats`, {
             headers: getHeaders()
         });
         return handleResponse(response);
