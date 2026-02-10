@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ImageWithFallback } from './ImageWithFallback';
-import { Send } from 'lucide-react';
+import { Send, Eye, Eraser, LogOut, ChevronRight } from 'lucide-react';
 import { LatexText } from './LatexText';
 
 /**
@@ -42,14 +42,14 @@ const OptionButton = ({ option, idx, selectedAnswer, question, onAnswer, hasAnsw
             whileTap={!hasAnswered ? { scale: 0.99 } : {}}
             onClick={() => !hasAnswered && onAnswer(option)}
             disabled={hasAnswered}
-            className={`w-full p-4 md:p-6 rounded-2xl border-2 text-left transition-all duration-200 flex items-center gap-4 shadow-sm
+            className={`w-full p-[0.95rem] sm:p-4 md:p-6 rounded-2xl border-2 text-left transition-all duration-200 flex items-center gap-[0.95rem] sm:gap-4 shadow-sm
       ${borderColor} ${bgColor} ${hasAnswered && !isSelected ? 'opacity-50 cursor-default' : ''}
     `}
         >
             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${ringColor}`}>
                 {isSelected && <div className={`w-3 h-3 rounded-full ${dotColor}`} />}
             </div>
-            <span className={`text-base md:text-lg font-semibold leading-snug ${textColor}`}>
+            <span className={`text-[1.4rem] sm:text-lg md:text-xl font-semibold leading-snug ${textColor}`}>
                 {/* Render option text with Latex support */}
                 <LatexText text={option} />
             </span>
@@ -122,10 +122,61 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
     );
 };
 
-export function QuestionCard({ question, selectedAnswer, onAnswer }) {
+export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNext, onExit, onViewExplanation, onToggleScratchpad, showViewExplanation, canGoNext }) {
     const isImageQuestion = question.type === 'image' && !!question.image;
     const isInputQuestion = question.type === 'input' || (!question.options || question.options.length === 0);
     const hasAnswered = !!selectedAnswer;
+
+    const mobileActionBar = (
+        <div className="lg:hidden flex items-center justify-between gap-2 pt-4 mt-auto border-t border-gray-100">
+            {/* Left: Exit + Scratchpad */}
+            <div className="flex items-center gap-2">
+                <button
+                    onClick={onExit}
+                    className="flex items-center gap-1 px-3 py-2 bg-white text-[#637AB9] border-2 border-[#A8FBD3] rounded-xl hover:border-[#4FB7B3] text-sm font-medium transition-all"
+                >
+                    <LogOut size={16} className="rotate-180" />
+                </button>
+                <button
+                    onClick={onToggleScratchpad}
+                    className="flex items-center gap-1 px-3 py-2 bg-white text-[#637AB9] border-2 border-[#A8FBD3] rounded-xl hover:border-[#4FB7B3] text-sm font-medium transition-all"
+                >
+                    <span className="text-lg">✏️</span>
+                </button>
+            </div>
+
+            {/* Center: Explain + Clear */}
+            <div className="flex items-center gap-2">
+                {showViewExplanation && (
+                    <button
+                        onClick={onViewExplanation}
+                        className="flex items-center gap-1 px-3 py-2 bg-[#637AB9]/10 text-[#637AB9] border-2 border-[#637AB9]/30 rounded-xl hover:bg-[#637AB9]/20 text-sm font-bold transition-all"
+                    >
+                        <Eye size={16} />
+                        Explain
+                    </button>
+                )}
+                {hasAnswered && (
+                    <button
+                        onClick={onClear}
+                        className="flex items-center gap-1 px-3 py-2 bg-white text-[#637AB9] border-2 border-[#A8FBD3] rounded-xl hover:border-[#4FB7B3] text-sm font-medium transition-all"
+                    >
+                        <Eraser size={16} />
+                    </button>
+                )}
+            </div>
+
+            {/* Right: Next */}
+            <button
+                onClick={onNext}
+                disabled={!canGoNext}
+                className="flex items-center gap-1 px-4 py-2 bg-[#4FB7B3] text-white rounded-xl font-bold shadow-md hover:bg-[#3da09c] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            >
+                Next
+                <ChevronRight size={18} />
+            </button>
+        </div>
+    );
 
     return (
         <div className="bg-white rounded-3xl shadow-sm border border-[#A8FBD3]/50 overflow-hidden flex flex-col h-full">
@@ -187,8 +238,8 @@ export function QuestionCard({ question, selectedAnswer, onAnswer }) {
                     /* --- Standard Layout for Text/Input Questions --- */
                     <>
                         {/* Header */}
-                        <div className="shrink-0 flex items-start gap-4 mb-6">
-                            <span className="text-xl md:text-2xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
+                        <div className="shrink-0 flex items-start gap-4 mb-4 sm:mb-6">
+                            <span className="text-lg md:text-2xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
                             <div className="text-lg md:text-2xl font-bold text-[#31326F] leading-snug">
                                 <LatexText text={question.text} />
                             </div>
@@ -221,6 +272,9 @@ export function QuestionCard({ question, selectedAnswer, onAnswer }) {
                                 </div>
                             )}
                         </div>
+
+                        {/* Mobile action buttons */}
+                        {mobileActionBar}
                     </>
                 )}
             </div>

@@ -248,6 +248,33 @@ const MiddlePracticeSession = () => {
                                     selectedAnswer={userAnswers[currentQ.id]}
                                     onAnswer={handleAnswer}
                                     onViewExplanation={() => setShowExplanation(true)}
+                                    showViewExplanation={!!userAnswer}
+                                    canGoNext={!!userAnswer}
+                                    onNext={proceedToNext}
+                                    onExit={() => navigate('/math')}
+                                    onToggleScratchpad={() => setShowScratchpad(true)}
+                                    onClear={() => {
+                                        const currentQ = questions[currentIndex];
+                                        const wasAnswered = userAnswers[currentQ.id];
+                                        if (!wasAnswered) return;
+                                        setUserAnswers(prev => {
+                                            const next = { ...prev };
+                                            delete next[currentQ.id];
+                                            return next;
+                                        });
+                                        const historyEntry = history.find(h => h.question.id === currentQ.id);
+                                        if (historyEntry) {
+                                            setHistory(prev => prev.filter(h => h.question.id !== currentQ.id));
+                                            setStats(prev => ({
+                                                ...prev,
+                                                total: Math.max(0, prev.total - 1),
+                                                correct: historyEntry.status === 'correct' ? Math.max(0, prev.correct - 1) : prev.correct,
+                                                wrong: historyEntry.status === 'wrong' ? Math.max(0, prev.wrong - 1) : prev.wrong,
+                                                streak: historyEntry.status === 'correct' ? Math.max(0, prev.streak - 1) : prev.streak
+                                            }));
+                                        }
+                                        setShowExplanation(false);
+                                    }}
                                 />
                             )}
                         </motion.div>
@@ -260,9 +287,8 @@ const MiddlePracticeSession = () => {
                 </aside>
             </div>
 
-            {/* Bottom Navigation */}
-            {/* Bottom Navigation */}
-            <div className="shrink-0 px-4 lg:px-6 pb-4 lg:pb-6 max-w-[1400px] mx-auto w-full">
+            {/* Bottom Navigation (desktop only — mobile buttons are inside QuestionCard) */}
+            <div className="shrink-0 hidden lg:block px-4 lg:px-6 pb-4 lg:pb-6 max-w-[1400px] mx-auto w-full">
                 <BottomBar
                     mode="junior"
                     onClear={() => {
