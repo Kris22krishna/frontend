@@ -4,6 +4,7 @@ import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen } 
 import Whiteboard from '../../components/Whiteboard';
 import { api } from '../../services/api';
 import './HighPracticeSession.css';
+import LatexContent from '../../components/LatexContent';
 import Navbar from '../../components/Navbar';
 
 const HighPracticeSession = () => {
@@ -38,6 +39,9 @@ const HighPracticeSession = () => {
         startTimeRef.current = Date.now();
         setDisplayQuestionNum(1); // Reset question number on new skill
     }, [skillId]);
+
+
+
 
     const fetchQuestions = async (retryType = null, append = false, forcedDifficulty = null) => {
         if (!append) setLoading(true);
@@ -285,7 +289,7 @@ const HighPracticeSession = () => {
 
                         <div className="question-content">
                             {currentQ?.text && (
-                                <div className="question-text" dangerouslySetInnerHTML={{ __html: currentQ.text }} />
+                                <LatexContent html={currentQ.text} className="question-text" block={true} />
                             )}
                             {currentQ?.imageUrl && (
                                 <img src={currentQ.imageUrl} alt="Question" style={{ maxWidth: '100%', marginBottom: '2rem', borderRadius: '4px' }} />
@@ -310,21 +314,37 @@ const HighPracticeSession = () => {
                                         disabled={!!feedback}
                                     >
                                         <span className="high-key">{String.fromCharCode(65 + idx)}.</span>
-                                        <span>{opt}</span>
+                                        <LatexContent html={opt} />
                                     </button>
                                 );
                             })}
                         </div>
 
                         {(currentQ?.type === 'input' || !currentQ?.options || currentQ?.options.length === 0) && (
-                            <input
-                                type="text"
-                                className="high-text-input"
-                                value={userAnswer}
-                                onChange={(e) => setUserAnswer(e.target.value)}
-                                placeholder="Enter answer here..."
-                                disabled={!!feedback}
-                            />
+                            <div className="high-input-group">
+                                <input
+                                    type="text"
+                                    className="high-text-input"
+                                    value={userAnswer}
+                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                    placeholder="Enter answer here..."
+                                    disabled={!!feedback}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !feedback && userAnswer.trim()) {
+                                            handleCheck(userAnswer);
+                                        }
+                                    }}
+                                />
+                                {!feedback && (
+                                    <button
+                                        className="high-submit-btn"
+                                        onClick={() => handleCheck(userAnswer)}
+                                        disabled={!userAnswer.trim()}
+                                    >
+                                        Submit Answer
+                                    </button>
+                                )}
+                            </div>
                         )}
 
                         {feedback && (
@@ -338,7 +358,7 @@ const HighPracticeSession = () => {
                                 {feedback && currentQ.solution && (
                                     <div className={`high-explanation-box ${feedback}`}>
                                         <h4 className="explanation-header">EXPLANATION</h4>
-                                        <div dangerouslySetInnerHTML={{ __html: currentQ.solution }} />
+                                        <LatexContent html={currentQ.solution} block={true} />
                                     </div>
                                 )}
                             </div>
@@ -353,7 +373,6 @@ const HighPracticeSession = () => {
                 {/* Tools Column */}
                 <aside className="high-tools-col">
                     <div className="high-notebook">
-                        <div className="high-notebook-header">Scratchpad</div>
                         <div style={{ flex: 1, position: 'relative' }}>
                             <Whiteboard isOpen={true} />
                         </div>
