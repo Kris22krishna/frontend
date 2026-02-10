@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import './MiddlePracticeSession.css';
 
@@ -17,11 +17,13 @@ import mascotImg from '../../assets/mascot.png';
 
 const MiddlePracticeSession = () => {
     const { skillId } = useParams();
+    const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
     const [userAnswers, setUserAnswers] = useState({});
     const [showExplanation, setShowExplanation] = useState(false);
+    const [showScratchpad, setShowScratchpad] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [stats, setStats] = useState({ correct: 0, wrong: 0, skipped: 0, total: 0, streak: 0 });
     const [completed, setCompleted] = useState(false);
@@ -53,16 +55,32 @@ const MiddlePracticeSession = () => {
 
             if (!Array.isArray(rawQuestions)) rawQuestions = [];
 
-            const normalized = rawQuestions.map((q, idx) => ({
-                id: q.id || q.question_id || idx + 1,
-                text: q.question_text || q.question || q.question_html || "Question Text Missing",
-                options: q.options || [],
-                correctAnswer: q.correct_answer || q.answer || q.answer_value,
-                explanation: q.solution || q.solution_html || q.explanation || "No detailed explanation available.",
-                type: (q.type || q.question_type || 'mcq').toLowerCase(),
-                image: q.imageUrl || q.image,
-                hint: q.hint
-            }));
+            const normalized = rawQuestions.map((q, idx) => {
+                // Debug: log raw question structure
+                console.log(`[Question ${idx + 1}] Raw:`, JSON.stringify(q).slice(0, 300));
+
+                // Normalize options - handle array, object ({A: '...', B: '...'}), or string
+                let opts = q.options || [];
+                if (opts && typeof opts === 'object' && !Array.isArray(opts)) {
+                    // Convert {A: 'val1', B: 'val2'} to ['val1', 'val2']
+                    opts = Object.values(opts);
+                }
+                if (typeof opts === 'string') {
+                    opts = opts.split(',').map(o => o.trim()).filter(Boolean);
+                }
+                if (!Array.isArray(opts)) opts = [];
+
+                return {
+                    id: q.id || q.question_id || idx + 1,
+                    text: q.question_text || q.question || q.question_html || q.text || q.prompt || "Question Text Missing",
+                    options: opts,
+                    correctAnswer: q.correct_answer || q.answer || q.answer_value || q.correct_option,
+                    explanation: q.solution || q.solution_html || q.explanation || q.explanation_text || "No detailed explanation available.",
+                    type: (q.type || q.question_type || (opts.length > 0 ? 'mcq' : 'input')).toLowerCase(),
+                    image: q.imageUrl || q.image || q.image_url,
+                    hint: q.hint
+                };
+            });
 
             setQuestions(normalized);
             if (response.skill_name) setSkillName(response.skill_name);
@@ -187,19 +205,20 @@ const MiddlePracticeSession = () => {
     return (
         <div className="h-screen w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
             {/* Header Section: Contains SunTimer and Mascot */}
-            {/* Increased height to h-32 to prevent clipping and improve layout */}
-            <header className="flex items-center justify-between px-8 py-4 shrink-0 z-20 h-32">
+            {/* Header Section: Contains SunTimer and Mascot */}
+            {/* Responsive height: h-24 on mobile, h-32 on desktop */}
+            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32">
                 <div className="flex items-center">
                     {/* Enlarged SunTimer for better visibility */}
                     <SunTimer timeLeft={elapsedTime} />
                 </div>
                 <div className="flex items-center">
-                    {/* Enlarged Mascot Image aligned with timer */}
-                    <img src={mascotImg} alt="Mascot" className="w-24 h-24 object-contain drop-shadow-lg" />
+                    {/* Enlarged Mascot Image aligned with timer (smaller on mobile) */}
+                    <img src={mascotImg} alt="Mascot" className="w-16 h-16 lg:w-24 lg:h-24 object-contain drop-shadow-lg" />
                 </div>
             </header>
 
-            <div className="flex-1 flex gap-6 px-6 pb-6 overflow-hidden max-w-[1400px] mx-auto w-full">
+            <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 lg:px-6 pb-4 lg:pb-6 overflow-hidden max-w-[1400px] mx-auto w-full">
                 {/* Left Column: Question Card */}
                 <main className="flex-[3] relative h-full min-h-0">
                     <AnimatePresence mode="wait">
@@ -223,23 +242,109 @@ const MiddlePracticeSession = () => {
                     </AnimatePresence>
                 </main>
 
-                {/* Right Column: Inline Scratchpad */}
-                <aside className="flex-[2] h-full min-h-0">
+                {/* Right Column: Inline Scratchpad (Hidden on mobile to save space) */}
+                <aside className="hidden lg:block flex-[2] h-full min-h-0">
                     <InlineScratchpad />
                 </aside>
             </div>
 
             {/* Bottom Navigation */}
-            <div className="shrink-0 px-6 pb-6 max-w-[1400px] mx-auto w-full">
+            <div className="shrink-0 px-4 lg:px-6 pb-4 lg:pb-6 max-w-[1400px] mx-auto w-full">
                 <BottomBar
                     mode="junior"
-                    onClear={() => { }}
+                    onClear={() => {
+                        const currentQ = questions[currentIndex];
+                        const wasAnswered = userAnswers[currentQ.id];
+                        if (!wasAnswered) return;
+
+                        // Reset answer
+                        setUserAnswers(prev => {
+                            const next = { ...prev };
+                            delete next[currentQ.id];
+                            return next;
+                        });
+
+                        // Revert stats if it was in history
+                        const historyEntry = history.find(h => h.question.id === currentQ.id);
+                        if (historyEntry) {
+                            setHistory(prev => prev.filter(h => h.question.id !== currentQ.id));
+                            setStats(prev => ({
+                                ...prev,
+                                total: Math.max(0, prev.total - 1),
+                                correct: historyEntry.status === 'correct' ? Math.max(0, prev.correct - 1) : prev.correct,
+                                wrong: historyEntry.status === 'wrong' ? Math.max(0, prev.wrong - 1) : prev.wrong,
+                                // Note: Streak restoration is imperfect without history stack, but safe to just decrement if positive
+                                streak: historyEntry.status === 'correct' ? Math.max(0, prev.streak - 1) : prev.streak
+                            }));
+                        }
+                        setShowExplanation(false);
+                    }}
                     onNext={proceedToNext}
+                    onExit={() => navigate('/math')}
                     onViewExplanation={() => setShowExplanation(true)}
                     showViewExplanation={!!userAnswer}
                     canGoNext={!!userAnswer}
+                    onToggleScratchpad={() => setShowScratchpad(true)}
                 />
             </div>
+
+            {/* Mobile Scratchpad - Draggable Bottom Sheet */}
+            <AnimatePresence>
+                {showScratchpad && (
+                    <>
+                        {/* Backdrop overlay */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowScratchpad(false)}
+                            className="fixed inset-0 z-[65] bg-black/30 lg:hidden"
+                        />
+                        {/* Bottom Sheet - drag only on handle bar */}
+                        <motion.div
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                            className="fixed bottom-0 left-0 right-0 z-[70] bg-white rounded-t-3xl shadow-2xl flex flex-col lg:hidden"
+                            style={{ height: '65vh' }}
+                        >
+                            {/* Drag Handle - ONLY this area is draggable to dismiss */}
+                            <motion.div
+                                drag="y"
+                                dragConstraints={{ top: 0, bottom: 0 }}
+                                dragElastic={{ top: 0, bottom: 0.6 }}
+                                onDragEnd={(_, info) => {
+                                    if (info.offset.y > 80 || info.velocity.y > 400) {
+                                        setShowScratchpad(false);
+                                    }
+                                }}
+                                className="flex flex-col items-center pt-3 pb-2 cursor-grab active:cursor-grabbing shrink-0"
+                                style={{ touchAction: 'none' }}
+                            >
+                                <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
+                            </motion.div>
+
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-4 pb-3 border-b border-gray-100 shrink-0">
+                                <h3 className="text-lg font-bold text-[#31326F]">Scratchpad</h3>
+                                <button
+                                    onClick={() => setShowScratchpad(false)}
+                                    className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+                                >
+                                    <X size={20} className="text-gray-600" />
+                                </button>
+                            </div>
+
+                            {/* Canvas */}
+                            <div className="flex-1 relative overflow-hidden">
+                                <InlineScratchpad />
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
 
             {/* Explanation Modal */}
             <AnimatePresence>
@@ -249,18 +354,18 @@ const MiddlePracticeSession = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex min-h-[500px]"
+                            className="bg-white rounded-[32px] lg:rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px] max-h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-visible"
                         >
                             {/* Left Side: Mascot Area */}
-                            <div className="flex-[4] bg-[#E0FBEF] flex flex-col items-center justify-center p-8 relative">
-                                <img src={mascotImg} alt="Mascot" className="w-64 h-64 object-contain drop-shadow-xl" />
-                                <div className="mt-8 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#4FB7B3]/30">
+                            <div className="flex-[4] bg-[#E0FBEF] flex flex-col items-center justify-center p-6 lg:p-8 relative min-h-[200px] lg:min-h-0 shrink-0">
+                                <img src={mascotImg} alt="Mascot" className="w-32 h-32 lg:w-64 lg:h-64 object-contain drop-shadow-xl" />
+                                <div className="mt-4 lg:mt-8 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#4FB7B3]/30">
                                     <span className="text-[#31326F] font-bold">Keep going!</span>
                                 </div>
                             </div>
 
                             {/* Right Side: Explanation Content */}
-                            <div className="flex-[6] p-12 flex flex-col">
+                            <div className="flex-[6] p-6 lg:p-12 flex flex-col">
                                 <div className="flex items-center gap-3 mb-8">
                                     {!isAnswerCorrect ? (
                                         <>

@@ -42,7 +42,7 @@ const OptionButton = ({ option, idx, selectedAnswer, question, onAnswer, hasAnsw
             whileTap={!hasAnswered ? { scale: 0.99 } : {}}
             onClick={() => !hasAnswered && onAnswer(option)}
             disabled={hasAnswered}
-            className={`w-full p-5 md:p-6 rounded-2xl border-2 text-left transition-all duration-200 flex items-center gap-4 shadow-sm
+            className={`w-full p-4 md:p-6 rounded-2xl border-2 text-left transition-all duration-200 flex items-center gap-4 shadow-sm
       ${borderColor} ${bgColor} ${hasAnswered && !isSelected ? 'opacity-50 cursor-default' : ''}
     `}
         >
@@ -86,7 +86,7 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
         <div className="w-full">
             <form
                 onSubmit={handleSubmitInput}
-                className="flex gap-3"
+                className="flex flex-col sm:flex-row gap-3"
             >
                 <input
                     ref={inputRef}
@@ -96,7 +96,7 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
                     onChange={(e) => !hasAnswered && setInputValue(e.target.value)}
                     disabled={hasAnswered}
                     placeholder="Type your answer here..."
-                    className={`flex-1 p-5 text-xl rounded-2xl border-2 outline-none transition-all text-[#31326F] placeholder-gray-400 font-medium
+                    className={`flex-1 p-3 sm:p-4 lg:p-5 text-base sm:text-lg lg:text-xl rounded-2xl border-2 outline-none transition-all text-[#31326F] placeholder-gray-400 font-medium
                         ${hasAnswered
                             ? (isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50')
                             : 'border-gray-300 focus:border-[#637AB9] focus:ring-4 focus:ring-[#637AB9]/10 bg-white'
@@ -106,7 +106,7 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
                     <button
                         type="submit"
                         disabled={!inputValue.trim()}
-                        className="px-8 py-4 bg-[#4FB7B3] text-white rounded-2xl font-bold flex items-center gap-2 hover:bg-[#3da09c] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg h-[68px]"
+                        className="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-[#4FB7B3] text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-[#3da09c] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                     >
                         <Send size={20} />
                         Submit
@@ -129,7 +129,7 @@ export function QuestionCard({ question, selectedAnswer, onAnswer }) {
 
     return (
         <div className="bg-white rounded-3xl shadow-sm border border-[#A8FBD3]/50 overflow-hidden flex flex-col h-full">
-            <div className="flex-1 flex flex-col p-6 h-full overflow-hidden">
+            <div className="flex-1 flex flex-col p-4 md:p-6 h-full overflow-hidden">
 
                 {isImageQuestion ? (
                     /* --- Two-Column Layout for Image Questions --- */
@@ -188,8 +188,8 @@ export function QuestionCard({ question, selectedAnswer, onAnswer }) {
                     <>
                         {/* Header */}
                         <div className="shrink-0 flex items-start gap-4 mb-6">
-                            <span className="text-2xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
-                            <div className="text-xl md:text-2xl font-bold text-[#31326F] leading-snug">
+                            <span className="text-xl md:text-2xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
+                            <div className="text-lg md:text-2xl font-bold text-[#31326F] leading-snug">
                                 <LatexText text={question.text} />
                             </div>
                         </div>

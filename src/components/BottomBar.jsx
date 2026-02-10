@@ -1,4 +1,4 @@
-import { ChevronRight, Eraser, Eye } from 'lucide-react';
+import { ChevronRight, Eraser, Eye, LogOut } from 'lucide-react';
 import clsx from 'clsx';
 
 // BottomBar Component
@@ -9,13 +9,15 @@ export function BottomBar({
     mode,
     onClear,
     onNext,
+    onExit,
     onViewExplanation,
     canGoNext,
-    showViewExplanation
+    showViewExplanation,
+    onToggleScratchpad
 }) {
     const isJunior = mode === 'junior';
 
-    const buttonBase = "flex items-center justify-center gap-2 px-6 py-3 font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed";
+    const buttonBase = "flex items-center justify-center gap-2 px-4 py-2 lg:px-6 lg:py-3 font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed";
 
     const secondaryBtn = isJunior
         ? "bg-white text-[#637AB9] border-2 border-[#A8FBD3] rounded-xl hover:border-[#4FB7B3] hover:text-[#4FB7B3]"
@@ -28,14 +30,33 @@ export function BottomBar({
     const explanationBtn = "bg-[#637AB9]/10 text-[#637AB9] border-2 border-[#637AB9]/30 rounded-xl hover:bg-[#637AB9]/20 hover:border-[#637AB9]/50 font-bold";
 
     return (
-        <div className="h-24 bg-white rounded-3xl shadow-sm border border-[#A8FBD3]/50 px-8 flex items-center justify-between relative">
+        <div className="h-20 lg:h-24 bg-white rounded-3xl shadow-sm border border-[#A8FBD3]/50 px-4 lg:px-8 flex items-center justify-between relative">
 
-            {/* Left Side: Scratchpad Toggle (Clear button - Hidden on small screens if needed, logic preserved) */}
-            <div className="flex items-center gap-4">
-                {/* Previous button removed as per user request */}
-                <button onClick={onClear} className={clsx(buttonBase, secondaryBtn, "hidden md:flex")}>
+            {/* Left Side: Exit & Scratchpad Toggle & Clear */}
+            <div className="flex items-center gap-2 lg:gap-4">
+                {/* Exit Button */}
+                <button
+                    onClick={onExit}
+                    className={clsx(buttonBase, secondaryBtn, "px-3 lg:px-6")}
+                    title="Exit Practice"
+                >
+                    <LogOut size={18} className="rotate-180" />
+                    <span className="hidden lg:inline">Exit</span>
+                </button>
+
+                {/* Clear Answer (only shows if we have an answer to clear? No, always show to confirm user intent, maybe disable if no answer? Logic in parent handles validation) */}
+                <button onClick={onClear} className={clsx(buttonBase, secondaryBtn, "hidden lg:flex")}>
                     <Eraser size={18} />
                     Clear Answer
+                </button>
+
+                {/* Mobile: Scratchpad Toggle Button */}
+                <button
+                    onClick={onToggleScratchpad}
+                    className={clsx(buttonBase, secondaryBtn, "lg:hidden flex px-3 py-2")}
+                    aria-label="Open Scratchpad"
+                >
+                    <span className="text-xl">✏️</span>
                 </button>
             </div>
 
@@ -48,7 +69,8 @@ export function BottomBar({
                         className={clsx(buttonBase, explanationBtn)}
                     >
                         <Eye size={18} />
-                        View Explanation
+                        <span className="hidden lg:inline">View Explanation</span>
+                        <span className="lg:hidden">Explain</span>
                     </button>
                 )}
             </div>
