@@ -20,6 +20,7 @@ const HighPracticeSession = () => {
     const [error, setError] = useState(null);
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
     const [consecutiveCorrect, setConsecutiveCorrect] = useState(0);
+    const [displayQuestionNum, setDisplayQuestionNum] = useState(1);
 
     // Time Tracking
     const startTimeRef = useRef(Date.now());
@@ -35,6 +36,7 @@ const HighPracticeSession = () => {
     useEffect(() => {
         fetchQuestions();
         startTimeRef.current = Date.now();
+        setDisplayQuestionNum(1); // Reset question number on new skill
     }, [skillId]);
 
     const fetchQuestions = async (retryType = null, append = false, forcedDifficulty = null) => {
@@ -82,17 +84,20 @@ const HighPracticeSession = () => {
         }
     };
 
-    const handleCheck = () => {
+    const handleCheck = (selectedVal) => {
         const currentQ = questions[currentIndex];
         if (!currentQ) return;
 
-        const isCorrect = userAnswer.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
+        const valToCheck = selectedVal !== undefined ? selectedVal : userAnswer;
+        setUserAnswer(valToCheck);
+
+        const isCorrect = valToCheck.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
 
         setFeedback(isCorrect ? 'correct' : 'incorrect');
 
         const attempt = {
             question: currentQ,
-            userVal: userAnswer,
+            userVal: valToCheck,
             status: isCorrect ? 'correct' : 'wrong',
             solution: currentQ.solution
         };
@@ -158,6 +163,7 @@ const HighPracticeSession = () => {
 
         setUserAnswer('');
         setFeedback(null);
+        setDisplayQuestionNum(prev => prev + 1);
     };
 
     // Live Timer
@@ -244,12 +250,7 @@ const HighPracticeSession = () => {
                     <div className="high-header">
                         <div className="high-title-group">
                             <h1>{skillName}</h1>
-                            <div className="high-subtitle">
-                                <span className="high-badge">Practice Mode</span>
-                                <span className={`high-difficulty-badge ${currentDifficulty.toLowerCase()}`}>
-                                    {currentDifficulty} Level
-                                </span>
-                            </div>
+                            {/* Badges Removed */}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                             <div className="high-subtitle">
@@ -259,14 +260,7 @@ const HighPracticeSession = () => {
 
                             {/* Action Button moved to Header */}
                             {!feedback ? (
-                                <button
-                                    className="high-btn primary"
-                                    onClick={handleCheck}
-                                    disabled={!userAnswer}
-                                    style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}
-                                >
-                                    Submit
-                                </button>
+                                <div style={{ width: '0px' }}></div> /* Placeholder to keep layout */
                             ) : (
                                 <button
                                     className="high-btn primary"
@@ -285,10 +279,8 @@ const HighPracticeSession = () => {
 
                     <div className="question-card">
                         <div className="question-meta">
-                            <span>Question {currentIndex + 1}</span>
-                            <span className={`high-q-difficulty ${currentQ?.difficulty?.toLowerCase()}`}>
-                                {currentQ?.difficulty}
-                            </span>
+                            <span>Question {displayQuestionNum}</span>
+                            {/* Difficulty Badge Removed */}
                         </div>
 
                         <div className="question-content">
@@ -314,7 +306,7 @@ const HighPracticeSession = () => {
                                     <button
                                         key={idx}
                                         className={btnClass}
-                                        onClick={() => !feedback && setUserAnswer(opt)}
+                                        onClick={() => !feedback && handleCheck(opt)}
                                         disabled={!!feedback}
                                     >
                                         <span className="high-key">{String.fromCharCode(65 + idx)}.</span>
@@ -345,7 +337,7 @@ const HighPracticeSession = () => {
 
                                 {feedback && currentQ.solution && (
                                     <div className={`high-explanation-box ${feedback}`}>
-                                        <h4>Explanation</h4>
+                                        <h4 className="explanation-header">EXPLANATION</h4>
                                         <div dangerouslySetInnerHTML={{ __html: currentQ.solution }} />
                                     </div>
                                 )}
