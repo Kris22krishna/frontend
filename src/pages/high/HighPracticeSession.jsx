@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen } from 'lucide-react';
+import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
 import { api } from '../../services/api';
 import './HighPracticeSession.css';
@@ -11,6 +11,7 @@ const HighPracticeSession = () => {
     const { skillId } = useParams();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [showScratchpad, setShowScratchpad] = useState(false); // Mobile state
     const [loading, setLoading] = useState(true);
     const [userAnswer, setUserAnswer] = useState('');
     const [feedback, setFeedback] = useState(null);
@@ -275,6 +276,16 @@ const HighPracticeSession = () => {
                                 </button>
                             )}
 
+                            {/* Mobile Scratchpad Toggle (Header) */}
+                            <button
+                                className={`high-btn secondary high-mobile-scratchpad-toggle ${showScratchpad ? 'active' : ''}`}
+                                onClick={() => setShowScratchpad(!showScratchpad)}
+                                title="Open Scratchpad"
+                                style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                                <PenTool size={18} />
+                            </button>
+
                             <Link to="/math" className="high-btn secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
                                 Exit
                             </Link>
@@ -368,6 +379,19 @@ const HighPracticeSession = () => {
                             {/* Skip button removed */}
                         </div>
                     </div>
+
+                    {/* Mobile Scratchpad Overlay */}
+                    {showScratchpad && (
+                        <div className="high-mobile-scratchpad-overlay">
+                            <button
+                                className="high-close-scratchpad"
+                                onClick={() => setShowScratchpad(false)}
+                            >
+                                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#ffffff' }}>✕</span>
+                            </button>
+                            <Whiteboard isOpen={true} />
+                        </div>
+                    )}
                 </main>
 
                 {/* Tools Column */}
