@@ -100,8 +100,8 @@
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    min-width: 150px;
+    gap: 0.75rem;
+    min-width: 140px;
     justify-content: flex-end;
 }
 
@@ -124,30 +124,32 @@
 }
 
 .btn-primary {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
     padding: 0.6rem 1.4rem;
     border-radius: 100px;
     font-weight: 600;
-    transition: all 0.2s;
-    box-shadow: 0 0 0 0px rgba(99, 102, 241, 0);
+    font-size: 0.9rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
     text-decoration: none;
-    /* For Links */
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border: none;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .btn-primary:hover {
-    background: hsl(var(--primary));
-    /* Need darker shade ideally */
-    filter: brightness(0.9);
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(79, 183, 179, 0.3);
-    color: hsl(var(--primary-foreground));
-    /* Ensure text stays white on hover */
+    box-shadow: 0 6px 15px rgba(15, 23, 42, 0.2);
+    color: white;
+}
+
+.btn-primary:active {
+    transform: scale(0.96);
 }
 
 @media (max-width: 768px) {

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { api } from '../services/api';
+import ModelRenderer from '../models/ModelRenderer';
 import Navbar from '../components/Navbar';
 import '../styles/PracticeSession.css';
 
@@ -105,6 +106,9 @@ const PracticeSession = () => {
     const [finished, setFinished] = useState(false);
     const [skillMetadata, setSkillMetadata] = useState(null);
     const [showWhiteboard, setShowWhiteboard] = useState(false);
+    const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
+    const [fetchingNext, setFetchingNext] = useState(false);
+    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
 
     // Debug State
     const [debugLogs, setDebugLogs] = useState([]);
@@ -199,18 +203,21 @@ const PracticeSession = () => {
             variables_used: sample.variables_used,
             solution_html: sample.solution_html,
             question_type: questionType || 'user_input',
-            options: options || []
+            options: options || [],
+            model: sample.model || 'Default'
         };
     };
 
     const [selectionMode, setSelectionMode] = useState(false);
     const [availableTypes, setAvailableTypes] = useState([]);
 
-    const fetchQuestions = async (typeOverride = null) => {
-        setLoading(true);
-        addLog("Fetching questions...");
+    const fetchQuestions = async (typeOverride = null, diff = 'Easy', isInitial = true) => {
+        if (isInitial) setLoading(true);
+        else setFetchingNext(true);
+
+        addLog(`Fetching question for diff: ${diff}`);
         try {
-            const skillData = await api.getPracticeQuestionsBySkill(templateId, 10, typeOverride);
+            const skillData = await api.getPracticeQuestionsBySkill(templateId, 1, typeOverride, diff);
 
             if (skillData && skillData.template_metadata) {
                 setSkillMetadata(skillData.template_metadata);
@@ -224,20 +231,27 @@ const PracticeSession = () => {
             }
 
             if (skillData && skillData.preview_samples && skillData.preview_samples.length > 0) {
-                const dynamicQuestions = skillData.preview_samples.map((sample, idx) => parseQuestion(sample, idx));
-                setQuestions(dynamicQuestions);
+                const dynamicQuestions = skillData.preview_samples.map((sample, idx) => parseQuestion(sample, isInitial ? idx : questions.length));
+
+                if (isInitial) {
+                    setQuestions(dynamicQuestions);
+                } else {
+                    setQuestions(prev => [...prev, ...dynamicQuestions]);
+                }
+
                 setSelectionMode(false);
                 setLoading(false);
                 return;
             }
 
             addLog("No V2 content found in question response.");
-            setQuestions([]);
+            if (isInitial) setQuestions([]);
         } catch (err) {
             addLog(`Error fetching questions: ${err.message}`);
-            setQuestions([]);
+            if (isInitial) setQuestions([]);
         } finally {
             setLoading(false);
+            setFetchingNext(false);
         }
     };
 
@@ -310,14 +324,36 @@ const PracticeSession = () => {
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
+        const isCorrect = feedback && feedback.type === 'success';
+
+        let nextDiff = currentDifficulty;
+        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+
+        if (nextLevelCount >= 3) {
+            if (currentDifficulty === 'Easy') {
+                nextDiff = 'Medium';
+                nextLevelCount = 0;
+            } else if (currentDifficulty === 'Medium') {
+                nextDiff = 'Hard';
+                nextLevelCount = 0;
+            }
+        }
+
+        setCurrentDifficulty(nextDiff);
+        setCorrectCountAtLevel(nextLevelCount);
+
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
-            setUserAnswer('');
-            setFeedback(null);
-            setShowSolution(false);
-            hasAnsweredRef.current = false;
+        } else {
+            await fetchQuestions(null, nextDiff, false);
+            setCurrentIndex(currentIndex + 1);
         }
+
+        setUserAnswer('');
+        setFeedback(null);
+        setShowSolution(false);
+        hasAnsweredRef.current = false;
     };
 
     const handlePrev = () => {
@@ -366,7 +402,7 @@ const PracticeSession = () => {
                     <div style={{ fontSize: '64px', marginBottom: '20px' }}>🎉</div>
                     <h2 style={{ color: '#10b981', marginBottom: '16px' }}>Practice Complete!</h2>
                     <p style={{ color: '#64748b', marginBottom: '32px' }}>
-                        You have completed all {questions.length} questions.
+                        You have completed all {stats.total} questions.
                     </p>
                     <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
                         <button
@@ -437,7 +473,7 @@ const PracticeSession = () => {
                                 <div className="header-actions">
                                     <div className="progress-circle">
                                         <span className="current">{currentIndex + 1}</span>
-                                        <span className="total">/{questions.length}</span>
+                                        <span className="total">/{stats.total}</span>
                                     </div>
                                     <button
                                         className={`wb-toggle-btn ${showWhiteboard ? 'active' : ''}`}
@@ -469,52 +505,31 @@ const PracticeSession = () => {
                                 <div className="zen-left-panel">
                                     <div className="zen-card">
                                         <div className="zen-question-content">
-                                            <div className="zen-question-text" dangerouslySetInnerHTML={{ __html: question.question_html }} />
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="badge">Problem {currentIndex + 1}</span>
+                                                <span className={`difficulty-badge ${currentDifficulty.toLowerCase()}`}>{currentDifficulty}</span>
+                                            </div>
+                                            {fetchingNext ? (
+                                                <div className="zen-loader">Generating next challenge...</div>
+                                            ) : (
+                                                <div className="zen-question-text" dangerouslySetInnerHTML={{ __html: question.question_html }} />
+                                            )}
                                         </div>
 
                                         <div className="zen-interaction-area">
                                             {/* ... Interactions ... */}
-                                            {question.question_type === 'MCQ' || question.question_type === 'mcq' && question.options && question.options.length > 0 ? (
-                                                <div className="zen-options-grid">
-                                                    {question.options.map((option, idx) => {
-                                                        const isCorrect = isOptionCorrect(option, idx);
-                                                        const isSelected = userAnswer === option;
-                                                        let btnClass = 'zen-option-btn';
-                                                        if (isSelected) btnClass += ' selected';
-                                                        if (feedback) {
-                                                            if (isCorrect) btnClass += ' correct';
-                                                            else if (isSelected && !isCorrect) btnClass += ' wrong';
-                                                        }
-                                                        return (
-                                                            <button
-                                                                key={idx}
-                                                                className={btnClass}
-                                                                onClick={() => !feedback && setUserAnswer(option)}
-                                                                disabled={!!feedback}
-                                                            >
-                                                                <div className="zen-option-key">{String.fromCharCode(65 + idx)}</div>
-                                                                <div className="zen-option-val">{option}</div>
-                                                            </button>
-                                                        );
-                                                    })}
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    {!question.question_html.includes('inline-input') && (
-                                                        <div className="zen-input-wrapper">
-                                                            <input
-                                                                type="text"
-                                                                value={userAnswer}
-                                                                onChange={(e) => setUserAnswer(e.target.value)}
-                                                                placeholder="Type your answer..."
-                                                                className="zen-text-input"
-                                                                onKeyDown={(e) => e.key === 'Enter' && !feedback && handleCheckAnswer()}
-                                                                disabled={!!feedback}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
+                                            <ModelRenderer
+                                                question={{
+                                                    ...question,
+                                                    type: question.question_type, // Map question_type to type for ModelRenderer
+                                                    correctAnswer: question.answer_value
+                                                }}
+                                                userAnswer={userAnswer}
+                                                setUserAnswer={setUserAnswer}
+                                                feedback={feedback ? (feedback.type === 'success' ? 'correct' : 'incorrect') : null}
+                                                disabled={!!feedback}
+                                                onCheck={handleCheckAnswer}
+                                            />
 
                                             <div className="zen-actions">
                                                 {!feedback && (
@@ -564,15 +579,20 @@ const PracticeSession = () => {
                                                 {showWhiteboard ? 'Hide Notebook' : 'Show Notebook'}
                                             </button>
 
-                                            {isLastQuestion ? (
+                                            <div className="flex gap-2">
                                                 <button onClick={handleFinish} className="zen-nav-btn finish">
                                                     Finish
                                                 </button>
-                                            ) : (
-                                                <button onClick={handleNext} className="zen-nav-btn primary-action">
-                                                    Next →
-                                                </button>
-                                            )}
+                                                {!isLastQuestion ? (
+                                                    <button onClick={handleNext} className="zen-nav-btn primary-action">
+                                                        Next →
+                                                    </button>
+                                                ) : (
+                                                    <button onClick={handleNext} className="zen-nav-btn primary-action">
+                                                        Next →
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

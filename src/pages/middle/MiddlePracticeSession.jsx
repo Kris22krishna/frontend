@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Check, X, RefreshCw, Zap, Award, Star, Cloud, ArrowRight } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
 import { api } from '../../services/api';
+import ModelRenderer from '../../models/ModelRenderer';
 import './MiddlePracticeSession.css';
 
 const MiddlePracticeSession = () => {
@@ -16,6 +17,9 @@ const MiddlePracticeSession = () => {
     const [completed, setCompleted] = useState(false);
     const [skillName, setSkillName] = useState('Math Practice');
     const [history, setHistory] = useState([]);
+    const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
+    const [fetchingNext, setFetchingNext] = useState(false);
+    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
 
     // Time Tracking
     const startTimeRef = useRef(Date.now());
@@ -33,10 +37,12 @@ const MiddlePracticeSession = () => {
         startTimeRef.current = Date.now();
     }, [skillId]);
 
-    const fetchQuestions = async () => {
-        setLoading(true);
+    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+        if (isInitial) setLoading(true);
+        else setFetchingNext(true);
+
         try {
-            const response = await api.getPracticeQuestionsBySkill(skillId, 10);
+            const response = await api.getPracticeQuestionsBySkill(skillId, 1, null, diff);
 
             let rawQuestions = [];
             if (response && response.questions) rawQuestions = response.questions;
@@ -47,21 +53,29 @@ const MiddlePracticeSession = () => {
             if (!Array.isArray(rawQuestions)) rawQuestions = [];
 
             const normalized = rawQuestions.map((q, idx) => ({
-                id: q.id || q.question_id || idx,
+                id: q.id || q.question_id || (isInitial ? idx : questions.length),
                 text: q.question_text || q.question || q.question_html || "Question Text Missing",
                 options: q.options || [],
                 correctAnswer: q.correct_answer || q.answer || q.answer_value,
                 solution: q.solution || q.solution_html || q.explanation || "No detailed explanation available.",
-                type: q.type || q.question_type || 'MCQ'
+                type: q.type || q.question_type || 'MCQ',
+                difficulty: diff,
+                model: q.model || 'Default'
             }));
 
-            setQuestions(normalized);
-            if (response.skill_name) setSkillName(response.skill_name);
+            if (isInitial) {
+                setQuestions(normalized);
+                if (response.skill_name) setSkillName(response.skill_name);
+                else if (response.template_metadata?.skill_name) setSkillName(response.template_metadata.skill_name);
+            } else {
+                setQuestions(prev => [...prev, ...normalized]);
+            }
 
         } catch (error) {
             console.error("Error fetching middle practice:", error);
         } finally {
             setLoading(false);
+            setFetchingNext(false);
         }
     };
 
@@ -124,13 +138,38 @@ const MiddlePracticeSession = () => {
         handleNextStep();
     };
 
-    const handleNextStep = () => {
+    const handleNextStep = async () => {
+        const currentQ = questions[currentIndex];
+        const lastAttempt = history[history.length - 1];
+        const isCorrect = lastAttempt && lastAttempt.status === 'correct';
+
+        let nextDiff = currentDifficulty;
+        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+
+        if (nextLevelCount >= 3) {
+            if (currentDifficulty === 'Easy') {
+                nextDiff = 'Medium';
+                nextLevelCount = 0;
+            } else if (currentDifficulty === 'Medium') {
+                nextDiff = 'Hard';
+                nextLevelCount = 0;
+            }
+        }
+
+        setCurrentDifficulty(nextDiff);
+        setCorrectCountAtLevel(nextLevelCount);
+
         if (currentIndex < questions.length - 1) {
+            // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
             setUserAnswer('');
             setFeedback(null);
         } else {
-            finishSession();
+            // Fetch next question
+            await fetchQuestions(nextDiff, false);
+            setCurrentIndex(prev => prev + 1);
+            setUserAnswer('');
+            setFeedback(null);
         }
     };
 
@@ -298,7 +337,7 @@ const MiddlePracticeSession = () => {
                         </div>
                         <div className="stat-row">
                             <Check size={18} className="stat-icon correct" />
-                            <span>Score: <strong>{stats.correct}</strong>/10</span>
+                            <span>Score: <strong>{stats.correct}</strong>/<strong>{stats.total}</strong></span>
                         </div>
                     </div>
 
@@ -308,10 +347,19 @@ const MiddlePracticeSession = () => {
                 {/* COL 2: Main Question Area */}
                 <main className="middle-question-area">
                     <div className="question-card glass-card pop-in">
-                        <span className="topic-tag">Problem {currentIndex + 1}</span>
+                        <div className="flex justify-between items-center mb-4">
+                            <span className="topic-tag">Problem {currentIndex + 1}</span>
+                            <span className={`difficulty-badge ${currentDifficulty.toLowerCase()}`}>
+                                {currentDifficulty}
+                            </span>
+                        </div>
                         <div className="question-text">
-                            {currentQ?.text && (
-                                <div dangerouslySetInnerHTML={{ __html: currentQ.text }} />
+                            {fetchingNext ? (
+                                <div className="fetching-loader">Preparing next challenge...</div>
+                            ) : (
+                                currentQ?.text && (
+                                    <div dangerouslySetInnerHTML={{ __html: currentQ.text }} />
+                                )
                             )}
                         </div>
 
@@ -321,42 +369,14 @@ const MiddlePracticeSession = () => {
                             </div>
                         )}
 
-                        <div className={`options-grid ${currentQ?.type === 'true_false' ? 'tf-grid' : ''}`}>
-                            {currentQ?.options?.map((opt, idx) => {
-                                const isSelected = userAnswer === opt;
-
-                                let btnClass = `option-btn ${isSelected ? 'selected' : ''}`;
-                                if (feedback) {
-                                    if (opt === currentQ.correctAnswer) btnClass += ' correct';
-                                    else if (isSelected && feedback === 'incorrect') btnClass += ' wrong';
-                                }
-
-                                return (
-                                    <button
-                                        key={idx}
-                                        className={btnClass}
-                                        onClick={() => !feedback && setUserAnswer(opt)}
-                                        disabled={!!feedback}
-                                    >
-                                        <div className="opt-letter">{String.fromCharCode(65 + idx)}</div>
-                                        <span>{opt}</span>
-                                        {feedback && opt === currentQ.correctAnswer && <Check size={20} className="ml-auto text-green-600" />}
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        {/* Only for input type */}
-                        {currentQ?.type === 'input' && (
-                            <input
-                                type="text"
-                                className="middle-input"
-                                value={userAnswer}
-                                onChange={(e) => setUserAnswer(e.target.value)}
-                                placeholder="Type your answer..."
-                                disabled={!!feedback}
-                            />
-                        )}
+                        <ModelRenderer
+                            question={currentQ}
+                            userAnswer={userAnswer}
+                            setUserAnswer={setUserAnswer}
+                            feedback={feedback}
+                            disabled={!!feedback}
+                            onCheck={handleCheck}
+                        />
 
                         <div className="action-bar">
                             {feedback ? (
@@ -370,6 +390,9 @@ const MiddlePracticeSession = () => {
                                 </div>
                             ) : (
                                 <div className="flex gap-4">
+                                    <button className="middle-btn secondary" onClick={() => setCompleted(true)}>
+                                        Finish
+                                    </button>
                                     <button className="middle-btn secondary" onClick={handleSkip}>
                                         Skip
                                     </button>

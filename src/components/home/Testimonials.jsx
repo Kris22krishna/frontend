@@ -7,42 +7,42 @@ const testimonials = [
         grade: 'Grade 8',
         location: 'Mumbai, Maharashtra',
         text: 'Skill100 made maths so much fun! I used to struggle with algebra, but the practice sessions helped me score 95% in my board exams. Thank you!',
-        image: 'https://images.unsplash.com/photo-1590400541360-b2034010a3e2?auto=format&fit=crop&q=80&w=150&h=150'
+        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150'
     },
     {
         name: 'Priya Patel',
         grade: 'Grade 6',
         location: 'Ahmedabad, Gujarat',
         text: 'I love the colorful interface and the explanations after each question. It feels like having a personal tutor at home!',
-        image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150'
+        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150'
     },
     {
         name: 'Rohan Iyer',
         grade: 'Grade 10',
         location: 'Chennai, Tamil Nadu',
         text: 'The practice questions are exactly like my school exams. Skill100 helped me prepare for my 10th boards with confidence.',
-        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150'
+        image: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&q=80&w=150&h=150'
     },
     {
         name: 'Ananya Reddy',
         grade: 'Grade 4',
         location: 'Hyderabad, Telangana',
         text: 'My daughter enjoys learning maths now! The progress tracking helps me see her improvement every week.',
-        image: 'https://images.unsplash.com/photo-1491013516836-7ad643eead2c?auto=format&fit=crop&q=80&w=150&h=150'
+        image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150'
     },
     {
         name: 'Kabir Singh',
         grade: 'Grade 7',
         location: 'Delhi',
         text: 'The scratchpad feature is amazing! I can solve problems step-by-step without needing extra paper.',
-        image: 'https://images.unsplash.com/photo-1540348563548-706ad357ebcb?auto=format&fit=crop&q=80&w=150&h=150'
+        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150'
     },
     {
         name: 'Sneha Nair',
         grade: 'Grade 9',
         location: 'Kochi, Kerala',
         text: 'From fractions to geometry, Skill100 covers everything. I recommend it to all my classmates!',
-        image: 'https://images.unsplash.com/photo-1594185230677-50a6aa0728fd?auto=format&fit=crop&q=80&w=150&h=150'
+        image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=150&h=150'
     }
 ];
 
