@@ -7,6 +7,7 @@ export function SunTimer({ timeLeft }) {
         return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
+
     const spinTransition = {
         repeat: Infinity,
         ease: "linear",

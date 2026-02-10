@@ -249,6 +249,7 @@ const MiddlePracticeSession = () => {
             </div>
 
             {/* Bottom Navigation */}
+            {/* Bottom Navigation */}
             <div className="shrink-0 px-4 lg:px-6 pb-4 lg:pb-6 max-w-[1400px] mx-auto w-full">
                 <BottomBar
                     mode="junior"
@@ -344,8 +345,6 @@ const MiddlePracticeSession = () => {
                     </>
                 )}
             </AnimatePresence>
-
-
             {/* Explanation Modal */}
             <AnimatePresence>
                 {showExplanation && (
