@@ -9,6 +9,7 @@ import ContentPage from './pages/ContentPage';
 import DynamicQuestionsDashboard from './pages/DynamicQuestionsDashboard';
 import PracticeSession from './pages/PracticeSession';
 import UploaderLogin from './pages/UploaderLogin';
+import RapidMathPage from './pages/RapidMathPage';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -92,6 +93,7 @@ function App() {
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
           {/* Practice Session moved to top level for full screen */}
+          <Route path="rapid-math" element={<RapidMathPage />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>
 

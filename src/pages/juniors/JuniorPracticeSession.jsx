@@ -4,6 +4,7 @@ import { ChevronRight, ChevronLeft, Flag, Home, RefreshCw, Star, FileText, Penci
 import StickerExit from '../../components/StickerExit';
 import avatarImg from '../../assets/avatar.png';
 import { api } from '../../services/api'; // Correct import
+import ModelRenderer from '../../models/ModelRenderer';
 import Navbar from '../../components/Navbar';
 import './JuniorPracticeSession.css';
 
@@ -22,52 +23,60 @@ const JuniorPracticeSession = () => {
     const [answers, setAnswers] = useState({}); // { questionIndex: { selected: ..., correct: boolean } }
     const [timeElapsed, setTimeElapsed] = useState(0); // Count up logic
     const [showResults, setShowResults] = useState(false);
+    const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
+    const [fetchingNext, setFetchingNext] = useState(false);
+    const [stats, setStats] = useState({ correct: 0, total: 0 });
+    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
 
     // Fetch questions
-    useEffect(() => {
-        const fetchQuestions = async () => {
-            if (!skillId) return;
-            try {
-                setLoading(true);
-                // Fetch 10 questions for the skill
-                const response = await api.getPracticeQuestionsBySkill(skillId, 10);
+    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+        if (!skillId) return;
+        if (isInitial) setLoading(true);
+        else setFetchingNext(true);
 
-                // Handle different response structures
-                let rawQuestions = [];
-                if (response && response.questions) {
-                    rawQuestions = response.questions; // Standard APIResponse format
-                } else if (response && response.preview_samples) {
-                    rawQuestions = response.preview_samples; // v2 Template Preview format
-                } else if (response && response.selection_needed) {
-                    // Logic: If multiple types available and none selected, auto-select first one for junior grades
-                    const defaultType = response.available_types[0];
-                    const retryResponse = await api.getPracticeQuestionsBySkill(skillId, 10, defaultType);
-                    rawQuestions = retryResponse.questions || retryResponse.preview_samples || [];
-                } else if (Array.isArray(response)) {
-                    rawQuestions = response; // Direct array
-                }
+        try {
+            // Fetch 1 question at a time with specified difficulty
+            const response = await api.getPracticeQuestionsBySkill(skillId, 1, null, diff);
 
-                // Ensure questions are valid
-                const validQuestions = rawQuestions.map(q => {
-                    return {
-                        id: q.id || q.question_id || Math.random(),
-                        text: q.text || q.question_text || q.question || q.question_html,
-                        options: q.options || [],
-                        correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
-                        type: q.type || q.question_type || 'MCQ',
-                        solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this."
-                    };
-                });
-
-                setQuestions(validQuestions);
-            } catch (error) {
-                console.error('Error fetching questions:', error);
-            } finally {
-                setLoading(false);
+            let rawQuestions = [];
+            if (response && response.questions) {
+                rawQuestions = response.questions;
+            } else if (response && response.preview_samples) {
+                rawQuestions = response.preview_samples;
+            } else if (response && response.selection_needed) {
+                const defaultType = response.available_types[0];
+                const retryResponse = await api.getPracticeQuestionsBySkill(skillId, 1, defaultType, diff);
+                rawQuestions = retryResponse.questions || retryResponse.preview_samples || [];
+            } else if (Array.isArray(response)) {
+                rawQuestions = response;
             }
-        };
 
-        fetchQuestions();
+            const validQuestions = rawQuestions.map(q => ({
+                id: q.id || q.question_id || Math.random(),
+                text: q.text || q.question_text || q.question || q.question_html,
+                options: q.options || [],
+                correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
+                type: q.type || q.question_type || 'MCQ',
+                solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
+                difficulty: diff,
+                model: q.model || 'Default'
+            }));
+
+            if (isInitial) {
+                setQuestions(validQuestions);
+            } else {
+                setQuestions(prev => [...prev, ...validQuestions]);
+            }
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+        } finally {
+            setLoading(false);
+            setFetchingNext(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchQuestions('Easy', true);
     }, [skillId]);
 
     // Sync selectedOption with previous answers when navigating
@@ -114,13 +123,38 @@ const JuniorPracticeSession = () => {
                 isCorrect
             }
         }));
+
+        setStats(prev => ({
+            total: prev.total + 1,
+            correct: isCorrect ? prev.correct + 1 : prev.correct
+        }));
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
+        const currentAns = answers[currentIndex];
+        const isCorrect = currentAns && currentAns.isCorrect;
+
+        let nextDiff = currentDifficulty;
+        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+
+        if (nextLevelCount >= 3) {
+            if (currentDifficulty === 'Easy') {
+                nextDiff = 'Medium';
+                nextLevelCount = 0;
+            } else if (currentDifficulty === 'Medium') {
+                nextDiff = 'Hard';
+                nextLevelCount = 0;
+            }
+        }
+
+        setCurrentDifficulty(nextDiff);
+        setCorrectCountAtLevel(nextLevelCount);
+
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(prev => prev + 1);
         } else {
-            handleSubmitSession();
+            await fetchQuestions(nextDiff, false);
+            setCurrentIndex(prev => prev + 1);
         }
     };
 
@@ -142,12 +176,12 @@ const JuniorPracticeSession = () => {
             const reportData = {
                 title: skillName || 'Junior Math Practice',
                 type: 'practice',
-                score: (correctCount / questions.length) * 100,
+                score: (stats.correct / stats.total) * 100,
                 parameters: {
                     skill_id: skillId,
                     skill_name: skillName,
-                    total_questions: questions.length,
-                    correct_answers: correctCount,
+                    total_questions: stats.total,
+                    correct_answers: stats.correct,
                     timestamp: new Date().toISOString(),
                     time_taken_seconds: timeElapsed
                 },
@@ -193,8 +227,9 @@ const JuniorPracticeSession = () => {
     }
 
     if (showResults) {
-        const score = Object.values(answers).filter(a => a.isCorrect).length;
-        const percentage = Math.round((score / questions.length) * 100);
+        const score = stats.correct;
+        const total = stats.total;
+        const percentage = Math.round((score / total) * 100);
 
         return (
             <div className="junior-practice-page results-view">
@@ -234,7 +269,7 @@ const JuniorPracticeSession = () => {
                         <div className="results-stats">
                             <div className="stat-card">
                                 <span className="stat-label">Correct</span>
-                                <span className="stat-value highlight">{score}/{questions.length}</span>
+                                <span className="stat-value highlight">{score}/{total}</span>
                             </div>
                             <div className="stat-card">
                                 <span className="stat-label">Time</span>
@@ -288,40 +323,30 @@ const JuniorPracticeSession = () => {
 
                 <div className="question-board">
                     <div className="board-header">
+                        <div className="flex justify-between items-center w-full px-4 mb-2">
+                            <span className="question-number">Question {currentIndex + 1}</span>
+                            <span className={`difficulty-tag ${currentDifficulty.toLowerCase()}`}>
+                                {currentDifficulty}
+                            </span>
+                        </div>
                         <h2 className="question-text">
-                            <span className="question-number">{currentIndex + 1}.</span>
-                            <span dangerouslySetInnerHTML={{ __html: currentQuestion?.text }} />
+                            {fetchingNext ? (
+                                <div className="junior-loader">Finding next puzzle...</div>
+                            ) : (
+                                <span dangerouslySetInnerHTML={{ __html: currentQuestion?.text }} />
+                            )}
                         </h2>
                     </div>
 
                     <div className="board-interaction-area">
-                        {currentQuestion?.type === 'User Input' || currentQuestion?.type === 'user_input' ? (
-                            <div className="user-input-container">
-                                <input
-                                    type="text"
-                                    className="user-input-large"
-                                    placeholder="Type here..."
-                                    value={selectedOption || ''}
-                                    onChange={(e) => handleOptionSelect(e.target.value)}
-                                    disabled={isSubmitted} // Disable after submit
-                                    onKeyDown={(e) => e.key === 'Enter' && !isSubmitted && handleSubmitAnswer()}
-                                />
-                            </div>
-                        ) : (
-                            <div className="options-grid">
-                                {currentQuestion?.options.map((option, idx) => (
-                                    <button
-                                        key={idx}
-                                        className={`option-btn ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct-option' : ''
-                                            } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong-option' : ''
-                                            }`}
-                                        onClick={() => handleOptionSelect(option)}
-                                        disabled={isSubmitted}
-                                        dangerouslySetInnerHTML={{ __html: option }}
-                                    />
-                                ))}
-                            </div>
-                        )}
+                        <ModelRenderer
+                            question={currentQuestion}
+                            userAnswer={selectedOption}
+                            setUserAnswer={handleOptionSelect}
+                            feedback={isSubmitted ? (isCorrect ? 'correct' : 'incorrect') : null}
+                            disabled={isSubmitted}
+                            onCheck={handleSubmitAnswer}
+                        />
 
                         {/* FEEDBACK AREA */}
                         {isSubmitted && (
@@ -355,9 +380,14 @@ const JuniorPracticeSession = () => {
                             Submit Answer 🚀
                         </button>
                     ) : (
-                        <button className="next-question-btn" onClick={handleNext}>
-                            {currentIndex < questions.length - 1 ? "Next Question ➡️" : "Finish Adventure 🏁"}
-                        </button>
+                        <div className="flex gap-4">
+                            <button className="magic-pad-btn" onClick={handleSubmitSession}>
+                                Finish Adventure 🏁
+                            </button>
+                            <button className="next-question-btn" onClick={handleNext}>
+                                Next Question ➡️
+                            </button>
+                        </div>
                     )}
                 </div>
 

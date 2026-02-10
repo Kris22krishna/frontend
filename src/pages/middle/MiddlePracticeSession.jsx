@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
+import ModelRenderer from '../../models/ModelRenderer';
 import './MiddlePracticeSession.css';
 
 // Components
@@ -29,6 +30,9 @@ const MiddlePracticeSession = () => {
     const [completed, setCompleted] = useState(false);
     const [skillName, setSkillName] = useState('Math Practice');
     const [history, setHistory] = useState([]);
+    const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
+    const [fetchingNext, setFetchingNext] = useState(false);
+    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
 
     const startTimeRef = useRef(Date.now());
 
@@ -42,8 +46,10 @@ const MiddlePracticeSession = () => {
         return () => clearInterval(timer);
     }, [skillId]);
 
-    const fetchQuestions = async () => {
-        setLoading(true);
+    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+        if (isInitial) setLoading(true);
+        else setFetchingNext(true);
+
         try {
             let response = await api.getPracticeQuestionsBySkill(skillId, 10);
 
@@ -101,6 +107,7 @@ const MiddlePracticeSession = () => {
             console.error("Error fetching middle practice:", error);
         } finally {
             setLoading(false);
+            setFetchingNext(false);
         }
     };
 
@@ -136,6 +143,7 @@ const MiddlePracticeSession = () => {
     const proceedToNext = () => {
         setShowExplanation(false);
         if (currentIndex < questions.length - 1) {
+            // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
         } else {
             setCompleted(true);

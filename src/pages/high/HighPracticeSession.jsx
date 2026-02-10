@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
 import { api } from '../../services/api';
+import ModelRenderer from '../../models/ModelRenderer';
 import './HighPracticeSession.css';
 import Navbar from '../../components/Navbar';
 
@@ -19,7 +20,8 @@ const HighPracticeSession = () => {
     const [history, setHistory] = useState([]);
     const [error, setError] = useState(null);
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
-    const [consecutiveCorrect, setConsecutiveCorrect] = useState(0);
+    const [fetchingNext, setFetchingNext] = useState(false);
+    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
 
     // Time Tracking
     const startTimeRef = useRef(Date.now());
@@ -39,16 +41,16 @@ const HighPracticeSession = () => {
 
     const fetchQuestions = async (retryType = null, append = false, forcedDifficulty = null) => {
         if (!append) setLoading(true);
+        else setFetchingNext(true);
         setError(null);
         try {
             const diff = forcedDifficulty || currentDifficulty;
-            console.log(`[HighPractice] Fetching questions for skillId: ${skillId}, type: ${retryType}, append: ${append}, difficulty: ${diff}`);
-            const response = await api.getPracticeQuestionsBySkill(skillId, 10, retryType, diff);
+            const response = await api.getPracticeQuestionsBySkill(skillId, 1, retryType, diff);
 
             // Handle Type Selection Request
             if (response && response.selection_needed && response.available_types?.length > 0) {
                 const defaultType = response.available_types[0];
-                return fetchQuestions(defaultType, append);
+                return fetchQuestions(defaultType, append, diff);
             }
 
             let rawQuestions = [];
@@ -64,7 +66,8 @@ const HighPracticeSession = () => {
                 solution: q.solution || q.solution_html || q.explanation || "No detailed explanation available.",
                 type: q.type || q.question_type || 'MCQ',
                 imageUrl: q.imageUrl || q.image_url,
-                difficulty: q.difficulty || (response.template_metadata?.difficulty) || diff
+                difficulty: diff,
+                model: q.model || 'Default'
             }));
 
             if (append) {
@@ -79,6 +82,7 @@ const HighPracticeSession = () => {
             if (!append) setError(err.message || "Failed to load session.");
         } finally {
             if (!append) setLoading(false);
+            setFetchingNext(false);
         }
     };
 
@@ -102,16 +106,6 @@ const HighPracticeSession = () => {
         }
 
         if (isCorrect) {
-            const nextConsecutive = consecutiveCorrect + 1;
-            setConsecutiveCorrect(nextConsecutive);
-
-            // Logic: 1 correct -> Medium, 2 correct -> Hard
-            if (nextConsecutive === 1 && currentDifficulty === 'Easy') {
-                setCurrentDifficulty('Medium');
-            } else if (nextConsecutive >= 2 && currentDifficulty !== 'Hard') {
-                setCurrentDifficulty('Hard');
-            }
-
             setStats(prev => ({
                 ...prev,
                 correct: prev.correct + 1,
@@ -119,7 +113,6 @@ const HighPracticeSession = () => {
                 streak: prev.streak + 1
             }));
         } else {
-            setConsecutiveCorrect(0);
             setStats(prev => ({
                 ...prev,
                 wrong: prev.wrong + 1,
@@ -131,29 +124,30 @@ const HighPracticeSession = () => {
 
 
     const handleNextStep = async () => {
-        const nextIdx = currentIndex + 1;
-        const nextQ = questions[nextIdx];
+        const lastAttempt = history[history.length - 1];
+        const isCorrect = lastAttempt && lastAttempt.status === 'correct';
 
-        // If next question exists but has wrong difficulty, we must fetch new ones and skip to them
-        if (nextQ && nextQ.difficulty !== currentDifficulty) {
-            const newQuestions = await fetchQuestions(null, true, currentDifficulty);
-            if (newQuestions && newQuestions.length > 0) {
-                // Skip to the first question of the newly fetched batch
-                // We know setQuestions appended them, so the index is the PREVIOUS length
-                setCurrentIndex(questions.length);
-            } else {
-                // Fallback to normal if fetch failed/returned nothing
-                setCurrentIndex(nextIdx);
+        let nextDiff = currentDifficulty;
+        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+
+        if (nextLevelCount >= 3) {
+            if (currentDifficulty === 'Easy') {
+                nextDiff = 'Medium';
+                nextLevelCount = 0;
+            } else if (currentDifficulty === 'Medium') {
+                nextDiff = 'Hard';
+                nextLevelCount = 0;
             }
         }
-        // If no next question at all, fetch more
-        else if (!nextQ) {
-            await fetchQuestions(null, true, currentDifficulty);
-            setCurrentIndex(nextIdx);
-        }
-        // Normal progression (next question exists and is correct difficulty)
-        else {
-            setCurrentIndex(nextIdx);
+
+        setCurrentDifficulty(nextDiff);
+        setCorrectCountAtLevel(nextLevelCount);
+
+        if (currentIndex < questions.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+        } else {
+            await fetchQuestions(null, true, nextDiff);
+            setCurrentIndex(prev => prev + 1);
         }
 
         setUserAnswer('');
@@ -245,7 +239,7 @@ const HighPracticeSession = () => {
                         <div className="high-title-group">
                             <h1>{skillName}</h1>
                             <div className="high-subtitle">
-                                <span className="high-badge">Practice Mode</span>
+                                <span className="high-badge">Question {currentIndex + 1}</span>
                                 <span className={`high-difficulty-badge ${currentDifficulty.toLowerCase()}`}>
                                     {currentDifficulty} Level
                                 </span>
@@ -292,48 +286,28 @@ const HighPracticeSession = () => {
                         </div>
 
                         <div className="question-content">
-                            {currentQ?.text && (
-                                <div className="question-text" dangerouslySetInnerHTML={{ __html: currentQ.text }} />
-                            )}
-                            {currentQ?.imageUrl && (
-                                <img src={currentQ.imageUrl} alt="Question" style={{ maxWidth: '100%', marginBottom: '2rem', borderRadius: '4px' }} />
+                            {fetchingNext ? (
+                                <div className="high-loader">Fetching next challenge...</div>
+                            ) : (
+                                <>
+                                    {currentQ?.text && (
+                                        <div className="question-text" dangerouslySetInnerHTML={{ __html: currentQ.text }} />
+                                    )}
+                                    {currentQ?.imageUrl && (
+                                        <img src={currentQ.imageUrl} alt="Question" style={{ maxWidth: '100%', marginBottom: '2rem', borderRadius: '4px' }} />
+                                    )}
+                                </>
                             )}
                         </div>
 
-                        <div className="high-options-grid">
-                            {currentQ?.options?.map((opt, idx) => {
-                                const isSelected = userAnswer === opt;
-                                let btnClass = `high-option-btn ${isSelected ? 'selected' : ''}`;
-
-                                if (feedback) {
-                                    if (opt === currentQ.correctAnswer) btnClass += ' correct';
-                                    else if (isSelected && feedback === 'incorrect') btnClass += ' wrong';
-                                }
-
-                                return (
-                                    <button
-                                        key={idx}
-                                        className={btnClass}
-                                        onClick={() => !feedback && setUserAnswer(opt)}
-                                        disabled={!!feedback}
-                                    >
-                                        <span className="high-key">{String.fromCharCode(65 + idx)}.</span>
-                                        <span>{opt}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        {(currentQ?.type === 'input' || !currentQ?.options || currentQ?.options.length === 0) && (
-                            <input
-                                type="text"
-                                className="high-text-input"
-                                value={userAnswer}
-                                onChange={(e) => setUserAnswer(e.target.value)}
-                                placeholder="Enter answer here..."
-                                disabled={!!feedback}
-                            />
-                        )}
+                        <ModelRenderer
+                            question={currentQ}
+                            userAnswer={userAnswer}
+                            setUserAnswer={setUserAnswer}
+                            feedback={feedback}
+                            disabled={!!feedback}
+                            onCheck={handleCheck}
+                        />
 
                         {feedback && (
                             <div className="high-feedback-container">

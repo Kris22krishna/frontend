@@ -47,7 +47,7 @@ const ContentPage = ({ topic }) => {
     if (topic === 'learn-to-learn') {
         return (
             <div className="learn-page">
-                <SEO title="Learn to Learn | Skill100.AI" description="Discover topics and master mathematics with smart learning techniques." />
+                <SEO title="Learn to Learn | Skill100.ai" description="Discover topics and master mathematics with smart learning techniques." />
                 <Navbar />
 
                 {/* Learning Tips */}

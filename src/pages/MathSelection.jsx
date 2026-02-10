@@ -65,6 +65,22 @@ const HighSchoolIllustration = () => (
     </svg>
 );
 
+const RapidMathIllustration = () => (
+    <svg viewBox="0 0 200 160" className="category-illustration">
+        {/* Lightning bolt / Speed effect */}
+        <path d="M120 20L80 70H110L70 140" stroke="#fbbf24" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" className="animate-pulse" />
+        {/* Circular timer ring */}
+        <circle cx="100" cy="80" r="60" stroke="#f59e0b" strokeWidth="4" strokeDasharray="10 5" fill="none" opacity="0.3" />
+        {/* Floating numbers */}
+        <text x="40" y="50" fontSize="24" fill="#f59e0b" fontWeight="900" opacity="0.8">7</text>
+        <text x="150" y="110" fontSize="20" fill="#f59e0b" fontWeight="900" opacity="0.6">×</text>
+        <text x="140" y="40" fontSize="22" fill="#f59e0b" fontWeight="900" opacity="0.7">12</text>
+        {/* Motion lines */}
+        <line x1="30" y1="100" x2="60" y2="100" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+        <line x1="20" y1="120" x2="50" y2="120" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+);
+
 const MathSelection = () => {
     const navigate = useNavigate();
     const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -121,6 +137,22 @@ const MathSelection = () => {
             icon: <Trophy className="category-icon" />,
             illustration: <HighSchoolIllustration />,
             features: ['Advanced Algebra', 'Trigonometry', 'Calculus Prep'],
+        },
+        {
+            id: 'rapid-math',
+            title: 'Rapid Math',
+            subtitle: 'Speed & Accuracy',
+            description: 'Can you solve 10 questions in record time? Challenge your brain and climb the leaderboard!',
+            grades: [
+                { id: 'rapid', label: 'Start Speed Test' },
+            ],
+            isGame: true,
+            color: 'rapid',
+            gradient: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+            bgLight: '#fef3c7',
+            icon: <Zap className="category-icon" />,
+            illustration: <RapidMathIllustration />,
+            features: ['Mental Math', 'Beat the Clock', 'Global Ranks'],
         },
     ];
 
@@ -187,6 +219,10 @@ const MathSelection = () => {
                                             key={grade.id}
                                             className="grade-btn"
                                             onClick={() => {
+                                                if (category.id === 'rapid-math') {
+                                                    navigate('/rapid-math');
+                                                    return;
+                                                }
                                                 const id = parseInt(grade.id);
                                                 if (id >= 1 && id <= 4) {
                                                     navigate(`/junior/grade/${grade.id}`);
