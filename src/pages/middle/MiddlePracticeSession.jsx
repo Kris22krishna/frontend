@@ -45,7 +45,14 @@ const MiddlePracticeSession = () => {
     const fetchQuestions = async () => {
         setLoading(true);
         try {
-            const response = await api.getPracticeQuestionsBySkill(skillId, 10);
+            let response = await api.getPracticeQuestionsBySkill(skillId, 10);
+
+            // Handle selection_needed: when backend has both MCQ and User Input templates,
+            // it asks the frontend to choose. Auto-pick MCQ for the practice session.
+            if (response && response.selection_needed) {
+                console.log('[Practice] selection_needed detected, auto-picking MCQ. Available types:', response.available_types);
+                response = await api.getPracticeQuestionsBySkill(skillId, 10, 'MCQ');
+            }
 
             let rawQuestions = [];
             if (response && response.questions) rawQuestions = response.questions;
@@ -83,7 +90,12 @@ const MiddlePracticeSession = () => {
             });
 
             setQuestions(normalized);
-            if (response.skill_name) setSkillName(response.skill_name);
+            // Extract skill name from template_metadata (backend nests it there)
+            if (response?.template_metadata?.skill_name) {
+                setSkillName(response.template_metadata.skill_name);
+            } else if (response?.skill_name) {
+                setSkillName(response.skill_name);
+            }
 
         } catch (error) {
             console.error("Error fetching middle practice:", error);
