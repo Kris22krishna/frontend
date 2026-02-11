@@ -47,6 +47,7 @@ const MiddleGradeSyllabus = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         const fetchData = async () => {
             setLoading(true);
             try {
