@@ -157,8 +157,8 @@ const JuniorPracticeSession = () => {
         const currentQuestion = questions[currentIndex];
 
         // Robust comparison matching handleOptionSelect
-        const val1 = String(selectedOption).trim();
-        const val2 = String(currentQuestion.correctAnswer).trim();
+        const val1 = String(selectedOption).trim().toLowerCase();
+        const val2 = String(currentQuestion.correctAnswer).trim().toLowerCase();
         const isCorrect = val1 === val2;
 
         setAnswers(prev => ({
@@ -347,9 +347,9 @@ const JuniorPracticeSession = () => {
     // Helper to sanitize question text specifically for Junior view where options are buttons
     const cleanQuestionText = (html) => {
         if (!html) return '';
-        // Remove patterns like "A. ...", "(A) ...", "a) ..." that appear at the end of the string
-        let cleaned = html.replace(/(?:<br\s*\/?>|\n|\r)+\s*[A-Da-d1-4][\.\)]\s+.*?(?=(?:<br\s*\/?>|\n|\r)|$)/gi, '');
-        return cleaned.trim();
+        // Remove patterns like "A. ...", "(A) ...", "a) ..."
+        // Handles newlines, br tags, p/div tags, and varying whitespace
+        return html.replace(/(?:<(?:br|p|div)\s*\/?>|<\/(?:p|div)>|\n|\r)+\s*(?:[A-Da-d1-4][\.\)]|\([A-Da-d1-4]\))\s*.*?(?=(?:<(?:br|p|div)\s*\/?>|<\/(?:p|div)>|\n|\r)|$)/gi, '').trim();
     };
 
     return (

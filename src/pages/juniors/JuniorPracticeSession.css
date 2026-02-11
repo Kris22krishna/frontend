@@ -116,7 +116,7 @@
 .practice-board-container {
     display: grid;
     /* Desktop: 2 columns (Question | Scratchpad) */
-    grid-template-columns: minmax(0, 1fr) 350px;
+    grid-template-columns: minmax(0, 1fr) 300px;
     grid-template-rows: 1fr;
     gap: 1.5rem;
     width: 100%;
@@ -132,7 +132,7 @@
 .practice-left-col {
     position: relative;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Right Column - Desktop */
@@ -171,10 +171,10 @@
 /* Mascot - Overlapping Left of Question Card */
 .mascot-overlap {
     position: absolute;
-    left: -50px;
-    bottom: 120px;
+    left: 0px;
+    bottom: 220px;
     z-index: 25;
-    width: 200px;
+    width: 150px;
     /* Reduced size */
     filter: drop-shadow(5px 10px 15px rgba(0, 0, 0, 0.15));
     pointer-events: none;
@@ -270,7 +270,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     flex: 1;
     /* Take remaining space */
@@ -1542,4 +1542,16 @@
         font-size: 0.85rem;
     }
 
+}
+
+/* ============================================
+   FIX: Explanation Modal Color Override
+   ============================================ */
+.junior-practice-page .explanation-header,
+.junior-practice-page .explanation-header h2 {
+    background: transparent !important;
+    color: #1E293B !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border: none !important;
 }
