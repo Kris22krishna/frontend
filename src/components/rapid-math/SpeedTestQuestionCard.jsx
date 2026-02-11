@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent } from "../ui/card";
 import { CalculatorKeypad } from "./CalculatorKeypad";
 import { CheckCircle2, XCircle } from "lucide-react";
@@ -11,11 +11,64 @@ export function SpeedTestQuestionCard({
     const [userAnswer, setUserAnswer] = useState("");
     const [feedback, setFeedback] = useState(null);
     const [submitted, setSubmitted] = useState(false);
+    const [timeoutId, setLocalTimeoutId] = useState(null);
+
+    const handleAnswerChange = useCallback((value) => {
+        if (submitted || feedback === "correct") return;
+
+        // Clear any pending "incorrect" timer immediately
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            setLocalTimeoutId(null);
+        }
+
+        if (value === "" || value === "-") {
+            setUserAnswer(value);
+            setFeedback(null);
+            return;
+        }
+
+        // Basic string validation to prevent weird non-number entries
+        const valueStr = value.toString();
+        const correctStr = question.correctAnswer.toString();
+
+        // Check if current value is exactly the correct answer
+        const currentNum = Number(value);
+        if (!isNaN(currentNum) && currentNum === question.correctAnswer && valueStr === correctStr) {
+            setUserAnswer(value);
+            setFeedback("correct");
+            setSubmitted(true);
+            setTimeout(() => {
+                onSubmit(currentNum);
+            }, 500);
+            return;
+        }
+
+        // If it starts with the correct answer, keep letting them type
+        if (correctStr.startsWith(valueStr)) {
+            setUserAnswer(value);
+            setFeedback(null);
+        } else {
+            // Incorrect - show feedback and clear after a delay
+            setUserAnswer(value);
+            setFeedback("incorrect");
+            const newTimeout = setTimeout(() => {
+                setUserAnswer("");
+                setFeedback(null);
+                setLocalTimeoutId(null);
+            }, 300);
+            setLocalTimeoutId(newTimeout);
+        }
+    }, [submitted, feedback, timeoutId, question.correctAnswer, onSubmit]);
 
     useEffect(() => {
         setUserAnswer("");
         setFeedback(null);
         setSubmitted(false);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+            setLocalTimeoutId(null);
+        }
     }, [question.id]);
 
     // Keyboard input handler
@@ -31,6 +84,10 @@ export function SpeedTestQuestionCard({
                 e.preventDefault();
                 handleAnswerChange(userAnswer.slice(0, -1));
             }
+            else if (e.key === '.' && !userAnswer.includes('.')) {
+                e.preventDefault();
+                handleAnswerChange(userAnswer + '.');
+            }
             else if (e.key === '-' && userAnswer === '') {
                 e.preventDefault();
                 handleAnswerChange('-');
@@ -39,56 +96,8 @@ export function SpeedTestQuestionCard({
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [userAnswer, submitted, feedback]);
+    }, [userAnswer, submitted, feedback, handleAnswerChange]);
 
-    useEffect(() => {
-        if (userAnswer && !submitted) {
-            const answer = Number(userAnswer);
-            if (!isNaN(answer) && answer === question.correctAnswer) {
-                setFeedback("correct");
-                setSubmitted(true);
-                setTimeout(() => {
-                    onSubmit(answer);
-                }, 500);
-            }
-        }
-    }, [userAnswer, question.correctAnswer, submitted, onSubmit]);
-
-    const handleAnswerChange = (value) => {
-        if (submitted || feedback === "correct") return;
-
-        if (value === "") {
-            setUserAnswer("");
-            setFeedback(null);
-            return;
-        }
-
-        if (value === "-") {
-            setUserAnswer("-");
-            setFeedback(null);
-            return;
-        }
-
-        if (isNaN(Number(value))) return;
-
-        const answer = Number(value);
-        const correctStr = question.correctAnswer.toString();
-        const valueStr = value.toString();
-
-        if (answer === question.correctAnswer) {
-            setUserAnswer(value);
-        } else if (correctStr.startsWith(valueStr)) {
-            setUserAnswer(value);
-            setFeedback(null);
-        } else {
-            setUserAnswer(value);
-            setFeedback("incorrect");
-            setTimeout(() => {
-                setUserAnswer("");
-                setFeedback(null);
-            }, 300);
-        }
-    };
 
     return (
         <Card className="w-full max-w-4xl mx-auto border-none shadow-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-3xl overflow-hidden">
