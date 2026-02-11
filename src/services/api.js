@@ -628,12 +628,7 @@ export const api = {
         return handleResponse(response);
     },
 
-    getTeacherDashboardStats: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/teacher/dashboard-stats`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
+
 
     getTeacherStudents: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/teacher/students`, {

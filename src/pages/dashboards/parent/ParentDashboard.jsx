@@ -10,7 +10,8 @@ import {
 import { api } from "@/services/api";
 
 export default function ParentDashboard() {
-    const { selectedChild } = useOutletContext();
+    const context = useOutletContext();
+    const selectedChild = context?.selectedChild;
 
     // Fallback/Loading UI could be improved here
     if (!selectedChild) return null;
