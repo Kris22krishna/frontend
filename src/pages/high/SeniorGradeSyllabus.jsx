@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../../services/api';
-import Navbar from '../../components/Navbar';
+
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
 import './SeniorGradeSyllabus.css';
@@ -69,7 +69,7 @@ const SeniorGradeSyllabus = () => {
     return (
         <div className="senior-syllabus-page">
             <SEO title={`Grade ${grade} Mathematics - Advanced Curriculum`} description={`Master Grade ${grade} math skills.`} />
-            <Navbar />
+
 
             {/* Header / Breadcrumbs */}
             <header className="senior-header-container">
@@ -149,7 +149,7 @@ const SeniorGradeSyllabus = () => {
                                     <div
                                         key={skill.skill_id}
                                         className="skill-card-modal"
-                                        onClick={() => navigate(`/practice/${skill.skill_id}`)}
+                                        onClick={() => navigate(`/high/practice/${skill.skill_id}`)}
                                     >
                                         <h4>{skill.skill_name}</h4>
                                         <div className="skill-card-footer">
