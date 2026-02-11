@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Home, Star, ChevronRight, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
-import LatexText from '../../components/LatexText';
+import { LatexText } from '../../components/LatexText';
 import { api } from '../../services/api';
 import './JuniorGradeSyllabus.css';
 

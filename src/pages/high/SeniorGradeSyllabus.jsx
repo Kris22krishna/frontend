@@ -4,7 +4,7 @@ import { api } from '../../services/api';
 
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
-import LatexText from '../../components/LatexText';
+import { LatexText } from '../../components/LatexText';
 import './SeniorGradeSyllabus.css';
 
 const SeniorGradeSyllabus = () => {
