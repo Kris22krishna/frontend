@@ -4,6 +4,7 @@ import { api } from '../../services/api';
 
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
+import { LatexText } from '../../components/LatexText';
 import './SeniorGradeSyllabus.css';
 
 const SeniorGradeSyllabus = () => {
@@ -35,7 +36,13 @@ const SeniorGradeSyllabus = () => {
     }, [grade]);
 
     // Group skills by topic
-    const skillsByTopic = skills.reduce((acc, skill) => {
+    const skillsByTopic = (skills || []).reduce((acc, skill) => {
+        const topicName = (skill.topic || 'General').toLowerCase();
+        const gradeNum = parseInt(grade.replace('grade', ''));
+
+        // Filter by grade
+        if (gradeNum === 8 && !topicName.includes("exponents")) return acc;
+
         const topic = skill.topic || 'General';
         if (!acc[topic]) acc[topic] = [];
         acc[topic].push(skill);
@@ -57,6 +64,20 @@ const SeniorGradeSyllabus = () => {
         return (
             <div className="senior-loading">
                 <div className="animate-pulse">Loading curriculum...</div>
+            </div>
+        );
+    }
+
+    if (!skills || skills.length === 0 || topics.length === 0) {
+        return (
+            <div className="senior-syllabus-page">
+                <SEO title={`Grade ${grade} Mathematics`} description="Grade syllabus" />
+                <div style={{ padding: '100px 20px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📚</div>
+                    <h2 style={{ color: '#1e293b', marginBottom: '10px' }}>No Content Available</h2>
+                    <p style={{ color: '#64748b' }}>We are currently updating the curriculum for Grade {grade}. Please check back later!</p>
+                    <Link to="/math" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600' }}>← Back to Grades</Link>
+                </div>
             </div>
         );
     }
@@ -146,7 +167,7 @@ const SeniorGradeSyllabus = () => {
                                         className="skill-card-modal"
                                         onClick={() => navigate(`/high/practice/${skill.skill_id}`)}
                                     >
-                                        <h4>{skill.skill_name}</h4>
+                                        <h4><LatexText text={skill.skill_name} /></h4>
                                         <div className="skill-card-footer">
                                             <span className="skill-badge">ID: {skill.skill_id}</span>
                                             <span className="start-btn">

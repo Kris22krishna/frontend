@@ -7,12 +7,15 @@ import {
     Grid, Layers, Triangle, Zap, Calculator, PieChart,
     ArrowRight, Box, Compass, Cuboid
 } from 'lucide-react';
+import { LatexText } from '../../components/LatexText';
 import './MiddleGradeSyllabus.css';
 
 const SkillItem = ({ skill }) => (
     <Link to={`/middle/practice/${skill.skill_id}`} className="middle-skill-item">
         <ArrowRight size={16} className="skill-arrow" />
-        <span className="skill-text">{skill.skill_name}</span>
+        <span className="skill-text">
+            <LatexText text={skill.skill_name} />
+        </span>
     </Link>
 );
 
@@ -44,6 +47,7 @@ const MiddleGradeSyllabus = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         const fetchData = async () => {
             setLoading(true);
             try {
@@ -62,7 +66,16 @@ const MiddleGradeSyllabus = () => {
 
     // Group skills by topic
     const skillsByTopic = skills.reduce((acc, skill) => {
+        const topicName = (skill.topic || 'General').toLowerCase();
+        const gradeNum = parseInt(grade.replace('grade', ''));
+
+        // Filter by grade
+        if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
+        if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
+        if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
+
         const topic = skill.topic || 'General';
+
         if (!acc[topic]) acc[topic] = [];
         acc[topic].push(skill);
         return acc;
@@ -81,7 +94,7 @@ const MiddleGradeSyllabus = () => {
 
     return (
         <div className="middle-syllabus-page">
-            <SEO title={`Class ${grade.replace('grade', '')} Maths - Skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
+            <SEO title={`Class ${grade.replace('grade', '')} Maths - skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
 
             <div className="middle-container">
                 <div className="middle-nav-controls">

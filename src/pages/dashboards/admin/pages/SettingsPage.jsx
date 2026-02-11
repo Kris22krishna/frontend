@@ -56,7 +56,7 @@ const SettingsPage = () => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Platform Name</label>
-                                <input type="text" defaultValue="Skill100.ai" className="w-full px-4 py-2 border border-gray-200 rounded-lg" />
+                                <input type="text" defaultValue="skill100" className="w-full px-4 py-2 border border-gray-200 rounded-lg" />
                             </div>
 
                             <div>
