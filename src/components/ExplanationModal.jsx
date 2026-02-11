@@ -22,37 +22,40 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
                     {/* Content Side */}
                     <div className="explanation-text-col">
 
-                        {/* Header */}
-                        <div className="explanation-header">
-                            {isCorrect ? (
-                                <>
-                                    <div className="icon-circle correct"><Check size={32} /></div>
-                                    <h2>Great job!</h2>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="icon-circle wrong"><X size={32} /></div>
-                                    <h2>Not quite right</h2>
-                                </>
-                            )}
-                        </div>
-
-                        {/* Correct Answer Display (if wrong) */}
-                        {!isCorrect && (
-                            <div className="correct-answer-box">
-                                <span className="label">CORRECT ANSWER</span>
-                                <div className="answer-value">
-                                    <Check size={20} className="mini-check" />
-                                    <LatexContent html={correctAnswer} />
-                                </div>
+                        {/* Scrollable Content Wrapper */}
+                        <div className="explanation-scroll-content">
+                            {/* Header */}
+                            <div className="explanation-header">
+                                {isCorrect ? (
+                                    <>
+                                        <div className="icon-circle correct"><Check size={32} /></div>
+                                        <h2>Great job!</h2>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="icon-circle wrong"><X size={32} /></div>
+                                        <h2>Not quite right</h2>
+                                    </>
+                                )}
                             </div>
-                        )}
 
-                        {/* Explanation Text */}
-                        <div className="explanation-detail">
-                            <h3>WHY IS THIS CORRECT?</h3>
-                            <div className="explanation-html-content">
-                                <LatexContent html={explanation || "Great effort! Keep practicing to master this concept."} />
+                            {/* Correct Answer Display (if wrong) */}
+                            {!isCorrect && (
+                                <div className="correct-answer-box">
+                                    <span className="label">CORRECT ANSWER</span>
+                                    <div className="answer-value">
+                                        <Check size={20} className="mini-check" />
+                                        <LatexContent html={correctAnswer} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Explanation Text */}
+                            <div className="explanation-detail">
+                                <h3>WHY IS THIS CORRECT?</h3>
+                                <div className="explanation-html-content">
+                                    <LatexContent html={explanation || "Great effort! Keep practicing to master this concept."} />
+                                </div>
                             </div>
                         </div>
 

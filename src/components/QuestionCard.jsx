@@ -156,14 +156,6 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNe
                         Explain
                     </button>
                 )}
-                {hasAnswered && (
-                    <button
-                        onClick={onClear}
-                        className="flex items-center gap-1 px-3 py-2 bg-white text-[#637AB9] border-2 border-[#A8FBD3] rounded-xl hover:border-[#4FB7B3] text-sm font-medium transition-all"
-                    >
-                        <Eraser size={16} />
-                    </button>
-                )}
             </div>
 
             {/* Right: Next */}
