@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Home, Star, ChevronRight, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
+import LatexText from '../../components/LatexText';
 import { api } from '../../services/api';
 import './JuniorGradeSyllabus.css';
 
@@ -161,7 +162,9 @@ const JuniorGradeSyllabus = () => {
                                     </div>
 
                                     {/* Topic Name */}
-                                    <h2 className="topic-name">{topic.name}</h2>
+                                    <h2 className="topic-name">
+                                        <LatexText text={topic.name} />
+                                    </h2>
 
                                     {/* Progress Bar */}
 

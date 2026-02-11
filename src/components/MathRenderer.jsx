@@ -12,8 +12,9 @@ const MathRenderer = ({ text, inline = true }) => {
     // Ensure string
     const stringText = String(text);
 
-    // Split by delimiters: $$...$$, \[...\], \(...\)
-    const regex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\))/g;
+    // Split by delimiters: $$...$$, \[...\], \(...\), and $...$
+    // Use negative lookbehind to avoid matching escaped \$
+    const regex = /(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|(?<!\\)\$[\s\S]*?(?<!\\)\$)/g;
 
     const parts = stringText.split(regex);
 
@@ -23,7 +24,7 @@ const MathRenderer = ({ text, inline = true }) => {
                 if (!part) return null;
 
                 // Check for delimiters and render appropriately
-                if (part.startsWith('$$') && part.endsWith('$$')) {
+                if (part.startsWith('$$') && part.endsWith('$$') && part.length >= 4) {
                     const content = part.slice(2, -2);
                     return inline ? <InlineMath key={index} math={content} /> : <BlockMath key={index} math={content} />;
                 } else if (part.startsWith('\\(') && part.endsWith('\\)')) {
@@ -32,6 +33,9 @@ const MathRenderer = ({ text, inline = true }) => {
                 } else if (part.startsWith('\\[') && part.endsWith('\\]')) {
                     const content = part.slice(2, -2);
                     return <BlockMath key={index} math={content} />;
+                } else if (part.startsWith('$') && part.endsWith('$') && part.length >= 2) {
+                    const content = part.slice(1, -1);
+                    return <InlineMath key={index} math={content} />;
                 } else {
                     return <span key={index}>{part}</span>;
                 }

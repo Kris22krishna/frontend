@@ -7,12 +7,15 @@ import {
     Grid, Layers, Triangle, Zap, Calculator, PieChart,
     ArrowRight, Box, Compass, Cuboid
 } from 'lucide-react';
+import LatexText from '../../components/LatexText';
 import './MiddleGradeSyllabus.css';
 
 const SkillItem = ({ skill }) => (
     <Link to={`/middle/practice/${skill.skill_id}`} className="middle-skill-item">
         <ArrowRight size={16} className="skill-arrow" />
-        <span className="skill-text">{skill.skill_name}</span>
+        <span className="skill-text">
+            <LatexText text={skill.skill_name} />
+        </span>
     </Link>
 );
 

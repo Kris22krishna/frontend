@@ -4,6 +4,7 @@ import { api } from '../../services/api';
 
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
+import LatexText from '../../components/LatexText';
 import './SeniorGradeSyllabus.css';
 
 const SeniorGradeSyllabus = () => {
@@ -166,7 +167,7 @@ const SeniorGradeSyllabus = () => {
                                         className="skill-card-modal"
                                         onClick={() => navigate(`/high/practice/${skill.skill_id}`)}
                                     >
-                                        <h4>{skill.skill_name}</h4>
+                                        <h4><LatexText text={skill.skill_name} /></h4>
                                         <div className="skill-card-footer">
                                             <span className="skill-badge">ID: {skill.skill_id}</span>
                                             <span className="start-btn">
