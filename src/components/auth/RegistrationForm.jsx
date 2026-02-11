@@ -16,6 +16,7 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
     const [error, setError] = useState('');
     const [showConfirm, setShowConfirm] = useState(false);
     const [isRateLimited, setIsRateLimited] = useState(false);
+    const [predictedUsername, setPredictedUsername] = useState('');
     const navigate = useNavigate();
 
     const roles = ['Student', 'Parent', 'Mentor', 'Guest'];
@@ -24,16 +25,7 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
         'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'
     ];
 
-    const getPredictedUsername = () => {
-        let prefix = selectedRole.charAt(0);
-        if (selectedRole === 'mentor') prefix = 't'; // Mentor -> Teacher -> t
-        if (selectedRole === 'student') prefix = 's';
-        if (selectedRole === 'parent') prefix = 'p';
-        if (selectedRole === 'guest') prefix = 'g';
 
-        const cleanName = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 4);
-        return `${prefix}100-${cleanName}`;
-    };
 
     const handleValidate = async (e) => {
         e.preventDefault();
@@ -55,7 +47,6 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
             setIsLoading(false);
             return;
         }
-        // Phone mandatory for non-students
         if (selectedRole !== 'student' && !phoneNumber) {
             setError('Phone number is required for this role.');
             setIsLoading(false);
@@ -69,8 +60,13 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
                 setIsLoading(false);
                 return;
             }
+
+            // Predict Username
+            const uname = await authService.predictUsername(name, selectedRole);
+            setPredictedUsername(uname || 'Error');
+
         } catch (err) {
-            // Continue if check fails
+            console.error("Validation error:", err);
         }
 
         setError('');
@@ -122,7 +118,7 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
     if (showConfirm) {
         return (
             <div className="registration-form">
-                <h2 className="auth-title">Confirm Details</h2>
+                <h2 className="auth-title">Quick Check</h2>
                 <div className="confirmation-summary" style={{ textAlign: 'left', margin: '20px 0', padding: '15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                     <p style={{ marginBottom: '10px' }}><strong>Full Name:</strong> {name}</p>
                     <p style={{ marginBottom: '10px' }}><strong>Role:</strong> {roles.find(r => r.toLowerCase() === selectedRole)}</p>
@@ -133,7 +129,7 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
                     <div style={{ marginTop: '15px', padding: '10px', background: '#e0f2fe', borderRadius: '6px', border: '1px solid #bae6fd' }}>
                         <p style={{ color: '#0369a1', fontSize: '0.9rem' }}>
                             <strong>Your Personal Login ID:</strong><br />
-                            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'monospace' }}>{getPredictedUsername()}...</span>
+                            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'monospace' }}>{predictedUsername}</span>
                             <br />
                             <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>(This unique ID will be assigned to you)</span>
                         </p>
@@ -143,10 +139,10 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
                 <div className="auth-buttons" style={{ display: 'flex', gap: '10px' }}>
                     <button
                         type="button"
-                        className="auth-btn-secondary"
+                        className="auth-btn-primary"
                         onClick={() => setShowConfirm(false)}
                         disabled={isLoading}
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, margin: 0 }}
                     >
                         Edit Details
                     </button>

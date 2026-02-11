@@ -131,6 +131,15 @@ export const api = {
         return handleResponse(response);
     },
 
+    predictUsername: async (name, role) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/predict-username`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, role }),
+        });
+        return handleResponse(response);
+    },
+
     logout: () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userId');

@@ -38,6 +38,16 @@ export const authService = {
         }
     },
 
+    async predictUsername(name, role) {
+        try {
+            const result = await api.predictUsername(name, role);
+            return result.username;
+        } catch (error) {
+            console.error("Username prediction failed:", error);
+            return null;
+        }
+    },
+
     async loginWithEmail(email, password) {
         try {
             const response = await api.login(email, password);
