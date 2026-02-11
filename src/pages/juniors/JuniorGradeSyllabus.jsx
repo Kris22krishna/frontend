@@ -51,9 +51,14 @@ const JuniorGradeSyllabus = () => {
 
                 const filteredSkills = (skillsResponse || []).filter(skill => {
                     const gradeNumInt = parseInt(gradeNum);
-                    const topicName = skill.topic || 'General';
-                    if (gradeNumInt === 3) return topicName === "Raksha Bhandan";
-                    if (gradeNumInt === 4) return topicName === "The Cleanest Village";
+                    const topicName = (skill.topic || 'General').toLowerCase();
+
+                    if (gradeNumInt === 3) {
+                        return topicName.includes("raksha") && topicName.includes("bandhan");
+                    }
+                    if (gradeNumInt === 4) {
+                        return topicName === "the cleanest village";
+                    }
                     return true;
                 });
 

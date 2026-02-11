@@ -62,13 +62,15 @@ const MiddleGradeSyllabus = () => {
 
     // Group skills by topic
     const skillsByTopic = skills.reduce((acc, skill) => {
-        const topic = skill.topic || 'General';
+        const topicName = (skill.topic || 'General').toLowerCase();
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 5 && topic !== "Ways to Multiply and Divide") return acc;
-        if (gradeNum === 6 && topic !== "Fractions") return acc;
-        if (gradeNum === 7 && topic !== "Exponents and Powers") return acc;
+        if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
+        if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
+        if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
+
+        const topic = skill.topic || 'General';
 
         if (!acc[topic]) acc[topic] = [];
         acc[topic].push(skill);
