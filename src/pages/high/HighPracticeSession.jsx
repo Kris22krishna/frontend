@@ -26,6 +26,7 @@ const HighPracticeSession = () => {
     const [displayQuestionNum, setDisplayQuestionNum] = useState(1);
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
     const [fetchingNext, setFetchingNext] = useState(false);
+    const [gradeLevel, setGradeLevel] = useState(null);
 
     // Time Tracking
     const startTimeRef = useRef(Date.now());
@@ -40,6 +41,11 @@ const HighPracticeSession = () => {
 
     useEffect(() => {
         fetchQuestions();
+        // Fetch skill details to get grade level for navigation
+        api.getSkillById(skillId).then(skill => {
+            if (skill?.grade) setGradeLevel(skill.grade);
+        }).catch(err => console.error("Failed to fetch skill info", err));
+
         startTimeRef.current = Date.now();
         setDisplayQuestionNum(1); // Reset question number on new skill
     }, [skillId]);
@@ -225,12 +231,31 @@ const HighPracticeSession = () => {
         <div className="high-practice-page">
             <main className="high-main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                 <div className="question-card" style={{ textAlign: 'center', padding: '3rem' }}>
-                    <div style={{ color: '#e11d48', marginBottom: '1rem' }}><Zap size={48} /></div>
-                    <h2 style={{ fontFamily: 'Merriweather, serif', marginBottom: '1rem' }}>Unable to Load Session</h2>
-                    <p style={{ color: '#64748b', marginBottom: '2rem' }}>{error}</p>
-                    <button onClick={() => window.location.reload()} className="high-btn primary">Try Again</button>
-                    <br /><br />
-                    <Link to="/math" style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '0.9rem' }}>Return to Dashboard</Link>
+                    <div style={{ color: '#31326F', marginBottom: '1rem' }}><Zap size={64} /></div>
+                    <h2 style={{
+                        fontFamily: 'Merriweather, serif',
+                        marginBottom: '1rem',
+                        color: '#31326F',
+                        fontSize: '2rem',
+                        fontWeight: 'bold'
+                    }}>
+                        Oops! This content isn’t available yet!!
+                    </h2>
+                    <p style={{ color: '#64748b', marginBottom: '2rem', fontSize: '1.1rem' }}>
+                        But don’t worry — we’re working hard to bring it to you soon! 🚀
+                    </p>
+                    <Link
+                        to={gradeLevel ? `/senior/grade/${gradeLevel}` : '/math'}
+                        className="high-btn primary"
+                        style={{
+                            textDecoration: 'none',
+                            display: 'inline-block',
+                            padding: '0.75rem 2rem',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        Return to Dashboard
+                    </Link>
                 </div>
             </main>
         </div>

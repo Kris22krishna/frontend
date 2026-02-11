@@ -90,21 +90,25 @@ const UploaderDashboard = () => {
         <>
             <Navbar />
             <div className="admin-layout" style={{ paddingTop: '80px' }}>
-                <SEO title="Uploader Dashboard - Learner's Hub" description="Question Upload Panel" />
+                <SEO title="Uploader Dashboard - skill100.ai" description="Question Upload Panel" />
 
                 {/* Sidebar */}
                 <aside className="admin-sidebar">
                     <div className="sidebar-header">
-                        <h1 style={{
-                            margin: 0,
-                            fontSize: '1.5rem',
-                            fontWeight: '800',
-                            background: 'linear-gradient(to right, #818cf8, #f472b6)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent'
-                        }}>
-                            skill100.AI
-                        </h1>
+                        <div className="sidebar-brand">
+                            <div className="brand-icon">⚡</div>
+                            <div className="brand-text">
+                                <h1 style={{
+                                    fontSize: '1.25rem',
+                                    fontWeight: 'bold',
+                                    background: 'linear-gradient(to right, #00C9FF, #92FE9D)',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent'
+                                }}>
+                                    skill100.ai
+                                </h1>
+                            </div>
+                        </div>
                     </div>
                     <nav className="sidebar-nav">
                         <div className="nav-group">

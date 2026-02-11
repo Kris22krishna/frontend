@@ -30,7 +30,8 @@ const AssessmentRunner = () => {
                     { left: "$$", right: "$$", display: true },
                     { left: "$$", right: "$$", display: false },
                     { left: "\\(", right: "\\)", display: false },
-                    { left: "\\[", right: "\\]", display: true }
+                    { left: "\\[", right: "\\]", display: true },
+                    { left: "$", right: "$", display: false }
                 ],
                 throwOnError: false
             });
@@ -179,9 +180,9 @@ const AssessmentRunner = () => {
                         <Menu className="h-6 w-6" />
                     </button>
                     <div className="flex items-center gap-3">
-                        <img src={logo} alt="Skill100.ai" className="h-8 w-auto rounded-full" />
-                        <span className="font-extrabold text-xl bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-green-500 hidden sm:inline">
-                            Skill100.ai
+                        <img src={logo} alt="skill100" className="h-8 w-auto rounded-full" />
+                        <span className="text-xl font-bold text-gray-900 tracking-tight">
+                            skill100
                         </span>
                     </div>
                 </div>

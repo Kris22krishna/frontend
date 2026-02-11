@@ -139,10 +139,10 @@ const DynamicQuestionsDashboard = () => {
         // ... (login form)
         return (
             <div className="login-container">
-                <SEO title="Admin Login - skill100.AI" />
+                <SEO title="Admin Login - skill100.ai" />
                 <div className="login-card">
                     <div className="login-header">
-                        <h1 className="brand-title">skill100.AI</h1>
+                        <h1 className="brand-title">skill100.ai</h1>
                         <p className="login-subtitle">Admin Portal Access</p>
                     </div>
 
@@ -178,7 +178,7 @@ const DynamicQuestionsDashboard = () => {
 
     return (
         <div className="admin-layout">
-            <SEO title="Admin Dashboard - Learner's Hub" description="Admin control panel" />
+            <SEO title="Admin Dashboard - skill100.ai" description="Admin control panel" />
 
             {/* Sidebar */}
             <aside className="admin-sidebar">
@@ -186,14 +186,13 @@ const DynamicQuestionsDashboard = () => {
                 <div className="sidebar-header">
                     <h1 style={{
                         margin: 0,
-                        fontSize: '1.5rem',
-                        fontWeight: '800',
-                        background: 'linear-gradient(to right, #818cf8, #f472b6)',
+                        fontSize: '1.25rem',
+                        fontWeight: 'bold',
+                        background: 'linear-gradient(to right, #00C9FF, #92FE9D)',
                         WebkitBackgroundClip: 'text',
-                        backgroundClip: 'text',
-                        color: 'transparent'
+                        WebkitTextFillColor: 'transparent'
                     }}>
-                        skill100.AI
+                        skill100.ai
                     </h1>
                 </div>
                 <nav className="sidebar-nav">

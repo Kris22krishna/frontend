@@ -36,7 +36,7 @@ const AdminLogin = () => {
 
     return (
         <div className="admin-login-page">
-            <SEO title="Admin Login | Learners" description="Secure admin portal access" />
+            <SEO title="Admin Login | skill100.ai" description="Secure admin portal access" />
             <Navbar />
 
             <div className="admin-login-container">
@@ -47,7 +47,7 @@ const AdminLogin = () => {
                             <Shield className="shield-icon" />
                         </div>
                         <h1>Admin Portal</h1>
-                        <p>Secure access to manage the Learners platform. Monitor users, content, and system analytics.</p>
+                        <p>Secure access to manage the skill100.ai platform. Monitor users, content, and system analytics.</p>
 
                         <div className="features-list">
                             <div className="feature-item">

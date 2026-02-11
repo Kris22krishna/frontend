@@ -83,7 +83,7 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
     const isCorrect = hasAnswered && String(selectedAnswer).trim().toLowerCase() === String(question.correctAnswer).trim().toLowerCase();
 
     return (
-        <div className="w-full">
+        <div className="w-full mt-4 sm:mt-0">
             <form
                 onSubmit={handleSubmitInput}
                 className="flex flex-col sm:flex-row gap-3"
@@ -128,7 +128,7 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNe
     const hasAnswered = !!selectedAnswer;
 
     const mobileActionBar = (
-        <div className="lg:hidden flex items-center justify-between gap-2 pt-4 mt-auto border-t border-gray-100">
+        <div className="lg:hidden flex items-center justify-between gap-2 pt-4 mt-auto border-t border-gray-100 shrink-0 bg-white pb-2">
             {/* Left: Exit + Scratchpad */}
             <div className="flex items-center gap-2">
                 <button

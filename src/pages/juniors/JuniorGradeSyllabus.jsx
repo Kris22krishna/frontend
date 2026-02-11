@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Home, Star, ChevronRight, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
+import { LatexText } from '../../components/LatexText';
 import { api } from '../../services/api';
 import './JuniorGradeSyllabus.css';
 
@@ -49,8 +50,21 @@ const JuniorGradeSyllabus = () => {
 
                 const skillsResponse = await api.getSkills(gradeNum);
 
+                const filteredSkills = (skillsResponse || []).filter(skill => {
+                    const gradeNumInt = parseInt(gradeNum);
+                    const topicName = (skill.topic || 'General').toLowerCase();
+
+                    if (gradeNumInt === 3) {
+                        return topicName.includes("raksha") && topicName.includes("bandhan");
+                    }
+                    if (gradeNumInt === 4) {
+                        return topicName === "the cleanest village";
+                    }
+                    return true;
+                });
+
                 const topicMap = {};
-                (skillsResponse || []).forEach(skill => {
+                filteredSkills.forEach(skill => {
                     const topicName = skill.topic || 'General';
                     if (!topicMap[topicName]) {
                         topicMap[topicName] = {
@@ -148,7 +162,9 @@ const JuniorGradeSyllabus = () => {
                                     </div>
 
                                     {/* Topic Name */}
-                                    <h2 className="topic-name">{topic.name}</h2>
+                                    <h2 className="topic-name">
+                                        <LatexText text={topic.name} />
+                                    </h2>
 
                                     {/* Progress Bar */}
 
