@@ -33,6 +33,9 @@ const MiddlePracticeSession = () => {
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
     const [fetchingNext, setFetchingNext] = useState(false);
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
+    const [grade, setGrade] = useState(null); // Store grade for exit navigation
+
+
 
     const startTimeRef = useRef(Date.now());
 
@@ -45,6 +48,17 @@ const MiddlePracticeSession = () => {
         }, 1000);
         return () => clearInterval(timer);
     }, [skillId]);
+
+    // Rerender MathJax when question changes (Fix for options rendering)
+    useEffect(() => {
+        if (window.MathJax && questions.length > 0) {
+            const timer = setTimeout(() => {
+                window.MathJax.typesetPromise && window.MathJax.typesetPromise()
+                    .catch(err => console.log('MathJax error:', err));
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [questions, currentIndex, showExplanation]);
 
     const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
         if (isInitial) setLoading(true);
@@ -99,10 +113,13 @@ const MiddlePracticeSession = () => {
             // Extract skill name from template_metadata (backend nests it there)
             if (response?.template_metadata?.skill_name) {
                 setSkillName(response.template_metadata.skill_name);
-            } else if (response?.skill_name) {
-                setSkillName(response.skill_name);
-            }
 
+
+                // Extract grade for exit navigation
+                if (response?.template_metadata?.grade) {
+                    setGrade(response.template_metadata.grade);
+                }
+            }
         } catch (error) {
             console.error("Error fetching middle practice:", error);
         } finally {
@@ -259,7 +276,7 @@ const MiddlePracticeSession = () => {
                                     showViewExplanation={!!userAnswer}
                                     canGoNext={!!userAnswer}
                                     onNext={proceedToNext}
-                                    onExit={() => navigate('/math')}
+                                    onExit={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
                                     onToggleScratchpad={() => setShowScratchpad(true)}
                                     onClear={() => {
                                         const currentQ = questions[currentIndex];
@@ -327,7 +344,7 @@ const MiddlePracticeSession = () => {
                         setShowExplanation(false);
                     }}
                     onNext={proceedToNext}
-                    onExit={() => navigate('/math')}
+                    onExit={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
                     onViewExplanation={() => setShowExplanation(true)}
                     showViewExplanation={!!userAnswer}
                     canGoNext={!!userAnswer}
