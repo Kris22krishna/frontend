@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import ModelRenderer from '../models/ModelRenderer';
 import Navbar from '../components/Navbar';
@@ -96,6 +96,7 @@ const Whiteboard = ({ onClose }) => {
 
 const PracticeSession = () => {
     const { templateId } = useParams();
+    const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -418,10 +419,10 @@ const PracticeSession = () => {
                             Practice Again
                         </button>
                         <button
-                            onClick={() => window.history.back()}
+                            onClick={() => navigate('/')}
                             className="nav-btn"
                         >
-                            Back to Topics
+                            Back Home
                         </button>
                     </div>
                 </div>
@@ -450,7 +451,7 @@ const PracticeSession = () => {
                     {skillMetadata && (
                         <div className="practice-header-redesigned">
                             <div className="header-top">
-                                <button onClick={() => window.history.back()} className="back-btn-simple">
+                                <button onClick={() => navigate('/')} className="back-btn-simple">
                                     ← Back
                                 </button>
                                 <div className="session-info">
@@ -620,7 +621,7 @@ const PracticeSession = () => {
                                     </a>
                                 </div>
 
-                                <button onClick={() => window.history.back()} className="back-btn-simple">Go Back</button>
+                                <button onClick={() => navigate('/')} className="back-btn-simple">Go Back</button>
 
                                 <div style={{ marginTop: '40px', background: '#f1f5f9', padding: '15px', borderRadius: '8px', textAlign: 'left', fontSize: '0.8rem', fontFamily: 'monospace', maxWidth: '600px', width: '100%' }}>
                                     <strong>Debug Log:</strong>
