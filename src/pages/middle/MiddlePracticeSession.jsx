@@ -1,18 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Check, X, RefreshCw, Zap, Award, Star, Cloud, ArrowRight } from 'lucide-react';
-import Whiteboard from '../../components/Whiteboard';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import ModelRenderer from '../../models/ModelRenderer';
 import './MiddlePracticeSession.css';
 
+// Components
+import { QuestionCard } from '../../components/QuestionCard';
+import { BottomBar } from '../../components/BottomBar';
+import { SunTimer } from '../../components/SunTimer';
+import { InlineScratchpad } from '../../components/InlineScratchpad';
+import { LatexText } from '../../components/LatexText';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X, CheckCircle2, ChevronRight } from 'lucide-react';
+
+// Assets
+import mascotImg from '../../assets/mascot.png';
+
 const MiddlePracticeSession = () => {
     const { skillId } = useParams();
+    const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [userAnswer, setUserAnswer] = useState('');
-    const [feedback, setFeedback] = useState(null);
+    const [userAnswers, setUserAnswers] = useState({});
+    const [showExplanation, setShowExplanation] = useState(false);
+    const [showScratchpad, setShowScratchpad] = useState(false);
+    const [elapsedTime, setElapsedTime] = useState(0);
     const [stats, setStats] = useState({ correct: 0, wrong: 0, skipped: 0, total: 0, streak: 0 });
     const [completed, setCompleted] = useState(false);
     const [skillName, setSkillName] = useState('Math Practice');
@@ -21,20 +34,16 @@ const MiddlePracticeSession = () => {
     const [fetchingNext, setFetchingNext] = useState(false);
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
 
-    // Time Tracking
     const startTimeRef = useRef(Date.now());
-    const [timeTaken, setTimeTaken] = useState(0);
-
-    // Format time helper
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}m ${secs}s`;
-    };
 
     useEffect(() => {
         fetchQuestions();
         startTimeRef.current = Date.now();
+
+        const timer = setInterval(() => {
+            setElapsedTime((prev) => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
     }, [skillId]);
 
     const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
@@ -79,40 +88,32 @@ const MiddlePracticeSession = () => {
         }
     };
 
-    const handleCheck = () => {
+    const handleAnswer = (answer) => {
         const currentQ = questions[currentIndex];
-        if (!currentQ) return;
+        setUserAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
 
-        const isCorrect = userAnswer.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
+        // Check if wrong immediately to pop modal
+        const isCorrect = String(answer).trim().toLowerCase() === String(currentQ.correctAnswer).trim().toLowerCase();
 
-        setFeedback(isCorrect ? 'correct' : 'incorrect');
-
-        // Record history
-        const attempt = {
-            question: currentQ,
-            userVal: userAnswer,
-            status: isCorrect ? 'correct' : 'wrong',
-            solution: currentQ.solution
-        };
-
+        // Update stats
         if (!history.find(h => h.question.id === currentQ.id)) {
-            setHistory(prev => [...prev, attempt]);
+            setHistory(prev => [...prev, {
+                question: currentQ,
+                userVal: answer,
+                status: isCorrect ? 'correct' : 'wrong'
+            }]);
+
+            setStats(prev => ({
+                ...prev,
+                correct: isCorrect ? prev.correct + 1 : prev.correct,
+                wrong: !isCorrect ? prev.wrong + 1 : prev.wrong,
+                total: prev.total + 1,
+                streak: isCorrect ? prev.streak + 1 : 0
+            }));
         }
 
-        if (isCorrect) {
-            setStats(prev => ({
-                ...prev,
-                correct: prev.correct + 1,
-                total: prev.total + 1,
-                streak: prev.streak + 1
-            }));
-        } else {
-            setStats(prev => ({
-                ...prev,
-                wrong: prev.wrong + 1,
-                total: prev.total + 1,
-                streak: 0
-            }));
+        if (!isCorrect) {
+            setShowExplanation(true);
         }
     };
 
@@ -162,8 +163,6 @@ const MiddlePracticeSession = () => {
         if (currentIndex < questions.length - 1) {
             // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
-            setUserAnswer('');
-            setFeedback(null);
         } else {
             // Fetch next question
             await fetchQuestions(nextDiff, false);
@@ -173,116 +172,66 @@ const MiddlePracticeSession = () => {
         }
     };
 
-    const finishSession = () => {
-        const endTime = Date.now();
-        const durationSeconds = Math.floor((endTime - startTimeRef.current) / 1000);
-        setTimeTaken(durationSeconds);
-        setCompleted(true);
+    const handlePrev = () => {
+        if (currentIndex > 0) {
+            setCurrentIndex(prev => prev - 1);
+            setShowExplanation(false);
+        }
     };
 
-    // Live Timer
-    const [elapsedTime, setElapsedTime] = useState(0);
-
-    useEffect(() => {
-        let timer;
-        if (!loading && !completed) {
-            timer = setInterval(() => {
-                const seconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
-                setElapsedTime(seconds);
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [loading, completed]);
-
-    const getQuestionStatus = (idx) => {
-        if (idx === currentIndex) return 'current';
-        const historyItem = history.find(h => h.question.id === questions[idx]?.id);
-        if (historyItem) return historyItem.status; // 'correct', 'wrong', 'skipped'
-        return 'pending';
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}m ${secs}s`;
     };
 
     if (loading) return <div className="middle-loading">Generating problems...</div>;
 
     if (completed) {
-        // ... (Completion view remains same, but maybe use TimeTaken from ref/state)
-        const accuracy = Math.round((stats.correct / stats.total) * 100) || 0;
-
+        const accuracy = Math.round((stats.correct / (stats.total || 1)) * 100);
         return (
-            <div className="middle-practice-page">
-                <div className="middle-practice-container completed-view-full">
-                    <div className="report-card">
-                        <div className="report-header">
-                            <div className="report-title">
-                                <h1>Session Report</h1>
-                                <p>{skillName}</p>
-                            </div>
-                            <div className="report-score">
-                                <div className="score-circle">
-                                    <span className="score-number">{accuracy}%</span>
-                                    <span className="score-sub">Accuracy</span>
+            <div className="middle-practice-page overflow-y-auto">
+                <div className="report-container p-6 max-w-4xl mx-auto">
+                    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                        <div className="bg-[#31326F] p-8 text-white text-center">
+                            <h1 className="text-3xl font-bold mb-2">Practice Complete!</h1>
+                            <p className="opacity-80">{skillName}</p>
+                            <div className="mt-6 flex justify-center gap-8">
+                                <div>
+                                    <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Accuracy</p>
+                                    <p className="text-3xl font-bold">{accuracy}%</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Time</p>
+                                    <p className="text-3xl font-bold">{formatTime(elapsedTime)}</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Stats Grid */}
-                        <div className="stats-grid">
-                            <div className="stat-box">
-                                <span className="stat-label">Time Taken</span>
-                                <span className="stat-val">{formatTime(timeTaken || elapsedTime)}</span>
-                            </div>
-                            <div className="stat-box correct">
-                                <span className="stat-label">Correct</span>
-                                <span className="stat-val">{stats.correct}</span>
-                            </div>
-                            <div className="stat-box wrong">
-                                <span className="stat-label">Wrong</span>
-                                <span className="stat-val">{stats.wrong}</span>
-                            </div>
-                            <div className="stat-box skipped">
-                                <span className="stat-label">Skipped</span>
-                                <span className="stat-val">{stats.skipped}</span>
-                            </div>
-                        </div>
-
-                        <div className="question-analysis">
-                            <h3>Detailed Analysis</h3>
-                            {history.map((item, idx) => (
-                                <div key={idx} className={`analysis-item ${item.status}`}>
-                                    <div className="analysis-header">
-                                        <div className={`status-badge ${item.status}`}>
-                                            {item.status === 'correct' && <Check size={16} />}
-                                            {item.status === 'wrong' && <X size={16} />}
-                                            {item.status === 'skipped' && <RefreshCw size={16} />}
-                                            <span>{item.status.toUpperCase()}</span>
-                                        </div>
-                                        <span className="q-number">Question {idx + 1}</span>
-                                    </div>
-
-                                    <div className="analysis-content">
-                                        <div className="q-text" dangerouslySetInnerHTML={{ __html: item.question.text }} />
-
-                                        <div className="ans-comparison">
-                                            <div className="ans-block user">
-                                                <span className="label">Your Answer:</span>
-                                                <span className="val">{item.userVal}</span>
-                                            </div>
-                                            <div className="ans-block correct">
-                                                <span className="label">Correct Answer:</span>
-                                                <span className="val">{item.question.correctAnswer}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="explanation-block">
-                                            <h4><Zap size={16} /> Explanation:</h4>
-                                            <div dangerouslySetInnerHTML={{ __html: item.question.solution }} />
-                                        </div>
-                                    </div>
+                        <div className="p-8">
+                            <div className="grid grid-cols-4 gap-4 mb-8">
+                                <div className="bg-green-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-green-600 font-bold uppercase mb-1">Correct</p>
+                                    <p className="text-2xl font-bold text-green-700">{stats.correct}</p>
                                 </div>
-                            ))}
-                        </div>
+                                <div className="bg-red-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-red-600 font-bold uppercase mb-1">Wrong</p>
+                                    <p className="text-2xl font-bold text-red-700">{stats.wrong}</p>
+                                </div>
+                                <div className="bg-yellow-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-yellow-600 font-bold uppercase mb-1">Skipped</p>
+                                    <p className="text-2xl font-bold text-yellow-700">{stats.skipped}</p>
+                                </div>
+                                <div className="bg-blue-50 p-4 rounded-xl text-center">
+                                    <p className="text-xs text-blue-600 font-bold uppercase mb-1">Total</p>
+                                    <p className="text-2xl font-bold text-blue-700">{stats.total}</p>
+                                </div>
+                            </div>
 
-                        <div className="report-actions">
-                            <Link to="/math" className="middle-btn primary">Back to Topics</Link>
+                            <div className="flex justify-center gap-4">
+                                <Link to="/math" className="px-8 py-3 bg-[#31326F] text-white rounded-xl font-bold hover:bg-[#25265E] transition-all">Back to Topics</Link>
+                                <button onClick={() => window.location.reload()} className="px-8 py-3 border-2 border-[#31326F] text-[#31326F] rounded-xl font-bold hover:bg-gray-50 transition-all">Try Again</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -291,14 +240,25 @@ const MiddlePracticeSession = () => {
     }
 
     const currentQ = questions[currentIndex];
+    const userAnswer = userAnswers[currentQ?.id];
+    // Check if the user's answer matches the correct answer (case-insensitive)
+    const isAnswerCorrect = userAnswer && String(userAnswer).trim().toLowerCase() === String(currentQ?.correctAnswer).trim().toLowerCase();
 
-    // Whiteboard placeholder
     return (
-        <div className="middle-practice-page full-screen-mode">
-            {/* Animated Background Elements */}
-            <div className="bg-decoration circle-1"></div>
-            <div className="bg-decoration circle-2"></div>
-            <div className="bg-decoration circle-3"></div>
+        <div className="h-screen w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
+            {/* Header Section: Contains SunTimer and Mascot */}
+            {/* Header Section: Contains SunTimer and Mascot */}
+            {/* Responsive height: h-24 on mobile, h-32 on desktop */}
+            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32">
+                <div className="flex items-center">
+                    {/* Enlarged SunTimer for better visibility */}
+                    <SunTimer timeLeft={elapsedTime} />
+                </div>
+                <div className="flex items-center">
+                    {/* Enlarged Mascot Image aligned with timer (smaller on mobile) */}
+                    <img src={mascotImg} alt="Mascot" className="w-16 h-16 lg:w-24 lg:h-24 object-contain drop-shadow-lg" />
+                </div>
+            </header>
 
             {/* Floating Stickers */}
             <div className="sticker star-1"><Star size={40} fill="#ffd700" color="#b45309" /></div>
@@ -409,12 +369,181 @@ const MiddlePracticeSession = () => {
                     </div>
                 </main>
 
-                {/* COL 3: Whiteboard */}
-                <aside className="middle-whiteboard-col">
-                    <Whiteboard isOpen={true} />
+                {/* Right Column: Inline Scratchpad (Hidden on mobile to save space) */}
+                <aside className="hidden lg:block flex-[2] h-full min-h-0">
+                    <InlineScratchpad />
                 </aside>
-
             </div>
+
+            {/* Bottom Navigation (desktop only — mobile buttons are inside QuestionCard) */}
+            <div className="shrink-0 hidden lg:block px-4 lg:px-6 pb-4 lg:pb-6 max-w-[1400px] mx-auto w-full">
+                <BottomBar
+                    mode="junior"
+                    onClear={() => {
+                        const currentQ = questions[currentIndex];
+                        const wasAnswered = userAnswers[currentQ.id];
+                        if (!wasAnswered) return;
+
+                        // Reset answer
+                        setUserAnswers(prev => {
+                            const next = { ...prev };
+                            delete next[currentQ.id];
+                            return next;
+                        });
+
+                        // Revert stats if it was in history
+                        const historyEntry = history.find(h => h.question.id === currentQ.id);
+                        if (historyEntry) {
+                            setHistory(prev => prev.filter(h => h.question.id !== currentQ.id));
+                            setStats(prev => ({
+                                ...prev,
+                                total: Math.max(0, prev.total - 1),
+                                correct: historyEntry.status === 'correct' ? Math.max(0, prev.correct - 1) : prev.correct,
+                                wrong: historyEntry.status === 'wrong' ? Math.max(0, prev.wrong - 1) : prev.wrong,
+                                // Note: Streak restoration is imperfect without history stack, but safe to just decrement if positive
+                                streak: historyEntry.status === 'correct' ? Math.max(0, prev.streak - 1) : prev.streak
+                            }));
+                        }
+                        setShowExplanation(false);
+                    }}
+                    onNext={proceedToNext}
+                    onExit={() => navigate('/math')}
+                    onViewExplanation={() => setShowExplanation(true)}
+                    showViewExplanation={!!userAnswer}
+                    canGoNext={!!userAnswer}
+                    onToggleScratchpad={() => setShowScratchpad(true)}
+                />
+            </div>
+
+            {/* Mobile Scratchpad - Draggable Bottom Sheet */}
+            <AnimatePresence>
+                {showScratchpad && (
+                    <>
+                        {/* Backdrop overlay */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowScratchpad(false)}
+                            className="fixed inset-0 z-[65] bg-black/30 lg:hidden"
+                        />
+                        {/* Bottom Sheet - drag only on handle bar */}
+                        <motion.div
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                            className="fixed bottom-0 left-0 right-0 z-[70] bg-white rounded-t-3xl shadow-2xl flex flex-col lg:hidden"
+                            style={{ height: '65vh' }}
+                        >
+                            {/* Drag Handle - ONLY this area is draggable to dismiss */}
+                            <motion.div
+                                drag="y"
+                                dragConstraints={{ top: 0, bottom: 0 }}
+                                dragElastic={{ top: 0, bottom: 0.6 }}
+                                onDragEnd={(_, info) => {
+                                    if (info.offset.y > 80 || info.velocity.y > 400) {
+                                        setShowScratchpad(false);
+                                    }
+                                }}
+                                className="flex flex-col items-center pt-3 pb-2 cursor-grab active:cursor-grabbing shrink-0"
+                                style={{ touchAction: 'none' }}
+                            >
+                                <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
+                            </motion.div>
+
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-4 pb-3 border-b border-gray-100 shrink-0">
+                                <h3 className="text-lg font-bold text-[#31326F]">Scratchpad</h3>
+                                <button
+                                    onClick={() => setShowScratchpad(false)}
+                                    className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
+                                >
+                                    <X size={20} className="text-gray-600" />
+                                </button>
+                            </div>
+
+                            {/* Canvas */}
+                            <div className="flex-1 relative overflow-hidden">
+                                <InlineScratchpad />
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+            {/* Explanation Modal */}
+            <AnimatePresence>
+                {showExplanation && (
+                    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-[32px] lg:rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px] max-h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-visible"
+                        >
+                            {/* Left Side: Mascot Area */}
+                            <div className="flex-[4] bg-[#E0FBEF] flex flex-col items-center justify-center p-6 lg:p-8 relative min-h-[200px] lg:min-h-0 shrink-0">
+                                <img src={mascotImg} alt="Mascot" className="w-32 h-32 lg:w-64 lg:h-64 object-contain drop-shadow-xl" />
+                                <div className="mt-4 lg:mt-8 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#4FB7B3]/30">
+                                    <span className="text-[#31326F] font-bold">Keep going!</span>
+                                </div>
+                            </div>
+
+                            {/* Right Side: Explanation Content */}
+                            <div className="flex-[6] p-6 lg:p-12 flex flex-col">
+                                <div className="flex items-center gap-3 mb-8">
+                                    {!isAnswerCorrect ? (
+                                        <>
+                                            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                                <X className="w-6 h-6 text-red-500" />
+                                            </div>
+                                            <h3 className="text-3xl font-black text-[#31326F]">Not quite right</h3>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                                <CheckCircle2 className="w-6 h-6 text-green-500" />
+                                            </div>
+                                            <h3 className="text-3xl font-black text-[#31326F]">Excellent!</h3>
+                                        </>
+                                    )}
+                                </div>
+
+                                <div className="mb-8">
+                                    <p className="text-[#4FB7B3] text-sm font-black uppercase tracking-widest mb-3">Correct Answer</p>
+                                    <div className="bg-[#E0FBEF]/50 p-4 rounded-2xl flex items-center gap-3 border border-[#4FB7B3]/20">
+                                        <div className="w-6 h-6 rounded-full border-2 border-[#4FB7B3] flex items-center justify-center shadow-sm">
+                                            <div className="w-3 h-3 bg-[#4FB7B3] rounded-full" />
+                                        </div>
+                                        <span className="text-xl font-bold text-[#31326F]">
+                                            <LatexText text={currentQ.correctAnswer} />
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                                <div className="flex-1">
+                                    <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
+                                    <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin">
+                                        {/* Render explanation text with LaTeX support */}
+                                        <LatexText text={currentQ.explanation} />
+                                    </div>
+                                </div>
+
+                                <div className="mt-8 flex justify-end">
+                                    <button
+                                        onClick={() => setShowExplanation(false)}
+                                        className="flex items-center gap-2 px-10 py-4 bg-[#31326F] text-white rounded-2xl font-black text-lg shadow-lg hover:shadow-xl hover:bg-[#25265E] transition-all"
+                                    >
+                                        Got it
+                                        <ChevronRight size={24} />
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
