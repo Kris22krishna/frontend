@@ -32,8 +32,8 @@ const RegisterPage = () => {
 
             {/* Right Section - Form */}
             <div className="auth-form-section">
-                <div className="auth-card animate-fade-in" style={{ maxWidth: '480px' }}>
-                    <Link to="/" className="back-link" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', marginBottom: '1rem', textDecoration: 'none' }}>
+                <div className="auth-card animate-fade-in">
+                    <Link to="/" className="back-link">
                         <ArrowLeft size={18} /> Back to Home
                     </Link>
 

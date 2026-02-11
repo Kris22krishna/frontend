@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
 import { api } from '../../services/api';
+import ModelRenderer from '../../models/ModelRenderer';
 import './HighPracticeSession.css';
 import LatexContent from '../../components/LatexContent';
 import Navbar from '../../components/Navbar';
@@ -46,16 +47,16 @@ const HighPracticeSession = () => {
 
     const fetchQuestions = async (retryType = null, append = false, forcedDifficulty = null) => {
         if (!append) setLoading(true);
+        else setFetchingNext(true);
         setError(null);
         try {
             const diff = forcedDifficulty || currentDifficulty;
-            console.log(`[HighPractice] Fetching questions for skillId: ${skillId}, type: ${retryType}, append: ${append}, difficulty: ${diff}`);
-            const response = await api.getPracticeQuestionsBySkill(skillId, 10, retryType, diff);
+            const response = await api.getPracticeQuestionsBySkill(skillId, 1, retryType, diff);
 
             // Handle Type Selection Request
             if (response && response.selection_needed && response.available_types?.length > 0) {
                 const defaultType = response.available_types[0];
-                return fetchQuestions(defaultType, append);
+                return fetchQuestions(defaultType, append, diff);
             }
 
             let rawQuestions = [];
@@ -71,7 +72,8 @@ const HighPracticeSession = () => {
                 solution: q.solution || q.solution_html || q.explanation || "No detailed explanation available.",
                 type: q.type || q.question_type || 'MCQ',
                 imageUrl: q.imageUrl || q.image_url,
-                difficulty: q.difficulty || (response.template_metadata?.difficulty) || diff
+                difficulty: diff,
+                model: q.model || 'Default'
             }));
 
             if (append) {
@@ -86,6 +88,7 @@ const HighPracticeSession = () => {
             if (!append) setError(err.message || "Failed to load session.");
         } finally {
             if (!append) setLoading(false);
+            setFetchingNext(false);
         }
     };
 
@@ -112,16 +115,6 @@ const HighPracticeSession = () => {
         }
 
         if (isCorrect) {
-            const nextConsecutive = consecutiveCorrect + 1;
-            setConsecutiveCorrect(nextConsecutive);
-
-            // Logic: 1 correct -> Medium, 2 correct -> Hard
-            if (nextConsecutive === 1 && currentDifficulty === 'Easy') {
-                setCurrentDifficulty('Medium');
-            } else if (nextConsecutive >= 2 && currentDifficulty !== 'Hard') {
-                setCurrentDifficulty('Hard');
-            }
-
             setStats(prev => ({
                 ...prev,
                 correct: prev.correct + 1,
@@ -129,7 +122,6 @@ const HighPracticeSession = () => {
                 streak: prev.streak + 1
             }));
         } else {
-            setConsecutiveCorrect(0);
             setStats(prev => ({
                 ...prev,
                 wrong: prev.wrong + 1,
@@ -141,29 +133,30 @@ const HighPracticeSession = () => {
 
 
     const handleNextStep = async () => {
-        const nextIdx = currentIndex + 1;
-        const nextQ = questions[nextIdx];
+        const lastAttempt = history[history.length - 1];
+        const isCorrect = lastAttempt && lastAttempt.status === 'correct';
 
-        // If next question exists but has wrong difficulty, we must fetch new ones and skip to them
-        if (nextQ && nextQ.difficulty !== currentDifficulty) {
-            const newQuestions = await fetchQuestions(null, true, currentDifficulty);
-            if (newQuestions && newQuestions.length > 0) {
-                // Skip to the first question of the newly fetched batch
-                // We know setQuestions appended them, so the index is the PREVIOUS length
-                setCurrentIndex(questions.length);
-            } else {
-                // Fallback to normal if fetch failed/returned nothing
-                setCurrentIndex(nextIdx);
+        let nextDiff = currentDifficulty;
+        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+
+        if (nextLevelCount >= 3) {
+            if (currentDifficulty === 'Easy') {
+                nextDiff = 'Medium';
+                nextLevelCount = 0;
+            } else if (currentDifficulty === 'Medium') {
+                nextDiff = 'Hard';
+                nextLevelCount = 0;
             }
         }
-        // If no next question at all, fetch more
-        else if (!nextQ) {
-            await fetchQuestions(null, true, currentDifficulty);
-            setCurrentIndex(nextIdx);
-        }
-        // Normal progression (next question exists and is correct difficulty)
-        else {
-            setCurrentIndex(nextIdx);
+
+        setCurrentDifficulty(nextDiff);
+        setCorrectCountAtLevel(nextLevelCount);
+
+        if (currentIndex < questions.length - 1) {
+            setCurrentIndex(prev => prev + 1);
+        } else {
+            await fetchQuestions(null, true, nextDiff);
+            setCurrentIndex(prev => prev + 1);
         }
 
         setUserAnswer('');

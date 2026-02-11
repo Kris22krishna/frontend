@@ -83,7 +83,7 @@ const LoginPage = () => {
                 <div className="auth-hero-content">
                     <h1 className="auth-hero-title">
                         Welcome Back to <br />
-                        <span className="highlight-text">Skill100.AI</span>
+                        <span className="highlight-text">Skill100.ai</span>
                     </h1>
                     <p className="auth-hero-subtitle">
                         Continue your journey to excellence.
@@ -98,7 +98,7 @@ const LoginPage = () => {
             {/* Right Section - Login Form */}
             <div className="auth-form-section">
                 <div className="auth-card animate-fade-in">
-                    <Link to="/" className="back-link" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#64748b', marginBottom: '2rem', textDecoration: 'none' }}>
+                    <Link to="/" className="back-link">
                         <ArrowLeft size={18} /> Back to Home
                     </Link>
 
