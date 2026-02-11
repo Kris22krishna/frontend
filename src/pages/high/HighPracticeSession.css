@@ -483,6 +483,13 @@
     background: #fafafa;
 }
 
+/* Mobile Scratchpad Toggle - Hidden by default on Desktop */
+.high-mobile-scratchpad-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Mobile */
 @media (max-width: 900px) {
     .high-practice-layout {
@@ -524,6 +531,13 @@
 
     .high-btn {
         width: 100%;
+    }
+
+    /* Show Scratchpad Toggle on Mobile */
+    .high-mobile-scratchpad-toggle {
+        display: flex;
+        width: auto;
+        /* Don't stretch this specific button */
     }
 }
 
@@ -593,6 +607,8 @@ body {
     display: flex;
     justify-content: center;
 }
+
+
 
 .high-spin {
     animation: high-spin 2s linear infinite;

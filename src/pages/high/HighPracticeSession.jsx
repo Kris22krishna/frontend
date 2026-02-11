@@ -24,6 +24,8 @@ const HighPracticeSession = () => {
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
     const [consecutiveCorrect, setConsecutiveCorrect] = useState(0);
     const [displayQuestionNum, setDisplayQuestionNum] = useState(1);
+    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
+    const [fetchingNext, setFetchingNext] = useState(false);
 
     // Time Tracking
     const startTimeRef = useRef(Date.now());
@@ -274,7 +276,7 @@ const HighPracticeSession = () => {
                                 className={`high-btn secondary high-mobile-scratchpad-toggle ${showScratchpad ? 'active' : ''}`}
                                 onClick={() => setShowScratchpad(!showScratchpad)}
                                 title="Open Scratchpad"
-                                style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                style={{ padding: '0.5rem' }}
                             >
                                 <PenTool size={18} />
                             </button>
