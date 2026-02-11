@@ -4,6 +4,7 @@ import { Home, Check, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
 import { api } from '../../services/api';
+import { LatexText } from '../../components/LatexText';
 import './JuniorSubtopics.css';
 
 // Colors for subtopics
@@ -122,7 +123,7 @@ const JuniorSubtopics = () => {
                                         </div>
 
                                         {/* Text */}
-                                        <span className="pill-text">{subtopic.name}</span>
+                                        <span className="pill-text"><LatexText text={subtopic.name} /></span>
 
                                         {/* Completed checkmark */}
 

@@ -115,7 +115,7 @@ const JuniorGradeSyllabus = () => {
 
             <div className="junior-container">
                 {/* Back Button */}
-                <button className="back-btn" onClick={() => navigate('/practice')}>
+                <button className="back-btn" onClick={() => navigate('/')}>
                     <Home className="back-icon" />
                     <span>Back Home</span>
                 </button>

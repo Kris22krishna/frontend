@@ -88,6 +88,7 @@ const MiddleGradeSyllabus = () => {
             <header className="middle-header">
                 <h1>Class {grade.replace('grade', '')} Maths</h1>
                 <p>No active content found for this grade.</p>
+                <Link to="/" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600', textDecoration: 'none' }}>← Back Home</Link>
             </header>
         </div>
     );
@@ -98,8 +99,8 @@ const MiddleGradeSyllabus = () => {
 
             <div className="middle-container">
                 <div className="middle-nav-controls">
-                    <Link to="/math" className="middle-back-btn">
-                        ← Back to Grades
+                    <Link to="/" className="middle-back-btn">
+                        ← Back Home
                     </Link>
                 </div>
 
@@ -124,7 +125,7 @@ const MiddleGradeSyllabus = () => {
                                     <div className="topic-icon-wrapper">
                                         {getTopicIcon(topic)}
                                     </div>
-                                    <h3 className="category-header">{topic}</h3>
+                                    <h3 className="category-header"><LatexText text={topic} /></h3>
                                 </div>
                                 <div className="skills-list">
                                     {topicSkills.map(skill => (
