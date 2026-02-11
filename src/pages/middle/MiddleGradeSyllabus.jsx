@@ -63,6 +63,13 @@ const MiddleGradeSyllabus = () => {
     // Group skills by topic
     const skillsByTopic = skills.reduce((acc, skill) => {
         const topic = skill.topic || 'General';
+        const gradeNum = parseInt(grade.replace('grade', ''));
+
+        // Filter by grade
+        if (gradeNum === 5 && topic !== "Ways to Multiply and Divide") return acc;
+        if (gradeNum === 6 && topic !== "Fractions") return acc;
+        if (gradeNum === 7 && topic !== "Exponents and Powers") return acc;
+
         if (!acc[topic]) acc[topic] = [];
         acc[topic].push(skill);
         return acc;
@@ -81,7 +88,7 @@ const MiddleGradeSyllabus = () => {
 
     return (
         <div className="middle-syllabus-page">
-            <SEO title={`Class ${grade.replace('grade', '')} Maths - Skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
+            <SEO title={`Class ${grade.replace('grade', '')} Maths - skill00`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
 
             <div className="middle-container">
                 <div className="middle-nav-controls">

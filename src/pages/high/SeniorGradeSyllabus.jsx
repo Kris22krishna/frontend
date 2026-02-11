@@ -37,6 +37,11 @@ const SeniorGradeSyllabus = () => {
     // Group skills by topic
     const skillsByTopic = skills.reduce((acc, skill) => {
         const topic = skill.topic || 'General';
+        const gradeNum = parseInt(grade.replace('grade', ''));
+
+        // Filter by grade
+        if (gradeNum === 8 && topic !== "Laws of exponents") return acc;
+
         if (!acc[topic]) acc[topic] = [];
         acc[topic].push(skill);
         return acc;

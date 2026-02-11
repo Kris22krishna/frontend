@@ -7,14 +7,14 @@ const SEO = ({ title, description, name, type }) => {
       {/* Standard metadata tags */}
       <title>{title}</title>
       <meta name='description' content={description} />
-      
+
       {/* End standard metadata tags */}
       {/* Facebook tags */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       {/* End Facebook tags */}
-      
+
       {/* Twitter tags */}
       <meta name="twitter:creator" content={name} />
       <meta name="twitter:card" content={type} />
@@ -33,9 +33,9 @@ SEO.propTypes = {
 };
 
 SEO.defaultProps = {
-  title: 'Skill100',
-  description: 'A platform for learning and skill development',
-  name: 'Skill100',
+  title: 'skill00',
+  description: 'Smart Learning with skill00',
+  name: 'skill00',
   type: 'website',
 };
 

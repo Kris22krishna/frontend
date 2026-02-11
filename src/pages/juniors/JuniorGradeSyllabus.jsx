@@ -49,8 +49,16 @@ const JuniorGradeSyllabus = () => {
 
                 const skillsResponse = await api.getSkills(gradeNum);
 
+                const filteredSkills = (skillsResponse || []).filter(skill => {
+                    const gradeNumInt = parseInt(gradeNum);
+                    const topicName = skill.topic || 'General';
+                    if (gradeNumInt === 3) return topicName === "Raksha Bhandan";
+                    if (gradeNumInt === 4) return topicName === "The Cleanest Village";
+                    return true;
+                });
+
                 const topicMap = {};
-                (skillsResponse || []).forEach(skill => {
+                filteredSkills.forEach(skill => {
                     const topicName = skill.topic || 'General';
                     if (!topicMap[topicName]) {
                         topicMap[topicName] = {

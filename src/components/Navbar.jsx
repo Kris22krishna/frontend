@@ -48,6 +48,8 @@ const Navbar = () => {
                 return '/admin';
             case 'uploader':
                 return '/uploader-dashboard';
+            case 'assessment_uploader':
+                return '/assessment-uploader-dashboard';
             default:
                 return '/guest-dashboard';
         }
@@ -64,8 +66,8 @@ const Navbar = () => {
         <nav className="navbar glass">
             <div className="navbar-content">
                 <Link to="/" className="logo">
-                    <img src={logo} alt="Skill100.ai Logo" className="navbar-logo-img" />
-                    <span>Skill100.ai</span>
+                    <img src={logo} alt="skill00.ai Logo" className="navbar-logo-img" />
+                    <span>skill00.ai</span>
                 </Link>
 
                 {/* Center: Navigation Links */}

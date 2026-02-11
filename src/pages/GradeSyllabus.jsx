@@ -137,7 +137,7 @@ const GradeSyllabus = () => {
 
     return (
         <div className="grade-syllabus-container">
-            <SEO title={`Class ${grade.replace('grade', '')} Maths - Skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
+            <SEO title={`Class ${grade.replace('grade', '')} Maths - skill00`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
 
             <header className="syllabus-header">
                 <h1>Class {grade.replace('grade', '')} Maths</h1>

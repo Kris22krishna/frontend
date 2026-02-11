@@ -12,7 +12,7 @@ const MainLayout = () => {
             </main>
 
             <footer className="main-footer">
-                <p>&copy; {new Date().getFullYear()} Learner's Hub. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} skill00.ai. All rights reserved.</p>
             </footer>
         </div>
     );

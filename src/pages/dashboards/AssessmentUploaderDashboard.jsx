@@ -186,7 +186,7 @@ const AssessmentUploaderDashboard = () => {
                             <div className="flex items-center gap-3">
                                 <img src={logo} alt="Logo" className="h-8 w-8 rounded-full shadow-sm" />
                                 <span className="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-green-500">
-                                    Skill100.ai
+                                    skill00.ai
                                 </span>
                                 <span className="hidden sm:inline-block px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase rounded-md border border-indigo-100">
                                     Assessment Portal
