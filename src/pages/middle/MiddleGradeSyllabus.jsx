@@ -7,7 +7,7 @@ import {
     Grid, Layers, Triangle, Zap, Calculator, PieChart,
     ArrowRight, Box, Compass, Cuboid
 } from 'lucide-react';
-import LatexText from '../../components/LatexText';
+import { LatexText } from '../../components/LatexText';
 import './MiddleGradeSyllabus.css';
 
 const SkillItem = ({ skill }) => (
