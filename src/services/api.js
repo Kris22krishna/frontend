@@ -619,43 +619,9 @@ export const api = {
         return handleResponse(response);
     },
 
-    getParentStats: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/stats/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentProgress: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/progress/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentQuizzes: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/quizzes/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentSkills: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/skills/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentReportSummary: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/reports-summary/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
     // --- Teacher ---
     getTeacherProfile: async () => {
+
         const response = await fetch(`${BASE_URL}/api/v1/teacher/profile`, {
             headers: getHeaders()
         });
