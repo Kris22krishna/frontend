@@ -7,6 +7,7 @@ import avatarImg from '../../assets/avatar.png';
 import { api } from '../../services/api';
 import Navbar from '../../components/Navbar';
 import Whiteboard from '../../components/Whiteboard';
+import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import ExplanationModal from '../../components/ExplanationModal';
 import LatexContent from '../../components/LatexContent';
 import './JuniorPracticeSession.css';
@@ -449,66 +450,17 @@ const JuniorPracticeSession = () => {
                             <Whiteboard isOpen={true} onClose={() => setShowMagicPad(false)} />
                         </div>
 
-                        {/* Mobile View: Bottom Sheet */}
+                        {/* Mobile View: Full Screen Overlay */}
                         <AnimatePresence>
                             {showMagicPad && (
-                                <>
-                                    {/* Backdrop */}
-                                    <motion.div
-                                        className="bottom-sheet-backdrop"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        onClick={() => setShowMagicPad(false)}
-                                    />
-
-                                    {/* Bottom Sheet */}
-                                    <motion.div
-                                        className="bottom-sheet-container"
-                                        initial={{ y: "100%" }}
-                                        animate={{ y: 0 }}
-                                        exit={{ y: "100%" }}
-                                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                                        drag="y"
-                                        dragControls={dragControls}
-                                        dragListener={false}
-                                        dragConstraints={{ top: 0 }}
-                                        dragElastic={0.2}
-                                        onDragEnd={(e, { offset, velocity }) => {
-                                            // Swipe down to close
-                                            if (offset.y > 150 || velocity.y > 200) {
-                                                setShowMagicPad(false);
-                                            }
-                                        }}
-                                    >
-                                        {/* Drag Handle Bar */}
-                                        <div
-                                            className="sheet-handle-bar"
-                                            onPointerDown={(e) => dragControls.start(e)}
-                                            style={{ touchAction: 'none' }}
-                                        >
-                                            <div className="sheet-handle"></div>
-                                        </div>
-
-                                        {/* Header with Close */}
-                                        <div className="sheet-header-mobile">
-                                            <div className="sheet-title">
-                                                <Pencil size={18} /> Scratchpad
-                                            </div>
-                                            <div className="sheet-exit-wrapper">
-                                                <StickerExit onClick={() => setShowMagicPad(false)} />
-                                            </div>
-                                        </div>
-
-                                        {/* Content Area */}
-                                        <div
-                                            className="sheet-content"
-                                            onPointerDown={(e) => e.stopPropagation()}
-                                        >
-                                            <Whiteboard isOpen={true} onClose={() => setShowMagicPad(false)} />
-                                        </div>
-                                    </motion.div>
-                                </>
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="fixed inset-0 z-[100] lg:hidden"
+                                >
+                                    <FullScreenScratchpad onClose={() => setShowMagicPad(false)} />
+                                </motion.div>
                             )}
                         </AnimatePresence>
                     </div>

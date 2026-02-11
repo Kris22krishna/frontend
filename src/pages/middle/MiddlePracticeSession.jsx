@@ -12,6 +12,7 @@ import { InlineScratchpad } from '../../components/InlineScratchpad';
 import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight } from 'lucide-react';
+import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 
 // Assets
 import mascotImg from '../../assets/mascot.png';
@@ -243,8 +244,8 @@ const MiddlePracticeSession = () => {
         <div className="h-[100dvh] w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Header Section: Contains SunTimer and Mascot */}
-            {/* Responsive height: h-24 on mobile, h-32 on desktop */}
-            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32">
+            {/* Responsive height: h-24 on mobile, h-32 on desktop, smaller on landscape mobile */}
+            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32 landscape:h-16 landscape:lg:h-32">
                 <div className="flex items-center">
                     {/* Enlarged SunTimer for better visibility */}
                     <SunTimer timeLeft={elapsedTime} />
@@ -352,60 +353,17 @@ const MiddlePracticeSession = () => {
                 />
             </div>
 
-            {/* Mobile Scratchpad - Draggable Bottom Sheet */}
+            {/* Mobile Scratchpad - Full Screen Overlay */}
             <AnimatePresence>
                 {showScratchpad && (
-                    <>
-                        {/* Backdrop overlay */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowScratchpad(false)}
-                            className="fixed inset-0 z-[65] bg-black/30 lg:hidden"
-                        />
-                        {/* Bottom Sheet - drag only on handle bar */}
-                        <motion.div
-                            initial={{ y: '100%' }}
-                            animate={{ y: 0 }}
-                            exit={{ y: '100%' }}
-                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed bottom-0 left-0 right-0 z-[70] bg-white rounded-t-3xl shadow-2xl flex flex-col lg:hidden"
-                            style={{ height: '65vh' }}
-                        >
-                            {/* Drag Handle - ONLY this area is draggable to dismiss */}
-                            <motion.div
-                                drag="y"
-                                dragConstraints={{ top: 0, bottom: 0 }}
-                                dragElastic={{ top: 0, bottom: 0.6 }}
-                                onDragEnd={(_, info) => {
-                                    if (info.offset.y > 80 || info.velocity.y > 400) {
-                                        setShowScratchpad(false);
-                                    }
-                                }}
-                                className="flex flex-col items-center pt-3 pb-2 cursor-grab active:cursor-grabbing shrink-0"
-                                style={{ touchAction: 'none' }}
-                            >
-                                <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
-                            </motion.div>
-
-                            {/* Header */}
-                            <div className="flex items-center justify-between px-4 pb-3 border-b border-gray-100 shrink-0">
-                                <h3 className="text-lg font-bold text-[#31326F]">Scratchpad</h3>
-                                <button
-                                    onClick={() => setShowScratchpad(false)}
-                                    className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-                                >
-                                    <X size={20} className="text-gray-600" />
-                                </button>
-                            </div>
-
-                            {/* Canvas */}
-                            <div className="flex-1 relative overflow-hidden">
-                                <InlineScratchpad />
-                            </div>
-                        </motion.div>
-                    </>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] lg:hidden"
+                    >
+                        <FullScreenScratchpad onClose={() => setShowScratchpad(false)} />
+                    </motion.div>
                 )}
             </AnimatePresence>
             {/* Explanation Modal */}

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
+import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import { api } from '../../services/api';
 import ModelRenderer from '../../models/ModelRenderer';
 import './HighPracticeSession.css';
@@ -402,15 +403,7 @@ const HighPracticeSession = () => {
 
                     {/* Mobile Scratchpad Overlay */}
                     {showScratchpad && (
-                        <div className="high-mobile-scratchpad-overlay">
-                            <button
-                                className="high-close-scratchpad"
-                                onClick={() => setShowScratchpad(false)}
-                            >
-                                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#ffffff' }}>✕</span>
-                            </button>
-                            <Whiteboard isOpen={true} />
-                        </div>
+                        <FullScreenScratchpad onClose={() => setShowScratchpad(false)} />
                     )}
                 </main>
 
