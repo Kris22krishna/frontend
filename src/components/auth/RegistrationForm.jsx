@@ -5,7 +5,7 @@ import { authService } from '../../services/auth';
 import '../../styles/AuthStyles.css'; // Use shared styles
 
 
-const RegistrationForm = ({ role = 'student', onBack }) => {
+const RegistrationForm = ({ role = 'student', onBack, onSuccess }) => {
     const [selectedRole, setSelectedRole] = useState(role.toLowerCase());
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -17,6 +17,7 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [isRateLimited, setIsRateLimited] = useState(false);
     const [predictedUsername, setPredictedUsername] = useState('');
+    const [hasEmail, setHasEmail] = useState(null);
     const navigate = useNavigate();
 
     const roles = ['Student', 'Parent', 'Mentor', 'Guest'];
@@ -32,39 +33,63 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
         if (isRateLimited) return;
         setIsLoading(true);
 
-        if (!email || !password || !name) {
-            setError('Please fill in all required fields.');
+        if (!name) {
+            setError('Please enter your full name.');
             setIsLoading(false);
             return;
         }
+
         if (password.length < 8) {
             setError('Password must be at least 8 characters.');
             setIsLoading(false);
             return;
         }
-        if (selectedRole === 'student' && !grade) {
-            setError('Please select your grade.');
-            setIsLoading(false);
-            return;
-        }
-        if (selectedRole !== 'student' && !phoneNumber) {
-            setError('Phone number is required for this role.');
-            setIsLoading(false);
-            return;
-        }
 
-        try {
-            const result = await authService.checkEmail(email);
-            if (result && !result.available) {
-                setError('This email is already registered. Please log in.');
+        if (selectedRole === 'student') {
+            if (!grade) {
+                setError('Please select your grade.');
                 setIsLoading(false);
                 return;
             }
+            if (hasEmail === null) {
+                setError('Please select if you have an email address.');
+                setIsLoading(false);
+                return;
+            }
+            if (hasEmail && !email) {
+                setError('Please enter your email address.');
+                setIsLoading(false);
+                return;
+            }
+        } else {
+            if (!phoneNumber) {
+                setError('Phone number is required.');
+                setIsLoading(false);
+                return;
+            }
+            if (!email) {
+                setError('Email is required.');
+                setIsLoading(false);
+                return;
+            }
+        }
 
-            // Predict Username
+        if ((selectedRole !== 'student' || hasEmail) && email) {
+            try {
+                const result = await authService.checkEmail(email);
+                if (result && !result.available) {
+                    setError('This email is already registered. Please log in.');
+                    setIsLoading(false);
+                    return;
+                }
+            } catch (err) {
+                console.error("Email check error:", err);
+            }
+        }
+
+        try {
             const uname = await authService.predictUsername(name, selectedRole);
             setPredictedUsername(uname || 'Error');
-
         } catch (err) {
             console.error("Validation error:", err);
         }
@@ -90,8 +115,17 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
             });
             console.log('Registration Success:', response);
 
-            // Auto-login after registration
-            await authService.loginWithEmail(email, password);
+            // Auto-login using token from registration response
+            if (response && response.token) {
+                localStorage.setItem('authToken', response.token);
+                localStorage.setItem('userId', response.user_id);
+                localStorage.setItem('userType', response.role);
+                localStorage.setItem('firstName', response.name?.split(' ')[0] || ''); // Optional for welcome message
+                window.dispatchEvent(new Event('auth-change'));
+            } else {
+                // Fallback (should not happen if registration succeeds)
+                await authService.loginWithEmail(email, password);
+            }
 
             // Redirect to specific dashboard based on role
             const dashboardMap = {
@@ -101,8 +135,12 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
                 'guest': '/guest-dashboard'
             };
 
-            const targetPath = dashboardMap[selectedRole] || '/';
-            navigate(targetPath);
+            if (onSuccess) {
+                onSuccess(response);
+            } else {
+                const targetPath = dashboardMap[selectedRole] || '/';
+                navigate(targetPath);
+            }
 
         } catch (err) {
             console.error("Registration Error:", err);
@@ -122,8 +160,11 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
                 <div className="confirmation-summary" style={{ textAlign: 'left', margin: '20px 0', padding: '15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                     <p style={{ marginBottom: '10px' }}><strong>Full Name:</strong> {name}</p>
                     <p style={{ marginBottom: '10px' }}><strong>Role:</strong> {roles.find(r => r.toLowerCase() === selectedRole)}</p>
-                    <p style={{ marginBottom: '10px' }}><strong>Email:</strong> {email}</p>
-                    <p style={{ marginBottom: '10px' }}><strong>Phone:</strong> {phoneNumber || 'N/A'}</p>
+
+                    {email && <p style={{ marginBottom: '10px' }}><strong>Email:</strong> {email}</p>}
+
+                    {selectedRole !== 'student' && <p style={{ marginBottom: '10px' }}><strong>Phone:</strong> {phoneNumber || 'N/A'}</p>}
+
                     {selectedRole === 'student' && <p style={{ marginBottom: '10px' }}><strong>Grade:</strong> {grade}</p>}
 
                     <div style={{ marginTop: '15px', padding: '10px', background: '#e0f2fe', borderRadius: '6px', border: '1px solid #bae6fd' }}>
@@ -213,30 +254,99 @@ const RegistrationForm = ({ role = 'student', onBack }) => {
                     </div>
                 )}
 
-                <div className="auth-form-group">
-                    <label className="auth-label">Phone Number {selectedRole !== 'student' && '*'}</label>
-                    <input
-                        type="tel"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="auth-input"
-                        placeholder="+1 (555) 000-0000"
-                        required={selectedRole !== 'student'}
-                        disabled={isLoading}
-                    />
-                </div>
+                {/* Phone Number - Not for Student */}
+                {selectedRole !== 'student' && (
+                    <div className="auth-form-group">
+                        <label className="auth-label">Phone Number *</label>
+                        <input
+                            type="tel"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            className="auth-input"
+                            placeholder="+1 (555) 000-0000"
+                            required
+                            disabled={isLoading}
+                        />
+                    </div>
+                )}
 
+                {/* Email - Toggle for Student */}
                 <div className="auth-form-group">
-                    <label className="auth-label">Email</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="auth-input"
-                        placeholder="name@example.com"
-                        required
-                        disabled={isLoading}
-                    />
+                    {selectedRole === 'student' ? (
+                        <>
+                            <label className="auth-label" style={{ marginBottom: '10px', display: 'block' }}>
+                                Do you have an email address?
+                            </label>
+                            <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setHasEmail(true)}
+                                    className={hasEmail === true ? "auth-btn-primary" : "auth-btn-secondary"}
+                                    style={{
+                                        flex: 1,
+                                        padding: '10px',
+                                        margin: 0,
+                                        backgroundColor: hasEmail === true ? undefined : '#f8fafc',
+                                        color: hasEmail === true ? undefined : '#334155',
+                                        border: hasEmail === true ? undefined : '1px solid #e2e8f0',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setHasEmail(false); setEmail(''); }}
+                                    className={hasEmail === false ? "auth-btn-primary" : "auth-btn-secondary"}
+                                    style={{
+                                        flex: 1,
+                                        padding: '10px',
+                                        margin: 0,
+                                        backgroundColor: hasEmail === false ? undefined : '#f8fafc',
+                                        color: hasEmail === false ? undefined : '#334155',
+                                        border: hasEmail === false ? undefined : '1px solid #e2e8f0',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    No
+                                </button>
+                            </div>
+
+                            {hasEmail === true && (
+                                <div style={{ animation: 'fadeIn 0.3s' }}>
+                                    <label className="auth-label">Email</label>
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="auth-input"
+                                        placeholder="name@example.com"
+                                        required
+                                        disabled={isLoading}
+                                    />
+                                </div>
+                            )}
+
+                            {hasEmail === false && (
+                                <div style={{ padding: '12px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', color: '#166534', fontSize: '0.95rem', animation: 'fadeIn 0.3s' }}>
+                                    No worries! We will create a username for you :))
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <label className="auth-label">Email</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="auth-input"
+                                placeholder="name@example.com"
+                                required
+                                disabled={isLoading}
+                            />
+                        </>
+                    )}
                 </div>
 
                 <div className="auth-form-group">

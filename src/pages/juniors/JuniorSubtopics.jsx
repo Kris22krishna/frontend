@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Home, Check, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { api } from '../../services/api';
 import './JuniorSubtopics.css';
 
@@ -22,7 +23,27 @@ const JuniorSubtopics = () => {
     const [subtopics, setSubtopics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hoveredSubtopic, setHoveredSubtopic] = useState(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingSubtopic, setPendingSubtopic] = useState(null);
     const decodedTopic = decodeURIComponent(topic);
+
+    const handleSubtopicClick = (subtopic) => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            setPendingSubtopic(subtopic);
+            setShowLoginModal(true);
+        } else {
+            navigate(`/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingSubtopic) {
+            const subtopic = pendingSubtopic;
+            navigate(`/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`);
+            setPendingSubtopic(null);
+        }
+    };
 
     useEffect(() => {
         const fetchSubtopics = async () => {
@@ -111,7 +132,7 @@ const JuniorSubtopics = () => {
                                         }}
                                         onMouseEnter={() => setHoveredSubtopic(subtopic.id)}
                                         onMouseLeave={() => setHoveredSubtopic(null)}
-                                        onClick={() => navigate(`/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`)}
+                                        onClick={() => handleSubtopicClick(subtopic)}
                                     >
                                         {/* Glow effect */}
                                         <div className="pill-glow"></div>
@@ -140,6 +161,11 @@ const JuniorSubtopics = () => {
                     </div>
                 )}
             </div>
+            <LoginPromptModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };

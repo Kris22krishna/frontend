@@ -13,14 +13,14 @@ export const authService = {
             const payload = {
                 name: data.name,
                 role: data.role,
-                email: data.email,
+                email: data.email || null,
                 password: data.password,
                 phone_number: data.phoneNumber,
                 class_name: data.grade, // Mapping grade to class_name
             };
 
             const response = await api.register(payload);
-            return response.data;
+            return response;
         } catch (error) {
             // Rethrow the error to be handled by the component
             throw error;
