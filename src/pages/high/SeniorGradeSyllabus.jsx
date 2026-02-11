@@ -144,7 +144,7 @@ const SeniorGradeSyllabus = () => {
                                     <div
                                         key={skill.skill_id}
                                         className="skill-card-modal"
-                                        onClick={() => navigate(`/practice/${skill.skill_id}`)}
+                                        onClick={() => navigate(`/high/practice/${skill.skill_id}`)}
                                     >
                                         <h4>{skill.skill_name}</h4>
                                         <div className="skill-card-footer">
