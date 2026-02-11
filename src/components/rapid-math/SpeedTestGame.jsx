@@ -145,14 +145,14 @@ export function SpeedTestGame() {
         setRankFeedback("Leaderboard temporarily disabled during migration.");
     };
 
-    const finishGame = async () => {
+    const finishGame = useCallback(async () => {
         setGameState("summary");
         if (user) {
             await saveScore(user);
         } else {
             setRankFeedback("Log in to save your score on the leaderboard!");
         }
-    };
+    }, [user, saveScore]);
 
     const handleLoginAndSave = async () => {
         setRankFeedback("Login temporarily disabled during migration. Use the main login button.");
@@ -224,9 +224,9 @@ export function SpeedTestGame() {
                             <div className="flex justify-between items-center">
                                 <h3 className="text-xl font-bold text-slate-800 dark:text-white">Select Difficulty</h3>
                                 <span className={`text-xs font-bold px-2 py-1 rounded-md transition-colors ${activeDiff.theme === 'green' ? 'bg-green-100 text-green-600' :
-                                        activeDiff.theme === 'blue' ? 'bg-blue-100 text-blue-600' :
-                                            activeDiff.theme === 'orange' ? 'bg-orange-100 text-orange-600' :
-                                                'bg-red-100 text-red-600'
+                                    activeDiff.theme === 'blue' ? 'bg-blue-100 text-blue-600' :
+                                        activeDiff.theme === 'orange' ? 'bg-orange-100 text-orange-600' :
+                                            'bg-red-100 text-red-600'
                                     }`}>
                                     {activeDiff.range}
                                 </span>
@@ -454,7 +454,7 @@ export function SpeedTestGame() {
 
     return (
         <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-slate-900">
-            <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 sticky top-0 z-10">
+            <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 sticky top-0 z-50">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-6">
                         <div className="flex flex-col">

@@ -92,10 +92,9 @@ function App() {
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
-          {/* Practice Session moved to top level for full screen */}
-          <Route path="rapid-math" element={<RapidMathPage />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>
+        <Route path="/rapid-math" element={<RapidMathPage />} />
 
         {/* Junior Routes (Grades 1-4 child-friendly design) */}
         <Route path="/junior/grade/:grade" element={<JuniorGradeSyllabus />} />

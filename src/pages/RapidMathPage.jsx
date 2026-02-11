@@ -4,7 +4,7 @@ import SEO from '../components/common/SEO';
 
 const RapidMathPage = () => {
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col pt-16">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col">
             <SEO
                 title="Rapid Math - Speed Challenge"
                 description="Test your mathematical speed and accuracy in the Rapid Math challenge."
