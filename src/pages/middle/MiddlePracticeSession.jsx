@@ -240,7 +240,7 @@ const MiddlePracticeSession = () => {
     const isAnswerCorrect = userAnswer && String(userAnswer).trim().toLowerCase() === String(currentQ?.correctAnswer).trim().toLowerCase();
 
     return (
-        <div className="h-screen w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
+        <div className="h-[100dvh] w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Responsive height: h-24 on mobile, h-32 on desktop */}

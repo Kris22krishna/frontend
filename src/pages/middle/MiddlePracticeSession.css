@@ -93,3 +93,34 @@
     max-height: 100%;
     object-fit: contain;
 }
+
+/* Landscape Mode Optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+    header {
+        height: 3.5rem !important;
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+    }
+    
+    header img {
+        height: 2.5rem !important;
+        width: 2.5rem !important;
+    }
+
+    /* Adjust layout to fit better */
+    .flex-col {
+        flex-direction: row !important;
+    }
+    
+    /* Ensure question card takes full height */
+    main {
+        padding-bottom: 0 !important;
+        height: 100% !important;
+    }
+
+    /* Hide sun timer usually to save space or scale it down */
+    .sun-timer-container {
+        transform: scale(0.6);
+        transform-origin: left center;
+    }
+}
