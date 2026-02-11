@@ -30,22 +30,7 @@ const JuniorSubtopics = () => {
                 setLoading(true);
                 const gradeNum = grade.replace('grade', '');
 
-                // Fetch both skills and user stats in parallel, handling stats failure gracefully
-                const [skillsResponse, statsResponse] = await Promise.all([
-                    api.getSkills(gradeNum),
-                    api.getStudentStats().catch(err => {
-                        console.warn('Failed to fetch stats:', err);
-                        return null;
-                    })
-                ]);
-
-                // Create a map of skill scores
-                const skillScores = {};
-                if (statsResponse) {
-                    [...(statsResponse.mastered_skills || []), ...(statsResponse.in_progress_skills || [])].forEach(s => {
-                        skillScores[s.name] = s.score;
-                    });
-                }
+                const skillsResponse = await api.getSkills(gradeNum);
 
                 // Filter by topic and get unique skills
                 const filteredSkills = (skillsResponse || [])
@@ -55,12 +40,9 @@ const JuniorSubtopics = () => {
                     );
 
                 const subtopicList = filteredSkills.map((skill, index) => {
-                    const score = skillScores[skill.skill_name] || 0;
                     return {
                         id: skill.skill_id,
                         name: skill.skill_name,
-                        score: score,
-                        completed: score >= 85, // Consider completed if score >= 85
                         colorIndex: index % subtopicColors.length
                     };
                 });
@@ -76,7 +58,7 @@ const JuniorSubtopics = () => {
         fetchSubtopics();
     }, [grade, decodedTopic]);
 
-    const completedCount = subtopics.filter(s => s.completed).length;
+    const completedCount = 0;
 
     return (
         <div className="junior-subtopics-page">
@@ -100,9 +82,9 @@ const JuniorSubtopics = () => {
                 {/* Header */}
                 <div className="junior-header">
                     <h1>Choose a Topic! 📚</h1>
-                    <div className="completion-badge">
+                    <div className="completion-badge" style={{ display: 'none' }}>
                         <Sparkles className="sparkle-icon" />
-                        <span>{completedCount} of {subtopics.length} completed! 🎉</span>
+                        <span>Practice specific skills!</span>
                     </div>
                     <p className="topic-title">{decodedTopic}</p>
                 </div>
@@ -136,22 +118,14 @@ const JuniorSubtopics = () => {
 
                                         {/* Icon container */}
                                         <div className="pill-icon">
-                                            {subtopic.completed ? (
-                                                <Check className="check-icon" />
-                                            ) : (
-                                                <span className="number-icon">{index + 1}</span>
-                                            )}
+                                            <span className="number-icon">{index + 1}</span>
                                         </div>
 
                                         {/* Text */}
                                         <span className="pill-text">{subtopic.name}</span>
 
                                         {/* Completed checkmark */}
-                                        {subtopic.completed && (
-                                            <div className="completed-badge">
-                                                <Check className="badge-check" />
-                                            </div>
-                                        )}
+
 
                                         {/* Hover label */}
                                         {hoveredSubtopic === subtopic.id && !subtopic.completed && (

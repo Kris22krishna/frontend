@@ -140,8 +140,8 @@ export const api = {
     },
 
     // --- Student ---
-    getStudentStats: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/stats`, {
+    getStudentProfile: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/student/profile`, {
             headers: getHeaders(),
         });
         return handleResponse(response);
@@ -151,7 +151,7 @@ export const api = {
     getSkills: async (grade) => {
         const params = new URLSearchParams();
         if (grade) params.append('grade', grade);
-        const response = await fetch(`${BASE_URL}/api/v1/skills?${params.toString()}`, {
+        const response = await fetch(`${BASE_URL}/api/v1/skills/?${params.toString()}`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -159,13 +159,6 @@ export const api = {
 
     getSkillById: async (skillId) => {
         const response = await fetch(`${BASE_URL}/api/v1/skills/${skillId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getStudentStats: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/stats`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -188,14 +181,14 @@ export const api = {
         const queryString = params.toString() ? `?${params.toString()}` : '';
 
         // Fetch v1 Templates
-        const p1 = fetch(`${BASE_URL}/api/v1/question-templates${queryString}`, { headers: getHeaders() })
+        const p1 = fetch(`${BASE_URL}/api/v1/question-templates/${queryString}`, { headers: getHeaders() })
             .then(res => handleResponse(res))
             .then(data => ({ templates: data.templates || [], total: data.total || 0 }))
             .catch(err => { console.error("v1 fetch error", err); return { templates: [], total: 0 }; });
 
         // Fetch v2 Templates
         // Note: v2 list endpoint might have different filter params, adapting best effort
-        const p2 = fetch(`${BASE_URL}/api/v1/question-generation-templates${queryString}`, { headers: getHeaders() })
+        const p2 = fetch(`${BASE_URL}/api/v1/question-generation-templates/${queryString}`, { headers: getHeaders() })
             .then(res => handleResponse(res))
             .then(data => ({ templates: data.templates || [], total: data.total || 0 }))
             .catch(err => { console.error("v2 fetch error", err); return { templates: [], total: 0 }; });
@@ -322,7 +315,7 @@ export const api = {
 
     // Public practice endpoint (no auth required)
     createReport: async (data) => {
-        const response = await fetch(`${BASE_URL}/api/v1/reports`, {
+        const response = await fetch(`${BASE_URL}/api/v1/reports/`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify(data),

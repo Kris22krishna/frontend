@@ -51,7 +51,14 @@ const MiddlePracticeSession = () => {
         else setFetchingNext(true);
 
         try {
-            const response = await api.getPracticeQuestionsBySkill(skillId, 1, null, diff);
+            let response = await api.getPracticeQuestionsBySkill(skillId, 10);
+
+            // Handle selection_needed: when backend has both MCQ and User Input templates,
+            // it asks the frontend to choose. Auto-pick MCQ for the practice session.
+            if (response && response.selection_needed) {
+                console.log('[Practice] selection_needed detected, auto-picking MCQ. Available types:', response.available_types);
+                response = await api.getPracticeQuestionsBySkill(skillId, 10, 'MCQ');
+            }
 
             let rawQuestions = [];
             if (response && response.questions) rawQuestions = response.questions;
@@ -61,23 +68,39 @@ const MiddlePracticeSession = () => {
 
             if (!Array.isArray(rawQuestions)) rawQuestions = [];
 
-            const normalized = rawQuestions.map((q, idx) => ({
-                id: q.id || q.question_id || (isInitial ? idx : questions.length),
-                text: q.question_text || q.question || q.question_html || "Question Text Missing",
-                options: q.options || [],
-                correctAnswer: q.correct_answer || q.answer || q.answer_value,
-                solution: q.solution || q.solution_html || q.explanation || "No detailed explanation available.",
-                type: q.type || q.question_type || 'MCQ',
-                difficulty: diff,
-                model: q.model || 'Default'
-            }));
+            const normalized = rawQuestions.map((q, idx) => {
+                // Debug: log raw question structure
+                console.log(`[Question ${idx + 1}] Raw:`, JSON.stringify(q).slice(0, 300));
 
-            if (isInitial) {
-                setQuestions(normalized);
-                if (response.skill_name) setSkillName(response.skill_name);
-                else if (response.template_metadata?.skill_name) setSkillName(response.template_metadata.skill_name);
-            } else {
-                setQuestions(prev => [...prev, ...normalized]);
+                // Normalize options - handle array, object ({A: '...', B: '...'}), or string
+                let opts = q.options || [];
+                if (opts && typeof opts === 'object' && !Array.isArray(opts)) {
+                    // Convert {A: 'val1', B: 'val2'} to ['val1', 'val2']
+                    opts = Object.values(opts);
+                }
+                if (typeof opts === 'string') {
+                    opts = opts.split(',').map(o => o.trim()).filter(Boolean);
+                }
+                if (!Array.isArray(opts)) opts = [];
+
+                return {
+                    id: q.id || q.question_id || idx + 1,
+                    text: q.question_text || q.question || q.question_html || q.text || q.prompt || "Question Text Missing",
+                    options: opts,
+                    correctAnswer: q.correct_answer || q.answer || q.answer_value || q.correct_option,
+                    explanation: q.solution || q.solution_html || q.explanation || q.explanation_text || "No detailed explanation available.",
+                    type: (q.type || q.question_type || (opts.length > 0 ? 'mcq' : 'input')).toLowerCase(),
+                    image: q.imageUrl || q.image || q.image_url,
+                    hint: q.hint
+                };
+            });
+
+            setQuestions(normalized);
+            // Extract skill name from template_metadata (backend nests it there)
+            if (response?.template_metadata?.skill_name) {
+                setSkillName(response.template_metadata.skill_name);
+            } else if (response?.skill_name) {
+                setSkillName(response.skill_name);
             }
 
         } catch (error) {
@@ -117,58 +140,13 @@ const MiddlePracticeSession = () => {
         }
     };
 
-    const handleSkip = () => {
-        const currentQ = questions[currentIndex];
-
-        // Record skip
-        const attempt = {
-            question: currentQ,
-            userVal: 'Skipped',
-            status: 'skipped',
-            solution: currentQ.solution
-        };
-
-        setHistory(prev => [...prev, attempt]);
-        setStats(prev => ({
-            ...prev,
-            skipped: prev.skipped + 1,
-            total: prev.total + 1,
-            streak: 0
-        }));
-
-        handleNextStep();
-    };
-
-    const handleNextStep = async () => {
-        const currentQ = questions[currentIndex];
-        const lastAttempt = history[history.length - 1];
-        const isCorrect = lastAttempt && lastAttempt.status === 'correct';
-
-        let nextDiff = currentDifficulty;
-        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
-
-        if (nextLevelCount >= 3) {
-            if (currentDifficulty === 'Easy') {
-                nextDiff = 'Medium';
-                nextLevelCount = 0;
-            } else if (currentDifficulty === 'Medium') {
-                nextDiff = 'Hard';
-                nextLevelCount = 0;
-            }
-        }
-
-        setCurrentDifficulty(nextDiff);
-        setCorrectCountAtLevel(nextLevelCount);
-
+    const proceedToNext = () => {
+        setShowExplanation(false);
         if (currentIndex < questions.length - 1) {
             // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
         } else {
-            // Fetch next question
-            await fetchQuestions(nextDiff, false);
-            setCurrentIndex(prev => prev + 1);
-            setUserAnswer('');
-            setFeedback(null);
+            setCompleted(true);
         }
     };
 
@@ -260,113 +238,55 @@ const MiddlePracticeSession = () => {
                 </div>
             </header>
 
-            {/* Floating Stickers */}
-            <div className="sticker star-1"><Star size={40} fill="#ffd700" color="#b45309" /></div>
-            <div className="sticker cloud-1"><Cloud size={60} fill="white" color="#cbd5e1" /></div>
-
-            <div className="middle-practice-layout three-col-grid">
-
-                {/* COL 1: Sidebar Stats & Palette */}
-                <aside className="middle-sidebar glass-panel">
-                    <div className="sidebar-header">
-                        <h2>{skillName}</h2>
-                        <div className="timer-display">
-                            <RefreshCw size={16} className="spin-slow" />
-                            <span>{formatTime(elapsedTime)}</span>
-                        </div>
-                    </div>
-
-                    <div className="question-palette">
-                        <span className="palette-label">Question Palette</span>
-                        <div className="palette-grid">
-                            {questions.map((_, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`palette-item ${getQuestionStatus(idx)}`}
-                                >
-                                    {idx + 1}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="stats-panel-compact">
-                        <div className="stat-row">
-                            <Zap size={18} className="stat-icon streak" />
-                            <span>Streak: <strong>{stats.streak}</strong></span>
-                        </div>
-                        <div className="stat-row">
-                            <Check size={18} className="stat-icon correct" />
-                            <span>Score: <strong>{stats.correct}</strong>/<strong>{stats.total}</strong></span>
-                        </div>
-                    </div>
-
-                    <Link to="/math" className="exit-btn">Exit Practice</Link>
-                </aside>
-
-                {/* COL 2: Main Question Area */}
-                <main className="middle-question-area">
-                    <div className="question-card glass-card pop-in">
-                        <div className="flex justify-between items-center mb-4">
-                            <span className="topic-tag">Problem {currentIndex + 1}</span>
-                            <span className={`difficulty-badge ${currentDifficulty.toLowerCase()}`}>
-                                {currentDifficulty}
-                            </span>
-                        </div>
-                        <div className="question-text">
-                            {fetchingNext ? (
-                                <div className="fetching-loader">Preparing next challenge...</div>
-                            ) : (
-                                currentQ?.text && (
-                                    <div dangerouslySetInnerHTML={{ __html: currentQ.text }} />
-                                )
+            <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 lg:px-6 pb-4 lg:pb-6 overflow-hidden max-w-[1400px] mx-auto w-full">
+                {/* Left Column: Question Card */}
+                <main className="flex-[3] relative h-full min-h-0">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentQ?.id}
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.2 }}
+                            className="h-full"
+                        >
+                            {currentQ && (
+                                <QuestionCard
+                                    question={currentQ}
+                                    selectedAnswer={userAnswers[currentQ.id]}
+                                    onAnswer={handleAnswer}
+                                    onViewExplanation={() => setShowExplanation(true)}
+                                    showViewExplanation={!!userAnswer}
+                                    canGoNext={!!userAnswer}
+                                    onNext={proceedToNext}
+                                    onExit={() => navigate('/math')}
+                                    onToggleScratchpad={() => setShowScratchpad(true)}
+                                    onClear={() => {
+                                        const currentQ = questions[currentIndex];
+                                        const wasAnswered = userAnswers[currentQ.id];
+                                        if (!wasAnswered) return;
+                                        setUserAnswers(prev => {
+                                            const next = { ...prev };
+                                            delete next[currentQ.id];
+                                            return next;
+                                        });
+                                        const historyEntry = history.find(h => h.question.id === currentQ.id);
+                                        if (historyEntry) {
+                                            setHistory(prev => prev.filter(h => h.question.id !== currentQ.id));
+                                            setStats(prev => ({
+                                                ...prev,
+                                                total: Math.max(0, prev.total - 1),
+                                                correct: historyEntry.status === 'correct' ? Math.max(0, prev.correct - 1) : prev.correct,
+                                                wrong: historyEntry.status === 'wrong' ? Math.max(0, prev.wrong - 1) : prev.wrong,
+                                                streak: historyEntry.status === 'correct' ? Math.max(0, prev.streak - 1) : prev.streak
+                                            }));
+                                        }
+                                        setShowExplanation(false);
+                                    }}
+                                />
                             )}
-                        </div>
-
-                        {currentQ?.imageUrl && (
-                            <div className="question-image">
-                                <img src={currentQ.imageUrl} alt="Question visual" />
-                            </div>
-                        )}
-
-                        <ModelRenderer
-                            question={currentQ}
-                            userAnswer={userAnswer}
-                            setUserAnswer={setUserAnswer}
-                            feedback={feedback}
-                            disabled={!!feedback}
-                            onCheck={handleCheck}
-                        />
-
-                        <div className="action-bar">
-                            {feedback ? (
-                                <div className="feedback-display">
-                                    <span className={`feedback-msg ${feedback}`}>
-                                        {feedback === 'correct' ? 'Excellent!' : 'Keep trying!'}
-                                    </span>
-                                    <button className="middle-btn next" onClick={handleNextStep}>
-                                        Next Problem <ArrowRight size={20} />
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex gap-4">
-                                    <button className="middle-btn secondary" onClick={() => setCompleted(true)}>
-                                        Finish
-                                    </button>
-                                    <button className="middle-btn secondary" onClick={handleSkip}>
-                                        Skip
-                                    </button>
-                                    <button
-                                        className="middle-btn primary"
-                                        onClick={handleCheck}
-                                        disabled={!userAnswer}
-                                    >
-                                        Check Answer
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </main>
 
                 {/* Right Column: Inline Scratchpad (Hidden on mobile to save space) */}
