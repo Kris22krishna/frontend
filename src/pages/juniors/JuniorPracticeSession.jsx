@@ -71,6 +71,39 @@ const JuniorPracticeSession = () => {
     // Suggestion Modal State
     const [suggestionModal, setSuggestionModal] = useState({ isOpen: false, type: null, skill: null });
 
+    // Session & Timer State
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
+
+    // Initial Session Creation
+    useEffect(() => {
+        if (skillId && !sessionId) {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                api.createPracticeSession(userId, skillId).then(sess => {
+                    if (sess && sess.session_id) setSessionId(sess.session_id);
+                }).catch(err => console.error("Failed to start session", err));
+            }
+        }
+    }, [skillId]);
+
+    // Timer Visibility Logic
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
+
     const dragControls = useDragControls();
 
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
@@ -110,6 +143,7 @@ const JuniorPracticeSession = () => {
             // Ensure questions are valid
             const validQuestions = rawQuestions.map(q => ({
                 id: q.id || q.question_id || Math.random(),
+                template_id: q.template_id,
                 text: q.text || q.question_text || q.question || q.question_html,
                 options: q.options || [],
                 correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
@@ -169,6 +203,35 @@ const JuniorPracticeSession = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: parseInt(skillId, 10),
+                template_id: question.template_id || null,
+                difficulty_level: currentDifficulty,
+                question_text: question.text,
+                correct_answer: question.correctAnswer,
+                student_answer: selected,
+                is_correct: isCorrect,
+                solution_text: question.solution,
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
+
     const handleOptionSelect = (option) => {
         if (answers[currentIndex]) return; // Disable changing answer after submit
 
@@ -196,6 +259,8 @@ const JuniorPracticeSession = () => {
             // Wrong Answer: Show Modal Immediately
             setShowExplanationModal(true);
         }
+
+        recordQuestionAttempt(currentQuestion, option, isCorrect);
         // Correct Answer: UI updates automatically via isCorrect check in render
     };
 
@@ -221,6 +286,7 @@ const JuniorPracticeSession = () => {
         if (!isCorrect) {
             setShowExplanationModal(true);
         }
+        recordQuestionAttempt(currentQuestion, selectedOption, isCorrect);
     };
 
     const handleNext = async () => {
@@ -287,6 +353,11 @@ const JuniorPracticeSession = () => {
         // Fetch Next Question Immediately (One at a time)
         await fetchQuestions(nextDiff, false);
         setCurrentIndex(prev => prev + 1);
+
+        // Reset Question Timer
+        accumulatedTime.current = 0;
+        questionStartTime.current = Date.now();
+        isTabActive.current = !document.hidden;
     };
 
     const handlePrev = () => {
@@ -306,6 +377,7 @@ const JuniorPracticeSession = () => {
     })();
 
     const handleSubmitSession = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         // Submit report
         try {

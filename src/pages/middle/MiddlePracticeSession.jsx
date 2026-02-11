@@ -35,7 +35,38 @@ const MiddlePracticeSession = () => {
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
     const [grade, setGrade] = useState(null); // Store grade for exit navigation
 
+    // Session & Timer State
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
 
+    // Initial Session Creation
+    useEffect(() => {
+        if (skillId && !sessionId) {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                api.createPracticeSession(userId, skillId).then(sess => {
+                    if (sess && sess.session_id) setSessionId(sess.session_id);
+                }).catch(err => console.error("Failed to start session", err));
+            }
+        }
+    }, [skillId]);
+
+    // Timer Visibility Logic
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
 
     const startTimeRef = useRef(Date.now());
     const hasFetched = useRef(false);
@@ -105,6 +136,7 @@ const MiddlePracticeSession = () => {
 
                 return {
                     id: q.id || q.question_id || idx + 1,
+                    template_id: q.template_id,
                     text: q.question_text || q.question || q.question_html || q.text || q.prompt || "Question Text Missing",
                     options: opts,
                     correctAnswer: q.correct_answer || q.answer || q.answer_value || q.correct_option,
@@ -134,6 +166,35 @@ const MiddlePracticeSession = () => {
         }
     };
 
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: parseInt(skillId, 10),
+                template_id: question.template_id || null,
+                difficulty_level: currentDifficulty,
+                question_text: question.text,
+                correct_answer: question.correctAnswer,
+                student_answer: selected,
+                is_correct: isCorrect,
+                solution_text: question.explanation,
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
+
     const handleAnswer = (answer) => {
         const currentQ = questions[currentIndex];
         setUserAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
@@ -156,6 +217,8 @@ const MiddlePracticeSession = () => {
                 total: prev.total + 1,
                 streak: isCorrect ? prev.streak + 1 : 0
             }));
+
+            recordQuestionAttempt(currentQ, answer, isCorrect);
         }
 
         if (!isCorrect) {
@@ -168,7 +231,13 @@ const MiddlePracticeSession = () => {
         if (currentIndex < questions.length - 1) {
             // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
+
+            // Reset timer
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
+            isTabActive.current = !document.hidden;
         } else {
+            if (sessionId) api.finishSession(sessionId).catch(e => console.error("Error finishing session", e));
             setCompleted(true);
         }
     };

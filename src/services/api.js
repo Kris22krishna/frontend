@@ -686,4 +686,52 @@ export const api = {
         });
         return handleResponse(response);
     },
+
+    // --- Practice (V2) ---
+    createPracticeSession: async (userId, skillId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/sessions`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ user_id: userId, skill_id: skillId }),
+        });
+        return handleResponse(response);
+    },
+
+    recordAttempt: async (attemptData) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/attempts`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(attemptData),
+        });
+        return handleResponse(response);
+    },
+
+    getUserProgress: async (userId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/user-progress/${userId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getUserSessions: async (userId, limit = 10) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/user-sessions/${userId}?limit=${limit}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getUserSessions: async (userId, limit = 10) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/user-sessions/${userId}?limit=${limit}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    finishSession: async (sessionId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/sessions/${sessionId}/finish`, {
+            method: 'POST',
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
 };
