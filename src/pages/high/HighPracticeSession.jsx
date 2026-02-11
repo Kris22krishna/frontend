@@ -1,16 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen } from 'lucide-react';
+import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
 import { api } from '../../services/api';
 import ModelRenderer from '../../models/ModelRenderer';
 import './HighPracticeSession.css';
+import LatexContent from '../../components/LatexContent';
 import Navbar from '../../components/Navbar';
 
 const HighPracticeSession = () => {
     const { skillId } = useParams();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [showScratchpad, setShowScratchpad] = useState(false); // Mobile state
     const [loading, setLoading] = useState(true);
     const [userAnswer, setUserAnswer] = useState('');
     const [feedback, setFeedback] = useState(null);
@@ -20,8 +22,8 @@ const HighPracticeSession = () => {
     const [history, setHistory] = useState([]);
     const [error, setError] = useState(null);
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
-    const [fetchingNext, setFetchingNext] = useState(false);
-    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
+    const [consecutiveCorrect, setConsecutiveCorrect] = useState(0);
+    const [displayQuestionNum, setDisplayQuestionNum] = useState(1);
 
     // Time Tracking
     const startTimeRef = useRef(Date.now());
@@ -37,7 +39,11 @@ const HighPracticeSession = () => {
     useEffect(() => {
         fetchQuestions();
         startTimeRef.current = Date.now();
+        setDisplayQuestionNum(1); // Reset question number on new skill
     }, [skillId]);
+
+
+
 
     const fetchQuestions = async (retryType = null, append = false, forcedDifficulty = null) => {
         if (!append) setLoading(true);
@@ -86,17 +92,20 @@ const HighPracticeSession = () => {
         }
     };
 
-    const handleCheck = () => {
+    const handleCheck = (selectedVal) => {
         const currentQ = questions[currentIndex];
         if (!currentQ) return;
 
-        const isCorrect = userAnswer.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
+        const valToCheck = selectedVal !== undefined ? selectedVal : userAnswer;
+        setUserAnswer(valToCheck);
+
+        const isCorrect = valToCheck.toString().trim().toLowerCase() === currentQ.correctAnswer.toString().trim().toLowerCase();
 
         setFeedback(isCorrect ? 'correct' : 'incorrect');
 
         const attempt = {
             question: currentQ,
-            userVal: userAnswer,
+            userVal: valToCheck,
             status: isCorrect ? 'correct' : 'wrong',
             solution: currentQ.solution
         };
@@ -152,6 +161,7 @@ const HighPracticeSession = () => {
 
         setUserAnswer('');
         setFeedback(null);
+        setDisplayQuestionNum(prev => prev + 1);
     };
 
     // Live Timer
@@ -238,12 +248,7 @@ const HighPracticeSession = () => {
                     <div className="high-header">
                         <div className="high-title-group">
                             <h1>{skillName}</h1>
-                            <div className="high-subtitle">
-                                <span className="high-badge">Question {currentIndex + 1}</span>
-                                <span className={`high-difficulty-badge ${currentDifficulty.toLowerCase()}`}>
-                                    {currentDifficulty} Level
-                                </span>
-                            </div>
+                            {/* Badges Removed */}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                             <div className="high-subtitle">
@@ -253,14 +258,7 @@ const HighPracticeSession = () => {
 
                             {/* Action Button moved to Header */}
                             {!feedback ? (
-                                <button
-                                    className="high-btn primary"
-                                    onClick={handleCheck}
-                                    disabled={!userAnswer}
-                                    style={{ padding: '0.5rem 1.5rem', fontSize: '0.9rem' }}
-                                >
-                                    Submit
-                                </button>
+                                <div style={{ width: '0px' }}></div> /* Placeholder to keep layout */
                             ) : (
                                 <button
                                     className="high-btn primary"
@@ -271,6 +269,16 @@ const HighPracticeSession = () => {
                                 </button>
                             )}
 
+                            {/* Mobile Scratchpad Toggle (Header) */}
+                            <button
+                                className={`high-btn secondary high-mobile-scratchpad-toggle ${showScratchpad ? 'active' : ''}`}
+                                onClick={() => setShowScratchpad(!showScratchpad)}
+                                title="Open Scratchpad"
+                                style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                                <PenTool size={18} />
+                            </button>
+
                             <Link to="/math" className="high-btn secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
                                 Exit
                             </Link>
@@ -279,35 +287,69 @@ const HighPracticeSession = () => {
 
                     <div className="question-card">
                         <div className="question-meta">
-                            <span>Question {currentIndex + 1}</span>
-                            <span className={`high-q-difficulty ${currentQ?.difficulty?.toLowerCase()}`}>
-                                {currentQ?.difficulty}
-                            </span>
+                            <span>Question {displayQuestionNum}</span>
+                            {/* Difficulty Badge Removed */}
                         </div>
 
                         <div className="question-content">
-                            {fetchingNext ? (
-                                <div className="high-loader">Fetching next challenge...</div>
-                            ) : (
-                                <>
-                                    {currentQ?.text && (
-                                        <div className="question-text" dangerouslySetInnerHTML={{ __html: currentQ.text }} />
-                                    )}
-                                    {currentQ?.imageUrl && (
-                                        <img src={currentQ.imageUrl} alt="Question" style={{ maxWidth: '100%', marginBottom: '2rem', borderRadius: '4px' }} />
-                                    )}
-                                </>
+                            {currentQ?.text && (
+                                <LatexContent html={currentQ.text} className="question-text" block={true} />
+                            )}
+                            {currentQ?.imageUrl && (
+                                <img src={currentQ.imageUrl} alt="Question" style={{ maxWidth: '100%', marginBottom: '2rem', borderRadius: '4px' }} />
                             )}
                         </div>
 
-                        <ModelRenderer
-                            question={currentQ}
-                            userAnswer={userAnswer}
-                            setUserAnswer={setUserAnswer}
-                            feedback={feedback}
-                            disabled={!!feedback}
-                            onCheck={handleCheck}
-                        />
+                        <div className="high-options-grid">
+                            {currentQ?.options?.map((opt, idx) => {
+                                const isSelected = userAnswer === opt;
+                                let btnClass = `high-option-btn ${isSelected ? 'selected' : ''}`;
+
+                                if (feedback) {
+                                    if (opt === currentQ.correctAnswer) btnClass += ' correct';
+                                    else if (isSelected && feedback === 'incorrect') btnClass += ' wrong';
+                                }
+
+                                return (
+                                    <button
+                                        key={idx}
+                                        className={btnClass}
+                                        onClick={() => !feedback && handleCheck(opt)}
+                                        disabled={!!feedback}
+                                    >
+                                        <span className="high-key">{String.fromCharCode(65 + idx)}.</span>
+                                        <LatexContent html={opt} />
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {(currentQ?.type === 'input' || !currentQ?.options || currentQ?.options.length === 0) && (
+                            <div className="high-input-group">
+                                <input
+                                    type="text"
+                                    className="high-text-input"
+                                    value={userAnswer}
+                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                    placeholder="Enter answer here..."
+                                    disabled={!!feedback}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !feedback && userAnswer.trim()) {
+                                            handleCheck(userAnswer);
+                                        }
+                                    }}
+                                />
+                                {!feedback && (
+                                    <button
+                                        className="high-submit-btn"
+                                        onClick={() => handleCheck(userAnswer)}
+                                        disabled={!userAnswer.trim()}
+                                    >
+                                        Submit Answer
+                                    </button>
+                                )}
+                            </div>
+                        )}
 
                         {feedback && (
                             <div className="high-feedback-container">
@@ -319,8 +361,8 @@ const HighPracticeSession = () => {
 
                                 {feedback && currentQ.solution && (
                                     <div className={`high-explanation-box ${feedback}`}>
-                                        <h4>Explanation</h4>
-                                        <div dangerouslySetInnerHTML={{ __html: currentQ.solution }} />
+                                        <h4 className="explanation-header">EXPLANATION</h4>
+                                        <LatexContent html={currentQ.solution} block={true} />
                                     </div>
                                 )}
                             </div>
@@ -330,12 +372,24 @@ const HighPracticeSession = () => {
                             {/* Skip button removed */}
                         </div>
                     </div>
+
+                    {/* Mobile Scratchpad Overlay */}
+                    {showScratchpad && (
+                        <div className="high-mobile-scratchpad-overlay">
+                            <button
+                                className="high-close-scratchpad"
+                                onClick={() => setShowScratchpad(false)}
+                            >
+                                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#ffffff' }}>✕</span>
+                            </button>
+                            <Whiteboard isOpen={true} />
+                        </div>
+                    )}
                 </main>
 
                 {/* Tools Column */}
                 <aside className="high-tools-col">
                     <div className="high-notebook">
-                        <div className="high-notebook-header">Scratchpad</div>
                         <div style={{ flex: 1, position: 'relative' }}>
                             <Whiteboard isOpen={true} />
                         </div>
