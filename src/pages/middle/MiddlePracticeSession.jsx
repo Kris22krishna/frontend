@@ -13,6 +13,7 @@ import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight } from 'lucide-react';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
+import LatexContent from '../../components/LatexContent';
 
 // Assets
 import mascotImg from '../../assets/mascot.png';
@@ -81,6 +82,8 @@ const MiddlePracticeSession = () => {
             else if (response && response.preview_samples) rawQuestions = response.preview_samples;
             else if (response) rawQuestions = [response];
 
+            console.log('[MiddlePractice] API Response rawQuestions:', rawQuestions);
+
             if (!Array.isArray(rawQuestions)) rawQuestions = [];
 
             const normalized = rawQuestions.map((q, idx) => {
@@ -98,9 +101,15 @@ const MiddlePracticeSession = () => {
                 }
                 if (!Array.isArray(opts)) opts = [];
 
+                // Fix: Replace className= with class= in HTML strings from backend
+                let qText = q.question_text || q.question || q.question_html || q.text || q.prompt || "Question Text Missing";
+                if (typeof qText === 'string') {
+                    qText = qText.replace(/className=/g, 'class=');
+                }
+
                 return {
                     id: q.id || q.question_id || idx + 1,
-                    text: q.question_text || q.question || q.question_html || q.text || q.prompt || "Question Text Missing",
+                    text: qText,
                     options: opts,
                     correctAnswer: q.correct_answer || q.answer || q.answer_value || q.correct_option,
                     explanation: q.solution || q.solution_html || q.explanation || q.explanation_text || "No detailed explanation available.",
@@ -182,6 +191,27 @@ const MiddlePracticeSession = () => {
     };
 
     if (loading) return <div className="middle-loading">Generating problems...</div>;
+
+    if (!loading && (!questions || questions.length === 0)) {
+        return (
+            <div className="h-[100dvh] w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex items-center justify-center font-sans text-[#31326F]">
+                <div className="bg-white p-8 rounded-3xl shadow-xl text-center max-w-md mx-4">
+                    <img src={mascotImg} alt="Mascot" className="w-24 h-24 mx-auto mb-4 object-contain opacity-50" />
+                    <h2 className="text-2xl font-bold mb-2">No Questions Found</h2>
+                    <p className="text-gray-500 mb-6">We couldn't load practice questions for this topic. It might be empty or there was a connection error.</p>
+                    <div className="bg-gray-100 p-4 rounded-xl text-left text-xs font-mono text-gray-500 mb-6 overflow-x-auto max-h-32">
+                        Debug Info: Skill ID {skillId} returned 0 questions.
+                    </div>
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="px-6 py-3 bg-[#31326F] text-white rounded-xl font-bold hover:bg-[#25265E] transition-all w-full"
+                    >
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (completed) {
         const accuracy = Math.round((stats.correct / (stats.total || 1)) * 100);
