@@ -35,7 +35,7 @@ const SeniorGradeSyllabus = () => {
     }, [grade]);
 
     // Group skills by topic
-    const skillsByTopic = skills.reduce((acc, skill) => {
+    const skillsByTopic = (skills || []).reduce((acc, skill) => {
         const topicName = (skill.topic || 'General').toLowerCase();
         const gradeNum = parseInt(grade.replace('grade', ''));
 
@@ -43,6 +43,7 @@ const SeniorGradeSyllabus = () => {
         if (gradeNum === 8 && !topicName.includes("exponents")) return acc;
 
         const topic = skill.topic || 'General';
+        if (!acc[topic]) acc[topic] = [];
         acc[topic].push(skill);
         return acc;
     }, {});
@@ -62,6 +63,20 @@ const SeniorGradeSyllabus = () => {
         return (
             <div className="senior-loading">
                 <div className="animate-pulse">Loading curriculum...</div>
+            </div>
+        );
+    }
+
+    if (!skills || skills.length === 0 || topics.length === 0) {
+        return (
+            <div className="senior-syllabus-page">
+                <SEO title={`Grade ${grade} Mathematics`} description="Grade syllabus" />
+                <div style={{ padding: '100px 20px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📚</div>
+                    <h2 style={{ color: '#1e293b', marginBottom: '10px' }}>No Content Available</h2>
+                    <p style={{ color: '#64748b' }}>We are currently updating the curriculum for Grade {grade}. Please check back later!</p>
+                    <Link to="/math" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600' }}>← Back to Grades</Link>
+                </div>
             </div>
         );
     }
