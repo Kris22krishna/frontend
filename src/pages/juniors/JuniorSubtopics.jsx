@@ -29,18 +29,30 @@ const JuniorSubtopics = () => {
 
     const handleSubtopicClick = (subtopic) => {
         const token = localStorage.getItem('authToken');
+
+        // Find index
+        const index = subtopics.findIndex(s => s.id === subtopic.id);
+
         if (!token) {
             setPendingSubtopic(subtopic);
             setShowLoginModal(true);
         } else {
-            navigate(`/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`);
+            navigate(
+                `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
+                { state: { skills: subtopics, currentIndex: index } }
+            );
         }
     };
 
     const handleLoginSuccess = () => {
         if (pendingSubtopic) {
             const subtopic = pendingSubtopic;
-            navigate(`/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`);
+            const index = subtopics.findIndex(s => s.id === subtopic.id);
+
+            navigate(
+                `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
+                { state: { skills: subtopics, currentIndex: index } }
+            );
             setPendingSubtopic(null);
         }
     };

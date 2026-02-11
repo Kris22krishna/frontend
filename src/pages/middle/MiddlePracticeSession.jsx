@@ -38,9 +38,13 @@ const MiddlePracticeSession = () => {
 
 
     const startTimeRef = useRef(Date.now());
+    const hasFetched = useRef(false);
 
     useEffect(() => {
-        fetchQuestions();
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        fetchQuestions(null, true);
         startTimeRef.current = Date.now();
 
         const timer = setInterval(() => {
@@ -60,19 +64,21 @@ const MiddlePracticeSession = () => {
         }
     }, [questions, currentIndex, showExplanation]);
 
-    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+    const fetchQuestions = async (diff = null, isInitial = true) => {
         if (isInitial) setLoading(true);
         else setFetchingNext(true);
 
         try {
-            let response = await api.getPracticeQuestionsBySkill(skillId, 10);
+            // Pass difficulty (if any) to API
+            let response = await api.getPracticeQuestionsBySkill(skillId, 3, null, diff);
+
+            // Update local state if backend provided metadata
+            if (response.template_metadata?.difficulty) {
+                setCurrentDifficulty(response.template_metadata.difficulty);
+            }
 
             // Handle selection_needed: when backend has both MCQ and User Input templates,
             // it asks the frontend to choose. Auto-pick MCQ for the practice session.
-            if (response && response.selection_needed) {
-                console.log('[Practice] selection_needed detected, auto-picking MCQ. Available types:', response.available_types);
-                response = await api.getPracticeQuestionsBySkill(skillId, 10, 'MCQ');
-            }
 
             let rawQuestions = [];
             if (response && response.questions) rawQuestions = response.questions;
@@ -181,6 +187,24 @@ const MiddlePracticeSession = () => {
     };
 
     if (loading) return <div className="middle-loading">Generating problems...</div>;
+
+    if (!questions || questions.length === 0) {
+        return (
+            <div className="h-[100dvh] w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex items-center justify-center font-sans text-[#31326F]">
+                <div className="text-center p-12 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl max-w-lg mx-auto border border-white/50">
+                    <img src={mascotImg} alt="Mascot" className="w-32 h-32 mx-auto mb-6 object-contain drop-shadow-md" />
+                    <h2 className="text-3xl font-bold mb-4 text-[#31326F]">No questions found!</h2>
+                    <p className="text-lg text-[#31326F] opacity-80 mb-8 font-medium">Ask a grown-up to check back later.</p>
+                    <button
+                        onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
+                        className="px-8 py-3 bg-[#31326F] text-white rounded-2xl font-bold text-lg hover:bg-[#25265E] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    >
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (completed) {
         const accuracy = Math.round((stats.correct / (stats.total || 1)) * 100);
