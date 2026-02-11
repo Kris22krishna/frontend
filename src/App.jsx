@@ -33,7 +33,8 @@ import SkillsPage from './pages/dashboards/parent/SkillsPage';
 import ReportsPage from './pages/dashboards/parent/ReportsPage';
 import SettingsPage from './pages/dashboards/parent/SettingsPage';
 import NotificationsPage from './pages/dashboards/parent/NotificationsPage';
-import GuestDashboard from './pages/dashboards/GuestDashboard';
+import GuestDashboard from './pages/dashboards/guest/GuestDashboard';
+import MentorDashboard from './pages/dashboards/mentor/MentorDashboard';
 
 // Admin Dashboard
 import AdminLayout from './pages/dashboards/admin/AdminLayout';
@@ -164,6 +165,7 @@ function App() {
         </Route>
 
         <Route path="/guest-dashboard" element={<GuestDashboard />} />
+        <Route path="/mentor-dashboard" element={<MentorDashboard />} />
 
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/uploader-login" element={<UploaderLogin />} />

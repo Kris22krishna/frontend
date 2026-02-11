@@ -71,16 +71,12 @@ export const api = {
         return data;
     },
 
-    // User Login (Standard)
-    login: async (email, password) => {
-        const formData = new URLSearchParams();
-        formData.append('username', email); // FASTAPI OAuth2 expects 'username' field even for emails
-        formData.append('password', password);
-
+    // User Login (V2)
+    login: async (identifier, password) => {
         const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier, password }),
         });
 
         if (!response.ok) {
@@ -122,6 +118,15 @@ export const api = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
+        });
+        return handleResponse(response);
+    },
+
+    checkEmail: async (email) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/check-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
         });
         return handleResponse(response);
     },
