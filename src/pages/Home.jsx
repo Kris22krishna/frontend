@@ -1,22 +1,16 @@
 import React from 'react';
 import './Home.css';
-import HeroBranding from '../components/home/HeroBranding';
-import HeroRegistration from '../components/home/HeroRegistration';
+import NewHero from '../components/home/NewHero';
+import PracticeIntro from '../components/home/PracticeIntro';
+import GradeGrid from '../components/home/GradeGrid';
 import Testimonials from '../components/home/Testimonials';
-
-import GradeSection from '../components/math100/GradeSection';
 
 const Home = () => {
     return (
-        <div className="home-page">
-            <section className="hero">
-                <div className="hero-content animate-fade-in">
-                    <HeroBranding />
-                    <HeroRegistration />
-                </div>
-            </section>
-
-            <GradeSection />
+        <div className="home-page overflow-x-hidden">
+            <NewHero />
+            <PracticeIntro />
+            <GradeGrid />
             <Testimonials />
         </div>
     );

@@ -57,6 +57,7 @@
     font-style: italic;
     background: linear-gradient(135deg, #0e7490 0%, #1d4ed8 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -152,42 +153,46 @@
 }
 
 .btn-primary-large {
-    background-color: #0f172a;
-    /* Darker slate/black for contrast */
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     color: white;
-    padding: 1rem 3rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    padding: 1.1rem 3.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     border-radius: 100px;
-    /* Pill shape */
     border: none;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15);
 }
 
 .btn-primary-large:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+}
+
+.btn-primary-large:active {
+    transform: scale(0.97);
 }
 
 .btn-secondary-large {
     background-color: white;
     color: #0f172a;
-    padding: 1rem 3rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    padding: 1.1rem 3.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     border-radius: 100px;
-    /* Pill shape */
     border: 2px solid #e2e8f0;
-    /* Thicker border */
     cursor: pointer;
     transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary-large:hover {
     border-color: #0f172a;
     background-color: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {

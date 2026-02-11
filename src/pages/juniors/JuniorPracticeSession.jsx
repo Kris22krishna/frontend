@@ -70,15 +70,32 @@ const JuniorPracticeSession = () => {
                     };
                 });
 
-                setQuestions(validQuestions);
-            } catch (error) {
-                console.error('Error fetching questions:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+            const validQuestions = rawQuestions.map(q => ({
+                id: q.id || q.question_id || Math.random(),
+                text: q.text || q.question_text || q.question || q.question_html,
+                options: q.options || [],
+                correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
+                type: q.type || q.question_type || 'MCQ',
+                solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
+                difficulty: diff,
+                model: q.model || 'Default'
+            }));
 
-        fetchQuestions();
+            if (isInitial) {
+                setQuestions(validQuestions);
+            } else {
+                setQuestions(prev => [...prev, ...validQuestions]);
+            }
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+        } finally {
+            setLoading(false);
+            setFetchingNext(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchQuestions('Easy', true);
     }, [skillId]);
 
     // Reset modal and other per-question states ONLY when question changes
@@ -164,11 +181,31 @@ const JuniorPracticeSession = () => {
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
+        const currentAns = answers[currentIndex];
+        const isCorrect = currentAns && currentAns.isCorrect;
+
+        let nextDiff = currentDifficulty;
+        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+
+        if (nextLevelCount >= 3) {
+            if (currentDifficulty === 'Easy') {
+                nextDiff = 'Medium';
+                nextLevelCount = 0;
+            } else if (currentDifficulty === 'Medium') {
+                nextDiff = 'Hard';
+                nextLevelCount = 0;
+            }
+        }
+
+        setCurrentDifficulty(nextDiff);
+        setCorrectCountAtLevel(nextLevelCount);
+
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(prev => prev + 1);
         } else {
-            handleSubmitSession();
+            await fetchQuestions(nextDiff, false);
+            setCurrentIndex(prev => prev + 1);
         }
     };
 
@@ -190,12 +227,12 @@ const JuniorPracticeSession = () => {
             const reportData = {
                 title: skillName || 'Junior Math Practice',
                 type: 'practice',
-                score: (correctCount / questions.length) * 100,
+                score: (stats.correct / stats.total) * 100,
                 parameters: {
                     skill_id: skillId,
                     skill_name: skillName,
-                    total_questions: questions.length,
-                    correct_answers: correctCount,
+                    total_questions: stats.total,
+                    correct_answers: stats.correct,
                     timestamp: new Date().toISOString(),
                     time_taken_seconds: timeElapsed
                 },
@@ -241,8 +278,9 @@ const JuniorPracticeSession = () => {
     }
 
     if (showResults) {
-        const score = Object.values(answers).filter(a => a.isCorrect).length;
-        const percentage = Math.round((score / questions.length) * 100);
+        const score = stats.correct;
+        const total = stats.total;
+        const percentage = Math.round((score / total) * 100);
 
         return (
             <div className="junior-practice-page results-view">
@@ -282,7 +320,7 @@ const JuniorPracticeSession = () => {
                         <div className="results-stats">
                             <div className="stat-card">
                                 <span className="stat-label">Correct</span>
-                                <span className="stat-value highlight">{score}/{questions.length}</span>
+                                <span className="stat-value highlight">{score}/{total}</span>
                             </div>
                             <div className="stat-card">
                                 <span className="stat-label">Time</span>
