@@ -76,7 +76,7 @@ const SeniorGradeSyllabus = () => {
                     <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📚</div>
                     <h2 style={{ color: '#1e293b', marginBottom: '10px' }}>No Content Available</h2>
                     <p style={{ color: '#64748b' }}>We are currently updating the curriculum for Grade {grade}. Please check back later!</p>
-                    <Link to="/math" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600' }}>← Back to Grades</Link>
+                    <Link to="/" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600' }}>← Back Home</Link>
                 </div>
             </div>
         );
@@ -93,7 +93,7 @@ const SeniorGradeSyllabus = () => {
                     <nav className="breadcrumb">
                         <Link to="/" className="home-link">Home</Link>
                         <ChevronRight size={14} />
-                        <Link to="/math" className="home-link">Math</Link>
+                        <Link to="/" className="home-link">Math</Link>
                         <ChevronRight size={14} />
                         <span>Grade {grade}</span>
                     </nav>
@@ -132,7 +132,7 @@ const SeniorGradeSyllabus = () => {
                             <div className="topic-card-icon">
                                 <Layout size={32} />
                             </div>
-                            <h3>{topic}</h3>
+                            <h3><LatexText text={topic} /></h3>
                             <div className="topic-meta">
                                 {skillsByTopic[topic].length} Skills
                             </div>
@@ -148,7 +148,7 @@ const SeniorGradeSyllabus = () => {
                         <div className="modal-header">
                             <h2>
                                 <Grid size={24} color="#4F46E5" />
-                                {selectedTopic}
+                                <LatexText text={selectedTopic} />
                             </h2>
                             <button
                                 className="modal-close-btn-text"

@@ -3,12 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { api } from '../services/api'; // Use real API
 import SEO from '../components/common/SEO';
+import { LatexText } from '../components/LatexText';
 import '../styles/GradeSyllabus.css';
 
 const SkillItem = ({ skill }) => (
     <Link to={`/practice/${skill.skill_id}`} className="skill-item">
         <span className="skill-code">&bull;</span>
-        <span className="skill-title">{skill.skill_name}</span>
+        <span className="skill-title"><LatexText text={skill.skill_name} /></span>
     </Link>
 );
 
@@ -147,7 +148,7 @@ const GradeSyllabus = () => {
             <div className="syllabus-grid">
                 {Object.entries(skillsByTopic).map(([topic, topicSkills]) => (
                     <div key={topic} className="category-block">
-                        <h3 className="category-title">{topic}</h3>
+                        <h3 className="category-title"><LatexText text={topic} /></h3>
                         <div className="category-content">
                             {topicSkills.map(skill => (
                                 <div

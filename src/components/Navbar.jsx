@@ -65,7 +65,6 @@ const Navbar = () => {
                 {/* Center: Desktop Navigation Links */}
                 <div className="nav-center hidden-mobile">
                     <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>Home</Link>
-                    <Link to="/practice" className={`nav-link-item ${isActive('/practice') || location.pathname.includes('/grade/') ? 'active' : ''}`}>Practice</Link>
                     <Link to="/rapid-math" className={`nav-link-item ${isActive('/rapid-math') ? 'active' : ''}`}>Rapid Math</Link>
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
@@ -104,9 +103,6 @@ const Navbar = () => {
                 {/* Mobile Dropdown Menu */}
                 {isMenuOpen && (
                     <div className="mobile-dropdown show-mobile">
-                        <Link to="/practice" className={`mobile-dropdown-item ${isActive('/practice') ? 'active' : ''}`}>
-                            Practice
-                        </Link>
                         <Link to="/rapid-math" className={`mobile-dropdown-item ${isActive('/rapid-math') ? 'active' : ''}`}>
                             Rapid Math
                         </Link>
