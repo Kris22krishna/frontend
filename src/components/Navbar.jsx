@@ -66,8 +66,8 @@ const Navbar = () => {
         <nav className="navbar glass">
             <div className="navbar-content">
                 <Link to="/" className="logo">
-                    <img src={logo} alt="skill00.ai Logo" className="navbar-logo-img" />
-                    <span>skill00.ai</span>
+                    <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />
+                    <span>skill100.ai</span>
                 </Link>
 
                 {/* Center: Navigation Links */}

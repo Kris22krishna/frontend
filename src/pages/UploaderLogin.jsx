@@ -26,10 +26,10 @@ const UploaderLogin = () => {
 
     return (
         <div className="login-container">
-            <SEO title="Uploader Login - skill00.ai" />
+            <SEO title="Uploader Login - skill100.ai" />
             <div className="login-card">
                 <div className="login-header">
-                    <h1 className="brand-title">skill00.ai</h1>
+                    <h1 className="brand-title">skill100.ai</h1>
                     <p className="login-subtitle">Uploader Portal Access</p>
                 </div>
 

@@ -6,7 +6,7 @@ const testimonials = [
         name: 'Aarav Sharma',
         grade: 'Grade 8',
         location: 'Mumbai',
-        text: 'skill00.ai made maths so much fun! I used to struggle with algebra, but the practice sessions helped me score 95% in my board exams.',
+        text: 'skill100.ai made maths so much fun! I used to struggle with algebra, but the practice sessions helped me score 95% in my board exams.',
         image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150'
     },
     {
@@ -20,7 +20,7 @@ const testimonials = [
         name: 'Rohan Iyer',
         grade: 'Grade 10',
         location: 'Chennai',
-        text: 'The practice questions are exactly like my school exams. skill00.ai helped me prepare for my 10th boards with confidence.',
+        text: 'The practice questions are exactly like my school exams. skill100.ai helped me prepare for my 10th boards with confidence.',
         image: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&q=80&w=150&h=150'
     }
 ];
@@ -37,7 +37,7 @@ export function HomeTestimonials() {
                 >
                     <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Loved by Students</h2>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Join thousands of learners crossing educational milestones with skill00.ai
+                        Join thousands of learners crossing educational milestones with skill100.ai
                     </p>
                 </motion.div>
 

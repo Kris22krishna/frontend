@@ -90,7 +90,7 @@ const UploaderDashboard = () => {
         <>
             <Navbar />
             <div className="admin-layout" style={{ paddingTop: '80px' }}>
-                <SEO title="Uploader Dashboard - skill00.ai" description="Question Upload Panel" />
+                <SEO title="Uploader Dashboard - skill100.ai" description="Question Upload Panel" />
 
                 {/* Sidebar */}
                 <aside className="admin-sidebar">
@@ -105,7 +105,7 @@ const UploaderDashboard = () => {
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent'
                                 }}>
-                                    skill00.ai
+                                    skill100.ai
                                 </h1>
                             </div>
                         </div>

@@ -179,9 +179,9 @@ const AssessmentRunner = () => {
                         <Menu className="h-6 w-6" />
                     </button>
                     <div className="flex items-center gap-3">
-                        <img src={logo} alt="skill00" className="h-8 w-auto rounded-full" />
+                        <img src={logo} alt="skill100" className="h-8 w-auto rounded-full" />
                         <span className="text-xl font-bold text-gray-900 tracking-tight">
-                            skill00
+                            skill100
                         </span>
                     </div>
                 </div>

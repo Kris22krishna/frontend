@@ -28,7 +28,7 @@ export function HomeStats() {
                             viewport={{ once: true }}
                             className="inline-block px-4 py-1.5 rounded-full bg-teal-50 text-teal-600 font-bold tracking-wide text-xs uppercase mb-6"
                         >
-                            Why Choose skill00?
+                            Why Choose skill100?
                         </motion.div>
                         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
                             Master Mathematics with <br />

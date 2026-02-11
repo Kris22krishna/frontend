@@ -47,7 +47,7 @@ const ContentPage = ({ topic }) => {
     if (topic === 'learn-to-learn') {
         return (
             <div className="learn-page">
-                <SEO title="Learn to Learn | skill00" description="Discover topics and master mathematics with smart learning techniques." />
+                <SEO title="Learn to Learn | skill100" description="Discover topics and master mathematics with smart learning techniques." />
                 <Navbar />
 
                 {/* Learning Tips */}
@@ -118,7 +118,7 @@ const ContentPage = ({ topic }) => {
 
     return (
         <div style={{ padding: '2rem', textAlign: 'center' }}>
-            <SEO title={`${data.title} - skill00`} description={data.desc} />
+            <SEO title={`${data.title} - skill100`} description={data.desc} />
             <h1>{data.title}</h1>
             <p>{data.desc}</p>
         </div>

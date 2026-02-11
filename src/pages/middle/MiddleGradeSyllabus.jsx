@@ -90,7 +90,7 @@ const MiddleGradeSyllabus = () => {
 
     return (
         <div className="middle-syllabus-page">
-            <SEO title={`Class ${grade.replace('grade', '')} Maths - skill00`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
+            <SEO title={`Class ${grade.replace('grade', '')} Maths - skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
 
             <div className="middle-container">
                 <div className="middle-nav-controls">

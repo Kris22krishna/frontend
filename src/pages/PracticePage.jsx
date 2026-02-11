@@ -136,7 +136,7 @@ const PracticePage = () => {
 
     return (
         <div className="practice-page">
-            <SEO title="Practice Math | skill00.ai" description="Choose your grade level and start practicing math with interactive exercises." />
+            <SEO title="Practice Math | skill100.ai" description="Choose your grade level and start practicing math with interactive exercises." />
             <Navbar />
 
             {/* Header Section */}

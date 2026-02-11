@@ -33,9 +33,9 @@ SEO.propTypes = {
 };
 
 SEO.defaultProps = {
-  title: 'skill00',
-  description: 'Smart Learning with skill00',
-  name: 'skill00',
+  title: 'skill100',
+  description: 'Smart Learning with skill100',
+  name: 'skill100',
   type: 'website',
 };
 

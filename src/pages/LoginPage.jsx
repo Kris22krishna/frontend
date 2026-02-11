@@ -83,7 +83,7 @@ const LoginPage = () => {
                 <div className="auth-hero-content">
                     <h1 className="auth-hero-title">
                         Welcome Back to <br />
-                        <span className="highlight-text">skill00.ai</span>
+                        <span className="highlight-text">skill100.ai</span>
                     </h1>
                     <p className="auth-hero-subtitle">
                         Continue your journey to excellence.
