@@ -31,45 +31,38 @@ const JuniorPracticeSession = () => {
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const dragControls = useDragControls();
 
+    const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
+    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
+    const [fetchingNext, setFetchingNext] = useState(false);
+
     // Fetch questions
-    useEffect(() => {
-        const fetchQuestions = async () => {
-            if (!skillId) {
-                setLoading(false);
-                return;
+    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+        if (!skillId) {
+            setLoading(false);
+            return;
+        }
+        try {
+            if (isInitial) setLoading(true);
+            else setFetchingNext(true);
+
+            // Fetch 10 questions for the skill
+            const response = await api.getPracticeQuestionsBySkill(skillId, 10);
+
+            // Handle different response structures
+            let rawQuestions = [];
+            if (response && response.questions) {
+                rawQuestions = response.questions; // Standard APIResponse format
+            } else if (response && response.preview_samples) {
+                rawQuestions = response.preview_samples; // v2 Template Preview format
+            } else if (response && response.selection_needed) {
+                const defaultType = response.available_types[0];
+                const retryResponse = await api.getPracticeQuestionsBySkill(skillId, 10, defaultType);
+                rawQuestions = retryResponse.questions || retryResponse.preview_samples || [];
+            } else if (Array.isArray(response)) {
+                rawQuestions = response; // Direct array
             }
-            try {
-                setLoading(true);
-                // Fetch 10 questions for the skill
-                const response = await api.getPracticeQuestionsBySkill(skillId, 10);
 
-                // Handle different response structures
-                let rawQuestions = [];
-                if (response && response.questions) {
-                    rawQuestions = response.questions; // Standard APIResponse format
-                } else if (response && response.preview_samples) {
-                    rawQuestions = response.preview_samples; // v2 Template Preview format
-                } else if (response && response.selection_needed) {
-                    // Logic: If multiple types available and none selected, auto-select first one for junior grades
-                    const defaultType = response.available_types[0];
-                    const retryResponse = await api.getPracticeQuestionsBySkill(skillId, 10, defaultType);
-                    rawQuestions = retryResponse.questions || retryResponse.preview_samples || [];
-                } else if (Array.isArray(response)) {
-                    rawQuestions = response; // Direct array
-                }
-
-                // Ensure questions are valid
-                const validQuestions = rawQuestions.map(q => {
-                    return {
-                        id: q.id || q.question_id || Math.random(),
-                        text: q.text || q.question_text || q.question || q.question_html,
-                        options: q.options || [],
-                        correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
-                        type: q.type || q.question_type || 'MCQ',
-                        solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this concept."
-                    };
-                });
-
+            // Ensure questions are valid
             const validQuestions = rawQuestions.map(q => ({
                 id: q.id || q.question_id || Math.random(),
                 text: q.text || q.question_text || q.question || q.question_html,
@@ -215,12 +208,17 @@ const JuniorPracticeSession = () => {
         }
     };
 
-    const handleSubmitSession = async () => {
-        // Calculate stats
-        let correctCount = 0;
+    // Compute stats from answers
+    const stats = (() => {
+        let correct = 0;
+        const total = Object.keys(answers).length;
         Object.values(answers).forEach(ans => {
-            if (ans.isCorrect) correctCount++;
+            if (ans.isCorrect) correct++;
         });
+        return { correct, total: total || questions.length };
+    })();
+
+    const handleSubmitSession = async () => {
 
         // Submit report
         try {
