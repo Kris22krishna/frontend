@@ -115,6 +115,8 @@ const MathSelection = () => {
                 { id: '8', label: 'Grade 8' },
                 { id: '9', label: 'Grade 9' },
                 { id: '10', label: 'Grade 10' },
+                { id: '11', label: 'Grade 11' },
+                { id: '12', label: 'Grade 12' },
             ],
             color: 'high',
             gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',

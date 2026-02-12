@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth';
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
+    const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -14,8 +14,8 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!email || !password) {
-            setError('Please enter both email and password.');
+        if (!identifier || !password) {
+            setError('Please enter both identifier (email/username) and password.');
             return;
         }
 
@@ -23,16 +23,17 @@ const LoginPage = () => {
         setError('');
 
         try {
-            const response = await authService.loginWithEmail(email, password);
+            const response = await authService.loginWithEmail(identifier, password);
             console.log('Login Success:', response);
 
             // Redirect based on role
-            const userType = response.user_type || 'student'; // Fallback
+            const userType = response.role || response.user_type || 'student'; // Fallback
             const dashboardMap = {
                 'student': '/student-dashboard',
                 'teacher': '/teacher-dashboard',
                 'parent': '/parent-dashboard',
                 'guest': '/guest-dashboard',
+                'mentor': '/mentor-dashboard', // Added mentor
                 'admin': '/admin'
             };
 
@@ -57,12 +58,13 @@ const LoginPage = () => {
             console.log('Google Login Success:', response);
 
             // Redirect based on role
-            const userType = response.user_type || 'student'; // Fallback
+            const userType = response.role || response.user_type || 'student'; // Fallback
             const dashboardMap = {
                 'student': '/student-dashboard',
                 'teacher': '/teacher-dashboard',
                 'parent': '/parent-dashboard',
                 'guest': '/guest-dashboard',
+                'mentor': '/mentor-dashboard',
                 'admin': '/admin'
             };
 
@@ -116,13 +118,13 @@ const LoginPage = () => {
 
                     <form onSubmit={handleSubmit}>
                         <div className="auth-form-group">
-                            <label className="auth-label">Email</label>
+                            <label className="auth-label">Email or Username</label>
                             <input
-                                type="email"
+                                type="text"
                                 className="auth-input"
-                                placeholder="name@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="name@example.com or username"
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
                                 required
                                 disabled={isLoading}
                             />
@@ -147,6 +149,7 @@ const LoginPage = () => {
                             {isLoading ? 'Logging in...' : 'Log in'}
                         </button>
                     </form>
+
 
                     <p className="auth-footer">
                         Don't have an account? <Link to="/register" className="auth-link">Sign up</Link>

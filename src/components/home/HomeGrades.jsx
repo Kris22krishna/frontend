@@ -27,7 +27,13 @@ export function HomeGrades() {
     ];
 
     const handleGradeClick = (id) => {
-        navigate(`/math/grade/${id}`);
+        if (id >= 1 && id <= 4) {
+            navigate(`/junior/grade/${id}`);
+        } else if (id >= 5 && id <= 7) {
+            navigate(`/middle/grade/${id}`);
+        } else {
+            navigate(`/senior/grade/${id}`);
+        }
     };
 
     return (

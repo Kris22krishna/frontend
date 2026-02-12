@@ -37,12 +37,52 @@ const MiddlePracticeSession = () => {
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
     const [grade, setGrade] = useState(null); // Store grade for exit navigation
 
+    // Session & Timer State
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
 
+    // Initial Session Creation
+    const sessionCreatedForSkill = useRef(null);
+
+    // Initial Session Creation
+    useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        if (skillId && !sessionId && userId && sessionCreatedForSkill.current !== skillId) {
+            sessionCreatedForSkill.current = skillId;
+            api.createPracticeSession(userId, skillId).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => {
+                console.error("Failed to start session", err);
+                sessionCreatedForSkill.current = null;
+            });
+        }
+    }, [skillId]);
+
+    // Timer Visibility Logic
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
 
     const startTimeRef = useRef(Date.now());
+    const hasFetched = useRef(false);
 
     useEffect(() => {
-        fetchQuestions();
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        fetchQuestions(null, true);
         startTimeRef.current = Date.now();
 
         const timer = setInterval(() => {
@@ -62,19 +102,21 @@ const MiddlePracticeSession = () => {
         }
     }, [questions, currentIndex, showExplanation]);
 
-    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+    const fetchQuestions = async (diff = null, isInitial = true) => {
         if (isInitial) setLoading(true);
         else setFetchingNext(true);
 
         try {
-            let response = await api.getPracticeQuestionsBySkill(skillId, 10);
+            // Pass difficulty (if any) to API
+            let response = await api.getPracticeQuestionsBySkill(skillId, 3, null, diff);
+
+            // Update local state if backend provided metadata
+            if (response.template_metadata?.difficulty) {
+                setCurrentDifficulty(response.template_metadata.difficulty);
+            }
 
             // Handle selection_needed: when backend has both MCQ and User Input templates,
             // it asks the frontend to choose. Auto-pick MCQ for the practice session.
-            if (response && response.selection_needed) {
-                console.log('[Practice] selection_needed detected, auto-picking MCQ. Available types:', response.available_types);
-                response = await api.getPracticeQuestionsBySkill(skillId, 10, 'MCQ');
-            }
 
             let rawQuestions = [];
             if (response && response.questions) rawQuestions = response.questions;
@@ -109,7 +151,8 @@ const MiddlePracticeSession = () => {
 
                 return {
                     id: q.id || q.question_id || idx + 1,
-                    text: qText,
+                    template_id: q.template_id,
+                    text: q.question_text || q.question || q.question_html || q.text || q.prompt || "Question Text Missing",
                     options: opts,
                     correctAnswer: q.correct_answer || q.answer || q.answer_value || q.correct_option,
                     explanation: q.solution || q.solution_html || q.explanation || q.explanation_text || "No detailed explanation available.",
@@ -138,6 +181,35 @@ const MiddlePracticeSession = () => {
         }
     };
 
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: parseInt(skillId, 10),
+                template_id: question.template_id || null,
+                difficulty_level: currentDifficulty,
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
+                is_correct: isCorrect,
+                solution_text: String(question.explanation || ''),
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
+
     const handleAnswer = (answer) => {
         const currentQ = questions[currentIndex];
         setUserAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
@@ -160,6 +232,8 @@ const MiddlePracticeSession = () => {
                 total: prev.total + 1,
                 streak: isCorrect ? prev.streak + 1 : 0
             }));
+
+            recordQuestionAttempt(currentQ, answer, isCorrect);
         }
 
         if (!isCorrect) {
@@ -172,7 +246,13 @@ const MiddlePracticeSession = () => {
         if (currentIndex < questions.length - 1) {
             // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
+
+            // Reset timer
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
+            isTabActive.current = !document.hidden;
         } else {
+            if (sessionId) api.finishSession(sessionId).catch(e => console.error("Error finishing session", e));
             setCompleted(true);
         }
     };
@@ -192,19 +272,16 @@ const MiddlePracticeSession = () => {
 
     if (loading) return <div className="middle-loading">Generating problems...</div>;
 
-    if (!loading && (!questions || questions.length === 0)) {
+    if (!questions || questions.length === 0) {
         return (
             <div className="h-[100dvh] w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex items-center justify-center font-sans text-[#31326F]">
-                <div className="bg-white p-8 rounded-3xl shadow-xl text-center max-w-md mx-4">
-                    <img src={mascotImg} alt="Mascot" className="w-24 h-24 mx-auto mb-4 object-contain opacity-50" />
-                    <h2 className="text-2xl font-bold mb-2">No Questions Found</h2>
-                    <p className="text-gray-500 mb-6">We couldn't load practice questions for this topic. It might be empty or there was a connection error.</p>
-                    <div className="bg-gray-100 p-4 rounded-xl text-left text-xs font-mono text-gray-500 mb-6 overflow-x-auto max-h-32">
-                        Debug Info: Skill ID {skillId} returned 0 questions.
-                    </div>
+                <div className="text-center p-12 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl max-w-lg mx-auto border border-white/50">
+                    <img src={mascotImg} alt="Mascot" className="w-32 h-32 mx-auto mb-6 object-contain drop-shadow-md" />
+                    <h2 className="text-3xl font-bold mb-4 text-[#31326F]">No questions found!</h2>
+                    <p className="text-lg text-[#31326F] opacity-80 mb-8 font-medium">Ask a grown-up to check back later.</p>
                     <button
-                        onClick={() => navigate(-1)}
-                        className="px-6 py-3 bg-[#31326F] text-white rounded-xl font-bold hover:bg-[#25265E] transition-all w-full"
+                        onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
+                        className="px-8 py-3 bg-[#31326F] text-white rounded-2xl font-bold text-lg hover:bg-[#25265E] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                     >
                         Go Back
                     </button>
