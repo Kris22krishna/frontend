@@ -45,17 +45,23 @@ const HighPracticeSession = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const sessionCreatedForSkill = useRef(null);
+
     useEffect(() => {
         fetchQuestions();
 
         // Create Session
         const createSession = async () => {
             const uid = localStorage.getItem('userId');
-            if (uid && skillId) {
+            if (uid && skillId && sessionCreatedForSkill.current !== skillId) {
+                sessionCreatedForSkill.current = skillId;
                 try {
                     const s = await api.createPracticeSession(uid, skillId);
                     if (s?.session_id) setSessionId(s.session_id);
-                } catch (e) { console.error("Session init failed", e); }
+                } catch (e) {
+                    console.error("Session init failed", e);
+                    sessionCreatedForSkill.current = null;
+                }
             }
         };
         createSession();

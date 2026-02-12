@@ -42,14 +42,19 @@ const MiddlePracticeSession = () => {
     const isTabActive = useRef(true);
 
     // Initial Session Creation
+    const sessionCreatedForSkill = useRef(null);
+
+    // Initial Session Creation
     useEffect(() => {
-        if (skillId && !sessionId) {
-            const userId = localStorage.getItem('userId');
-            if (userId) {
-                api.createPracticeSession(userId, skillId).then(sess => {
-                    if (sess && sess.session_id) setSessionId(sess.session_id);
-                }).catch(err => console.error("Failed to start session", err));
-            }
+        const userId = localStorage.getItem('userId');
+        if (skillId && !sessionId && userId && sessionCreatedForSkill.current !== skillId) {
+            sessionCreatedForSkill.current = skillId;
+            api.createPracticeSession(userId, skillId).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => {
+                console.error("Failed to start session", err);
+                sessionCreatedForSkill.current = null;
+            });
         }
     }, [skillId]);
 

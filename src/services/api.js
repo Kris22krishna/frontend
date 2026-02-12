@@ -618,6 +618,13 @@ export const api = {
     },
 
     // --- Parent ---
+    getParentProfile: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/profile`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     getLinkedChildren: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/parent/children`, {
             headers: getHeaders()

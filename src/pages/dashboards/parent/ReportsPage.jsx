@@ -89,7 +89,7 @@ export default function ReportsPage() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 text-[#31326F] font-semibold">
-                                                    Skill #{session.skill_id}
+                                                    {session.skill_name || `Skill #${session.skill_id}`}
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${percent >= 80 ? 'bg-green-100 text-green-700 border-green-200' : percent >= 50 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' : 'bg-red-100 text-red-700 border-red-200'}`}>

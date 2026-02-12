@@ -146,7 +146,7 @@ export default function ParentLayout() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-slate-900 truncate">{selectedChild.name}</p>
-                                    <p className="text-xs text-slate-500">Grade {selectedChild.grade}</p>
+                                    <p className="text-xs text-slate-500"> {selectedChild.grade}</p>
                                 </div>
                             </div>
 

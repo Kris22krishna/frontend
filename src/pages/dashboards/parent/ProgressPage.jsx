@@ -15,38 +15,8 @@ export default function ProgressPage() {
 
         const fetchData = async () => {
             try {
-                // 1. Fetch user progress
                 const progressData = await api.getUserProgress(selectedChild.student_id);
-
-                // 2. Fetch all skills for the child's grade to map names
-                let skillsData = [];
-                if (selectedChild.grade) {
-                    try {
-                        skillsData = await api.getSkills(selectedChild.grade);
-                    } catch (e) {
-                        console.warn("Could not fetch skills metadata", e);
-                    }
-                }
-
-                const combined = progressData.map(p => {
-                    let skillName = `Skill #${p.skill_id}`;
-
-                    // Search in categories for skill name
-                    if (Array.isArray(skillsData)) {
-                        for (const cat of skillsData) {
-                            const found = cat.skills?.find(s => s.id === p.skill_id);
-                            if (found) {
-                                skillName = found.name;
-                                break;
-                            }
-                        }
-                    }
-
-                    return { ...p, skillName };
-                });
-
-                setSkillsProgress(combined);
-
+                setSkillsProgress(progressData || []);
             } catch (err) {
                 console.error("Progress fetch error:", err);
             } finally {
@@ -79,7 +49,7 @@ export default function ProgressPage() {
                             <CardHeader className="pb-2">
                                 <div className="flex justify-between items-start">
                                     <div className="space-y-1">
-                                        <CardTitle className="text-lg font-bold text-[#31326F]">{p.skillName}</CardTitle>
+                                        <CardTitle className="text-lg font-bold text-[#31326F]">{p.skill_name || `Skill #${p.skill_id}`}</CardTitle>
                                         <div className="flex items-center gap-2 mt-1">
                                             <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-bold border border-slate-200">
                                                 {p.current_difficulty}

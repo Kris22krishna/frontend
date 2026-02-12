@@ -138,7 +138,7 @@ export default function ParentDashboard() {
                                         </div>
                                         <div>
                                             {/* Skill Name would ideally come from session join or separate call. For now using ID or a placeholder logic if available */}
-                                            <h3 className="font-bold text-[#31326F] text-lg">Skill ID #{session.skill_id}</h3>
+                                            <h3 className="font-bold text-[#31326F] text-lg">{session.skill_name || `Skill ID #${session.skill_id}`}</h3>
                                             <div className="flex gap-4 text-sm text-slate-500 mt-1">
                                                 <span>{new Date(session.started_at).toLocaleDateString()}</span>
                                                 <span>•</span>
