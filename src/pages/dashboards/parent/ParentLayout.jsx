@@ -192,7 +192,7 @@ export default function ParentLayout() {
                     </header>
 
                     <div className="p-4 md:p-8 max-w-7xl mx-auto">
-                        <Outlet context={{ selectedChild }} />
+                        <Outlet context={{ selectedChild, openAddChild: () => setIsAddChildOpen(true) }} />
                     </div>
                 </main>
 

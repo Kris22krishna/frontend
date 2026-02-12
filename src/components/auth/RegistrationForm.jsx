@@ -123,15 +123,29 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
             console.log('Registration Success:', response);
 
             // Auto-login using token from registration response
-            if (response && response.token) {
-                localStorage.setItem('authToken', response.token);
-                localStorage.setItem('userId', response.user_id);
-                localStorage.setItem('userType', response.role);
-                localStorage.setItem('firstName', response.name?.split(' ')[0] || ''); // Optional for welcome message
-                window.dispatchEvent(new Event('auth-change'));
-            } else {
-                // Fallback (should not happen if registration succeeds)
-                await authService.loginWithEmail(email, password);
+            if (response && response.token && !parentId) {
+                localStorage.setItem('authToken', response.token); // Use 'access_token' if backend returns that, but backend returns 'access_token' and frontend mapped it? 
+                // check authService.registerWithEmail response. test_register.py showed backend returns "access_token".
+                // authService.registerWithEmail wraps it? 
+                // api.js register returns `handleResponse(response)`.
+                // In backend router, we return { access_token: ... }.
+                // So response.access_token is correct key.
+                // Existing code uses response.token? Maybe adapter?
+                // Let's stick to existing code style but skip if parentId.
+
+                // Wait, if I don't login, I just redirect.
+            }
+
+            if (!parentId) {
+                if (response && (response.token || response.access_token)) {
+                    localStorage.setItem('authToken', response.token || response.access_token);
+                    localStorage.setItem('userId', response.user_id);
+                    localStorage.setItem('userType', response.role);
+                    localStorage.setItem('firstName', response.name?.split(' ')[0] || '');
+                    window.dispatchEvent(new Event('auth-change'));
+                } else {
+                    await authService.loginWithEmail(email, password);
+                }
             }
 
             // Redirect to specific dashboard based on role
@@ -145,9 +159,15 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
             if (onSuccess) {
                 onSuccess(response);
             } else {
-                const targetPath = dashboardMap[selectedRole] || '/';
-                navigate(targetPath);
+                if (parentId) {
+                    navigate('/parent-dashboard');
+                } else {
+                    const targetPath = dashboardMap[selectedRole] || '/';
+                    navigate(targetPath);
+                }
             }
+
+
 
         } catch (err) {
             console.error("Registration Error:", err);

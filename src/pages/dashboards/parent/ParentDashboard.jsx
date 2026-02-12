@@ -63,11 +63,18 @@ export default function ParentDashboard() {
                             <span className="text-sm font-medium opacity-90">Dashboard</span>
                         </div>
                         <h1 className="text-3xl md:text-4xl font-bold mb-3">
-                            Welcome to {selectedChild.name}'s Dashboard
+                            Welcome, {localStorage.getItem('firstName') || 'Parent'}!
                         </h1>
                         <p className="text-lg opacity-90 mb-6 font-medium">
-                            Here is a snapshot of their recent learning journey!
+                            Here is a snapshot of {selectedChild.name}'s learning journey!
                         </p>
+                        <button
+                            onClick={context.openAddChild}
+                            className="bg-white text-[#4FB7B3] px-6 py-2 rounded-full font-bold shadow-md hover:bg-opacity-90 transition-all flex items-center gap-2 mx-auto md:mx-0"
+                        >
+                            <Target className="h-5 w-5" />
+                            Link Another Child
+                        </button>
                     </div>
                 </div>
             </div>

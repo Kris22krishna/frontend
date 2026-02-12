@@ -89,6 +89,7 @@ export const api = {
         if (data.user_id) localStorage.setItem('userId', data.user_id);
         if (data.user_type) localStorage.setItem('userType', data.user_type);
         if (data.first_name) localStorage.setItem('firstName', data.first_name);
+        else if (data.name) localStorage.setItem('firstName', data.name.split(' ')[0]);
         if (data.email) localStorage.setItem('userEmail', data.email);
         window.dispatchEvent(new Event('auth-change'));
         return data;
