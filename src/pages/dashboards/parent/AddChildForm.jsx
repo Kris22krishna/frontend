@@ -92,14 +92,27 @@ export default function AddChildForm({ onLinkSuccess, onDemoMode }) {
                             </div>
                         </div>
 
-                        <Button
-                            type="button"
-                            variant="outline"
-                            className="w-full"
-                            onClick={onDemoMode}
-                        >
-                            View Demo Dashboard
-                        </Button>
+                        <div className="grid grid-cols-2 gap-3">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full border-[#4FB7B3] text-[#4FB7B3] hover:bg-[#4FB7B3] hover:text-white transition-all"
+                                onClick={() => {
+                                    const parentUserId = localStorage.getItem('userId');
+                                    window.location.href = `/register?role=student&parent_id=${parentUserId}`;
+                                }}
+                            >
+                                Create Child Account
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full border-[#637AB9] text-[#637AB9] hover:bg-[#637AB9] hover:text-white transition-all"
+                                onClick={() => window.location.href = '/'}
+                            >
+                                Explore Skill100
+                            </Button>
+                        </div>
                     </form>
                 </CardContent>
             </Card>

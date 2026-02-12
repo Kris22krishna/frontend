@@ -5,7 +5,7 @@ import { authService } from '../../services/auth';
 import '../../styles/AuthStyles.css'; // Use shared styles
 
 
-const RegistrationForm = ({ role = 'student', onBack, onSuccess }) => {
+const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess }) => {
     const [selectedRole, setSelectedRole] = useState(role.toLowerCase());
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -105,14 +105,21 @@ const RegistrationForm = ({ role = 'student', onBack, onSuccess }) => {
         setError('');
 
         try {
-            const response = await authService.registerWithEmail({
+            const registrationData = {
                 email,
                 password,
                 role: selectedRole,
-                name, // Changed from username
+                name,
                 phoneNumber,
                 grade: selectedRole === 'student' ? grade : undefined
-            });
+            };
+
+            // Add parent_user_id if creating student from parent dashboard
+            if (selectedRole === 'student' && parentId) {
+                registrationData.parent_user_id = parentId;
+            }
+
+            const response = await authService.registerWithEmail(registrationData);
             console.log('Registration Success:', response);
 
             // Auto-login using token from registration response

@@ -169,13 +169,13 @@ const HighPracticeSession = () => {
                         user_id: parseInt(uid),
                         session_id: sessionId,
                         skill_id: parseInt(skillId),
-                        template_id: currentQ.template_id || null, // Ensure mapped
+                        template_id: currentQ.template_id || null,
                         difficulty_level: currentDifficulty,
-                        question_text: currentQ.text,
-                        correct_answer: currentQ.correctAnswer,
-                        student_answer: valToCheck,
+                        question_text: String(currentQ.text || ''),
+                        correct_answer: String(currentQ.correctAnswer || ''),
+                        student_answer: String(valToCheck || ''),
                         is_correct: isCorrect,
-                        solution_text: currentQ.solution,
+                        solution_text: String(currentQ.solution || ''),
                         time_spent_seconds: sec
                     });
                 }

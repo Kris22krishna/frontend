@@ -183,11 +183,11 @@ const MiddlePracticeSession = () => {
                 skill_id: parseInt(skillId, 10),
                 template_id: question.template_id || null,
                 difficulty_level: currentDifficulty,
-                question_text: question.text,
-                correct_answer: question.correctAnswer,
-                student_answer: selected,
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
                 is_correct: isCorrect,
-                solution_text: question.explanation,
+                solution_text: String(question.explanation || ''),
                 time_spent_seconds: seconds >= 0 ? seconds : 0
             });
         } catch (e) {

@@ -5,11 +5,18 @@ import { Link } from 'react-router-dom';
 import RegistrationForm from '../components/auth/RegistrationForm';
 
 const RegisterPage = () => {
-    // We can manage role selection here or inside the form. The existing form handles it via props.
-    // For simplicity, let's default to no role selected initially if the form handles selection, 
-    // or pass a default. The existing HeroRegistration passed a role. 
-    // Let's assume the RegistrationForm has a way to select role if none provided, or we default to 'learner'.
-    const [role, setRole] = React.useState('student'); // Defaulting for now
+    const [role, setRole] = React.useState('student');
+    const [parentId, setParentId] = React.useState(null);
+
+    React.useEffect(() => {
+        // Read URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const urlRole = params.get('role');
+        const urlParentId = params.get('parent_id');
+
+        if (urlRole) setRole(urlRole);
+        if (urlParentId) setParentId(parseInt(urlParentId, 10));
+    }, []);
 
     return (
         <div className="auth-page">
@@ -37,7 +44,7 @@ const RegisterPage = () => {
                         <ArrowLeft size={18} /> Back to Home
                     </Link>
 
-                    <RegistrationForm role={role} onBack={() => { }} />
+                    <RegistrationForm role={role} parentId={parentId} onBack={() => { }} />
                 </div>
             </div>
         </div>

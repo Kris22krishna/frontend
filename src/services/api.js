@@ -698,12 +698,15 @@ export const api = {
     },
 
     recordAttempt: async (attemptData) => {
+        console.log('🔍 recordAttempt called with:', attemptData);
         const response = await fetch(`${BASE_URL}/api/v1/practice/attempts`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify(attemptData),
         });
-        return handleResponse(response);
+        const result = await handleResponse(response);
+        console.log('✅ recordAttempt response:', result);
+        return result;
     },
 
     getUserProgress: async (userId) => {
@@ -720,18 +723,16 @@ export const api = {
         return handleResponse(response);
     },
 
-    getUserSessions: async (userId, limit = 10) => {
-        const response = await fetch(`${BASE_URL}/api/v1/practice/user-sessions/${userId}?limit=${limit}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
+
 
     finishSession: async (sessionId) => {
+        console.log('🏁 finishSession called for session:', sessionId);
         const response = await fetch(`${BASE_URL}/api/v1/practice/sessions/${sessionId}/finish`, {
             method: 'POST',
             headers: getHeaders()
         });
-        return handleResponse(response);
+        const result = await handleResponse(response);
+        console.log('✅ finishSession response:', result);
+        return result;
     },
 };

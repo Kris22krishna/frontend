@@ -141,17 +141,20 @@ const JuniorPracticeSession = () => {
             }
 
             // Ensure questions are valid
-            const validQuestions = rawQuestions.map(q => ({
-                id: q.id || q.question_id || Math.random(),
-                template_id: q.template_id,
-                text: q.text || q.question_text || q.question || q.question_html,
-                options: q.options || [],
-                correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
-                type: q.type || q.question_type || 'MCQ',
-                solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
-                difficulty: diff || (response.template_metadata?.difficulty) || 'Easy',
-                model: q.model || 'Default'
-            }));
+            const validQuestions = rawQuestions.map(q => {
+                console.log('🔍 Raw question data:', { id: q.id, template_id: q.template_id });
+                return {
+                    id: q.id || q.question_id || Math.random(),
+                    template_id: q.template_id,
+                    text: q.text || q.question_text || q.question || q.question_html,
+                    options: q.options || [],
+                    correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
+                    type: q.type || q.question_type || 'MCQ',
+                    solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
+                    difficulty: diff || (response.template_metadata?.difficulty) || 'Easy',
+                    model: q.model || 'Default'
+                };
+            });
 
             if (isInitial) {
                 setQuestions(validQuestions);
@@ -220,11 +223,11 @@ const JuniorPracticeSession = () => {
                 skill_id: parseInt(skillId, 10),
                 template_id: question.template_id || null,
                 difficulty_level: currentDifficulty,
-                question_text: question.text,
-                correct_answer: question.correctAnswer,
-                student_answer: selected,
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
                 is_correct: isCorrect,
-                solution_text: question.solution,
+                solution_text: String(question.solution || ''),
                 time_spent_seconds: seconds >= 0 ? seconds : 0
             });
         } catch (e) {
@@ -621,7 +624,10 @@ const JuniorPracticeSession = () => {
                 </div>
 
                 <div className="exit-practice-container">
-                    <StickerExit onClick={() => navigate(-1)} />
+                    <StickerExit onClick={async () => {
+                        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                        navigate(-1);
+                    }} />
                 </div>
             </header>
 
