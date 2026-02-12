@@ -123,29 +123,13 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
             console.log('Registration Success:', response);
 
             // Auto-login using token from registration response
-            if (response && response.token && !parentId) {
-                localStorage.setItem('authToken', response.token); // Use 'access_token' if backend returns that, but backend returns 'access_token' and frontend mapped it? 
-                // check authService.registerWithEmail response. test_register.py showed backend returns "access_token".
-                // authService.registerWithEmail wraps it? 
-                // api.js register returns `handleResponse(response)`.
-                // In backend router, we return { access_token: ... }.
-                // So response.access_token is correct key.
-                // Existing code uses response.token? Maybe adapter?
-                // Let's stick to existing code style but skip if parentId.
-
-                // Wait, if I don't login, I just redirect.
-            }
-
             if (!parentId) {
-                if (response && (response.token || response.access_token)) {
-                    localStorage.setItem('authToken', response.token || response.access_token);
-                    localStorage.setItem('userId', response.user_id);
-                    localStorage.setItem('userType', response.role);
-                    localStorage.setItem('firstName', response.name?.split(' ')[0] || '');
-                    window.dispatchEvent(new Event('auth-change'));
-                } else {
-                    await authService.loginWithEmail(email, password);
-                }
+                // Registration successful -> Cookie set -> wait for auth-change or force check
+                // dispatchEvent logic is handled in api.js register
+                // But if we need to ensure login if register didn't auto-login (depends on backend implementation)
+                // Backend register DOES login (sets cookie).
+                // So we just need to wait a moment or just redirect.
+                // The auth-change event should update state.
             }
 
             // Redirect to specific dashboard based on role

@@ -1,10 +1,16 @@
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, ''); // Adjust if backend runs elsewhere
 
+// Override fetch to always include credentials (cookies)
+const fetch = (url, options = {}) => {
+    return window.fetch(url, {
+        ...options,
+        credentials: 'include'
+    });
+};
+
 const getHeaders = () => {
-    const token = localStorage.getItem('authToken');
     return {
         'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
     };
 };
 
@@ -64,9 +70,9 @@ export const api = {
             throw new Error(error.detail || 'Login failed');
         }
         const data = await response.json();
-        localStorage.setItem('authToken', data.access_token);
-        localStorage.setItem('userType', 'admin');
-        if (data.username) localStorage.setItem('firstName', data.username);
+        // Token handled by HttpOnly cookie
+        // User details should be fetched via getMe or context
+        if (data.username) localStorage.setItem('firstName', data.username); // Optional: Keep non-sensitive data if needed
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },
@@ -85,12 +91,7 @@ export const api = {
         }
 
         const data = await response.json();
-        localStorage.setItem('authToken', data.access_token);
-        if (data.user_id) localStorage.setItem('userId', data.user_id);
-        if (data.user_type) localStorage.setItem('userType', data.user_type);
-        if (data.first_name) localStorage.setItem('firstName', data.first_name);
-        else if (data.name) localStorage.setItem('firstName', data.name.split(' ')[0]);
-        if (data.email) localStorage.setItem('userEmail', data.email);
+        // Token handled by HttpOnly cookie
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },
@@ -108,8 +109,6 @@ export const api = {
         }
 
         const resData = await response.json();
-        localStorage.setItem('authToken', resData.access_token);
-        if (resData.user_id) localStorage.setItem('userId', resData.user_id);
         window.dispatchEvent(new Event('auth-change'));
         return resData;
     },
@@ -120,7 +119,9 @@ export const api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
         });
-        return handleResponse(response);
+        const result = await handleResponse(response);
+        window.dispatchEvent(new Event('auth-change'));
+        return result;
     },
 
     checkEmail: async (email) => {
@@ -141,17 +142,29 @@ export const api = {
         return handleResponse(response);
     },
 
-    logout: () => {
-        localStorage.removeItem('authToken');
+    getMe: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/me`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    logout: async () => {
+        try {
+            await fetch(`${BASE_URL}/api/v1/auth/logout`, { method: 'POST' });
+        } catch (e) { console.error('Logout failed', e); }
+
         localStorage.removeItem('userId');
         localStorage.removeItem('userType');
         localStorage.removeItem('firstName');
-        localStorage.removeItem('userEmail');
+        // authToken already removed from logic
         window.dispatchEvent(new Event('auth-change'));
     },
 
+    // Deprecated: IsAuthenticated check via local storage is no longer valid with HttpOnly cookies.
+    // Use AuthContext to check authentication state.
     isAuthenticated: () => {
-        return !!localStorage.getItem('authToken');
+        return false; // Force check via API/Context
     },
 
     // --- Student ---
@@ -427,11 +440,12 @@ export const api = {
             throw new Error(error.detail || 'Login failed');
         }
         const data = await response.json();
-        localStorage.setItem('authToken', data.access_token);
+        // Token handled by HttpOnly cookie
         localStorage.setItem('userType', data.user_type);
         if (data.username) {
             localStorage.setItem('userName', data.username);
         }
+        window.dispatchEvent(new Event('auth-change'));
         return data;
     },
 
@@ -486,7 +500,7 @@ export const api = {
             throw new Error(error.detail || 'Login failed');
         }
         const data = await response.json();
-        localStorage.setItem('authToken', data.access_token);
+        // Token handled by HttpOnly cookie
         localStorage.setItem('userType', data.user_type);
         if (data.username) {
             localStorage.setItem('userName', data.username);
@@ -494,6 +508,7 @@ export const api = {
         if (data.email) {
             localStorage.setItem('userEmail', data.email);
         }
+        window.dispatchEvent(new Event('auth-change'));
         return data;
     },
 

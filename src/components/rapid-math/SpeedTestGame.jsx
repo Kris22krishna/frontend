@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from "react-router-dom";
 import { SpeedTestQuestionCard } from "./SpeedTestQuestionCard";
 import { SpeedTestLeaderboard } from "./SpeedTestLeaderboard";
@@ -11,20 +12,22 @@ export function SpeedTestGame() {
     const [activeChild, setActiveChild] = useState(null);
     const [activeChildLoading, setActiveChildLoading] = useState(true);
 
-    useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        const userType = localStorage.getItem('userType');
-        const firstName = localStorage.getItem('firstName');
-        const studentName = localStorage.getItem('studentName');
+    const { isAuthenticated, user: authUser } = useAuth();
 
-        if (token) {
+    useEffect(() => {
+        if (isAuthenticated && authUser) {
+            const userType = authUser.role;
+            const firstName = authUser.first_name || authUser.name;
+            const studentName = localStorage.getItem('studentName'); // Assuming studentName logic is separate or needs migration
+
             setUser({ type: userType, firstName });
+
             if (userType === 'student' || studentName) {
                 setActiveChild({ name: studentName || firstName });
             }
         }
         setActiveChildLoading(false);
-    }, []);
+    }, [isAuthenticated, authUser]);
     const [gameState, setGameState] = useState("intro");
     const [selectedDifficulty, setSelectedDifficulty] = useState("standard");
     const [questionCount, setQuestionCount] = useState(10);
