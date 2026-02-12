@@ -72,7 +72,7 @@ export const api = {
         const data = await response.json();
         // Token handled by HttpOnly cookie
         // User details should be fetched via getMe or context
-        if (data.username) localStorage.setItem('firstName', data.username); // Optional: Keep non-sensitive data if needed
+        if (data.username) sessionStorage.setItem('firstName', data.username); // Optional: Keep non-sensitive data if needed
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },
@@ -154,9 +154,9 @@ export const api = {
             await fetch(`${BASE_URL}/api/v1/auth/logout`, { method: 'POST' });
         } catch (e) { console.error('Logout failed', e); }
 
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userType');
-        localStorage.removeItem('firstName');
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('userType');
+        sessionStorage.removeItem('firstName');
         // authToken already removed from logic
         window.dispatchEvent(new Event('auth-change'));
     },
@@ -441,9 +441,9 @@ export const api = {
         }
         const data = await response.json();
         // Token handled by HttpOnly cookie
-        localStorage.setItem('userType', data.user_type);
+        sessionStorage.setItem('userType', data.user_type);
         if (data.username) {
-            localStorage.setItem('userName', data.username);
+            sessionStorage.setItem('userName', data.username);
         }
         window.dispatchEvent(new Event('auth-change'));
         return data;
@@ -501,12 +501,12 @@ export const api = {
         }
         const data = await response.json();
         // Token handled by HttpOnly cookie
-        localStorage.setItem('userType', data.user_type);
+        sessionStorage.setItem('userType', data.user_type);
         if (data.username) {
-            localStorage.setItem('userName', data.username);
+            sessionStorage.setItem('userName', data.username);
         }
         if (data.email) {
-            localStorage.setItem('userEmail', data.email);
+            sessionStorage.setItem('userEmail', data.email);
         }
         window.dispatchEvent(new Event('auth-change'));
         return data;
@@ -583,16 +583,16 @@ export const api = {
         }
         const data = await response.json();
         // Store student token
-        localStorage.setItem('studentToken', data.access_token);
-        localStorage.setItem('studentToken', data.access_token);
-        localStorage.setItem('studentName', data.student_name);
-        localStorage.setItem('studentGrade', data.grade);
-        localStorage.setItem('studentSchool', data.school_name);
+        // Store student token
+        sessionStorage.setItem('studentToken', data.access_token);
+        sessionStorage.setItem('studentName', data.student_name);
+        sessionStorage.setItem('studentGrade', data.grade);
+        sessionStorage.setItem('studentSchool', data.school_name);
         return data;
     },
 
     startAssessment: async () => {
-        const token = localStorage.getItem('studentToken');
+        const token = sessionStorage.getItem('studentToken');
         const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/start-assessment`, {
             method: 'POST',
             headers: {
@@ -608,7 +608,7 @@ export const api = {
     },
 
     submitAssessment: async (sessionId, answers) => {
-        const token = localStorage.getItem('studentToken');
+        const token = sessionStorage.getItem('studentToken');
         const response = await fetch(`${BASE_URL}/api/v1/assessment-integration/submit-assessment`, {
             method: 'POST',
             headers: {

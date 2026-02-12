@@ -14,24 +14,24 @@ export function AuthProvider({ children }) {
             if (userData) {
                 setUser(userData);
                 setIsAuthenticated(true);
-                // Sync non-sensitive items to localStorage for legacy components that might read them directly
-                if (userData.role) localStorage.setItem('userType', userData.role);
-                if (userData.first_name) localStorage.setItem('firstName', userData.first_name);
-                if (userData.user_id) localStorage.setItem('userId', userData.user_id);
+                // Sync non-sensitive items to sessionStorage for legacy components that might read them directly
+                if (userData.role) sessionStorage.setItem('userType', userData.role);
+                if (userData.first_name) sessionStorage.setItem('firstName', userData.first_name);
+                if (userData.user_id) sessionStorage.setItem('userId', userData.user_id);
             } else {
                 setUser(null);
                 setIsAuthenticated(false);
-                localStorage.removeItem('userType');
-                localStorage.removeItem('firstName');
-                localStorage.removeItem('userId');
+                sessionStorage.removeItem('userType');
+                sessionStorage.removeItem('firstName');
+                sessionStorage.removeItem('userId');
             }
         } catch (error) {
             // If 401, it throws.
             setUser(null);
             setIsAuthenticated(false);
-            localStorage.removeItem('userType');
-            localStorage.removeItem('firstName');
-            localStorage.removeItem('userId');
+            sessionStorage.removeItem('userType');
+            sessionStorage.removeItem('firstName');
+            sessionStorage.removeItem('userId');
         } finally {
             setLoading(false);
         }
