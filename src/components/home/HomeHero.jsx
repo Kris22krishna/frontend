@@ -16,7 +16,7 @@ export function HomeHero() {
             <div className="relative z-10 max-w-4xl mx-auto text-center">
                 {/* Main Headline */}
                 <div className="flex items-center justify-center gap-3 mb-6">
-                    <h1 className="text-4xl md:text-[64px] text-[#000000] font-[Chilanka,sans-serif] leading-tight">
+                    <h1 className="text-4xl md:text-[64px] text-[#000000] font-black leading-tight">
                         Go Beyond <span className="text-blue-800 italic font-bold">100</span>
                     </h1>
                 </div>

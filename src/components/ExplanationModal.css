@@ -42,6 +42,8 @@
     flex-direction: column;
     max-height: 90vh;
     /* Limit height to viewport */
+    background: #ffffff !important;
+    color: #1e293b;
 }
 
 @keyframes popInModal {
@@ -252,7 +254,7 @@
 
 .explanation-detail p {
     font-size: 1.1rem;
-    color: #334155;
+    color: #334155 !important;
     line-height: 1.6;
     margin: 0;
 }
