@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
+import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import { api } from '../../services/api';
 import ModelRenderer from '../../models/ModelRenderer';
 import './HighPracticeSession.css';
@@ -32,6 +33,12 @@ const HighPracticeSession = () => {
     const startTimeRef = useRef(Date.now());
     const [timeTaken, setTimeTaken] = useState(0);
 
+    // Session Tracking
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
+
     // Format time helper
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -39,8 +46,27 @@ const HighPracticeSession = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const sessionCreatedForSkill = useRef(null);
+
     useEffect(() => {
         fetchQuestions();
+
+        // Create Session
+        const createSession = async () => {
+            const uid = localStorage.getItem('userId');
+            if (uid && skillId && sessionCreatedForSkill.current !== skillId) {
+                sessionCreatedForSkill.current = skillId;
+                try {
+                    const s = await api.createPracticeSession(uid, skillId);
+                    if (s?.session_id) setSessionId(s.session_id);
+                } catch (e) {
+                    console.error("Session init failed", e);
+                    sessionCreatedForSkill.current = null;
+                }
+            }
+        };
+        createSession();
+
         // Fetch skill details to get grade level for navigation
         api.getSkillById(skillId).then(skill => {
             if (skill?.grade) setGradeLevel(skill.grade);
@@ -49,6 +75,20 @@ const HighPracticeSession = () => {
         startTimeRef.current = Date.now();
         setDisplayQuestionNum(1); // Reset question number on new skill
     }, [skillId]);
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                isTabActive.current = false;
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+            } else {
+                isTabActive.current = true;
+                questionStartTime.current = Date.now();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
 
 
 
@@ -81,7 +121,8 @@ const HighPracticeSession = () => {
                 type: q.type || q.question_type || 'MCQ',
                 imageUrl: q.imageUrl || q.image_url,
                 difficulty: diff,
-                model: q.model || 'Default'
+                model: q.model || 'Default',
+                template_id: q.template_id
             }));
 
             if (append) {
@@ -100,7 +141,7 @@ const HighPracticeSession = () => {
         }
     };
 
-    const handleCheck = (selectedVal) => {
+    const handleCheck = async (selectedVal) => {
         const currentQ = questions[currentIndex];
         if (!currentQ) return;
 
@@ -120,6 +161,32 @@ const HighPracticeSession = () => {
 
         if (!history.find(h => h.question.id === currentQ.id)) {
             setHistory(prev => [...prev, attempt]);
+        }
+
+        // Record Attempt
+        const uid = localStorage.getItem('userId');
+        if (uid) {
+            let t = accumulatedTime.current;
+            if (isTabActive.current) t += Date.now() - questionStartTime.current;
+            const sec = Math.max(0, Math.round(t / 1000));
+
+            try {
+                if (sessionId) {
+                    await api.recordAttempt({
+                        user_id: parseInt(uid),
+                        session_id: sessionId,
+                        skill_id: parseInt(skillId),
+                        template_id: currentQ.template_id || null,
+                        difficulty_level: currentDifficulty,
+                        question_text: String(currentQ.text || ''),
+                        correct_answer: String(currentQ.correctAnswer || ''),
+                        student_answer: String(valToCheck || ''),
+                        is_correct: isCorrect,
+                        solution_text: String(currentQ.solution || ''),
+                        time_spent_seconds: sec
+                    });
+                }
+            } catch (e) { console.error("Record attempt error", e); }
         }
 
         if (isCorrect) {
@@ -170,6 +237,8 @@ const HighPracticeSession = () => {
         setUserAnswer('');
         setFeedback(null);
         setDisplayQuestionNum(prev => prev + 1);
+        accumulatedTime.current = 0;
+        questionStartTime.current = Date.now();
     };
 
     // Live Timer
@@ -306,7 +375,14 @@ const HighPracticeSession = () => {
                                 <PenTool size={18} />
                             </button>
 
-                            <Link to="/math" className="high-btn secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
+                            <Link
+                                to="/math"
+                                className="high-btn secondary"
+                                style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
+                                onClick={() => {
+                                    if (sessionId) api.finishSession(sessionId).catch(console.error);
+                                }}
+                            >
                                 Exit
                             </Link>
                         </div>
@@ -402,15 +478,7 @@ const HighPracticeSession = () => {
 
                     {/* Mobile Scratchpad Overlay */}
                     {showScratchpad && (
-                        <div className="high-mobile-scratchpad-overlay">
-                            <button
-                                className="high-close-scratchpad"
-                                onClick={() => setShowScratchpad(false)}
-                            >
-                                <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#ffffff' }}>✕</span>
-                            </button>
-                            <Whiteboard isOpen={true} />
-                        </div>
+                        <FullScreenScratchpad onClose={() => setShowScratchpad(false)} />
                     )}
                 </main>
 

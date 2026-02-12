@@ -71,16 +71,12 @@ export const api = {
         return data;
     },
 
-    // User Login (Standard)
-    login: async (email, password) => {
-        const formData = new URLSearchParams();
-        formData.append('username', email); // FASTAPI OAuth2 expects 'username' field even for emails
-        formData.append('password', password);
-
+    // User Login (V2)
+    login: async (identifier, password) => {
         const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier, password }),
         });
 
         if (!response.ok) {
@@ -93,6 +89,7 @@ export const api = {
         if (data.user_id) localStorage.setItem('userId', data.user_id);
         if (data.user_type) localStorage.setItem('userType', data.user_type);
         if (data.first_name) localStorage.setItem('firstName', data.first_name);
+        else if (data.name) localStorage.setItem('firstName', data.name.split(' ')[0]);
         if (data.email) localStorage.setItem('userEmail', data.email);
         window.dispatchEvent(new Event('auth-change'));
         return data;
@@ -122,6 +119,24 @@ export const api = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
+        });
+        return handleResponse(response);
+    },
+
+    checkEmail: async (email) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/check-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+        return handleResponse(response);
+    },
+
+    predictUsername: async (name, role) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/predict-username`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, role }),
         });
         return handleResponse(response);
     },
@@ -603,6 +618,13 @@ export const api = {
     },
 
     // --- Parent ---
+    getParentProfile: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/parent/profile`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     getLinkedChildren: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/parent/children`, {
             headers: getHeaders()
@@ -619,55 +641,16 @@ export const api = {
         return handleResponse(response);
     },
 
-    getParentStats: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/stats/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentProgress: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/progress/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentQuizzes: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/quizzes/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentSkills: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/skills/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
-    getParentReportSummary: async (studentId) => {
-        const response = await fetch(`${BASE_URL}/api/v1/parent/reports-summary/${studentId}`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
-
     // --- Teacher ---
     getTeacherProfile: async () => {
+
         const response = await fetch(`${BASE_URL}/api/v1/teacher/profile`, {
             headers: getHeaders()
         });
         return handleResponse(response);
     },
 
-    getTeacherDashboardStats: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/teacher/dashboard-stats`, {
-            headers: getHeaders()
-        });
-        return handleResponse(response);
-    },
+
 
     getTeacherStudents: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/teacher/students`, {
@@ -710,5 +693,54 @@ export const api = {
             headers: getHeaders()
         });
         return handleResponse(response);
+    },
+
+    // --- Practice (V2) ---
+    createPracticeSession: async (userId, skillId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/sessions`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ user_id: userId, skill_id: skillId }),
+        });
+        return handleResponse(response);
+    },
+
+    recordAttempt: async (attemptData) => {
+        console.log('🔍 recordAttempt called with:', attemptData);
+        const response = await fetch(`${BASE_URL}/api/v1/practice/attempts`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(attemptData),
+        });
+        const result = await handleResponse(response);
+        console.log('✅ recordAttempt response:', result);
+        return result;
+    },
+
+    getUserProgress: async (userId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/user-progress/${userId}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getUserSessions: async (userId, limit = 10) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/user-sessions/${userId}?limit=${limit}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+
+
+    finishSession: async (sessionId) => {
+        console.log('🏁 finishSession called for session:', sessionId);
+        const response = await fetch(`${BASE_URL}/api/v1/practice/sessions/${sessionId}/finish`, {
+            method: 'POST',
+            headers: getHeaders()
+        });
+        const result = await handleResponse(response);
+        console.log('✅ finishSession response:', result);
+        return result;
     },
 };

@@ -1,101 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import ModelRenderer from '../models/ModelRenderer';
 import Navbar from '../components/Navbar';
 import '../styles/PracticeSession.css';
+import { FullScreenScratchpad } from '../components/FullScreenScratchpad';
 
-// Simple Whiteboard Component
-const Whiteboard = ({ onClose }) => {
-    const canvasRef = useRef(null);
-    const [isDrawing, setIsDrawing] = useState(false);
-    const [context, setContext] = useState(null);
-    const [color, setColor] = useState('#000000');
-    const [brushSize, setBrushSize] = useState(3);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        // Handle resizing
-        canvas.width = canvas.parentElement.offsetWidth;
-        canvas.height = canvas.parentElement.offsetHeight;
-
-        const ctx = canvas.getContext('2d');
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = color;
-        ctx.lineWidth = brushSize;
-        setContext(ctx);
-
-        // Clean up
-        return () => { };
-    }, []);
-
-    useEffect(() => {
-        if (context) {
-            context.strokeStyle = color;
-            context.lineWidth = brushSize;
-        }
-    }, [color, brushSize, context]);
-
-    const startDrawing = ({ nativeEvent }) => {
-        const { offsetX, offsetY } = nativeEvent;
-        context.beginPath();
-        context.moveTo(offsetX, offsetY);
-        setIsDrawing(true);
-    };
-
-    const finishDrawing = () => {
-        context.closePath();
-        setIsDrawing(false);
-    };
-
-    const draw = ({ nativeEvent }) => {
-        if (!isDrawing) return;
-        const { offsetX, offsetY } = nativeEvent;
-        context.lineTo(offsetX, offsetY);
-        context.stroke();
-    };
-
-    const clearCanvas = () => {
-        const canvas = canvasRef.current;
-        context.clearRect(0, 0, canvas.width, canvas.height);
-    };
-
-    return (
-        <div className="whiteboard-container">
-            <div className="whiteboard-toolbar">
-                <div className="wb-tools">
-                    <input type="color" value={color} onChange={(e) => setColor(e.target.value)} title="Pen Color" />
-                    <input
-                        type="range"
-                        min="1"
-                        max="10"
-                        value={brushSize}
-                        onChange={(e) => setBrushSize(e.target.value)}
-                        title="Brush Size"
-                    />
-                    <button onClick={() => setColor('#ffffff')} className="tool-btn eraser" title="Eraser">🧴</button>
-                    <button onClick={clearCanvas} className="tool-btn" title="Clear All">🗑️</button>
-                </div>
-                <button onClick={onClose} className="close-wb-btn">✖ Close Whiteboard</button>
-            </div>
-            <div className="canvas-wrapper">
-                <canvas
-                    ref={canvasRef}
-                    onMouseDown={startDrawing}
-                    onMouseUp={finishDrawing}
-                    onMouseMove={draw}
-                    onMouseLeave={finishDrawing}
-                />
-            </div>
-        </div>
-    );
-};
 
 const PracticeSession = () => {
     const { templateId } = useParams();
+    const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -418,10 +332,10 @@ const PracticeSession = () => {
                             Practice Again
                         </button>
                         <button
-                            onClick={() => window.history.back()}
+                            onClick={() => navigate('/')}
                             className="nav-btn"
                         >
-                            Back to Topics
+                            Back Home
                         </button>
                     </div>
                 </div>
@@ -450,7 +364,7 @@ const PracticeSession = () => {
                     {skillMetadata && (
                         <div className="practice-header-redesigned">
                             <div className="header-top">
-                                <button onClick={() => window.history.back()} className="back-btn-simple">
+                                <button onClick={() => navigate('/')} className="back-btn-simple">
                                     ← Back
                                 </button>
                                 <div className="session-info">
@@ -486,7 +400,7 @@ const PracticeSession = () => {
                         </div>
                     )}
 
-                    <main className={`zen-main ${showWhiteboard ? 'split-view' : 'center-view'}`}>
+                    <main className="zen-main center-view">
                         {loading && (
                             <div style={{ padding: '2rem', textAlign: 'center' }}>
                                 <h3>Loading Practice Session...</h3>
@@ -597,9 +511,7 @@ const PracticeSession = () => {
                                     </div>
                                 </div>
                                 {showWhiteboard && (
-                                    <div className="zen-right-panel">
-                                        <Whiteboard onClose={() => setShowWhiteboard(false)} />
-                                    </div>
+                                    <FullScreenScratchpad onClose={() => setShowWhiteboard(false)} />
                                 )}
                             </>
                         )}
@@ -620,7 +532,7 @@ const PracticeSession = () => {
                                     </a>
                                 </div>
 
-                                <button onClick={() => window.history.back()} className="back-btn-simple">Go Back</button>
+                                <button onClick={() => navigate('/')} className="back-btn-simple">Go Back</button>
 
                                 <div style={{ marginTop: '40px', background: '#f1f5f9', padding: '15px', borderRadius: '8px', textAlign: 'left', fontSize: '0.8rem', fontFamily: 'monospace', maxWidth: '600px', width: '100%' }}>
                                     <strong>Debug Log:</strong>

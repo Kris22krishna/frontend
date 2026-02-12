@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { api } from '../../services/api';
 import SEO from '../../components/common/SEO';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import {
     Grid, Layers, Triangle, Zap, Calculator, PieChart,
     ArrowRight, Box, Compass, Cuboid
@@ -10,13 +11,13 @@ import {
 import { LatexText } from '../../components/LatexText';
 import './MiddleGradeSyllabus.css';
 
-const SkillItem = ({ skill }) => (
-    <Link to={`/middle/practice/${skill.skill_id}`} className="middle-skill-item">
+const SkillItem = ({ skill, onClick }) => (
+    <div onClick={() => onClick(skill)} className="middle-skill-item" style={{ cursor: 'pointer' }}>
         <ArrowRight size={16} className="skill-arrow" />
         <span className="skill-text">
             <LatexText text={skill.skill_name} />
         </span>
-    </Link>
+    </div>
 );
 
 SkillItem.propTypes = {
@@ -43,8 +44,28 @@ const getAccentColor = (index) => {
 
 const MiddleGradeSyllabus = () => {
     const { grade } = useParams();
+    const navigate = useNavigate();
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingSkill, setPendingSkill] = useState(null);
+
+    const handleSkillClick = (skill) => {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            setPendingSkill(skill);
+            setShowLoginModal(true);
+        } else {
+            navigate(`/middle/practice/${skill.skill_id}`);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingSkill) {
+            navigate(`/middle/practice/${pendingSkill.skill_id}`);
+            setPendingSkill(null);
+        }
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -88,6 +109,7 @@ const MiddleGradeSyllabus = () => {
             <header className="middle-header">
                 <h1>Class {grade.replace('grade', '')} Maths</h1>
                 <p>No active content found for this grade.</p>
+                <Link to="/" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600', textDecoration: 'none' }}>← Back Home</Link>
             </header>
         </div>
     );
@@ -98,8 +120,8 @@ const MiddleGradeSyllabus = () => {
 
             <div className="middle-container">
                 <div className="middle-nav-controls">
-                    <Link to="/math" className="middle-back-btn">
-                        ← Back to Grades
+                    <Link to="/" className="middle-back-btn">
+                        ← Back Home
                     </Link>
                 </div>
 
@@ -124,11 +146,11 @@ const MiddleGradeSyllabus = () => {
                                     <div className="topic-icon-wrapper">
                                         {getTopicIcon(topic)}
                                     </div>
-                                    <h3 className="category-header">{topic}</h3>
+                                    <h3 className="category-header"><LatexText text={topic} /></h3>
                                 </div>
                                 <div className="skills-list">
                                     {topicSkills.map(skill => (
-                                        <SkillItem key={skill.skill_id} skill={skill} />
+                                        <SkillItem key={skill.skill_id} skill={skill} onClick={handleSkillClick} />
                                     ))}
                                 </div>
                             </div>
@@ -136,6 +158,11 @@ const MiddleGradeSyllabus = () => {
                     })}
                 </div>
             </div>
+            <LoginPromptModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };
