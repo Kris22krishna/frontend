@@ -13,6 +13,7 @@ import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight } from 'lucide-react';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 
 // Assets
 import mascotImg from '../../assets/mascot.png';
@@ -289,7 +290,7 @@ const MiddlePracticeSession = () => {
                     <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
                         <div className="bg-[#31326F] p-8 text-white text-center">
                             <h1 className="text-3xl font-bold mb-2">Practice Complete!</h1>
-                            <p className="opacity-80">{skillName}</p>
+                            <p className="opacity-80">{capitalizeFirstLetter(skillName)}</p>
                             <div className="mt-6 flex justify-center gap-8">
                                 <div>
                                     <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Accuracy</p>

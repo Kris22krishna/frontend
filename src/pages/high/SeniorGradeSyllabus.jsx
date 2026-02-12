@@ -5,6 +5,7 @@ import { api } from '../../services/api';
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
 import { LatexText } from '../../components/LatexText';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 import './SeniorGradeSyllabus.css';
 
 const SeniorGradeSyllabus = () => {
@@ -132,7 +133,7 @@ const SeniorGradeSyllabus = () => {
                             <div className="topic-card-icon">
                                 <Layout size={32} />
                             </div>
-                            <h3><LatexText text={topic} /></h3>
+                            <h3><LatexText text={capitalizeFirstLetter(topic)} /></h3>
                             <div className="topic-meta">
                                 {skillsByTopic[topic].length} Skills
                             </div>
@@ -148,7 +149,7 @@ const SeniorGradeSyllabus = () => {
                         <div className="modal-header">
                             <h2>
                                 <Grid size={24} color="#4F46E5" />
-                                <LatexText text={selectedTopic} />
+                                <LatexText text={capitalizeFirstLetter(selectedTopic)} />
                             </h2>
                             <button
                                 className="modal-close-btn-text"
@@ -167,7 +168,7 @@ const SeniorGradeSyllabus = () => {
                                         className="skill-card-modal"
                                         onClick={() => navigate(`/high/practice/${skill.skill_id}`)}
                                     >
-                                        <h4><LatexText text={skill.skill_name} /></h4>
+                                        <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                         <div className="skill-card-footer">
                                             <span className="skill-badge">ID: {skill.skill_id}</span>
                                             <span className="start-btn">
