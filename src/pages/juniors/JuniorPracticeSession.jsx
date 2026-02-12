@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Flag, Home, RefreshCw, Star, FileText, Pencil, RotateCcw, X, Check, Eye, PenTool, Minus } from 'lucide-react';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
@@ -20,24 +20,106 @@ const JuniorPracticeSession = () => {
     const searchParams = new URLSearchParams(location.search);
     const skillId = searchParams.get('skillId');
     const skillName = searchParams.get('skillName');
+    const topic = searchParams.get('topic'); // Ensure we keep topic for navigation
+
+    // Navigation Context State
+    const [skillsList, setSkillsList] = useState(location.state?.skills || []);
+    const [skillIdx, setSkillIdx] = useState(location.state?.currentIndex ?? -1);
+
+    // Fetch skills context if missing (e.g., page reload)
+    useEffect(() => {
+        if (skillsList.length === 0 && topic && grade) {
+            const loadSkills = async () => {
+                try {
+                    const gradeNum = grade.replace(/\D/g, '');
+                    const response = await api.getSkills(gradeNum);
+
+                    if (response) {
+                        const subtopics = response
+                            .filter(s => s.topic === topic)
+                            .filter((skill, index, self) =>
+                                skill.skill_name && self.findIndex(s => s.skill_id === skill.skill_id) === index
+                            );
+
+                        setSkillsList(subtopics);
+                        const idx = subtopics.findIndex(s => String(s.skill_id) === String(skillId));
+                        setSkillIdx(idx);
+
+                        console.log("Restored Skills Context:", subtopics.length, "Current Index:", idx);
+                    }
+                } catch (err) {
+                    console.error("Failed to load skills context:", err);
+                }
+            };
+            loadSkills();
+        }
+    }, [skillsList.length, topic, grade, skillId]);
+
+    // Computed navigation targets
+    const prevSkill = skillIdx > 0 ? skillsList[skillIdx - 1] : null;
+    const nextSkill = (skillIdx !== -1 && skillIdx < skillsList.length - 1) ? skillsList[skillIdx + 1] : null;
 
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
-    const [answers, setAnswers] = useState({}); // {questionIndex: {selected: ..., correct: boolean }}
-    const [timeElapsed, setTimeElapsed] = useState(0); // Count up logic
+    const [answers, setAnswers] = useState({});
+    const [timeElapsed, setTimeElapsed] = useState(0);
     const [showResults, setShowResults] = useState(false);
     const [showMagicPad, setShowMagicPad] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+
+    // Suggestion Modal State
+    const [suggestionModal, setSuggestionModal] = useState({ isOpen: false, type: null, skill: null });
+
+    // Session & Timer State
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
+
+    // Initial Session Creation
+    const sessionCreatedForSkill = useRef(null);
+
+    // Initial Session Creation
+    useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        if (skillId && !sessionId && userId && sessionCreatedForSkill.current !== skillId) {
+            sessionCreatedForSkill.current = skillId;
+            api.createPracticeSession(userId, skillId).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => {
+                console.error("Failed to start session", err);
+                sessionCreatedForSkill.current = null;
+            });
+        }
+    }, [skillId]);
+
+    // Timer Visibility Logic
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
+
     const dragControls = useDragControls();
 
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
-    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
+    const [correctStreak, setCorrectStreak] = useState(0);
+    const [wrongStreak, setWrongStreak] = useState(0);
     const [fetchingNext, setFetchingNext] = useState(false);
+    const hasFetched = useRef(false);
 
     // Fetch questions
-    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+    const fetchQuestions = async (diff = null, isInitial = true) => {
         if (!skillId) {
             setLoading(false);
             return;
@@ -46,8 +128,13 @@ const JuniorPracticeSession = () => {
             if (isInitial) setLoading(true);
             else setFetchingNext(true);
 
-            // Fetch 10 questions for the skill
-            const response = await api.getPracticeQuestionsBySkill(skillId, 10);
+            // Fetch ONE question dynamically
+            const response = await api.getPracticeQuestionsBySkill(skillId, 1, null, diff);
+
+            // Update difficulty based on what we actually got for initial load
+            if (isInitial && response.template_metadata?.difficulty) {
+                setCurrentDifficulty(response.template_metadata.difficulty);
+            }
 
             // Handle different response structures
             let rawQuestions = [];
@@ -55,25 +142,25 @@ const JuniorPracticeSession = () => {
                 rawQuestions = response.questions; // Standard APIResponse format
             } else if (response && response.preview_samples) {
                 rawQuestions = response.preview_samples; // v2 Template Preview format
-            } else if (response && response.selection_needed) {
-                const defaultType = response.available_types[0];
-                const retryResponse = await api.getPracticeQuestionsBySkill(skillId, 10, defaultType);
-                rawQuestions = retryResponse.questions || retryResponse.preview_samples || [];
             } else if (Array.isArray(response)) {
                 rawQuestions = response; // Direct array
             }
 
             // Ensure questions are valid
-            const validQuestions = rawQuestions.map(q => ({
-                id: q.id || q.question_id || Math.random(),
-                text: q.text || q.question_text || q.question || q.question_html,
-                options: q.options || [],
-                correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
-                type: q.type || q.question_type || 'MCQ',
-                solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
-                difficulty: diff,
-                model: q.model || 'Default'
-            }));
+            const validQuestions = rawQuestions.map(q => {
+                console.log('🔍 Raw question data:', { id: q.id, template_id: q.template_id });
+                return {
+                    id: q.id || q.question_id || Math.random(),
+                    template_id: q.template_id,
+                    text: q.text || q.question_text || q.question || q.question_html,
+                    options: q.options || [],
+                    correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
+                    type: q.type || q.question_type || 'MCQ',
+                    solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
+                    difficulty: diff || (response.template_metadata?.difficulty) || 'Easy',
+                    model: q.model || 'Default'
+                };
+            });
 
             if (isInitial) {
                 setQuestions(validQuestions);
@@ -89,7 +176,11 @@ const JuniorPracticeSession = () => {
     };
 
     useEffect(() => {
-        fetchQuestions('Easy', true);
+        // Prevent double-fetch in StrictMode
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        fetchQuestions(null, true);
     }, [skillId]);
 
     // Reset modal and other per-question states ONLY when question changes
@@ -121,6 +212,35 @@ const JuniorPracticeSession = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: parseInt(skillId, 10),
+                template_id: question.template_id || null,
+                difficulty_level: currentDifficulty,
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
+                is_correct: isCorrect,
+                solution_text: String(question.solution || ''),
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
+
     const handleOptionSelect = (option) => {
         if (answers[currentIndex]) return; // Disable changing answer after submit
 
@@ -148,6 +268,8 @@ const JuniorPracticeSession = () => {
             // Wrong Answer: Show Modal Immediately
             setShowExplanationModal(true);
         }
+
+        recordQuestionAttempt(currentQuestion, option, isCorrect);
         // Correct Answer: UI updates automatically via isCorrect check in render
     };
 
@@ -173,6 +295,7 @@ const JuniorPracticeSession = () => {
         if (!isCorrect) {
             setShowExplanationModal(true);
         }
+        recordQuestionAttempt(currentQuestion, selectedOption, isCorrect);
     };
 
     const handleNext = async () => {
@@ -180,27 +303,70 @@ const JuniorPracticeSession = () => {
         const isCorrect = currentAns && currentAns.isCorrect;
 
         let nextDiff = currentDifficulty;
-        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+        let nextCorrectStreak = correctStreak;
+        let nextWrongStreak = wrongStreak;
 
-        if (nextLevelCount >= 3) {
-            if (currentDifficulty === 'Easy') {
-                nextDiff = 'Medium';
-                nextLevelCount = 0;
-            } else if (currentDifficulty === 'Medium') {
-                nextDiff = 'Hard';
-                nextLevelCount = 0;
+        if (isCorrect) {
+            nextCorrectStreak += 1;
+            nextWrongStreak = 0;
+
+            // 3 Correct in a row -> Move Up
+            if (nextCorrectStreak >= 3) {
+                if (currentDifficulty === 'Easy') {
+                    nextDiff = 'Medium';
+                    nextCorrectStreak = 0; // Reset streak on level up
+                } else if (currentDifficulty === 'Medium') {
+                    nextDiff = 'Hard';
+                    nextCorrectStreak = 0; // Reset streak on level up
+                }
+
+                // Hard -> Check for Next Skill Suggestion
+                if (currentDifficulty === 'Hard') {
+                    nextCorrectStreak = 0; // Reset for next set
+                    if (nextSkill) {
+                        setSuggestionModal({ isOpen: true, type: 'next', skill: nextSkill });
+                        setCorrectStreak(nextCorrectStreak);
+                        setWrongStreak(nextWrongStreak);
+                        return; // Modal handles navigation or resume
+                    }
+                }
+            }
+        } else {
+            nextWrongStreak += 1;
+            nextCorrectStreak = 0;
+
+            // 1 Wrong -> Drop Down immediately (if not Easy)
+            if (currentDifficulty === 'Medium' || currentDifficulty === 'Hard') {
+                nextDiff = currentDifficulty === 'Hard' ? 'Medium' : 'Easy';
+                nextWrongStreak = 0; // Reset streak after dropping
+            }
+
+            // 2 Wrong on Easy -> Check for Prev Skill / Mentor Suggestion
+            if (currentDifficulty === 'Easy' && nextWrongStreak >= 2) {
+                if (prevSkill) {
+                    setSuggestionModal({ isOpen: true, type: 'prev', skill: prevSkill });
+                } else {
+                    setSuggestionModal({ isOpen: true, type: 'mentor', skill: null });
+                }
+                setCorrectStreak(nextCorrectStreak);
+                setWrongStreak(nextWrongStreak);
+                return; // Modal handles navigation or resume
             }
         }
 
+        // Update State
         setCurrentDifficulty(nextDiff);
-        setCorrectCountAtLevel(nextLevelCount);
+        setCorrectStreak(nextCorrectStreak);
+        setWrongStreak(nextWrongStreak);
 
-        if (currentIndex < questions.length - 1) {
-            setCurrentIndex(prev => prev + 1);
-        } else {
-            await fetchQuestions(nextDiff, false);
-            setCurrentIndex(prev => prev + 1);
-        }
+        // Fetch Next Question Immediately (One at a time)
+        await fetchQuestions(nextDiff, false);
+        setCurrentIndex(prev => prev + 1);
+
+        // Reset Question Timer
+        accumulatedTime.current = 0;
+        questionStartTime.current = Date.now();
+        isTabActive.current = !document.hidden;
     };
 
     const handlePrev = () => {
@@ -220,6 +386,7 @@ const JuniorPracticeSession = () => {
     })();
 
     const handleSubmitSession = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         // Submit report
         try {
@@ -356,6 +523,89 @@ const JuniorPracticeSession = () => {
     return (
         <div className={`junior-practice-page ${showMagicPad ? 'magic-pad-active-mobile' : ''}`}>
 
+            {/* Suggestion Modal */}
+            <AnimatePresence>
+                {suggestionModal.isOpen && (
+                    <motion.div
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center relative overflow-hidden border-4 border-white"
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                        >
+                            {/* Background Decorations */}
+                            <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] -z-10 rounded-t-2xl" />
+
+                            <img src={avatarImg} alt="Mascot" className="w-24 h-24 mx-auto -mt-4 mb-4 object-contain drop-shadow-md hover:scale-110 transition-transform" />
+
+                            <h3 className="text-2xl font-black text-[#31326F] mb-2 font-display">
+                                {suggestionModal.type === 'next' && "Awesome Job! 🌟"}
+                                {suggestionModal.type === 'prev' && "Tricky stuff? 🤔"}
+                                {suggestionModal.type === 'mentor' && "Need a hint? 💡"}
+                            </h3>
+
+                            <p className="text-gray-600 mb-6 font-medium leading-relaxed">
+                                {suggestionModal.type === 'next' && `You're crushing it! Want to try "${suggestionModal.skill?.name}" next?`}
+                                {suggestionModal.type === 'prev' && `This seems tough. How about we practice "${suggestionModal.skill?.name}" first?`}
+                                {suggestionModal.type === 'mentor' && "It looks like you might need some help. Ask a grown-up or mentor to explain this topic!"}
+                            </p>
+
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={() => {
+                                        if (suggestionModal.type === 'mentor') {
+                                            setSuggestionModal({ isOpen: false, type: null, skill: null });
+                                            // Reset streak so prompt doesn't appear immediately again
+                                            setWrongStreak(0);
+                                            // Resume practice
+                                            fetchQuestions(currentDifficulty, false);
+                                            setCurrentIndex(prev => prev + 1);
+                                        } else {
+                                            // Navigate to new skill
+                                            const newSkill = suggestionModal.skill;
+                                            const newIndex = skillsList.findIndex(s => s.id === newSkill.id);
+
+                                            setSuggestionModal({ isOpen: false, type: null, skill: null });
+
+                                            navigate(
+                                                `/junior/grade/${grade}/practice?topic=${encodeURIComponent(topic || '')}&skillId=${newSkill.id}&skillName=${encodeURIComponent(newSkill.name)}`,
+                                                { state: { skills: skillsList, currentIndex: newIndex } }
+                                            );
+                                        }
+                                    }}
+                                    className="w-full py-3 bg-[#31326F] text-white rounded-xl font-bold text-lg shadow-lg hover:bg-[#25265E] hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                                >
+                                    {suggestionModal.type === 'next' ? "Yes, Let's Go! 🚀" :
+                                        suggestionModal.type === 'prev' ? "Try Previous Skill 🔙" :
+                                            "Okay, Got it! 👍"}
+                                </button>
+
+                                <button
+                                    onClick={() => {
+                                        setSuggestionModal({ isOpen: false, type: null, skill: null });
+                                        // Reset streaks to delay re-prompting
+                                        if (suggestionModal.type === 'next') setCorrectStreak(0);
+                                        if (suggestionModal.type === 'prev') setWrongStreak(0);
+                                        // Fetch next question logic
+                                        fetchQuestions(currentDifficulty, false);
+                                        setCurrentIndex(prev => prev + 1);
+                                    }}
+                                    className="w-full py-3 bg-white text-gray-500 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors"
+                                >
+                                    {suggestionModal.type === 'next' ? "Stay Here" : "Keep Trying"}
+                                </button>
+                            </div>
+
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Explanation Modal */}
             <ExplanationModal
                 isOpen={showExplanationModal}
@@ -380,7 +630,10 @@ const JuniorPracticeSession = () => {
                 </div>
 
                 <div className="exit-practice-container">
-                    <StickerExit onClick={() => navigate(-1)} />
+                    <StickerExit onClick={async () => {
+                        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                        navigate(-1);
+                    }} />
                 </div>
             </header>
 
