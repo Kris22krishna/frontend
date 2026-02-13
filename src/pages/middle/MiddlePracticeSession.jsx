@@ -5,13 +5,14 @@ import ModelRenderer from '../../models/ModelRenderer';
 import './MiddlePracticeSession.css';
 
 // Components
+import Navbar from '../../components/Navbar';
 import { QuestionCard } from '../../components/QuestionCard';
 import { BottomBar } from '../../components/BottomBar';
 import { SunTimer } from '../../components/SunTimer';
 import { InlineScratchpad } from '../../components/InlineScratchpad';
 import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, CheckCircle2, ChevronRight } from 'lucide-react';
+import { X, CheckCircle2, ChevronRight, Target, Clock, BookOpen, ArrowLeft } from 'lucide-react';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
 
@@ -154,7 +155,7 @@ const MiddlePracticeSession = () => {
 
         try {
             // Pass difficulty (if any) to API
-            let response = await api.getPracticeQuestionsBySkill(skillId, 3, null, diff);
+            let response = await api.getPracticeQuestionsBySkill(skillId, 10, null, diff);
 
             // Update local state if backend provided metadata
             if (response.template_metadata?.difficulty) {
@@ -267,6 +268,8 @@ const MiddlePracticeSession = () => {
         }
     };
 
+    const QUESTIONS_PER_SESSION = 10;
+
     const handleAnswer = (answer) => {
         const currentQ = questions[currentIndex];
         setUserAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
@@ -309,18 +312,19 @@ const MiddlePracticeSession = () => {
     const proceedToNext = () => {
         setShowExplanation(false);
         setEncouragement(null);
-        if (currentIndex < questions.length - 1) {
-            // This shouldn't really happen with 1-by-1 fetching but for safety
-            setCurrentIndex(prev => prev + 1);
 
-            // Reset timer
-            accumulatedTime.current = 0;
-            questionStartTime.current = Date.now();
-            isTabActive.current = !document.hidden;
-        } else {
+        // Stop if we've reached the session limit or end of questions
+        if (stats.total >= QUESTIONS_PER_SESSION || currentIndex >= questions.length - 1) {
             if (sessionId) api.finishSession(sessionId).catch(e => console.error("Error finishing session", e));
             setCompleted(true);
+            return;
         }
+
+        setCurrentIndex(prev => prev + 1);
+        // Reset timer
+        accumulatedTime.current = 0;
+        questionStartTime.current = Date.now();
+        isTabActive.current = !document.hidden;
     };
 
     const handlePrev = () => {
@@ -358,56 +362,73 @@ const MiddlePracticeSession = () => {
     }
 
     if (completed) {
+        console.log('[MiddleReport] Completed state reached. Stats:', stats);
         const accuracy = Math.round((stats.correct / (stats.total || 1)) * 100);
-        return (
-            <div className="middle-practice-page overflow-y-auto">
-                <div className="report-container p-6 max-w-4xl mx-auto">
-                    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-                        <div className="bg-[#31326F] p-8 text-white text-center">
-                            <h1 className="text-3xl font-bold mb-2">Practice Complete!</h1>
-                            <p className="opacity-80">{capitalizeFirstLetter(skillName)}</p>
-                            <div className="mt-6 flex justify-center gap-8">
-                                <div>
-                                    <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Accuracy</p>
-                                    <p className="text-3xl font-bold">{accuracy}%</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Time</p>
-                                    <p className="text-3xl font-bold">{formatTime(elapsedTime)}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-8">
-                            <div className="grid grid-cols-3 gap-4 mb-8">
-                                <div className="bg-green-50 p-4 rounded-xl text-center">
-                                    <p className="text-xs text-green-600 font-bold uppercase mb-1">Correct</p>
-                                    <p className="text-2xl font-bold text-green-700">{stats.correct}</p>
-                                </div>
-                                <div className="bg-red-50 p-4 rounded-xl text-center">
-                                    <p className="text-xs text-red-600 font-bold uppercase mb-1">Wrong</p>
-                                    <p className="text-2xl font-bold text-red-700">{stats.wrong}</p>
-                                </div>
-                                <div className="bg-blue-50 p-4 rounded-xl text-center">
-                                    <p className="text-xs text-blue-600 font-bold uppercase mb-1">Total</p>
-                                    <p className="text-2xl font-bold text-blue-700">{stats.total}</p>
+        try {
+            return (
+                <div className="middle-practice-page results-view overflow-y-auto bg-gray-50 min-h-screen">
+                    <Navbar />
+                    <div className="report-container p-6 lg:p-8 max-w-4xl mx-auto">
+                        <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden border border-gray-100 mb-8">
+                            <div className="results-header bg-[#31326F] p-8 lg:p-12 text-white text-center relative overflow-hidden">
+                                <h1 className="text-4xl font-black mb-2 tracking-tight">Practice Complete!</h1>
+                                <p className="text-xl opacity-80 font-medium">{capitalizeFirstLetter(skillName)}</p>
+                                <div className="mt-10 flex flex-wrap justify-center gap-8">
+                                    <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10">
+                                        <p className="text-sm opacity-60 uppercase font-black tracking-widest mb-1">Accuracy</p>
+                                        <p className="text-4xl font-black">{accuracy}%</p>
+                                    </div>
+                                    <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10">
+                                        <p className="text-sm opacity-60 uppercase font-black tracking-widest mb-1">Time</p>
+                                        <p className="text-4xl font-black">{formatTime(elapsedTime)}</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="flex justify-center gap-4">
-                                <button
-                                    onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
-                                    className="px-8 py-3 bg-[#31326F] text-white rounded-xl font-bold hover:bg-[#25265E] transition-all"
-                                >
-                                    Back to Topics
-                                </button>
-                                <button onClick={() => window.location.reload()} className="px-8 py-3 border-2 border-[#31326F] text-[#31326F] rounded-xl font-bold hover:bg-gray-50 transition-all">Try Again</button>
+                            <div className="p-8">
+                                <div className="grid grid-cols-3 gap-4 mb-8">
+                                    <div className="bg-green-50 p-6 rounded-2xl text-center border border-green-100">
+                                        <p className="text-xs text-green-600 font-black uppercase mb-1">Correct</p>
+                                        <p className="text-3xl font-black text-green-700">{stats.correct}</p>
+                                    </div>
+                                    <div className="bg-red-50 p-6 rounded-2xl text-center border border-red-100">
+                                        <p className="text-xs text-red-600 font-black uppercase mb-1">Wrong</p>
+                                        <p className="text-3xl font-black text-red-700">{stats.wrong}</p>
+                                    </div>
+                                    <div className="bg-blue-50 p-6 rounded-2xl text-center border border-blue-100">
+                                        <p className="text-xs text-blue-600 font-black uppercase mb-1">Total</p>
+                                        <p className="text-3xl font-black text-blue-700">{stats.total}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center gap-4">
+                                    <button
+                                        onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
+                                        className="px-10 py-4 bg-[#31326F] text-white rounded-2xl font-black text-lg hover:bg-[#25265E] transition-all shadow-lg"
+                                    >
+                                        Back to Topics
+                                    </button>
+                                    <button onClick={() => window.location.reload()} className="px-10 py-4 border-2 border-[#31326F] text-[#31326F] rounded-2xl font-black text-lg hover:bg-gray-50 transition-all">
+                                        Try Again
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        } catch (err) {
+            console.error('[MiddleReport] Render failed:', err);
+            return (
+                <div className="p-12 text-center">
+                    <h2 className="text-2xl font-bold text-red-600">Report Error</h2>
+                    <p className="text-gray-600 mb-4">{err.message}</p>
+                    <button onClick={() => window.location.reload()} className="px-6 py-2 bg-slate-800 text-white rounded-lg">
+                        Retry
+                    </button>
+                </div>
+            );
+        }
     }
 
     const currentQ = questions[currentIndex];
@@ -559,13 +580,13 @@ const MiddlePracticeSession = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-[32px] lg:rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px] max-h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-visible"
+                            className="bg-white dark:bg-slate-900 rounded-[32px] lg:rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px] max-h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-visible border-4 border-white dark:border-slate-800"
                         >
                             {/* Left Side: Mascot Area */}
                             <div className="flex-[4] bg-[#E0FBEF] flex flex-col items-center justify-center p-6 lg:p-8 relative min-h-[200px] lg:min-h-0 shrink-0">
                                 <img src={mascotImg} alt="Mascot" className="w-32 h-32 lg:w-64 lg:h-64 object-contain drop-shadow-xl" />
-                                <div className="mt-4 lg:mt-8 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#4FB7B3]/30">
-                                    <span className="text-[#31326F] font-bold">Keep going!</span>
+                                <div className="mt-4 lg:mt-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-6 py-2 rounded-full border border-[#4FB7B3]/30">
+                                    <span className="text-[#31326F] dark:text-[#A8FBD3] font-bold">Keep going!</span>
                                 </div>
                             </div>
 
@@ -577,14 +598,14 @@ const MiddlePracticeSession = () => {
                                             <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                                                 <X className="w-6 h-6 text-red-500" />
                                             </div>
-                                            <h3 className="text-3xl font-black text-[#31326F]">Not quite right</h3>
+                                            <h3 className="text-3xl font-black text-[#31326F] dark:text-white">Not quite right</h3>
                                         </>
                                     ) : (
                                         <>
                                             <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                                                 <CheckCircle2 className="w-6 h-6 text-green-500" />
                                             </div>
-                                            <h3 className="text-3xl font-black text-[#31326F]">Excellent!</h3>
+                                            <h3 className="text-3xl font-black text-[#31326F] dark:text-white">Excellent!</h3>
                                         </>
                                     )}
                                 </div>
@@ -595,7 +616,7 @@ const MiddlePracticeSession = () => {
                                         <div className="w-6 h-6 rounded-full border-2 border-[#4FB7B3] flex items-center justify-center shadow-sm">
                                             <div className="w-3 h-3 bg-[#4FB7B3] rounded-full" />
                                         </div>
-                                        <span className="text-xl font-bold text-[#31326F]">
+                                        <span className="text-xl font-bold text-[#31326F] dark:text-white">
                                             <LatexText text={currentQ.correctAnswer} />
                                         </span>
                                     </div>
@@ -604,7 +625,7 @@ const MiddlePracticeSession = () => {
 
                                 <div className="flex-1">
                                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
-                                    <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin">
+                                    <div className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin">
                                         {/* Render explanation text with LaTeX support */}
                                         <LatexText text={currentQ.explanation} />
                                     </div>
