@@ -5,6 +5,7 @@ import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
 import { LatexText } from '../../components/LatexText';
 import { api } from '../../services/api';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 import './JuniorGradeSyllabus.css';
 
 // Topic icons with pastel colors for children
@@ -127,14 +128,14 @@ const JuniorGradeSyllabus = () => {
                         <Sparkles className="sparkle-icon" />
                         <span>{gradeLabels[grade]} Math</span>
                     </div>
-                    <p>Pick a topic to start learning and having fun!</p>
+                    <p>Pick a skill to start learning and having fun!</p>
                 </div>
 
                 {/* Topics Grid */}
                 {loading ? (
                     <div className="loading-container">
                         <div className="loading-spinner"></div>
-                        <p>Loading fun topics...</p>
+                        <p>Loading fun skills...</p>
                     </div>
                 ) : (
                     <div className="topics-grid">
@@ -163,7 +164,7 @@ const JuniorGradeSyllabus = () => {
 
                                     {/* Topic Name */}
                                     <h2 className="topic-name">
-                                        <LatexText text={topic.name} />
+                                        <LatexText text={capitalizeFirstLetter(topic.name)} />
                                     </h2>
 
                                     {/* Progress Bar */}
@@ -174,7 +175,7 @@ const JuniorGradeSyllabus = () => {
 
                                     {/* Skills count */}
                                     <div className="skills-count">
-                                        {topic.skills.length} sub-topics
+                                        {topic.skills.length} Skills
                                     </div>
 
                                     {/* Hover CTA */}

@@ -13,7 +13,7 @@ import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight } from 'lucide-react';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
-import LatexContent from '../../components/LatexContent';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 
 // Assets
 import mascotImg from '../../assets/mascot.png';
@@ -88,6 +88,13 @@ const MiddlePracticeSession = () => {
                 console.error("Failed to start session", err);
                 sessionCreatedForSkill.current = null;
             });
+        }
+
+        // Fetch skill details to get grade level for navigation
+        if (skillId) {
+            api.getSkillById(skillId).then(skill => {
+                if (skill?.grade) setGrade(skill.grade);
+            }).catch(err => console.error("Failed to fetch skill info", err));
         }
     }, [skillId]);
 
@@ -358,7 +365,7 @@ const MiddlePracticeSession = () => {
                     <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
                         <div className="bg-[#31326F] p-8 text-white text-center">
                             <h1 className="text-3xl font-bold mb-2">Practice Complete!</h1>
-                            <p className="opacity-80">{skillName}</p>
+                            <p className="opacity-80">{capitalizeFirstLetter(skillName)}</p>
                             <div className="mt-6 flex justify-center gap-8">
                                 <div>
                                     <p className="text-sm opacity-60 uppercase font-bold tracking-wider">Accuracy</p>
@@ -372,7 +379,7 @@ const MiddlePracticeSession = () => {
                         </div>
 
                         <div className="p-8">
-                            <div className="grid grid-cols-4 gap-4 mb-8">
+                            <div className="grid grid-cols-3 gap-4 mb-8">
                                 <div className="bg-green-50 p-4 rounded-xl text-center">
                                     <p className="text-xs text-green-600 font-bold uppercase mb-1">Correct</p>
                                     <p className="text-2xl font-bold text-green-700">{stats.correct}</p>
@@ -381,10 +388,6 @@ const MiddlePracticeSession = () => {
                                     <p className="text-xs text-red-600 font-bold uppercase mb-1">Wrong</p>
                                     <p className="text-2xl font-bold text-red-700">{stats.wrong}</p>
                                 </div>
-                                <div className="bg-yellow-50 p-4 rounded-xl text-center">
-                                    <p className="text-xs text-yellow-600 font-bold uppercase mb-1">Skipped</p>
-                                    <p className="text-2xl font-bold text-yellow-700">{stats.skipped}</p>
-                                </div>
                                 <div className="bg-blue-50 p-4 rounded-xl text-center">
                                     <p className="text-xs text-blue-600 font-bold uppercase mb-1">Total</p>
                                     <p className="text-2xl font-bold text-blue-700">{stats.total}</p>
@@ -392,7 +395,12 @@ const MiddlePracticeSession = () => {
                             </div>
 
                             <div className="flex justify-center gap-4">
-                                <Link to="/math" className="px-8 py-3 bg-[#31326F] text-white rounded-xl font-bold hover:bg-[#25265E] transition-all">Back to Topics</Link>
+                                <button
+                                    onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
+                                    className="px-8 py-3 bg-[#31326F] text-white rounded-xl font-bold hover:bg-[#25265E] transition-all"
+                                >
+                                    Back to Topics
+                                </button>
                                 <button onClick={() => window.location.reload()} className="px-8 py-3 border-2 border-[#31326F] text-[#31326F] rounded-xl font-bold hover:bg-gray-50 transition-all">Try Again</button>
                             </div>
                         </div>

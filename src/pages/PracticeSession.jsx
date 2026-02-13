@@ -5,6 +5,7 @@ import ModelRenderer from '../models/ModelRenderer';
 import Navbar from '../components/Navbar';
 import '../styles/PracticeSession.css';
 import { FullScreenScratchpad } from '../components/FullScreenScratchpad';
+import { capitalizeFirstLetter } from '../lib/stringUtils';
 
 
 const PracticeSession = () => {
@@ -379,9 +380,9 @@ const PracticeSession = () => {
 
                             <div className="header-main">
                                 <div className="title-section">
-                                    <h1>{skillMetadata ? skillMetadata.skill_name : 'Practice Session'}</h1>
+                                    <h1>{skillMetadata ? capitalizeFirstLetter(skillMetadata.skill_name) : 'Practice Session'}</h1>
                                     <p className="subtitle">
-                                        {skillMetadata ? `Topic: ${skillMetadata.topic || skillMetadata.category}` : 'Master your skills'}
+                                        {skillMetadata ? `Topic: ${capitalizeFirstLetter(skillMetadata.topic || skillMetadata.category)}` : 'Master your skills'}
                                     </p>
                                 </div>
                                 <div className="header-actions">
