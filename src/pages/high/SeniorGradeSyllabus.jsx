@@ -42,7 +42,7 @@ const SeniorGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 8 && !topicName.includes("exponents")) return acc;
+        if (gradeNum === 8 && topicName !== "exponents and power") return acc;
 
         const topic = skill.topic || 'General';
         if (!acc[topic]) acc[topic] = [];
@@ -166,7 +166,7 @@ const SeniorGradeSyllabus = () => {
                                     <div
                                         key={skill.skill_id}
                                         className="skill-card-modal"
-                                        onClick={() => navigate(`/high/practice/${skill.skill_id}`)}
+                                        onClick={() => navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } })}
                                     >
                                         <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                         <div className="skill-card-footer">
