@@ -376,7 +376,7 @@ const HighPracticeSession = () => {
                             </button>
 
                             <Link
-                                to="/math"
+                                to={gradeLevel ? `/senior/grade/${gradeLevel}` : '/math'}
                                 className="high-btn secondary"
                                 style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                                 onClick={() => {
