@@ -1,17 +1,21 @@
 import React, { useEffect, useState, memo } from "react";
+import { useAuth } from '../../contexts/AuthContext';
 import { Trophy, AlertTriangle } from "lucide-react";
+
 export const SpeedTestLeaderboard = memo(function SpeedTestLeaderboard({
     limitCount = 10,
     lastUpdated = 0
 }) {
+    const { user: authUser } = useAuth();
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-            setUser({ id: localStorage.getItem('userId') });
+        if (authUser) {
+            setUser({ id: authUser.user_id });
+        } else {
+            setUser(null);
         }
-    }, []);
+    }, [authUser]);
 
     const [topScores, setTopScores] = useState([]);
     const [userRank, setUserRank] = useState(null);

@@ -11,9 +11,9 @@ const AssessmentStudentDashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const name = localStorage.getItem('studentName');
-        const grade = localStorage.getItem('studentGrade');
-        const school = localStorage.getItem('studentSchool');
+        const name = sessionStorage.getItem('studentName');
+        const grade = sessionStorage.getItem('studentGrade');
+        const school = sessionStorage.getItem('studentSchool');
 
         if (name) {
             setStudentName(name);
@@ -43,8 +43,8 @@ const AssessmentStudentDashboard = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('studentToken');
-        localStorage.removeItem('studentName');
+        sessionStorage.removeItem('studentToken');
+        sessionStorage.removeItem('studentName');
         navigate('/assessment-access');
     };
 
