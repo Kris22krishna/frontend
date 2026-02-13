@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../../services/api';
 import {
@@ -73,6 +74,7 @@ const AdminLayout = () => {
 
     const handleLogout = () => {
         api.logout();
+        toast.success("Logged out successfully! Hope to see you again soon 👋");
         navigate('/');
     };
 

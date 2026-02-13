@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../../services/api';
 import AddChildForm from './AddChildForm';
@@ -170,7 +171,14 @@ export default function ParentLayout() {
                                 </div>
                             )}
                         </div>
-                        <button onClick={() => api.logout() || navigate('/login')} className="w-full flex items-center gap-2 text-sm text-slate-500 hover:text-red-600 transition-colors px-2">
+                        <button
+                            onClick={() => {
+                                api.logout();
+                                toast.success("Logged out successfully! Hope to see you again soon 👋");
+                                navigate('/');
+                            }}
+                            className="w-full flex items-center gap-2 text-sm text-slate-500 hover:text-red-600 transition-colors px-2"
+                        >
                             <LogOut className="h-4 w-4" />
                             Sign Out
                         </button>

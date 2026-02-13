@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { api } from '../../services/api';
@@ -45,6 +46,7 @@ const getAccentColor = (index) => {
 
 const MiddleGradeSyllabus = () => {
     const { grade } = useParams();
+    const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -52,8 +54,7 @@ const MiddleGradeSyllabus = () => {
     const [pendingSkill, setPendingSkill] = useState(null);
 
     const handleSkillClick = (skill) => {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
+        if (!isAuthenticated) {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {

@@ -267,6 +267,9 @@ const JuniorPracticeSession = () => {
         if (!isCorrect) {
             // Wrong Answer: Show Modal Immediately
             setShowExplanationModal(true);
+        } else {
+            // Correct Answer: Show Modal Immediately
+            setShowExplanationModal(true);
         }
 
         recordQuestionAttempt(currentQuestion, option, isCorrect);
@@ -293,6 +296,8 @@ const JuniorPracticeSession = () => {
         }));
 
         if (!isCorrect) {
+            setShowExplanationModal(true);
+        } else {
             setShowExplanationModal(true);
         }
         recordQuestionAttempt(currentQuestion, selectedOption, isCorrect);
@@ -614,10 +619,12 @@ const JuniorPracticeSession = () => {
                 explanation={currentQuestion?.solution}
                 onClose={() => setShowExplanationModal(false)}
                 onNext={() => {
-                    setShowExplanationModal(false);
-                    // If wrong, they might want to just close and see board, if correct they click next.
-                    // The user requested: "if answer is wrong explanation pop up with got it button. a next button should be on question page"
-                    // So this button just closes modal.
+                    if (isCorrect) {
+                        setShowExplanationModal(false);
+                        handleNext();
+                    } else {
+                        setShowExplanationModal(false);
+                    }
                 }}
             />
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { api } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * ProtectedRoute component that checks authentication and user type
@@ -11,13 +11,21 @@ import { api } from '../services/api';
  */
 const ProtectedRoute = ({ children, allowedRoles = [], redirectTo = '/admin-login' }) => {
     const location = useLocation();
-    const isAuthenticated = api.isAuthenticated();
-    const userType = localStorage.getItem('userType');
+    const { isAuthenticated, loading, user } = useAuth();
+
+    if (loading) {
+        // You might want a better loading component here
+        return <div className="flex items-center justify-center min-h-screen">
+            <div className="text-lg">Loading...</div>
+        </div>;
+    }
 
     // Not authenticated - redirect to login
     if (!isAuthenticated) {
         return <Navigate to={redirectTo} state={{ from: location }} replace />;
     }
+
+    const userType = user?.role;
 
     // Check role if specified
     if (allowedRoles.length > 0 && !allowedRoles.includes(userType)) {

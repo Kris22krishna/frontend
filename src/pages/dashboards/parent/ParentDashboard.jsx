@@ -3,8 +3,10 @@ import { useOutletContext } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, Clock, Target, Award } from "lucide-react";
 import { api } from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ParentDashboard() {
+    const { user } = useAuth();
     const context = useOutletContext();
     const selectedChild = context?.selectedChild;
     const [recentSessions, setRecentSessions] = useState([]);
@@ -63,7 +65,7 @@ export default function ParentDashboard() {
                             <span className="text-sm font-medium opacity-90">Dashboard</span>
                         </div>
                         <h1 className="text-3xl md:text-4xl font-bold mb-3">
-                            Welcome, {localStorage.getItem('firstName') || 'Parent'}!
+                            Welcome, {user?.first_name || 'Parent'}!
                         </h1>
                         <p className="text-lg opacity-90 mb-6 font-medium">
                             Here is a snapshot of {selectedChild.name}'s learning journey!

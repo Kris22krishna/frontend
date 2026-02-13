@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Home, Check, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
@@ -21,6 +22,7 @@ const subtopicColors = [
 
 const JuniorSubtopics = () => {
     const { grade, topic } = useParams();
+    const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const [subtopics, setSubtopics] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -29,13 +31,8 @@ const JuniorSubtopics = () => {
     const [pendingSubtopic, setPendingSubtopic] = useState(null);
     const decodedTopic = decodeURIComponent(topic);
 
-    const handleSubtopicClick = (subtopic) => {
-        const token = localStorage.getItem('authToken');
-
-        // Find index
-        const index = subtopics.findIndex(s => s.id === subtopic.id);
-
-        if (!token) {
+    const handleSubtopicClick = (subtopic, index) => {
+        if (!isAuthenticated) {
             setPendingSubtopic(subtopic);
             setShowLoginModal(true);
         } else {
@@ -146,7 +143,7 @@ const JuniorSubtopics = () => {
                                         }}
                                         onMouseEnter={() => setHoveredSubtopic(subtopic.id)}
                                         onMouseLeave={() => setHoveredSubtopic(null)}
-                                        onClick={() => handleSubtopicClick(subtopic)}
+                                        onClick={() => handleSubtopicClick(subtopic, index)}
                                     >
                                         {/* Glow effect */}
                                         <div className="pill-glow"></div>

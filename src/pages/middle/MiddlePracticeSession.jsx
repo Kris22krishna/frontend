@@ -75,20 +75,27 @@ const MiddlePracticeSession = () => {
         return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, []);
 
-    const startTimeRef = useRef(Date.now());
-    const hasFetched = useRef(false);
-
+    // Live Timer (starts on mount, continues through session)
     useEffect(() => {
-        if (hasFetched.current) return;
-        hasFetched.current = true;
-
-        fetchQuestions(null, true);
-        startTimeRef.current = Date.now();
-
         const timer = setInterval(() => {
             setElapsedTime((prev) => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
+    }, []);
+
+    // Fetch Questions when skillId changes
+    useEffect(() => {
+        // Reset state for new skill
+        setQuestions([]);
+        setLoading(true);
+        setCurrentIndex(0);
+        setElapsedTime(0); // Reset timer for new skill practice
+        setStats({ correct: 0, wrong: 0, skipped: 0, total: 0, streak: 0 });
+        setCompleted(false);
+        setUserAnswers({});
+        setHistory([]);
+
+        fetchQuestions(null, true);
     }, [skillId]);
 
     // Rerender MathJax when question changes (Fix for options rendering)
@@ -124,6 +131,8 @@ const MiddlePracticeSession = () => {
             else if (response && response.preview_samples) rawQuestions = response.preview_samples;
             else if (response) rawQuestions = [response];
 
+            console.log('[MiddlePractice] API Response rawQuestions:', rawQuestions);
+
             if (!Array.isArray(rawQuestions)) rawQuestions = [];
 
             const normalized = rawQuestions.map((q, idx) => {
@@ -140,6 +149,23 @@ const MiddlePracticeSession = () => {
                     opts = opts.split(',').map(o => o.trim()).filter(Boolean);
                 }
                 if (!Array.isArray(opts)) opts = [];
+
+                // Fix: Replace className= with class= in HTML strings from backend
+                // Normalized question text extraction with robust fallbacks for Grade 7+ content
+                let qText = q.question_text || q.question || q.question_html || q.text || q.prompt || q.content || q.body || q.stimulus || q.raw_text || (q.data && q.data.question) || (q.props && q.props.question) || (q.data && q.data.stimulus);
+
+                // If text is still missing but we have a template ID, it might be a client-side generation case
+                if (!qText && q.template_id) {
+                    console.warn(`[Question ${idx + 1}] Missing text for template ${q.template_id}. Full object:`, q);
+                    qText = "Question Text Missing"; // Fallback
+                } else if (!qText) {
+                    console.warn(`[Question ${idx + 1}] Completely missing text. Full object:`, q);
+                    qText = "Question Text Missing";
+                }
+
+                if (typeof qText === 'string') {
+                    qText = qText.replace(/className=/g, 'class=');
+                }
 
                 return {
                     id: q.id || q.question_id || idx + 1,
@@ -228,7 +254,11 @@ const MiddlePracticeSession = () => {
             recordQuestionAttempt(currentQ, answer, isCorrect);
         }
 
-        if (!isCorrect) {
+        if (isCorrect) {
+            // Show "Excellent!" modal for correct answers too
+            setShowExplanation(true);
+        } else {
+            // Show "Not quite right" modal for wrong answers
             setShowExplanation(true);
         }
     };
@@ -530,7 +560,8 @@ const MiddlePracticeSession = () => {
                                         className="flex items-center gap-2 px-10 py-4 bg-[#31326F] text-white rounded-2xl font-black text-lg shadow-lg hover:shadow-xl hover:bg-[#25265E] transition-all"
                                     >
                                         Got it
-                                        <ChevronRight size={24} />
+                                        {/* Using CheckCircle2 to indicate completion/acknowledgment instead of navigation arrow */}
+                                        <CheckCircle2 size={24} />
                                     </button>
                                 </div>
                             </div>
