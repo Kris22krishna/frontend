@@ -9,9 +9,14 @@ const fetch = (url, options = {}) => {
 };
 
 const getHeaders = () => {
-    return {
+    const headers = {
         'Content-Type': 'application/json',
     };
+    const token = sessionStorage.getItem('access_token');
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    return headers;
 };
 
 // Helper to handle API response wrapper
@@ -73,6 +78,7 @@ export const api = {
         // Token handled by HttpOnly cookie
         // User details should be fetched via getMe or context
         if (data.username) sessionStorage.setItem('firstName', data.username); // Optional: Keep non-sensitive data if needed
+        if (data.access_token) sessionStorage.setItem('access_token', data.access_token);
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },
@@ -91,7 +97,8 @@ export const api = {
         }
 
         const data = await response.json();
-        // Token handled by HttpOnly cookie
+        // Token handled by HttpOnly cookie, but also saving for fallback
+        if (data.access_token) sessionStorage.setItem('access_token', data.access_token);
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },
@@ -109,6 +116,7 @@ export const api = {
         }
 
         const resData = await response.json();
+        if (resData.access_token) sessionStorage.setItem('access_token', resData.access_token);
         window.dispatchEvent(new Event('auth-change'));
         return resData;
     },
@@ -120,6 +128,7 @@ export const api = {
             body: JSON.stringify(data),
         });
         const result = await handleResponse(response);
+        if (result && result.access_token) sessionStorage.setItem('access_token', result.access_token);
         window.dispatchEvent(new Event('auth-change'));
         return result;
     },
@@ -157,6 +166,7 @@ export const api = {
         sessionStorage.removeItem('userId');
         sessionStorage.removeItem('userType');
         sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('access_token');
         // authToken already removed from logic
         window.dispatchEvent(new Event('auth-change'));
     },
@@ -445,6 +455,7 @@ export const api = {
         if (data.username) {
             sessionStorage.setItem('userName', data.username);
         }
+        if (data.access_token) sessionStorage.setItem('access_token', data.access_token);
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },
@@ -508,6 +519,7 @@ export const api = {
         if (data.email) {
             sessionStorage.setItem('userEmail', data.email);
         }
+        if (data.access_token) sessionStorage.setItem('access_token', data.access_token);
         window.dispatchEvent(new Event('auth-change'));
         return data;
     },

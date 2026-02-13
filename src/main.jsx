@@ -7,13 +7,11 @@ import App from './App.jsx';
 import 'katex/dist/katex.min.css';
 import './index.css';
 
-import { Toaster } from 'react-hot-toast';
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HelmetProvider>
-      <App />
-      <Toaster />
       <AuthProvider>
         <Toaster
           position="top-center"
