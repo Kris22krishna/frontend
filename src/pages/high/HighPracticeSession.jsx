@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
@@ -11,6 +11,7 @@ import Navbar from '../../components/Navbar';
 
 const HighPracticeSession = () => {
     const { skillId } = useParams();
+    const location = useLocation();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showScratchpad, setShowScratchpad] = useState(false); // Mobile state
@@ -27,7 +28,7 @@ const HighPracticeSession = () => {
     const [displayQuestionNum, setDisplayQuestionNum] = useState(1);
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
     const [fetchingNext, setFetchingNext] = useState(false);
-    const [gradeLevel, setGradeLevel] = useState(null);
+    const [gradeLevel, setGradeLevel] = useState(location.state?.grade || null);
 
     // Time Tracking
     const startTimeRef = useRef(Date.now());
@@ -376,7 +377,7 @@ const HighPracticeSession = () => {
                             </button>
 
                             <Link
-                                to="/math"
+                                to={gradeLevel ? `/senior/grade/${gradeLevel}` : '/math'}
                                 className="high-btn secondary"
                                 style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
                                 onClick={() => {

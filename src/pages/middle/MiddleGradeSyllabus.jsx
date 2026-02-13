@@ -56,13 +56,13 @@ const MiddleGradeSyllabus = () => {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
-            navigate(`/middle/practice/${skill.skill_id}`);
+            navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
 
     const handleLoginSuccess = () => {
         if (pendingSkill) {
-            navigate(`/middle/practice/${pendingSkill.skill_id}`);
+            navigate(`/middle/practice/${pendingSkill.skill_id}`, { state: { grade: grade } });
             setPendingSkill(null);
         }
     };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../services/api';
 import ModelRenderer from '../../models/ModelRenderer';
 import './MiddlePracticeSession.css';
@@ -18,9 +18,39 @@ import LatexContent from '../../components/LatexContent';
 // Assets
 import mascotImg from '../../assets/mascot.png';
 
+const encouragingPhrases = [
+    "Great job!", "Way to go!", "You're doing amazing!", "Keep it up!",
+    "Fantastic!", "Brilliant!", "Spot on!", "Excellent work!",
+    "You're a star!", "Correct!",
+
+    // New ones
+    "Nailed it!",
+    "That’s absolutely right!",
+    "Boom! You got it!",
+    "Superb work!",
+    "You’re on fire!",
+    "Impressive!",
+    "That was smooth!",
+    "Sharp thinking!",
+    "You crushed it!",
+    "Outstanding!",
+    "Perfect answer!",
+    "You’re getting really good at this!",
+    "Yes! That’s the one!",
+    "Top-tier answer!",
+    "Flawless!",
+    "You’ve got this!",
+    "Keep shining!",
+    "That’s some solid reasoning!",
+    "Smart move!",
+    "You’re leveling up!"
+];
+
+
 const MiddlePracticeSession = () => {
     const { skillId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -35,7 +65,8 @@ const MiddlePracticeSession = () => {
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
     const [fetchingNext, setFetchingNext] = useState(false);
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
-    const [grade, setGrade] = useState(null); // Store grade for exit navigation
+    const [encouragement, setEncouragement] = useState(null);
+    const [grade, setGrade] = useState(location.state?.grade || null); // Store grade for exit navigation
 
     // Session & Timer State
     const [sessionId, setSessionId] = useState(null);
@@ -94,6 +125,7 @@ const MiddlePracticeSession = () => {
         setCompleted(false);
         setUserAnswers({});
         setHistory([]);
+        setEncouragement(null);
 
         fetchQuestions(null, true);
     }, [skillId]);
@@ -255,16 +287,21 @@ const MiddlePracticeSession = () => {
         }
 
         if (isCorrect) {
-            // Show "Excellent!" modal for correct answers too
-            setShowExplanation(true);
+            // Pick a random encouraging phrase
+            const randomPhrase = encouragingPhrases[Math.floor(Math.random() * encouragingPhrases.length)];
+            setEncouragement(randomPhrase);
+            // Don't show "Excellent!" modal for correct answers, show encouragement instead
+            setShowExplanation(false);
         } else {
             // Show "Not quite right" modal for wrong answers
+            setEncouragement(null);
             setShowExplanation(true);
         }
     };
 
     const proceedToNext = () => {
         setShowExplanation(false);
+        setEncouragement(null);
         if (currentIndex < questions.length - 1) {
             // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
@@ -283,6 +320,7 @@ const MiddlePracticeSession = () => {
         if (currentIndex > 0) {
             setCurrentIndex(prev => prev - 1);
             setShowExplanation(false);
+            setEncouragement(null);
         }
     };
 
@@ -374,11 +412,21 @@ const MiddlePracticeSession = () => {
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Responsive height: h-24 on mobile, h-32 on desktop, smaller on landscape mobile */}
-            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32 landscape:h-16 landscape:lg:h-32">
+            <header className="relative flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32 landscape:h-16 landscape:lg:h-32">
                 <div className="flex items-center">
                     {/* Enlarged SunTimer for better visibility */}
                     <SunTimer timeLeft={elapsedTime} />
                 </div>
+
+                {/* Encouragement Message - Absolute Centered */}
+                {encouragement && (
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
+                        <div className="px-6 py-2 lg:px-8 lg:py-3 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full font-black text-lg lg:text-xl shadow-lg border-2 border-white/50 animate-in zoom-in fade-in slide-in-from-bottom-2 duration-300 whitespace-nowrap">
+                            {encouragement}
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex items-center">
                     {/* Enlarged Mascot Image aligned with timer (smaller on mobile) */}
                     <img src={mascotImg} alt="Mascot" className="w-16 h-16 lg:w-24 lg:h-24 object-contain drop-shadow-lg" />
@@ -387,7 +435,7 @@ const MiddlePracticeSession = () => {
 
             <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 lg:px-6 pb-4 lg:pb-6 overflow-hidden max-w-[1400px] mx-auto w-full">
                 {/* Left Column: Question Card */}
-                <main className="flex-[3] relative h-full min-h-0">
+                <main className="flex-[3] relative h-full min-h-0 flex flex-col">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentQ?.id}
