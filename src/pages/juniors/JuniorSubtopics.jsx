@@ -7,6 +7,7 @@ import Navbar from '../../components/Navbar';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { api } from '../../services/api';
 import { LatexText } from '../../components/LatexText';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 import './JuniorSubtopics.css';
 
 // Colors for subtopics
@@ -107,17 +108,17 @@ const JuniorSubtopics = () => {
                 {/* Back Button */}
                 <button className="back-btn" onClick={() => navigate(`/junior/grade/${grade}`)}>
                     <Home className="back-icon" />
-                    <span>Back to Topics</span>
+                    <span>Back to Skills</span>
                 </button>
 
                 {/* Header */}
                 <div className="junior-header">
-                    <h1>Choose a Topic! 📚</h1>
+                    <h1>Choose a Skill! 📚</h1>
                     <div className="completion-badge" style={{ display: 'none' }}>
                         <Sparkles className="sparkle-icon" />
                         <span>Practice specific skills!</span>
                     </div>
-                    <p className="topic-title">{decodedTopic}</p>
+                    <p className="topic-title">{capitalizeFirstLetter(decodedTopic)}</p>
                 </div>
 
                 {/* Subtopics List */}
@@ -153,7 +154,7 @@ const JuniorSubtopics = () => {
                                         </div>
 
                                         {/* Text */}
-                                        <span className="pill-text"><LatexText text={subtopic.name} /></span>
+                                        <span className="pill-text"><LatexText text={capitalizeFirstLetter(subtopic.name)} /></span>
 
                                         {/* Completed checkmark */}
 

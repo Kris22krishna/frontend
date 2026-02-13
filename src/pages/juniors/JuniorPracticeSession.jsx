@@ -585,6 +585,9 @@ const JuniorPracticeSession = () => {
                         <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
                             <RefreshCw size={24} /> Start New Quest
                         </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
+                            <Home size={24} /> Back to Topics
+                        </button>
                     </div>
                 </main>
             </div>
@@ -600,6 +603,11 @@ const JuniorPracticeSession = () => {
         if (!html) return '';
         // Remove patterns like "A. ...", "(A) ...", "a) ..." that appear at the end of the string
         let cleaned = html.replace(/(?:<br\s*\/?>|\n|\r)+\s*[A-Da-d1-4][\.\)]\s+.*?(?=(?:<br\s*\/?>|\n|\r)|$)/gi, '');
+
+        // Replace 2+ underscores with a proper LaTeX blank line (underlined space)
+        // using a lighter weight command or just standard LaTeX underline with space
+        cleaned = cleaned.replace(/_{2,}/g, ' $\\underline{\\hspace{1cm}}$ ');
+
         return cleaned.trim();
     };
 
@@ -750,7 +758,7 @@ const JuniorPracticeSession = () => {
                                     <div className="user-input-modern">
                                         <input
                                             type="text"
-                                            className="modern-input-field"
+                                            className={`modern-input-field ${isSubmitted ? (isCorrect ? 'correct' : 'wrong') : ''}`}
                                             placeholder="Type here..."
                                             value={selectedOption || ''}
                                             onChange={(e) => setSelectedOption(e.target.value)}

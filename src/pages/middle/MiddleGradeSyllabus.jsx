@@ -10,13 +10,14 @@ import {
     ArrowRight, Box, Compass, Cuboid, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { LatexText } from '../../components/LatexText';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 import './MiddleGradeSyllabus.css';
 
 const SkillItem = ({ skill, onClick }) => (
     <div onClick={() => onClick(skill)} className="middle-skill-item" style={{ cursor: 'pointer' }}>
         <ArrowRight size={16} className="skill-arrow" />
         <span className="skill-text">
-            <LatexText text={skill.skill_name} />
+            <LatexText text={capitalizeFirstLetter(skill.skill_name)} />
         </span>
     </div>
 );
@@ -65,13 +66,13 @@ const MiddleGradeSyllabus = () => {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
-            navigate(`/middle/practice/${skill.skill_id}`);
+            navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
 
     const handleLoginSuccess = () => {
         if (pendingSkill) {
-            navigate(`/middle/practice/${pendingSkill.skill_id}`);
+            navigate(`/middle/practice/${pendingSkill.skill_id}`, { state: { grade: grade } });
             setPendingSkill(null);
         }
     };
@@ -169,7 +170,7 @@ const MiddleGradeSyllabus = () => {
                                     <div className="topic-icon-wrapper">
                                         {getTopicIcon(topic)}
                                     </div>
-                                    <h3 className="category-header"><LatexText text={topic} /></h3>
+                                    <h3 className="category-header"><LatexText text={capitalizeFirstLetter(topic)} /></h3>
                                 </div>
                                 <div className="skills-container-nested">
                                     {orderedSubTopics.map(([subTopic, topicSkills]) => {

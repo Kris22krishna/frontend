@@ -383,7 +383,7 @@
     text-align: center;
     border: 3px solid #B2DFDB;
     border-radius: 1.5rem;
-    background: #F0FFF4;
+    background: white;
     color: #2D3748;
 }
 
@@ -392,6 +392,20 @@
     outline: none;
     box-shadow: 0 0 0 4px rgba(0, 191, 165, 0.2);
     background: white;
+}
+
+.modern-input-field.correct {
+    background: #C8E6C9;
+    border-color: #4CAF50;
+    color: #1B5E20;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+}
+
+.modern-input-field.wrong {
+    background: #FFCDD2;
+    border-color: #EF5350;
+    color: #B71C1C;
+    box-shadow: 0 0 0 4px rgba(239, 83, 80, 0.2);
 }
 
 /* Bottom Action Bar */

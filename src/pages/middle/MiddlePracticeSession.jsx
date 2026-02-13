@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../services/api';
 import ModelRenderer from '../../models/ModelRenderer';
 import './MiddlePracticeSession.css';
@@ -14,14 +14,44 @@ import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight, Target, Clock, BookOpen, ArrowLeft } from 'lucide-react';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
-import LatexContent from '../../components/LatexContent';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 
 // Assets
 import mascotImg from '../../assets/mascot.png';
 
+const encouragingPhrases = [
+    "Great job!", "Way to go!", "You're doing amazing!", "Keep it up!",
+    "Fantastic!", "Brilliant!", "Spot on!", "Excellent work!",
+    "You're a star!", "Correct!",
+
+    // New ones
+    "Nailed it!",
+    "That’s absolutely right!",
+    "Boom! You got it!",
+    "Superb work!",
+    "You’re on fire!",
+    "Impressive!",
+    "That was smooth!",
+    "Sharp thinking!",
+    "You crushed it!",
+    "Outstanding!",
+    "Perfect answer!",
+    "You’re getting really good at this!",
+    "Yes! That’s the one!",
+    "Top-tier answer!",
+    "Flawless!",
+    "You’ve got this!",
+    "Keep shining!",
+    "That’s some solid reasoning!",
+    "Smart move!",
+    "You’re leveling up!"
+];
+
+
 const MiddlePracticeSession = () => {
     const { skillId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -36,7 +66,8 @@ const MiddlePracticeSession = () => {
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
     const [fetchingNext, setFetchingNext] = useState(false);
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
-    const [grade, setGrade] = useState(null); // Store grade for exit navigation
+    const [encouragement, setEncouragement] = useState(null);
+    const [grade, setGrade] = useState(location.state?.grade || null); // Store grade for exit navigation
 
     // Session & Timer State
     const [sessionId, setSessionId] = useState(null);
@@ -58,6 +89,13 @@ const MiddlePracticeSession = () => {
                 console.error("Failed to start session", err);
                 sessionCreatedForSkill.current = null;
             });
+        }
+
+        // Fetch skill details to get grade level for navigation
+        if (skillId) {
+            api.getSkillById(skillId).then(skill => {
+                if (skill?.grade) setGrade(skill.grade);
+            }).catch(err => console.error("Failed to fetch skill info", err));
         }
     }, [skillId]);
 
@@ -95,6 +133,7 @@ const MiddlePracticeSession = () => {
         setCompleted(false);
         setUserAnswers({});
         setHistory([]);
+        setEncouragement(null);
 
         fetchQuestions(null, true);
     }, [skillId]);
@@ -257,11 +296,22 @@ const MiddlePracticeSession = () => {
             recordQuestionAttempt(currentQ, answer, isCorrect);
         }
 
-        setShowExplanation(true);
+        if (isCorrect) {
+            // Pick a random encouraging phrase
+            const randomPhrase = encouragingPhrases[Math.floor(Math.random() * encouragingPhrases.length)];
+            setEncouragement(randomPhrase);
+            // Don't show "Excellent!" modal for correct answers, show encouragement instead
+            setShowExplanation(false);
+        } else {
+            // Show "Not quite right" modal for wrong answers
+            setEncouragement(null);
+            setShowExplanation(true);
+        }
     };
 
     const proceedToNext = () => {
         setShowExplanation(false);
+        setEncouragement(null);
 
         // Stop if we've reached the session limit or end of questions
         if (stats.total >= QUESTIONS_PER_SESSION || currentIndex >= questions.length - 1) {
@@ -281,6 +331,7 @@ const MiddlePracticeSession = () => {
         if (currentIndex > 0) {
             setCurrentIndex(prev => prev - 1);
             setShowExplanation(false);
+            setEncouragement(null);
         }
     };
 
@@ -317,114 +368,48 @@ const MiddlePracticeSession = () => {
             return (
                 <div className="middle-practice-page results-view overflow-y-auto bg-gray-50 min-h-screen">
                     <Navbar />
-                    <div className="report-container p-4 lg:p-8 max-w-5xl mx-auto">
+                    <div className="report-container p-6 lg:p-8 max-w-4xl mx-auto">
                         <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden border border-gray-100 mb-8">
                             <div className="results-header bg-[#31326F] p-8 lg:p-12 text-white text-center relative overflow-hidden">
-                                <button
-                                    onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
-                                    className="back-topics-top absolute top-8 right-8 px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-black text-lg transition-all flex items-center gap-3 z-50 border-2 border-white/20 shadow-xl"
-                                >
-                                    <ArrowLeft size={24} /> Back to Topics
-                                </button>
-                                {/* Background Decorative Elements */}
-                                {/* Decorative background circle */}
-                                <div className="absolute top-[-50px] right-[-50px] w-64 h-64 bg-white/5 rounded-full" />
-
-                                <img src={mascotImg} alt="Mascot" className="w-24 h-24 mx-auto mb-4 drop-shadow-lg" />
                                 <h1 className="text-4xl font-black mb-2 tracking-tight">Practice Complete!</h1>
-                                <p className="text-xl opacity-80 font-medium">{skillName}</p>
-
-                                <div className="mt-10 flex flex-wrap justify-center gap-6 lg:gap-12">
+                                <p className="text-xl opacity-80 font-medium">{capitalizeFirstLetter(skillName)}</p>
+                                <div className="mt-10 flex flex-wrap justify-center gap-8">
                                     <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10">
                                         <p className="text-sm opacity-60 uppercase font-black tracking-widest mb-1">Accuracy</p>
                                         <p className="text-4xl font-black">{accuracy}%</p>
                                     </div>
                                     <div className="bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/10">
-                                        <p className="text-sm opacity-60 uppercase font-black tracking-widest mb-1">Total Time</p>
+                                        <p className="text-sm opacity-60 uppercase font-black tracking-widest mb-1">Time</p>
                                         <p className="text-4xl font-black">{formatTime(elapsedTime)}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="p-6 lg:p-10">
-                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-                                    <div className="bg-green-50 p-6 rounded-2xl border border-green-100 flex flex-col items-center">
-                                        <CheckCircle2 className="text-green-500 mb-2" size={24} />
-                                        <p className="text-xs text-green-600 font-black uppercase tracking-wider mb-1">Correct</p>
+                            <div className="p-8">
+                                <div className="grid grid-cols-3 gap-4 mb-8">
+                                    <div className="bg-green-50 p-6 rounded-2xl text-center border border-green-100">
+                                        <p className="text-xs text-green-600 font-black uppercase mb-1">Correct</p>
                                         <p className="text-3xl font-black text-green-700">{stats.correct}</p>
                                     </div>
-                                    <div className="bg-red-50 p-6 rounded-2xl border border-red-100 flex flex-col items-center">
-                                        <X className="text-red-500 mb-2" size={24} />
-                                        <p className="text-xs text-red-600 font-black uppercase tracking-wider mb-1">Wrong</p>
-                                        <p className="text-3xl font-black text-red-700">{stats.wrong || stats.total - stats.correct}</p>
+                                    <div className="bg-red-50 p-6 rounded-2xl text-center border border-red-100">
+                                        <p className="text-xs text-red-600 font-black uppercase mb-1">Wrong</p>
+                                        <p className="text-3xl font-black text-red-700">{stats.wrong}</p>
                                     </div>
-                                    <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100 flex flex-col items-center">
-                                        <Target className="text-blue-500 mb-2" size={24} />
-                                        <p className="text-xs text-blue-600 font-black uppercase tracking-wider mb-1">Questions</p>
+                                    <div className="bg-blue-50 p-6 rounded-2xl text-center border border-blue-100">
+                                        <p className="text-xs text-blue-600 font-black uppercase mb-1">Total</p>
                                         <p className="text-3xl font-black text-blue-700">{stats.total}</p>
                                     </div>
-                                    <div className="bg-yellow-50 p-6 rounded-2xl border border-yellow-100 flex flex-col items-center">
-                                        <Clock className="text-yellow-600 mb-2" size={24} />
-                                        <p className="text-xs text-yellow-600 font-black uppercase tracking-wider mb-1">Avg Time</p>
-                                        <p className="text-3xl font-black text-yellow-700">{Math.round(elapsedTime / (stats.total || 1))}s</p>
-                                    </div>
                                 </div>
 
-                                <div className="mb-10">
-                                    <h2 className="text-2xl font-black text-[#31326F] mb-6 flex items-center gap-2">
-                                        <BookOpen className="text-[#4FB7B3]" />
-                                        Question Breakdown
-                                    </h2>
-                                    <div className="space-y-6">
-                                        {history.map((item, idx) => (
-                                            <div key={idx} className={`p-6 rounded-[24px] border-2 ${item.status === 'correct' ? 'border-green-100 bg-green-50/30' : 'border-red-100 bg-red-50/30'}`}>
-                                                <div className="flex items-start justify-between gap-4 mb-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <span className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-lg ${item.status === 'correct' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
-                                                            {idx + 1}
-                                                        </span>
-                                                        <div className="flex-1 text-lg font-bold text-[#31326F]">
-                                                            <LatexText text={item.question.text} />
-                                                        </div>
-                                                    </div>
-                                                    {item.status === 'correct' ? (
-                                                        <CheckCircle2 className="text-green-500 shrink-0" size={28} />
-                                                    ) : (
-                                                        <X className="text-red-500 shrink-0" size={28} />
-                                                    )}
-                                                </div>
-
-                                                <div className="grid lg:grid-cols-2 gap-6 ml-12">
-                                                    <div className="space-y-2">
-                                                        <p className="text-xs font-black uppercase tracking-widest text-gray-400">Your Answer</p>
-                                                        <div className={`p-3 rounded-xl font-bold ${item.status === 'correct' ? 'text-green-700 bg-green-100/50' : 'text-red-700 bg-red-100/50'}`}>
-                                                            <LatexText text={item.userVal} />
-                                                        </div>
-                                                    </div>
-                                                    {item.status !== 'correct' && (
-                                                        <div className="space-y-2">
-                                                            <p className="text-xs font-black uppercase tracking-widest text-[#4FB7B3]">Correct Answer</p>
-                                                            <div className="p-3 rounded-xl font-bold text-[#31326F] bg-[#E0FBEF]">
-                                                                <LatexText text={item.question.correctAnswer} />
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <div className="mt-6 ml-12 p-4 bg-white/50 rounded-2xl border border-gray-100">
-                                                    <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Explanation</p>
-                                                    <div className="text-gray-600 leading-relaxed font-medium">
-                                                        <LatexText text={item.question.explanation} />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-wrap items-center justify-center gap-4 pt-6 border-t border-gray-100">
+                                <div className="flex justify-center gap-4">
+                                    <button
+                                        onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
+                                        className="px-10 py-4 bg-[#31326F] text-white rounded-2xl font-black text-lg hover:bg-[#25265E] transition-all shadow-lg"
+                                    >
+                                        Back to Topics
+                                    </button>
                                     <button onClick={() => window.location.reload()} className="px-10 py-4 border-2 border-[#31326F] text-[#31326F] rounded-2xl font-black text-lg hover:bg-gray-50 transition-all">
-                                        Try Another Set
+                                        Try Again
                                     </button>
                                 </div>
                             </div>
@@ -456,11 +441,21 @@ const MiddlePracticeSession = () => {
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Responsive height: h-24 on mobile, h-32 on desktop, smaller on landscape mobile */}
-            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32 landscape:h-16 landscape:lg:h-32">
+            <header className="relative flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32 landscape:h-16 landscape:lg:h-32">
                 <div className="flex items-center">
                     {/* Enlarged SunTimer for better visibility */}
                     <SunTimer timeLeft={elapsedTime} />
                 </div>
+
+                {/* Encouragement Message - Absolute Centered */}
+                {encouragement && (
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
+                        <div className="px-6 py-2 lg:px-8 lg:py-3 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full font-black text-lg lg:text-xl shadow-lg border-2 border-white/50 animate-in zoom-in fade-in slide-in-from-bottom-2 duration-300 whitespace-nowrap">
+                            {encouragement}
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex items-center">
                     {/* Enlarged Mascot Image aligned with timer (smaller on mobile) */}
                     <img src={mascotImg} alt="Mascot" className="w-16 h-16 lg:w-24 lg:h-24 object-contain drop-shadow-lg" />
@@ -469,7 +464,7 @@ const MiddlePracticeSession = () => {
 
             <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 lg:px-6 pb-4 lg:pb-6 overflow-hidden max-w-[1400px] mx-auto w-full">
                 {/* Left Column: Question Card */}
-                <main className="flex-[3] relative h-full min-h-0">
+                <main className="flex-[3] relative h-full min-h-0 flex flex-col">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentQ?.id}
