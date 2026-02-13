@@ -562,15 +562,16 @@
     color: #14532d;
 }
 
-.explanation-header {
+.high-explanation-header {
     margin: 0 0 0.5rem 0;
     font-size: 1rem;
     font-weight: 800;
     text-transform: uppercase;
     opacity: 1;
-    background: #000000;
+    background: #0f172a;
+    /* Use navy instead of pure black */
     color: #ffffff;
-    /* White text on black bg for highlight */
+    /* White text on dark bg for highlight */
     display: inline-block;
     padding: 0.25rem 0.5rem;
     border-radius: 2px;
@@ -756,4 +757,16 @@ body {
     to {
         transform: translateY(0);
     }
+}
+
+/* Results View Styles */
+.results-view {
+    padding-top: 80px;
+    /* Clear fixed Navbar */
+    min-height: 100vh;
+}
+
+.back-topics-top {
+    z-index: 1001;
+    /* Above Navbar if needed */
 }

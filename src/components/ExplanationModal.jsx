@@ -9,7 +9,7 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
 
     return (
         <div className="explanation-modal-overlay">
-            <div className={`explanation-modal-content ${isCorrect ? 'correct-theme' : 'wrong-theme'}`}>
+            <div className={`explanation-modal-content dark:bg-slate-900 dark:border-slate-800 ${isCorrect ? 'correct-theme' : 'wrong-theme'}`}>
 
                 {/* Close Button Removed as per user request */}
 
@@ -29,21 +29,21 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
                                 {isCorrect ? (
                                     <>
                                         <div className="icon-circle correct"><Check size={32} /></div>
-                                        <h2>Great job!</h2>
+                                        <h2 className="dark:text-white">Great job!</h2>
                                     </>
                                 ) : (
                                     <>
                                         <div className="icon-circle wrong"><X size={32} /></div>
-                                        <h2>Not quite right</h2>
+                                        <h2 className="dark:text-white">Not quite right</h2>
                                     </>
                                 )}
                             </div>
 
                             {/* Correct Answer Display (if wrong) */}
                             {!isCorrect && (
-                                <div className="correct-answer-box">
-                                    <span className="label">CORRECT ANSWER</span>
-                                    <div className="answer-value">
+                                <div className="correct-answer-box dark:bg-teal-900/30 dark:border-teal-800">
+                                    <span className="label dark:text-teal-400">CORRECT ANSWER</span>
+                                    <div className="answer-value dark:text-teal-200">
                                         <Check size={20} className="mini-check" />
                                         <LatexContent html={correctAnswer} />
                                     </div>
@@ -52,15 +52,15 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
 
                             {/* Explanation Text */}
                             <div className="explanation-detail">
-                                <h3>WHY IS THIS CORRECT?</h3>
-                                <div className="explanation-html-content">
+                                <h3 className="dark:text-slate-400">WHY IS THIS CORRECT?</h3>
+                                <div className="explanation-html-content dark:text-slate-300">
                                     <LatexContent html={explanation || "Great effort! Keep practicing to master this concept."} />
                                 </div>
                             </div>
                         </div>
 
                         {/* Action Button */}
-                        <div className="explanation-actions">
+                        <div className="explanation-actions dark:bg-slate-900">
                             <button className="action-main-btn" onClick={onNext || onClose}>
                                 {isCorrect ? 'Keep going!' : 'Got it'}
                                 <ArrowRight size={20} />

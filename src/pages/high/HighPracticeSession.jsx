@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Check, X, RefreshCw, Zap, Award, ArrowRight, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Check, X, RefreshCw, Zap, Award, ArrowRight, ArrowLeft, Target, Clock, BookOpen, PenTool, LogOut, Eye } from 'lucide-react';
 import Whiteboard from '../../components/Whiteboard';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import { api } from '../../services/api';
@@ -11,6 +11,7 @@ import Navbar from '../../components/Navbar';
 
 const HighPracticeSession = () => {
     const { skillId } = useParams();
+    const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [showScratchpad, setShowScratchpad] = useState(false); // Mobile state
@@ -207,7 +208,15 @@ const HighPracticeSession = () => {
     };
 
 
+    const QUESTIONS_PER_SESSION = 10;
+
     const handleNextStep = async () => {
+        if (stats.total >= QUESTIONS_PER_SESSION) {
+            setCompleted(true);
+            if (sessionId) api.finishSession(sessionId).catch(console.error);
+            return;
+        }
+
         const lastAttempt = history[history.length - 1];
         const isCorrect = lastAttempt && lastAttempt.status === 'correct';
 
@@ -330,9 +339,115 @@ const HighPracticeSession = () => {
         </div>
     );
 
+    if (completed) {
+        const accuracy = Math.round((stats.correct / (stats.total || 1)) * 100);
+        return (
+            <div className="high-practice-page results-view overflow-y-auto bg-slate-50 min-h-screen">
+                <Navbar />
+                <main className="max-w-6xl mx-auto py-12 px-6">
+                    <div className="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-slate-200">
+                        <div className="bg-slate-900 p-12 text-white text-center">
+                            <div className="flex justify-between items-start mb-6">
+                                <Award className="w-20 h-20 text-yellow-400" />
+                                <button
+                                    onClick={() => navigate(gradeLevel ? `/senior/grade/${gradeLevel}` : "/math")}
+                                    className="back-topics-top px-10 py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 transition-all flex items-center gap-3 text-lg shadow-lg border border-slate-700 relative z-[1001]"
+                                >
+                                    <ArrowLeft size={20} /> Back to Topics
+                                </button>
+                            </div>
+                            <h1 className="text-4xl font-serif font-bold mb-2">Practice Session Complete</h1>
+                            <p className="text-slate-400 text-lg">{skillName}</p>
 
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-12">
+                                <div className="text-center">
+                                    <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-xs font-bold mb-2">Accuracy</p>
+                                    <p className="text-4xl font-bold dark:text-white">{accuracy}%</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-xs font-bold mb-2">Time Taken</p>
+                                    <p className="text-4xl font-bold dark:text-white">{formatTime(elapsedTime)}</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-xs font-bold mb-2">Correct</p>
+                                    <p className="text-4xl font-bold text-emerald-400">{stats.correct}</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-xs font-bold mb-2">Mastery</p>
+                                    <p className="text-4xl font-bold text-blue-400">{currentDifficulty}</p>
+                                </div>
+                            </div>
+                        </div>
 
-    // Removal of Completion/Report view block (unlimited mode)
+                        <div className="p-12">
+                            <h2 className="text-2xl font-serif font-bold text-slate-900 mb-8 flex items-center gap-3">
+                                <Target className="text-slate-400" />
+                                Detailed Performance Breakdown
+                            </h2>
+
+                            <div className="space-y-8">
+                                {history.map((item, idx) => (
+                                    <div key={idx} className={`p-8 rounded-2xl border-l-4 transition-all ${item.status === 'correct' ? 'border-emerald-500 bg-emerald-50/20' : 'border-rose-500 bg-rose-50/20'}`}>
+                                        <div className="flex items-start justify-between gap-6 mb-6">
+                                            <div className="flex items-center gap-4">
+                                                <span className={`w-8 h-8 rounded shrink-0 flex items-center justify-center font-bold font-serif ${item.status === 'correct' ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`}>
+                                                    {idx + 1}
+                                                </span>
+                                                <div className="text-lg font-serif text-slate-800 leading-relaxed">
+                                                    <LatexContent html={item.question.text} />
+                                                </div>
+                                            </div>
+                                            {item.status === 'correct' ? (
+                                                <div className="flex items-center gap-2 text-emerald-600 font-bold bg-emerald-100 px-3 py-1 rounded-full text-sm">
+                                                    <Check size={16} /> CORRECT
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 text-rose-600 font-bold bg-rose-100 px-3 py-1 rounded-full text-sm">
+                                                    <X size={16} /> INCORRECT
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-8 mb-6 ml-12">
+                                            <div className="space-y-2">
+                                                <p className="text-slate-400 uppercase tracking-widest text-[10px] font-bold">Your Response</p>
+                                                <div className={`p-4 rounded-xl font-medium ${item.status === 'correct' ? 'bg-emerald-100/50 text-emerald-900' : 'bg-rose-100/50 text-rose-900'}`}>
+                                                    <LatexContent html={item.userVal} />
+                                                </div>
+                                            </div>
+                                            {!item.status === 'correct' && (
+                                                <div className="space-y-2">
+                                                    <p className="text-slate-500 uppercase tracking-widest text-[10px] font-bold">Key Solution</p>
+                                                    <div className="p-4 rounded-xl bg-slate-100 text-slate-900 font-medium">
+                                                        <LatexContent html={item.question.correctAnswer} />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="ml-12 p-6 bg-white rounded-xl border border-slate-100 shadow-sm">
+                                            <p className="text-slate-500 uppercase tracking-widest text-[10px] font-bold mb-3 flex items-center gap-2">
+                                                <BookOpen size={12} /> Step-by-Step Explanation
+                                            </p>
+                                            <div className="text-slate-600 font-serif leading-relaxed">
+                                                <LatexContent html={item.question.solution} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex items-center justify-center gap-6 mt-16 pt-12 border-t border-slate-100">
+                                <button onClick={() => window.location.reload()} className="px-12 py-4 border-2 border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all flex items-center gap-2">
+                                    <RefreshCw size={20} /> Reset Session
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     const currentQ = questions[currentIndex];
 
@@ -464,7 +579,7 @@ const HighPracticeSession = () => {
 
                                 {feedback && currentQ.solution && (
                                     <div className={`high-explanation-box ${feedback}`}>
-                                        <h4 className="explanation-header">EXPLANATION</h4>
+                                        <h4 className="high-explanation-header">EXPLANATION</h4>
                                         <LatexContent html={currentQ.solution} block={true} />
                                     </div>
                                 )}

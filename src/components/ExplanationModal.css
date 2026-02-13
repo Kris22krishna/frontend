@@ -42,8 +42,14 @@
     flex-direction: column;
     max-height: 90vh;
     /* Limit height to viewport */
-    background: #ffffff !important;
+    background: #ffffff;
     color: #1e293b;
+}
+
+.dark .explanation-modal-content {
+    background: #0f172a !important;
+    /* slate-900 */
+    color: #f1f5f9;
 }
 
 @keyframes popInModal {
@@ -116,12 +122,24 @@
     overflow: hidden;
 }
 
+.dark .explanation-mascot-col {
+    background: linear-gradient(135deg, #134e4a 0%, #115e59 100%);
+}
+
 .correct-theme .explanation-mascot-col {
     background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
 }
 
 .wrong-theme .explanation-mascot-col {
     background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+}
+
+.dark .correct-theme .explanation-mascot-col {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+}
+
+.dark .wrong-theme .explanation-mascot-col {
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
 }
 
 .explanation-mascot-img {
@@ -212,6 +230,14 @@
     font-weight: 800;
 }
 
+.dark .explanation-header h2 {
+    color: #f8fafc !important;
+}
+
+.dark .explanation-detail p {
+    color: #cbd5e1 !important;
+}
+
 /* Correct Answer Box */
 .correct-answer-box {
     background: #F0FDFA;
@@ -271,6 +297,11 @@
     z-index: 10;
     background: white;
     /* Ensure opacity over scrolled content */
+}
+
+.dark .explanation-actions {
+    background: #0f172a !important;
+    border-top: 1px solid #1e293b;
 }
 
 .action-main-btn {
