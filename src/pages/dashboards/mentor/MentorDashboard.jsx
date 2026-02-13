@@ -20,6 +20,7 @@ const MentorDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedGrade, setSelectedGrade] = useState('All');
+    const [selectedStatsDate, setSelectedStatsDate] = useState(new Date());
 
     useEffect(() => {
         const fetchData = async () => {
@@ -76,6 +77,10 @@ const MentorDashboard = () => {
         ? searchedStudents
         : searchedStudents.filter(s => (s.grade || 'Ungraded') === selectedGrade);
 
+    // Compute stats for the selected date from the daily_stats array
+    const selectedDateStr = selectedStatsDate.toISOString().split('T')[0];
+    const selectedDayStat = stats.daily_stats ? stats.daily_stats.find(d => d.date === selectedDateStr) : null;
+
     if (loading) {
         return (
             <div className="min-h-screen bg-slate-50">
@@ -129,50 +134,97 @@ const MentorDashboard = () => {
                     </div>
                 )}
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {/* Total Students Card */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
-                        <div className="p-4 bg-blue-100 rounded-full text-blue-600">
-                            <Users className="h-8 w-8" />
+                {/* Stats Cards - Now with Day Navigation */}
+                <div className="flex flex-col gap-4 mb-6">
+                    {/* Date Selector Header */}
+                    <div className="flex items-center justify-end gap-3 mb-2">
+                        <button
+                            onClick={() => {
+                                const newDate = new Date(selectedStatsDate);
+                                newDate.setDate(newDate.getDate() - 1);
+                                setSelectedStatsDate(newDate);
+                            }}
+                            className="bg-white p-2 rounded-full shadow-sm hover:shadow-md border border-slate-200 text-slate-500 hover:text-slate-700 transition-all font-bold"
+                            title="Previous Day"
+                        >
+                            &larr;
+                        </button>
+
+                        <div className="bg-white px-5 py-2 rounded-full shadow-sm border border-slate-200 font-bold text-[#31326F] min-w-[150px] text-center">
+                            {new Date().toDateString() === selectedStatsDate.toDateString()
+                                ? "Today"
+                                : selectedStatsDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
                         </div>
-                        <div>
-                            <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Total Students</p>
-                            <p className="text-3xl font-bold text-[#31326F]">{stats.total_students}</p>
-                        </div>
+
+                        <button
+                            onClick={() => {
+                                const newDate = new Date(selectedStatsDate);
+                                newDate.setDate(newDate.getDate() + 1);
+                                if (newDate <= new Date()) {
+                                    setSelectedStatsDate(newDate);
+                                }
+                            }}
+                            disabled={new Date().toDateString() === selectedStatsDate.toDateString()}
+                            className={`p-2 rounded-full shadow-sm border border-slate-200 transition-all font-bold ${new Date().toDateString() === selectedStatsDate.toDateString()
+                                ? 'bg-slate-50 text-slate-300 cursor-not-allowed'
+                                : 'bg-white hover:shadow-md text-slate-500 hover:text-slate-700'
+                                }`}
+                            title="Next Day"
+                        >
+                            &rarr;
+                        </button>
                     </div>
 
-                    {/* Total Time Card */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
-                        <div className="p-4 bg-teal-100 rounded-full text-teal-600">
-                            <Clock className="h-8 w-8" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {/* Total Students Card (Always Static) */}
+                        <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
+                            <div className="p-4 bg-blue-100 rounded-full text-blue-600">
+                                <Users className="h-8 w-8" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Total Students</p>
+                                <p className="text-3xl font-bold text-[#31326F]">{stats.total_students}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Time Today</p>
-                            <p className="text-3xl font-bold text-[#31326F]">{formatTime(stats.total_time_seconds)}</p>
-                        </div>
-                    </div>
 
-                    {/* Questions Solved Card */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
-                        <div className="p-4 bg-purple-100 rounded-full text-purple-600">
-                            <BookOpen className="h-8 w-8" />
+                        {/* Total Time Card */}
+                        <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
+                            <div className="p-4 bg-teal-100 rounded-full text-teal-600">
+                                <Clock className="h-8 w-8" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Time Spent</p>
+                                <p className="text-3xl font-bold text-[#31326F]">
+                                    {formatTime(selectedDayStat ? selectedDayStat.total_time_seconds : (new Date().toDateString() === selectedStatsDate.toDateString() ? stats.total_time_seconds : 0))}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Solved Today</p>
-                            <p className="text-3xl font-bold text-[#31326F]">{stats.today_questions_solved || 0}</p>
-                        </div>
-                    </div>
 
-                    {/* Avg Engagement Card */}
-                    <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
-                        <div className="p-4 bg-orange-100 rounded-full text-orange-600">
-                            <Activity className="h-8 w-8" />
+                        {/* Questions Solved Card */}
+                        <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
+                            <div className="p-4 bg-purple-100 rounded-full text-purple-600">
+                                <BookOpen className="h-8 w-8" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Questions Solved</p>
+                                <p className="text-3xl font-bold text-[#31326F]">
+                                    {selectedDayStat ? selectedDayStat.total_solved : (new Date().toDateString() === selectedStatsDate.toDateString() ? (stats.today_questions_solved || 0) : 0)}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Avg Engagement</p>
-                            <p className="text-3xl font-bold text-[#31326F]">{formatTime(stats.avg_time_seconds)}</p>
-                            <p className="text-xs text-slate-400 mt-1">Per student today</p>
+
+                        {/* Avg Engagement Card */}
+                        <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-100 flex items-center gap-4">
+                            <div className="p-4 bg-orange-100 rounded-full text-orange-600">
+                                <Activity className="h-8 w-8" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-slate-500 font-medium tracking-wide uppercase">Avg Engagement</p>
+                                <p className="text-3xl font-bold text-[#31326F]">
+                                    {formatTime(selectedDayStat ? selectedDayStat.avg_time_seconds : (new Date().toDateString() === selectedStatsDate.toDateString() ? stats.avg_time_seconds : 0))}
+                                </p>
+                                <p className="text-xs text-slate-400 mt-1">Per student</p>
+                            </div>
                         </div>
                     </div>
                 </div>
