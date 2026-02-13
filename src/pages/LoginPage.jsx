@@ -27,18 +27,39 @@ const LoginPage = () => {
             console.log('Login Success:', response);
 
             // Redirect based on role
+            // Redirect based on role
             const userType = response.role || response.user_type || 'student'; // Fallback
-            const dashboardMap = {
-                'student': '/student-dashboard',
-                'teacher': '/teacher-dashboard',
-                'parent': '/parent-dashboard',
-                'guest': '/guest-dashboard',
-                'mentor': '/mentor-dashboard', // Added mentor
-                'admin': '/admin'
-            };
 
-            const targetPath = dashboardMap[userType] || '/';
-            navigate(targetPath);
+            if (userType === 'student') {
+                const grade = response.grade || response.class_name;
+                if (grade) {
+                    const gradeNum = parseInt(grade.toString().replace(/\D/g, ''), 10);
+                    if (!isNaN(gradeNum)) {
+                        if (gradeNum >= 1 && gradeNum <= 4) {
+                            navigate(`/junior/grade/${gradeNum}`);
+                            return;
+                        } else if (gradeNum >= 5 && gradeNum <= 7) {
+                            navigate(`/middle/grade/${gradeNum}`);
+                            return;
+                        } else if (gradeNum >= 8) {
+                            navigate(`/senior/grade/${gradeNum}`);
+                            return;
+                        }
+                    }
+                }
+                // If grade logic fails or no grade present
+                navigate('/student-dashboard');
+            } else {
+                const dashboardMap = {
+                    'teacher': '/teacher-dashboard',
+                    'parent': '/parent-dashboard',
+                    'guest': '/guest-dashboard',
+                    'mentor': '/mentor-dashboard',
+                    'admin': '/admin'
+                };
+                const targetPath = dashboardMap[userType] || '/';
+                navigate(targetPath);
+            }
 
         } catch (err) {
             console.error('Login Failed:', err);
@@ -58,18 +79,39 @@ const LoginPage = () => {
             console.log('Google Login Success:', response);
 
             // Redirect based on role
+            // Redirect based on role
             const userType = response.role || response.user_type || 'student'; // Fallback
-            const dashboardMap = {
-                'student': '/student-dashboard',
-                'teacher': '/teacher-dashboard',
-                'parent': '/parent-dashboard',
-                'guest': '/guest-dashboard',
-                'mentor': '/mentor-dashboard',
-                'admin': '/admin'
-            };
 
-            const targetPath = dashboardMap[userType] || '/';
-            navigate(targetPath);
+            if (userType === 'student') {
+                const grade = response.grade || response.class_name;
+                if (grade) {
+                    const gradeNum = parseInt(grade.toString().replace(/\D/g, ''), 10);
+                    if (!isNaN(gradeNum)) {
+                        if (gradeNum >= 1 && gradeNum <= 4) {
+                            navigate(`/junior/grade/${gradeNum}`);
+                            return;
+                        } else if (gradeNum >= 5 && gradeNum <= 7) {
+                            navigate(`/middle/grade/${gradeNum}`);
+                            return;
+                        } else if (gradeNum >= 8) {
+                            navigate(`/senior/grade/${gradeNum}`);
+                            return;
+                        }
+                    }
+                }
+                // Fallback if grade not found or logic falls through
+                navigate('/student-dashboard');
+            } else {
+                const dashboardMap = {
+                    'teacher': '/teacher-dashboard',
+                    'parent': '/parent-dashboard',
+                    'guest': '/guest-dashboard',
+                    'mentor': '/mentor-dashboard',
+                    'admin': '/admin'
+                };
+                const targetPath = dashboardMap[userType] || '/';
+                navigate(targetPath);
+            }
         } catch (err) {
             console.error('Google Login Failed:', err);
             setError('Google login failed. Please try again.');

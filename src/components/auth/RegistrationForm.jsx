@@ -146,8 +146,25 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                 if (parentId) {
                     navigate('/parent-dashboard');
                 } else {
-                    const targetPath = dashboardMap[selectedRole] || '/';
-                    navigate(targetPath);
+                    if (selectedRole === 'student' && grade) {
+                        const gradeNum = parseInt(grade.replace(/\D/g, ''), 10);
+                        if (!isNaN(gradeNum)) {
+                            if (gradeNum >= 1 && gradeNum <= 4) {
+                                navigate(`/junior/grade/${gradeNum}`);
+                                return;
+                            } else if (gradeNum >= 5 && gradeNum <= 7) {
+                                navigate(`/middle/grade/${gradeNum}`);
+                                return;
+                            } else if (gradeNum >= 8) {
+                                navigate(`/senior/grade/${gradeNum}`);
+                                return;
+                            }
+                        }
+                        navigate('/student-dashboard');
+                    } else {
+                        const targetPath = dashboardMap[selectedRole] || '/';
+                        navigate(targetPath);
+                    }
                 }
             }
 
