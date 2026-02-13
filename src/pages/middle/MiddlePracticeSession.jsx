@@ -12,6 +12,8 @@ import { InlineScratchpad } from '../../components/InlineScratchpad';
 import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight } from 'lucide-react';
+import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
+import LatexContent from '../../components/LatexContent';
 
 // Assets
 import mascotImg from '../../assets/mascot.png';
@@ -35,18 +37,65 @@ const MiddlePracticeSession = () => {
     const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
     const [grade, setGrade] = useState(null); // Store grade for exit navigation
 
+    // Session & Timer State
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
 
+    // Initial Session Creation
+    const sessionCreatedForSkill = useRef(null);
 
-    const startTimeRef = useRef(Date.now());
-
+    // Initial Session Creation
     useEffect(() => {
-        fetchQuestions();
-        startTimeRef.current = Date.now();
+        const userId = localStorage.getItem('userId');
+        if (skillId && !sessionId && userId && sessionCreatedForSkill.current !== skillId) {
+            sessionCreatedForSkill.current = skillId;
+            api.createPracticeSession(userId, skillId).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => {
+                console.error("Failed to start session", err);
+                sessionCreatedForSkill.current = null;
+            });
+        }
+    }, [skillId]);
 
+    // Timer Visibility Logic
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
+
+    // Live Timer (starts on mount, continues through session)
+    useEffect(() => {
         const timer = setInterval(() => {
             setElapsedTime((prev) => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
+    }, []);
+
+    // Fetch Questions when skillId changes
+    useEffect(() => {
+        // Reset state for new skill
+        setQuestions([]);
+        setLoading(true);
+        setCurrentIndex(0);
+        setElapsedTime(0); // Reset timer for new skill practice
+        setStats({ correct: 0, wrong: 0, skipped: 0, total: 0, streak: 0 });
+        setCompleted(false);
+        setUserAnswers({});
+        setHistory([]);
+
+        fetchQuestions(null, true);
     }, [skillId]);
 
     // Rerender MathJax when question changes (Fix for options rendering)
@@ -60,25 +109,29 @@ const MiddlePracticeSession = () => {
         }
     }, [questions, currentIndex, showExplanation]);
 
-    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+    const fetchQuestions = async (diff = null, isInitial = true) => {
         if (isInitial) setLoading(true);
         else setFetchingNext(true);
 
         try {
-            let response = await api.getPracticeQuestionsBySkill(skillId, 10);
+            // Pass difficulty (if any) to API
+            let response = await api.getPracticeQuestionsBySkill(skillId, 3, null, diff);
+
+            // Update local state if backend provided metadata
+            if (response.template_metadata?.difficulty) {
+                setCurrentDifficulty(response.template_metadata.difficulty);
+            }
 
             // Handle selection_needed: when backend has both MCQ and User Input templates,
             // it asks the frontend to choose. Auto-pick MCQ for the practice session.
-            if (response && response.selection_needed) {
-                console.log('[Practice] selection_needed detected, auto-picking MCQ. Available types:', response.available_types);
-                response = await api.getPracticeQuestionsBySkill(skillId, 10, 'MCQ');
-            }
 
             let rawQuestions = [];
             if (response && response.questions) rawQuestions = response.questions;
             else if (Array.isArray(response)) rawQuestions = response;
             else if (response && response.preview_samples) rawQuestions = response.preview_samples;
             else if (response) rawQuestions = [response];
+
+            console.log('[MiddlePractice] API Response rawQuestions:', rawQuestions);
 
             if (!Array.isArray(rawQuestions)) rawQuestions = [];
 
@@ -97,8 +150,26 @@ const MiddlePracticeSession = () => {
                 }
                 if (!Array.isArray(opts)) opts = [];
 
+                // Fix: Replace className= with class= in HTML strings from backend
+                // Normalized question text extraction with robust fallbacks for Grade 7+ content
+                let qText = q.question_text || q.question || q.question_html || q.text || q.prompt || q.content || q.body || q.stimulus || q.raw_text || (q.data && q.data.question) || (q.props && q.props.question) || (q.data && q.data.stimulus);
+
+                // If text is still missing but we have a template ID, it might be a client-side generation case
+                if (!qText && q.template_id) {
+                    console.warn(`[Question ${idx + 1}] Missing text for template ${q.template_id}. Full object:`, q);
+                    qText = "Question Text Missing"; // Fallback
+                } else if (!qText) {
+                    console.warn(`[Question ${idx + 1}] Completely missing text. Full object:`, q);
+                    qText = "Question Text Missing";
+                }
+
+                if (typeof qText === 'string') {
+                    qText = qText.replace(/className=/g, 'class=');
+                }
+
                 return {
                     id: q.id || q.question_id || idx + 1,
+                    template_id: q.template_id,
                     text: q.question_text || q.question || q.question_html || q.text || q.prompt || "Question Text Missing",
                     options: opts,
                     correctAnswer: q.correct_answer || q.answer || q.answer_value || q.correct_option,
@@ -128,6 +199,35 @@ const MiddlePracticeSession = () => {
         }
     };
 
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: parseInt(skillId, 10),
+                template_id: question.template_id || null,
+                difficulty_level: currentDifficulty,
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
+                is_correct: isCorrect,
+                solution_text: String(question.explanation || ''),
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
+
     const handleAnswer = (answer) => {
         const currentQ = questions[currentIndex];
         setUserAnswers(prev => ({ ...prev, [currentQ.id]: answer }));
@@ -150,9 +250,15 @@ const MiddlePracticeSession = () => {
                 total: prev.total + 1,
                 streak: isCorrect ? prev.streak + 1 : 0
             }));
+
+            recordQuestionAttempt(currentQ, answer, isCorrect);
         }
 
-        if (!isCorrect) {
+        if (isCorrect) {
+            // Show "Excellent!" modal for correct answers too
+            setShowExplanation(true);
+        } else {
+            // Show "Not quite right" modal for wrong answers
             setShowExplanation(true);
         }
     };
@@ -162,7 +268,13 @@ const MiddlePracticeSession = () => {
         if (currentIndex < questions.length - 1) {
             // This shouldn't really happen with 1-by-1 fetching but for safety
             setCurrentIndex(prev => prev + 1);
+
+            // Reset timer
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
+            isTabActive.current = !document.hidden;
         } else {
+            if (sessionId) api.finishSession(sessionId).catch(e => console.error("Error finishing session", e));
             setCompleted(true);
         }
     };
@@ -181,6 +293,24 @@ const MiddlePracticeSession = () => {
     };
 
     if (loading) return <div className="middle-loading">Generating problems...</div>;
+
+    if (!questions || questions.length === 0) {
+        return (
+            <div className="h-[100dvh] w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex items-center justify-center font-sans text-[#31326F]">
+                <div className="text-center p-12 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl max-w-lg mx-auto border border-white/50">
+                    <img src={mascotImg} alt="Mascot" className="w-32 h-32 mx-auto mb-6 object-contain drop-shadow-md" />
+                    <h2 className="text-3xl font-bold mb-4 text-[#31326F]">No questions found!</h2>
+                    <p className="text-lg text-[#31326F] opacity-80 mb-8 font-medium">Ask a grown-up to check back later.</p>
+                    <button
+                        onClick={() => navigate(grade ? `/middle/grade/${grade}` : '/math')}
+                        className="px-8 py-3 bg-[#31326F] text-white rounded-2xl font-bold text-lg hover:bg-[#25265E] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    >
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (completed) {
         const accuracy = Math.round((stats.correct / (stats.total || 1)) * 100);
@@ -243,8 +373,8 @@ const MiddlePracticeSession = () => {
         <div className="h-[100dvh] w-full bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] flex flex-col overflow-hidden font-sans text-[#31326F]">
             {/* Header Section: Contains SunTimer and Mascot */}
             {/* Header Section: Contains SunTimer and Mascot */}
-            {/* Responsive height: h-24 on mobile, h-32 on desktop */}
-            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32">
+            {/* Responsive height: h-24 on mobile, h-32 on desktop, smaller on landscape mobile */}
+            <header className="flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32 landscape:h-16 landscape:lg:h-32">
                 <div className="flex items-center">
                     {/* Enlarged SunTimer for better visibility */}
                     <SunTimer timeLeft={elapsedTime} />
@@ -352,60 +482,17 @@ const MiddlePracticeSession = () => {
                 />
             </div>
 
-            {/* Mobile Scratchpad - Draggable Bottom Sheet */}
+            {/* Mobile Scratchpad - Full Screen Overlay */}
             <AnimatePresence>
                 {showScratchpad && (
-                    <>
-                        {/* Backdrop overlay */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowScratchpad(false)}
-                            className="fixed inset-0 z-[65] bg-black/30 lg:hidden"
-                        />
-                        {/* Bottom Sheet - drag only on handle bar */}
-                        <motion.div
-                            initial={{ y: '100%' }}
-                            animate={{ y: 0 }}
-                            exit={{ y: '100%' }}
-                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed bottom-0 left-0 right-0 z-[70] bg-white rounded-t-3xl shadow-2xl flex flex-col lg:hidden"
-                            style={{ height: '65vh' }}
-                        >
-                            {/* Drag Handle - ONLY this area is draggable to dismiss */}
-                            <motion.div
-                                drag="y"
-                                dragConstraints={{ top: 0, bottom: 0 }}
-                                dragElastic={{ top: 0, bottom: 0.6 }}
-                                onDragEnd={(_, info) => {
-                                    if (info.offset.y > 80 || info.velocity.y > 400) {
-                                        setShowScratchpad(false);
-                                    }
-                                }}
-                                className="flex flex-col items-center pt-3 pb-2 cursor-grab active:cursor-grabbing shrink-0"
-                                style={{ touchAction: 'none' }}
-                            >
-                                <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
-                            </motion.div>
-
-                            {/* Header */}
-                            <div className="flex items-center justify-between px-4 pb-3 border-b border-gray-100 shrink-0">
-                                <h3 className="text-lg font-bold text-[#31326F]">Scratchpad</h3>
-                                <button
-                                    onClick={() => setShowScratchpad(false)}
-                                    className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-                                >
-                                    <X size={20} className="text-gray-600" />
-                                </button>
-                            </div>
-
-                            {/* Canvas */}
-                            <div className="flex-1 relative overflow-hidden">
-                                <InlineScratchpad />
-                            </div>
-                        </motion.div>
-                    </>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] lg:hidden"
+                    >
+                        <FullScreenScratchpad onClose={() => setShowScratchpad(false)} />
+                    </motion.div>
                 )}
             </AnimatePresence>
             {/* Explanation Modal */}
@@ -473,7 +560,8 @@ const MiddlePracticeSession = () => {
                                         className="flex items-center gap-2 px-10 py-4 bg-[#31326F] text-white rounded-2xl font-black text-lg shadow-lg hover:shadow-xl hover:bg-[#25265E] transition-all"
                                     >
                                         Got it
-                                        <ChevronRight size={24} />
+                                        {/* Using CheckCircle2 to indicate completion/acknowledgment instead of navigation arrow */}
+                                        <CheckCircle2 size={24} />
                                     </button>
                                 </div>
                             </div>

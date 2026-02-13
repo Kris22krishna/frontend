@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
 import {
     Play,
     BookOpen,
-    ChevronRight,
     Loader2,
 } from 'lucide-react';
 import { api } from '../../../services/api';
@@ -39,12 +38,6 @@ const StudentDashboard = () => {
         const match = profile.grade.match(/\d+/);
         return match ? parseInt(match[0]) : 5;
     };
-
-    // Subjects (static for now, could be dynamic later)
-    const subjects = [
-        { name: 'Mathematics', icon: '🔢', color: 'bg-blue-500', path: '/math' },
-        { name: 'Learn to Learn', icon: '🧠', color: 'bg-purple-500', path: '/learn-to-learn' },
-    ];
 
     if (loading) {
         return (
@@ -117,36 +110,6 @@ const StudentDashboard = () => {
                             <div className="text-purple-100 text-sm">Browse all subjects</div>
                         </button>
                     </div>
-
-                    {/* Subjects */}
-                    <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm h-full">
-                        <div className="flex items-center justify-between mb-5">
-                            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                                <BookOpen className="h-5 w-5 text-cyan-500" />
-                                My Subjects
-                            </h2>
-                            <button className="text-cyan-500 text-sm hover:text-cyan-600 flex items-center gap-1">
-                                View All <ChevronRight className="h-4 w-4" />
-                            </button>
-                        </div>
-                        <div className="space-y-4">
-                            {subjects.map((subject, i) => (
-                                <div
-                                    key={i}
-                                    onClick={() => navigate(subject.path)}
-                                    className="bg-slate-50 rounded-xl p-4 flex items-center gap-4 cursor-pointer hover:bg-slate-100 transition-all group border border-slate-100"
-                                >
-                                    <div className="text-4xl">{subject.icon}</div>
-                                    <div className="flex-1">
-                                        <div className="text-slate-800 font-semibold mb-1">{subject.name}</div>
-                                        <div className="text-slate-400 text-xs">Click to start learning</div>
-                                    </div>
-                                    <ChevronRight className="h-5 w-5 text-slate-300 group-hover:text-slate-500 transition-colors" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

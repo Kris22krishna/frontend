@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { api } from '../../services/api';
 import SEO from '../../components/common/SEO';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import {
     Grid, Layers, Triangle, Zap, Calculator, PieChart,
     ArrowRight, Box, Compass, Cuboid
@@ -10,13 +12,13 @@ import {
 import { LatexText } from '../../components/LatexText';
 import './MiddleGradeSyllabus.css';
 
-const SkillItem = ({ skill }) => (
-    <Link to={`/middle/practice/${skill.skill_id}`} className="middle-skill-item">
+const SkillItem = ({ skill, onClick }) => (
+    <div onClick={() => onClick(skill)} className="middle-skill-item" style={{ cursor: 'pointer' }}>
         <ArrowRight size={16} className="skill-arrow" />
         <span className="skill-text">
             <LatexText text={skill.skill_name} />
         </span>
-    </Link>
+    </div>
 );
 
 SkillItem.propTypes = {
@@ -43,8 +45,28 @@ const getAccentColor = (index) => {
 
 const MiddleGradeSyllabus = () => {
     const { grade } = useParams();
+    const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingSkill, setPendingSkill] = useState(null);
+
+    const handleSkillClick = (skill) => {
+        if (!isAuthenticated) {
+            setPendingSkill(skill);
+            setShowLoginModal(true);
+        } else {
+            navigate(`/middle/practice/${skill.skill_id}`);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingSkill) {
+            navigate(`/middle/practice/${pendingSkill.skill_id}`);
+            setPendingSkill(null);
+        }
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -129,7 +151,7 @@ const MiddleGradeSyllabus = () => {
                                 </div>
                                 <div className="skills-list">
                                     {topicSkills.map(skill => (
-                                        <SkillItem key={skill.skill_id} skill={skill} />
+                                        <SkillItem key={skill.skill_id} skill={skill} onClick={handleSkillClick} />
                                     ))}
                                 </div>
                             </div>
@@ -137,6 +159,11 @@ const MiddleGradeSyllabus = () => {
                     })}
                 </div>
             </div>
+            <LoginPromptModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };

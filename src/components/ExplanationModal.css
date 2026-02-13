@@ -42,6 +42,8 @@
     flex-direction: column;
     max-height: 90vh;
     /* Limit height to viewport */
+    background: #ffffff !important;
+    color: #1e293b;
 }
 
 @keyframes popInModal {
@@ -145,10 +147,35 @@
     display: flex;
     flex-direction: column;
     /* justify-content: center; removed to allow top alignment with scroll */
-    overflow-y: auto;
-    /* Enable vertical scrolling */
+    overflow: hidden;
+    /* Prevent column itself from scrolling */
     max-height: 100%;
+    position: relative;
     /* Use available height */
+}
+
+/* Scrollable Wrapper */
+.explanation-scroll-content {
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+    /* Important for flex child scrolling */
+    padding-right: 0.5rem;
+    /* Avoid scrollbar overlap content */
+}
+
+/* Custom Scrollbar for the content */
+.explanation-scroll-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.explanation-scroll-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.explanation-scroll-content::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
 }
 
 .explanation-header {
@@ -227,16 +254,23 @@
 
 .explanation-detail p {
     font-size: 1.1rem;
-    color: #334155;
+    color: #334155 !important;
     line-height: 1.6;
     margin: 0;
 }
 
 /* Action Button */
 .explanation-actions {
-    margin-top: 2.5rem;
+    margin-top: 0;
+    padding-top: 1.5rem;
     display: flex;
     justify-content: flex-end;
+    /* border-top: 1px solid #e2e8f0; Optional separator */
+    flex-shrink: 0;
+    /* Don't shrink */
+    z-index: 10;
+    background: white;
+    /* Ensure opacity over scrolled content */
 }
 
 .action-main-btn {
@@ -310,7 +344,12 @@
 
     .explanation-actions {
         justify-content: center;
-        margin-top: 1.5rem;
+        margin-top: 0;
+        padding-top: 1rem;
+        padding-bottom: 0.5rem;
+        /* Ensure touch target */
+        width: 100%;
+        background: white;
     }
 
     .action-main-btn {

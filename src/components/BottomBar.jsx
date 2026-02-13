@@ -1,4 +1,4 @@
-import { ChevronRight, Eraser, Eye, LogOut } from 'lucide-react';
+import { ChevronRight, Eye, LogOut } from 'lucide-react';
 import clsx from 'clsx';
 
 // BottomBar Component
@@ -44,11 +44,6 @@ export function BottomBar({
                     <span className="hidden lg:inline">Exit</span>
                 </button>
 
-                {/* Clear Answer (only shows if we have an answer to clear? No, always show to confirm user intent, maybe disable if no answer? Logic in parent handles validation) */}
-                <button onClick={onClear} className={clsx(buttonBase, secondaryBtn, "hidden lg:flex")}>
-                    <Eraser size={18} />
-                    Clear Answer
-                </button>
 
                 {/* Mobile: Scratchpad Toggle Button */}
                 <button
