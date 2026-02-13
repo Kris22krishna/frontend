@@ -30,7 +30,7 @@ const JuniorSubtopics = () => {
     const [pendingSubtopic, setPendingSubtopic] = useState(null);
     const decodedTopic = decodeURIComponent(topic);
 
-    const handleSubtopicClick = (subtopic) => {
+    const handleSubtopicClick = (subtopic, index) => {
         if (!isAuthenticated) {
             setPendingSubtopic(subtopic);
             setShowLoginModal(true);
@@ -142,7 +142,7 @@ const JuniorSubtopics = () => {
                                         }}
                                         onMouseEnter={() => setHoveredSubtopic(subtopic.id)}
                                         onMouseLeave={() => setHoveredSubtopic(null)}
-                                        onClick={() => handleSubtopicClick(subtopic)}
+                                        onClick={() => handleSubtopicClick(subtopic, index)}
                                     >
                                         {/* Glow effect */}
                                         <div className="pill-glow"></div>
