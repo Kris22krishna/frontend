@@ -2,7 +2,9 @@ import React from 'react';
 import { HomeHero } from '../components/home/HomeHero';
 import { HomeGrades } from '../components/home/HomeGrades';
 import { HomeStats } from '../components/home/HomeStats';
-import { HomeTestimonials } from '../components/home/HomeTestimonials';
+import { HomeRamanujan } from '../components/home/HomeRamanujan';
+import { HomeVideos } from '../components/home/HomeVideos';
+
 
 const Home = () => {
     return (
@@ -10,7 +12,8 @@ const Home = () => {
             <HomeHero />
             <HomeGrades />
             <HomeStats />
-            <HomeTestimonials />
+            <HomeRamanujan />
+            <HomeVideos />
         </div>
     );
 };

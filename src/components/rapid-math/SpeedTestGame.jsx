@@ -31,6 +31,14 @@ export function SpeedTestGame() {
     const [gameState, setGameState] = useState("intro");
     const [selectedDifficulty, setSelectedDifficulty] = useState("standard");
     const [questionCount, setQuestionCount] = useState(10);
+    // Slider state for visual alignment
+    const [sliderValue, setSliderValue] = useState(10);
+
+    // Sync sliderValue with questionCount
+    useEffect(() => {
+        setQuestionCount(sliderValue);
+    }, [sliderValue]);
+
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [questionStartTime, setQuestionStartTime] = useState(0);
     const [stats, setStats] = useState({
@@ -204,6 +212,15 @@ export function SpeedTestGame() {
                             <h1 className="text-6xl font-black tracking-tight text-slate-900 dark:text-white">
                                 Math <span className="text-blue-600">Mastery</span>
                             </h1>
+                            <div className="flex gap-4">
+                                <Button
+                                    onClick={() => navigate('/')}
+                                    variant="outline"
+                                    className="rounded-xl px-4 py-2 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold flex items-center gap-2"
+                                >
+                                    <Home className="w-4 h-4" /> Back to Home
+                                </Button>
+                            </div>
                             <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
                                 Sharpen your arithmetic skills with rapid-fire quizzes. Challenge yourself and track your progress.
                             </p>
@@ -265,19 +282,25 @@ export function SpeedTestGame() {
                                 <h3 className="text-xl font-bold text-slate-800 dark:text-white">Questions</h3>
                                 <span className="text-3xl font-black text-blue-600">{questionCount}</span>
                             </div>
-                            <input
-                                type="range"
-                                min="5"
-                                max="50"
-                                step="5"
-                                value={questionCount}
-                                onChange={(e) => setQuestionCount(parseInt(e.target.value))}
-                                className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                            />
-                            <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                                <span>5</span>
-                                <span>25</span>
-                                <span>50</span>
+                            <div className="relative pt-6 pb-2">
+                                <input
+                                    type="range"
+                                    min="5"
+                                    max="50"
+                                    step="5"
+                                    value={sliderValue}
+                                    onChange={(e) => setSliderValue(parseInt(e.target.value))}
+                                    className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                    style={{
+                                        background: `linear-gradient(to right, #2563ea ${((sliderValue - 5) / 45) * 100}%, #e2e8f0 ${((sliderValue - 5) / 45) * 100}%)`
+                                    }}
+                                />
+                                <div className="absolute top-0 w-full flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider select-none pointer-events-none">
+                                    <span>5</span>
+                                    {/* Position 25 approximately where it falls on the linear scale (20/45 ≈ 44.4%) */}
+                                    <span style={{ position: 'absolute', left: '44.4%', transform: 'translateX(-50%)' }}>25</span>
+                                    <span>50</span>
+                                </div>
                             </div>
                         </div>
 
