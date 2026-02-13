@@ -23,12 +23,14 @@ const LoginPage = () => {
         setError('');
 
         try {
+            console.log("Attempting login with:", identifier);
             const response = await authService.loginWithEmail(identifier, password);
-            console.log('Login Success:', response);
+            console.log('Login Service Response:', response);
 
             // Redirect based on role
             // Redirect based on role
             const userType = response.role || response.user_type || 'student'; // Fallback
+            console.log("Detected User Type:", userType);
 
             if (userType === 'student') {
                 const grade = response.grade || response.class_name;
@@ -48,6 +50,7 @@ const LoginPage = () => {
                     }
                 }
                 // If grade logic fails or no grade present
+                console.log("Redirecting to default student dashboard");
                 navigate('/student-dashboard');
             } else {
                 const dashboardMap = {
@@ -58,11 +61,12 @@ const LoginPage = () => {
                     'admin': '/admin'
                 };
                 const targetPath = dashboardMap[userType] || '/';
+                console.log("Redirecting to:", targetPath);
                 navigate(targetPath);
             }
 
         } catch (err) {
-            console.error('Login Failed:', err);
+            console.error('Login Failed Detailed:', err);
             // Handle object errors from API
             const msg = err.detail || err.message || (typeof err === 'string' ? err : 'Login failed. Please check your credentials.');
             setError(msg);

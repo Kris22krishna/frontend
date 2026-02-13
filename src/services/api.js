@@ -686,6 +686,28 @@ export const api = {
         return handleResponse(response);
     },
 
+    // --- Mentor ---
+    getMentorProfile: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/mentor/profile`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getMentorStudents: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/mentor/students`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getMentorStats: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/mentor/stats`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     // --- Admin ---
     getAdminDashboardOverview: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/admin/overview`, {
