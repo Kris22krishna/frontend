@@ -78,15 +78,33 @@ const DetailsSection = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                         >
-                            <div className="flex items-center gap-3 mb-4">
-                                <MapPin className="w-6 h-6 text-blue-400" />
-                                <h3 className="text-xl font-bold text-white">Venue</h3>
+                            <div className="flex flex-col md:flex-row gap-6">
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <MapPin className="w-6 h-6 text-blue-400" />
+                                        <h3 className="text-xl font-bold text-white">Venue</h3>
+                                    </div>
+                                    <p className="text-white font-medium mb-1">Learners Digital Skill Hub</p>
+                                    <p className="text-slate-400 text-sm">Nesara Tech Park, Hebbal Industrial Area, Mysuru</p>
+                                    <p className="text-slate-400 text-sm mt-3">
+                                        A professional space designed to inspire creativity, innovation, and collaboration.
+                                    </p>
+                                </div>
+                                <div className="flex-1 h-48 md:h-auto rounded-xl overflow-hidden border border-slate-700 shadow-inner">
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Nesara%20Tech%20Park,%20Hebbal%20Industrial%20Area,%20Mysuru+(Learners%20Digital)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                                        title="Learners Digital Location"
+                                        frameBorder="0"
+                                        scrolling="no"
+                                        marginHeight="0"
+                                        marginWidth="0"
+                                        className="grayscale hover:grayscale-0 transition-all duration-500 w-full h-full object-cover"
+                                    >
+                                    </iframe>
+                                </div>
                             </div>
-                            <p className="text-white font-medium mb-1">Learners Digital Skill Hub</p>
-                            <p className="text-slate-400 text-sm">Nesara Tech Park, Hebbal Industrial Area, Mysuru</p>
-                            <p className="text-slate-400 text-sm mt-3">
-                                A professional space designed to inspire creativity, innovation, and collaboration.
-                            </p>
                         </motion.div>
 
                         {/* Who Should Apply */}
