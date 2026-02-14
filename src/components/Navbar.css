@@ -48,6 +48,29 @@
     color: #fff !important;
 }
 
+/* Mobile Dropdown Override for Transparent Navbar */
+.navbar-transparent .mobile-dropdown {
+    background: rgba(15, 23, 42, 0.95) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.navbar-transparent .mobile-dropdown-item {
+    color: #cbd5e1 !important;
+}
+
+.navbar-transparent .mobile-dropdown-item:hover,
+.navbar-transparent .mobile-dropdown-item.active {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Primary Button Override for Transparent Navbar */
+.navbar-transparent .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
 .navbar-content {
     display: flex !important;
     justify-content: space-between;

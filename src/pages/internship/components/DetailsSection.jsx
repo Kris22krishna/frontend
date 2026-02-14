@@ -94,12 +94,14 @@ const DetailsSection = () => {
                                     <iframe
                                         width="100%"
                                         height="100%"
-                                        src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Nesara%20Tech%20Park,%20Hebbal%20Industrial%20Area,%20Mysuru+(Learners%20Digital)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                                        src="https://maps.google.com/maps?width=100%25&height=600&hl=en&q=Nesara%20Tech%20Park,%20Hebbal%20Industrial%20Area,%20Mysuru+(Learners%20Digital)&t=&z=15&ie=UTF8&iwloc=B&output=embed"
                                         title="Learners Digital Location"
                                         frameBorder="0"
                                         scrolling="no"
                                         marginHeight="0"
                                         marginWidth="0"
+                                        loading="lazy"
+                                        sandbox="allow-scripts allow-same-origin"
                                         className="grayscale hover:grayscale-0 transition-all duration-500 w-full h-full object-cover"
                                     >
                                     </iframe>
@@ -138,8 +140,8 @@ const DetailsSection = () => {
                         >
                             <h3 className="text-xl font-bold text-white mb-4">Get in Touch</h3>
                             <div className="space-y-3">
-                                <a href="tel:9632402004" className="flex items-center gap-3 text-slate-400 hover:text-blue-400 transition-colors">
-                                    <Phone className="w-5 h-5" /> <span>9632402004</span>
+                                <a href="tel:+919632402004" className="flex items-center gap-3 text-slate-400 hover:text-blue-400 transition-colors">
+                                    <Phone className="w-5 h-5" /> <span>+91 9632402004</span>
                                 </a>
                                 <a href="https://instagram.com/skill100.ai" target="_blank" rel="noreferrer" className="flex items-center gap-3 text-slate-400 hover:text-blue-400 transition-colors">
                                     <Instagram className="w-5 h-5" /> <span>skill100.ai</span>
