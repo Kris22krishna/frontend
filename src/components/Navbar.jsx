@@ -17,6 +17,7 @@ const Navbar = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const isTransparent = location.pathname === '/internship';
 
     // Close menu on navigation
     useEffect(() => {
@@ -55,11 +56,11 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="navbar">
+        <nav className={`navbar ${isTransparent ? 'navbar-transparent' : ''}`}>
             <div className="navbar-content">
                 <Link to="/" className="logo">
-                    <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />
-                    <span>skill100.ai</span>
+                    {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
+                    <span>Skill100.AI</span>
                 </Link>
 
                 <div className="nav-center hidden-mobile">
