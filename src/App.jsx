@@ -10,6 +10,7 @@ import DynamicQuestionsDashboard from './pages/DynamicQuestionsDashboard';
 import PracticeSession from './pages/PracticeSession';
 import UploaderLogin from './pages/UploaderLogin';
 import RapidMathPage from './pages/RapidMathPage';
+import Internship from './pages/Internship';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -96,6 +97,7 @@ function App() {
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
+        <Route path="/internship" element={<Internship />} />
 
         {/* Junior Routes (Grades 1-4 child-friendly design) */}
         <Route path="/junior/grade/:grade" element={<JuniorGradeSyllabus />} />
