@@ -10,7 +10,7 @@ import DynamicQuestionsDashboard from './pages/DynamicQuestionsDashboard';
 import PracticeSession from './pages/PracticeSession';
 import UploaderLogin from './pages/UploaderLogin';
 import RapidMathPage from './pages/RapidMathPage';
-import Internship from './pages/Internship';
+import Internship from './pages/internship/Internship';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
