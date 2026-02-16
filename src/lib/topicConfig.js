@@ -7,7 +7,10 @@ export const TOPIC_CONFIGS = {
         ],
         'Fair Share': [
             { id: "FS-01", name: "Cutting equal parts" },
-            { id: "FS-02", name: "Halves and doubles" }
+            { id: "FS-02", name: "Halves and doubles" },
+            { id: "FS-03", name: "Drawing other half" },
+            { id: "FS-04", name: "Guess Who Am I?" }
         ]
     }
 };
+

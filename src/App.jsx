@@ -76,6 +76,8 @@ import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Ba
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
 import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
+import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
+import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -136,6 +138,16 @@ function App() {
         <Route path="/junior/grade/:grade/fair-share/halves-doubles" element={
           <ProtectedRoute redirectTo="/login">
             <FairShareHalvesDoubles />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/draw" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareDraw />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/guess-who" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareGuesswho />
           </ProtectedRoute>
         } />
 
