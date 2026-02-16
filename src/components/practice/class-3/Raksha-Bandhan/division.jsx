@@ -100,7 +100,7 @@ const RakshaBandhanDivision = () => {
                     questionText = `
                         <div class='question-container'>
                             <p>There are ${total} kaju katlis in a tray.</p>
-                            <p>${groupSize} sweets are packed in one small box.</p>
+                            <p>${groupSize} kaju katlis are packed in one small box.</p>
                             <p><strong>How many boxes can be made?</strong></p>
                         </div>
                     `;
