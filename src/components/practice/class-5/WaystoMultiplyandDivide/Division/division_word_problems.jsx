@@ -1,14 +1,16 @@
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { Check, Eye, ChevronRight, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { api } from "../../../../../services/api";
+import LatexContent from "../../../../LatexContent";
+import ExplanationModal from "../../../../ExplanationModal";
+import "../../../../../pages/juniors/JuniorPracticeSession.css";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../../services/api';
-import LatexContent from '../../../../LatexContent';
-import ExplanationModal from '../../../../ExplanationModal';
-import '../../../../../pages/juniors/JuniorPracticeSession.css';
+const randomInt = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
 
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const TOTAL_QUESTIONS = 10;
 
 const CORRECT_MESSAGES = [
     "✨ Amazing job! You got it! ✨",
@@ -21,168 +23,154 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const DivisionEndingZero = () => {
+const DivisionWordProblems = () => {
     const navigate = useNavigate();
 
-    // Core Game State
     const [qIndex, setQIndex] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
-
-    // Feedback State
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [feedbackMessage, setFeedbackMessage] = useState("");
-
-    // Session / Timing State
-    const [timeElapsed, setTimeElapsed] = useState(0);
     const [sessionId, setSessionId] = useState(null);
     const [answers, setAnswers] = useState({});
+    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [feedbackMessage, setFeedbackMessage] = useState("");
 
-    // Refs for accurate timing
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
-    const isTabActive = useRef(true);
+    const usedQuestions = useRef([]);
 
-    // Difficulty State
-    const [currentLevel, setCurrentLevel] = useState(0); // 0: Easy, 1: Medium, 2: Hard
-    const [consecutiveWrong, setConsecutiveWrong] = useState(0);
-
-    const SKILL_ID = 9010;
-    const SKILL_NAME = "Divide numbers ending in zeroes";
-    const TOTAL_QUESTIONS = 10;
-
-    // --- Effects ---
+    const SKILL_ID = 9011;
+    const SKILL_NAME = "Division Word Problems";
 
     useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const userId =
+            sessionStorage.getItem("userId") || localStorage.getItem("userId");
+
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            }).catch(err => console.error("Failed to start session", err));
+            api.createPracticeSession(userId, SKILL_ID).then((sess) => {
+                if (sess?.session_id) setSessionId(sess.session_id);
+            });
         }
 
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
-
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                accumulatedTime.current += Date.now() - questionStartTime.current;
-                isTabActive.current = false;
-            } else {
-                questionStartTime.current = Date.now();
-                isTabActive.current = true;
-            }
-        };
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
-        return () => {
-            clearInterval(timer);
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
+        const timer = setInterval(() => setTimeElapsed((p) => p + 1), 1000);
+        return () => clearInterval(timer);
     }, []);
 
-    useEffect(() => {
-        let level = currentLevel;
-        if (qIndex === 3 && currentLevel < 1) {
-            level = 1;
-            setCurrentLevel(1);
-        } else if (qIndex === 6 && currentLevel < 2) {
-            level = 2;
-            setCurrentLevel(2);
+    useEffect(() => generateQuestion(), [qIndex]);
+
+    // 📚 Division word problems
+    const divisionProblems = [
+        () => {
+            const money = randomInt(900, 1500);
+            const cost = randomInt(30, 60);
+            return {
+                q: `Isha has ₹${money}. Petrol costs ₹${cost} per litre. How many litres can she buy?`,
+                a: Math.floor(money / cost),
+            };
+        },
+        () => {
+            const pencils = randomInt(800, 1000);
+            return {
+                q: `Each child gets 4 pencils. If there are ${pencils} pencils, how many children will get them?`,
+                a: Math.floor(pencils / 4),
+            };
+        },
+        () => {
+            const loan = randomInt(8000, 12000);
+            const months = randomInt(4, 8);
+            return {
+                q: `A loan of ₹${loan} is repaid in ${months} equal months. How much per month?`,
+                a: Math.floor(loan / months),
+            };
+        },
+        () => {
+            const children = randomInt(900, 1000);
+            return {
+                q: `${children} children are going on a picnic. If 25 sit in one bus, how many buses are needed?`,
+                a: Math.ceil(children / 25),
+            };
+        },
+        () => {
+            const books = randomInt(500, 600);
+            const perBox = randomInt(20, 30);
+            return {
+                q: `${books} books are packed with ${perBox} books in each box. How many boxes are needed?`,
+                a: Math.ceil(books / perBox),
+            };
+        },
+        () => {
+            const trees = randomInt(400, 500);
+            const perRow = randomInt(10, 20);
+            return {
+                q: `A gardener plants ${trees} trees in rows of ${perRow}. How many rows are needed?`,
+                a: Math.floor(trees / perRow),
+            };
+        },
+        () => {
+            const people = randomInt(800, 900);
+            const rows = randomInt(40, 50);
+            return {
+                q: `${people} people sit in ${rows} rows. How many in each row?`,
+                a: Math.floor(people / rows),
+            };
+        },
+        () => {
+            const hours = randomInt(1800, 2400);
+            return {
+                q: `A battery runs for ${hours} hours continuously. How many days will it run?`,
+                a: Math.floor(hours / 24),
+            };
+        },
+        () => {
+            const laddoos = randomInt(300, 400);
+            const perBox = randomInt(12, 20);
+            return {
+                q: `${laddoos} laddoos are packed in boxes of ${perBox}. How many boxes are needed?`,
+                a: Math.ceil(laddoos / perBox),
+            };
+        },
+        () => {
+            const money = randomInt(2000, 3000);
+            return {
+                q: `₹${money} is divided equally among 4 children. How much does each get?`,
+                a: Math.floor(money / 4),
+            };
+        },
+    ];
+
+    const generateQuestion = () => {
+        if (usedQuestions.current.length === divisionProblems.length) {
+            usedQuestions.current = [];
         }
-        generateQuestion(level);
-    }, [qIndex]);
 
-    // --- Logic ---
+        let index;
+        do {
+            index = randomInt(0, divisionProblems.length - 1);
+        } while (usedQuestions.current.includes(index));
 
-    const generateQuestion = (level) => {
-        let dividend, divisor, quotient, difficultyLabel;
+        usedQuestions.current.push(index);
 
-        if (level === 0) {
-            // Easy: 2-digit dividend ending in zero, 1-digit divisor
-            divisor = randomInt(2, 9);
-            quotient = randomInt(2, 9) * 10;
-            dividend = quotient * divisor;
-            difficultyLabel = "Easy";
-        } else if (level === 1) {
-            // Medium: 3 or 4-digit dividend, divisor depends on zeros
-            const useTwoDigitDivisor = Math.random() > 0.5;
-            if (useTwoDigitDivisor) {
-                divisor = randomInt(2, 9) * 10;
-                quotient = randomInt(2, 30);
-                dividend = quotient * divisor;
-            } else {
-                divisor = randomInt(2, 9);
-                quotient = randomInt(11, 40) * 10;
-                dividend = quotient * divisor;
-            }
-            difficultyLabel = "Medium";
-        } else {
-            // Hard: 4 or 5-digit dividend, larger zeros
-            const useComplexDivisor = Math.random() > 0.5;
-            if (useComplexDivisor) {
-                divisor = randomInt(2, 9) * 100;
-                quotient = randomInt(5, 50);
-                dividend = quotient * divisor;
-            } else {
-                divisor = randomInt(11, 49) * 10;
-                quotient = randomInt(11, 40);
-                dividend = quotient * divisor;
-            }
-            difficultyLabel = "Hard";
-        }
+        const { q, a } = divisionProblems[index]();
 
-        const questionText = `
-            <div class='question-container'>
-                <p>Divide:</p>
-                <div style="font-size: 2em; margin: 10px 0;">
-                    ${dividend} ÷ ${divisor} = ?
-                </div>
-            </div>
-        `;
-
-        // Zero-canceling explanation
-        let divStr = dividend.toString();
-        let dsStr = divisor.toString();
-        let zerosInDiv = (divStr.match(/0+$/) || [""])[0].length;
-        let zerosInDs = (dsStr.match(/0+$/) || [""])[0].length;
-        let canCancel = Math.min(zerosInDiv, zerosInDs);
-
-        let solution = `<strong>Shortcut: Canceling Zeros</strong><br/><br/>`;
-        solution += `When both numbers end in zeros, we can cancel the same number of zeros from both to make it easier.<br/><br/>`;
-
-        if (canCancel > 0) {
-            let simpleDiv = dividend / Math.pow(10, canCancel);
-            let simpleDs = divisor / Math.pow(10, canCancel);
-            solution += `1. Cancel ${canCancel} zero${canCancel > 1 ? 's' : ''} from both: ${dividend} ÷ ${divisor} becomes <strong>${simpleDiv} ÷ ${simpleDs}</strong><br/>`;
-            solution += `2. Divide: ${simpleDiv} ÷ ${simpleDs} = <strong>${quotient}</strong><br/>`;
-        } else {
-            solution += `1. Divide the non-zero parts or use long division.<br/>`;
-            solution += `2. ${dividend} ÷ ${divisor} = <strong>${quotient}</strong><br/>`;
-        }
-
-        solution += `<br/><em>Check:</em> ${divisor} × ${quotient} = ${dividend}`;
-
-        const correctAnswer = quotient.toString();
-        const options = [correctAnswer];
+        const correct = a.toString();
+        const options = [correct];
 
         while (options.length < 4) {
-            const distractor = (quotient + randomInt(-5, 5) * (quotient > 50 ? 10 : 1)).toString();
-            if (!options.includes(distractor) && parseInt(distractor) > 0) {
-                options.push(distractor);
-            }
+            const fake = a + randomInt(-10, 10);
+            if (fake > 0 && !options.includes(fake.toString()))
+                options.push(fake.toString());
         }
 
-        setShuffledOptions([...options].sort(() => Math.random() - 0.5));
+        setShuffledOptions(options.sort(() => Math.random() - 0.5));
+
         setCurrentQuestion({
-            text: questionText,
-            correctAnswer: correctAnswer,
-            solution: solution,
-            difficulty: difficultyLabel
+            text: `<div class='question-container'><p>${q}</p></div>`,
+            correctAnswer: correct,
+            solution: `<strong>Solution:</strong><br/>To find the answer, we divide the numbers given in the problem.<br/><br/>Answer = <strong>${correct}</strong>`,
+            difficulty: 'Medium'
         });
 
         setSelectedOption(null);
@@ -191,32 +179,25 @@ const DivisionEndingZero = () => {
     };
 
     const handleCheck = () => {
-        if (!selectedOption || !currentQuestion) return;
-        const isRight = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
+        if (!selectedOption) return;
+        const right = selectedOption === currentQuestion.correctAnswer;
+        setIsCorrect(right);
         setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
+        setAnswers((p) => ({ ...p, [qIndex]: right }));
 
-        if (isRight) {
+        if (right) {
             setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-            setConsecutiveWrong(0);
         } else {
             setShowExplanationModal(true);
-            const newWrongCount = consecutiveWrong + 1;
-            if (newWrongCount >= 2) {
-                setCurrentLevel(prev => Math.max(0, prev - 1));
-                setConsecutiveWrong(0);
-            } else {
-                setConsecutiveWrong(newWrongCount);
-            }
         }
-        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+        recordQuestionAttempt(currentQuestion, selectedOption, right);
     };
 
     const recordQuestionAttempt = async (question, selected, isCorrect) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
-        let timeSpent = accumulatedTime.current + (isTabActive.current ? Date.now() - questionStartTime.current : 0);
+
+        let timeSpent = accumulatedTime.current + (Date.now() - questionStartTime.current);
         const seconds = Math.round(timeSpent / 1000);
 
         try {
@@ -224,7 +205,7 @@ const DivisionEndingZero = () => {
                 user_id: parseInt(userId, 10),
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                difficulty_level: question.difficulty || 'Easy',
+                difficulty_level: question.difficulty || 'Medium',
                 question_text: String(question.text || ''),
                 correct_answer: String(question.correctAnswer || ''),
                 student_answer: String(selected || ''),
@@ -239,12 +220,13 @@ const DivisionEndingZero = () => {
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
-            setQIndex(prev => prev + 1);
-            setShowExplanationModal(false);
+            setQIndex((p) => p + 1);
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
+            setShowExplanationModal(false);
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
+
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val === true).length;
@@ -268,13 +250,13 @@ const DivisionEndingZero = () => {
         }
     };
 
-    if (!currentQuestion) return <div>Loading...</div>;
-
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
+
+    if (!currentQuestion) return <div>Loading...</div>;
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
@@ -303,11 +285,19 @@ const DivisionEndingZero = () => {
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
+
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button key={idx} className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`} style={{ fontWeight: '500', fontSize: '1.2rem', fontFamily: '"Proxima Nova", sans-serif' }} onClick={() => setSelectedOption(option)} disabled={isSubmitted}>
-                                                    <LatexContent html={option} />
+                                            {shuffledOptions.map((opt, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => !isSubmitted && setSelectedOption(opt)}
+                                                    className={`option-btn-modern ${selectedOption === opt ? "selected" : ""
+                                                        } ${isSubmitted && opt === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}`}
+                                                    style={{ fontWeight: '500', fontSize: '1.2rem', fontFamily: '"Proxima Nova", sans-serif' }}
+                                                    disabled={isSubmitted}
+                                                >
+                                                    {opt}
                                                 </button>
                                             ))}
                                         </div>
@@ -324,18 +314,27 @@ const DivisionEndingZero = () => {
                 </div>
             </main>
 
-            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
+            <ExplanationModal
+                isOpen={showExplanationModal}
+                isCorrect={isCorrect}
+                correctAnswer={currentQuestion.correctAnswer}
+                explanation={currentQuestion.solution}
+                onClose={() => setShowExplanationModal(false)}
+                onNext={() => setShowExplanationModal(false)}
+            />
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>
+                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>
                             <X size={20} /> Exit
                         </button>
                     </div>
+
                     <div className="bottom-center">
                         {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> View Explanation</button>}
                     </div>
+
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
                             {isSubmitted ? (
@@ -355,4 +354,4 @@ const DivisionEndingZero = () => {
     );
 };
 
-export default DivisionEndingZero;
+export default DivisionWordProblems;

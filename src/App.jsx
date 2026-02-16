@@ -6,6 +6,9 @@ import MultiplicationEndingZero from './components/practice/class-5/WaystoMultip
 import MultiplicationWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_word_problems';
 import DivisionPracticeOneDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_one_digit_number';
 import DivisionPracticeTwoDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_by_two_digit_number';
+import DivisionEndingZero from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_numbers_ending_zeros';
+import DivisionWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Division/division_word_problems';
+import MultiDivWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Skill_application_problems/skill_application_problems';
 import MainLayout from './layouts/WebsiteLayout';
 import Home from './pages/Home';
 import AdminLogin from './pages/AdminLogin';
@@ -218,6 +221,9 @@ function App() {
         <Route path="/middle/practice/9007" element={<MultiplicationWordProblems />} />
         <Route path="/middle/practice/9008" element={<DivisionPracticeOneDigit />} />
         <Route path="/middle/practice/9009" element={<DivisionPracticeTwoDigit />} />
+        <Route path="/middle/practice/9010" element={<DivisionEndingZero />} />
+        <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
+        <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>
