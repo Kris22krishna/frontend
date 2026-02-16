@@ -83,6 +83,47 @@ const RakshaBandhanDivision = () => {
     }, [qIndex]);
 
     const generateQuestion = (index) => {
+        if (index === 9) {
+            const subQuestions = [
+                { type: "all 50 rupees notes?", denom: 50, ans: 10 },
+                { type: "all 20 rupees notes?", denom: 20, ans: 25 },
+                { type: "all 10 rupees notes?", denom: 10, ans: 50 }
+            ];
+            const sub = subQuestions[Math.floor(Math.random() * subQuestions.length)];
+
+            const questionText = `
+                <div class='question-container'>
+                    <p>Preeti has a ₹500 note and wants to exchange it for lower denomination notes.</p>
+                    <p>How many notes will she get if she wants ${sub.type}</p>
+                </div>
+            `;
+            const explanation = `Total amount = ₹500.<br/>Note denomination = ₹${sub.denom}.<br/>Number of notes = 500 ÷ ${sub.denom} = <strong>${sub.ans}</strong>.`;
+
+            const correctAnswer = sub.ans;
+            const options = [
+                correctAnswer.toString(),
+                (correctAnswer + 5).toString(),
+                (correctAnswer - 5 > 0 ? correctAnswer - 5 : correctAnswer + 2).toString(),
+                (correctAnswer * 2).toString()
+            ];
+
+            const uniqueOptions = [...new Set(options)];
+            while (uniqueOptions.length < 4) {
+                let rand = (correctAnswer + randomInt(1, 20)).toString();
+                if (!uniqueOptions.includes(rand)) uniqueOptions.push(rand);
+            }
+
+            setShuffledOptions([...uniqueOptions].sort(() => Math.random() - 0.5));
+            setCurrentQuestion({
+                text: questionText,
+                correctAnswer: correctAnswer.toString(),
+                solution: explanation
+            });
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            return;
+        }
         const storyTypes = ["spiders", "kaju", "idlis"];
         const storyType = storyTypes[Math.floor(Math.random() * storyTypes.length)];
 
