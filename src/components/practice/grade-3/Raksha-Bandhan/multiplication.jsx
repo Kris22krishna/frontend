@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, Pencil, X, Star, Home, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
@@ -11,31 +11,7 @@ import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 
-const ITEMS = [
-    { plural: "Rakhis", singular: "Rakhi", unit: "threads" },
-    { plural: "Boxes", singular: "Box", unit: "sweets" },
-    { plural: "Gift packs", singular: "Gift pack", unit: "chocolates" },
-    { plural: "Sisters", singular: "Sister", unit: "envelopes" },
-    { plural: "Plates", singular: "Plate", unit: "laddoos" },
-    { plural: "Rakhi cards", singular: "Rakhi card", unit: "stickers" },
-    { plural: "Thalis", singular: "Thali", unit: "diyas" },
-    { plural: "Bundles", singular: "Bundle", unit: "rakhi threads" },
-    { plural: "Gift bags", singular: "Gift bag", unit: "ribbons" },
-    { plural: "Trays", singular: "Tray", unit: "cups of water" }
-];
-
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-const CORRECT_MESSAGES = [
-    "✨ Amazing job! You got it! ✨",
-    "🌟 Brilliant! Keep it up! 🌟",
-    "🎉 Correct! You're a math-star! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
-    "🌈 Perfect! Well done! 🌈",
-    "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Excellent! 💎"
-];
+import { RAKSHA_ITEMS, CORRECT_MESSAGES, generateMultiplicationQuestionData } from './questions';
 
 const RakshaBandhanMultiplication = () => {
     const { grade } = useParams();
@@ -49,6 +25,8 @@ const RakshaBandhanMultiplication = () => {
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showResults, setShowResults] = useState(false);
+    const [questLog, setQuestLog] = useState([]);
 
     // Logging states
     const [sessionId, setSessionId] = useState(null);
@@ -74,7 +52,7 @@ const RakshaBandhanMultiplication = () => {
         }
 
         const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
+            if (!showResults) setTimeElapsed(prev => prev + 1);
         }, 1000);
 
         // Visibility Change logic
@@ -90,80 +68,23 @@ const RakshaBandhanMultiplication = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         // Shuffle everything once per session
-        setShuffledItems([...ITEMS].sort(() => Math.random() - 0.5));
+        setShuffledItems([...RAKSHA_ITEMS].sort(() => Math.random() - 0.5));
         setTemplateIndices(Array(TOTAL_QUESTIONS).fill(0).map(() => Math.floor(Math.random() * 3)));
 
         return () => {
             clearInterval(timer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [showResults]);
 
     useEffect(() => {
-        if (shuffledItems.length > 0) {
+        if (shuffledItems.length > 0 && !showResults) {
             generateQuestion(qIndex);
         }
-    }, [qIndex, shuffledItems]);
+    }, [qIndex, shuffledItems, showResults]);
 
     const generateQuestion = (index) => {
-        let groups, perGroup;
-
-        // Progressive difficulty with random ranges
-        switch (index) {
-            case 0: groups = randomInt(2, 3); perGroup = 2; break;
-            case 1: groups = randomInt(4, 5); perGroup = 2; break;
-            case 2: groups = randomInt(2, 4); perGroup = 5; break;
-            case 3: groups = randomInt(6, 8); perGroup = 2; break;
-            case 4: groups = randomInt(3, 4); perGroup = randomInt(3, 4); break;
-            case 5: groups = randomInt(2, 3); perGroup = randomInt(6, 7); break;
-            case 6: groups = 5; perGroup = randomInt(3, 5); break;
-            case 7: groups = randomInt(4, 6); perGroup = randomInt(4, 5); break;
-            case 8: groups = randomInt(7, 10); perGroup = 3; break;
-            case 9: groups = randomInt(8, 10); perGroup = 5; break;
-            default: groups = randomInt(2, 10); perGroup = randomInt(2, 5);
-        }
-
-        const item = shuffledItems[index % shuffledItems.length];
-        const total = groups * perGroup;
-        const repeatedAddition = Array(groups).fill(perGroup).join(' + ');
-        const templateIdx = templateIndices[index % templateIndices.length];
-
-        const templates = [
-            `<div class='question-container'>
-                <p>We found ${groups} ${item.plural} for the celebration.</p>
-                <p>Each ${item.singular} has ${perGroup} ${item.unit}.</p>
-                <p>How many ${item.unit} do we have in total?</p>
-             </div>`,
-            `<div class='question-container'>
-                <p>During Raksha Bandhan, we used ${groups} ${item.plural}.</p>
-                <p>If every ${item.singular} contains ${perGroup} ${item.unit}, what is the total number of ${item.unit}?</p>
-             </div>`,
-            `<div class='question-container'>
-                <p>There are ${groups} ${item.plural} placed on a tray.</p>
-                <p>Since each ${item.singular} holds ${perGroup} ${item.unit}, calculate the total count of ${item.unit}.</p>
-             </div>`
-        ];
-
-        const qData = {
-            text: templates[templateIdx],
-            correctAnswer: total.toString(),
-            solution: `We can find the total by adding ${perGroup} repeatedly ${groups} times:<br/>
-                       <strong>${repeatedAddition} = ${total}</strong>.<br/><br/>
-                       In multiplication, this is <strong>${groups} × ${perGroup} = ${total}</strong>.`,
-            options: [
-                total.toString(),
-                (total + perGroup).toString(),
-                (total - 1 > 0 ? total - 1 : total + 1).toString(),
-                (groups + perGroup).toString()
-            ]
-        };
-
-        // Ensure options are unique
-        qData.options = [...new Set(qData.options)];
-        while (qData.options.length < 4) {
-            let rand = (total + randomInt(1, 10)).toString();
-            if (!qData.options.includes(rand)) qData.options.push(rand);
-        }
+        const qData = generateMultiplicationQuestionData(index, shuffledItems, templateIndices);
 
         setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
         setCurrentQuestion(qData);
@@ -171,6 +92,7 @@ const RakshaBandhanMultiplication = () => {
         setIsSubmitted(false);
         setIsCorrect(false);
     };
+
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
@@ -212,6 +134,15 @@ const RakshaBandhanMultiplication = () => {
         setIsCorrect(isRight);
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
+
+        // Add to quest log for report card
+        setQuestLog(prev => [...prev, {
+            text: currentQuestion.text,
+            correctAnswer: currentQuestion.correctAnswer,
+            selectedAnswer: selectedOption,
+            isCorrect: isRight,
+            solution: currentQuestion.solution
+        }]);
 
         if (isRight) {
             setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
@@ -263,7 +194,7 @@ const RakshaBandhanMultiplication = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setShowResults(true);
         }
     };
 
@@ -271,6 +202,138 @@ const RakshaBandhanMultiplication = () => {
         if (isSubmitted) return;
         setSelectedOption(option);
     };
+
+    if (showResults) {
+        const totalCorrect = Object.values(answers).filter(val => val === true).length;
+        const percentage = Math.round((totalCorrect / TOTAL_QUESTIONS) * 100);
+
+        return (
+            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+                <header className="junior-practice-header results-header relative">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                    >
+                        <FileText size={28} /> Back to Topics
+                    </button>
+                    <div className="sun-timer-container">
+                        <div className="sun-timer">
+                            <div className="sun-rays"></div>
+                            <span className="timer-text">Done!</span>
+                        </div>
+                    </div>
+                    <div className="title-area">
+                        <h1 className="results-title">Adventure Report</h1>
+                    </div>
+                </header>
+
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}
+                                >
+                                    <Star
+                                        size={60}
+                                        fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
+                                        color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{totalCorrect}/{TOTAL_QUESTIONS}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Status</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage >= 70 ? 'Master!' : 'Growing'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <div className="space-y-4">
+                            {questLog.map((q, idx) => (
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    className={`p-6 rounded-[2rem] border-4 ${q.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
+                                >
+                                    <div className="flex items-start gap-4">
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${q.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                            {idx + 1}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="text-lg font-bold text-[#31326F] mb-4">
+                                                <LatexContent html={q.text} />
+                                            </div>
+
+                                            <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                    <span className={`text-lg font-black ${q.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                        {q.selectedAnswer}
+                                                    </span>
+                                                </div>
+                                                {!q.isCorrect && (
+                                                    <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                        <span className="text-lg font-black text-[#31326F]">
+                                                            {q.correctAnswer}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
+                                                <div className="text-sm font-medium text-gray-600 leading-relaxed">
+                                                    <LatexContent html={q.solution} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                            {q.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Start New Quest
+                        </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>
+                            <Home size={24} /> Back to Topics
+                        </button>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     if (!currentQuestion) return <div>Loading...</div>;
 
@@ -293,6 +356,7 @@ const RakshaBandhanMultiplication = () => {
                     </div>
                 </div>
             </header>
+
 
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
