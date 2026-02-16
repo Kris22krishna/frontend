@@ -74,6 +74,7 @@ import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
+import RakshaBandhanFactors from './components/practice/class-3/Raksha-Bandhan/factors';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -110,7 +111,7 @@ function App() {
             <JuniorPracticeSession />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanIntro />
@@ -124,6 +125,11 @@ function App() {
         <Route path="/junior/grade/:grade/raksha-bandhan/division" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/raksha-bandhan/factors" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanFactors />
           </ProtectedRoute>
         } />
 
