@@ -51,6 +51,14 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
             return;
         }
+        if (subtopic.id === "FS-01") {
+            navigate(`/junior/grade/${grade}/fair-share/cutting`);
+            return;
+        }
+        if (subtopic.id === "FS-02") {
+            navigate(`/junior/grade/${grade}/fair-share/halves-doubles`);
+            return;
+        }
 
         navigate(
             `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
@@ -69,6 +77,10 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
             } else if (subtopic.id === "RB-03") {
                 navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            } else if (subtopic.id === "FS-01") {
+                navigate(`/junior/grade/${grade}/fair-share/cutting`);
+            } else if (subtopic.id === "FS-02") {
+                navigate(`/junior/grade/${grade}/fair-share/halves-doubles`);
             } else {
                 navigate(
                     `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,

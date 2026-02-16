@@ -74,6 +74,8 @@ import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
+import FairShareCutting from './components/practice/class-3/fair-share/cutting';
+import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -110,7 +112,7 @@ function App() {
             <JuniorPracticeSession />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanIntro />
@@ -124,6 +126,16 @@ function App() {
         <Route path="/junior/grade/:grade/raksha-bandhan/division" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/cutting" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareCutting />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/halves-doubles" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareHalvesDoubles />
           </ProtectedRoute>
         } />
 
