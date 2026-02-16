@@ -8,6 +8,7 @@ import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { api } from '../../services/api';
 import { LatexText } from '../../components/LatexText';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
+import { TOPIC_CONFIGS } from '../../lib/topicConfig';
 import './JuniorSubtopics.css';
 
 // Colors for subtopics
@@ -104,23 +105,16 @@ const JuniorSubtopics = () => {
                     };
                 });
 
-                // Manually inject for Raksha Bandhan
-                if (gradeNum === '3' && decodedTopic === 'Raksha Bandhan') {
+                // Manually inject for special topics
+                const gradeConfigs = TOPIC_CONFIGS[gradeNum];
+                if (gradeConfigs && gradeConfigs[decodedTopic]) {
                     if (subtopicList.length === 0) {
-                        subtopicList.push({
-                            id: "RB-01",
-                            name: "Conceptual questions",
-                            colorIndex: 0
-                        });
-                        subtopicList.push({
-                            id: "RB-02",
-                            name: "Multiplication",
-                            colorIndex: 1
-                        });
-                        subtopicList.push({
-                            id: "RB-03",
-                            name: "Division",
-                            colorIndex: 2
+                        gradeConfigs[decodedTopic].forEach((skill, index) => {
+                            subtopicList.push({
+                                id: skill.id,
+                                name: skill.name,
+                                colorIndex: index % subtopicColors.length
+                            });
                         });
                     }
                 }
