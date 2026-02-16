@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ImageWithFallback } from './ImageWithFallback';
 import { Send, Eye, Eraser, LogOut, ChevronRight } from 'lucide-react';
 import { LatexText } from './LatexText';
+import LatexContent from './LatexContent';
 
 /**
  * OptionButton Component
@@ -156,14 +157,6 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNe
                         Explain
                     </button>
                 )}
-                {hasAnswered && (
-                    <button
-                        onClick={onClear}
-                        className="flex items-center gap-1 px-3 py-2 bg-white text-[#637AB9] border-2 border-[#A8FBD3] rounded-xl hover:border-[#4FB7B3] text-sm font-medium transition-all"
-                    >
-                        <Eraser size={16} />
-                    </button>
-                )}
             </div>
 
             {/* Right: Next */}
@@ -202,7 +195,7 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNe
                             <div className="shrink-0 flex items-start gap-2 mb-4">
                                 <span className="text-xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
                                 <div className="text-lg md:text-xl font-bold text-[#31326F] leading-snug">
-                                    <LatexText text={question.text} />
+                                    <LatexContent html={question.text} block={true} />
                                 </div>
                             </div>
 
@@ -240,8 +233,8 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNe
                         {/* Header */}
                         <div className="shrink-0 flex items-start gap-4 mb-4 sm:mb-6">
                             <span className="text-lg md:text-2xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
-                            <div className="text-lg md:text-2xl font-bold text-[#31326F] leading-snug">
-                                <LatexText text={question.text} />
+                            <div className="text-lg md:text-2xl font-bold text-[#31326F] leading-snug w-full">
+                                <LatexContent html={question.text} block={true} />
                             </div>
                         </div>
 

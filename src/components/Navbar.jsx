@@ -1,43 +1,44 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import './Navbar.css';
 import logo from '../assets/logo.jpg';
-import { api } from '../services/api';
+// import { api } from '../services/api'; // No longer needed directly for auth state
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userType, setUserType] = useState(null);
+    // Consume AuthContext
+    const { isAuthenticated, user, logout } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    // Derived state
+    const userType = user?.role; // Ensure user object has role
+
     const navigate = useNavigate();
     const location = useLocation();
-
-    useEffect(() => {
-        const checkAuth = () => {
-            const isAuth = api.isAuthenticated();
-            const storedUserType = localStorage.getItem('userType');
-            setIsAuthenticated(isAuth);
-            setUserType(storedUserType);
-        };
-
-        checkAuth();
-        window.addEventListener('auth-change', checkAuth);
-        return () => window.removeEventListener('auth-change', checkAuth);
-    }, [location]);
+    const isTransparent = location.pathname === '/internship';
 
     // Close menu on navigation
     useEffect(() => {
         setIsMenuOpen(false);
     }, [location.pathname]);
 
-    const handleLogout = () => {
-        api.logout();
-        setIsAuthenticated(false);
-        setUserType(null);
-        navigate('/login');
+    const handleLogout = async () => {
+        await logout();
+        toast.success("Logged out successfully! Hope to see you again soon 👋", {
+            duration: 4000,
+            style: {
+                background: '#333',
+                color: '#fff',
+            },
+        });
+        navigate('/');
     };
 
     const getPortalPath = () => {
+        if (!userType) return '/guest-dashboard';
+
         switch (userType) {
             case 'parent': return '/parent-dashboard';
             case 'student': return '/student-dashboard';
@@ -55,31 +56,22 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="navbar">
+        <nav className={`navbar ${isTransparent ? 'navbar-transparent' : ''}`}>
             <div className="navbar-content">
                 <Link to="/" className="logo">
-                    <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />
-                    <span>skill100.ai</span>
+                    {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
+                    <span>Skill100.ai</span>
                 </Link>
 
-                {/* Center: Desktop Navigation Links */}
                 <div className="nav-center hidden-mobile">
                     <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>Home</Link>
-                    <Link to="/practice" className={`nav-link-item ${isActive('/practice') || location.pathname.includes('/grade/') ? 'active' : ''}`}>Practice</Link>
                     <Link to="/rapid-math" className={`nav-link-item ${isActive('/rapid-math') ? 'active' : ''}`}>Rapid Math</Link>
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
                     )}
                 </div>
 
-                {/* Right: Actions & Toggle */}
                 <div className="nav-actions">
-                    {!isAuthenticated && (
-                        <div className="nav-auth-mobile show-mobile">
-                            <Link to="/login" className="btn-login">Login / Sign Up</Link>
-                        </div>
-                    )}
-
                     <div className="nav-auth-desktop hidden-mobile">
                         {!isAuthenticated ? (
                             <>
@@ -91,7 +83,6 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    {/* Mobile Menu Toggle */}
                     <button
                         className="menu-toggle show-mobile"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -104,9 +95,7 @@ const Navbar = () => {
                 {/* Mobile Dropdown Menu */}
                 {isMenuOpen && (
                     <div className="mobile-dropdown show-mobile">
-                        <Link to="/practice" className={`mobile-dropdown-item ${isActive('/practice') ? 'active' : ''}`}>
-                            Practice
-                        </Link>
+                        <Link to="/" className="mobile-dropdown-item">Home</Link>
                         <Link to="/rapid-math" className={`mobile-dropdown-item ${isActive('/rapid-math') ? 'active' : ''}`}>
                             Rapid Math
                         </Link>
@@ -116,7 +105,10 @@ const Navbar = () => {
                                 <button onClick={handleLogout} className="mobile-dropdown-item logout-btn">Logout</button>
                             </>
                         ) : (
-                            <Link to="/register" className="mobile-dropdown-item signup-btn">Sign Up</Link>
+                            <>
+                                <Link to="/login" className="mobile-dropdown-item">Login</Link>
+                                <Link to="/register" className="mobile-dropdown-item signup-btn">Sign Up</Link>
+                            </>
                         )}
                     </div>
                 )}

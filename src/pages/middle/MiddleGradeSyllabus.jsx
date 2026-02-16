@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { api } from '../../services/api';
 import SEO from '../../components/common/SEO';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import {
     Grid, Layers, Triangle, Zap, Calculator, PieChart,
-    ArrowRight, Box, Compass, Cuboid
+    ArrowRight, Box, Compass, Cuboid, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { LatexText } from '../../components/LatexText';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 import './MiddleGradeSyllabus.css';
 
-const SkillItem = ({ skill }) => (
-    <Link to={`/middle/practice/${skill.skill_id}`} className="middle-skill-item">
+const SkillItem = ({ skill, onClick }) => (
+    <div onClick={() => onClick(skill)} className="middle-skill-item" style={{ cursor: 'pointer' }}>
         <ArrowRight size={16} className="skill-arrow" />
         <span className="skill-text">
-            <LatexText text={skill.skill_name} />
+            <LatexText text={capitalizeFirstLetter(skill.skill_name)} />
         </span>
-    </Link>
+    </div>
 );
 
 SkillItem.propTypes = {
@@ -43,8 +46,36 @@ const getAccentColor = (index) => {
 
 const MiddleGradeSyllabus = () => {
     const { grade } = useParams();
+    const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingSkill, setPendingSkill] = useState(null);
+    const [expandedSubTopics, setExpandedSubTopics] = useState({});
+
+    const toggleSubTopic = (topic, subTopic) => {
+        setExpandedSubTopics(prev => ({
+            ...prev,
+            [`${topic}-${subTopic}`]: !prev[`${topic}-${subTopic}`]
+        }));
+    };
+
+    const handleSkillClick = (skill) => {
+        if (!isAuthenticated) {
+            setPendingSkill(skill);
+            setShowLoginModal(true);
+        } else {
+            navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingSkill) {
+            navigate(`/middle/practice/${pendingSkill.skill_id}`, { state: { grade: grade } });
+            setPendingSkill(null);
+        }
+    };
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -64,7 +95,7 @@ const MiddleGradeSyllabus = () => {
         fetchData();
     }, [grade]);
 
-    // Group skills by topic
+    // Group skills by topic and sub-topic
     const skillsByTopic = skills.reduce((acc, skill) => {
         const topicName = (skill.topic || 'General').toLowerCase();
         const gradeNum = parseInt(grade.replace('grade', ''));
@@ -75,9 +106,11 @@ const MiddleGradeSyllabus = () => {
         if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
 
         const topic = skill.topic || 'General';
+        const subTopic = skill.sub_topic || 'Main';
 
-        if (!acc[topic]) acc[topic] = [];
-        acc[topic].push(skill);
+        if (!acc[topic]) acc[topic] = {};
+        if (!acc[topic][subTopic]) acc[topic][subTopic] = [];
+        acc[topic][subTopic].push(skill);
         return acc;
     }, {});
 
@@ -88,6 +121,7 @@ const MiddleGradeSyllabus = () => {
             <header className="middle-header">
                 <h1>Class {grade.replace('grade', '')} Maths</h1>
                 <p>No active content found for this grade.</p>
+                <Link to="/" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600', textDecoration: 'none' }}>← Back Home</Link>
             </header>
         </div>
     );
@@ -98,8 +132,8 @@ const MiddleGradeSyllabus = () => {
 
             <div className="middle-container">
                 <div className="middle-nav-controls">
-                    <Link to="/math" className="middle-back-btn">
-                        ← Back to Grades
+                    <Link to="/" className="middle-back-btn">
+                        ← Back Home
                     </Link>
                 </div>
 
@@ -116,26 +150,79 @@ const MiddleGradeSyllabus = () => {
                 </header>
 
                 <div className="middle-masonry-grid">
-                    {Object.entries(skillsByTopic).map(([topic, topicSkills], index) => {
+                    {Object.entries(skillsByTopic).map(([topic, subTopics], index) => {
                         const accentColor = getAccentColor(index);
+
+                        // Define fixed order for sub-topics in "Ways to Multiply and Divide"
+                        const subTopicOrder = ["Multiplication", "Division", "Skill Application Problems"];
+                        const orderedSubTopics = Object.entries(subTopics).sort(([a], [b]) => {
+                            const indexA = subTopicOrder.indexOf(a);
+                            const indexB = subTopicOrder.indexOf(b);
+                            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                            if (indexA !== -1) return -1;
+                            if (indexB !== -1) return 1;
+                            return a.localeCompare(b);
+                        });
+
                         return (
                             <div key={topic} className="middle-topic-card" style={{ '--card-accent': accentColor }}>
                                 <div className="topic-header">
                                     <div className="topic-icon-wrapper">
                                         {getTopicIcon(topic)}
                                     </div>
-                                    <h3 className="category-header">{topic}</h3>
+                                    <h3 className="category-header"><LatexText text={capitalizeFirstLetter(topic)} /></h3>
                                 </div>
-                                <div className="skills-list">
-                                    {topicSkills.map(skill => (
-                                        <SkillItem key={skill.skill_id} skill={skill} />
-                                    ))}
+                                <div className="skills-container-nested">
+                                    {orderedSubTopics.map(([subTopic, topicSkills]) => {
+                                        const isExpanded = expandedSubTopics[`${topic}-${subTopic}`];
+                                        const isMain = subTopic === 'Main';
+                                        const isDirectButton = subTopic === 'Skill Application Problems';
+
+                                        return (
+                                            <div key={subTopic} className={`subtopic-group ${isExpanded ? 'is-expanded' : ''} ${isMain ? 'is-main' : ''} ${isDirectButton ? 'is-direct' : ''}`}>
+                                                {!isMain && (
+                                                    <button
+                                                        className="subtopic-toggle-btn"
+                                                        onClick={() => {
+                                                            if (isDirectButton) {
+                                                                // Navigate directly to the last skill in the group (usually the most comprehensive)
+                                                                handleSkillClick(topicSkills[topicSkills.length - 1]);
+                                                            } else {
+                                                                toggleSubTopic(topic, subTopic);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <span>{subTopic}</span>
+                                                        {isDirectButton ? (
+                                                            <ArrowRight size={18} />
+                                                        ) : (
+                                                            isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />
+                                                        )}
+                                                    </button>
+                                                )}
+                                                {!isDirectButton && (
+                                                    <div className={`skills-list-wrapper ${isExpanded || isMain ? 'show' : 'hide'}`}>
+                                                        <div className="skills-list">
+                                                            {topicSkills.map(skill => (
+                                                                <SkillItem key={skill.skill_id} skill={skill} onClick={handleSkillClick} />
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         );
                     })}
                 </div>
             </div>
+            <LoginPromptModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };

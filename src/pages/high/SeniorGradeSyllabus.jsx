@@ -5,6 +5,7 @@ import { api } from '../../services/api';
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
 import { LatexText } from '../../components/LatexText';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
 import './SeniorGradeSyllabus.css';
 
 const SeniorGradeSyllabus = () => {
@@ -41,7 +42,7 @@ const SeniorGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 8 && !topicName.includes("exponents")) return acc;
+        if (gradeNum === 8 && topicName !== "exponents and power") return acc;
 
         const topic = skill.topic || 'General';
         if (!acc[topic]) acc[topic] = [];
@@ -76,7 +77,7 @@ const SeniorGradeSyllabus = () => {
                     <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📚</div>
                     <h2 style={{ color: '#1e293b', marginBottom: '10px' }}>No Content Available</h2>
                     <p style={{ color: '#64748b' }}>We are currently updating the curriculum for Grade {grade}. Please check back later!</p>
-                    <Link to="/math" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600' }}>← Back to Grades</Link>
+                    <Link to="/" style={{ display: 'inline-block', marginTop: '30px', color: '#4F46E5', fontWeight: '600' }}>← Back Home</Link>
                 </div>
             </div>
         );
@@ -93,7 +94,7 @@ const SeniorGradeSyllabus = () => {
                     <nav className="breadcrumb">
                         <Link to="/" className="home-link">Home</Link>
                         <ChevronRight size={14} />
-                        <Link to="/math" className="home-link">Math</Link>
+                        <Link to="/" className="home-link">Math</Link>
                         <ChevronRight size={14} />
                         <span>Grade {grade}</span>
                     </nav>
@@ -132,7 +133,7 @@ const SeniorGradeSyllabus = () => {
                             <div className="topic-card-icon">
                                 <Layout size={32} />
                             </div>
-                            <h3>{topic}</h3>
+                            <h3><LatexText text={capitalizeFirstLetter(topic)} /></h3>
                             <div className="topic-meta">
                                 {skillsByTopic[topic].length} Skills
                             </div>
@@ -148,7 +149,7 @@ const SeniorGradeSyllabus = () => {
                         <div className="modal-header">
                             <h2>
                                 <Grid size={24} color="#4F46E5" />
-                                {selectedTopic}
+                                <LatexText text={capitalizeFirstLetter(selectedTopic)} />
                             </h2>
                             <button
                                 className="modal-close-btn-text"
@@ -165,9 +166,9 @@ const SeniorGradeSyllabus = () => {
                                     <div
                                         key={skill.skill_id}
                                         className="skill-card-modal"
-                                        onClick={() => navigate(`/high/practice/${skill.skill_id}`)}
+                                        onClick={() => navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } })}
                                     >
-                                        <h4><LatexText text={skill.skill_name} /></h4>
+                                        <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                         <div className="skill-card-footer">
                                             <span className="skill-badge">ID: {skill.skill_id}</span>
                                             <span className="start-btn">

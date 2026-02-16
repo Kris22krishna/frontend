@@ -5,6 +5,8 @@ import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
 import { LatexText } from '../../components/LatexText';
 import { api } from '../../services/api';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
+import { TOPIC_CONFIGS } from '../../lib/topicConfig';
 import './JuniorGradeSyllabus.css';
 
 // Topic icons with pastel colors for children
@@ -47,8 +49,12 @@ const JuniorGradeSyllabus = () => {
             try {
                 setLoading(true);
                 const gradeNum = grade.replace('grade', '');
+                let skillsResponse = [];
 
-                const skillsResponse = await api.getSkills(gradeNum);
+                // For Grade 3, we skip fetching from API and use manual injection below
+                if (gradeNum !== '3') {
+                    skillsResponse = await api.getSkills(gradeNum);
+                }
 
                 const filteredSkills = (skillsResponse || []).filter(skill => {
                     const gradeNumInt = parseInt(gradeNum);
@@ -62,6 +68,23 @@ const JuniorGradeSyllabus = () => {
                     }
                     return true;
                 });
+
+                // Manually inject special topics for Grade 3 if not present
+                if (parseInt(gradeNum) === 3) {
+                    const gradeConfigs = TOPIC_CONFIGS['3'] || {};
+                    Object.entries(gradeConfigs).forEach(([topicName, skills]) => {
+                        const topicExists = filteredSkills.some(s => (s.topic || '').toLowerCase().includes(topicName.toLowerCase()));
+                        if (!topicExists) {
+                            skills.forEach(skill => {
+                                filteredSkills.push({
+                                    skill_id: skill.id,
+                                    skill_name: skill.name,
+                                    topic: topicName
+                                });
+                            });
+                        }
+                    });
+                }
 
                 const topicMap = {};
                 filteredSkills.forEach(skill => {
@@ -115,7 +138,7 @@ const JuniorGradeSyllabus = () => {
 
             <div className="junior-container">
                 {/* Back Button */}
-                <button className="back-btn" onClick={() => navigate('/practice')}>
+                <button className="back-btn" onClick={() => navigate('/')}>
                     <Home className="back-icon" />
                     <span>Back Home</span>
                 </button>
@@ -127,14 +150,14 @@ const JuniorGradeSyllabus = () => {
                         <Sparkles className="sparkle-icon" />
                         <span>{gradeLabels[grade]} Math</span>
                     </div>
-                    <p>Pick a topic to start learning and having fun!</p>
+                    <p>Pick a skill to start learning and having fun!</p>
                 </div>
 
                 {/* Topics Grid */}
                 {loading ? (
                     <div className="loading-container">
                         <div className="loading-spinner"></div>
-                        <p>Loading fun topics...</p>
+                        <p>Loading fun skills...</p>
                     </div>
                 ) : (
                     <div className="topics-grid">
@@ -163,7 +186,7 @@ const JuniorGradeSyllabus = () => {
 
                                     {/* Topic Name */}
                                     <h2 className="topic-name">
-                                        <LatexText text={topic.name} />
+                                        <LatexText text={capitalizeFirstLetter(topic.name)} />
                                     </h2>
 
                                     {/* Progress Bar */}
@@ -174,7 +197,7 @@ const JuniorGradeSyllabus = () => {
 
                                     {/* Skills count */}
                                     <div className="skills-count">
-                                        {topic.skills.length} sub-topics
+                                        {topic.skills.length} Skills
                                     </div>
 
                                     {/* Hover CTA */}

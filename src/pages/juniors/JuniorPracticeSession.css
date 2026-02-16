@@ -222,10 +222,7 @@
     align-items: flex-start;
     justify-content: center;
     gap: 0.8rem;
-    max-height: 30vh;
-    /* Prevent taking up too much vertical space */
-    overflow-y: auto;
-    /* Allow scroll only if absolutely necessary within the text */
+    overflow: visible;
 }
 
 
@@ -318,6 +315,13 @@
     box-shadow: 0 4px 0 #00897B;
 }
 
+.raksha-theme .option-btn-modern.selected {
+    border-color: #f59e0b;
+    background: #FEF3C7;
+    color: #92400E;
+    box-shadow: 0 4px 0 #D97706;
+}
+
 .option-btn-modern.correct {
     background: #C8E6C9;
     border-color: #4CAF50;
@@ -383,7 +387,7 @@
     text-align: center;
     border: 3px solid #B2DFDB;
     border-radius: 1.5rem;
-    background: #F0FFF4;
+    background: white;
     color: #2D3748;
 }
 
@@ -392,6 +396,20 @@
     outline: none;
     box-shadow: 0 0 0 4px rgba(0, 191, 165, 0.2);
     background: white;
+}
+
+.modern-input-field.correct {
+    background: #C8E6C9;
+    border-color: #4CAF50;
+    color: #1B5E20;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+}
+
+.modern-input-field.wrong {
+    background: #FFCDD2;
+    border-color: #EF5350;
+    color: #B71C1C;
+    box-shadow: 0 0 0 4px rgba(239, 83, 80, 0.2);
 }
 
 /* Bottom Action Bar */
@@ -1293,7 +1311,7 @@
     .mobile-footer-right {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         width: 100%;
         gap: 8px;
         /* Gap between Nav buttons */
@@ -1320,7 +1338,8 @@
         top: 10px;
         right: 10px;
         z-index: 100;
-        transform: none;
+        transform: scale(0.65);
+        transform-origin: right top;
     }
 
     .mascot-img-large {
@@ -1544,14 +1563,28 @@
 
 }
 
-/* ============================================
-   FIX: Explanation Modal Color Override
-   ============================================ */
-.junior-practice-page .explanation-header,
-.junior-practice-page .explanation-header h2 {
-    background: transparent !important;
-    color: #1E293B !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    border: none !important;
+/* Results View Styles */
+.results-view {
+    padding-top: 80px;
+    /* Clear fixed Navbar */
+    background-color: #F0FDFA;
+    min-height: 100vh;
+}
+
+.results-header {
+    background: #31326F;
+    height: 160px;
+    /* Taller header for results */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom-left-radius: 4rem;
+    border-bottom-right-radius: 4rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(49, 50, 111, 0.2);
+}
+
+.results-header .back-topics-top {
+    z-index: 1001;
+    /* Above Navbar if needed */
 }

@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Home, Check, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
 import Navbar from '../../components/Navbar';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { api } from '../../services/api';
+import { LatexText } from '../../components/LatexText';
+import { capitalizeFirstLetter } from '../../lib/stringUtils';
+import { TOPIC_CONFIGS } from '../../lib/topicConfig';
 import './JuniorSubtopics.css';
 
 // Colors for subtopics
@@ -18,19 +23,72 @@ const subtopicColors = [
 
 const JuniorSubtopics = () => {
     const { grade, topic } = useParams();
+    const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const [subtopics, setSubtopics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hoveredSubtopic, setHoveredSubtopic] = useState(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingSubtopic, setPendingSubtopic] = useState(null);
     const decodedTopic = decodeURIComponent(topic);
+
+    const handleSubtopicClick = (subtopic, index) => {
+        if (!isAuthenticated) {
+            setPendingSubtopic(subtopic);
+            setShowLoginModal(true);
+            return;
+        }
+
+        if (subtopic.id === "RB-01") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
+            return;
+        }
+        if (subtopic.id === "RB-02") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
+            return;
+        }
+        if (subtopic.id === "RB-03") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            return;
+        }
+
+        navigate(
+            `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
+            { state: { skills: subtopics, currentIndex: index } }
+        );
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingSubtopic) {
+            const subtopic = pendingSubtopic;
+            const index = subtopics.findIndex(s => s.id === subtopic.id);
+
+            if (subtopic.id === "RB-01") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
+            } else if (subtopic.id === "RB-02") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
+            } else if (subtopic.id === "RB-03") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            } else {
+                navigate(
+                    `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
+                    { state: { skills: subtopics, currentIndex: index } }
+                );
+            }
+            setPendingSubtopic(null);
+        }
+    };
 
     useEffect(() => {
         const fetchSubtopics = async () => {
             try {
                 setLoading(true);
                 const gradeNum = grade.replace('grade', '');
+                let skillsResponse = [];
 
-                const skillsResponse = await api.getSkills(gradeNum);
+                if (gradeNum !== '3') {
+                    skillsResponse = await api.getSkills(gradeNum);
+                }
 
                 // Filter by topic and get unique skills
                 const filteredSkills = (skillsResponse || [])
@@ -46,6 +104,20 @@ const JuniorSubtopics = () => {
                         colorIndex: index % subtopicColors.length
                     };
                 });
+
+                // Manually inject for special topics
+                const gradeConfigs = TOPIC_CONFIGS[gradeNum];
+                if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                    if (subtopicList.length === 0) {
+                        gradeConfigs[decodedTopic].forEach((skill, index) => {
+                            subtopicList.push({
+                                id: skill.id,
+                                name: skill.name,
+                                colorIndex: index % subtopicColors.length
+                            });
+                        });
+                    }
+                }
 
                 setSubtopics(subtopicList);
             } catch (error) {
@@ -76,17 +148,17 @@ const JuniorSubtopics = () => {
                 {/* Back Button */}
                 <button className="back-btn" onClick={() => navigate(`/junior/grade/${grade}`)}>
                     <Home className="back-icon" />
-                    <span>Back to Topics</span>
+                    <span>Back to Skills</span>
                 </button>
 
                 {/* Header */}
                 <div className="junior-header">
-                    <h1>Choose a Topic! 📚</h1>
+                    <h1>Choose a Skill! 📚</h1>
                     <div className="completion-badge" style={{ display: 'none' }}>
                         <Sparkles className="sparkle-icon" />
                         <span>Practice specific skills!</span>
                     </div>
-                    <p className="topic-title">{decodedTopic}</p>
+                    <p className="topic-title">{capitalizeFirstLetter(decodedTopic)}</p>
                 </div>
 
                 {/* Subtopics List */}
@@ -111,7 +183,7 @@ const JuniorSubtopics = () => {
                                         }}
                                         onMouseEnter={() => setHoveredSubtopic(subtopic.id)}
                                         onMouseLeave={() => setHoveredSubtopic(null)}
-                                        onClick={() => navigate(`/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`)}
+                                        onClick={() => handleSubtopicClick(subtopic, index)}
                                     >
                                         {/* Glow effect */}
                                         <div className="pill-glow"></div>
@@ -122,7 +194,7 @@ const JuniorSubtopics = () => {
                                         </div>
 
                                         {/* Text */}
-                                        <span className="pill-text">{subtopic.name}</span>
+                                        <span className="pill-text"><LatexText text={capitalizeFirstLetter(subtopic.name)} /></span>
 
                                         {/* Completed checkmark */}
 
@@ -140,6 +212,11 @@ const JuniorSubtopics = () => {
                     </div>
                 )}
             </div>
+            <LoginPromptModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };

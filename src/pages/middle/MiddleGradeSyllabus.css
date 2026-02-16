@@ -247,6 +247,79 @@
     gap: 0.8rem;
 }
 
+.skills-container-nested {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.subtopic-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.subtopic-group:not(.is-main) {
+    background: #f1f5f9;
+    padding: 0.5rem;
+}
+
+.subtopic-group.is-expanded:not(.is-main) {
+    background: #f8fafc;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.subtopic-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.subtopic-toggle-btn:hover {
+    background: #fdfdfd;
+    border-color: var(--card-accent);
+    color: var(--card-accent);
+    transform: translateY(-1px);
+}
+
+.subtopic-group.is-expanded .subtopic-toggle-btn {
+    border-color: var(--card-accent);
+    background: white;
+    color: var(--card-accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.skills-list-wrapper {
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.skills-list-wrapper.hide {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    pointer-events: none;
+}
+
+.skills-list-wrapper.show {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 0.5rem;
+    padding: 0.2rem;
+}
+
 .middle-skill-item {
     display: flex;
     align-items: center;

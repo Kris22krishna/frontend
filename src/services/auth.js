@@ -9,22 +9,42 @@ export const authService = {
      */
     async registerWithEmail(data) {
         try {
-            // Map frontend data to backend schema
+            // Map frontend data to backend schema (V2)
             const payload = {
-                user_type: data.role,
-                first_name: data.username, // Mapping username to first_name
-                email: data.email,
+                name: data.name,
+                role: data.role,
+                email: data.email || null,
                 password: data.password,
                 phone_number: data.phoneNumber,
-                grade: data.grade, // For students
-                // Optional: last_name can be handled if added to form
+                class_name: data.grade, // Mapping grade to class_name
             };
 
             const response = await api.register(payload);
-            return response.data;
+            return response;
         } catch (error) {
             // Rethrow the error to be handled by the component
             throw error;
+        }
+    },
+
+    async checkEmail(email) {
+        try {
+            return await api.checkEmail(email);
+        } catch (error) {
+            console.error("Email check failed:", error);
+            // If check fails (e.g., 500 error), we might want to let the user proceed 
+            // and let the actual registration handle the error.
+            return { available: true };
+        }
+    },
+
+    async predictUsername(name, role) {
+        try {
+            const result = await api.predictUsername(name, role);
+            return result.username;
+        } catch (error) {
+            console.error("Username prediction failed:", error);
+            return null;
         }
     },
 

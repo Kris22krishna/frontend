@@ -101,7 +101,7 @@
         padding-top: 0.25rem !important;
         padding-bottom: 0.25rem !important;
     }
-    
+
     header img {
         height: 2.5rem !important;
         width: 2.5rem !important;
@@ -111,7 +111,7 @@
     .flex-col {
         flex-direction: row !important;
     }
-    
+
     /* Ensure question card takes full height */
     main {
         padding-bottom: 0 !important;
@@ -123,4 +123,21 @@
         transform: scale(0.6);
         transform-origin: left center;
     }
+}
+
+/* Results View Styles */
+.results-view {
+    padding-top: 80px;
+    /* Clear fixed Navbar */
+    min-height: 100vh;
+}
+
+.results-header {
+    position: relative;
+    z-index: 10;
+}
+
+.back-topics-top {
+    z-index: 1001;
+    /* Above Navbar if needed */
 }

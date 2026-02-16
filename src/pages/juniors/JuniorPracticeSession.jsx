@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ChevronRight, ChevronLeft, Flag, Home, RefreshCw, Star, FileText, Pencil, RotateCcw, X, Check, Eye, PenTool, Minus } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Flag, Home, RefreshCw, Star, FileText, Pencil, RotateCcw, X, Check, Eye, PenTool, Minus, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import StickerExit from '../../components/StickerExit';
 import avatarImg from '../../assets/avatar.png';
 import { api } from '../../services/api';
 import Navbar from '../../components/Navbar';
 import Whiteboard from '../../components/Whiteboard';
+import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import ExplanationModal from '../../components/ExplanationModal';
 import LatexContent from '../../components/LatexContent';
 import './JuniorPracticeSession.css';
@@ -19,24 +20,106 @@ const JuniorPracticeSession = () => {
     const searchParams = new URLSearchParams(location.search);
     const skillId = searchParams.get('skillId');
     const skillName = searchParams.get('skillName');
+    const topic = searchParams.get('topic'); // Ensure we keep topic for navigation
+
+    // Navigation Context State
+    const [skillsList, setSkillsList] = useState(location.state?.skills || []);
+    const [skillIdx, setSkillIdx] = useState(location.state?.currentIndex ?? -1);
+
+    // Fetch skills context if missing (e.g., page reload)
+    useEffect(() => {
+        if (skillsList.length === 0 && topic && grade) {
+            const loadSkills = async () => {
+                try {
+                    const gradeNum = grade.replace(/\D/g, '');
+                    const response = await api.getSkills(gradeNum);
+
+                    if (response) {
+                        const subtopics = response
+                            .filter(s => s.topic === topic)
+                            .filter((skill, index, self) =>
+                                skill.skill_name && self.findIndex(s => s.skill_id === skill.skill_id) === index
+                            );
+
+                        setSkillsList(subtopics);
+                        const idx = subtopics.findIndex(s => String(s.skill_id) === String(skillId));
+                        setSkillIdx(idx);
+
+                        console.log("Restored Skills Context:", subtopics.length, "Current Index:", idx);
+                    }
+                } catch (err) {
+                    console.error("Failed to load skills context:", err);
+                }
+            };
+            loadSkills();
+        }
+    }, [skillsList.length, topic, grade, skillId]);
+
+    // Computed navigation targets
+    const prevSkill = skillIdx > 0 ? skillsList[skillIdx - 1] : null;
+    const nextSkill = (skillIdx !== -1 && skillIdx < skillsList.length - 1) ? skillsList[skillIdx + 1] : null;
 
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
-    const [answers, setAnswers] = useState({}); // {questionIndex: {selected: ..., correct: boolean }}
-    const [timeElapsed, setTimeElapsed] = useState(0); // Count up logic
+    const [answers, setAnswers] = useState({});
+    const [timeElapsed, setTimeElapsed] = useState(0);
     const [showResults, setShowResults] = useState(false);
     const [showMagicPad, setShowMagicPad] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+
+    // Suggestion Modal State
+    const [suggestionModal, setSuggestionModal] = useState({ isOpen: false, type: null, skill: null });
+
+    // Session & Timer State
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
+
+    // Initial Session Creation
+    const sessionCreatedForSkill = useRef(null);
+
+    // Initial Session Creation
+    useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        if (skillId && !sessionId && userId && sessionCreatedForSkill.current !== skillId) {
+            sessionCreatedForSkill.current = skillId;
+            api.createPracticeSession(userId, skillId).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => {
+                console.error("Failed to start session", err);
+                sessionCreatedForSkill.current = null;
+            });
+        }
+    }, [skillId]);
+
+    // Timer Visibility Logic
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
+
     const dragControls = useDragControls();
 
     const [currentDifficulty, setCurrentDifficulty] = useState('Easy');
-    const [correctCountAtLevel, setCorrectCountAtLevel] = useState(0);
+    const [correctStreak, setCorrectStreak] = useState(0);
+    const [wrongStreak, setWrongStreak] = useState(0);
     const [fetchingNext, setFetchingNext] = useState(false);
+    const hasFetched = useRef(false);
 
     // Fetch questions
-    const fetchQuestions = async (diff = 'Easy', isInitial = true) => {
+    const fetchQuestions = async (diff = null, isInitial = true) => {
         if (!skillId) {
             setLoading(false);
             return;
@@ -45,8 +128,13 @@ const JuniorPracticeSession = () => {
             if (isInitial) setLoading(true);
             else setFetchingNext(true);
 
-            // Fetch 10 questions for the skill
-            const response = await api.getPracticeQuestionsBySkill(skillId, 10);
+            // Fetch ONE question dynamically
+            const response = await api.getPracticeQuestionsBySkill(skillId, 1, null, diff);
+
+            // Update difficulty based on what we actually got for initial load
+            if (isInitial && response.template_metadata?.difficulty) {
+                setCurrentDifficulty(response.template_metadata.difficulty);
+            }
 
             // Handle different response structures
             let rawQuestions = [];
@@ -54,25 +142,25 @@ const JuniorPracticeSession = () => {
                 rawQuestions = response.questions; // Standard APIResponse format
             } else if (response && response.preview_samples) {
                 rawQuestions = response.preview_samples; // v2 Template Preview format
-            } else if (response && response.selection_needed) {
-                const defaultType = response.available_types[0];
-                const retryResponse = await api.getPracticeQuestionsBySkill(skillId, 10, defaultType);
-                rawQuestions = retryResponse.questions || retryResponse.preview_samples || [];
             } else if (Array.isArray(response)) {
                 rawQuestions = response; // Direct array
             }
 
             // Ensure questions are valid
-            const validQuestions = rawQuestions.map(q => ({
-                id: q.id || q.question_id || Math.random(),
-                text: q.text || q.question_text || q.question || q.question_html,
-                options: q.options || [],
-                correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
-                type: q.type || q.question_type || 'MCQ',
-                solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
-                difficulty: diff,
-                model: q.model || 'Default'
-            }));
+            const validQuestions = rawQuestions.map(q => {
+                console.log('🔍 Raw question data:', { id: q.id, template_id: q.template_id });
+                return {
+                    id: q.id || q.question_id || Math.random(),
+                    template_id: q.template_id,
+                    text: q.text || q.question_text || q.question || q.question_html,
+                    options: q.options || [],
+                    correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
+                    type: q.type || q.question_type || 'MCQ',
+                    solution: q.solution || q.solution_html || q.explanation || "Great effort! Keep practicing to master this.",
+                    difficulty: diff || (response.template_metadata?.difficulty) || 'Easy',
+                    model: q.model || 'Default'
+                };
+            });
 
             if (isInitial) {
                 setQuestions(validQuestions);
@@ -88,7 +176,11 @@ const JuniorPracticeSession = () => {
     };
 
     useEffect(() => {
-        fetchQuestions('Easy', true);
+        // Prevent double-fetch in StrictMode
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+
+        fetchQuestions(null, true);
     }, [skillId]);
 
     // Reset modal and other per-question states ONLY when question changes
@@ -120,6 +212,35 @@ const JuniorPracticeSession = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: parseInt(skillId, 10),
+                template_id: question.template_id || null,
+                difficulty_level: currentDifficulty,
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
+                is_correct: isCorrect,
+                solution_text: String(question.solution || ''),
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
+
     const handleOptionSelect = (option) => {
         if (answers[currentIndex]) return; // Disable changing answer after submit
 
@@ -146,7 +267,12 @@ const JuniorPracticeSession = () => {
         if (!isCorrect) {
             // Wrong Answer: Show Modal Immediately
             setShowExplanationModal(true);
+        } else {
+            // Correct Answer: Show Modal Immediately
+            setShowExplanationModal(true);
         }
+
+        recordQuestionAttempt(currentQuestion, option, isCorrect);
         // Correct Answer: UI updates automatically via isCorrect check in render
     };
 
@@ -171,35 +297,88 @@ const JuniorPracticeSession = () => {
 
         if (!isCorrect) {
             setShowExplanationModal(true);
+        } else {
+            setShowExplanationModal(true);
         }
+        recordQuestionAttempt(currentQuestion, selectedOption, isCorrect);
     };
+
+    const QUESTIONS_PER_SESSION = 10;
 
     const handleNext = async () => {
         const currentAns = answers[currentIndex];
         const isCorrect = currentAns && currentAns.isCorrect;
 
-        let nextDiff = currentDifficulty;
-        let nextLevelCount = isCorrect ? correctCountAtLevel + 1 : correctCountAtLevel;
+        if (stats.total >= QUESTIONS_PER_SESSION) {
+            handleSubmitSession();
+            return;
+        }
 
-        if (nextLevelCount >= 3) {
-            if (currentDifficulty === 'Easy') {
-                nextDiff = 'Medium';
-                nextLevelCount = 0;
-            } else if (currentDifficulty === 'Medium') {
-                nextDiff = 'Hard';
-                nextLevelCount = 0;
+        let nextDiff = currentDifficulty;
+        let nextCorrectStreak = correctStreak;
+        let nextWrongStreak = wrongStreak;
+
+        if (isCorrect) {
+            nextCorrectStreak += 1;
+            nextWrongStreak = 0;
+
+            // 3 Correct in a row -> Move Up
+            if (nextCorrectStreak >= 3) {
+                if (currentDifficulty === 'Easy') {
+                    nextDiff = 'Medium';
+                    nextCorrectStreak = 0; // Reset streak on level up
+                } else if (currentDifficulty === 'Medium') {
+                    nextDiff = 'Hard';
+                    nextCorrectStreak = 0; // Reset streak on level up
+                }
+
+                // Hard -> Check for Next Skill Suggestion
+                if (currentDifficulty === 'Hard') {
+                    nextCorrectStreak = 0; // Reset for next set
+                    if (nextSkill) {
+                        setSuggestionModal({ isOpen: true, type: 'next', skill: nextSkill });
+                        setCorrectStreak(nextCorrectStreak);
+                        setWrongStreak(nextWrongStreak);
+                        return; // Modal handles navigation or resume
+                    }
+                }
+            }
+        } else {
+            nextWrongStreak += 1;
+            nextCorrectStreak = 0;
+
+            // 1 Wrong -> Drop Down immediately (if not Easy)
+            if (currentDifficulty === 'Medium' || currentDifficulty === 'Hard') {
+                nextDiff = currentDifficulty === 'Hard' ? 'Medium' : 'Easy';
+                nextWrongStreak = 0; // Reset streak after dropping
+            }
+
+            // 2 Wrong on Easy -> Check for Prev Skill / Mentor Suggestion
+            if (currentDifficulty === 'Easy' && nextWrongStreak >= 2) {
+                if (prevSkill) {
+                    setSuggestionModal({ isOpen: true, type: 'prev', skill: prevSkill });
+                } else {
+                    setSuggestionModal({ isOpen: true, type: 'mentor', skill: null });
+                }
+                setCorrectStreak(nextCorrectStreak);
+                setWrongStreak(nextWrongStreak);
+                return; // Modal handles navigation or resume
             }
         }
 
+        // Update State
         setCurrentDifficulty(nextDiff);
-        setCorrectCountAtLevel(nextLevelCount);
+        setCorrectStreak(nextCorrectStreak);
+        setWrongStreak(nextWrongStreak);
 
-        if (currentIndex < questions.length - 1) {
-            setCurrentIndex(prev => prev + 1);
-        } else {
-            await fetchQuestions(nextDiff, false);
-            setCurrentIndex(prev => prev + 1);
-        }
+        // Fetch Next Question Immediately (One at a time)
+        await fetchQuestions(nextDiff, false);
+        setCurrentIndex(prev => prev + 1);
+
+        // Reset Question Timer
+        accumulatedTime.current = 0;
+        questionStartTime.current = Date.now();
+        isTabActive.current = !document.hidden;
     };
 
     const handlePrev = () => {
@@ -219,6 +398,7 @@ const JuniorPracticeSession = () => {
     })();
 
     const handleSubmitSession = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         // Submit report
         try {
@@ -281,9 +461,15 @@ const JuniorPracticeSession = () => {
         const percentage = Math.round((score / total) * 100);
 
         return (
-            <div className="junior-practice-page results-view">
+            <div className="junior-practice-page results-view overflow-y-auto">
                 <Navbar />
-                <header className="junior-practice-header results-header">
+                <header className="junior-practice-header results-header relative">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                    >
+                        <FileText size={28} /> Back to Topics
+                    </button>
                     <div className="sun-timer-container">
                         <div className="sun-timer">
                             <div className="sun-rays"></div>
@@ -295,45 +481,113 @@ const JuniorPracticeSession = () => {
                     </div>
                 </header>
 
-                <main className="practice-content results-content">
-                    <div className="mascot-container results-mascot">
-                        <img src={avatarImg} alt="Happy Mascot" className="mascot-image" />
-                    </div>
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <img src={avatarImg} alt="Happy Mascot" className="w-32 h-32 mb-4 drop-shadow-lg" />
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
 
-                    <div className="question-board results-board">
-                        <h2 className="congrats-text">Adventure Complete! 🎉</h2>
-
-                        <div className="stars-container">
+                        <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
-                                <div key={i} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}
+                                >
                                     <Star
-                                        size={80}
+                                        size={60}
                                         fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
                                         color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
                                     />
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
 
-                        <div className="results-stats">
-                            <div className="stat-card">
-                                <span className="stat-label">Correct</span>
-                                <span className="stat-value highlight">{score}/{total}</span>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{total}</span>
                             </div>
-                            <div className="stat-card">
-                                <span className="stat-label">Time</span>
-                                <span className="stat-value">{formatTime(timeElapsed)}</span>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Streak</span>
+                                <span className="text-3xl font-black text-[#31326F]">{correctStreak}</span>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="results-actions">
-                            <button className="magic-pad-btn play-again" onClick={() => window.location.reload()}>
-                                <RefreshCw size={24} /> Play Again
-                            </button>
-                            <button className="start-over-btn back-topics" onClick={() => navigate(-1)}>
-                                <Home size={20} /> Back to Topics
-                            </button>
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <div className="space-y-4">
+                            {questions.slice(0, stats.total).map((q, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                                {idx + 1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-lg font-bold text-[#31326F] mb-4">
+                                                    <LatexContent html={q.text} />
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                            {ans.selected}
+                                                        </span>
+                                                    </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                {q.correctAnswer}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
+                                                        <LatexContent html={q.solution} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
                         </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Start New Quest
+                        </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
+                            <Home size={24} /> Back to Topics
+                        </button>
                     </div>
                 </main>
             </div>
@@ -347,13 +601,101 @@ const JuniorPracticeSession = () => {
     // Helper to sanitize question text specifically for Junior view where options are buttons
     const cleanQuestionText = (html) => {
         if (!html) return '';
-        // Remove patterns like "A. ...", "(A) ...", "a) ..."
-        // Handles newlines, br tags, p/div tags, and varying whitespace
-        return html.replace(/(?:<(?:br|p|div)\s*\/?>|<\/(?:p|div)>|\n|\r)+\s*(?:[A-Da-d1-4][\.\)]|\([A-Da-d1-4]\))\s*.*?(?=(?:<(?:br|p|div)\s*\/?>|<\/(?:p|div)>|\n|\r)|$)/gi, '').trim();
+        // Remove patterns like "A. ...", "(A) ...", "a) ..." that appear at the end of the string
+        let cleaned = html.replace(/(?:<br\s*\/?>|\n|\r)+\s*[A-Da-d1-4][\.\)]\s+.*?(?=(?:<br\s*\/?>|\n|\r)|$)/gi, '');
+
+        // Replace 2+ underscores with a proper LaTeX blank line (underlined space)
+        // using a lighter weight command or just standard LaTeX underline with space
+        cleaned = cleaned.replace(/_{2,}/g, ' $\\underline{\\hspace{1cm}}$ ');
+
+        return cleaned.trim();
     };
 
     return (
         <div className={`junior-practice-page ${showMagicPad ? 'magic-pad-active-mobile' : ''}`}>
+
+            {/* Suggestion Modal */}
+            <AnimatePresence>
+                {suggestionModal.isOpen && (
+                    <motion.div
+                        className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center relative overflow-hidden border-4 border-white"
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                        >
+                            {/* Background Decorations */}
+                            <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-[#E0FBEF] to-[#E6FFFA] -z-10 rounded-t-2xl" />
+
+                            <img src={avatarImg} alt="Mascot" className="w-24 h-24 mx-auto -mt-4 mb-4 object-contain drop-shadow-md hover:scale-110 transition-transform" />
+
+                            <h3 className="text-2xl font-black text-[#31326F] mb-2 font-display">
+                                {suggestionModal.type === 'next' && "Awesome Job! 🌟"}
+                                {suggestionModal.type === 'prev' && "Tricky stuff? 🤔"}
+                                {suggestionModal.type === 'mentor' && "Need a hint? 💡"}
+                            </h3>
+
+                            <p className="text-gray-600 mb-6 font-medium leading-relaxed">
+                                {suggestionModal.type === 'next' && `You're crushing it! Want to try "${suggestionModal.skill?.name}" next?`}
+                                {suggestionModal.type === 'prev' && `This seems tough. How about we practice "${suggestionModal.skill?.name}" first?`}
+                                {suggestionModal.type === 'mentor' && "It looks like you might need some help. Ask a grown-up or mentor to explain this topic!"}
+                            </p>
+
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={async () => {
+                                        if (suggestionModal.type === 'mentor') {
+                                            setSuggestionModal({ isOpen: false, type: null, skill: null });
+                                            // Reset streak so prompt doesn't appear immediately again
+                                            setWrongStreak(0);
+                                            // Resume practice
+                                            await fetchQuestions(currentDifficulty, false);
+                                            setCurrentIndex(prev => prev + 1);
+                                        } else {
+                                            // Navigate to new skill
+                                            const newSkill = suggestionModal.skill;
+                                            const newIndex = skillsList.findIndex(s => s.id === newSkill.id);
+
+                                            setSuggestionModal({ isOpen: false, type: null, skill: null });
+
+                                            navigate(
+                                                `/junior/grade/${grade}/practice?topic=${encodeURIComponent(topic || '')}&skillId=${newSkill.id}&skillName=${encodeURIComponent(newSkill.name)}`,
+                                                { state: { skills: skillsList, currentIndex: newIndex } }
+                                            );
+                                        }
+                                    }}
+                                    className="w-full py-3 bg-[#31326F] text-white rounded-xl font-bold text-lg shadow-lg hover:bg-[#25265E] hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                                >
+                                    {suggestionModal.type === 'next' ? "Yes, Let's Go! 🚀" :
+                                        suggestionModal.type === 'prev' ? "Try Previous Skill 🔙" :
+                                            "Okay, Got it! 👍"}
+                                </button>
+
+                                <button
+                                    onClick={async () => {
+                                        setSuggestionModal({ isOpen: false, type: null, skill: null });
+                                        // Reset streaks to delay re-prompting
+                                        if (suggestionModal.type === 'next') setCorrectStreak(0);
+                                        if (suggestionModal.type === 'prev') setWrongStreak(0);
+                                        // Fetch next question logic
+                                        await fetchQuestions(currentDifficulty, false);
+                                        setCurrentIndex(prev => prev + 1);
+                                    }}
+                                    className="w-full py-3 bg-white text-gray-500 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors"
+                                >
+                                    {suggestionModal.type === 'next' ? "Stay Here" : "Keep Trying"}
+                                </button>
+                            </div>
+
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Explanation Modal */}
             <ExplanationModal
@@ -363,10 +705,12 @@ const JuniorPracticeSession = () => {
                 explanation={currentQuestion?.solution}
                 onClose={() => setShowExplanationModal(false)}
                 onNext={() => {
-                    setShowExplanationModal(false);
-                    // If wrong, they might want to just close and see board, if correct they click next.
-                    // The user requested: "if answer is wrong explanation pop up with got it button. a next button should be on question page"
-                    // So this button just closes modal.
+                    if (isCorrect) {
+                        setShowExplanationModal(false);
+                        handleNext();
+                    } else {
+                        setShowExplanationModal(false);
+                    }
                 }}
             />
 
@@ -379,7 +723,10 @@ const JuniorPracticeSession = () => {
                 </div>
 
                 <div className="exit-practice-container">
-                    <StickerExit onClick={() => navigate(-1)} />
+                    <StickerExit onClick={async () => {
+                        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                        navigate(-1);
+                    }} />
                 </div>
             </header>
 
@@ -411,7 +758,7 @@ const JuniorPracticeSession = () => {
                                     <div className="user-input-modern">
                                         <input
                                             type="text"
-                                            className="modern-input-field"
+                                            className={`modern-input-field ${isSubmitted ? (isCorrect ? 'correct' : 'wrong') : ''}`}
                                             placeholder="Type here..."
                                             value={selectedOption || ''}
                                             onChange={(e) => setSelectedOption(e.target.value)}
@@ -449,66 +796,17 @@ const JuniorPracticeSession = () => {
                             <Whiteboard isOpen={true} onClose={() => setShowMagicPad(false)} />
                         </div>
 
-                        {/* Mobile View: Bottom Sheet */}
+                        {/* Mobile View: Full Screen Overlay */}
                         <AnimatePresence>
                             {showMagicPad && (
-                                <>
-                                    {/* Backdrop */}
-                                    <motion.div
-                                        className="bottom-sheet-backdrop"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        onClick={() => setShowMagicPad(false)}
-                                    />
-
-                                    {/* Bottom Sheet */}
-                                    <motion.div
-                                        className="bottom-sheet-container"
-                                        initial={{ y: "100%" }}
-                                        animate={{ y: 0 }}
-                                        exit={{ y: "100%" }}
-                                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                                        drag="y"
-                                        dragControls={dragControls}
-                                        dragListener={false}
-                                        dragConstraints={{ top: 0 }}
-                                        dragElastic={0.2}
-                                        onDragEnd={(e, { offset, velocity }) => {
-                                            // Swipe down to close
-                                            if (offset.y > 150 || velocity.y > 200) {
-                                                setShowMagicPad(false);
-                                            }
-                                        }}
-                                    >
-                                        {/* Drag Handle Bar */}
-                                        <div
-                                            className="sheet-handle-bar"
-                                            onPointerDown={(e) => dragControls.start(e)}
-                                            style={{ touchAction: 'none' }}
-                                        >
-                                            <div className="sheet-handle"></div>
-                                        </div>
-
-                                        {/* Header with Close */}
-                                        <div className="sheet-header-mobile">
-                                            <div className="sheet-title">
-                                                <Pencil size={18} /> Scratchpad
-                                            </div>
-                                            <div className="sheet-exit-wrapper">
-                                                <StickerExit onClick={() => setShowMagicPad(false)} />
-                                            </div>
-                                        </div>
-
-                                        {/* Content Area */}
-                                        <div
-                                            className="sheet-content"
-                                            onPointerDown={(e) => e.stopPropagation()}
-                                        >
-                                            <Whiteboard isOpen={true} onClose={() => setShowMagicPad(false)} />
-                                        </div>
-                                    </motion.div>
-                                </>
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="fixed inset-0 z-[100] lg:hidden"
+                                >
+                                    <FullScreenScratchpad onClose={() => setShowMagicPad(false)} />
+                                </motion.div>
                             )}
                         </AnimatePresence>
                     </div>
