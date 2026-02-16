@@ -10,6 +10,7 @@ import DynamicQuestionsDashboard from './pages/DynamicQuestionsDashboard';
 import PracticeSession from './pages/PracticeSession';
 import UploaderLogin from './pages/UploaderLogin';
 import RapidMathPage from './pages/RapidMathPage';
+import Internship from './pages/internship/Internship';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -70,6 +71,9 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
+import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
+import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -96,11 +100,32 @@ function App() {
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
+        <Route path="/internship" element={<Internship />} />
 
         {/* Junior Routes (Grades 1-4 child-friendly design) */}
         <Route path="/junior/grade/:grade" element={<JuniorGradeSyllabus />} />
         <Route path="/junior/grade/:grade/topic/:topic" element={<JuniorSubtopics />} />
-        <Route path="/junior/grade/:grade/practice" element={<JuniorPracticeSession />} />
+        <Route path="/junior/grade/:grade/practice" element={
+          <ProtectedRoute redirectTo="/login">
+            <JuniorPracticeSession />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanIntro />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/raksha-bandhan/multiplication" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanMultiplication />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/raksha-bandhan/division" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanDivision />
+          </ProtectedRoute>
+        } />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
 

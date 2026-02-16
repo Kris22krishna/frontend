@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ChevronRight, ChevronLeft, Flag, Home, RefreshCw, Star, FileText, Pencil, RotateCcw, X, Check, Eye, PenTool, Minus } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Flag, Home, RefreshCw, Star, FileText, Pencil, RotateCcw, X, Check, Eye, PenTool, Minus, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import StickerExit from '../../components/StickerExit';
 import avatarImg from '../../assets/avatar.png';
@@ -303,9 +303,16 @@ const JuniorPracticeSession = () => {
         recordQuestionAttempt(currentQuestion, selectedOption, isCorrect);
     };
 
+    const QUESTIONS_PER_SESSION = 10;
+
     const handleNext = async () => {
         const currentAns = answers[currentIndex];
         const isCorrect = currentAns && currentAns.isCorrect;
+
+        if (stats.total >= QUESTIONS_PER_SESSION) {
+            handleSubmitSession();
+            return;
+        }
 
         let nextDiff = currentDifficulty;
         let nextCorrectStreak = correctStreak;
@@ -454,9 +461,15 @@ const JuniorPracticeSession = () => {
         const percentage = Math.round((score / total) * 100);
 
         return (
-            <div className="junior-practice-page results-view">
+            <div className="junior-practice-page results-view overflow-y-auto">
                 <Navbar />
-                <header className="junior-practice-header results-header">
+                <header className="junior-practice-header results-header relative">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                    >
+                        <FileText size={28} /> Back to Topics
+                    </button>
                     <div className="sun-timer-container">
                         <div className="sun-timer">
                             <div className="sun-rays"></div>
@@ -468,45 +481,113 @@ const JuniorPracticeSession = () => {
                     </div>
                 </header>
 
-                <main className="practice-content results-content">
-                    <div className="mascot-container results-mascot">
-                        <img src={avatarImg} alt="Happy Mascot" className="mascot-image" />
-                    </div>
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <img src={avatarImg} alt="Happy Mascot" className="w-32 h-32 mb-4 drop-shadow-lg" />
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
 
-                    <div className="question-board results-board">
-                        <h2 className="congrats-text">Adventure Complete! 🎉</h2>
-
-                        <div className="stars-container">
+                        <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
-                                <div key={i} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}
+                                >
                                     <Star
-                                        size={80}
+                                        size={60}
                                         fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
                                         color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
                                     />
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
 
-                        <div className="results-stats">
-                            <div className="stat-card">
-                                <span className="stat-label">Correct</span>
-                                <span className="stat-value highlight">{score}/{total}</span>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{total}</span>
                             </div>
-                            <div className="stat-card">
-                                <span className="stat-label">Time</span>
-                                <span className="stat-value">{formatTime(timeElapsed)}</span>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Streak</span>
+                                <span className="text-3xl font-black text-[#31326F]">{correctStreak}</span>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="results-actions">
-                            <button className="magic-pad-btn play-again" onClick={() => window.location.reload()}>
-                                <RefreshCw size={24} /> Play Again
-                            </button>
-                            <button className="start-over-btn back-topics" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
-                                <Home size={20} /> Back to Topics
-                            </button>
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <div className="space-y-4">
+                            {questions.slice(0, stats.total).map((q, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                                {idx + 1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-lg font-bold text-[#31326F] mb-4">
+                                                    <LatexContent html={q.text} />
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                            {ans.selected}
+                                                        </span>
+                                                    </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                {q.correctAnswer}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
+                                                        <LatexContent html={q.solution} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
                         </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Start New Quest
+                        </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
+                            <Home size={24} /> Back to Topics
+                        </button>
                     </div>
                 </main>
             </div>
@@ -567,13 +648,13 @@ const JuniorPracticeSession = () => {
 
                             <div className="flex flex-col gap-3">
                                 <button
-                                    onClick={() => {
+                                    onClick={async () => {
                                         if (suggestionModal.type === 'mentor') {
                                             setSuggestionModal({ isOpen: false, type: null, skill: null });
                                             // Reset streak so prompt doesn't appear immediately again
                                             setWrongStreak(0);
                                             // Resume practice
-                                            fetchQuestions(currentDifficulty, false);
+                                            await fetchQuestions(currentDifficulty, false);
                                             setCurrentIndex(prev => prev + 1);
                                         } else {
                                             // Navigate to new skill
@@ -596,13 +677,13 @@ const JuniorPracticeSession = () => {
                                 </button>
 
                                 <button
-                                    onClick={() => {
+                                    onClick={async () => {
                                         setSuggestionModal({ isOpen: false, type: null, skill: null });
                                         // Reset streaks to delay re-prompting
                                         if (suggestionModal.type === 'next') setCorrectStreak(0);
                                         if (suggestionModal.type === 'prev') setWrongStreak(0);
                                         // Fetch next question logic
-                                        fetchQuestions(currentDifficulty, false);
+                                        await fetchQuestions(currentDifficulty, false);
                                         setCurrentIndex(prev => prev + 1);
                                     }}
                                     className="w-full py-3 bg-white text-gray-500 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors"

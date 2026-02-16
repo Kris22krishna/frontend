@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar';
 import { LatexText } from '../../components/LatexText';
 import { api } from '../../services/api';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
+import { TOPIC_CONFIGS } from '../../lib/topicConfig';
 import './JuniorGradeSyllabus.css';
 
 // Topic icons with pastel colors for children
@@ -48,8 +49,12 @@ const JuniorGradeSyllabus = () => {
             try {
                 setLoading(true);
                 const gradeNum = grade.replace('grade', '');
+                let skillsResponse = [];
 
-                const skillsResponse = await api.getSkills(gradeNum);
+                // For Grade 3, we skip fetching from API and use manual injection below
+                if (gradeNum !== '3') {
+                    skillsResponse = await api.getSkills(gradeNum);
+                }
 
                 const filteredSkills = (skillsResponse || []).filter(skill => {
                     const gradeNumInt = parseInt(gradeNum);
@@ -63,6 +68,23 @@ const JuniorGradeSyllabus = () => {
                     }
                     return true;
                 });
+
+                // Manually inject special topics for Grade 3 if not present
+                if (parseInt(gradeNum) === 3) {
+                    const gradeConfigs = TOPIC_CONFIGS['3'] || {};
+                    Object.entries(gradeConfigs).forEach(([topicName, skills]) => {
+                        const topicExists = filteredSkills.some(s => (s.topic || '').toLowerCase().includes(topicName.toLowerCase()));
+                        if (!topicExists) {
+                            skills.forEach(skill => {
+                                filteredSkills.push({
+                                    skill_id: skill.id,
+                                    skill_name: skill.name,
+                                    topic: topicName
+                                });
+                            });
+                        }
+                    });
+                }
 
                 const topicMap = {};
                 filteredSkills.forEach(skill => {
