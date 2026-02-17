@@ -89,6 +89,10 @@ import LawsOfExponents from './components/practice/class-8/exponents and powers/
 import LawsOfExponentsApplication from './components/practice/class-8/exponents and powers/laws_of_exponents_application';
 import StandardFormSmallNumbers from './components/practice/class-8/exponents and powers/standard_form_small_numbers';
 import ComparingLargeSmallNumbers from './components/practice/class-8/exponents and powers/comparing_large_small_numbers';
+import FairShareCutting from './components/practice/class-3/fair-share/cutting';
+import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
+import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
+import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -139,6 +143,26 @@ function App() {
         <Route path="/junior/grade/:grade/raksha-bandhan/division" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/cutting" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareCutting />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/halves-doubles" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareHalvesDoubles />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/draw" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareDraw />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/guess-who" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareGuesswho />
           </ProtectedRoute>
         } />
 

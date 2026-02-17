@@ -25,6 +25,7 @@ const topicIcons = {
     'Money': { emoji: '💰', color: '#98D8C8', gradient: 'linear-gradient(135deg, #98D8C8 0%, #B8E6D5 100%)' },
     'Geometry': { emoji: '📐', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'Data': { emoji: '📊', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
+    'Fair Share': { emoji: '🍰', color: '#B39DDB', gradient: 'linear-gradient(135deg, #B39DDB 0%, #D1C4E9 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }
 };
 
@@ -61,7 +62,7 @@ const JuniorGradeSyllabus = () => {
                     const topicName = (skill.topic || 'General').toLowerCase();
 
                     if (gradeNumInt === 3) {
-                        return topicName.includes("raksha") && topicName.includes("bandhan");
+                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("fair share");
                     }
                     if (gradeNumInt === 4) {
                         return topicName === "the cleanest village";
