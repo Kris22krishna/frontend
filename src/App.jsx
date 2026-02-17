@@ -283,7 +283,7 @@ function App() {
         <Route path="/middle/grade/7/comparing-quantities/simple-interest" element={<SimpleInterest />} />
 
         <Route path="/middle/grade/7/exponents-and-powers/basics" element={<ExponentsBasics />} />
-        <Route path="/middle/grade/7/exponents-and-powers/laws" element={<LawsOfExponentsClass7 />} />
+        <Route path="/middle/grade/7/exponents-and-powers/laws" element={<LawsOfExponents />} />
         <Route path="/middle/grade/7/exponents-and-powers/decimal-system" element={<DecimalNumberSystem />} />
         <Route path="/middle/grade/7/exponents-and-powers/standard-form" element={<StandardForm />} />
 
