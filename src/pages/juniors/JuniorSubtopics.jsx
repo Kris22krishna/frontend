@@ -52,6 +52,19 @@ const JuniorSubtopics = () => {
             return;
         }
 
+        // Grade 4 - The Cleanest Village routing
+        const gradeNum = grade.replace('grade', '');
+        if (parseInt(gradeNum) === 4) {
+            const gradeConfigs = TOPIC_CONFIGS['4'];
+            if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                if (skill && skill.route) {
+                    navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
+                    return;
+                }
+            }
+        }
+
         navigate(
             `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
             { state: { skills: subtopics, currentIndex: index } }
@@ -70,6 +83,20 @@ const JuniorSubtopics = () => {
             } else if (subtopic.id === "RB-03") {
                 navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
             } else {
+                // Grade 4 - The Cleanest Village routing
+                const gradeNum = grade.replace('grade', '');
+                if (parseInt(gradeNum) === 4) {
+                    const gradeConfigs = TOPIC_CONFIGS['4'];
+                    if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                        const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                        if (skill && skill.route) {
+                            navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
+                            setPendingSubtopic(null);
+                            return;
+                        }
+                    }
+                }
+
                 navigate(
                     `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
                     { state: { skills: subtopics, currentIndex: index } }
@@ -86,7 +113,7 @@ const JuniorSubtopics = () => {
                 const gradeNum = grade.replace('grade', '');
                 let skillsResponse = [];
 
-                if (gradeNum !== '3') {
+                if (gradeNum !== '3' && gradeNum !== '4') {
                     skillsResponse = await api.getSkills(gradeNum);
                 }
 
