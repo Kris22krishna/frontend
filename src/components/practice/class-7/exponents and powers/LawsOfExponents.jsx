@@ -19,7 +19,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const LawsOfExponents = () => {
+const LawsOfExponents7 = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
@@ -550,4 +550,4 @@ const LawsOfExponents = () => {
     );
 };
 
-export default LawsOfExponents;
+export default LawsOfExponents7;
