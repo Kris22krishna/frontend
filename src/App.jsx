@@ -104,6 +104,10 @@ import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Vi
 import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
+import Commutativity from './components/practice/class-8/rational-numbers/commutativity';
+import Associativity from './components/practice/class-8/rational-numbers/associativity';
+import AdditiveMultiplicativeIdentity from './components/practice/class-8/rational-numbers/additive_multiplicative_identity';
+import Distributivity from './components/practice/class-8/rational-numbers/distributivity';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -273,6 +277,34 @@ function App() {
         <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
           <ProtectedRoute redirectTo="/login">
             <LetUsPlay />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Commutativity */}
+        <Route path="/senior/grade/8/rational-numbers/commutativity" element={
+          <ProtectedRoute redirectTo="/login">
+            <Commutativity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Associativity */}
+        <Route path="/senior/grade/8/rational-numbers/associativity" element={
+          <ProtectedRoute redirectTo="/login">
+            <Associativity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Additive and Multiplicative Identity */}
+        <Route path="/senior/grade/8/rational-numbers/identity" element={
+          <ProtectedRoute redirectTo="/login">
+            <AdditiveMultiplicativeIdentity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Distributivity */}
+        <Route path="/senior/grade/8/rational-numbers/distributivity" element={
+          <ProtectedRoute redirectTo="/login">
+            <Distributivity />
           </ProtectedRoute>
         } />
 

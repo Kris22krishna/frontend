@@ -60,6 +60,8 @@ const SeniorGradeSyllabus = () => {
     const skillsByTopic = (skills || []).reduce((acc, skill) => {
         const topicName = (skill.topic || 'General').toLowerCase();
         const gradeNum = parseInt(grade.replace('grade', ''));
+
+        // Filter by grade - Grade 8: show only Exponents (skip database Rational Numbers, we'll hardcode it)
         if (gradeNum === 8 && topicName !== "exponents and power") return acc;
 
         const topic = skill.topic || 'General';
@@ -82,6 +84,42 @@ const SeniorGradeSyllabus = () => {
             skill_name: 'Application of Laws of Exponents',
             topic: 'Exponents and Power'
         });
+    }
+
+    // Add hardcoded "Rational Numbers" topic for Grade 8 with 4 subtopics
+    if (parseInt(grade.replace('grade', '')) === 8) {
+        // Create Rational Numbers topic if it doesn't exist
+        if (!skillsByTopic['Rational Numbers']) {
+            skillsByTopic['Rational Numbers'] = [];
+        }
+
+        // Add 4 hardcoded skills for Rational Numbers
+        skillsByTopic['Rational Numbers'] = [
+            {
+                skill_id: 8006,
+                skill_name: 'Commutativity',
+                topic: 'Rational Numbers',
+                sub_topic: 'Properties of Rational Numbers'
+            },
+            {
+                skill_id: 8007,
+                skill_name: 'Associativity',
+                topic: 'Rational Numbers',
+                sub_topic: 'Properties of Rational Numbers'
+            },
+            {
+                skill_id: 8008,
+                skill_name: 'Additive and Multiplicative Identity',
+                topic: 'Rational Numbers',
+                sub_topic: 'Properties of Rational Numbers'
+            },
+            {
+                skill_id: 8009,
+                skill_name: 'Distributivity',
+                topic: 'Rational Numbers',
+                sub_topic: 'Properties of Rational Numbers'
+            }
+        ];
     }
 
     const topics = Object.keys(skillsByTopic);
