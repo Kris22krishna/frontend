@@ -1,4 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
+import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
+import MultiplicationPracticeMultiple from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_multiple_numbers';
+import MultiplicationEndingZero from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_numbers_ending_in_zeros';
+import MultiplicationWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_word_problems';
+import DivisionPracticeOneDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_one_digit_number';
+import DivisionPracticeTwoDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_by_two_digit_number';
+import DivisionEndingZero from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_numbers_ending_zeros';
+import DivisionWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Division/division_word_problems';
+import MultiDivWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Skill_application_problems/skill_application_problems';
 import MainLayout from './layouts/WebsiteLayout';
 import Home from './pages/Home';
 import AdminLogin from './pages/AdminLogin';
@@ -244,6 +254,16 @@ function App() {
 
         {/* Full Screen Practice Sessions */}
         <Route path="/practice/:templateId" element={<PracticeSession />} />
+        <Route path="/middle/practice/9003" element={<MultiplicationPractice />} />
+        <Route path="/middle/practice/9004" element={<MultiplicationPractice3D />} />
+        <Route path="/middle/practice/9005" element={<MultiplicationPracticeMultiple />} />
+        <Route path="/middle/practice/9006" element={<MultiplicationEndingZero />} />
+        <Route path="/middle/practice/9007" element={<MultiplicationWordProblems />} />
+        <Route path="/middle/practice/9008" element={<DivisionPracticeOneDigit />} />
+        <Route path="/middle/practice/9009" element={<DivisionPracticeTwoDigit />} />
+        <Route path="/middle/practice/9010" element={<DivisionEndingZero />} />
+        <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
+        <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>

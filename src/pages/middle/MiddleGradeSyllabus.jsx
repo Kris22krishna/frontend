@@ -101,7 +101,7 @@ const MiddleGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
+        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
         if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
 
@@ -113,6 +113,28 @@ const MiddleGradeSyllabus = () => {
         acc[topic][subTopic].push(skill);
         return acc;
     }, {});
+
+    // Inject custom skills for Grade 5
+    if (parseInt(grade.replace('grade', '')) === 5) {
+        skillsByTopic['Ways to Divide and Multiply'] = {
+            'Multiplication': [
+                { skill_id: 9003, skill_name: 'Multiply 2 digit numbers', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9004, skill_name: 'Multiply 3 digit numbers', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9005, skill_name: 'Multiply three and four numbers', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9006, skill_name: 'Multiply number ending in zeroes', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9007, skill_name: 'Skill Application Problems', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' }
+            ],
+            'Division': [
+                { skill_id: 9008, skill_name: 'Divide by 1 digit number', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' },
+                { skill_id: 9009, skill_name: 'Divide by 2 digit number', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' },
+                { skill_id: 9010, skill_name: 'Divide numbers ending in zeroes', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' },
+                { skill_id: 9011, skill_name: 'Skill Application Problems', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' }
+            ],
+            'Skill Application Problems': [
+                { skill_id: 9012, skill_name: 'Skill Application Problems', topic: 'Ways to Divide and Multiply', sub_topic: 'Skill Application Problems' }
+            ]
+        };
+    }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 
