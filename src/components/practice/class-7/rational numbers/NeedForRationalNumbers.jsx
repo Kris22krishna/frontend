@@ -19,7 +19,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const StandardForm = () => {
+const NeedForRationalNumbers = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const StandardForm = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 33; // Placeholder
-    const SKILL_NAME = "Class 7 - Exponents - Standard Form";
+    const SKILL_ID = 'local-rn-need';
+    const SKILL_NAME = "Class 7 - Rational Numbers - Need";
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
@@ -49,116 +49,228 @@ const StandardForm = () => {
 
             for (let i = 0; i < 10; i++) {
                 let q = {};
+                // Topic 1: Need for Rational Numbers
+                // Subtopic 1: Extension of number system (Q0-Q4)
+                // Subtopic 2: Negative fractions in real life (Q5-Q9)
 
                 if (i < 5) {
-                    // Subtopic 1: Large numbers (Positive exponents)
-                    // e.g. 5,985,000,000 or 316.5
-                    const exponent = rand(3, 9);
-                    // generate a base number between 1 and 10 (exclusive 10)
-                    // e.g. 3.45 or 7.0 or 1.234
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 3);
+                    // Subtopic 1: Extension of number system
+                    // Concept: We need numbers to represent distance below zero, or opposite directions.
 
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        // trim trailing zeros if any, unless it becomes empty
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
+                    if (i === 0) {
+                        // Example 1: Below sea level
+                        const depth = rand(200, 900); // e.g. 750
+                        const numerator = -depth;
+                        const denominator = 1000;
+                        // simplify fraction logic
+                        const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                        const common = gcd(Math.abs(numerator), denominator);
+                        const simpNum = numerator / common;
+                        const simpDen = denominator / common;
+                        const correct = `$\\frac{${simpNum}}{${simpDen}}$ km`;
 
-                    // The standard form is significand x 10^exponent
-                    const standardForm = `${significand} \\times 10^{${exponent}}`;
-
-                    // The actual number to display
-                    // Need to multiply significand by 10^exponent
-                    // simplest way: construct number string
-                    // 3.45 * 10^5 -> move decimal 5 right -> 345000
-                    let numStr = significand;
-                    let move = exponent;
-                    if (numStr.includes('.')) {
-                        const parts = numStr.split('.');
-                        const decLen = parts[1].length;
-                        if (move >= decLen) {
-                            numStr = parts[0] + parts[1] + "0".repeat(move - decLen);
-                        } else {
-                            // move < decLen: 3.456 * 10^1 = 34.56
-                            numStr = parts[0] + parts[1].slice(0, move) + "." + parts[1].slice(move);
-                        }
+                        q = {
+                            type: "Real Life Representation",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Represent ${depth} m below sea level in km using rational numbers.</p>
+                                   </div>`,
+                            correctAnswer: correct,
+                            solution: `Below sea level indicates a negative direction.
+                                       $$${depth} \\text{ m} = \\frac{-${depth}}{1000} \\text{ km}$$
+                                       Simplifying $\\frac{-${depth}}{1000}$:
+                                       Divide by ${common}: $\\frac{-${depth / common}}{${1000 / common}}$
+                                        So, it is $\\frac{${simpNum}}{${simpDen}}$ km.`,
+                            options: shuffle([
+                                correct,
+                                `$\\frac{${Math.abs(simpNum)}}{${simpDen}}$ km`,
+                                `$\\frac{${simpNum}}{${simpDen * 10}}$ km`,
+                                `$\\frac{${simpDen}}{${Math.abs(simpNum)}}$ km`
+                            ])
+                        };
+                    } else if (i === 1) {
+                        // Example 2: Opposite of creating profit
+                        const val = rand(10, 50);
+                        const dist = rand(val + 10, 100);
+                        q = {
+                            type: "Directional Representation",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>If moving ${dist} km East is represented by $+${dist}$, how is moving ${val} km West represented?</p>
+                                   </div>`,
+                            correctAnswer: `$-${val}$`,
+                            solution: `West is the opposite direction of East. 
+                                       If East is positive, West is negative.
+                                       So, ${val} km West is represented as $-${val}$.`,
+                            options: shuffle([`$-${val}$`, `$${val}$`, `$-${dist}$`, `$${dist - val}$`])
+                        };
+                    } else if (i === 2) {
+                        // Extension needs
+                        q = {
+                            type: "Number System Concept",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Which set of numbers is needed to represent parts of a whole where the value is less than zero?</p>
+                                   </div>`,
+                            correctAnswer: `Rational Numbers`,
+                            solution: `Integers include negative numbers but not parts of a whole (fractions). 
+                                       Fractions are positive. 
+                                       To represent negative parts (like negative fractions), we need Rational Numbers.`,
+                            options: shuffle([`Rational Numbers`, `Integers`, `Natural Numbers`, `Whole Numbers`])
+                        };
+                    } else if (i === 3) {
+                        // Simple representation
+                        const val = rand(2, 9);
+                        const den = rand(val + 1, 15);
+                        q = {
+                            type: "Negative Fraction Meaning",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>What does the number $-\\frac{${val}}{${den}}$ represent on a number line?</p>
+                                   </div>`,
+                            correctAnswer: `A distance of $\\frac{${val}}{${den}}$ to the left of 0`,
+                            solution: `A negative rational number represents a point to the left of 0 on the number line. 
+                                       So $-\\frac{${val}}{${den}}$ is at a distance of $\\frac{${val}}{${den}}$ units to the left of 0.`,
+                            options: shuffle([
+                                `A distance of $\\frac{${val}}{${den}}$ to the left of 0`,
+                                `A distance of $\\frac{${val}}{${den}}$ to the right of 0`,
+                                `A distance of ${val} to the left of ${den}`,
+                                `None of these`
+                            ])
+                        };
                     } else {
-                        numStr += "0".repeat(move);
+                        // General scenario
+                        const profit = rand(100, 500);
+                        q = {
+                            type: "Integer Scenario",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>If a profit of ₹${profit} is denoted by +${profit}, then a loss of ₹${profit} is denoted by:</p>
+                                   </div>`,
+                            correctAnswer: `$-${profit}$`,
+                            solution: `Loss is opposite to profit. If profit is positive, loss is negative.`,
+                            options: shuffle([`$-${profit}$`, `$${profit}$`, `$0$`, `$-1$`])
+                        };
                     }
-                    // format with commas for readibility? Maybe just raw string if it's very long
-                    // Let's use locale string if no decimal, else raw
-                    const displayNum = numStr.includes('.') ? numStr : parseInt(numStr).toLocaleString();
-
-                    q = {
-                        type: "Standard Form (Large)",
-                        difficulty_level: "Medium",
-                        text: `<div class='question-container'>
-                                  <p>Express $${displayNum}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${exponent} places to the left.<br>$$${displayNum} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${exponent - 1}}$`,
-                            `$${significand.replace('.', '')} \\times 10^{${significand.includes('.') ? exponent : exponent + 2}}$`,
-                            `$${lead}.${decPart ? decPart : ''} \\times 10^{${exponent + 1}}$`
-                        ])
-                    };
-
                 } else {
-                    // Subtopic 2: Small numbers (Negative exponents)
-                    // e.g. 0.00045 = 4.5 x 10^-4
-                    const negExp = rand(3, 8); // e.g. 4 means 10^-4
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 2);
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
+                    // Subtopic 2: Negative fractions in real life
+                    if (i === 5) {
+                        // Example: Loss of X out of Y
+                        const loss = rand(2, 9);
+                        const total = rand(10, 20);
+                        q = {
+                            type: "Real Life Fraction",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Write a rational number representing a loss of ₹${loss} out of ₹${total}.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-${loss}}{${total}}$`,
+                            solution: `A loss is negative. 
+                                       "Out of" implies the denominator.
+                                       So, a loss of ₹${loss} out of ₹${total} is represented as $\\frac{-${loss}}{${total}}$.`,
+                            options: shuffle([
+                                `$\\frac{-${loss}}{${total}}$`,
+                                `$\\frac{${loss}}{${total}}$`,
+                                `$\\frac{-${total}}{${loss}}$`,
+                                `$\\frac{${total}}{${loss}}$`
+                            ])
+                        };
+                    } else if (i === 6) {
+                        // Temperature drop
+                        const drop = rand(3, 15);
+                        const duration = rand(2, 5);
+                        // Avg drop per hour
+                        q = {
+                            type: "Real Life Rate",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>The temperature dropped by ${drop}°C over ${duration} hours. What is the average change per hour represented as a rational number?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-${drop}}{${duration}}$`,
+                            solution: `Temperature drop is negative change: $-${drop}$.
+                                       Time duration is ${duration}.
+                                       Average change = $\\frac{\\text{Total Change}}{\\text{Total Time}} = \\frac{-${drop}}{${duration}}$.`,
+                            options: shuffle([
+                                `$\\frac{-${drop}}{${duration}}$`,
+                                `$\\frac{${drop}}{${duration}}$`,
+                                `$\\frac{-${duration}}{${drop}}$`,
+                                `$${drop * duration}$`
+                            ])
+                        };
+                    } else if (i === 7) {
+                        // Debt sharing
+                        const debt = rand(100, 900);
+                        const people = rand(3, 6);
+                        q = {
+                            type: "Real Life Sharing",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>A debt of ₹${debt} is shared equally among ${people} friends. Represent the share of each person as a rational number.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-${debt}}{${people}}$`,
+                            solution: `Debt is considered negative money: $-${debt}$.
+                                       Divided by ${people} people.
+                                       Each share = $\\frac{-${debt}}{${people}}$.`,
+                            options: shuffle([
+                                `$\\frac{-${debt}}{${people}}$`,
+                                `$\\frac{${debt}}{${people}}$`,
+                                `$\\frac{-${people}}{${debt}}$`,
+                                `$${debt - people}$`
+                            ])
+                        };
+                    } else if (i === 8) {
+                        // Real Life Distance (new question type)
+                        const n1 = rand(1, 5);
+                        const d1 = rand(n1 + 1, 10);
+                        const n2 = rand(1, 5);
+                        const d2 = rand(n2 + 1, 10);
+
+                        const num = n1 * d2 + n2 * d1;
+                        const den = d1 * d2;
+
+                        const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                        const common = gcd(num, den);
+                        const simpNum = num / common;
+                        const simpDen = den / common;
+
+                        const correct = `$\\frac{${simpNum}}{${simpDen}}$ km`;
+                        q = {
+                            type: "Real Life Distance",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Radha walked $\\frac{${n1}}{${d1}}$ km from her home to school and then walked $\\frac{${n2}}{${d2}}$ km to the market. Total distance traveled?</p>
+                                   </div>`,
+                            correctAnswer: correct,
+                            solution: `Total distance = $\\frac{${n1}}{${d1}} + \\frac{${n2}}{${d2}} = \\frac{${num}}{${den}}$. Simplified: $\\frac{${simpNum}}{${simpDen}}$ km.`,
+                            options: shuffle([
+                                `$\\frac{${simpNum}}{${simpDen}}$ km`,
+                                `$\\frac{${simpNum + 1}}{${simpDen}}$ km`,
+                                `$\\frac{${simpNum}}{${simpDen + 1}}$ km`,
+                                `$\\frac{${Math.abs(simpNum - 1)}}{${simpDen}}$ km`
+                            ])
+                        };
+                    } else {
+                        // Submarine depth e.g. (new question type)
+                        const depth = rand(50, 200) * 10;
+                        const correct = `$\\frac{-${depth}}{1000}$ km`;
+                        q = {
+                            type: "Real Life Depth",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>A submarine is ${depth} meters below sea level. Express this as a rational number in km.</p>
+                                   </div>`,
+                            correctAnswer: correct,
+                            solution: `Below sea level is negative. 1 km = 1000 m. So, $${depth} \\text{ m} = \\frac{-${depth}}{1000} \\text{ km}$.`,
+                            options: shuffle([
+                                `$\\frac{-${depth}}{1000}$ km`,
+                                `$\\frac{${depth}}{1000}$ km`,
+                                `$${depth}$ km`,
+                                `$\\frac{-1000}{${depth}}$ km`
+                            ])
+                        };
                     }
-
-                    const standardForm = `${significand} \\times 10^{-${negExp}}`;
-
-                    // Construct original small number
-                    // 4.5 * 10^-4 -> move decimal 4 left
-                    // 0.00045
-                    // zeros = negExp - 1
-                    let zeros = negExp - 1; // if 4.5, exp -4. dot is after 4. move 1 left passes 4 (0.45, exp -1). need 3 more zeros.
-                    // Wait. 4.5 * 10^-4.
-                    // 4.5 -> 0.45 (-1) -> 0.045 (-2) -> 0.0045 (-3) -> 0.00045 (-4).
-                    // So 3 zeros after decimal point. 
-                    // Wait, logic: lead digit is at 10^0 position in significand.
-                    // In result, lead digit is at 10^-negExp position? No.
-                    // Example: 3 * 10^-2 = 0.03.
-                    // 3 is at hundredths place.
-
-                    // Logic: "0." + (negExp - 1 zeros) + digits (without dot)
-                    // 4.5 * 10^-4 -> "0." + "000" + "45" -> 0.00045
-                    const digits = significand.replace('.', '');
-                    const originalStr = "0." + "0".repeat(zeros) + digits;
-
-                    q = {
-                        type: "Standard Form (Small)",
-                        difficulty_level: "Hard",
-                        text: `<div class='question-container'>
-                                  <p>Express $${originalStr}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${negExp} places to the right.<br>$$${originalStr} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${negExp}}$`, // positive exp distractor
-                            `$${significand} \\times 10^{-${negExp - 1}}$`,
-                            `$${significand} \\times 10^{-${negExp + 1}}$`
-                        ])
-                    };
                 }
+
                 newQuestions.push(q);
             }
             setQuestions(newQuestions);
@@ -166,6 +278,7 @@ const StandardForm = () => {
         generateQuestions();
     }, []);
 
+    // ... Standard boilerplate methods ...
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -279,11 +392,10 @@ const StandardForm = () => {
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }
-
+            // Create report logic
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-
                 try {
                     await api.createReport({
                         title: SKILL_NAME,
@@ -320,7 +432,7 @@ const StandardForm = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Standard Form</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Need for Rational Numbers</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -463,4 +575,4 @@ const StandardForm = () => {
     );
 };
 
-export default StandardForm;
+export default NeedForRationalNumbers;

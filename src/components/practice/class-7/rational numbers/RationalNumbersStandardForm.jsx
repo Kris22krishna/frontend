@@ -19,7 +19,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const StandardForm = () => {
+const RationalNumbersStandardForm = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const StandardForm = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 33; // Placeholder
-    const SKILL_NAME = "Class 7 - Exponents - Standard Form";
+    const SKILL_ID = 'local-rn-standard';
+    const SKILL_NAME = "Class 7 - Rational Numbers - Standard Form";
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
@@ -47,118 +47,209 @@ const StandardForm = () => {
                 return unique.sort(() => Math.random() - 0.5);
             };
 
+            const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+
             for (let i = 0; i < 10; i++) {
                 let q = {};
+                // Topic 5: Rational Numbers in Standard Form
+                // Subtopic 1: Meaning of standard form (Q0-Q4)
+                // Subtopic 2: Reducing to standard form using HCF (Q5-Q9)
 
                 if (i < 5) {
-                    // Subtopic 1: Large numbers (Positive exponents)
-                    // e.g. 5,985,000,000 or 316.5
-                    const exponent = rand(3, 9);
-                    // generate a base number between 1 and 10 (exclusive 10)
-                    // e.g. 3.45 or 7.0 or 1.234
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 3);
-
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        // trim trailing zeros if any, unless it becomes empty
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
-
-                    // The standard form is significand x 10^exponent
-                    const standardForm = `${significand} \\times 10^{${exponent}}`;
-
-                    // The actual number to display
-                    // Need to multiply significand by 10^exponent
-                    // simplest way: construct number string
-                    // 3.45 * 10^5 -> move decimal 5 right -> 345000
-                    let numStr = significand;
-                    let move = exponent;
-                    if (numStr.includes('.')) {
-                        const parts = numStr.split('.');
-                        const decLen = parts[1].length;
-                        if (move >= decLen) {
-                            numStr = parts[0] + parts[1] + "0".repeat(move - decLen);
+                    // Subtopic 1: Meaning
+                    if (i === 0) {
+                        q = {
+                            type: "Standard Definition",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Which of the following conditions must a rational number $\\frac{p}{q}$ satisfy to be in standard form?</p>
+                                   </div>`,
+                            correctAnswer: `$q > 0$ and HCF(p, q) = 1`,
+                            solution: `In standard form, the denominator $q$ must be positive, and the numerator $p$ and denominator $q$ must have no common factor other than 1.`,
+                            options: shuffle([
+                                `$q > 0$ and HCF(p, q) = 1`,
+                                `$q < 0$ and HCF(p, q) = 1`,
+                                `$p > 0$ and HCF(p, q) = 1`,
+                                `HCF(p, q) = 1 only`
+                            ])
+                        };
+                    } else if (i === 1) {
+                        const n = rand(2, 5);
+                        const d = rand(2, 5);
+                        q = {
+                            type: "Standard Check Denom",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Is $\\frac{${n}}{-${d}}$ in standard form?</p>
+                                   </div>`,
+                            correctAnswer: `No`,
+                            solution: `No, because the denominator is negative. In standard form, the denominator must be positive.`,
+                            options: shuffle([`No`, `Yes`])
+                        };
+                    } else if (i === 2) {
+                        // Common factor check
+                        const common = rand(2, 3);
+                        const n = rand(2, 4) * common;
+                        const d = rand(5, 7) * common;
+                        q = {
+                            type: "Standard Check HCF",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Is $\\frac{${n}}{${d}}$ in standard form?</p>
+                                   </div>`,
+                            correctAnswer: `No`,
+                            solution: `No, because ${n} and ${d} have a common factor of ${common}.`,
+                            options: shuffle([`No`, `Yes`])
+                        };
+                    } else if (i === 3) {
+                        const n = -rand(2, 5);
+                        const d = rand(7, 11); // likely prime or coprime
+                        // ensure coprime
+                        if (gcd(Math.abs(n), d) === 1) {
+                            q = {
+                                type: "Standard Check Valid",
+                                difficulty_level: "Easy",
+                                text: `<div class='question-container'>
+                                          <p>Is $\\frac{${n}}{${d}}$ in standard form?</p>
+                                       </div>`,
+                                correctAnswer: `Yes`,
+                                solution: `Yes, because the denominator is positive and HCF(${Math.abs(n)}, ${d}) = 1.`,
+                                options: shuffle([`Yes`, `No`])
+                            };
                         } else {
-                            // move < decLen: 3.456 * 10^1 = 34.56
-                            numStr = parts[0] + parts[1].slice(0, move) + "." + parts[1].slice(move);
+                            // Fallback if random gen fails coprimality
+                            q = {
+                                type: "Standard Check Valid",
+                                difficulty_level: "Easy",
+                                text: `<div class='question-container'>
+                                          <p>Is $\\frac{-1}{3}$ in standard form?</p>
+                                       </div>`,
+                                correctAnswer: `Yes`,
+                                solution: `Yes, denominator is positive and HCF(1, 3) = 1.`,
+                                options: shuffle([`Yes`, `No`])
+                            };
                         }
                     } else {
-                        numStr += "0".repeat(move);
+                        q = {
+                            type: "Standardize Sign",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Which step is required to convert $\\frac{7}{-9}$ to standard form?</p>
+                                   </div>`,
+                            correctAnswer: `Multiply numerator and denominator by -1`,
+                            solution: `To make the denominator positive, we multiply both numerator and denominator by -1 to get $\\frac{-7}{9}$.`,
+                            options: shuffle([
+                                `Multiply numerator and denominator by -1`,
+                                `Add 1 to denominator`,
+                                `Divide by HCF`,
+                                `It is already in standard form`
+                            ])
+                        };
                     }
-                    // format with commas for readibility? Maybe just raw string if it's very long
-                    // Let's use locale string if no decimal, else raw
-                    const displayNum = numStr.includes('.') ? numStr : parseInt(numStr).toLocaleString();
-
-                    q = {
-                        type: "Standard Form (Large)",
-                        difficulty_level: "Medium",
-                        text: `<div class='question-container'>
-                                  <p>Express $${displayNum}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${exponent} places to the left.<br>$$${displayNum} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${exponent - 1}}$`,
-                            `$${significand.replace('.', '')} \\times 10^{${significand.includes('.') ? exponent : exponent + 2}}$`,
-                            `$${lead}.${decPart ? decPart : ''} \\times 10^{${exponent + 1}}$`
-                        ])
-                    };
-
                 } else {
-                    // Subtopic 2: Small numbers (Negative exponents)
-                    // e.g. 0.00045 = 4.5 x 10^-4
-                    const negExp = rand(3, 8); // e.g. 4 means 10^-4
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 2);
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
+                    // Subtopic 2: Reducing to standard form using HCF
+                    if (i === 5) {
+                        const common = rand(5, 15);
+                        const n = 3 * common; // base 3/5 or 3/7
+                        const d = 5 * common;
+                        q = {
+                            type: "Reduce Simple",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Reduce $\\frac{${-n}}{${d}}$ to standard form.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-3}{5}$`,
+                            solution: `HCF of ${n} and ${d} is ${common}. Dividing both by ${common}, we get $\\frac{-3}{5}$.`,
+                            options: shuffle([
+                                `$\\frac{-3}{5}$`,
+                                `$\\frac{-${n}}{${d}}$`,
+                                `$\\frac{3}{-5}$`,
+                                `$\\frac{-5}{3}$`
+                            ])
+                        };
+                    } else if (i === 6) {
+                        // Example: 36/-24
+                        const common = 12;
+                        const n = 3 * common;
+                        const d = -2 * common;
+                        q = {
+                            type: "Reduce Negative Denom",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Write $\\frac{${n}}{${d}}$ in standard form.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-3}{2}$`,
+                            solution: `First, make denominator positive: $\\frac{-${n}}{${-d}}$. Then divide by HCF ${common}: $\\frac{-3}{2}$.`,
+                            options: shuffle([
+                                `$\\frac{-3}{2}$`,
+                                `$\\frac{3}{-2}$`,
+                                `$\\frac{-2}{3}$`,
+                                `$\\frac{3}{2}$`
+                            ])
+                        };
+                    } else if (i === 7) {
+                        const common = rand(2, 5);
+                        const n = -4 * common;
+                        const d = -7 * common;
+                        q = {
+                            type: "Reduce Double Negative",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Reduce $\\frac{${n}}{${d}}$ to standard form.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{4}{7}$`,
+                            solution: `Cancel the negative signs: $\\frac{${-n}}{${-d}}$. Divide by HCF ${common}: $\\frac{4}{7}$.`,
+                            options: shuffle([
+                                `$\\frac{4}{7}$`,
+                                `$\\frac{-4}{7}$`,
+                                `$\\frac{4}{-7}$`,
+                                `$\\frac{-4}{-7}$`
+                            ])
+                        };
+                    } else if (i === 8) {
+                        // large numbers
+                        const common = 15;
+                        const n = -45;
+                        const d = 30;
+                        q = {
+                            type: "Reduce Specific",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Reduce $\\frac{-45}{30}$ to standard form.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-3}{2}$`,
+                            solution: `HCF of 45 and 30 is 15. $\\frac{-45 \\div 15}{30 \\div 15} = \\frac{-3}{2}$.`,
+                            options: shuffle([
+                                `$\\frac{-3}{2}$`,
+                                `$\\frac{-9}{6}$`,
+                                `$\\frac{3}{2}$`,
+                                `$\\frac{-15}{10}$`
+                            ])
+                        };
+                    } else {
+                        const n = rand(10, 20);
+                        const d = rand(30, 50);
+                        const common = gcd(n, d);
+                        const sn = n / common;
+                        const sd = d / common;
+                        q = {
+                            type: "Reduce Random",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Reduce $\\frac{${n}}{${d}}$ to its lowest form.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{${sn}}{${sd}}$`,
+                            solution: `HCF of ${n} and ${d} is ${common}. Values become $\\frac{${sn}}{${sd}}$.`,
+                            options: shuffle([
+                                `$\\frac{${sn}}{${sd}}$`,
+                                `$\\frac{${sd}}{${sn}}$`,
+                                `$\\frac{${sn + 1}}{${sd + 1}}$`,
+                                `$\\frac{${sn}}{${sd + 1}}$`
+                            ])
+                        };
                     }
-
-                    const standardForm = `${significand} \\times 10^{-${negExp}}`;
-
-                    // Construct original small number
-                    // 4.5 * 10^-4 -> move decimal 4 left
-                    // 0.00045
-                    // zeros = negExp - 1
-                    let zeros = negExp - 1; // if 4.5, exp -4. dot is after 4. move 1 left passes 4 (0.45, exp -1). need 3 more zeros.
-                    // Wait. 4.5 * 10^-4.
-                    // 4.5 -> 0.45 (-1) -> 0.045 (-2) -> 0.0045 (-3) -> 0.00045 (-4).
-                    // So 3 zeros after decimal point. 
-                    // Wait, logic: lead digit is at 10^0 position in significand.
-                    // In result, lead digit is at 10^-negExp position? No.
-                    // Example: 3 * 10^-2 = 0.03.
-                    // 3 is at hundredths place.
-
-                    // Logic: "0." + (negExp - 1 zeros) + digits (without dot)
-                    // 4.5 * 10^-4 -> "0." + "000" + "45" -> 0.00045
-                    const digits = significand.replace('.', '');
-                    const originalStr = "0." + "0".repeat(zeros) + digits;
-
-                    q = {
-                        type: "Standard Form (Small)",
-                        difficulty_level: "Hard",
-                        text: `<div class='question-container'>
-                                  <p>Express $${originalStr}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${negExp} places to the right.<br>$$${originalStr} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${negExp}}$`, // positive exp distractor
-                            `$${significand} \\times 10^{-${negExp - 1}}$`,
-                            `$${significand} \\times 10^{-${negExp + 1}}$`
-                        ])
-                    };
                 }
+
                 newQuestions.push(q);
             }
             setQuestions(newQuestions);
@@ -166,6 +257,7 @@ const StandardForm = () => {
         generateQuestions();
     }, []);
 
+    // ... Standard boilerplate methods ...
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -279,11 +371,9 @@ const StandardForm = () => {
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }
-
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-
                 try {
                     await api.createReport({
                         title: SKILL_NAME,
@@ -463,4 +553,4 @@ const StandardForm = () => {
     );
 };
 
-export default StandardForm;
+export default RationalNumbersStandardForm;

@@ -5,6 +5,24 @@ import renderMathInElement from 'katex/dist/contrib/auto-render';
 const LatexContent = ({ html, className, block = false }) => {
     const containerRef = useRef(null);
 
+    // Smart processing: If no LaTeX delimiters are found, auto-convert "num/den" fractions
+    const processHtml = (raw) => {
+        if (!raw) return '';
+        let processed = String(raw);
+
+        // Check for existing delimiters ($$, $, \[, \()
+        const hasDelimiters = processed.includes('$$') || processed.includes('$') || processed.includes('\\[') || processed.includes('\\(');
+
+        if (!hasDelimiters) {
+            // Auto-convert standard fractions like "9/15" -> "\( \frac{9}{15} \)"
+            // Use INLINE delimiters so they wrap properly with text
+            processed = processed.replace(/\b(\d+)\s*\/\s*(\d+)\b/g, '\\( \\frac{$1}{$2} \\)');
+        }
+        return processed;
+    };
+
+    const finalHtml = processHtml(html);
+
     useEffect(() => {
         if (containerRef.current) {
             try {

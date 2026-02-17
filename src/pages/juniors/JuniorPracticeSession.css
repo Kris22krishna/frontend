@@ -1368,6 +1368,10 @@
         flex-shrink: 0;
     }
 
+    .header-left {
+        display: none !important;
+    }
+
     /* Adjust Sticker Exit size for footer */
     .mobile-sticker-exit {
         transform: scale(0.65);

@@ -90,7 +90,7 @@ const UseOfPercentages = () => {
                                </div>`,
                         correctAnswer: `${ans}`,
                         solution: `$$${pct}\\% \\times ${total} = \\frac{${pct}}{100} \\times ${total} = ${ans}$$`,
-                        options: shuffle([`${ans}`, `${ans * 2}`, `${ans / 2}`, `${total - ans}`])
+                        options: shuffle([`${ans}`, `${ans * 2}`, `${ans / 2}`, `${ans === total - ans ? total - ans + 10 : total - ans}`])
                     };
                 } else if (i < 6) {
                     // Subtopic 3: Finding whole from percent
@@ -115,7 +115,7 @@ const UseOfPercentages = () => {
                     const totalParts = a + b;
                     // Ensure nice percentages if possible, but standard is fine
                     // Let's pick ratios that sum to factors of 100 for cleaner numbers: 1:1(2), 1:3(4), 1:4(5), 2:3(5), 3:7(10), etc.
-                    const niceRatios = [[1, 1], [1, 3], [1, 4], [2, 3], [3, 2], [3, 7], [7, 3], [9, 1]];
+                    const niceRatios = [[1, 3], [1, 4], [2, 3], [3, 2], [3, 7], [7, 3], [9, 1]];
                     const pair = niceRatios[rand(0, niceRatios.length - 1)];
                     const [r1, r2] = pair;
                     const T = r1 + r2;
@@ -165,7 +165,7 @@ const UseOfPercentages = () => {
                                </div>`,
                         correctAnswer: `${changePct}%`,
                         solution: `Change = $|${final} - ${original}| = ${changeAmount}$.\nPercentage ${isInc ? 'increase' : 'decrease'} = $\\frac{\\text{Change}}{\\text{Original}} \\times 100 = \\frac{${changeAmount}}{${original}} \\times 100 = ${changePct}\\%$`,
-                        options: shuffle([`${changePct}%`, `${changePct * 2}%`, `${changePct / 2}%`, `${100 - changePct}%`])
+                        options: shuffle([`${changePct}%`, `${changePct * 2}%`, `${changePct / 2}%`, `${changePct === 100 - changePct ? 100 - changePct + 10 : 100 - changePct}%`])
                     };
                 }
                 newQuestions.push(q);
@@ -328,7 +328,9 @@ const UseOfPercentages = () => {
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"></div>
+                <div className="header-left">
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Use of Percentages</span>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}

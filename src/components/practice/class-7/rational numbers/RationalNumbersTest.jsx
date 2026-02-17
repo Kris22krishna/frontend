@@ -19,7 +19,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const StandardForm = () => {
+const RationalNumbersTest = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const StandardForm = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 33; // Placeholder
-    const SKILL_NAME = "Class 7 - Exponents - Standard Form";
+    const SKILL_ID = 'local-rn-test';
+    const SKILL_NAME = "Class 7 - Rational Numbers - Chapter Test";
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
@@ -46,126 +46,195 @@ const StandardForm = () => {
                 const unique = [...new Set(array)];
                 return unique.sort(() => Math.random() - 0.5);
             };
+            const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
 
-            for (let i = 0; i < 10; i++) {
-                let q = {};
+            // Generate 16 questions, 2 from each of the 8 topics
 
-                if (i < 5) {
-                    // Subtopic 1: Large numbers (Positive exponents)
-                    // e.g. 5,985,000,000 or 316.5
-                    const exponent = rand(3, 9);
-                    // generate a base number between 1 and 10 (exclusive 10)
-                    // e.g. 3.45 or 7.0 or 1.234
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 3);
+            const generators = [
+                // Topic 1: Need for Rational Numbers
+                // Q1: Concept
+                () => ({
+                    type: "Review Topic 1",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>Which set of numbers includes integers and fractions?</p></div>`,
+                    correctAnswer: `Rational Numbers`,
+                    solution: `Rational numbers include integers and fractions.`,
+                    options: shuffle([`Rational Numbers`, `Whole Numbers`, `Natural Numbers`, `Irrational Numbers`])
+                }),
+                // Q2: Application
+                () => {
+                    const deposit = rand(500, 1000);
+                    return {
+                        type: "Review Topic 1b",
+                        difficulty_level: "Easy",
+                        text: `<div class='question-container'><p>If depositing ₹${deposit} is represented by $+\\frac{${deposit}}{1}$, how is withdrawing ₹${Math.floor(deposit / 2)} represented?</p></div>`,
+                        correctAnswer: `$-\\frac{${Math.floor(deposit / 2)}}{1}$`,
+                        solution: `Withdrawal is the opposite of deposit, so it is negative.`,
+                        options: shuffle([`$-\\frac{${Math.floor(deposit / 2)}}{1}$`, `$+\\frac{${Math.floor(deposit / 2)}}{1}$`, `$\\frac{1}{${Math.floor(deposit / 2)}}$`, `None`])
+                    };
+                },
 
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        // trim trailing zeros if any, unless it becomes empty
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
-
-                    // The standard form is significand x 10^exponent
-                    const standardForm = `${significand} \\times 10^{${exponent}}`;
-
-                    // The actual number to display
-                    // Need to multiply significand by 10^exponent
-                    // simplest way: construct number string
-                    // 3.45 * 10^5 -> move decimal 5 right -> 345000
-                    let numStr = significand;
-                    let move = exponent;
-                    if (numStr.includes('.')) {
-                        const parts = numStr.split('.');
-                        const decLen = parts[1].length;
-                        if (move >= decLen) {
-                            numStr = parts[0] + parts[1] + "0".repeat(move - decLen);
-                        } else {
-                            // move < decLen: 3.456 * 10^1 = 34.56
-                            numStr = parts[0] + parts[1].slice(0, move) + "." + parts[1].slice(move);
-                        }
-                    } else {
-                        numStr += "0".repeat(move);
-                    }
-                    // format with commas for readibility? Maybe just raw string if it's very long
-                    // Let's use locale string if no decimal, else raw
-                    const displayNum = numStr.includes('.') ? numStr : parseInt(numStr).toLocaleString();
-
-                    q = {
-                        type: "Standard Form (Large)",
+                // Topic 2: What are Rational Numbers
+                // Q3: Definition
+                () => ({
+                    type: "Review Topic 2",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>A number of the form p/q is rational if p and q are integers and:</p></div>`,
+                    correctAnswer: `q ≠ 0`,
+                    solution: `The denominator q must not be zero.`,
+                    options: shuffle([`q ≠ 0`, `q = 0`, `p ≠ 0`, `p > q`])
+                }),
+                // Q4: Equivalent
+                () => {
+                    const n2 = rand(2, 5), d2 = rand(3, 7);
+                    const m = rand(2, 4);
+                    return {
+                        type: "Review Topic 2b",
                         difficulty_level: "Medium",
-                        text: `<div class='question-container'>
-                                  <p>Express $${displayNum}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${exponent} places to the left.<br>$$${displayNum} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${exponent - 1}}$`,
-                            `$${significand.replace('.', '')} \\times 10^{${significand.includes('.') ? exponent : exponent + 2}}$`,
-                            `$${lead}.${decPart ? decPart : ''} \\times 10^{${exponent + 1}}$`
-                        ])
+                        text: `<div class='question-container'><p>Which is equivalent to $\\frac{${n2}}{${d2}}$?</p></div>`,
+                        correctAnswer: `$\\frac{${n2 * m}}{${d2 * m}}$`,
+                        solution: `Multiplying num and den by ${m} gives $\\frac{${n2 * m}}{${d2 * m}}$.`,
+                        options: shuffle([`$\\frac{${n2 * m}}{${d2 * m}}$`, `$\\frac{${n2 + m}}{${d2 + m}}$`, `$\\frac{${n2}}{${d2 + 1}}$`, `$\\frac{${d2}}{${n2}}$`])
                     };
+                },
 
-                } else {
-                    // Subtopic 2: Small numbers (Negative exponents)
-                    // e.g. 0.00045 = 4.5 x 10^-4
-                    const negExp = rand(3, 8); // e.g. 4 means 10^-4
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 2);
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
+                // Topic 3: Positive and Negative
+                // Q5: Positive check
+                () => ({
+                    type: "Review Topic 3",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>Which of the following is a positive rational number?</p></div>`,
+                    correctAnswer: `$\\frac{-3}{-5}$`,
+                    solution: `$\\frac{-3}{-5} = \\frac{3}{5}$, which is positive.`,
+                    options: shuffle([`$\\frac{-3}{-5}$`, `$\\frac{-3}{5}$`, `$\\frac{3}{-5}$`, `-5`])
+                }),
+                // Q6: Negative
+                () => ({
+                    type: "Review Topic 3b",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>Is $\\frac{0}{-5}$ positive or negative?</p></div>`,
+                    correctAnswer: `Neither positive nor negative`,
+                    solution: `0 is neither positive nor negative.`,
+                    options: shuffle([`Neither positive nor negative`, `Positive`, `Negative`, `Both`])
+                }),
 
-                    const standardForm = `${significand} \\times 10^{-${negExp}}`;
-
-                    // Construct original small number
-                    // 4.5 * 10^-4 -> move decimal 4 left
-                    // 0.00045
-                    // zeros = negExp - 1
-                    let zeros = negExp - 1; // if 4.5, exp -4. dot is after 4. move 1 left passes 4 (0.45, exp -1). need 3 more zeros.
-                    // Wait. 4.5 * 10^-4.
-                    // 4.5 -> 0.45 (-1) -> 0.045 (-2) -> 0.0045 (-3) -> 0.00045 (-4).
-                    // So 3 zeros after decimal point. 
-                    // Wait, logic: lead digit is at 10^0 position in significand.
-                    // In result, lead digit is at 10^-negExp position? No.
-                    // Example: 3 * 10^-2 = 0.03.
-                    // 3 is at hundredths place.
-
-                    // Logic: "0." + (negExp - 1 zeros) + digits (without dot)
-                    // 4.5 * 10^-4 -> "0." + "000" + "45" -> 0.00045
-                    const digits = significand.replace('.', '');
-                    const originalStr = "0." + "0".repeat(zeros) + digits;
-
-                    q = {
-                        type: "Standard Form (Small)",
-                        difficulty_level: "Hard",
-                        text: `<div class='question-container'>
-                                  <p>Express $${originalStr}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${negExp} places to the right.<br>$$${originalStr} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${negExp}}$`, // positive exp distractor
-                            `$${significand} \\times 10^{-${negExp - 1}}$`,
-                            `$${significand} \\times 10^{-${negExp + 1}}$`
-                        ])
+                // Topic 4: Number Line
+                // Q7: Location
+                () => ({
+                    type: "Review Topic 4",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>On a number line, where does $\\frac{-1}{2}$ lie?</p></div>`,
+                    correctAnswer: `To the left of 0`,
+                    solution: `Negative numbers are to the left of 0.`,
+                    options: shuffle([`To the left of 0`, `To the right of 0`, `At 0`, `Undefined`])
+                }),
+                // Q8: Between integers
+                () => {
+                    const num = rand(3, 5), den = 2; // e.g. 3/2 = 1.5
+                    return {
+                        type: "Review Topic 4b",
+                        difficulty_level: "Medium",
+                        text: `<div class='question-container'><p>Between which two consecutive integers does $\\frac{${num}}{${den}}$ lie?</p></div>`,
+                        correctAnswer: `${Math.floor(num / den)} and ${Math.ceil(num / den)}`,
+                        solution: `$\\frac{${num}}{${den}} = ${num / den}$, which is between ${Math.floor(num / den)} and ${Math.ceil(num / den)}.`,
+                        options: shuffle([`${Math.floor(num / den)} and ${Math.ceil(num / den)}`, `${Math.floor(num / den) - 1} and ${Math.floor(num / den)}`, `${Math.ceil(num / den)} and ${Math.ceil(num / den) + 1}`, `0 and 1`])
                     };
-                }
-                newQuestions.push(q);
-            }
+                },
+
+                // Topic 5: Standard Form
+                // Q9: Standard check
+                () => ({
+                    type: "Review Topic 5",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>Reduce $\\frac{-12}{30}$ to standard form.</p></div>`,
+                    correctAnswer: `$\\frac{-2}{5}$`,
+                    solution: `Divide by HCF(12,30)=6: $\\frac{-12 \\div 6}{30 \\div 6} = \\frac{-2}{5}$.`,
+                    options: shuffle([`$\\frac{-2}{5}$`, `$\\frac{-4}{10}$`, `$\\frac{2}{-5}$`, `$\\frac{-6}{15}$`])
+                }),
+                // Q10: Condition
+                () => ({
+                    type: "Review Topic 5b",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>For standard form, the denominator must be:</p></div>`,
+                    correctAnswer: `Positive`,
+                    solution: `In standard form, the denominator is always positive.`,
+                    options: shuffle([`Positive`, `Negative`, `Zero`, `Even`])
+                }),
+
+                // Topic 6: Comparison
+                // Q11: Compare
+                () => ({
+                    type: "Review Topic 6",
+                    difficulty_level: "Medium",
+                    text: `<div class='question-container'><p>Which is greater: $\\frac{-2}{3}$ or $\\frac{-4}{5}$?</p></div>`,
+                    correctAnswer: `$\\frac{-2}{3}$`,
+                    solution: `$-0.66... > -0.8$. So $\\frac{-2}{3}$ is greater.`,
+                    options: shuffle([`$\\frac{-2}{3}$`, `$\\frac{-4}{5}$`, `Equal`, `Undefined`])
+                }),
+                // Q12: Order
+                () => ({
+                    type: "Review Topic 6b",
+                    difficulty_level: "Medium",
+                    text: `<div class='question-container'><p>Ascending order of $\\frac{-1}{2}, \\frac{1}{2}, 0$ is:</p></div>`,
+                    correctAnswer: `$\\frac{-1}{2}, 0, \\frac{1}{2}$`,
+                    solution: `Negative < Zero < Positive.`,
+                    options: shuffle([`$\\frac{-1}{2}, 0, \\frac{1}{2}$`, `$\\frac{1}{2}, 0, \\frac{-1}{2}$`, `$0, \\frac{-1}{2}, \\frac{1}{2}$`, `None`])
+                }),
+
+                // Topic 7: Rational numbers between
+                // Q13: Count
+                () => ({
+                    type: "Review Topic 7",
+                    difficulty_level: "Easy",
+                    text: `<div class='question-container'><p>How many rational numbers are between 0 and 1?</p></div>`,
+                    correctAnswer: `Infinite`,
+                    solution: `There are infinitely many rational numbers between any two distinct rational numbers.`,
+                    options: shuffle([`Infinite`, `Zero`, `One`, `Ten`])
+                }),
+                // Q14: Find one
+                () => ({
+                    type: "Review Topic 7b",
+                    difficulty_level: "Medium",
+                    text: `<div class='question-container'><p>Find a rational number between $\\frac{1}{3}$ and $\\frac{1}{2}$.</p></div>`,
+                    correctAnswer: `$\\frac{5}{12}$`,
+                    solution: `Average: $\\frac{1}{2}(\\frac{1}{3}+\\frac{1}{2}) = \\frac{1}{2}(\\frac{5}{6}) = \\frac{5}{12}$.`,
+                    options: shuffle([`$\\frac{5}{12}$`, `$\\frac{2}{5}$`, `$\\frac{3}{5}$`, `$\\frac{1}{6}$`])
+                }),
+
+                // Topic 8: Operations
+                // Q15: Add/Sub
+                () => {
+                    const o1 = rand(1, 5);
+                    return {
+                        type: "Review Topic 8",
+                        difficulty_level: "Medium",
+                        text: `<div class='question-container'><p>Solve: $\\frac{2}{3} + (\\frac{-${o1}}{3})$</p></div>`,
+                        correctAnswer: `$\\frac{${2 - o1}}{3}$`,
+                        solution: `$\\frac{2 + (-${o1})}{3} = \\frac{${2 - o1}}{3}$.`,
+                        options: shuffle([`$\\frac{${2 - o1}}{3}$`, `$\\frac{${2 + o1}}{3}$`, `$\\frac{${2 - o1}}{6}$`, `$\\frac{2}{${3 + o1}}$`])
+                    };
+                },
+                // Q16: Mult/Div
+                () => ({
+                    type: "Review Topic 8b",
+                    difficulty_level: "Medium",
+                    text: `<div class='question-container'><p>Product of reciprocal of $\\frac{-2}{3}$ and $\\frac{4}{5}$.</p></div>`,
+                    correctAnswer: `$\\frac{-6}{5}$`,
+                    solution: `Reciprocal of $\\frac{-2}{3}$ is $\\frac{-3}{2}$. Multiply by $\\frac{4}{5}$: $\\frac{-3}{2} \\times \\frac{4}{5} = \\frac{-12}{10} = \\frac{-6}{5}$.`,
+                    options: shuffle([`$\\frac{-6}{5}$`, `$\\frac{-8}{15}$`, `$\\frac{6}{5}$`, `$\\frac{-2}{15}$`])
+                })
+            ];
+
+            // Pick 10 random questions
+            const selectedGenerators = shuffle(generators).slice(0, 10);
+            selectedGenerators.forEach(gen => newQuestions.push(gen()));
+
             setQuestions(newQuestions);
         };
         generateQuestions();
     }, []);
 
+    // ... Standard boilerplate methods ...
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -279,11 +348,9 @@ const StandardForm = () => {
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }
-
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-
                 try {
                     await api.createReport({
                         title: SKILL_NAME,
@@ -320,7 +387,7 @@ const StandardForm = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Standard Form</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Rational Numbers</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -463,4 +530,4 @@ const StandardForm = () => {
     );
 };
 
-export default StandardForm;
+export default RationalNumbersTest;

@@ -19,7 +19,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const StandardForm = () => {
+const RationalNumbersBetween = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const StandardForm = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 33; // Placeholder
-    const SKILL_NAME = "Class 7 - Exponents - Standard Form";
+    const SKILL_ID = 'local-rn-between';
+    const SKILL_NAME = "Class 7 - Rational Numbers - Between Numbers";
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
@@ -49,116 +49,132 @@ const StandardForm = () => {
 
             for (let i = 0; i < 10; i++) {
                 let q = {};
+                // Topic 7: Rational Numbers Between Two Numbers
+                // Subtopic 1: Finding rational numbers between two rational numbers (Q0-Q8)
+                // Subtopic 2: Infinite rational numbers concept (Q9)
 
-                if (i < 5) {
-                    // Subtopic 1: Large numbers (Positive exponents)
-                    // e.g. 5,985,000,000 or 316.5
-                    const exponent = rand(3, 9);
-                    // generate a base number between 1 and 10 (exclusive 10)
-                    // e.g. 3.45 or 7.0 or 1.234
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 3);
-
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        // trim trailing zeros if any, unless it becomes empty
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
-
-                    // The standard form is significand x 10^exponent
-                    const standardForm = `${significand} \\times 10^{${exponent}}`;
-
-                    // The actual number to display
-                    // Need to multiply significand by 10^exponent
-                    // simplest way: construct number string
-                    // 3.45 * 10^5 -> move decimal 5 right -> 345000
-                    let numStr = significand;
-                    let move = exponent;
-                    if (numStr.includes('.')) {
-                        const parts = numStr.split('.');
-                        const decLen = parts[1].length;
-                        if (move >= decLen) {
-                            numStr = parts[0] + parts[1] + "0".repeat(move - decLen);
-                        } else {
-                            // move < decLen: 3.456 * 10^1 = 34.56
-                            numStr = parts[0] + parts[1].slice(0, move) + "." + parts[1].slice(move);
-                        }
+                if (i < 9) {
+                    // Subtopic 1: Finding rational numbers
+                    if (i === 0) {
+                        q = {
+                            type: "Identify Between",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Which rational number lies between -2 and -1?</p>
+                                   </div>`,
+                            correctAnswer: `$-1.5$ (or $\\frac{-3}{2}$)`,
+                            solution: `$\\frac{-3}{2} = -1.5$, which is between -2 and -1.`,
+                            options: shuffle([
+                                `$-1.5$ (or $\\frac{-3}{2}$)`,
+                                `$-2.5$`,
+                                `$-0.5$`,
+                                `0`
+                            ])
+                        };
+                    } else if (i === 1) {
+                        const n = rand(1, 5);
+                        const d = rand(6, 10);
+                        // find between 0 and n/d
+                        q = {
+                            type: "Find Between 0",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Which of the following rational numbers is between 0 and $\\frac{${n}}{${d}}$?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{${n}}{${2 * d}}$`,
+                            solution: `$\\frac{${n}}{${2 * d}}$ is half of $\\frac{${n}}{${d}}$, so it lies between 0 and $\\frac{${n}}{${d}}$.`,
+                            options: shuffle([
+                                `$\\frac{${n}}{${2 * d}}$`,
+                                `$\\frac{${n + 1}}{${d}}$`,
+                                `$\\frac{-1}{${d}}$`,
+                                `$\\frac{${d}}{${n}}$`
+                            ])
+                        };
+                    } else if (i === 2) {
+                        q = {
+                            type: "Mean Method",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Find a rational number exactly halfway between $\\frac{1}{4}$ and $\\frac{1}{2}$.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{3}{8}$`,
+                            solution: `Average = $\\frac{1}{2} (\\frac{1}{4} + \\frac{1}{2}) = \\frac{1}{2} (\\frac{1}{4} + \\frac{2}{4}) = \\frac{1}{2}(\\frac{3}{4}) = \\frac{3}{8}$.`,
+                            options: shuffle([`$\\frac{3}{8}$`, `$\\frac{1}{3}$`, `$\\frac{2}{8}$`, `$\\frac{5}{8}$`])
+                        };
+                    } else if (i === 3) {
+                        // Between -1/2 and -1/5?
+                        // -0.5 and -0.2
+                        // -0.3, -0.4 -> -3/10, -2/5
+                        q = {
+                            type: "Between Negatives",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Which rational number lies between $\\frac{-1}{2}$ and $\\frac{-1}{5}$?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-3}{10}$`,
+                            solution: `$\\frac{-1}{2} = -0.5$ and $\\frac{-1}{5} = -0.2$. $\\frac{-3}{10} = -0.3$, which lies between them.`,
+                            options: shuffle([
+                                `$\\frac{-3}{10}$`,
+                                `$\\frac{-6}{10}$`,
+                                `$\\frac{-1}{10}$`,
+                                `$\\frac{-7}{10}$`
+                            ])
+                        };
+                    } else if (i === 4) {
+                        // Specific example: 3 raional numbers between -2 and -1
+                        q = {
+                            type: "Multiple Between",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                       <p>Which set of rational numbers lies between -2 and -1?</p>
+                                    </div>`,
+                            correctAnswer: `$\\frac{-3}{2}, \\frac{-4}{3}, \\frac{-5}{3}$`, // -1.5, -1.33, -1.66
+                            solution: `All numbers in this set are between -1 and -2.`,
+                            options: shuffle([
+                                `$\\frac{-3}{2}, \\frac{-4}{3}, \\frac{-5}{3}$`,
+                                `$\\frac{-1}{2}, \\frac{-1}{3}, \\frac{-1}{4}$`,
+                                `$\\frac{-5}{2}, -3, -4$`,
+                                `$\\frac{3}{2}, \\frac{4}{3}$`
+                            ])
+                        };
                     } else {
-                        numStr += "0".repeat(move);
+                        // Method of equivalent fractions
+                        const m = rand(2, 4);
+                        q = {
+                            type: "Equivalent Method",
+                            difficulty_level: "Hard",
+                            text: `<div class='question-container'>
+                                       <p>To find 5 rational numbers between $\\frac{3}{5}$ and $\\frac{4}{5}$, we can write them as equivalent fractions with denominator:</p>
+                                    </div>`,
+                            correctAnswer: `30 (or any multiple greater than 5)`,
+                            solution: `To insert 5 numbers, we typically multiply by $5+1=6$. Denominator becomes $5 \\times 6 = 30$.`,
+                            options: shuffle([
+                                `30 (or any multiple greater than 5)`,
+                                `5`,
+                                `1`,
+                                `4`
+                            ])
+                        };
                     }
-                    // format with commas for readibility? Maybe just raw string if it's very long
-                    // Let's use locale string if no decimal, else raw
-                    const displayNum = numStr.includes('.') ? numStr : parseInt(numStr).toLocaleString();
-
-                    q = {
-                        type: "Standard Form (Large)",
-                        difficulty_level: "Medium",
-                        text: `<div class='question-container'>
-                                  <p>Express $${displayNum}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${exponent} places to the left.<br>$$${displayNum} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${exponent - 1}}$`,
-                            `$${significand.replace('.', '')} \\times 10^{${significand.includes('.') ? exponent : exponent + 2}}$`,
-                            `$${lead}.${decPart ? decPart : ''} \\times 10^{${exponent + 1}}$`
-                        ])
-                    };
-
                 } else {
-                    // Subtopic 2: Small numbers (Negative exponents)
-                    // e.g. 0.00045 = 4.5 x 10^-4
-                    const negExp = rand(3, 8); // e.g. 4 means 10^-4
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 2);
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
-
-                    const standardForm = `${significand} \\times 10^{-${negExp}}`;
-
-                    // Construct original small number
-                    // 4.5 * 10^-4 -> move decimal 4 left
-                    // 0.00045
-                    // zeros = negExp - 1
-                    let zeros = negExp - 1; // if 4.5, exp -4. dot is after 4. move 1 left passes 4 (0.45, exp -1). need 3 more zeros.
-                    // Wait. 4.5 * 10^-4.
-                    // 4.5 -> 0.45 (-1) -> 0.045 (-2) -> 0.0045 (-3) -> 0.00045 (-4).
-                    // So 3 zeros after decimal point. 
-                    // Wait, logic: lead digit is at 10^0 position in significand.
-                    // In result, lead digit is at 10^-negExp position? No.
-                    // Example: 3 * 10^-2 = 0.03.
-                    // 3 is at hundredths place.
-
-                    // Logic: "0." + (negExp - 1 zeros) + digits (without dot)
-                    // 4.5 * 10^-4 -> "0." + "000" + "45" -> 0.00045
-                    const digits = significand.replace('.', '');
-                    const originalStr = "0." + "0".repeat(zeros) + digits;
-
+                    // Subtopic 2: Infinite rational numbers concept
                     q = {
-                        type: "Standard Form (Small)",
-                        difficulty_level: "Hard",
+                        type: "Concept Infinite",
+                        difficulty_level: "Easy",
                         text: `<div class='question-container'>
-                                  <p>Express $${originalStr}$ in standard form.</p>
+                                  <p>How many rational numbers are there between any two distinct rational numbers?</p>
                                </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${negExp} places to the right.<br>$$${originalStr} = ${standardForm}$$`,
+                        correctAnswer: `Infinitely many`,
+                        solution: `There are infinitely many rational numbers between any two given rational numbers.`,
                         options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${negExp}}$`, // positive exp distractor
-                            `$${significand} \\times 10^{-${negExp - 1}}$`,
-                            `$${significand} \\times 10^{-${negExp + 1}}$`
+                            `Infinitely many`,
+                            `Finite number`,
+                            `Depends on the numbers`,
+                            `None`
                         ])
                     };
                 }
+
                 newQuestions.push(q);
             }
             setQuestions(newQuestions);
@@ -166,6 +182,7 @@ const StandardForm = () => {
         generateQuestions();
     }, []);
 
+    // ... Standard boilerplate methods ...
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -279,11 +296,9 @@ const StandardForm = () => {
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }
-
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-
                 try {
                     await api.createReport({
                         title: SKILL_NAME,
@@ -320,7 +335,7 @@ const StandardForm = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Standard Form</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Rational Numbers Between</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -463,4 +478,4 @@ const StandardForm = () => {
     );
 };
 
-export default StandardForm;
+export default RationalNumbersBetween;

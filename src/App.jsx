@@ -117,11 +117,20 @@ import UseOfPercentages from './components/practice/class-7/comparing quantities
 import ProfitAndLoss from './components/practice/class-7/comparing quantities/ProfitAndLoss';
 import SimpleInterest from './components/practice/class-7/comparing quantities/SimpleInterest';
 import ExponentsBasics from './components/practice/class-7/exponents and powers/ExponentsBasics';
-import LawsOfExponentsClass7 from './components/practice/class-7/exponents and powers/LawsOfExponents';
+import LawsOfExponents from './components/practice/class-7/exponents and powers/LawsOfExponents';
 import DecimalNumberSystem from './components/practice/class-7/exponents and powers/DecimalNumberSystem';
 import StandardForm from './components/practice/class-7/exponents and powers/StandardForm';
 import ComparingQuantitiesTest from './components/practice/class-7/comparing quantities/ComparingQuantitiesTest';
 import ExponentsPowersTest from './components/practice/class-7/exponents and powers/ExponentsPowersTest';
+import NeedForRationalNumbers from './components/practice/class-7/rational numbers/NeedForRationalNumbers';
+import WhatAreRationalNumbers from './components/practice/class-7/rational numbers/WhatAreRationalNumbers';
+import PositiveNegativeRationalNumbers from './components/practice/class-7/rational numbers/PositiveNegativeRationalNumbers';
+import RationalNumbersNumberLine from './components/practice/class-7/rational numbers/RationalNumbersNumberLine';
+import RationalNumbersStandardForm from './components/practice/class-7/rational numbers/RationalNumbersStandardForm';
+import ComparisonOfRationalNumbers from './components/practice/class-7/rational numbers/ComparisonOfRationalNumbers';
+import RationalNumbersBetween from './components/practice/class-7/rational numbers/RationalNumbersBetween';
+import OperationsOnRationalNumbers from './components/practice/class-7/rational numbers/OperationsOnRationalNumbers';
+import RationalNumbersTest from './components/practice/class-7/rational numbers/RationalNumbersTest';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -160,7 +169,6 @@ function App() {
             <JuniorPracticeSession />
           </ProtectedRoute>
         } />
-
 
         <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
           <ProtectedRoute redirectTo="/login">
@@ -322,6 +330,17 @@ function App() {
         {/* Chapter Tests */}
         <Route path="/middle/grade/7/comparing-quantities/chapter-test" element={<ComparingQuantitiesTest />} />
         <Route path="/middle/grade/7/exponents-and-powers/chapter-test" element={<ExponentsPowersTest />} />
+
+        {/* Rational Numbers */}
+        <Route path="/middle/grade/7/rational-numbers/need" element={<NeedForRationalNumbers />} />
+        <Route path="/middle/grade/7/rational-numbers/what" element={<WhatAreRationalNumbers />} />
+        <Route path="/middle/grade/7/rational-numbers/positive-negative" element={<PositiveNegativeRationalNumbers />} />
+        <Route path="/middle/grade/7/rational-numbers/number-line" element={<RationalNumbersNumberLine />} />
+        <Route path="/middle/grade/7/rational-numbers/standard-form" element={<RationalNumbersStandardForm />} />
+        <Route path="/middle/grade/7/rational-numbers/comparison" element={<ComparisonOfRationalNumbers />} />
+        <Route path="/middle/grade/7/rational-numbers/between" element={<RationalNumbersBetween />} />
+        <Route path="/middle/grade/7/rational-numbers/operations" element={<OperationsOnRationalNumbers />} />
+        <Route path="/middle/grade/7/rational-numbers/chapter-test" element={<RationalNumbersTest />} />
 
 
         {/* Auth Routes */}
