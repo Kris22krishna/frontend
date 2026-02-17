@@ -600,19 +600,19 @@ const FindMissingAddend = () => {
                         )}
                     </div>
 
-                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
-                        <div className="nav-buttons-group">
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '50%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className="nav-buttons-group" style={{ gap: '6px' }}>
                             {qIndex > 0 && (
-                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
                                     Previous
                                 </button>
                             )}
                             {isSubmitted ? (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                <button className="nav-pill-next-btn" onClick={handleNext} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
                                     Submit
                                 </button>
                             )}
