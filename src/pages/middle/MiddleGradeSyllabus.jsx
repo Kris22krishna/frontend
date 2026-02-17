@@ -92,6 +92,21 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('pattern')) {
+                if (lowerSkillName.includes('intro')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/intro`);
+                    return;
+                }
+                if (lowerSkillName.includes('relations')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/relations`);
+                    return;
+                }
+                if (lowerSkillName.includes('shapes')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/shapes`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -149,6 +164,13 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
                 { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' },
                 { skill_id: 'mixed-6', skill_name: 'Mixed Bag', topic: 'Perimeter and Area' }
+            ]
+        };
+        skillsByTopic['Patterns in Mathematics'] = {
+            'Main': [
+                { skill_id: 'patterns-6', skill_name: 'Intro to Patterns', topic: 'Patterns in Mathematics' },
+                { skill_id: 'shapes-6', skill_name: 'Patterns in Shapes', topic: 'Patterns in Mathematics' },
+                { skill_id: 'relations-6', skill_name: 'Relations among Number Sequences', topic: 'Patterns in Mathematics' }
             ]
         };
     }

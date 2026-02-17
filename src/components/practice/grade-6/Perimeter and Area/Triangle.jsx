@@ -168,6 +168,12 @@ const TrianglePractice = () => {
     return (
         <div className="min-h-screen bg-[#F0F8FF] flex flex-col font-sans text-[#31326F] pb-24">
             <header className="p-6 flex justify-between items-center max-w-5xl mx-auto w-full">
+                <div className="flex gap-4">
+                    <div className="bg-white px-6 py-2 rounded-full shadow-sm text-[#31326F] font-bold border border-indigo-50">
+                        Triangle
+                    </div>
+                </div>
+
                 <div className="bg-white px-6 py-2 rounded-full shadow-sm text-[#31326F] font-bold border border-indigo-50">
                     Question {qIndex + 1} / {TOTAL_QUESTIONS}
                 </div>

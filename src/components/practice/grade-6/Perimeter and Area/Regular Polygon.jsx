@@ -164,190 +164,257 @@ const RegularPolygonPractice = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F0F8FF] flex flex-col font-sans text-[#31326F] pb-24">
+        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             {/* Header */}
-            <header className="p-6 flex justify-between items-center max-w-5xl mx-auto w-full">
-                <div className="bg-white px-6 py-2 rounded-full shadow-sm text-[#31326F] font-bold border border-indigo-50">
-                    Question {qIndex + 1} / {TOTAL_QUESTIONS}
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left">
+                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Regular Polygon</span>
                 </div>
-                <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-indigo-50 font-bold text-[#31326F]">
-                    {formatTime(timeElapsed)}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                    </div>
+                </div>
+                <div className="header-right">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                        {formatTime(timeElapsed)}
+                    </div>
                 </div>
             </header>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col items-center justify-start p-4 w-full max-w-2xl mx-auto">
-                <div className="bg-white rounded-[32px] shadow-xl w-full overflow-hidden border border-indigo-50 p-8 flex flex-col items-center gap-8 min-h-[500px]">
-
-                    {/* Question Text */}
-                    <div className="text-center space-y-2">
-                        <h2 className="text-2xl font-medium text-[#31326F]">
-                            Find the <span className="font-bold">Perimeter</span> of this shape.
-                        </h2>
-                        <p className="text-gray-400 text-lg">
-                            {getPolygonName(numSides)}
-                        </p>
-                    </div>
-
-                    {/* Visualization */}
-                    <div className="flex-1 flex items-center justify-center w-full py-4">
-                        <div className="relative w-64 h-64 flex items-center justify-center">
-                            <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-xl filter">
-                                {(() => {
-                                    const cx = 100, cy = 100, r = 80;
-                                    const points = [];
-                                    for (let i = 0; i < numSides; i++) {
-                                        const angle = (Math.PI / 2) + (i * 2 * Math.PI / numSides);
-                                        const x = cx + r * Math.cos(angle);
-                                        const y = cy - r * Math.sin(angle); // Subtract because SVG y goes down
-                                        points.push(`${x},${y}`);
-                                    }
-
-                                    // Calculate midpoint of the first side (top right usually) to place label
-                                    // Or essentially any side. Let's pick the side between point 0 and 1
-                                    const p0 = points[0].split(',').map(Number);
-                                    const p1 = points[1].split(',').map(Number);
-                                    const mx = (p0[0] + p1[0]) / 2;
-                                    const my = (p0[1] + p1[1]) / 2;
-
-                                    // Offset label slightly outward
-                                    const angle0 = (Math.PI / 2);
-                                    const angle1 = (Math.PI / 2) + (2 * Math.PI / numSides);
-                                    const midAngle = (angle0 + angle1) / 2;
-                                    const lx = cx + (r + 25) * Math.cos(midAngle);
-                                    const ly = cy - (r + 25) * Math.sin(midAngle);
-
-
-                                    return (
-                                        <g>
-                                            <polygon
-                                                points={points.join(' ')}
-                                                fill="rgba(244, 113, 181, 0.05)"
-                                                stroke="#31326F"
-                                                strokeWidth="3"
-                                                strokeLinejoin="round"
-                                            />
-                                            {/* Side Length Label */}
-                                            <g>
-                                                <rect
-                                                    x={mx - 24}
-                                                    y={my - 14}
-                                                    width="48"
-                                                    height="28"
-                                                    rx="6"
-                                                    fill="white"
-                                                    className="drop-shadow-sm"
-                                                />
-                                                <text
-                                                    x={mx}
-                                                    y={my}
-                                                    textAnchor="middle"
-                                                    dominantBaseline="middle"
-                                                    className="text-lg font-bold fill-[#31326F]"
-                                                >
-                                                    {sideLength}
-                                                </text>
-                                            </g>
-                                        </g>
-                                    );
-                                })()}
-                            </svg>
-                        </div>
-                    </div>
-
-                    {/* Input Area */}
-                    <div className="w-full max-w-sm">
-                        <div className="flex flex-col items-center gap-4">
-                            {!isSubmitted ? (
-                                <>
-                                    <div className="relative w-full">
-                                        <input
-                                            type="number"
-                                            value={userAnswer}
-                                            onChange={(e) => setUserAnswer(e.target.value)}
-                                            placeholder="Enter perimeter"
-                                            className="w-full bg-indigo-50/50 text-center text-2xl font-bold py-4 rounded-xl border-2 border-transparent focus:border-[#3B82F6] focus:bg-white focus:outline-none transition-all placeholder:text-gray-300 text-[#31326F]"
-                                            autoFocus
-                                            onKeyDown={(e) => e.key === 'Enter' && userAnswer && handleCheck()}
-                                        />
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">
-                                            cm
-                                        </div>
-                                    </div>
-                                </>
-                            ) : (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className={`w-full p-4 rounded-xl text-center border-2 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
-                                    <p className={`text-lg font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
-                                        {isCorrect ? "Correct!" : "Try Again"}
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col" style={{ width: '100%' }}>
+                        <div className="question-card-modern" style={{ padding: '2rem' }}>
+                            <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
+                                <div className="text-center space-y-2 w-full">
+                                    <h2 className="text-2xl font-medium text-[#31326F]">
+                                        Find the <span className="font-bold">Perimeter</span> of this shape.
+                                    </h2>
+                                    <p className="text-gray-400 text-lg">
+                                        {getPolygonName(numSides)}
                                     </p>
-                                    {isCorrect && (
-                                        <p className="text-sm text-green-700 mt-1">{feedbackMessage}</p>
-                                    )}
-                                    {!isCorrect && (
-                                        <div className="flex flex-col items-center gap-2">
-                                            <p className="text-sm text-red-600 mt-1">
-                                                Perimeter = Sides × Length = {numSides} × {sideLength} = {numSides * sideLength}
+                                </div>
+                            </div>
+
+                            {/* Visualization */}
+                            <div className="flex-1 flex items-center justify-center w-full py-4 mb-8">
+                                <div className="relative w-64 h-64 flex items-center justify-center">
+                                    <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-xl filter">
+                                        {(() => {
+                                            const cx = 100, cy = 100, r = 80;
+                                            const points = [];
+                                            for (let i = 0; i < numSides; i++) {
+                                                const angle = (Math.PI / 2) + (i * 2 * Math.PI / numSides);
+                                                const x = cx + r * Math.cos(angle);
+                                                const y = cy - r * Math.sin(angle); // Subtract because SVG y goes down
+                                                points.push(`${x},${y}`);
+                                            }
+
+                                            // Calculate midpoint of the first side (top right usually) to place label
+                                            // Or essentially any side. Let's pick the side between point 0 and 1
+                                            const p0 = points[0].split(',').map(Number);
+                                            const p1 = points[1].split(',').map(Number);
+                                            const mx = (p0[0] + p1[0]) / 2;
+                                            const my = (p0[1] + p1[1]) / 2;
+
+                                            return (
+                                                <g>
+                                                    <polygon
+                                                        points={points.join(' ')}
+                                                        fill="rgba(244, 113, 181, 0.05)"
+                                                        stroke="#31326F"
+                                                        strokeWidth="3"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                    {/* Side Length Label */}
+                                                    <g>
+                                                        <rect
+                                                            x={mx - 24}
+                                                            y={my - 14}
+                                                            width="48"
+                                                            height="28"
+                                                            rx="6"
+                                                            fill="white"
+                                                            className="drop-shadow-sm"
+                                                        />
+                                                        <text
+                                                            x={mx}
+                                                            y={my}
+                                                            textAnchor="middle"
+                                                            dominantBaseline="middle"
+                                                            className="text-lg font-bold fill-[#31326F]"
+                                                        >
+                                                            {sideLength}
+                                                        </text>
+                                                    </g>
+                                                </g>
+                                            );
+                                        })()}
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Input Area */}
+                            <div className="interaction-area-modern w-full max-w-md mx-auto">
+                                <div className="flex flex-col items-center gap-4 w-full">
+                                    {!isSubmitted ? (
+                                        <>
+                                            <div className="relative w-full">
+                                                <input
+                                                    type="number"
+                                                    value={userAnswer}
+                                                    onChange={(e) => setUserAnswer(e.target.value)}
+                                                    placeholder="Enter perimeter"
+                                                    className="w-full bg-indigo-50/50 text-center text-3xl font-bold py-6 rounded-2xl border-2 border-transparent focus:border-[#3B82F6] focus:bg-white focus:outline-none transition-all placeholder:text-gray-300 text-[#31326F]"
+                                                    autoFocus
+                                                    onKeyDown={(e) => e.key === 'Enter' && userAnswer && handleCheck()}
+                                                />
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xl">
+                                                    cm
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className={`w-full p-4 rounded-xl text-center border-2 mt-4 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
+                                            <p className={`text-xl font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
+                                                {isCorrect ? "Correct! 🎉" : "Not quite right"}
                                             </p>
-                                            <button
-                                                onClick={() => setShowExplanation(true)}
-                                                className="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold hover:bg-red-200 transition-colors flex items-center gap-2"
-                                            >
-                                                <Eye size={16} /> View Solution
-                                            </button>
-                                        </div>
+                                            {isCorrect && (
+                                                <p className="text-green-600 mt-1">{feedbackMessage}</p>
+                                            )}
+                                            {!isCorrect && (
+                                                <div className="flex flex-col items-center gap-2 mt-2">
+                                                    <p className="text-sm text-red-600">
+                                                        Perimeter = Sides × Length = {numSides} × {sideLength} = {numSides * sideLength}
+                                                    </p>
+                                                    <button
+                                                        onClick={() => setShowExplanation(true)}
+                                                        className="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold hover:bg-red-200 transition-colors flex items-center gap-2"
+                                                    >
+                                                        <Eye size={16} /> View Solution
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </motion.div>
                                     )}
-                                </motion.div>
-                            )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </main>
 
             {/* Bottom Navigation Bar */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 pb-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-10">
-                <div className="max-w-5xl mx-auto flex items-center justify-between">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="px-6 py-3 rounded-full text-red-500 font-bold hover:bg-red-50 transition-colors flex items-center gap-2"
-                    >
-                        Exit Practice
-                    </button>
-
-                    <div className="flex items-center gap-3">
+            <footer className="junior-bottom-bar">
+                <div className="desktop-footer-controls">
+                    <div className="bottom-left">
                         <button
-                            onClick={handlePrevious}
-                            disabled={qIndex === 0}
-                            className={`px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0
-                                ? 'text-gray-300 cursor-not-allowed'
-                                : 'bg-[#3B82F6] text-white shadow-lg shadow-blue-200 hover:scale-105 active:scale-95'
-                                }`}
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            onClick={async () => {
+                                if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
+                                navigate(-1);
+                            }}
                         >
-                            <ChevronLeft size={20} />
-                            PREV
+                            Exit Practice
                         </button>
-
-                        {!isSubmitted ? (
+                    </div>
+                    <div className="bottom-center">
+                        {isSubmitted && (
                             <button
-                                onClick={handleCheck}
-                                disabled={!userAnswer}
-                                className="px-8 py-3 rounded-full bg-gray-200 text-gray-500 font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 hover:text-gray-700 transition-all flex items-center gap-2"
+                                onClick={() => setShowExplanation(true)}
+                                className="view-explanation-btn"
                             >
-                                SUBMIT <Check size={20} />
-                            </button>
-                        ) : (
-                            <button
-                                onClick={handleNext}
-                                className="px-8 py-3 rounded-full bg-[#3B82F6] text-white font-bold shadow-lg shadow-blue-200 hover:bg-blue-600 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
-                            >
-                                {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "FINISH"} <ChevronRight size={20} />
+                                <Eye size={20} /> View Solution
                             </button>
                         )}
                     </div>
+                    <div className="bottom-right">
+                        <div className="nav-buttons-group">
+                            <button
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                className={`px-4 py-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border-2 border-gray-100 text-gray-500 hover:bg-gray-50'}`}
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
+                            {!isSubmitted ? (
+                                <button
+                                    onClick={handleCheck}
+                                    disabled={!userAnswer}
+                                    className="nav-pill-submit-btn"
+                                >
+                                    Submit <Check size={28} strokeWidth={3} />
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleNext}
+                                    className="nav-pill-next-btn"
+                                >
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? (
+                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                    ) : (
+                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                    )}
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div className="mobile-footer-controls">
+                    <div className="flex items-center gap-2">
+                        <button
+                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
+                            onClick={async () => {
+                                if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
+                                navigate(-1);
+                            }}
+                        >
+                            <X size={20} />
+                        </button>
+                        {isSubmitted && (
+                            <button
+                                onClick={() => setShowExplanation(true)}
+                                className="view-explanation-btn"
+                            >
+                                <Eye size={18} /> Explain
+                            </button>
+                        )}
+                    </div>
+                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
+                        <div className="nav-buttons-group">
+                            <button
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                className={`p-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border border-gray-100 text-gray-500'}`}
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
+                            {!isSubmitted ? (
+                                <button
+                                    onClick={handleCheck}
+                                    disabled={!userAnswer}
+                                    className="nav-pill-submit-btn"
+                                >
+                                    Submit
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleNext}
+                                    className="nav-pill-next-btn"
+                                >
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </footer>
 
             <ExplanationModal
                 isOpen={showExplanation}

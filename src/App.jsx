@@ -83,6 +83,9 @@ import SquarePractice from './components/practice/grade-6/Perimeter and Area/Squ
 import TrianglePractice from './components/practice/grade-6/Perimeter and Area/Triangle';
 import RegularPolygonPractice from './components/practice/grade-6/Perimeter and Area/Regular Polygon';
 import MixedBagPractice from './components/practice/grade-6/Perimeter and Area/MixedBag';
+import VisualisingNumberSequences from './components/practice/grade-6/patterns-in-mathematics/VisualisingNumberSequences';
+import RelationsAmongNumberSequences from './components/practice/grade-6/patterns-in-mathematics/RelationsAmongNumberSequences';
+import PatternsInShapes from './components/practice/grade-6/patterns-in-mathematics/PatternsInShapes';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -138,6 +141,9 @@ function App() {
         <Route path="/middle/grade/6/perimeter-area/triangle" element={<TrianglePractice />} />
         <Route path="/middle/grade/6/perimeter-area/regular-polygon" element={<RegularPolygonPractice />} />
         <Route path="/middle/grade/6/perimeter-area/mixed-bag" element={<MixedBagPractice />} />
+        <Route path="/middle/grade/6/patterns-math/intro" element={<VisualisingNumberSequences />} />
+        <Route path="/middle/grade/6/patterns-math/relations" element={<RelationsAmongNumberSequences />} />
+        <Route path="/middle/grade/6/patterns-math/shapes" element={<PatternsInShapes />} />
 
 
         {/* Auth Routes */}
