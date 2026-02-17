@@ -40,6 +40,19 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10054, skill_name: 'Solve equations using elimination (no word problems)', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' }
                     ]);
+                } else if (grade === '8') {
+                    // Set all 9 Grade 8 skills for proper counting
+                    setSkills([
+                        { skill_id: 'local-8-exp-negative', skill_name: 'Powers with Negative Exponents', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-laws', skill_name: 'Laws of Exponents', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-application', skill_name: 'Application of Laws of Exponents', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-standard', skill_name: 'Standard Form for Small Numbers', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-comparing', skill_name: 'Comparing Large and Small Numbers', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-rn-commutativity', skill_name: 'Commutativity', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-rn-associativity', skill_name: 'Associativity', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-rn-identity', skill_name: 'Additive and Multiplicative Identity', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' }
+                    ]);
                 } else {
                     const response = await api.getSkills(grade);
                     setSkills(response || []);
@@ -61,8 +74,8 @@ const SeniorGradeSyllabus = () => {
         const topicName = (skill.topic || 'General').toLowerCase();
         const gradeNum = parseInt(grade.replace('grade', ''));
 
-        // Filter by grade - Grade 8: show only Exponents (skip database Rational Numbers, we'll hardcode it)
-        if (gradeNum === 8 && topicName !== "exponents and power") return acc;
+        // Filter by grade - Grade 8: we'll hardcode everything, so skip database skills
+        if (gradeNum === 8) return acc;
 
         const topic = skill.topic || 'General';
         if (!acc[topic]) acc[topic] = [];
@@ -70,54 +83,84 @@ const SeniorGradeSyllabus = () => {
         return acc;
     }, {});
 
-    // Add hardcoded "Application of Laws of Exponents" skill for Grade 8
-    if (parseInt(grade.replace('grade', '')) === 8 && skillsByTopic['Exponents and Power']) {
-        // Find the index of "Laws of Exponents" skill
-        const lawsIndex = skillsByTopic['Exponents and Power'].findIndex(
-            skill => skill.skill_id === 1869 || skill.skill_name.toLowerCase().includes('laws of exponent')
-        );
-
-        // Insert right after Laws of Exponents
-        const insertIndex = lawsIndex !== -1 ? lawsIndex + 1 : skillsByTopic['Exponents and Power'].length;
-        skillsByTopic['Exponents and Power'].splice(insertIndex, 0, {
-            skill_id: 8005,
-            skill_name: 'Application of Laws of Exponents',
-            topic: 'Exponents and Power'
-        });
-    }
-
-    // Add hardcoded "Rational Numbers" topic for Grade 8 with 4 subtopics
+    // Hardcode all Grade 8 skills for Exponents and Powers (5 skills)
     if (parseInt(grade.replace('grade', '')) === 8) {
-        // Create Rational Numbers topic if it doesn't exist
-        if (!skillsByTopic['Rational Numbers']) {
-            skillsByTopic['Rational Numbers'] = [];
-        }
+        skillsByTopic['Exponents and Powers'] = [
+            {
+                skill_id: 'local-8-exp-negative',
+                skill_name: 'Powers with Negative Exponents',
+                topic: 'Exponents and Powers',
+                subtopic: 'Understanding Exponents',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-powers/negative-exponents'
+            },
+            {
+                skill_id: 'local-8-exp-laws',
+                skill_name: 'Laws of Exponents',
+                topic: 'Exponents and Powers',
+                subtopic: 'Understanding Exponents',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-powers/laws-of-exponents'
+            },
+            {
+                skill_id: 'local-8-exp-application',
+                skill_name: 'Application of Laws of Exponents',
+                topic: 'Exponents and Powers',
+                subtopic: 'Understanding Exponents',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-powers/laws-application'
+            },
+            {
+                skill_id: 'local-8-exp-standard',
+                skill_name: 'Standard Form for Small Numbers',
+                topic: 'Exponents and Powers',
+                subtopic: 'Understanding Exponents',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-powers/standard-form'
+            },
+            {
+                skill_id: 'local-8-exp-comparing',
+                skill_name: 'Comparing Large and Small Numbers',
+                topic: 'Exponents and Powers',
+                subtopic: 'Understanding Exponents',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-powers/comparing-numbers'
+            }
+        ];
 
-        // Add 4 hardcoded skills for Rational Numbers
+        // Hardcode all Grade 8 skills for Rational Numbers (4 skills)
         skillsByTopic['Rational Numbers'] = [
             {
-                skill_id: 8006,
+                skill_id: 'local-8-rn-commutativity',
                 skill_name: 'Commutativity',
                 topic: 'Rational Numbers',
-                sub_topic: 'Properties of Rational Numbers'
+                subtopic: 'Properties of Rational Numbers',
+                isLocal: true,
+                path: '/senior/grade/8/rational-numbers/commutativity'
             },
             {
-                skill_id: 8007,
+                skill_id: 'local-8-rn-associativity',
                 skill_name: 'Associativity',
                 topic: 'Rational Numbers',
-                sub_topic: 'Properties of Rational Numbers'
+                subtopic: 'Properties of Rational Numbers',
+                isLocal: true,
+                path: '/senior/grade/8/rational-numbers/associativity'
             },
             {
-                skill_id: 8008,
+                skill_id: 'local-8-rn-identity',
                 skill_name: 'Additive and Multiplicative Identity',
                 topic: 'Rational Numbers',
-                sub_topic: 'Properties of Rational Numbers'
+                subtopic: 'Properties of Rational Numbers',
+                isLocal: true,
+                path: '/senior/grade/8/rational-numbers/identity'
             },
             {
-                skill_id: 8009,
+                skill_id: 'local-8-rn-distributivity',
                 skill_name: 'Distributivity',
                 topic: 'Rational Numbers',
-                sub_topic: 'Properties of Rational Numbers'
+                subtopic: 'Properties of Rational Numbers',
+                isLocal: true,
+                path: '/senior/grade/8/rational-numbers/distributivity'
             }
         ];
     }
@@ -248,38 +291,38 @@ const SeniorGradeSyllabus = () => {
                             {/* Render Subtopics as Sections */}
                             <div className="subtopics-list">
                                 {Object.keys(subtopics).map((subtopic) => (
-                                    <div key={subtopic} className="subtopic-section" style={{ marginBottom: '1rem', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+                                    <div key={subtopic} className="subtopic-section">
                                         <div
                                             className="subtopic-header"
-                                            style={{ padding: '1rem', background: '#f8fafc', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: '600', gap: '1rem' }}
                                             onClick={() => setExpandedSubtopic(expandedSubtopic === subtopic ? null : subtopic)}
                                         >
-                                            <div style={{ flex: 1 }}>
+                                            <div className="subtopic-title">
                                                 <LatexText text={subtopic} />
                                             </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-                                                <span style={{
-                                                    fontSize: '0.75rem',
-                                                    color: '#4F46E5',
-                                                    fontWeight: '700',
-                                                    background: '#EEF2FF',
-                                                    padding: '4px 12px',
-                                                    borderRadius: '12px',
-                                                    whiteSpace: 'nowrap'
-                                                }}>
+                                            <div className="subtopic-header-right">
+                                                <span className="subtopic-skill-count">
                                                     {subtopics[subtopic].length} {subtopics[subtopic].length === 1 ? 'Skill' : 'Skills'}
                                                 </span>
-                                                <ChevronRight size={20} style={{ transform: expandedSubtopic === subtopic ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: '#64748b' }} />
+                                                <ChevronRight
+                                                    size={20}
+                                                    className={`chevron-icon ${expandedSubtopic === subtopic ? 'expanded' : ''}`}
+                                                />
                                             </div>
                                         </div>
 
                                         {expandedSubtopic === subtopic && (
-                                            <div className="modal-skills-grid" style={{ padding: '1rem', background: '#fff' }}>
+                                            <div className="modal-skills-grid">
                                                 {subtopics[subtopic].map(skill => (
                                                     <div
                                                         key={skill.skill_id}
                                                         className="skill-card-modal"
-                                                        onClick={() => navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } })}
+                                                        onClick={() => {
+                                                            if (skill.isLocal) {
+                                                                navigate(skill.path);
+                                                            } else {
+                                                                navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
+                                                            }
+                                                        }}
                                                     >
                                                         <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                                         <div className="skill-card-footer">
