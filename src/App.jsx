@@ -79,8 +79,8 @@ import LawsOfExponents from './components/practice/class-8/exponents and powers/
 import LawsOfExponentsApplication from './components/practice/class-8/exponents and powers/laws_of_exponents_application';
 import StandardFormSmallNumbers from './components/practice/class-8/exponents and powers/standard_form_small_numbers';
 import ComparingLargeSmallNumbers from './components/practice/class-8/exponents and powers/comparing_large_small_numbers';
-import Commutativity from './components/practice/class-8/rational-numbers/commutativity';
 import Associativity from './components/practice/class-8/rational-numbers/associativity';
+import Commutativity from './components/practice/class-8/rational-numbers/commutativity';
 import AdditiveMultiplicativeIdentity from './components/practice/class-8/rational-numbers/additive_multiplicative_identity';
 import Distributivity from './components/practice/class-8/rational-numbers/distributivity';
 
