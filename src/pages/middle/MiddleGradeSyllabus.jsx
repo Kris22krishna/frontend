@@ -65,6 +65,8 @@ const MiddleGradeSyllabus = () => {
         if (!isAuthenticated) {
             setPendingSkill(skill);
             setShowLoginModal(true);
+        } else if (skill.isLocal) {
+            navigate(skill.path);
         } else {
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
@@ -84,7 +86,94 @@ const MiddleGradeSyllabus = () => {
             try {
                 const gradeNum = grade.replace('grade', '');
                 const response = await api.getSkills(gradeNum);
-                setSkills(response || []);
+                let fetched = response || [];
+
+                if (gradeNum === '7') {
+                    fetched = [
+                        ...fetched,
+                        {
+                            skill_id: 'local-percent',
+                            skill_name: 'Percentage',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/percentage'
+                        },
+                        {
+                            skill_id: 'local-use-percent',
+                            skill_name: 'Use of Percentages',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/use-of-percentages'
+                        },
+                        {
+                            skill_id: 'local-profit-loss',
+                            skill_name: 'Profit and Loss',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/profit-and-loss'
+                        },
+                        {
+                            skill_id: 'local-simple-interest',
+                            skill_name: 'Simple Interest',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/simple-interest'
+                        },
+                        {
+                            skill_id: 'local-cq-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-exp-basics',
+                            skill_name: 'Exponents Basics',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/basics'
+                        },
+                        {
+                            skill_id: 'local-exp-laws',
+                            skill_name: 'Laws of Exponents',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/laws'
+                        },
+                        {
+                            skill_id: 'local-exp-decimal',
+                            skill_name: 'Decimal Number System',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/decimal-system'
+                        },
+                        {
+                            skill_id: 'local-exp-standard',
+                            skill_name: 'Standard Form',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/standard-form'
+                        },
+                        {
+                            skill_id: 'local-ep-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/chapter-test'
+                        }
+                    ];
+                }
+                setSkills(fetched);
             } catch (error) {
                 console.error("Failed to fetch skills", error);
             } finally {
@@ -101,9 +190,10 @@ const MiddleGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
+        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers") return acc;
+        if (gradeNum === 7 && topicName === "exponents and powers" && !skill.isLocal) return acc;
 
         const topic = skill.topic || 'General';
         const subTopic = skill.sub_topic || 'Main';
@@ -113,6 +203,28 @@ const MiddleGradeSyllabus = () => {
         acc[topic][subTopic].push(skill);
         return acc;
     }, {});
+
+    // Inject custom skills for Grade 5
+    if (parseInt(grade.replace('grade', '')) === 5) {
+        skillsByTopic['Ways to Divide and Multiply'] = {
+            'Multiplication': [
+                { skill_id: 9003, skill_name: 'Multiply 2 digit numbers', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9004, skill_name: 'Multiply 3 digit numbers', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9005, skill_name: 'Multiply three and four numbers', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9006, skill_name: 'Multiply number ending in zeroes', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' },
+                { skill_id: 9007, skill_name: 'Skill Application Problems', topic: 'Ways to Divide and Multiply', sub_topic: 'Multiplication' }
+            ],
+            'Division': [
+                { skill_id: 9008, skill_name: 'Divide by 1 digit number', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' },
+                { skill_id: 9009, skill_name: 'Divide by 2 digit number', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' },
+                { skill_id: 9010, skill_name: 'Divide numbers ending in zeroes', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' },
+                { skill_id: 9011, skill_name: 'Skill Application Problems', topic: 'Ways to Divide and Multiply', sub_topic: 'Division' }
+            ],
+            'Skill Application Problems': [
+                { skill_id: 9012, skill_name: 'Skill Application Problems', topic: 'Ways to Divide and Multiply', sub_topic: 'Skill Application Problems' }
+            ]
+        };
+    }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 

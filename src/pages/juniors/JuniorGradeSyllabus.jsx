@@ -25,6 +25,7 @@ const topicIcons = {
     'Money': { emoji: '💰', color: '#98D8C8', gradient: 'linear-gradient(135deg, #98D8C8 0%, #B8E6D5 100%)' },
     'Geometry': { emoji: '📐', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'Data': { emoji: '📊', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
+    'Fair Share': { emoji: '🍰', color: '#B39DDB', gradient: 'linear-gradient(135deg, #B39DDB 0%, #D1C4E9 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }
 };
 
@@ -51,8 +52,8 @@ const JuniorGradeSyllabus = () => {
                 const gradeNum = grade.replace('grade', '');
                 let skillsResponse = [];
 
-                // For Grade 3, we skip fetching from API and use manual injection below
-                if (gradeNum !== '3') {
+                // For Grade 3 and 4, we skip fetching from API and use manual injection below
+                if (gradeNum !== '3' && gradeNum !== '4') {
                     skillsResponse = await api.getSkills(gradeNum);
                 }
 
@@ -61,17 +62,18 @@ const JuniorGradeSyllabus = () => {
                     const topicName = (skill.topic || 'General').toLowerCase();
 
                     if (gradeNumInt === 3) {
-                        return topicName.includes("raksha") && topicName.includes("bandhan");
+                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("fair share");
                     }
+                    // Grade 4 data will come from manual injection only, so exclude database
                     if (gradeNumInt === 4) {
-                        return topicName === "the cleanest village";
+                        return false;
                     }
                     return true;
                 });
 
-                // Manually inject special topics for Grade 3 if not present
-                if (parseInt(gradeNum) === 3) {
-                    const gradeConfigs = TOPIC_CONFIGS['3'] || {};
+                // Manually inject special topics for Grade 3 and 4 if not present
+                if (parseInt(gradeNum) === 3 || parseInt(gradeNum) === 4) {
+                    const gradeConfigs = TOPIC_CONFIGS[gradeNum] || {};
                     Object.entries(gradeConfigs).forEach(([topicName, skills]) => {
                         const topicExists = filteredSkills.some(s => (s.topic || '').toLowerCase().includes(topicName.toLowerCase()));
                         if (!topicExists) {

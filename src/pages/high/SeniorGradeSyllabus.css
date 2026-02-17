@@ -232,6 +232,37 @@
     background: #F8FAFC;
 }
 
+/* Subtopics List (Single Column) */
+.subtopics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.subtopic-section {
+    border: 1px solid #E2E8F0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: white;
+    transition: all 0.2s;
+}
+
+.subtopic-header {
+    padding: 1rem 1.5rem;
+    background: #F8FAFC !important;
+    /* Force override inline if needed */
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    gap: 1rem;
+}
+
+.subtopic-header:hover {
+    background: #F1F5F9 !important;
+}
+
 /* Skills Grid in Modal */
 .modal-skills-grid {
     display: grid;
