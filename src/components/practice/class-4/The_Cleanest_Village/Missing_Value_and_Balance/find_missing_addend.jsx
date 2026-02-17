@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -66,89 +66,104 @@ const FindMissingAddend = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const questions = [];
-        const seenCombinations = new Set();
 
-        while (questions.length < TOTAL_QUESTIONS) {
-            const index = questions.length;
+        // 10 unique scenarios — each used only once per session
+        const scenarioTemplates = [
+            (target, known) => `<div class='question-container'>
+                <p>We need ${target} garbage bags in total.</p>
+                <p>We already have ${known} bags.</p>
+                <p>How many more bags do we need?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>Our goal is to plant ${target} saplings.</p>
+                <p>We have planted ${known} so far.</p>
+                <p>How many more saplings do we need to plant?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>The collection drive goal is ${target} rupees.</p>
+                <p>We collected ${known} rupees.</p>
+                <p>How much more money is needed?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>The village needs ${target} bricks to build a wall.</p>
+                <p>So far, ${known} bricks have been brought.</p>
+                <p>How many more bricks are needed?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>A school wants to donate ${target} notebooks.</p>
+                <p>Students have collected ${known} notebooks so far.</p>
+                <p>How many more notebooks are still needed?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>The village pond needs ${target} litres of water to be full.</p>
+                <p>It already has ${known} litres.</p>
+                <p>How many more litres of water are needed?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>We need to paint ${target} houses in the village.</p>
+                <p>${known} houses have been painted already.</p>
+                <p>How many houses are left to paint?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>The community hall needs ${target} chairs for the meeting.</p>
+                <p>There are already ${known} chairs arranged.</p>
+                <p>How many more chairs are needed?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>Villagers want to install ${target} solar lights on the road.</p>
+                <p>${known} solar lights have been installed so far.</p>
+                <p>How many more solar lights need to be installed?</p>
+            </div>`,
+            (target, known) => `<div class='question-container'>
+                <p>The clean-up team needs ${target} gloves for all volunteers.</p>
+                <p>They currently have ${known} gloves.</p>
+                <p>How many more gloves do they need?</p>
+            </div>`
+        ];
 
+        // Shuffle scenario order so each question gets a unique scenario
+        const shuffledScenarios = [...scenarioTemplates].sort(() => Math.random() - 0.5);
+
+        for (let index = 0; index < TOTAL_QUESTIONS; index++) {
             // Progressive difficulty: 3 easy, 3 medium, 4 hard
             let target, known, missing;
 
             if (index < 3) {
-                // Easy: smaller numbers (20-100)
                 target = randomInt(30, 100);
                 known = randomInt(10, target - 5);
             } else if (index < 6) {
-                // Medium: moderate numbers (100-300)
                 target = randomInt(100, 300);
                 known = randomInt(30, target - 20);
             } else {
-                // Hard: larger numbers (300-500)
                 target = randomInt(300, 500);
                 known = randomInt(100, target - 30);
             }
 
             missing = target - known;
 
-            const comboKey = `${known}-${target}`;
+            const options = [
+                missing.toString(),
+                (missing + 10).toString(),
+                (missing - 10).toString(),
+                (missing + 5).toString()
+            ];
 
-            if (!seenCombinations.has(comboKey)) {
-                seenCombinations.add(comboKey);
-
-                const templateIdx = Math.floor(Math.random() * 3);
-
-                const templates = [
-                    `<div class='question-container'>
-                        <p>We need ${target} garbage bags in total.</p>
-                        <p>We already have ${known} bags.</p>
-                        <p>How many more bags do we need?</p>
-                        <div class="math-problem-horizontal">
-                            ${known} + ? = ${target}
-                        </div>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>Our goal is to plant ${target} saplings.</p>
-                        <p>We have planted ${known} so far.</p>
-                        <p>How many more saplings to plant?</p>
-                        <div class="math-problem-horizontal">
-                            ${known} + ? = ${target}
-                        </div>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>The collection drive goal is ${target} rupees.</p>
-                        <p>We collected ${known} rupees.</p>
-                        <p>How much more money is needed?</p>
-                        <div class="math-problem-horizontal">
-                            ${known} + ? = ${target}
-                        </div>
-                     </div>`
-                ];
-
-                const options = [
-                    missing.toString(),
-                    (missing + 10).toString(),
-                    (missing - 10).toString(),
-                    (missing + 5).toString()
-                ];
-
-                const uniqueOptions = [...new Set(options)];
-                while (uniqueOptions.length < 4) {
-                    let rand = (missing + randomInt(-20, 20)).toString();
-                    if (rand !== missing.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
-                }
-
-                questions.push({
-                    text: templates[templateIdx],
-                    correctAnswer: missing.toString(),
-                    solution: `To find the missing part, subtract the part we know from the total.<br/>
-                               Total needed: ${target}<br/>
-                               Amount we have: ${known}<br/>
-                               ${target} - ${known} = ${missing}.<br/>
-                               So, <strong>${missing}</strong> more are needed.`,
-                    shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
-                });
+            const uniqueOptions = [...new Set(options)];
+            while (uniqueOptions.length < 4) {
+                let rand = (missing + randomInt(-20, 20)).toString();
+                if (rand !== missing.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
             }
-            if (seenCombinations.size > 100) break;
+
+            questions.push({
+                text: shuffledScenarios[index](target, known),
+                correctAnswer: missing.toString(),
+                solution: `To find the missing part, subtract the part we know from the total.<br/>
+                           Total needed: ${target}<br/>
+                           Amount we have: ${known}<br/>
+                           ${target} - ${known} = ${missing}.<br/>
+                           So, <strong>${missing}</strong> more are needed.`,
+                shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
+            });
         }
 
         setSessionQuestions(questions);
@@ -171,9 +186,16 @@ const FindMissingAddend = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
         }
     }, [qIndex, sessionQuestions]);
 
@@ -268,20 +290,13 @@ const FindMissingAddend = () => {
     const handleOptionSelect = (option) => {
         if (isSubmitted) return;
         setSelectedOption(option);
+    };
 
-        // Immediately check if answer is correct and show feedback
-        const isRight = option === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: option } }));
-
-        if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setShowExplanationModal(true);
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
         }
-
-        recordQuestionAttempt(currentQuestion, option, isRight);
     };
 
     const stats = (() => {
@@ -478,7 +493,16 @@ const FindMissingAddend = () => {
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: 'bold', fontSize: '2.5rem' }}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '400',
+                                                        fontSize: '2.5rem',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                    }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -535,6 +559,11 @@ const FindMissingAddend = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -573,6 +602,11 @@ const FindMissingAddend = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}

@@ -7,20 +7,22 @@ import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
+
+
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Spot on! You know the difference! ✨",
-    "🌟 Excellent comparison skills! 🌟",
-    "🎉 Correct! You compared them perfectly! 🎉",
-    "✨ Fantastic! Great calculation! ✨",
-    "🚀 Super! You're analyzing like a pro! 🚀",
-    "🌿 Perfect! The village data is clear! 🌿",
+    "✨ Amazing! You're cleaning up nicely! ✨",
+    "🌟 Brilliant calculation! 🌟",
+    "🎉 Correct! The village is spotless! 🎉",
+    "✨ Fantastic work! ✨",
+    "🚀 Super! Keep going! 🚀",
+    "🌿 Perfect! Green and clean! 🌿",
     "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Exact difference! 💎"
+    "💎 Spot on! Excellent! 💎"
 ];
 
-const FindHowManyMoreOrLess = () => {
+const RepeatedSubtraction = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -39,8 +41,8 @@ const FindHowManyMoreOrLess = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 4009;
-    const SKILL_NAME = "The Cleanest Village - How Many More/Less";
+    const SKILL_ID = 4011;
+    const SKILL_NAME = "The Cleanest Village - Repeated Subtraction";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -66,108 +68,79 @@ const FindHowManyMoreOrLess = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const questions = [];
+        const seenCombinations = new Set();
+        let attempts = 0;
 
-        // 10 unique scenarios — each used only once per session
-        const scenarioTemplates = [
-            (n1, n2) => `<div class='question-container'>
-                <p>Team A collected ${n1} kg of waste.</p>
-                <p>Team B collected ${n2} kg of waste.</p>
-                <p>How much <strong>more</strong> did the winning team collect?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>North Street has ${n1} trees.</p>
-                <p>South Street has ${n2} trees.</p>
-                <p>What is the <strong>difference</strong> in the number of trees?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Dustbin X holds ${n1} litres.</p>
-                <p>Dustbin Y holds ${n2} litres.</p>
-                <p>How much <strong>less</strong> does the smaller dustbin hold?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Village A planted ${n1} flowers.</p>
-                <p>Village B planted ${n2} flowers.</p>
-                <p>How many <strong>more</strong> flowers did one village plant than the other?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>The boys' team picked up ${n1} pieces of litter.</p>
-                <p>The girls' team picked up ${n2} pieces of litter.</p>
-                <p>What is the <strong>difference</strong> between the two teams?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Class 4A collected ${n1} rupees in the donation drive.</p>
-                <p>Class 4B collected ${n2} rupees.</p>
-                <p>How much <strong>more</strong> did one class collect than the other?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>One farm produced ${n1} kg of vegetables.</p>
-                <p>Another farm produced ${n2} kg of vegetables.</p>
-                <p>How many <strong>fewer</strong> kg did the smaller farm produce?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Pond A has ${n1} fish.</p>
-                <p>Pond B has ${n2} fish.</p>
-                <p>How many <strong>more</strong> fish does the larger pond have?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>The morning shift cleaned ${n1} metres of road.</p>
-                <p>The evening shift cleaned ${n2} metres of road.</p>
-                <p>What is the <strong>difference</strong> in the distance cleaned?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>School A has ${n1} students.</p>
-                <p>School B has ${n2} students.</p>
-                <p>How many <strong>fewer</strong> students does the smaller school have?</p>
-            </div>`
-        ];
+        while (questions.length < TOTAL_QUESTIONS && attempts < 1000) {
+            attempts++;
+            const index = questions.length;
 
-        // Shuffle scenario order so each question gets a unique scenario
-        const shuffledScenarios = [...scenarioTemplates].sort(() => Math.random() - 0.5);
+            let groups, perGroup, startValue;
 
-        for (let index = 0; index < TOTAL_QUESTIONS; index++) {
-            // Progressive difficulty: 3 easy, 3 medium, 4 hard
-            let num1, num2;
-
+            // Progressive difficulty: 3 Easy, 3 Medium, 4 Hard
             if (index < 3) {
-                num1 = randomInt(20, 100);
-                num2 = randomInt(20, 100);
+                // Easy: subtract 2-3 times, small numbers 2-5
+                // Example: 15 - 5 - 5 - 5 = ?
+                groups = randomInt(2, 3);
+                perGroup = randomInt(2, 5);
+                startValue = groups * perGroup + randomInt(1, 10);
             } else if (index < 6) {
-                num1 = randomInt(100, 400);
-                num2 = randomInt(100, 400);
+                // Medium: subtract 3-4 times, numbers 3-7
+                // Example: 40 - 7 - 7 - 7 - 7 = ?
+                groups = randomInt(3, 4);
+                perGroup = randomInt(3, 7);
+                startValue = groups * perGroup + randomInt(5, 20);
             } else {
-                num1 = randomInt(400, 900);
-                num2 = randomInt(400, 900);
+                // Hard: subtract 4-6 times (smaller numbers 2-5) OR 3-4 times (larger numbers 6-12)
+                if (Math.random() > 0.5) {
+                    groups = randomInt(4, 6);
+                    perGroup = randomInt(2, 5);
+                    startValue = groups * perGroup + randomInt(10, 30);
+                } else {
+                    groups = randomInt(3, 4);
+                    perGroup = randomInt(6, 12);
+                    startValue = groups * perGroup + randomInt(10, 30);
+                }
             }
 
-            if (num1 === num2) num2 += randomInt(1, 10);
+            // Key relies only on the numbers involved
+            const comboKey = `${startValue}-${groups}-${perGroup}`;
 
-            const larger = Math.max(num1, num2);
-            const smaller = Math.min(num1, num2);
-            const diff = larger - smaller;
+            if (!seenCombinations.has(comboKey)) {
+                seenCombinations.add(comboKey);
 
-            const options = [
-                diff.toString(),
-                (diff + 10).toString(),
-                (diff - 10).toString(),
-                (diff + 5).toString()
-            ];
+                const result = startValue - (groups * perGroup);
+                const repeatedSubtraction = Array(groups).fill(perGroup).join(' − ');
 
-            const uniqueOptions = [...new Set(options)];
-            while (uniqueOptions.length < 4) {
-                let rand = (diff + randomInt(-20, 20)).toString();
-                if (rand !== diff.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
+                const templates = [
+                    `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.5rem; font-weight: normal; text-align: center;'>
+                        ${startValue} − ${repeatedSubtraction} = ?
+                     </div>`
+                ];
+
+                const options = [
+                    result.toString(),
+                    (result + perGroup).toString(),
+                    (result - perGroup).toString(),
+                    (result + randomInt(2, 5)).toString()
+                ];
+
+                // Filter out negative options and ensure uniqueness
+                const uniqueOptions = [...new Set(options.filter(o => parseInt(o) >= 0))];
+                while (uniqueOptions.length < 4) {
+                    let rand = (result + randomInt(-10, 15)).toString();
+                    if (rand !== result.toString() && !uniqueOptions.includes(rand) && parseInt(rand) >= 0) uniqueOptions.push(rand);
+                }
+
+                questions.push({
+                    text: templates[0],
+                    correctAnswer: result.toString(),
+                    solution: `We start with ${startValue} and subtract ${perGroup} a total of ${groups} times.<br/>
+                               Repeated subtraction: <strong>${startValue} − ${repeatedSubtraction} = ${result}</strong>.<br/><br/>
+                               Using multiplication: <strong>${startValue} − (${groups} × ${perGroup}) = ${startValue} − ${groups * perGroup} = ${result}</strong>.`,
+                    shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
+                });
             }
-
-            questions.push({
-                text: shuffledScenarios[index](num1, num2),
-                correctAnswer: diff.toString(),
-                solution: `To find the difference (how much more or less), subtract the smaller number from the larger number.<br/>
-                           Larger: ${larger}<br/>
-                           Smaller: ${smaller}<br/>
-                           ${larger} - ${smaller} = ${diff}.<br/>
-                           So, the difference is <strong>${diff}</strong>.`,
-                shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
-            });
         }
 
         setSessionQuestions(questions);
@@ -335,13 +308,13 @@ const FindHowManyMoreOrLess = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Village Report</h1>
+                        <h1 className="results-title">Clean Village Report</h1>
                     </div>
                 </header>
 
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Cleanliness Mission Complete! 🎉</h2>
 
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
@@ -382,7 +355,7 @@ const FindHowManyMoreOrLess = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Comparison Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Repeated Subtraction Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -485,7 +458,7 @@ const FindHowManyMoreOrLess = () => {
                             >
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '400', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
@@ -628,4 +601,4 @@ const FindHowManyMoreOrLess = () => {
     );
 };
 
-export default FindHowManyMoreOrLess;
+export default RepeatedSubtraction;

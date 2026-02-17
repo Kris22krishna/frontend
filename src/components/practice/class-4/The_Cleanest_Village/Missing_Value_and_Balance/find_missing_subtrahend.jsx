@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -66,89 +66,104 @@ const FindMissingSubtrahend = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const questions = [];
-        const seenCombinations = new Set();
 
-        while (questions.length < TOTAL_QUESTIONS) {
-            const index = questions.length;
+        // 10 unique scenarios — each used only once per session
+        const scenarioTemplates = [
+            (start, remainder) => `<div class='question-container'>
+                <p>We started with ${start} plastic bottles.</p>
+                <p>We recycled some, and now ${remainder} are left.</p>
+                <p>How many bottles did we recycle?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>There were ${start} brochures.</p>
+                <p>After distributing some, ${remainder} brochures remain.</p>
+                <p>How many brochures were distributed?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>The tank had ${start} litres of water.</p>
+                <p>After cleaning, ${remainder} litres are left.</p>
+                <p>How much water was used?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>The village had ${start} old tyres piled up.</p>
+                <p>Workers removed some, and now ${remainder} tyres remain.</p>
+                <p>How many tyres were removed?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>A truck carried ${start} kg of waste.</p>
+                <p>After unloading some at the dump, ${remainder} kg remained on the truck.</p>
+                <p>How much waste was unloaded?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>The library had ${start} damaged books.</p>
+                <p>Volunteers repaired some, leaving ${remainder} still damaged.</p>
+                <p>How many books were repaired?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>There were ${start} street lamps that needed fixing.</p>
+                <p>After the repair drive, ${remainder} still need fixing.</p>
+                <p>How many street lamps were fixed?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>The school garden had ${start} weeds.</p>
+                <p>Students pulled out some, and ${remainder} weeds are left.</p>
+                <p>How many weeds did the students pull out?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>A pond had ${start} litres of dirty water.</p>
+                <p>After draining, ${remainder} litres remain.</p>
+                <p>How many litres were drained?</p>
+            </div>`,
+            (start, remainder) => `<div class='question-container'>
+                <p>The village warehouse had ${start} sacks of grain.</p>
+                <p>Some sacks were given away, leaving ${remainder} in the warehouse.</p>
+                <p>How many sacks were given away?</p>
+            </div>`
+        ];
 
+        // Shuffle scenario order so each question gets a unique scenario
+        const shuffledScenarios = [...scenarioTemplates].sort(() => Math.random() - 0.5);
+
+        for (let index = 0; index < TOTAL_QUESTIONS; index++) {
             // Progressive difficulty: 3 easy, 3 medium, 4 hard
             let start, remainder, removed;
 
             if (index < 3) {
-                // Easy: smaller numbers (30-100)
                 start = randomInt(30, 100);
                 remainder = randomInt(5, start - 10);
             } else if (index < 6) {
-                // Medium: moderate numbers (100-300)
                 start = randomInt(100, 300);
                 remainder = randomInt(20, start - 30);
             } else {
-                // Hard: larger numbers (300-500)
                 start = randomInt(300, 500);
                 remainder = randomInt(50, start - 50);
             }
 
             removed = start - remainder;
 
-            const comboKey = `${start}-${remainder}`;
+            const options = [
+                removed.toString(),
+                (removed + 10).toString(),
+                (removed - 10).toString(),
+                (removed + 20).toString()
+            ];
 
-            if (!seenCombinations.has(comboKey)) {
-                seenCombinations.add(comboKey);
-
-                const templateIdx = Math.floor(Math.random() * 3);
-
-                const templates = [
-                    `<div class='question-container'>
-                        <p>We started with ${start} plastic bottles.</p>
-                        <p>We recycled some, and now ${remainder} are left.</p>
-                        <p>How many bottles did we recycle?</p>
-                        <div class="math-problem-horizontal">
-                            ${start} - ? = ${remainder}
-                        </div>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>There were ${start} brochures.</p>
-                        <p>After distributing some, ${remainder} brochures remain.</p>
-                        <p>How many brochures were distributed?</p>
-                        <div class="math-problem-horizontal">
-                            ${start} - ? = ${remainder}
-                        </div>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>The tank had ${start} liters of water.</p>
-                        <p>After cleaning, ${remainder} liters are left.</p>
-                        <p>How much water was used?</p>
-                        <div class="math-problem-horizontal">
-                            ${start} - ? = ${remainder}
-                        </div>
-                     </div>`
-                ];
-
-                const options = [
-                    removed.toString(),
-                    (removed + 10).toString(),
-                    (removed - 10).toString(),
-                    (removed + 20).toString()
-                ];
-
-                const uniqueOptions = [...new Set(options)];
-                while (uniqueOptions.length < 4) {
-                    let rand = (removed + randomInt(-20, 20)).toString();
-                    if (rand !== removed.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
-                }
-
-                questions.push({
-                    text: templates[templateIdx],
-                    correctAnswer: removed.toString(),
-                    solution: `To find the amount removed, subtract the remainder from the starting total.<br/>
-                               Start amount: ${start}<br/>
-                               Remaining: ${remainder}<br/>
-                               ${start} - ${remainder} = ${removed}.<br/>
-                               So, <strong>${removed}</strong> items were used/removed.`,
-                    shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
-                });
+            const uniqueOptions = [...new Set(options)];
+            while (uniqueOptions.length < 4) {
+                let rand = (removed + randomInt(-20, 20)).toString();
+                if (rand !== removed.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
             }
-            if (seenCombinations.size > 100) break;
+
+            questions.push({
+                text: shuffledScenarios[index](start, remainder),
+                correctAnswer: removed.toString(),
+                solution: `To find the amount removed, subtract the remainder from the starting total.<br/>
+                           Start amount: ${start}<br/>
+                           Remaining: ${remainder}<br/>
+                           ${start} - ${remainder} = ${removed}.<br/>
+                           So, <strong>${removed}</strong> items were used/removed.`,
+                shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
+            });
         }
 
         setSessionQuestions(questions);
@@ -171,9 +186,16 @@ const FindMissingSubtrahend = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
         }
     }, [qIndex, sessionQuestions]);
 
@@ -268,20 +290,13 @@ const FindMissingSubtrahend = () => {
     const handleOptionSelect = (option) => {
         if (isSubmitted) return;
         setSelectedOption(option);
+    };
 
-        // Immediately check if answer is correct and show feedback
-        const isRight = option === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: option } }));
-
-        if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setShowExplanationModal(true);
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
         }
-
-        recordQuestionAttempt(currentQuestion, option, isRight);
     };
 
     const stats = (() => {
@@ -478,7 +493,16 @@ const FindMissingSubtrahend = () => {
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: 'bold', fontSize: '2.5rem' }}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '400',
+                                                        fontSize: '2.5rem',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                    }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -535,6 +559,11 @@ const FindMissingSubtrahend = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -573,6 +602,11 @@ const FindMissingSubtrahend = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}

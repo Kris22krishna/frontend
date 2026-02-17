@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -69,18 +69,22 @@ const SubtractionWithRegrouping = () => {
         const seenCombinations = new Set();
 
         while (questions.length < TOTAL_QUESTIONS) {
-            // Randomly choose 2-digit or 3-digit problems
-            const is3Digit = Math.random() < 0.5;
+            const index = questions.length;
             let num1, num2;
 
-            if (is3Digit) {
-                // 3-digit numbers
+            // Progressive difficulty: 3 Easy, 3 Medium, 4 Hard
+            if (index < 3) {
+                // Easy: 2-digit - 2-digit with borrowing in ones place
+                num1 = randomInt(20, 59);
+                num2 = randomInt(12, num1 - 5);
+            } else if (index < 6) {
+                // Medium: 2-digit - 2-digit with borrowing in ones and/or tens
+                num1 = randomInt(50, 99);
+                num2 = randomInt(15, num1 - 1);
+            } else {
+                // Hard: 3-digit - 3-digit with borrowing
                 num1 = randomInt(200, 999);
                 num2 = randomInt(100, num1 - 10);
-            } else {
-                // 2-digit numbers
-                num1 = randomInt(20, 99);
-                num2 = randomInt(10, num1 - 1);
             }
 
             // Check if regrouping/borrowing happens
@@ -93,6 +97,7 @@ const SubtractionWithRegrouping = () => {
 
             if (!needsRegrouping) continue; // Skip if no regrouping
 
+            const is3Digit = index >= 6;
             const total = num1 - num2;
             const comboKey = `${num1}-${num2}`;
 
@@ -100,7 +105,7 @@ const SubtractionWithRegrouping = () => {
                 seenCombinations.add(comboKey);
 
                 const templates = [
-                    `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.5rem; font-weight: bold; text-align: center;'>
+                    `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.5rem; font-weight: normal; text-align: center;'>
                         ${num1} - ${num2} = ?
                      </div>`
                 ];
@@ -157,9 +162,16 @@ const SubtractionWithRegrouping = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
         }
     }, [qIndex, sessionQuestions]);
 
@@ -235,15 +247,12 @@ const SubtractionWithRegrouping = () => {
         }
     };
 
-    const handleOptionSelect = (option) => {
-        if (isSubmitted) return;
-        setSelectedOption(option);
-
-        // Immediately check if answer is correct and show feedback
-        const isRight = option === currentQuestion.correctAnswer;
+    const handleCheck = () => {
+        if (!selectedOption || !currentQuestion) return;
+        const isRight = selectedOption === currentQuestion.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: option } }));
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
         if (isRight) {
             setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
@@ -251,7 +260,19 @@ const SubtractionWithRegrouping = () => {
             setShowExplanationModal(true);
         }
 
-        recordQuestionAttempt(currentQuestion, option, isRight);
+        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
+    const handleOptionSelect = (option) => {
+        if (isSubmitted) return;
+        setSelectedOption(option);
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const stats = (() => {
@@ -436,7 +457,7 @@ const SubtractionWithRegrouping = () => {
                             >
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: 'bold', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
+                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '400', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
@@ -448,7 +469,16 @@ const SubtractionWithRegrouping = () => {
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: 'bold', fontSize: '2.5rem' }}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '400',
+                                                        fontSize: '2.5rem',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                    }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -505,6 +535,11 @@ const SubtractionWithRegrouping = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -514,7 +549,7 @@ const SubtractionWithRegrouping = () => {
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={() => { }} disabled={true} style={{ display: 'none' }}>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
                                     Submit <Check size={28} strokeWidth={3} />
                                 </button>
                             )}
@@ -543,9 +578,18 @@ const SubtractionWithRegrouping = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
-                            {isSubmitted && (
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    Previous
+                                </button>
+                            )}
+                            {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                </button>
+                            ) : (
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                    Submit
                                 </button>
                             )}
                         </div>

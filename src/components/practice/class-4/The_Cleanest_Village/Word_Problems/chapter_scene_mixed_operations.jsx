@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -66,121 +66,183 @@ const ChapterSceneMixedOperations = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const questions = [];
-        const seenCombinations = new Set();
 
-        while (questions.length < TOTAL_QUESTIONS) {
-            const index = questions.length;
-
-            // Mix of Addition, Subtraction, Multiplication
-            const type = Math.random();
-            let questionData = {};
-
-            if (type < 0.33) {
-                // Addition - Progressive difficulty
-                let n1, n2, ans;
-                if (index < 3) {
-                    // Easy: smaller numbers (10-50)
-                    n1 = randomInt(10, 50);
-                    n2 = randomInt(10, 50);
-                } else if (index < 6) {
-                    // Medium: moderate numbers (50-200)
-                    n1 = randomInt(50, 200);
-                    n2 = randomInt(50, 200);
-                } else {
-                    // Hard: larger numbers (200-400)
-                    n1 = randomInt(200, 400);
-                    n2 = randomInt(200, 400);
-                }
-                ans = n1 + n2;
-                questionData = {
+        // 10 unique scenario generators — each used only once per session
+        // Each returns { text, ans, sol } given difficulty-appropriate numbers
+        const scenarioGenerators = [
+            // Addition scenarios
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(10, 50); n2 = randomInt(10, 50); }
+                else if (index < 6) { n1 = randomInt(50, 200); n2 = randomInt(50, 200); }
+                else { n1 = randomInt(200, 400); n2 = randomInt(200, 400); }
+                return {
                     text: `<div class='question-container'>
-                            <p>To clean the park, ${n1} people volunteered on Saturday and ${n2} people on Sunday.</p>
-                            <p>How many volunteers helped in total?</p>
-                           </div>`,
-                    ans: ans,
-                    sol: `${n1} + ${n2} = ${ans}`
+                        <p>To clean the park, ${n1} people volunteered on Saturday and ${n2} people on Sunday.</p>
+                        <p>How many volunteers helped in total?</p>
+                    </div>`,
+                    ans: n1 + n2,
+                    sol: `${n1} + ${n2} = ${n1 + n2}`
                 };
-            } else if (type < 0.66) {
-                // Subtraction - Progressive difficulty
-                let n1, n2, ans;
-                if (index < 3) {
-                    // Easy: smaller numbers (30-100)
-                    n1 = randomInt(30, 100);
-                    n2 = randomInt(10, n1 - 10);
-                } else if (index < 6) {
-                    // Medium: moderate numbers (100-300)
-                    n1 = randomInt(100, 300);
-                    n2 = randomInt(20, n1 - 20);
-                } else {
-                    // Hard: larger numbers (300-500)
-                    n1 = randomInt(300, 500);
-                    n2 = randomInt(50, n1 - 50);
-                }
-                ans = n1 - n2;
-                questionData = {
+            },
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(15, 50); n2 = randomInt(10, 40); }
+                else if (index < 6) { n1 = randomInt(80, 200); n2 = randomInt(50, 150); }
+                else { n1 = randomInt(200, 400); n2 = randomInt(100, 300); }
+                return {
                     text: `<div class='question-container'>
-                            <p>We collected ${n1} plastic bottles. We sent ${n2} of them for recycling.</p>
-                            <p>How many bottles are still waiting to be sent?</p>
-                           </div>`,
-                    ans: ans,
-                    sol: `${n1} - ${n2} = ${ans}`
+                        <p>The village painted ${n1} metres of fencing in the morning and ${n2} metres in the afternoon.</p>
+                        <p>How many metres of fencing were painted in total?</p>
+                    </div>`,
+                    ans: n1 + n2,
+                    sol: `${n1} + ${n2} = ${n1 + n2}`
                 };
-            } else {
-                // Multiplication - Progressive difficulty
-                let n1, n2, ans;
-                if (index < 3) {
-                    // Easy: smaller multiplication (2-5 × 5-15)
-                    n1 = randomInt(2, 5);
-                    n2 = randomInt(5, 15);
-                } else if (index < 6) {
-                    // Medium: moderate multiplication (3-7 × 15-30)
-                    n1 = randomInt(3, 7);
-                    n2 = randomInt(15, 30);
-                } else {
-                    // Hard: larger multiplication (5-9 × 30-50)
-                    n1 = randomInt(5, 9);
-                    n2 = randomInt(30, 50);
-                }
-                ans = n1 * n2;
-                questionData = {
+            },
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(10, 40); n2 = randomInt(10, 30); }
+                else if (index < 6) { n1 = randomInt(60, 150); n2 = randomInt(40, 120); }
+                else { n1 = randomInt(150, 350); n2 = randomInt(100, 250); }
+                return {
                     text: `<div class='question-container'>
-                            <p>There are ${n1} teams. Each team planted ${n2} saplings.</p>
-                            <p>How many saplings were planted in total?</p>
-                           </div>`,
-                    ans: ans,
-                    sol: `${n1} \\times ${n2} = ${ans}`
+                        <p>Class 4A donated ${n1} books and Class 4B donated ${n2} books to the village library.</p>
+                        <p>How many books were donated altogether?</p>
+                    </div>`,
+                    ans: n1 + n2,
+                    sol: `${n1} + ${n2} = ${n1 + n2}`
+                };
+            },
+            // Subtraction scenarios
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(30, 100); n2 = randomInt(10, n1 - 10); }
+                else if (index < 6) { n1 = randomInt(100, 300); n2 = randomInt(20, n1 - 20); }
+                else { n1 = randomInt(300, 500); n2 = randomInt(50, n1 - 50); }
+                return {
+                    text: `<div class='question-container'>
+                        <p>We collected ${n1} plastic bottles. We sent ${n2} of them for recycling.</p>
+                        <p>How many bottles are still waiting to be sent?</p>
+                    </div>`,
+                    ans: n1 - n2,
+                    sol: `${n1} - ${n2} = ${n1 - n2}`
+                };
+            },
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(40, 90); n2 = randomInt(10, n1 - 10); }
+                else if (index < 6) { n1 = randomInt(100, 250); n2 = randomInt(30, n1 - 20); }
+                else { n1 = randomInt(300, 500); n2 = randomInt(80, n1 - 40); }
+                return {
+                    text: `<div class='question-container'>
+                        <p>A village pond had ${n1} litres of water. ${n2} litres were used for cleaning the streets.</p>
+                        <p>How many litres of water are left in the pond?</p>
+                    </div>`,
+                    ans: n1 - n2,
+                    sol: `${n1} - ${n2} = ${n1 - n2}`
+                };
+            },
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(30, 80); n2 = randomInt(5, n1 - 10); }
+                else if (index < 6) { n1 = randomInt(100, 250); n2 = randomInt(20, n1 - 20); }
+                else { n1 = randomInt(250, 450); n2 = randomInt(50, n1 - 50); }
+                return {
+                    text: `<div class='question-container'>
+                        <p>The school had ${n1} old newspapers. Students sold ${n2} of them to a recycler.</p>
+                        <p>How many newspapers are still left?</p>
+                    </div>`,
+                    ans: n1 - n2,
+                    sol: `${n1} - ${n2} = ${n1 - n2}`
+                };
+            },
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(30, 80); n2 = randomInt(5, n1 - 5); }
+                else if (index < 6) { n1 = randomInt(100, 300); n2 = randomInt(30, n1 - 20); }
+                else { n1 = randomInt(300, 500); n2 = randomInt(60, n1 - 40); }
+                return {
+                    text: `<div class='question-container'>
+                        <p>There were ${n1} kg of waste in the dump yard. The truck carried away ${n2} kg.</p>
+                        <p>How much waste is still in the dump yard?</p>
+                    </div>`,
+                    ans: n1 - n2,
+                    sol: `${n1} - ${n2} = ${n1 - n2}`
+                };
+            },
+            // Multiplication scenarios
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(2, 5); n2 = randomInt(5, 15); }
+                else if (index < 6) { n1 = randomInt(3, 7); n2 = randomInt(15, 30); }
+                else { n1 = randomInt(5, 9); n2 = randomInt(30, 50); }
+                return {
+                    text: `<div class='question-container'>
+                        <p>There are ${n1} teams. Each team planted ${n2} saplings.</p>
+                        <p>How many saplings were planted in total?</p>
+                    </div>`,
+                    ans: n1 * n2,
+                    sol: `${n1} \\times ${n2} = ${n1 * n2}`
+                };
+            },
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(2, 5); n2 = randomInt(3, 10); }
+                else if (index < 6) { n1 = randomInt(4, 7); n2 = randomInt(10, 25); }
+                else { n1 = randomInt(6, 9); n2 = randomInt(20, 40); }
+                return {
+                    text: `<div class='question-container'>
+                        <p>Each volunteer cleaned ${n2} metres of road. There were ${n1} volunteers.</p>
+                        <p>How many metres of road were cleaned altogether?</p>
+                    </div>`,
+                    ans: n1 * n2,
+                    sol: `${n1} \\times ${n2} = ${n1 * n2}`
+                };
+            },
+            (index) => {
+                let n1, n2;
+                if (index < 3) { n1 = randomInt(2, 4); n2 = randomInt(5, 12); }
+                else if (index < 6) { n1 = randomInt(3, 6); n2 = randomInt(12, 25); }
+                else { n1 = randomInt(5, 8); n2 = randomInt(25, 45); }
+                return {
+                    text: `<div class='question-container'>
+                        <p>The village has ${n1} streets. Each street has ${n2} lamp posts.</p>
+                        <p>How many lamp posts are there in the village?</p>
+                    </div>`,
+                    ans: n1 * n2,
+                    sol: `${n1} \\times ${n2} = ${n1 * n2}`
                 };
             }
+        ];
 
-            const comboKey = questionData.text; // Simple duplication check
+        // Shuffle scenario order so each question gets a unique scenario
+        const shuffledGenerators = [...scenarioGenerators].sort(() => Math.random() - 0.5);
 
-            if (!seenCombinations.has(comboKey)) {
-                seenCombinations.add(comboKey);
+        for (let index = 0; index < TOTAL_QUESTIONS; index++) {
+            const questionData = shuffledGenerators[index](index);
+            const ans = questionData.ans;
 
-                let ans = questionData.ans;
-                const options = [
-                    ans.toString(),
-                    (ans + randomInt(1, 5)).toString(),
-                    (ans - randomInt(1, 5)).toString(),
-                    (ans + 10).toString()
-                ];
+            const options = [
+                ans.toString(),
+                (ans + randomInt(1, 5)).toString(),
+                (ans - randomInt(1, 5)).toString(),
+                (ans + 10).toString()
+            ];
 
-                const uniqueOptions = [...new Set(options)];
-                while (uniqueOptions.length < 4) {
-                    let rand = (ans + randomInt(-20, 20)).toString();
-                    if (rand !== ans.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
-                }
-
-                questions.push({
-                    text: questionData.text,
-                    correctAnswer: ans.toString(),
-                    solution: `Identify the operation and solve.<br/>
-                               Calculation: ${questionData.sol}.<br/>
-                               Answer: <strong>${ans}</strong>.`,
-                    shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
-                });
+            const uniqueOptions = [...new Set(options)];
+            while (uniqueOptions.length < 4) {
+                let rand = (ans + randomInt(-20, 20)).toString();
+                if (rand !== ans.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
             }
-            if (seenCombinations.size > 100) break;
+
+            questions.push({
+                text: questionData.text,
+                correctAnswer: ans.toString(),
+                solution: `Identify the operation and solve.<br/>
+                           Calculation: ${questionData.sol}.<br/>
+                           Answer: <strong>${ans}</strong>.`,
+                shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
+            });
         }
 
         setSessionQuestions(questions);
@@ -203,9 +265,16 @@ const ChapterSceneMixedOperations = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
         }
     }, [qIndex, sessionQuestions]);
 
@@ -300,20 +369,13 @@ const ChapterSceneMixedOperations = () => {
     const handleOptionSelect = (option) => {
         if (isSubmitted) return;
         setSelectedOption(option);
+    };
 
-        // Immediately check if answer is correct and show feedback
-        const isRight = option === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: option } }));
-
-        if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setShowExplanationModal(true);
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
         }
-
-        recordQuestionAttempt(currentQuestion, option, isRight);
     };
 
     const stats = (() => {
@@ -510,7 +572,16 @@ const ChapterSceneMixedOperations = () => {
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: 'bold', fontSize: '2.5rem' }}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '400',
+                                                        fontSize: '2.5rem',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                    }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -567,6 +638,11 @@ const ChapterSceneMixedOperations = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -605,6 +681,11 @@ const ChapterSceneMixedOperations = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}

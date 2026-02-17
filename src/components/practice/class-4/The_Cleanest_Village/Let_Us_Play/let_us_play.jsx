@@ -7,20 +7,222 @@ import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
 const CORRECT_MESSAGES = [
-    "✨ Spot on! You know the difference! ✨",
-    "🌟 Excellent comparison skills! 🌟",
-    "🎉 Correct! You compared them perfectly! 🎉",
-    "✨ Fantastic! Great calculation! ✨",
-    "🚀 Super! You're analyzing like a pro! 🚀",
-    "🌿 Perfect! The village data is clear! 🌿",
+    "✨ Excellent puzzle solving! ✨",
+    "🌟 You cracked the triangle! 🌟",
+    "🎉 Correct! You're a number wizard! 🎉",
+    "✨ Fantastic thinking! ✨",
+    "🚀 Super! The triangle is complete! 🚀",
+    "🌿 Perfect! Nature loves your logic! 🌿",
     "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Exact difference! 💎"
+    "💎 Spot on! Brilliant! 💎"
 ];
 
-const FindHowManyMoreOrLess = () => {
+/* ── Triangle Puzzle Helpers ────────────────────────────────── */
+
+// Positions: 0=top, 1=left-mid, 2=bottom-left, 3=bottom-mid, 4=bottom-right, 5=right-mid
+// Sides:
+//   Left  : positions 0, 1, 2
+//   Bottom: positions 2, 3, 4
+//   Right : positions 0, 5, 4
+
+const SIDE_INDICES = [
+    [0, 1, 2], // left side
+    [2, 3, 4], // bottom side
+    [0, 5, 4], // right side
+];
+
+function generateAllSolutions(numbers, targetSum) {
+    const solutions = [];
+    const perm = (arr, chosen) => {
+        if (chosen.length === arr.length) {
+            const valid = SIDE_INDICES.every(side => {
+                const s = side.reduce((sum, i) => sum + chosen[i], 0);
+                return s === targetSum;
+            });
+            if (valid) solutions.push([...chosen]);
+            return;
+        }
+        const used = new Set(chosen);
+        for (const n of arr) {
+            if (!used.has(n)) {
+                chosen.push(n);
+                perm(arr, chosen);
+                chosen.pop();
+            }
+        }
+    };
+    perm(numbers, []);
+    return solutions;
+}
+
+// Triangle SVG coordinates — corners of the triangle + midpoints exactly on edges
+// Matches the textbook: equilateral triangle with circles sitting on the lines
+const TRIANGLE_POSITIONS = [
+    { x: 150, y: 24 },   // 0: top corner
+    { x: 75, y: 127 },  // 1: left-side midpoint  (midpoint of 0↔2)
+    { x: 30, y: 230 },  // 2: bottom-left corner
+    { x: 150, y: 230 },  // 3: bottom-side midpoint (midpoint of 2↔4)
+    { x: 270, y: 230 },  // 4: bottom-right corner
+    { x: 225, y: 127 },  // 5: right-side midpoint  (midpoint of 0↔4)
+];
+
+const TRIANGLE_LINES = [
+    [0, 2], // left side
+    [2, 4], // bottom side
+    [4, 0], // right side
+];
+
+// React component that renders the triangle as inline SVG
+const TriangleSVG = ({ placement, blankIndex }) => {
+    const circleR = 24;
+    return (
+        <svg viewBox="0 0 300 260" style={{ width: '100%', maxWidth: '420px', margin: '0 auto', display: 'block' }}>
+            {/* Draw triangle lines */}
+            {TRIANGLE_LINES.map(([a, b], i) => (
+                <line
+                    key={i}
+                    x1={TRIANGLE_POSITIONS[a].x} y1={TRIANGLE_POSITIONS[a].y}
+                    x2={TRIANGLE_POSITIONS[b].x} y2={TRIANGLE_POSITIONS[b].y}
+                    stroke="#CBD5E0" strokeWidth="3"
+                />
+            ))}
+            {/* Draw circles with numbers */}
+            {TRIANGLE_POSITIONS.map((pos, i) => {
+                const isBlank = i === blankIndex;
+                return (
+                    <g key={i}>
+                        <circle
+                            cx={pos.x} cy={pos.y} r={circleR}
+                            fill={isBlank ? '#FFF3CD' : '#E0FBEF'}
+                            stroke={isBlank ? '#F6AD55' : '#4FB7B3'}
+                            strokeWidth="3"
+                        />
+                        <text
+                            x={pos.x} y={pos.y + 1}
+                            textAnchor="middle" dominantBaseline="central"
+                            fontSize="20" fontWeight="700"
+                            fill={isBlank ? '#F6AD55' : '#31326F'}
+                        >
+                            {isBlank ? '?' : placement[i]}
+                        </text>
+                    </g>
+                );
+            })}
+        </svg>
+    );
+};
+
+function getTriangleSVGString(placement, blankIndex) {
+    const circleR = 24;
+    const P = TRIANGLE_POSITIONS;
+    let svg = `<svg viewBox="0 0 300 260" style="width:100%;max-width:280px;margin:0 auto;display:block;">`;
+    TRIANGLE_LINES.forEach(([a, b]) => {
+        svg += `<line x1="${P[a].x}" y1="${P[a].y}" x2="${P[b].x}" y2="${P[b].y}" stroke="#CBD5E0" stroke-width="3" />`;
+    });
+    P.forEach((pos, i) => {
+        const isBlank = i === blankIndex;
+        svg += `<circle cx="${pos.x}" cy="${pos.y}" r="${circleR}" fill="${isBlank ? '#FFF3CD' : '#E0FBEF'}" stroke="${isBlank ? '#F6AD55' : '#4FB7B3'}" stroke-width="3" />`;
+        svg += `<text x="${pos.x}" y="${pos.y + 1}" text-anchor="middle" dominant-baseline="central" font-size="20" font-weight="700" fill="${isBlank ? '#F6AD55' : '#31326F'}">${isBlank ? '?' : placement[i]}</text>`;
+    });
+    svg += `</svg>`;
+    return svg;
+}
+
+function generateQuestion(difficulty, usedSolutionKeys) {
+    let numbers, targetSums;
+
+    if (difficulty === 'easy') {
+        numbers = [1, 2, 3, 4, 5, 6];
+        targetSums = [9, 10];
+    } else if (difficulty === 'medium') {
+        numbers = [1, 2, 3, 4, 5, 6];
+        targetSums = [10, 11];
+    } else {
+        numbers = [1, 2, 3, 4, 5, 6];
+        targetSums = [11, 12];
+    }
+
+    // Shuffle target sums
+    const shuffledTargets = [...targetSums].sort(() => Math.random() - 0.5);
+
+    for (const target of shuffledTargets) {
+        const solutions = generateAllSolutions(numbers, target);
+        if (solutions.length === 0) continue;
+
+        // Shuffle solutions
+        const shuffledSolutions = [...solutions].sort(() => Math.random() - 0.5);
+
+        for (const solution of shuffledSolutions) {
+            const key = solution.join(',') + ':' + target;
+            if (usedSolutionKeys.has(key)) continue;
+
+            // Pick a random blank position
+            const blankIndex = Math.floor(Math.random() * 6);
+            const correctAnswer = solution[blankIndex];
+
+            // Generate distractor options
+            const distractors = new Set();
+            distractors.add(correctAnswer);
+
+            // Add other numbers from the set that aren't in the puzzle
+            const numbersInPuzzle = solution.filter((_, i) => i !== blankIndex);
+            const availableDistractors = numbers.filter(n => n !== correctAnswer && !numbersInPuzzle.includes(n));
+
+            availableDistractors.forEach(d => distractors.add(d));
+
+            // If we still need more, add nearby numbers
+            let offset = 1;
+            while (distractors.size < 4) {
+                const candidate = correctAnswer + offset;
+                if (candidate > 0 && candidate <= 9 && !distractors.has(candidate)) {
+                    distractors.add(candidate);
+                }
+                const candidate2 = correctAnswer - offset;
+                if (candidate2 > 0 && candidate2 <= 9 && !distractors.has(candidate2)) {
+                    distractors.add(candidate2);
+                }
+                offset++;
+                if (offset > 10) break;
+            }
+
+            const options = [...distractors].slice(0, 4).map(String);
+            const shuffledOptions = options.sort(() => Math.random() - 0.5);
+
+            // Build display placement (with blank)
+            const displayPlacement = [...solution];
+
+            const triangleSVGStr = getTriangleSVGString(displayPlacement, blankIndex);
+
+            const sideLabels = ['Left side', 'Bottom side', 'Right side'];
+            const solutionText = SIDE_INDICES.map((side, si) => {
+                const vals = side.map(i => solution[i]);
+                return `${sideLabels[si]}: $${vals[0]} + ${vals[1]} + ${vals[2]} = ${target}$`;
+            }).join('<br/>');
+
+            usedSolutionKeys.add(key);
+
+            return {
+                targetSum: target,
+                placement: displayPlacement,
+                blankIndex,
+                text: `<div style="text-align:center;">${triangleSVGStr}</div>`,
+                correctAnswer: correctAnswer.toString(),
+                solution: `The missing number is <strong>${correctAnswer}</strong>.<br/><br/>
+                    Each side of the triangle must sum to <strong>${target}</strong>:<br/>
+                    ${solutionText}`,
+                shuffledOptions
+            };
+        }
+    }
+
+    // Fallback: if somehow we can't generate (shouldn't happen)
+    return null;
+}
+
+/* ── Component ──────────────────────────────────────────────── */
+
+const LetUsPlay = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -40,7 +242,7 @@ const FindHowManyMoreOrLess = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 4009;
-    const SKILL_NAME = "The Cleanest Village - How Many More/Less";
+    const SKILL_NAME = "The Cleanest Village - Let Us Play (Triangle Puzzle)";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -65,109 +267,19 @@ const FindHowManyMoreOrLess = () => {
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
+        // Generate 10 questions: 3 easy, 3 medium, 4 hard
         const questions = [];
+        const usedKeys = new Set();
 
-        // 10 unique scenarios — each used only once per session
-        const scenarioTemplates = [
-            (n1, n2) => `<div class='question-container'>
-                <p>Team A collected ${n1} kg of waste.</p>
-                <p>Team B collected ${n2} kg of waste.</p>
-                <p>How much <strong>more</strong> did the winning team collect?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>North Street has ${n1} trees.</p>
-                <p>South Street has ${n2} trees.</p>
-                <p>What is the <strong>difference</strong> in the number of trees?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Dustbin X holds ${n1} litres.</p>
-                <p>Dustbin Y holds ${n2} litres.</p>
-                <p>How much <strong>less</strong> does the smaller dustbin hold?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Village A planted ${n1} flowers.</p>
-                <p>Village B planted ${n2} flowers.</p>
-                <p>How many <strong>more</strong> flowers did one village plant than the other?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>The boys' team picked up ${n1} pieces of litter.</p>
-                <p>The girls' team picked up ${n2} pieces of litter.</p>
-                <p>What is the <strong>difference</strong> between the two teams?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Class 4A collected ${n1} rupees in the donation drive.</p>
-                <p>Class 4B collected ${n2} rupees.</p>
-                <p>How much <strong>more</strong> did one class collect than the other?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>One farm produced ${n1} kg of vegetables.</p>
-                <p>Another farm produced ${n2} kg of vegetables.</p>
-                <p>How many <strong>fewer</strong> kg did the smaller farm produce?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>Pond A has ${n1} fish.</p>
-                <p>Pond B has ${n2} fish.</p>
-                <p>How many <strong>more</strong> fish does the larger pond have?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>The morning shift cleaned ${n1} metres of road.</p>
-                <p>The evening shift cleaned ${n2} metres of road.</p>
-                <p>What is the <strong>difference</strong> in the distance cleaned?</p>
-            </div>`,
-            (n1, n2) => `<div class='question-container'>
-                <p>School A has ${n1} students.</p>
-                <p>School B has ${n2} students.</p>
-                <p>How many <strong>fewer</strong> students does the smaller school have?</p>
-            </div>`
+        const difficulties = [
+            'easy', 'easy', 'easy',
+            'medium', 'medium', 'medium',
+            'hard', 'hard', 'hard', 'hard'
         ];
 
-        // Shuffle scenario order so each question gets a unique scenario
-        const shuffledScenarios = [...scenarioTemplates].sort(() => Math.random() - 0.5);
-
-        for (let index = 0; index < TOTAL_QUESTIONS; index++) {
-            // Progressive difficulty: 3 easy, 3 medium, 4 hard
-            let num1, num2;
-
-            if (index < 3) {
-                num1 = randomInt(20, 100);
-                num2 = randomInt(20, 100);
-            } else if (index < 6) {
-                num1 = randomInt(100, 400);
-                num2 = randomInt(100, 400);
-            } else {
-                num1 = randomInt(400, 900);
-                num2 = randomInt(400, 900);
-            }
-
-            if (num1 === num2) num2 += randomInt(1, 10);
-
-            const larger = Math.max(num1, num2);
-            const smaller = Math.min(num1, num2);
-            const diff = larger - smaller;
-
-            const options = [
-                diff.toString(),
-                (diff + 10).toString(),
-                (diff - 10).toString(),
-                (diff + 5).toString()
-            ];
-
-            const uniqueOptions = [...new Set(options)];
-            while (uniqueOptions.length < 4) {
-                let rand = (diff + randomInt(-20, 20)).toString();
-                if (rand !== diff.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
-            }
-
-            questions.push({
-                text: shuffledScenarios[index](num1, num2),
-                correctAnswer: diff.toString(),
-                solution: `To find the difference (how much more or less), subtract the smaller number from the larger number.<br/>
-                           Larger: ${larger}<br/>
-                           Smaller: ${smaller}<br/>
-                           ${larger} - ${smaller} = ${diff}.<br/>
-                           So, the difference is <strong>${diff}</strong>.`,
-                shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
-            });
+        for (const diff of difficulties) {
+            const q = generateQuestion(diff, usedKeys);
+            if (q) questions.push(q);
         }
 
         setSessionQuestions(questions);
@@ -382,7 +494,7 @@ const FindHowManyMoreOrLess = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Comparison Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Puzzle Log 🧩</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -455,7 +567,6 @@ const FindHowManyMoreOrLess = () => {
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    {/* Placeholder */}
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
@@ -472,25 +583,40 @@ const FindHowManyMoreOrLess = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={qIndex}
-                                initial={{ x: 50, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: -50, opacity: 0 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
-                            >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
-                                            <LatexContent html={currentQuestion.text} />
-                                        </h2>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '960px', width: '100%', margin: '0 auto' }}>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={qIndex}
+                            initial={{ x: 50, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: -50, opacity: 0 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            style={{ height: '100%', width: '100%' }}
+                        >
+                            <div className="question-card-modern" style={{ padding: '1.5rem 2rem' }}>
+                                {/* TOP: Main question - centered full width */}
+                                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                    <h2 style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.6rem)', fontWeight: '700', color: '#31326F', margin: 0, lineHeight: 1.4 }}>
+                                        Place numbers so that each side of the triangle adds up to{' '}
+                                        <span style={{ color: '#4FB7B3', fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: '900' }}>{currentQuestion.targetSum}</span>.
+                                    </h2>
+                                </div>
+
+                                {/* BOTTOM ROW: Triangle LEFT  |  Sub-question + Options RIGHT */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', justifyContent: 'center', flexWrap: 'nowrap' }}>
+                                    {/* LEFT: Triangle */}
+                                    <div style={{ flex: '1 1 50%' }}>
+                                        <TriangleSVG placement={currentQuestion.placement} blankIndex={currentQuestion.blankIndex} />
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+
+                                    {/* RIGHT: Sub-question text + 2×2 Options grid */}
+                                    <div style={{ flex: '1 1 50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                        <p style={{ fontSize: 'clamp(1rem, 1.8vw, 1.25rem)', fontWeight: '500', color: '#718096', textAlign: 'center', margin: '0 0 1.5rem 0', lineHeight: 1.5 }}>
+                                            Which number replaces <span style={{ color: '#F6AD55', fontWeight: '700', fontSize: '1.4rem' }}>?</span> in the triangle?
+                                        </p>
+
+                                        {/* 2×2 option grid */}
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', width: '100%', maxWidth: '380px' }}>
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
@@ -499,36 +625,42 @@ const FindHowManyMoreOrLess = () => {
                                                         }`}
                                                     style={{
                                                         fontFamily: '"Open Sans", sans-serif',
-                                                        fontWeight: '400',
-                                                        fontSize: '2.5rem',
+                                                        fontWeight: '600',
+                                                        fontSize: 'clamp(1.4rem, 2.5vw, 2.2rem)',
+                                                        padding: '18px 12px',
+                                                        borderRadius: '14px',
                                                         backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
                                                         color: !isSubmitted ? '#1f2937' : undefined,
                                                         borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
                                                         borderWidth: !isSubmitted ? '2px' : undefined,
-                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined,
+                                                        width: '100%',
+                                                        textAlign: 'center',
+                                                        cursor: isSubmitted ? 'default' : 'pointer'
                                                     }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
-                                                    <LatexContent html={option} />
+                                                    {option}
                                                 </button>
                                             ))}
                                         </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
                                     </div>
                                 </div>
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+
+                                {isSubmitted && isCorrect && (
+                                    <motion.div
+                                        initial={{ scale: 0.5, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        className="feedback-mini correct"
+                                        style={{ marginTop: '20px', textAlign: 'center' }}
+                                    >
+                                        {feedbackMessage}
+                                    </motion.div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             </main>
 
@@ -628,4 +760,4 @@ const FindHowManyMoreOrLess = () => {
     );
 };
 
-export default FindHowManyMoreOrLess;
+export default LetUsPlay;
