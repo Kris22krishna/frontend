@@ -79,6 +79,10 @@ import LawsOfExponents from './components/practice/class-8/exponents and powers/
 import LawsOfExponentsApplication from './components/practice/class-8/exponents and powers/laws_of_exponents_application';
 import StandardFormSmallNumbers from './components/practice/class-8/exponents and powers/standard_form_small_numbers';
 import ComparingLargeSmallNumbers from './components/practice/class-8/exponents and powers/comparing_large_small_numbers';
+import Commutativity from './components/practice/class-8/rational-numbers/commutativity';
+import Associativity from './components/practice/class-8/rational-numbers/associativity';
+import AdditiveMultiplicativeIdentity from './components/practice/class-8/rational-numbers/additive_multiplicative_identity';
+import Distributivity from './components/practice/class-8/rational-numbers/distributivity';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -164,6 +168,34 @@ function App() {
         <Route path="/senior/grade/8/exponents-powers/comparing-numbers" element={
           <ProtectedRoute redirectTo="/login">
             <ComparingLargeSmallNumbers />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Commutativity */}
+        <Route path="/senior/grade/8/rational-numbers/commutativity" element={
+          <ProtectedRoute redirectTo="/login">
+            <Commutativity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Associativity */}
+        <Route path="/senior/grade/8/rational-numbers/associativity" element={
+          <ProtectedRoute redirectTo="/login">
+            <Associativity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Additive and Multiplicative Identity */}
+        <Route path="/senior/grade/8/rational-numbers/identity" element={
+          <ProtectedRoute redirectTo="/login">
+            <AdditiveMultiplicativeIdentity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Rational Numbers - Distributivity */}
+        <Route path="/senior/grade/8/rational-numbers/distributivity" element={
+          <ProtectedRoute redirectTo="/login">
+            <Distributivity />
           </ProtectedRoute>
         } />
 
