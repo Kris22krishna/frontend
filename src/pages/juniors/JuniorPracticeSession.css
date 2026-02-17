@@ -1246,26 +1246,31 @@
         height: 60px;
     }
 
-    /* Resize Pill Buttons for Mobile */
+    /* Resize Pill Buttons for Mobile - Matching Class 3 Reference */
     .nav-pill-next-btn,
-    .nav-pill-submit-btn {
-        padding: 0.4rem 1rem;
-        /* Smaller padding */
-        font-size: 0.85rem;
-        height: 36px;
-        /* Fixed height */
-        border-radius: 1rem;
+    .nav-pill-submit-btn,
+    .nav-pill-prev-btn {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.7rem !important;
+        height: 30px !important;
+        border-radius: 0.8rem !important;
+        min-width: auto !important;
+        white-space: nowrap !important;
+        gap: 0.3rem !important;
+    }
+
+    /* Hide icon in Previous button on mobile to save space */
+    .nav-pill-prev-btn svg {
+        display: none !important;
     }
 
     .view-explanation-btn {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.75rem;
-        /* Smaller font */
-        height: 30px;
-        border-radius: 0.8rem;
-        border-width: 1.5px;
-        white-space: nowrap;
-        /* Prevent wrapping */
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.65rem !important;
+        height: 28px !important;
+        border-radius: 0.7rem !important;
+        border-width: 1.5px !important;
+        white-space: nowrap !important;
     }
 
     /* Target very small screens specifically */
@@ -1286,9 +1291,10 @@
         }
 
         .nav-pill-next-btn,
-        .nav-pill-submit-btn {
-            font-size: 0.75rem;
-            padding: 0.3rem 0.6rem;
+        .nav-pill-submit-btn,
+        .nav-pill-prev-btn {
+            font-size: 0.75rem !important;
+            padding: 0.3rem 0.6rem !important;
         }
     }
 
@@ -1321,7 +1327,7 @@
         display: flex !important;
         align-items: center;
         /* Ensure padding handles safe area */
-        padding: 0 1rem 0 0.5rem !important;
+        padding: 0 0.5rem 0 0.5rem !important;
         box-sizing: border-box;
         z-index: 60;
     }
@@ -1344,8 +1350,15 @@
         align-items: center;
         justify-content: flex-end;
         width: 100%;
-        gap: 8px;
-        /* Gap between Nav buttons */
+        gap: 4px !important;
+    }
+
+    /* Navigation buttons group spacing */
+    .nav-buttons-group {
+        display: flex !important;
+        gap: 4px !important;
+        align-items: center;
+        flex-shrink: 0;
     }
 
     /* Adjust Sticker Exit size for footer */
@@ -1650,4 +1663,121 @@
 .nav-pill-prev-btn:active {
     transform: translateY(2px);
     box-shadow: 0 2px 0 #1565C0;
+}
+
+/* ============================================
+   LANDSCAPE MODE OPTIMIZATIONS
+   For mobile devices in landscape orientation
+   ============================================ */
+
+/* Landscape Mode: Question Scrollability & Layout */
+@media (max-height: 500px) and (orientation: landscape) {
+    /* Make practice content scrollable */
+    .practice-content-wrapper {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 90px !important;
+    }
+    
+    /* Ensure question card doesn't have max-height restrictions */
+    .question-card-modern {
+        max-height: none !important;
+        height: auto !important;
+        margin-bottom: 1.2rem !important;
+        padding: 1.2rem !important;
+    }
+    
+    /* Make interaction area fully visible */
+    .interaction-area-modern {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    
+    /* Reduce header height in landscape */
+    .junior-practice-header {
+        height: 55px !important;
+    }
+    
+    /* Smaller timer in landscape */
+    .sun-timer-container {
+        transform: translateY(-50%) scale(0.65) !important;
+    }
+    
+    .sun-timer {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .timer-text {
+        font-size: 0.85rem !important;
+    }
+    
+    /* Adjust footer height */
+    .junior-bottom-bar {
+        height: 58px !important;
+        padding: 0 0.4rem !important;
+    }
+    
+    /* Smaller footer buttons in landscape */
+    .nav-pill-next-btn,
+    .nav-pill-submit-btn,
+    .nav-pill-prev-btn {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.65rem !important;
+        height: 28px !important;
+    }
+    
+    .view-explanation-btn {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.6rem !important;
+        height: 26px !important;
+    }
+    
+    /* Compact question text */
+    .question-text-modern {
+        font-size: 1rem !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Smaller options */
+    .option-btn-modern {
+        min-height: 42px !important;
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Very Short Landscape Screens (e.g., folding phones) */
+@media (max-height: 400px) and (orientation: landscape) {
+    /* More aggressive header reduction */
+    .junior-practice-header {
+        height: 48px !important;
+    }
+    
+    /* Smaller footer */
+    .junior-bottom-bar {
+        height: 52px !important;
+    }
+    
+    /* Even tighter question spacing */
+    .question-card-modern {
+        padding: 0.8rem !important;
+        gap: 0.6rem !important;
+    }
+    
+    /* More compact option buttons */
+    .option-btn-modern {
+        min-height: 38px !important;
+        padding: 0.4rem 0.7rem !important;
+        font-size: 0.85rem !important;
+    }
+    
+    /* Tiny footer buttons */
+    .nav-pill-next-btn,
+    .nav-pill-submit-btn,
+    .nav-pill-prev-btn {
+        padding: 0.15rem 0.35rem !important;
+        font-size: 0.6rem !important;
+        height: 26px !important;
+    }
 }
