@@ -12,49 +12,42 @@ When creating or modifying practice components (
 .jsx
  files), adhere to the following:
 
-Progressive Difficulty: Although subtopics are ordered, ensure within each subtopic/question, the complexity is appropriate (start simple).
-Question Generation:
-Create a loop (usually 10 questions) that deterministically selects the subtopic based on the index (e.g., Q1-Q2 for Subtopic 1, Q3-Q4 for Subtopic 2, etc.).
-Ensure coverage of all listed subtopics.
-Rich Content Rendering:
-ALWAYS use 
-LatexContent
- for rendering question text and options.
-format: <LatexContent html={expression} />.
-Detailed Solutions:
-The solution property of the question object must be comprehensive.
-Include step-by-step logic, formulas used, and final calculation.
-Use LaTeX formatting ($...$$) for math equations.
-Previous Button:
-Implement a "Previous" button in the navigation controls.
-It should be disabled when qIndex === 0 or when the session is submitted/finished (if applicable, though usually only 
-Next
- changes state).
-Styling:
-Use the standard "Junior/Middle Practice" unique styling (vibrant colors, glassmorphism, lucide-react icons).
-3. Chapter Test Component
-Create a New Component: For every chapter, create a ChapterNameTest.jsx.
-Aggregation: This component should import logic or re-implement generation to pull a random mix of questions from all the topics in that chapter.
-Purpose: To test the student on the entire chapter after they finish individual topics.
-4. Navigation & Integration
-Update Syllabus: Register the new components (topics + chapter test) in the appropriate Grade Syllabus file (e.g., 
+Progressive Difficulty & Ordered Topics:
+Q1-Q10 MUST follow the exact sequence of subtopics provided.
+Implement this deterministically in 
+generateQuestions
+ (e.g., if (i === 0) ... else if (i === 1) ...).
+Answer Persistence Design:
+State Structure: const [answers, setAnswers] = useState({});
+Storage: When checking an answer, store: setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect: isRight } }));.
+Restoration Hook: Use a useEffect dependent on [qIndex, answers] to restore selectedOption, isCorrect, and isSubmitted.
+Modal Control (CRITICAL): Use a separate useEffect dependent only on [qIndex] to call setShowExplanationModal(false). This prevents the modal from closing prematurely when the answers state updates on submission.
+Navigation Controls:
+Previous Button: Always enabled if qIndex > 0 (even after submission).
+Logic: 
+handlePrevious
+ should only update qIndex. Do NOT reset selection/submission state manually; let the restoration useEffect handle it.
+Rich Content & Visuals:
+LatexContent: Wrap ALL math and question text.
+Mascot Integration: Import mascotImg. Show in feedback-mini for correct answers and inside 
+ExplanationModal
+.
+Detailed Solutions: Include step-by-step LaTeX formulas in the solution property.
+3. Chapter Test Standards
+Mixed Pool: Use a shuffle/randomizer to pick questions from all chapter subtopics.
+Persistence: chapter tests MUST implement the same answer persistence pattern as practice sessions.
+Scoring: Calculate results using Object.values(answers).filter(val => val.isCorrect).length.
+4. Integration
+Sync with Syllabus: Register in 
 MiddleGradeSyllabus.jsx
-).
-Route: Ensure routes are correctly set up in the main 
+.
+Routing: Ensure a unique route exists in 
 App.jsx
- or router configuration.
-5. Artifact Updates
-Update 
-task.md
-: Check off progress.
-Update 
-walkthrough.md
-: Document the new feature and verify the ordered progression.
-Summary for User
-When finishing the task, provide a brief summary confirming:
-
-Ordered progression implemented.
-Detailed solutions added.
-Katex rendering used.
-Previous button added.
-Chapter Test created.
+.
+5. Summary Checklist for Verification
+ Subtopics follow ordered sequence.
+ Answer persistence stores { selectedOption, isCorrect }.
+ Modal visibility is decoupled from answer state (separate qIndex effect).
+ "Previous" button allows full review of previous answers.
+ Mascot is present and imported correctly.
+ LatexContent is used consistently.

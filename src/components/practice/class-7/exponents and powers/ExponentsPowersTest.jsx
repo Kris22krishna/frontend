@@ -42,7 +42,10 @@ const ExponentsPowersTest = () => {
         const generateQuestions = () => {
             const newQuestions = [];
             const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-            const shuffle = (array) => array.sort(() => Math.random() - 0.5);
+            const shuffle = (array) => {
+                const unique = [...new Set(array)];
+                return unique.sort(() => Math.random() - 0.5);
+            };
 
             const generators = [
                 // 1. Exponents Basics (Writing in exponential form)

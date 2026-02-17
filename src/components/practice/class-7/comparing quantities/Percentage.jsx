@@ -49,7 +49,11 @@ const Percentage = () => {
         const generateQuestions = () => {
             const newQuestions = [];
             const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-            const shuffle = (array) => array.sort(() => Math.random() - 0.5);
+            const shuffle = (array) => {
+                // Remove duplicates and ensure we have unique options
+                const unique = [...new Set(array)];
+                return unique.sort(() => Math.random() - 0.5);
+            };
 
             for (let i = 0; i < 10; i++) {
                 let q = {};
