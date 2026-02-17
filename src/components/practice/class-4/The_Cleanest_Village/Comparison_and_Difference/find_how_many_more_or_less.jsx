@@ -1,30 +1,26 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
-import Whiteboard from '../../../Whiteboard';
-import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import StickerExit from '../../../StickerExit';
-import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import { api } from '../../../../../services/api';
+import LatexContent from '../../../../LatexContent';
+import ExplanationModal from '../../../../ExplanationModal';
+import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You got it! ✨",
-    "🌟 Brilliant! Keep it up! 🌟",
-    "🎉 Correct! You're a math-star! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
-    "🌈 Perfect! Well done! 🌈",
+    "✨ Spot on! You know the difference! ✨",
+    "🌟 Excellent comparison skills! 🌟",
+    "🎉 Correct! You compared them perfectly! 🎉",
+    "✨ Fantastic! Great calculation! ✨",
+    "🚀 Super! You're analyzing like a pro! 🚀",
+    "🌿 Perfect! The village data is clear! 🌿",
     "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Excellent! 💎"
+    "💎 Spot on! Exact difference! 💎"
 ];
 
-const RakshaBandhanDivision = () => {
+const FindHowManyMoreOrLess = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -43,115 +39,20 @@ const RakshaBandhanDivision = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 9003; // Reserved ID for Raksha Bandhan Division
-    const SKILL_NAME = "Raksha Bandhan - Division";
+    const SKILL_ID = 4009;
+    const SKILL_NAME = "The Cleanest Village - How Many More/Less";
 
     const TOTAL_QUESTIONS = 10;
-    const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
+    const [answers, setAnswers] = useState({});
 
     useEffect(() => {
-        // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
         }
-
-        // Pre-generate unique questions
-        const questions = [];
-        const storyTypes = ["rakhis", "laddoos", "kaju", "giftBoxes", "cards"];
-        const seenCombinations = new Set();
-
-        while (questions.length < TOTAL_QUESTIONS) {
-            const storyType = storyTypes[questions.length % storyTypes.length];
-            const groupSize = randomInt(3, 6);
-            const groups = randomInt(4, 8);
-            const total = groupSize * groups;
-            const comboKey = `${storyType}-${total}-${groupSize}`;
-
-            if (!seenCombinations.has(comboKey)) {
-                seenCombinations.add(comboKey);
-
-                let questionText = "";
-                let explanation = "";
-                const correctAnswer = groups;
-
-                if (storyType === "rakhis") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} Rakhi threads to be tied.</p>
-                            <p>Each brother receives ${groupSize} Rakhis.</p>
-                            <p><strong>How many brothers are there?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total Rakhis = ${total}.<br/>Rakhis per brother = ${groupSize}.<br/>Number of brothers = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else if (storyType === "laddoos") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} delicious laddoos in a box.</p>
-                            <p>Each plate can hold ${groupSize} laddoos.</p>
-                            <p><strong>How many plates are needed?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total laddoos = ${total}.<br/>Laddoos per plate = ${groupSize}.<br/>Number of plates = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else if (storyType === "kaju") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} kaju katlis in a tray.</p>
-                            <p>${groupSize} sweets are packed in one small box.</p>
-                            <p><strong>How many boxes can be made?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total kaju katlis = ${total}.<br/>Sweets per box = ${groupSize}.<br/>Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else if (storyType === "giftBoxes") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} small gifts to be wrapped.</p>
-                            <p>Each large gift box can hold ${groupSize} gifts.</p>
-                            <p><strong>How many gift boxes do we need?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total gifts = ${total}.<br/>Gifts per box = ${groupSize}.<br/>Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} greeting cards for Raksha Bandhan.</p>
-                            <p>Each envelope contains ${groupSize} cards.</p>
-                            <p><strong>How many envelopes are used?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total cards = ${total}.<br/>Cards per envelope = ${groupSize}.<br/>Number of envelopes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                }
-
-                const options = [
-                    correctAnswer.toString(),
-                    (correctAnswer + 1).toString(),
-                    (correctAnswer - 1).toString(),
-                    (correctAnswer + 3).toString()
-                ];
-
-                // Ensure unique options
-                const uniqueOptions = [...new Set(options)];
-                while (uniqueOptions.length < 4) {
-                    let rand = (correctAnswer + randomInt(4, 10)).toString();
-                    if (!uniqueOptions.includes(rand)) uniqueOptions.push(rand);
-                }
-
-                questions.push({
-                    text: questionText,
-                    correctAnswer: correctAnswer.toString(),
-                    solution: explanation,
-                    shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
-                });
-            }
-
-            // Safety break to prevent infinite loop if ranges are too small, though they aren't here
-            if (seenCombinations.size > 100) break;
-        }
-
-        setSessionQuestions(questions);
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -163,6 +64,113 @@ const RakshaBandhanDivision = () => {
             }
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        const questions = [];
+
+        // 10 unique scenarios — each used only once per session
+        const scenarioTemplates = [
+            (n1, n2) => `<div class='question-container'>
+                <p>Team A collected ${n1} kg of waste.</p>
+                <p>Team B collected ${n2} kg of waste.</p>
+                <p>How much <strong>more</strong> did the winning team collect?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>North Street has ${n1} trees.</p>
+                <p>South Street has ${n2} trees.</p>
+                <p>What is the <strong>difference</strong> in the number of trees?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>Dustbin X holds ${n1} litres.</p>
+                <p>Dustbin Y holds ${n2} litres.</p>
+                <p>How much <strong>less</strong> does the smaller dustbin hold?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>Village A planted ${n1} flowers.</p>
+                <p>Village B planted ${n2} flowers.</p>
+                <p>How many <strong>more</strong> flowers did one village plant than the other?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>The boys' team picked up ${n1} pieces of litter.</p>
+                <p>The girls' team picked up ${n2} pieces of litter.</p>
+                <p>What is the <strong>difference</strong> between the two teams?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>Class 4A collected ${n1} rupees in the donation drive.</p>
+                <p>Class 4B collected ${n2} rupees.</p>
+                <p>How much <strong>more</strong> did one class collect than the other?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>One farm produced ${n1} kg of vegetables.</p>
+                <p>Another farm produced ${n2} kg of vegetables.</p>
+                <p>How many <strong>fewer</strong> kg did the smaller farm produce?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>Pond A has ${n1} fish.</p>
+                <p>Pond B has ${n2} fish.</p>
+                <p>How many <strong>more</strong> fish does the larger pond have?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>The morning shift cleaned ${n1} metres of road.</p>
+                <p>The evening shift cleaned ${n2} metres of road.</p>
+                <p>What is the <strong>difference</strong> in the distance cleaned?</p>
+            </div>`,
+            (n1, n2) => `<div class='question-container'>
+                <p>School A has ${n1} students.</p>
+                <p>School B has ${n2} students.</p>
+                <p>How many <strong>fewer</strong> students does the smaller school have?</p>
+            </div>`
+        ];
+
+        // Shuffle scenario order so each question gets a unique scenario
+        const shuffledScenarios = [...scenarioTemplates].sort(() => Math.random() - 0.5);
+
+        for (let index = 0; index < TOTAL_QUESTIONS; index++) {
+            // Progressive difficulty: 3 easy, 3 medium, 4 hard
+            let num1, num2;
+
+            if (index < 3) {
+                num1 = randomInt(20, 100);
+                num2 = randomInt(20, 100);
+            } else if (index < 6) {
+                num1 = randomInt(100, 400);
+                num2 = randomInt(100, 400);
+            } else {
+                num1 = randomInt(400, 900);
+                num2 = randomInt(400, 900);
+            }
+
+            if (num1 === num2) num2 += randomInt(1, 10);
+
+            const larger = Math.max(num1, num2);
+            const smaller = Math.min(num1, num2);
+            const diff = larger - smaller;
+
+            const options = [
+                diff.toString(),
+                (diff + 10).toString(),
+                (diff - 10).toString(),
+                (diff + 5).toString()
+            ];
+
+            const uniqueOptions = [...new Set(options)];
+            while (uniqueOptions.length < 4) {
+                let rand = (diff + randomInt(-20, 20)).toString();
+                if (rand !== diff.toString() && !uniqueOptions.includes(rand) && parseInt(rand) > 0) uniqueOptions.push(rand);
+            }
+
+            questions.push({
+                text: shuffledScenarios[index](num1, num2),
+                correctAnswer: diff.toString(),
+                solution: `To find the difference (how much more or less), subtract the smaller number from the larger number.<br/>
+                           Larger: ${larger}<br/>
+                           Smaller: ${smaller}<br/>
+                           ${larger} - ${smaller} = ${diff}.<br/>
+                           So, the difference is <strong>${diff}</strong>.`,
+                shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
+            });
+        }
+
+        setSessionQuestions(questions);
 
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -182,9 +190,16 @@ const RakshaBandhanDivision = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
         }
     }, [qIndex, sessionQuestions]);
 
@@ -271,9 +286,7 @@ const RakshaBandhanDivision = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            if (sessionId) {
-                await api.finishSession(sessionId).catch(console.error);
-            }
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
@@ -281,6 +294,13 @@ const RakshaBandhanDivision = () => {
     const handleOptionSelect = (option) => {
         if (isSubmitted) return;
         setSelectedOption(option);
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const stats = (() => {
@@ -298,7 +318,6 @@ const RakshaBandhanDivision = () => {
         const score = stats.correct;
         const total = stats.total;
         const percentage = Math.round((score / total) * 100);
-        const avatarImg = "/src/assets/avatar.png"; // Fallback path if import is missing
 
         return (
             <div className="junior-practice-page results-view overflow-y-auto">
@@ -316,7 +335,7 @@ const RakshaBandhanDivision = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Adventure Report</h1>
+                        <h1 className="results-title">Village Report</h1>
                     </div>
                 </header>
 
@@ -363,7 +382,7 @@ const RakshaBandhanDivision = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Comparison Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -433,14 +452,18 @@ const RakshaBandhanDivision = () => {
     }
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+        <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"></div>
+                <div className="header-left">
+                    {/* Placeholder */}
+                </div>
+
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
+
                 <div className="header-right">
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
@@ -462,7 +485,7 @@ const RakshaBandhanDivision = () => {
                             >
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
@@ -474,7 +497,16 @@ const RakshaBandhanDivision = () => {
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontWeight: '500' }}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '400',
+                                                        fontSize: '2.5rem',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                    }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -531,6 +563,11 @@ const RakshaBandhanDivision = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -559,20 +596,27 @@ const RakshaBandhanDivision = () => {
                         >
                             <X size={20} />
                         </button>
+
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
                                 <Eye size={18} /> Explain
                             </button>
                         )}
                     </div>
-                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
-                        <div className="nav-buttons-group">
+
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '50%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className="nav-buttons-group" style={{ gap: '6px' }}>
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
+                                    Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                <button className="nav-pill-next-btn" onClick={handleNext} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
                                     Submit
                                 </button>
                             )}
@@ -584,4 +628,4 @@ const RakshaBandhanDivision = () => {
     );
 };
 
-export default RakshaBandhanDivision;
+export default FindHowManyMoreOrLess;

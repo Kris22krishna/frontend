@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import 'katex/dist/katex.min.css';
-import renderMathInElement from 'katex/dist/contrib/auto-render.mjs';
+import renderMathInElement from 'katex/dist/contrib/auto-render';
 
 const LatexContent = ({ html, className, block = false }) => {
     const containerRef = useRef(null);
@@ -25,9 +25,6 @@ const LatexContent = ({ html, className, block = false }) => {
 
     useEffect(() => {
         if (containerRef.current) {
-            // Manual DOM update to prevent React from overwriting KaTeX changes on re-renders
-            containerRef.current.innerHTML = finalHtml || '';
-
             try {
                 renderMathInElement(containerRef.current, {
                     delimiters: [
@@ -42,16 +39,15 @@ const LatexContent = ({ html, className, block = false }) => {
                 console.error("KaTeX rendering error:", e);
             }
         }
-    }, [finalHtml]);
+    }, [html]);
 
     const Tag = block ? 'div' : 'span';
 
-    // Render an empty container. useEffect will populate it.
-    // This avoids dangerouslySetInnerHTML race conditions.
     return (
         <Tag
             ref={containerRef}
             className={className}
+            dangerouslySetInnerHTML={{ __html: html }}
         />
     );
 };
