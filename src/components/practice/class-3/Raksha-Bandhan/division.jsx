@@ -28,6 +28,7 @@ const RakshaBandhanDivision = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -51,11 +52,16 @@ const RakshaBandhanDivision = () => {
     const [sessionQuestions, setSessionQuestions] = useState([]);
 
     useEffect(() => {
+        console.log("RakshaBandhanDivision: Component Mounted");
         // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
+            console.log("RakshaBandhanDivision: Creating session for user", userId);
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
+                if (sess && sess.session_id) {
+                    console.log("RakshaBandhanDivision: Session created", sess.session_id);
+                    setSessionId(sess.session_id);
+                }
             }).catch(err => console.error("Failed to start session", err));
         }
 
@@ -63,8 +69,11 @@ const RakshaBandhanDivision = () => {
         const questions = [];
         const storyTypes = ["rakhis", "laddoos", "kaju", "giftBoxes", "cards"];
         const seenCombinations = new Set();
+        let loopAttempts = 0;
 
-        while (questions.length < TOTAL_QUESTIONS) {
+        console.log("RakshaBandhanDivision: Starting question generation...");
+        while (questions.length < TOTAL_QUESTIONS && loopAttempts < 200) {
+            loopAttempts++;
             const storyType = storyTypes[questions.length % storyTypes.length];
             const groupSize = randomInt(3, 6);
             const groups = randomInt(4, 8);
@@ -100,7 +109,7 @@ const RakshaBandhanDivision = () => {
                     questionText = `
                         <div class='question-container'>
                             <p>There are ${total} kaju katlis in a tray.</p>
-                            <p>${groupSize} sweets are packed in one small box.</p>
+                            <p>${groupSize} kaju katlis are packed in one small box.</p>
                             <p><strong>How many boxes can be made?</strong></p>
                         </div>
                     `;
@@ -146,10 +155,8 @@ const RakshaBandhanDivision = () => {
                     shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
                 });
             }
-
-            // Safety break to prevent infinite loop if ranges are too small, though they aren't here
-            if (seenCombinations.size > 100) break;
         }
+        console.log(`RakshaBandhanDivision: Generated ${questions.length} questions in ${loopAttempts} attempts.`);
 
         setSessionQuestions(questions);
 
@@ -230,13 +237,33 @@ const RakshaBandhanDivision = () => {
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
+        const feedbackMsg = isRight ? CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)] : "";
+
         if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+            setFeedbackMessage(feedbackMsg);
         } else {
             setShowExplanationModal(true);
         }
 
+        setHistory(prev => ({
+            ...prev,
+            [qIndex]: {
+                ...prev[qIndex],
+                selectedOption: selectedOption,
+                isSubmitted: true,
+                isCorrect: isRight,
+                feedbackMessage: feedbackMsg
+            }
+        }));
+
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const handleNext = async () => {
@@ -531,6 +558,14 @@ const RakshaBandhanDivision = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                            >
+                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -567,6 +602,21 @@ const RakshaBandhanDivision = () => {
                     </div>
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={20} strokeWidth={3} />
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}

@@ -10,6 +10,10 @@ import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+// import { useTheme } from 'next-themes';
+
+
+
 
 const ITEMS = [
     { plural: "Rakhis", singular: "Rakhi", unit: "threads" },
@@ -41,6 +45,7 @@ const RakshaBandhanMultiplication = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -64,11 +69,16 @@ const RakshaBandhanMultiplication = () => {
     const [answers, setAnswers] = useState({}); // To track for report
 
     useEffect(() => {
+        console.log("RakshaBandhanMultiplication: Component Mounted");
         // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
+            console.log("RakshaBandhanMultiplication: Creating session for user", userId);
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
+                if (sess && sess.session_id) {
+                    console.log("RakshaBandhanMultiplication: Session created", sess.session_id);
+                    setSessionId(sess.session_id);
+                }
             }).catch(err => console.error("Failed to start session", err));
         }
 
@@ -88,8 +98,11 @@ const RakshaBandhanMultiplication = () => {
         const questions = [];
         const items = [...ITEMS].sort(() => Math.random() - 0.5);
         const seenCombinations = new Set();
+        let loopAttempts = 0;
 
-        while (questions.length < TOTAL_QUESTIONS) {
+        console.log("RakshaBandhanMultiplication: Starting question generation...");
+        while (questions.length < TOTAL_QUESTIONS && loopAttempts < 200) {
+            loopAttempts++;
             const index = questions.length;
             let groups, perGroup;
 
@@ -157,10 +170,8 @@ const RakshaBandhanMultiplication = () => {
                     shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
                 });
             }
-
-            // Safety break
-            if (seenCombinations.size > 100) break;
         }
+        console.log(`RakshaBandhanMultiplication: Generated ${questions.length} questions in ${loopAttempts} attempts.`);
 
         setSessionQuestions(questions);
 
@@ -229,13 +240,33 @@ const RakshaBandhanMultiplication = () => {
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
+        const feedbackMsg = isRight ? CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)] : "";
+
         if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+            setFeedbackMessage(feedbackMsg);
         } else {
             setShowExplanationModal(true);
         }
 
+        setHistory(prev => ({
+            ...prev,
+            [qIndex]: {
+                ...prev[qIndex],
+                selectedOption: selectedOption,
+                isSubmitted: true,
+                isCorrect: isRight,
+                feedbackMessage: feedbackMsg
+            }
+        }));
+
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const handleNext = async () => {
@@ -539,6 +570,14 @@ const RakshaBandhanMultiplication = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                            >
+                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -578,6 +617,21 @@ const RakshaBandhanMultiplication = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={20} strokeWidth={3} />
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}

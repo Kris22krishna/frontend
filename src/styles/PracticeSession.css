@@ -1062,3 +1062,36 @@
         color: #f1f5f9;
     }
 }
+
+/* Landscape Orientation Fix - Make Practice Content Scrollable */
+@media (max-height: 500px) and (orientation: landscape) {
+    /* Make practice content wrapper scrollable in landscape */
+    .practice-content-wrapper,
+    main.practice-content-wrapper {
+        max-height: calc(100vh - 140px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Ensure the board container doesn't force height */
+    .practice-board-container {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* Make question card fit within scroll container */
+    .question-card-modern {
+        max-height: none !important;
+    }
+
+    /* Reduce header height in landscape to save space */
+    .junior-practice-header {
+        padding: 1rem 2rem !important;
+        min-height: 60px !important;
+    }
+
+    /* Reduce footer height */
+    footer {
+        padding: 0.75rem 1rem !important;
+    }
+}
