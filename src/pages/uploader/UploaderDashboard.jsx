@@ -11,8 +11,8 @@ import '../../styles/DynamicQuestionsDashboard.css'; // Reusing existing styles
 
 const UploaderDashboard = () => {
     // Auth State
-    const [isAuthenticated, setIsAuthenticated] = useState(api.isAuthenticated());
-    const userType = localStorage.getItem('userType');
+    const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem('access_token'));
+    const userType = sessionStorage.getItem('userType');
 
     // Dashboard State
     const [activeTab, setActiveTab] = useState('templates');
@@ -21,16 +21,30 @@ const UploaderDashboard = () => {
     const [previewTemplate, setPreviewTemplate] = useState(null);
     const [selectedJobId, setSelectedJobId] = useState(null);
 
+    const [errorState, setErrorState] = useState(null);
+
     // Redirect if not uploader or not authenticated
     useEffect(() => {
-        if (!isAuthenticated) {
-            window.location.href = '/uploader-login';
-        } else if (userType !== 'uploader') {
-            // If admin tries to access, maybe let them? Or redirect to admin dashboard. 
-            // For now, strict separation.
-            window.location.href = '/admin';
+        // Double check auth on mount
+        const token = sessionStorage.getItem('access_token');
+        const type = sessionStorage.getItem('userType');
+
+        console.log('--- Uploader Dashboard Mount ---');
+        console.log('Token:', token ? 'Yes' : 'No');
+        console.log('User Type:', type);
+
+        if (!token) {
+            console.error('Core Auth Failure: No Token');
+            setErrorState('No authentication token found. Please login again.');
+            // window.location.href = '/uploader-login'; // Disabled for debugging
+        } else if (type !== 'uploader') {
+            // If admin tries to access, maybe let them?
+            if (type === 'admin') return;
+            console.error('Core Auth Failure: Wrong Role', type);
+            setErrorState(`Invalid role: ${type}. Expected: uploader.`);
+            // window.location.href = '/admin'; // Disabled for debugging
         }
-    }, [isAuthenticated, userType]);
+    }, []);
 
 
     const handleLogout = () => {
@@ -84,7 +98,25 @@ const UploaderDashboard = () => {
         { id: 'questions', label: 'Questions', icon: '❓' }
     ];
 
-    if (!isAuthenticated) return null; // Or loading spinner
+    // if (!isAuthenticated) return null; // Or loading spinner
+
+    // Debug Error View
+    if (errorState) {
+        return (
+            <div style={{ padding: '50px', textAlign: 'center' }}>
+                <h1>Access Denied</h1>
+                <p style={{ color: 'red' }}>{errorState}</p>
+                <button onClick={() => window.location.href = '/uploader-login'}>Go to Login</button>
+            </div>
+        );
+    }
+
+    if (!isAuthenticated) return (
+        <div style={{ padding: '50px', textAlign: 'center' }}>
+            <h2>Loading Dashboard...</h2>
+            <p>(If this persists, check console logs)</p>
+        </div>
+    );
 
     return (
         <>
@@ -140,7 +172,7 @@ const UploaderDashboard = () => {
                         <h3>{navItems.find(i => i.id === activeTab)?.label}</h3>
                         <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <div className="user-info" style={{ fontWeight: 'bold' }}>
-                                {localStorage.getItem('userName') || 'Uploader'}
+                                {sessionStorage.getItem('userName') || 'Uploader'}
                             </div>
                             <div className="avatar-placeholder" style={{
                                 width: '32px', height: '32px', borderRadius: '50%',
@@ -148,7 +180,7 @@ const UploaderDashboard = () => {
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 fontSize: '14px'
                             }}>
-                                {(localStorage.getItem('userName') || 'U')[0].toUpperCase()}
+                                {(sessionStorage.getItem('userName') || 'U')[0].toUpperCase()}
                             </div>
                         </div>
                     </header>
