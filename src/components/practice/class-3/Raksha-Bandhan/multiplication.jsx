@@ -15,7 +15,7 @@ const ITEMS = [
     { plural: "Rakhis", singular: "Rakhi", unit: "threads" },
     { plural: "Boxes", singular: "Box", unit: "sweets" },
     { plural: "Gift packs", singular: "Gift pack", unit: "chocolates" },
-    { plural: "Sisters", singular: "Sister", unit: "envelopes" },
+    { plural: "Envelope", singular: "Sister", unit: "envelopes" },
     { plural: "Plates", singular: "Plate", unit: "laddoos" },
     { plural: "Rakhi cards", singular: "Rakhi card", unit: "stickers" },
     { plural: "Thalis", singular: "Thali", unit: "diyas" },
