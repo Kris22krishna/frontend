@@ -129,7 +129,7 @@ import UseOfPercentages from './components/practice/class-7/comparing quantities
 import ProfitAndLoss from './components/practice/class-7/comparing quantities/ProfitAndLoss';
 import SimpleInterest from './components/practice/class-7/comparing quantities/SimpleInterest';
 import ExponentsBasics from './components/practice/class-7/exponents and powers/ExponentsBasics';
-import LawsOfExponents from './components/practice/class-7/exponents and powers/LawsOfExponents';
+import LawsOfExponents7 from './components/practice/class-7/exponents and powers/LawsOfExponents';
 import DecimalNumberSystem from './components/practice/class-7/exponents and powers/DecimalNumberSystem';
 import StandardForm from './components/practice/class-7/exponents and powers/StandardForm';
 import ComparingQuantitiesTest from './components/practice/class-7/comparing quantities/ComparingQuantitiesTest';
@@ -348,7 +348,7 @@ function App() {
         <Route path="/middle/grade/7/comparing-quantities/simple-interest" element={<SimpleInterest />} />
 
         <Route path="/middle/grade/7/exponents-and-powers/basics" element={<ExponentsBasics />} />
-        <Route path="/middle/grade/7/exponents-and-powers/laws" element={<LawsOfExponents />} />
+        <Route path="/middle/grade/7/exponents-and-powers/laws" element={<LawsOfExponents7 />} />
         <Route path="/middle/grade/7/exponents-and-powers/decimal-system" element={<DecimalNumberSystem />} />
         <Route path="/middle/grade/7/exponents-and-powers/standard-form" element={<StandardForm />} />
 
