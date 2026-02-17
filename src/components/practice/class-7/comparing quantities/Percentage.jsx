@@ -71,7 +71,7 @@ const Percentage = () => {
                                </div>`,
                         correctAnswer: `$${part}\\%$`,
                         solution: `Percentage means "per 100".\nSince there are ${part} boys out of ${total} students, the percentage is directly ${part}%.\n$$\\frac{${part}}{${total}} \\times 100\\% = ${part}\\%$$`,
-                        options: shuffle([`$${part}\\%$`, `$${100 - part}\\%$`, `$${part / 10}\\%$`, `$${part + 10}\\%$`])
+                        options: shuffle([`$${part}\\%$`, `$${part === 100 - part ? 100 - part + 10 : 100 - part}\\%$`, `$${part / 10}\\%$`, `$${part + 10}\\%$`])
                     };
                 } else if (i === 1) {
                     // Subtopic 2: Percent when total != 100
@@ -87,7 +87,7 @@ const Percentage = () => {
                                </div>`,
                         correctAnswer: `$${pct}\\%$`,
                         solution: `To find the percentage, divide the part by the whole and multiply by 100.\n$$\\frac{${P}}{${T}} \\times 100\\% = ${P * (100 / T)}\\% = ${pct}\\%$$`,
-                        options: shuffle([`$${pct}\\%$`, `$${pct / 2}\\%$`, `$${100 - pct}\\%$`, `$${pct + 10}\\%$`])
+                        options: shuffle([`$${pct}\\%$`, `$${pct / 2}\\%$`, `$${pct === 100 - pct ? 100 - pct + 10 : 100 - pct}\\%$`, `$${pct + 10}\\%$`])
                     };
                 } else if (i === 2) {
                     // Subtopic 3: Fractions to percentage
@@ -116,7 +116,7 @@ const Percentage = () => {
                                </div>`,
                         correctAnswer: `$${pct}\\%$`,
                         solution: `To convert a decimal to a percentage, multiply by 100:\n$$${val} \\times 100\\% = ${pct}\\%$$`,
-                        options: shuffle([`$${pct}\\%$`, `$${(pct / 10).toFixed(1)}\\%$`, `$${pct * 10}\\%$`, `$${100 - pct}\\%$`])
+                        options: shuffle([`$${pct}\\%$`, `$${(pct / 10).toFixed(1)}\\%$`, `$${pct * 10}\\%$`, `$${pct === 100 - pct ? 100 - pct + 10 : 100 - pct}\\%$`])
                     };
                 } else if (i === 4) {
                     // Subtopic 5: Percentage to fraction/decimal
@@ -164,7 +164,7 @@ const Percentage = () => {
                                </div>`,
                         correctAnswer: `$${pct2}\\%$`,
                         solution: `The total percentage must be 100%.\n$$100\\% - ${pct1}\\% = ${pct2}\\%$$`,
-                        options: shuffle([`$${pct2}\\%$`, `$${pct1}\\%$`, `$${pct2 / 2}\\%$`, `$${pct1 + 10}\\%$`])
+                        options: shuffle([`$${pct2}\\%$`, `$${pct1 === pct2 ? pct1 + 10 : pct1}\\%$`, `$${pct2 / 2}\\%$`, `$${pct1 + 10}\\%$`])
                     };
                 } else if (i === 6) {
                     // Subtopic 7: Estimation
@@ -197,7 +197,7 @@ const Percentage = () => {
                                    </div>`,
                             correctAnswer: `$${ans}$`,
                             solution: `$$\\frac{${pct}}{100} \\times ${total} = ${ans}$$`,
-                            options: shuffle([`$${ans}$`, `$${ans * 10}$`, `$${ans / 2}$`, `$${total - ans}$`])
+                            options: shuffle([`$${ans}$`, `$${ans * 10}$`, `$${ans / 2}$`, `$${ans === total - ans ? total - ans + 10 : total - ans}$`])
                         };
                     } else if (type === 2) {
                         // Improper Percentage to Fraction
@@ -227,7 +227,7 @@ const Percentage = () => {
                                    </div>`,
                             correctAnswer: `$${p3}\\%$`,
                             solution: `Total is 100%.\n$$100\\% - (${p1} + ${p2})\\% = ${p3}\\%$$`,
-                            options: shuffle([`$${p3}\\%$`, `$${p1 + p2}\\%$`, `$${p3 + 10}\\%$`, `$${Math.abs(p1 - p2)}\\%$`])
+                            options: shuffle([`$${p3}\\%$`, `$${p3 === p1 + p2 ? p1 + p2 + 5 : p1 + p2}\\%$`, `$${p3 + 10}\\%$`, `$${Math.abs(p1 - p2)}\\%$`])
                         };
                     }
                 }
@@ -399,6 +399,7 @@ const Percentage = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Percentage</span>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">

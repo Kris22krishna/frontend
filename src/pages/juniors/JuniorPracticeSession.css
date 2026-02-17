@@ -1317,6 +1317,10 @@
         /* Gap between Nav buttons */
     }
 
+    .header-left {
+        display: none !important;
+    }
+
     /* Adjust Sticker Exit size for footer */
     .mobile-sticker-exit {
         transform: scale(0.65);

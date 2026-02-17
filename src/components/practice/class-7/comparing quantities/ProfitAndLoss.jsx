@@ -67,7 +67,7 @@ const ProfitAndLoss = () => {
                         solution: isProfit
                             ? `$$SP > CP \\implies \\text{Profit}$$\n$$\\text{Profit} = SP - CP = ${sp} - ${cp} = ${amount}$$`
                             : `$$CP > SP \\implies \\text{Loss}$$\n$$\\text{Loss} = CP - SP = ${cp} - ${sp} = ${amount}$$`,
-                        options: shuffle([`₹${amount}`, `₹${amount + 10}`, `₹${amount * 2}`, `₹${Math.abs(cp - sp) + 5}`])
+                        options: shuffle([`₹${amount}`, `₹${amount === 10 ? amount + 20 : amount + 10}`, `₹${amount * 2}`, `₹${Math.abs(cp - sp) + 5}`])
                     };
                 } else if (i < 6) {
                     // Subtopic 2: Profit or Loss (Larger numbers / variation)
@@ -105,7 +105,7 @@ const ProfitAndLoss = () => {
                                </div>`,
                         correctAnswer: `${pct}%`,
                         solution: `$$\\text{Percentage} = \\frac{\\text{${isProfit ? 'Profit' : 'Loss'}}}{\\text{CP}} \\times 100$$\n$$= \\frac{${amount}}{${cp}} \\times 100 = ${pct}\\%$$`,
-                        options: shuffle([`${pct}%`, `${pct + 5}%`, `${pct / 2}%`, `${100 - pct}%`])
+                        options: shuffle([`${pct}%`, `${pct + 5}%`, `${pct / 2}%`, `${pct === 100 - pct ? 100 - pct + 10 : 100 - pct}%`])
                     };
                 } else {
                     // Subtopic 4: Finding SP or CP using percent
@@ -125,7 +125,7 @@ const ProfitAndLoss = () => {
                                    </div>`,
                             correctAnswer: `₹${sp}`,
                             solution: `$$${isProfit ? 'Profit' : 'Loss'} = ${pct}\\% \\text{ of } ${cp} = ${amount}$$\n$$SP = CP ${isProfit ? '+' : '-'} ${isProfit ? 'Profit' : 'Loss'} = ${cp} ${isProfit ? '+' : '-'} ${amount} = ${sp}$$`,
-                            options: shuffle([`₹${sp}`, `₹${cp}`, `₹${sp + 10}`, `₹${sp - 10}`])
+                            options: shuffle([`₹${sp}`, `₹${cp === sp + 10 || cp === sp - 10 ? cp + 5 : cp}`, `₹${sp + 10}`, `₹${sp - 10}`])
                         };
                     } else {
                         // Find CP
@@ -145,7 +145,7 @@ const ProfitAndLoss = () => {
                             solution: isProfit
                                 ? `$$SP = CP \\times (1 + \\frac{R}{100}) \\implies ${sp} = CP \\times ${1 + pct / 100}$$\n$$CP = \\frac{${sp}}{${1 + pct / 100}} = ${cp}$$`
                                 : `$$SP = CP \\times (1 - \\frac{R}{100}) \\implies ${sp} = CP \\times ${1 - pct / 100}$$\n$$CP = \\frac{${sp}}{${1 - pct / 100}} = ${cp}$$`,
-                            options: shuffle([`₹${cp}`, `₹${sp}`, `₹${cp + 50}`, `₹${Math.abs(cp - 50)}`])
+                            options: shuffle([`₹${cp}`, `₹${sp === cp + 50 || sp === Math.abs(cp - 50) ? sp + 5 : sp}`, `₹${cp + 50}`, `₹${Math.abs(cp - 50)}`])
                         };
                     }
                 }
@@ -310,6 +310,7 @@ const ProfitAndLoss = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Profit and Loss</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">

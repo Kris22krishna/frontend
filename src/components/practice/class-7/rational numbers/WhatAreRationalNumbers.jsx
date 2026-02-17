@@ -19,7 +19,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const StandardForm = () => {
+const WhatAreRationalNumbers = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const StandardForm = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 33; // Placeholder
-    const SKILL_NAME = "Class 7 - Exponents - Standard Form";
+    const SKILL_ID = 'local-rn-what';
+    const SKILL_NAME = "Class 7 - Rational Numbers - Definition";
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
@@ -49,116 +49,177 @@ const StandardForm = () => {
 
             for (let i = 0; i < 10; i++) {
                 let q = {};
+                // Topic 2: What are Rational Numbers
+                // Subtopic 1: Definition of rational numbers (Q0-Q2)
+                // Subtopic 2: Numerator and denominator (Q3-Q4)
+                // Subtopic 3: Integers as rational numbers (Q5-Q6)
+                // Subtopic 4: Equivalent rational numbers (Q7-Q9)
 
-                if (i < 5) {
-                    // Subtopic 1: Large numbers (Positive exponents)
-                    // e.g. 5,985,000,000 or 316.5
-                    const exponent = rand(3, 9);
-                    // generate a base number between 1 and 10 (exclusive 10)
-                    // e.g. 3.45 or 7.0 or 1.234
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 3);
-
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        // trim trailing zeros if any, unless it becomes empty
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
-
-                    // The standard form is significand x 10^exponent
-                    const standardForm = `${significand} \\times 10^{${exponent}}`;
-
-                    // The actual number to display
-                    // Need to multiply significand by 10^exponent
-                    // simplest way: construct number string
-                    // 3.45 * 10^5 -> move decimal 5 right -> 345000
-                    let numStr = significand;
-                    let move = exponent;
-                    if (numStr.includes('.')) {
-                        const parts = numStr.split('.');
-                        const decLen = parts[1].length;
-                        if (move >= decLen) {
-                            numStr = parts[0] + parts[1] + "0".repeat(move - decLen);
-                        } else {
-                            // move < decLen: 3.456 * 10^1 = 34.56
-                            numStr = parts[0] + parts[1].slice(0, move) + "." + parts[1].slice(move);
-                        }
+                if (i < 3) {
+                    // Subtopic 1: Definition
+                    if (i === 0) {
+                        q = {
+                            type: "Definition Identify",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Which of the following is a rational number?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{3}{5}$`,
+                            solution: `A rational number is in the form $p/q$ where $p, q$ are integers and $q \\neq 0$. 
+                                       $\\frac{3}{5}$ clearly fits this form.`,
+                            options: shuffle([`$\\frac{3}{5}$`, `$\\frac{5}{0}$`, `$\\sqrt{2}$`, `None`])
+                        };
+                    } else if (i === 1) {
+                        const n = rand(1, 9);
+                        q = {
+                            type: "Definition Check",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Is $${n}$ a rational number?</p>
+                                   </div>`,
+                            correctAnswer: `Yes`,
+                            solution: `Yes, because $${n}$ can be written as $\\frac{${n}}{1}$, which is in the form $p/q$.`,
+                            options: shuffle([`Yes`, `No`, `Only if positive`, `Only if even`])
+                        };
                     } else {
-                        numStr += "0".repeat(move);
+                        // Example: "Which of the following are rational numbers" logic
+                        q = {
+                            type: "Definition Group",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Which collection consists ONLY of rational numbers?</p>
+                                   </div>`,
+                            correctAnswer: `$0.25, -4, \\frac{3}{5}$`,
+                            solution: `$0.25 = \\frac{1}{4}$, $-4 = \\frac{-4}{1}$, and $\\frac{3}{5}$ are all rational numbers.`,
+                            options: shuffle([
+                                `$0.25, -4, \\frac{3}{5}$`,
+                                `$\\frac{1}{0}, 2, 3$`,
+                                `$\\pi, 2, 4$`,
+                                `$\\sqrt{2}, \\sqrt{3}, 1$`
+                            ])
+                        };
                     }
-                    // format with commas for readibility? Maybe just raw string if it's very long
-                    // Let's use locale string if no decimal, else raw
-                    const displayNum = numStr.includes('.') ? numStr : parseInt(numStr).toLocaleString();
-
-                    q = {
-                        type: "Standard Form (Large)",
-                        difficulty_level: "Medium",
-                        text: `<div class='question-container'>
-                                  <p>Express $${displayNum}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${exponent} places to the left.<br>$$${displayNum} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${exponent - 1}}$`,
-                            `$${significand.replace('.', '')} \\times 10^{${significand.includes('.') ? exponent : exponent + 2}}$`,
-                            `$${lead}.${decPart ? decPart : ''} \\times 10^{${exponent + 1}}$`
-                        ])
-                    };
-
+                } else if (i < 5) {
+                    // Subtopic 2: Numerator and denominator
+                    if (i === 3) {
+                        const num = -rand(2, 9);
+                        const den = rand(2, 9);
+                        q = {
+                            type: "Identify Num/Den",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Identify the numerator in the rational number $\\frac{${num}}{${den}}$.</p>
+                                   </div>`,
+                            correctAnswer: `$${num}$`,
+                            solution: `In $\\frac{p}{q}$, $p$ is the numerator. Here $p = ${num}$.`,
+                            options: shuffle([`$${num}$`, `$${den}$`, `$${-num}$`, `$${Math.abs(num)}$`])
+                        };
+                    } else {
+                        const num = -rand(2, 9);
+                        const den = rand(2, 9);
+                        q = {
+                            type: "Construct Rational",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Write a rational number with numerator ${num} and denominator ${den}.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{${num}}{${den}}$`,
+                            solution: `Numerator goes on top, denominator on bottom. So $\\frac{${num}}{${den}}$.`,
+                            options: shuffle([
+                                `$\\frac{${num}}{${den}}$`,
+                                `$\\frac{${den}}{${num}}$`,
+                                `$\\frac{${-num}}{${-den}}$`,
+                                `$\\frac{${den}}{${-num}}$`
+                            ])
+                        };
+                    }
+                } else if (i < 7) {
+                    // Subtopic 3: Integers as rational numbers
+                    if (i === 5) {
+                        const intVal = -rand(2, 20);
+                        q = {
+                            type: "Integer to Rational",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Write the integer ${intVal} as a rational number with denominator 1.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{${intVal}}{1}$`,
+                            solution: `Any integer $z$ can be written as $\\frac{z}{1}$.`,
+                            options: shuffle([`$\\frac{${intVal}}{1}$`, `$\\frac{1}{${intVal}}$`, `$\\frac{${intVal}}{0}$`, `$\\frac{${Math.abs(intVal)}}{1}$`])
+                        };
+                    } else {
+                        q = {
+                            type: "Zero as Rational",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>How can 0 be written as a rational number?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{0}{1}$`,
+                            solution: `0 can be written as $0/q$ for any non-zero integer $q$. $\\frac{0}{1}$ is the simplest form.`,
+                            options: shuffle([`$\\frac{0}{1}$`, `$\\frac{1}{0}$`, `$\\frac{0}{0}$`, `It cannot`])
+                        };
+                    }
                 } else {
-                    // Subtopic 2: Small numbers (Negative exponents)
-                    // e.g. 0.00045 = 4.5 x 10^-4
-                    const negExp = rand(3, 8); // e.g. 4 means 10^-4
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 2);
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
+                    // Subtopic 4: Equivalent rational numbers
+                    if (i === 7) {
+                        const num = -rand(2, 5);
+                        const den = rand(2, 5);
+                        const mul = rand(2, 4);
+                        q = {
+                            type: "Find Equivalent",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Which of the following is equivalent to $\\frac{${num}}{${den}}$?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{${num * mul}}{${den * mul}}$`,
+                            solution: `Multiplying numerator and denominator by the same non-zero integer gives an equivalent rational number. 
+                                       $\\frac{${num} \\times ${mul}}{${den} \\times ${mul}} = \\frac{${num * mul}}{${den * mul}}$.`,
+                            options: shuffle([
+                                `$\\frac{${num * mul}}{${den * mul}}$`,
+                                `$\\frac{${num + mul}}{${den + mul}}$`,
+                                `$\\frac{${num}}{${den * mul}}$`,
+                                `$\\frac{${num * mul}}{${den}}$`
+                            ])
+                        };
+                    } else if (i === 8) {
+                        const num = rand(2, 5);
+                        const den = rand(6, 9);
+                        const m1 = 2, m2 = 3;
+                        const correct1 = `$\\frac{${num * m1}}{${den * m1}}$`;
+                        const correct2 = `$\\frac{${num * m2}}{${den * m2}}$`;
+
+                        q = {
+                            type: "Equivalent Forms",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Select a rational number equivalent to $\\frac{${num}}{${den}}$.</p>
+                                   </div>`,
+                            correctAnswer: correct1,
+                            solution: `Multiply num and den by 2: $\\frac{${num * 2}}{${den * 2}} = ${correct1}$.`,
+                            options: shuffle([
+                                correct1,
+                                `$\\frac{${num + 1}}{${den + 1}}$`,
+                                `$\\frac{${den}}{${num}}$`,
+                                `$\\frac{${num * 2}}{${den}}$`
+                            ])
+                        };
+                    } else {
+                        // Standardize equivalent check
+                        const n1 = -2, d1 = 3;
+                        const n2 = -4, d2 = 6;
+                        q = {
+                            type: "Check Equivalence",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Are $\\frac{${n1}}{${d1}}$ and $\\frac{${n2}}{${d2}}$ equivalent?</p>
+                                   </div>`,
+                            correctAnswer: `Yes`,
+                            solution: `$\\frac{${n1} \\times 2}{${d1} \\times 2} = \\frac{${n2}}{${d2}}$. Yes, they are equivalent.`,
+                            options: shuffle([`Yes`, `No`])
+                        };
                     }
-
-                    const standardForm = `${significand} \\times 10^{-${negExp}}`;
-
-                    // Construct original small number
-                    // 4.5 * 10^-4 -> move decimal 4 left
-                    // 0.00045
-                    // zeros = negExp - 1
-                    let zeros = negExp - 1; // if 4.5, exp -4. dot is after 4. move 1 left passes 4 (0.45, exp -1). need 3 more zeros.
-                    // Wait. 4.5 * 10^-4.
-                    // 4.5 -> 0.45 (-1) -> 0.045 (-2) -> 0.0045 (-3) -> 0.00045 (-4).
-                    // So 3 zeros after decimal point. 
-                    // Wait, logic: lead digit is at 10^0 position in significand.
-                    // In result, lead digit is at 10^-negExp position? No.
-                    // Example: 3 * 10^-2 = 0.03.
-                    // 3 is at hundredths place.
-
-                    // Logic: "0." + (negExp - 1 zeros) + digits (without dot)
-                    // 4.5 * 10^-4 -> "0." + "000" + "45" -> 0.00045
-                    const digits = significand.replace('.', '');
-                    const originalStr = "0." + "0".repeat(zeros) + digits;
-
-                    q = {
-                        type: "Standard Form (Small)",
-                        difficulty_level: "Hard",
-                        text: `<div class='question-container'>
-                                  <p>Express $${originalStr}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${negExp} places to the right.<br>$$${originalStr} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${negExp}}$`, // positive exp distractor
-                            `$${significand} \\times 10^{-${negExp - 1}}$`,
-                            `$${significand} \\times 10^{-${negExp + 1}}$`
-                        ])
-                    };
                 }
+
                 newQuestions.push(q);
             }
             setQuestions(newQuestions);
@@ -166,6 +227,7 @@ const StandardForm = () => {
         generateQuestions();
     }, []);
 
+    // ... Standard boilerplate methods ...
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -279,11 +341,10 @@ const StandardForm = () => {
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }
-
+            // Create report logic
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-
                 try {
                     await api.createReport({
                         title: SKILL_NAME,
@@ -320,7 +381,7 @@ const StandardForm = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Standard Form</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>What are Rational Numbers</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -463,4 +524,4 @@ const StandardForm = () => {
     );
 };
 
-export default StandardForm;
+export default WhatAreRationalNumbers;

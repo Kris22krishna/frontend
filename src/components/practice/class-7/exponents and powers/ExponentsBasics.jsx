@@ -101,7 +101,7 @@ const ExponentsBasics = () => {
                     const b1 = rand(2, 3);
                     const e1 = rand(3, 4);
                     const b2 = rand(2, 3);
-                    const e2 = rand(3, 4);
+                    let e2 = rand(3, 4);
                     // ensure different values
                     if (b1 === b2 && e1 === e2) e2++;
 
@@ -317,6 +317,7 @@ const ExponentsBasics = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Exponents Basics</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">

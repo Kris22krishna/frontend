@@ -170,6 +170,78 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/exponents-and-powers/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-rn-need',
+                            skill_name: 'Need For Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/need'
+                        },
+                        {
+                            skill_id: 'local-rn-what',
+                            skill_name: 'What Are Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/what'
+                        },
+                        {
+                            skill_id: 'local-rn-posneg',
+                            skill_name: 'Positive and Negative Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/positive-negative'
+                        },
+                        {
+                            skill_id: 'local-rn-line',
+                            skill_name: 'Rational Numbers on Number Line',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/number-line'
+                        },
+                        {
+                            skill_id: 'local-rn-standard',
+                            skill_name: 'Rational Numbers Validity/Standard Form',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/standard-form'
+                        },
+                        {
+                            skill_id: 'local-rn-compare',
+                            skill_name: 'Comparison of Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/comparison'
+                        },
+                        {
+                            skill_id: 'local-rn-between',
+                            skill_name: 'Rational Numbers Between Two Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/between'
+                        },
+                        {
+                            skill_id: 'local-rn-ops',
+                            skill_name: 'Operations on Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/operations'
+                        },
+                        {
+                            skill_id: 'local-rn-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/chapter-test'
                         }
                     ];
                 }
@@ -192,8 +264,9 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers") return acc;
-        if (gradeNum === 7 && topicName === "exponents and powers" && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers") && !skill.isLocal) return acc;
+
 
         const topic = skill.topic || 'General';
         const subTopic = skill.sub_topic || 'Main';

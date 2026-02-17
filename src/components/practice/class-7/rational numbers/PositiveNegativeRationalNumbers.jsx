@@ -19,7 +19,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const StandardForm = () => {
+const PositiveNegativeRationalNumbers = () => {
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const StandardForm = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 33; // Placeholder
-    const SKILL_NAME = "Class 7 - Exponents - Standard Form";
+    const SKILL_ID = 'local-rn-posneg';
+    const SKILL_NAME = "Class 7 - Rational Numbers - Positive & Negative";
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
@@ -49,116 +49,168 @@ const StandardForm = () => {
 
             for (let i = 0; i < 10; i++) {
                 let q = {};
+                // Topic 3: Positive and Negative Rational Numbers
+                // Subtopic 1: Positive rational numbers (Q0-Q2)
+                // Subtopic 2: Negative rational numbers (Q3-Q5)
+                // Subtopic 3: Sign rules (Q6-Q9)
 
-                if (i < 5) {
-                    // Subtopic 1: Large numbers (Positive exponents)
-                    // e.g. 5,985,000,000 or 316.5
-                    const exponent = rand(3, 9);
-                    // generate a base number between 1 and 10 (exclusive 10)
-                    // e.g. 3.45 or 7.0 or 1.234
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 3);
-
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        // trim trailing zeros if any, unless it becomes empty
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
-                    }
-
-                    // The standard form is significand x 10^exponent
-                    const standardForm = `${significand} \\times 10^{${exponent}}`;
-
-                    // The actual number to display
-                    // Need to multiply significand by 10^exponent
-                    // simplest way: construct number string
-                    // 3.45 * 10^5 -> move decimal 5 right -> 345000
-                    let numStr = significand;
-                    let move = exponent;
-                    if (numStr.includes('.')) {
-                        const parts = numStr.split('.');
-                        const decLen = parts[1].length;
-                        if (move >= decLen) {
-                            numStr = parts[0] + parts[1] + "0".repeat(move - decLen);
-                        } else {
-                            // move < decLen: 3.456 * 10^1 = 34.56
-                            numStr = parts[0] + parts[1].slice(0, move) + "." + parts[1].slice(move);
-                        }
+                if (i < 3) {
+                    // Subtopic 1: Positive
+                    if (i === 0) {
+                        const num = rand(2, 9);
+                        const den = rand(3, 11);
+                        q = {
+                            type: "Identify Sign Positive",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>State whether $\\frac{${num}}{${den}}$ is positive or negative.</p>
+                                   </div>`,
+                            correctAnswer: `Positive`,
+                            solution: `Both numerator and denominator are positive, so the rational number is positive.`,
+                            options: shuffle([`Positive`, `Negative`, `Neither`, `Undefined`])
+                        };
+                    } else if (i === 1) {
+                        // -/- is positive
+                        const num = -rand(2, 9);
+                        const den = -rand(3, 11);
+                        q = {
+                            type: "Identify Sign Double Negative",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>State whether $\\frac{${num}}{${den}}$ is positive or negative.</p>
+                                   </div>`,
+                            correctAnswer: `Positive`,
+                            solution: `Both numerator and denominator have the same sign (negative), so the rational number is positive.`,
+                            options: shuffle([`Positive`, `Negative`, `Neither`, `Undefined`])
+                        };
                     } else {
-                        numStr += "0".repeat(move);
+                        q = {
+                            type: "Select Positive",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Which of the following is a positive rational number?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{-3}{-5}$`,
+                            solution: `$\\frac{-3}{-5} = \\frac{3}{5}$ is positive. The others have opposite signs.`,
+                            options: shuffle([`$\\frac{-3}{-5}$`, `$\\frac{-3}{5}$`, `$\\frac{3}{-5}$`, `$-3$`])
+                        };
                     }
-                    // format with commas for readibility? Maybe just raw string if it's very long
-                    // Let's use locale string if no decimal, else raw
-                    const displayNum = numStr.includes('.') ? numStr : parseInt(numStr).toLocaleString();
-
-                    q = {
-                        type: "Standard Form (Large)",
-                        difficulty_level: "Medium",
-                        text: `<div class='question-container'>
-                                  <p>Express $${displayNum}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${exponent} places to the left.<br>$$${displayNum} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${exponent - 1}}$`,
-                            `$${significand.replace('.', '')} \\times 10^{${significand.includes('.') ? exponent : exponent + 2}}$`,
-                            `$${lead}.${decPart ? decPart : ''} \\times 10^{${exponent + 1}}$`
-                        ])
-                    };
-
+                } else if (i < 6) {
+                    // Subtopic 2: Negative
+                    if (i === 3) {
+                        q = {
+                            type: "Select Negative Group",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Which of the following set contains ONLY negative rational numbers?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{2}{-3}, \\frac{-5}{7}, \\frac{-2}{9}$`,
+                            solution: `In $\\frac{2}{-3}$, signs are opposite (negative).
+                                       In $\\frac{-5}{7}$, signs are opposite (negative).
+                                       In $\\frac{-2}{9}$, signs are opposite (negative).`,
+                            options: shuffle([
+                                `$\\frac{2}{-3}, \\frac{-5}{7}, \\frac{-2}{9}$`,
+                                `$\\frac{2}{3}, \\frac{-5}{7}, \\frac{6}{11}$`,
+                                `$\\frac{-2}{-3}, \\frac{5}{7}$`,
+                                `$\\frac{2}{3}, \\frac{5}{7}$`
+                            ])
+                        };
+                    } else if (i === 4) {
+                        const num = rand(2, 9);
+                        const den = -rand(2, 9);
+                        q = {
+                            type: "Identify Sign Mixed",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Is the rational number $\\frac{${num}}{${den}}$ positive or negative?</p>
+                                   </div>`,
+                            correctAnswer: `Negative`,
+                            solution: `Numerator is positive, denominator is negative. Rules of signs say opposite signs yield a negative rational number.`,
+                            options: shuffle([`Negative`, `Positive`, `Neither`, `Both`])
+                        };
+                    } else {
+                        q = {
+                            type: "Check Zero",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>Is the rational number 0 positive or negative?</p>
+                                   </div>`,
+                            correctAnswer: `Neither positive nor negative`,
+                            solution: `0 is the only rational number that is neither positive nor negative.`,
+                            options: shuffle([
+                                `Neither positive nor negative`,
+                                `Positive`,
+                                `Negative`,
+                                `Both positive and negative`
+                            ])
+                        };
+                    }
                 } else {
-                    // Subtopic 2: Small numbers (Negative exponents)
-                    // e.g. 0.00045 = 4.5 x 10^-4
-                    const negExp = rand(3, 8); // e.g. 4 means 10^-4
-                    const lead = rand(1, 9);
-                    const decimals = rand(0, 2);
-                    let significand = lead.toString();
-                    let decPart = "";
-                    if (decimals > 0) {
-                        for (let k = 0; k < decimals; k++) decPart += rand(0, 9);
-                        decPart = decPart.replace(/0+$/, '');
-                        if (decPart) significand += "." + decPart;
+                    // Subtopic 3: Sign rules
+                    if (i === 6) {
+                        const val = rand(2, 9);
+                        q = {
+                            type: "Sign Simplification",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>Simplify the sign of $\\frac{-${val}}{-${val + 1}}$.</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{${val}}{${val + 1}}$`,
+                            solution: `Negative divided by negative is positive. $\\frac{-a}{-b} = \\frac{a}{b}$.`,
+                            options: shuffle([
+                                `$\\frac{${val}}{${val + 1}}$`,
+                                `$\\frac{-${val}}{${val + 1}}$`,
+                                `$\\frac{${val}}{-${val + 1}}$`,
+                                `$-\\frac{${val}}{${val + 1}}$`
+                            ])
+                        };
+                    } else if (i === 7) {
+                        q = {
+                            type: "Standard Form Sign",
+                            difficulty_level: "Medium",
+                            text: `<div class='question-container'>
+                                      <p>In standard form, where should the negative sign be placed for the rational number $\\frac{5}{-7}$?</p>
+                                   </div>`,
+                            correctAnswer: `Numerator ($\\frac{-5}{7}$)`,
+                            solution: `Standard form of a rational number requires a positive denominator. $\\frac{5}{-7}$ becomes $\\frac{-5}{7}$.`,
+                            options: shuffle([
+                                `Numerator ($\\frac{-5}{7}$)`,
+                                `Denominator ($\\frac{5}{-7}$)`,
+                                `Both ($\\frac{-5}{-7}$)`,
+                                `Nowhere`
+                            ])
+                        };
+                    } else if (i === 8) {
+                        const n = rand(2, 5);
+                        q = {
+                            type: "Opposite Sign",
+                            difficulty_level: "Easy",
+                            text: `<div class='question-container'>
+                                      <p>What is the negative of the rational number $\\frac{-${n}}{3}$?</p>
+                                   </div>`,
+                            correctAnswer: `$\\frac{${n}}{3}$`,
+                            solution: `Negative of a negative number is positive. $-(\\frac{-${n}}{3}) = \\frac{${n}}{3}$.`,
+                            options: shuffle([`$\\frac{${n}}{3}$`, `$\\frac{-${n}}{3}$`, `$\\frac{${n}}{-3}$`, `$\\frac{-${n}}{-3}$`])
+                        };
+                    } else {
+                        q = {
+                            type: "Sign Product",
+                            difficulty_level: "Hard",
+                            text: `<div class='question-container'>
+                                      <p>If $p$ is a positive integer and $q$ is a negative integer, then $\\frac{p}{q}$ is:</p>
+                                   </div>`,
+                            correctAnswer: `Always negative`,
+                            solution: `Positive divided by negative is always negative.`,
+                            options: shuffle([
+                                `Always negative`,
+                                `Always positive`,
+                                `Zero`,
+                                `Depending on values`
+                            ])
+                        };
                     }
-
-                    const standardForm = `${significand} \\times 10^{-${negExp}}`;
-
-                    // Construct original small number
-                    // 4.5 * 10^-4 -> move decimal 4 left
-                    // 0.00045
-                    // zeros = negExp - 1
-                    let zeros = negExp - 1; // if 4.5, exp -4. dot is after 4. move 1 left passes 4 (0.45, exp -1). need 3 more zeros.
-                    // Wait. 4.5 * 10^-4.
-                    // 4.5 -> 0.45 (-1) -> 0.045 (-2) -> 0.0045 (-3) -> 0.00045 (-4).
-                    // So 3 zeros after decimal point. 
-                    // Wait, logic: lead digit is at 10^0 position in significand.
-                    // In result, lead digit is at 10^-negExp position? No.
-                    // Example: 3 * 10^-2 = 0.03.
-                    // 3 is at hundredths place.
-
-                    // Logic: "0." + (negExp - 1 zeros) + digits (without dot)
-                    // 4.5 * 10^-4 -> "0." + "000" + "45" -> 0.00045
-                    const digits = significand.replace('.', '');
-                    const originalStr = "0." + "0".repeat(zeros) + digits;
-
-                    q = {
-                        type: "Standard Form (Small)",
-                        difficulty_level: "Hard",
-                        text: `<div class='question-container'>
-                                  <p>Express $${originalStr}$ in standard form.</p>
-                               </div>`,
-                        correctAnswer: `$${standardForm}$`,
-                        solution: `Move decimal point ${negExp} places to the right.<br>$$${originalStr} = ${standardForm}$$`,
-                        options: shuffle([
-                            `$${standardForm}$`,
-                            `$${significand} \\times 10^{${negExp}}$`, // positive exp distractor
-                            `$${significand} \\times 10^{-${negExp - 1}}$`,
-                            `$${significand} \\times 10^{-${negExp + 1}}$`
-                        ])
-                    };
                 }
+
                 newQuestions.push(q);
             }
             setQuestions(newQuestions);
@@ -166,6 +218,7 @@ const StandardForm = () => {
         generateQuestions();
     }, []);
 
+    // ... Standard boilerplate methods ...
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -279,11 +332,9 @@ const StandardForm = () => {
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }
-
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-
                 try {
                     await api.createReport({
                         title: SKILL_NAME,
@@ -320,7 +371,7 @@ const StandardForm = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Standard Form</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Positive & Negative Rationals</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -463,4 +514,4 @@ const StandardForm = () => {
     );
 };
 
-export default StandardForm;
+export default PositiveNegativeRationalNumbers;

@@ -72,7 +72,7 @@ const LawsOfExponents = () => {
                                    </div>`,
                             correctAnswer: `$${b}^{${m + n}}$`,
                             solution: `$$a^m \\times a^n = a^{m+n}$$\n$$${b}^${m} \\times ${b}^${n} = ${b}^{${m}+${n}} = ${b}^${m + n}$$`,
-                            options: shuffle([`$${b}^{${m + n}}$`, `$${b}^{${m * n}}$`, `$${b * 2}^{${m + n}}$`, `$${b}^{${m}}$`])
+                            options: shuffle([`$${b}^{${m + n}}$`, `$${b}^{${m * n === m + n ? m * n + 1 : m * n}}$`, `$${b * 2}^{${m + n}}$`, `$${b}^{${m}}$`])
                         };
                     } else {
                         // Variable base
@@ -103,7 +103,7 @@ const LawsOfExponents = () => {
                                    </div>`,
                             correctAnswer: `$${b}^{${m - n}}$`,
                             solution: `$$a^m \\div a^n = a^{m-n}$$\n$$${b}^${m} \\div ${b}^${n} = ${b}^{${m}-${n}} = ${b}^${m - n}$$`,
-                            options: shuffle([`$${b}^{${m - n}}$`, `$${b}^{${m + n}}$`, `$${b}^{${m / n}}$`, `$1$`])
+                            options: shuffle([`$${b}^{${m - n}}$`, `$${b}^{${m + n}}$`, `$${b}^{${m / n === m - n ? (m / n) + 1 : m / n}}$`, `$1$`])
                         };
                     } else {
                         const v = ['a', 'x', 'p'][rand(0, 2)];
@@ -133,7 +133,7 @@ const LawsOfExponents = () => {
                                    </div>`,
                             correctAnswer: `$${b}^{${m * n}}$`,
                             solution: `$$(a^m)^n = a^{m \\times n}$$\n$$(${b}^${m})^${n} = ${b}^{${m} \\times ${n}} = ${b}^${m * n}$$`,
-                            options: shuffle([`$${b}^{${m * n}}$`, `$${b}^{${m + n}}$`, `$${b}^{${m}}$`, `$${b * n}^{m}$`])
+                            options: shuffle([`$${b}^{${m * n}}$`, `$${b}^{${m * n === m + n ? m * n + 1 : m + n}}$`, `$${b}^{${m}}$`, `$${b * n}^{m}$`])
                         };
                     } else {
                         const v = ['y', 'z'][rand(0, 1)];
@@ -165,7 +165,7 @@ const LawsOfExponents = () => {
                                    </div>`,
                             correctAnswer: `$${b1 * b2}^{${m}}$`,
                             solution: `$$a^m \\times b^m = (a \\times b)^m$$\n$$${b1}^${m} \\times ${b2}^${m} = (${b1} \\times ${b2})^${m} = ${b1 * b2}^${m}$$`,
-                            options: shuffle([`$${b1 * b2}^{${m}}$`, `$${b1 + b2}^{${m}}$`, `$${b1 * b2}^{${m + m}}$`, `$${b1}^{m}$`])
+                            options: shuffle([`$${b1 * b2}^{${m}}$`, `$${b1 * b2 === b1 + b2 ? b1 + b2 + 1 : b1 + b2}^{${m}}$`, `$${b1 * b2}^{${m + m}}$`, `$${b1}^{m}$`])
                         };
                     } else {
                         const v1 = 'a';
@@ -406,7 +406,9 @@ const LawsOfExponents = () => {
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"> </div>
+                <div className="header-left">
+                    <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Laws of Exponents</span>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}

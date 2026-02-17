@@ -10,8 +10,8 @@ const LatexContent = ({ html, className, block = false }) => {
         if (!raw) return '';
         let processed = String(raw);
 
-        // Check for existing delimiters ($$, \[, \()
-        const hasDelimiters = processed.includes('$$') || processed.includes('\\[') || processed.includes('\\(');
+        // Check for existing delimiters ($$, $, \[, \()
+        const hasDelimiters = processed.includes('$$') || processed.includes('$') || processed.includes('\\[') || processed.includes('\\(');
 
         if (!hasDelimiters) {
             // Auto-convert standard fractions like "9/15" -> "\( \frac{9}{15} \)"
