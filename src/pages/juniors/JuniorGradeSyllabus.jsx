@@ -49,42 +49,47 @@ const JuniorGradeSyllabus = () => {
         const fetchTopics = async () => {
             try {
                 setLoading(true);
-                const gradeNum = grade.replace('grade', '');
+                const gradeNumStr = String(grade).replace(/\D/g, ''); // Extract only digits
+                const isGrade1 = gradeNumStr === '1';
+                const isGrade3 = gradeNumStr === '3';
+                const isGrade4 = gradeNumStr === '4';
+
                 let skillsResponse = [];
 
-                // For Grade 3 and 4, we skip fetching from API and use manual injection below
-                if (gradeNum !== '3' && gradeNum !== '4') {
-                    skillsResponse = await api.getSkills(gradeNum);
+                // For Grade 1 and Grade 3, we skip fetching from API and use manual injection below
+                if (!isGrade1 && !isGrade3) {
+                    skillsResponse = await api.getSkills(gradeNumStr);
                 }
 
-                const filteredSkills = (skillsResponse || []).filter(skill => {
-                    const gradeNumInt = parseInt(gradeNum);
+                let filteredSkills = (skillsResponse || []).filter(skill => {
                     const topicName = (skill.topic || 'General').toLowerCase();
 
-                    if (gradeNumInt === 3) {
-                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("fair share");
+                    if (isGrade3) {
+                        return topicName.includes("raksha") && topicName.includes("bandhan");
                     }
-                    // Grade 4 data will come from manual injection only, so exclude database
-                    if (gradeNumInt === 4) {
-                        return false;
+                    if (isGrade4) {
+                        return topicName === "the cleanest village";
+                    }
+                    if (isGrade1) {
+                        return false; // Strictly hide all API topics for Grade 1
                     }
                     return true;
                 });
 
-                // Manually inject special topics for Grade 3 and 4 if not present
-                if (parseInt(gradeNum) === 3 || parseInt(gradeNum) === 4) {
-                    const gradeConfigs = TOPIC_CONFIGS[gradeNum] || {};
+                // Manually inject special topics for Grade 1 and Grade 3 if not present
+                if (isGrade1 || isGrade3) {
+                    const gradeConfigs = TOPIC_CONFIGS[gradeNumStr] || {};
                     Object.entries(gradeConfigs).forEach(([topicName, skills]) => {
-                        const topicExists = filteredSkills.some(s => (s.topic || '').toLowerCase().includes(topicName.toLowerCase()));
-                        if (!topicExists) {
-                            skills.forEach(skill => {
+                        skills.forEach(skill => {
+                            // Only add if not already in the list to avoid duplicates
+                            if (!filteredSkills.some(fs => fs.skill_id === skill.id)) {
                                 filteredSkills.push({
                                     skill_id: skill.id,
                                     skill_name: skill.name,
                                     topic: topicName
                                 });
-                            });
-                        }
+                            }
+                        });
                     });
                 }
 
