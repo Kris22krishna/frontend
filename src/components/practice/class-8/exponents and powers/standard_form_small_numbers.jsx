@@ -518,6 +518,7 @@ const StandardFormSmallNumbers = () => {
                                 navigate(-1);
                             }}
                         >
+                            <StickerExit size={20} className="hidden" />
                             Exit Practice
                         </button>
                     </div>

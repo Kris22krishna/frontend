@@ -113,7 +113,7 @@ import UseOfPercentages from './components/practice/class-7/comparing quantities
 import ProfitAndLoss from './components/practice/class-7/comparing quantities/ProfitAndLoss';
 import SimpleInterest from './components/practice/class-7/comparing quantities/SimpleInterest';
 import ExponentsBasics from './components/practice/class-7/exponents and powers/ExponentsBasics';
-import LawsOfExponents from './components/practice/class-7/exponents and powers/LawsOfExponents';
+import LawsOfExponentsClass7 from './components/practice/class-7/exponents and powers/LawsOfExponents';
 import DecimalNumberSystem from './components/practice/class-7/exponents and powers/DecimalNumberSystem';
 import StandardForm from './components/practice/class-7/exponents and powers/StandardForm';
 import ComparingQuantitiesTest from './components/practice/class-7/comparing quantities/ComparingQuantitiesTest';
@@ -122,6 +122,12 @@ import ExponentsPowersTest from './components/practice/class-7/exponents and pow
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
 import HighPracticeSession from './pages/high/HighPracticeSession';
+import IntroductionToLinearEquations from './components/practice/class-10/Pair of linear equations in two variables/IntroductionToLinearEquations';
+import GraphicalMethod from './components/practice/class-10/Pair of linear equations in two variables/GraphicalMethod';
+import AlgebraicMethods from './components/practice/class-10/Pair of linear equations in two variables/AlgebraicMethods';
+import ConditionsForConsistency from './components/practice/class-10/Pair of linear equations in two variables/ConditionsForConsistency';
+import ApplicationProblems from './components/practice/class-10/Pair of linear equations in two variables/ApplicationProblems';
+import StandardFormEquations from './components/practice/class-10/Pair of linear equations in two variables/StandardFormEquations';
 
 function App() {
   return (
@@ -150,6 +156,7 @@ function App() {
             <JuniorPracticeSession />
           </ProtectedRoute>
         } />
+
 
         <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
           <ProtectedRoute redirectTo="/login">
@@ -370,6 +377,18 @@ function App() {
         <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
         <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
+        {/* Class 10: Pair of Linear Equations Routes */}
+        <Route path="/high/practice/10011" element={<GraphicalMethod />} />
+        <Route path="/high/practice/10012" element={<GraphicalMethod />} />
+        <Route path="/high/practice/10021" element={<GraphicalMethod />} />
+        <Route path="/high/practice/10022" element={<ConditionsForConsistency />} />
+        <Route path="/high/practice/10031" element={<IntroductionToLinearEquations />} />
+        <Route path="/high/practice/10041" element={<StandardFormEquations />} />
+        <Route path="/high/practice/10051" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10052" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10053" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>
     </Router>
