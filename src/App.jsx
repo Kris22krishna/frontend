@@ -85,7 +85,7 @@ import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fil
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
 import PowersWithNegativeExponents from './components/practice/class-8/exponents and powers/powers_with_negative_exponents';
-import LawsOfExponents from './components/practice/class-8/exponents and powers/laws_of_exponents';
+import LawsOfExponentsClass8 from './components/practice/class-8/exponents and powers/laws_of_exponents';
 import LawsOfExponentsApplication from './components/practice/class-8/exponents and powers/laws_of_exponents_application';
 import StandardFormSmallNumbers from './components/practice/class-8/exponents and powers/standard_form_small_numbers';
 import ComparingLargeSmallNumbers from './components/practice/class-8/exponents and powers/comparing_large_small_numbers';
@@ -98,7 +98,11 @@ import FairShareGuesswho from './components/practice/class-3/fair-share/guess-wh
 import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
 import RepeatedSubtraction from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_subtraction';
 import AdditionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/addition_with_regrouping';
+import TwoDigitAdditionRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/two_digit_plus_two_digit_regrouping';
+import ThreeDigitAdditionRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/three_digit_plus_three_digit_regrouping';
 import SubtractionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/subtraction_with_regrouping';
+import TwoDigitSubtractionRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/two_digit_minus_two_digit_regrouping';
+import ThreeDigitSubtractionRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/three_digit_minus_three_digit_regrouping';
 import FindMissingAddend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_addend';
 import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_subtrahend';
 import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
@@ -216,7 +220,7 @@ function App() {
         {/* Grade 8 Exponents and Powers - Laws of Exponents */}
         <Route path="/senior/grade/8/exponents-powers/laws-of-exponents" element={
           <ProtectedRoute redirectTo="/login">
-            <LawsOfExponents />
+            <LawsOfExponentsClass8 />
           </ProtectedRoute>
         } />
 
@@ -257,9 +261,29 @@ function App() {
             <AdditionWithRegrouping />
           </ProtectedRoute>
         } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/two-digit-addition-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <TwoDigitAdditionRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/three-digit-addition-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <ThreeDigitAdditionRegrouping />
+          </ProtectedRoute>
+        } />
         <Route path="/junior/grade/:grade/the-cleanest-village/subtraction-with-regrouping" element={
           <ProtectedRoute redirectTo="/login">
             <SubtractionWithRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/two-digit-subtraction-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <TwoDigitSubtractionRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/three-digit-subtraction-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <ThreeDigitSubtractionRegrouping />
           </ProtectedRoute>
         } />
         <Route path="/junior/grade/:grade/the-cleanest-village/find-missing-addend" element={
@@ -440,7 +464,7 @@ function App() {
         <Route path="/high/practice/10053" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
-        <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
+``        <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>
     </Router>
   );
