@@ -108,6 +108,16 @@ import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
+import Percentage from './components/practice/class-7/comparing quantities/Percentage';
+import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
+import ProfitAndLoss from './components/practice/class-7/comparing quantities/ProfitAndLoss';
+import SimpleInterest from './components/practice/class-7/comparing quantities/SimpleInterest';
+import ExponentsBasics from './components/practice/class-7/exponents and powers/ExponentsBasics';
+import LawsOfExponents from './components/practice/class-7/exponents and powers/LawsOfExponents';
+import DecimalNumberSystem from './components/practice/class-7/exponents and powers/DecimalNumberSystem';
+import StandardForm from './components/practice/class-7/exponents and powers/StandardForm';
+import ComparingQuantitiesTest from './components/practice/class-7/comparing quantities/ComparingQuantitiesTest';
+import ExponentsPowersTest from './components/practice/class-7/exponents and powers/ExponentsPowersTest';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -260,6 +270,19 @@ function App() {
         } />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
+        <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
+        <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
+        <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />
+        <Route path="/middle/grade/7/comparing-quantities/simple-interest" element={<SimpleInterest />} />
+
+        <Route path="/middle/grade/7/exponents-and-powers/basics" element={<ExponentsBasics />} />
+        <Route path="/middle/grade/7/exponents-and-powers/laws" element={<LawsOfExponents />} />
+        <Route path="/middle/grade/7/exponents-and-powers/decimal-system" element={<DecimalNumberSystem />} />
+        <Route path="/middle/grade/7/exponents-and-powers/standard-form" element={<StandardForm />} />
+
+        {/* Chapter Tests */}
+        <Route path="/middle/grade/7/comparing-quantities/chapter-test" element={<ComparingQuantitiesTest />} />
+        <Route path="/middle/grade/7/exponents-and-powers/chapter-test" element={<ExponentsPowersTest />} />
 
 
         {/* Auth Routes */}
