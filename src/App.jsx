@@ -78,6 +78,12 @@ import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
 import HighPracticeSession from './pages/high/HighPracticeSession';
+import IntroductionToLinearEquations from './components/practice/class-10/Pair of linear equations in two variables/IntroductionToLinearEquations';
+import GraphicalMethod from './components/practice/class-10/Pair of linear equations in two variables/GraphicalMethod';
+import AlgebraicMethods from './components/practice/class-10/Pair of linear equations in two variables/AlgebraicMethods';
+import ConditionsForConsistency from './components/practice/class-10/Pair of linear equations in two variables/ConditionsForConsistency';
+import ApplicationProblems from './components/practice/class-10/Pair of linear equations in two variables/ApplicationProblems';
+import StandardFormEquations from './components/practice/class-10/Pair of linear equations in two variables/StandardFormEquations';
 
 function App() {
   return (
@@ -180,6 +186,18 @@ function App() {
         {/* Full Screen Practice Sessions */}
         <Route path="/practice/:templateId" element={<PracticeSession />} />
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
+        {/* Class 10: Pair of Linear Equations Routes */}
+        <Route path="/high/practice/10011" element={<GraphicalMethod />} />
+        <Route path="/high/practice/10012" element={<GraphicalMethod />} />
+        <Route path="/high/practice/10021" element={<GraphicalMethod />} />
+        <Route path="/high/practice/10022" element={<ConditionsForConsistency />} />
+        <Route path="/high/practice/10031" element={<IntroductionToLinearEquations />} />
+        <Route path="/high/practice/10041" element={<StandardFormEquations />} />
+        <Route path="/high/practice/10051" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10052" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10053" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>
     </Router>

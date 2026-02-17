@@ -60,7 +60,7 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
 
                             <div className="flex-1">
                                 <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
-                                <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin">
+                                <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin whitespace-pre-line">
                                     {/* Render explanation text with LaTeX support */}
                                     <LatexText text={explanation || "Great effort! Keep practicing to master this concept."} />
                                 </div>
