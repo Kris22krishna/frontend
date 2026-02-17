@@ -8,6 +8,7 @@ import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { api } from '../../services/api';
 import { LatexText } from '../../components/LatexText';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
+import { TOPIC_CONFIGS } from '../../lib/topicConfig';
 import './JuniorSubtopics.css';
 
 // Colors for subtopics
@@ -35,12 +36,26 @@ const JuniorSubtopics = () => {
         if (!isAuthenticated) {
             setPendingSubtopic(subtopic);
             setShowLoginModal(true);
-        } else {
-            navigate(
-                `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
-                { state: { skills: subtopics, currentIndex: index } }
-            );
+            return;
         }
+
+        if (subtopic.id === "RB-01") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
+            return;
+        }
+        if (subtopic.id === "RB-02") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
+            return;
+        }
+        if (subtopic.id === "RB-03") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            return;
+        }
+
+        navigate(
+            `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
+            { state: { skills: subtopics, currentIndex: index } }
+        );
     };
 
     const handleLoginSuccess = () => {
@@ -48,10 +63,18 @@ const JuniorSubtopics = () => {
             const subtopic = pendingSubtopic;
             const index = subtopics.findIndex(s => s.id === subtopic.id);
 
-            navigate(
-                `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
-                { state: { skills: subtopics, currentIndex: index } }
-            );
+            if (subtopic.id === "RB-01") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
+            } else if (subtopic.id === "RB-02") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
+            } else if (subtopic.id === "RB-03") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            } else {
+                navigate(
+                    `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
+                    { state: { skills: subtopics, currentIndex: index } }
+                );
+            }
             setPendingSubtopic(null);
         }
     };
@@ -61,8 +84,11 @@ const JuniorSubtopics = () => {
             try {
                 setLoading(true);
                 const gradeNum = grade.replace('grade', '');
+                let skillsResponse = [];
 
-                const skillsResponse = await api.getSkills(gradeNum);
+                if (gradeNum !== '3') {
+                    skillsResponse = await api.getSkills(gradeNum);
+                }
 
                 // Filter by topic and get unique skills
                 const filteredSkills = (skillsResponse || [])
@@ -78,6 +104,20 @@ const JuniorSubtopics = () => {
                         colorIndex: index % subtopicColors.length
                     };
                 });
+
+                // Manually inject for special topics
+                const gradeConfigs = TOPIC_CONFIGS[gradeNum];
+                if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                    if (subtopicList.length === 0) {
+                        gradeConfigs[decodedTopic].forEach((skill, index) => {
+                            subtopicList.push({
+                                id: skill.id,
+                                name: skill.name,
+                                colorIndex: index % subtopicColors.length
+                            });
+                        });
+                    }
+                }
 
                 setSubtopics(subtopicList);
             } catch (error) {

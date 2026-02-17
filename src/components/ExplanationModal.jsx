@@ -14,7 +14,7 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
-                        className="bg-white dark:bg-slate-900 rounded-[32px] lg:rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px] max-h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-visible border-4 border-white dark:border-slate-800"
+                        className="bg-white dark:bg-slate-900 rounded-[32px] lg:rounded-[40px] max-w-4xl w-full shadow-2xl overflow-hidden flex flex-col lg:flex-row max-h-[90vh] overflow-y-auto border-4 border-white dark:border-slate-800"
                     >
                         {/* Left Side: Mascot Area */}
                         <div className="flex-[4] bg-[#E0FBEF] flex flex-col items-center justify-center p-6 lg:p-8 relative min-h-[200px] lg:min-h-0 shrink-0">
@@ -60,7 +60,7 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
 
                             <div className="flex-1">
                                 <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
-                                <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin">
+                                <div className="text-gray-600 text-lg leading-relaxed pr-4">
                                     {/* Render explanation text with LaTeX support */}
                                     <LatexText text={explanation || "Great effort! Keep practicing to master this concept."} />
                                 </div>
