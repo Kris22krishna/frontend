@@ -1,4 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
+import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
+import MultiplicationPracticeMultiple from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_multiple_numbers';
+import MultiplicationEndingZero from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_numbers_ending_in_zeros';
+import MultiplicationWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_word_problems';
+import DivisionPracticeOneDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_one_digit_number';
+import DivisionPracticeTwoDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_by_two_digit_number';
+import DivisionEndingZero from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_numbers_ending_zeros';
+import DivisionWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Division/division_word_problems';
+import MultiDivWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Skill_application_problems/skill_application_problems';
 import MainLayout from './layouts/WebsiteLayout';
 import Home from './pages/Home';
 import AdminLogin from './pages/AdminLogin';
@@ -10,6 +20,7 @@ import DynamicQuestionsDashboard from './pages/DynamicQuestionsDashboard';
 import PracticeSession from './pages/PracticeSession';
 import UploaderLogin from './pages/UploaderLogin';
 import RapidMathPage from './pages/RapidMathPage';
+import Internship from './pages/internship/Internship';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -70,10 +81,43 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
+import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
+import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
+import PowersWithNegativeExponents from './components/practice/class-8/exponents and powers/powers_with_negative_exponents';
+import LawsOfExponents from './components/practice/class-8/exponents and powers/laws_of_exponents';
+import LawsOfExponentsApplication from './components/practice/class-8/exponents and powers/laws_of_exponents_application';
+import StandardFormSmallNumbers from './components/practice/class-8/exponents and powers/standard_form_small_numbers';
+import ComparingLargeSmallNumbers from './components/practice/class-8/exponents and powers/comparing_large_small_numbers';
+import FairShareCutting from './components/practice/class-3/fair-share/cutting';
+import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
+import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
+import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
+
+// Class 4 - The Cleanest Village
+import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
+import RepeatedSubtraction from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_subtraction';
+import AdditionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/addition_with_regrouping';
+import SubtractionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/subtraction_with_regrouping';
+import FindMissingAddend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_addend';
+import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_subtrahend';
+import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
+import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
+import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
+import Percentage from './components/practice/class-7/comparing quantities/Percentage';
+import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
+import ProfitAndLoss from './components/practice/class-7/comparing quantities/ProfitAndLoss';
+import SimpleInterest from './components/practice/class-7/comparing quantities/SimpleInterest';
+import ExponentsBasics from './components/practice/class-7/exponents and powers/ExponentsBasics';
+import LawsOfExponentsClass7 from './components/practice/class-7/exponents and powers/LawsOfExponents';
+import DecimalNumberSystem from './components/practice/class-7/exponents and powers/DecimalNumberSystem';
+import StandardForm from './components/practice/class-7/exponents and powers/StandardForm';
+import ComparingQuantitiesTest from './components/practice/class-7/comparing quantities/ComparingQuantitiesTest';
+import ExponentsPowersTest from './components/practice/class-7/exponents and powers/ExponentsPowersTest';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -102,13 +146,150 @@ function App() {
           <Route path="ai" element={<ContentPage topic="ai" />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
+        <Route path="/internship" element={<Internship />} />
 
         {/* Junior Routes (Grades 1-4 child-friendly design) */}
         <Route path="/junior/grade/:grade" element={<JuniorGradeSyllabus />} />
         <Route path="/junior/grade/:grade/topic/:topic" element={<JuniorSubtopics />} />
-        <Route path="/junior/grade/:grade/practice" element={<JuniorPracticeSession />} />
+        <Route path="/junior/grade/:grade/practice" element={
+          <ProtectedRoute redirectTo="/login">
+            <JuniorPracticeSession />
+          </ProtectedRoute>
+        } />
+
+
+        <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanIntro />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/raksha-bandhan/multiplication" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanMultiplication />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/raksha-bandhan/division" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/cutting" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareCutting />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/halves-doubles" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareHalvesDoubles />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/draw" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareDraw />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/guess-who" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareGuesswho />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Negative Exponents */}
+        <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
+          <ProtectedRoute redirectTo="/login">
+            <PowersWithNegativeExponents />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Laws of Exponents */}
+        <Route path="/senior/grade/8/exponents-powers/laws-of-exponents" element={
+          <ProtectedRoute redirectTo="/login">
+            <LawsOfExponents />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Laws of Exponents Application */}
+        <Route path="/senior/grade/8/exponents-powers/laws-application" element={
+          <ProtectedRoute redirectTo="/login">
+            <LawsOfExponentsApplication />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Standard Form for Small Numbers */}
+        <Route path="/senior/grade/8/exponents-powers/standard-form" element={
+          <ProtectedRoute redirectTo="/login">
+            <StandardFormSmallNumbers />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Comparing Large and Small Numbers */}
+        <Route path="/senior/grade/8/exponents-powers/comparing-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <ComparingLargeSmallNumbers />
+          </ProtectedRoute>
+        } />
+
+        {/* Cleanest Village Routes */}
+        <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <RepeatedAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/repeated-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <RepeatedSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/addition-with-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <AdditionWithRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/subtraction-with-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <SubtractionWithRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/find-missing-addend" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindMissingAddend />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/find-missing-subtrahend" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindMissingSubtrahend />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/find-how-many-more-or-less" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindHowManyMoreOrLess />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/chapter-scene-mixed-operations" element={
+          <ProtectedRoute redirectTo="/login">
+            <ChapterSceneMixedOperations />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
+          <ProtectedRoute redirectTo="/login">
+            <LetUsPlay />
+          </ProtectedRoute>
+        } />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
+        <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
+        <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
+        <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />
+        <Route path="/middle/grade/7/comparing-quantities/simple-interest" element={<SimpleInterest />} />
+
+        <Route path="/middle/grade/7/exponents-and-powers/basics" element={<ExponentsBasics />} />
+        <Route path="/middle/grade/7/exponents-and-powers/laws" element={<LawsOfExponents />} />
+        <Route path="/middle/grade/7/exponents-and-powers/decimal-system" element={<DecimalNumberSystem />} />
+        <Route path="/middle/grade/7/exponents-and-powers/standard-form" element={<StandardForm />} />
+
+        {/* Chapter Tests */}
+        <Route path="/middle/grade/7/comparing-quantities/chapter-test" element={<ComparingQuantitiesTest />} />
+        <Route path="/middle/grade/7/exponents-and-powers/chapter-test" element={<ExponentsPowersTest />} />
 
 
         {/* Auth Routes */}
@@ -185,6 +366,16 @@ function App() {
 
         {/* Full Screen Practice Sessions */}
         <Route path="/practice/:templateId" element={<PracticeSession />} />
+        <Route path="/middle/practice/9003" element={<MultiplicationPractice />} />
+        <Route path="/middle/practice/9004" element={<MultiplicationPractice3D />} />
+        <Route path="/middle/practice/9005" element={<MultiplicationPracticeMultiple />} />
+        <Route path="/middle/practice/9006" element={<MultiplicationEndingZero />} />
+        <Route path="/middle/practice/9007" element={<MultiplicationWordProblems />} />
+        <Route path="/middle/practice/9008" element={<DivisionPracticeOneDigit />} />
+        <Route path="/middle/practice/9009" element={<DivisionPracticeTwoDigit />} />
+        <Route path="/middle/practice/9010" element={<DivisionEndingZero />} />
+        <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
+        <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         {/* Class 10: Pair of Linear Equations Routes */}
         <Route path="/high/practice/10011" element={<GraphicalMethod />} />

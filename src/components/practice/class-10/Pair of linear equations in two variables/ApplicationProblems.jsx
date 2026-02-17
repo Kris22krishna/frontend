@@ -79,7 +79,9 @@ const ApplicationProblems = () => {
         // Total notes: N. 50s and 100s. Total value V.
         let n50 = getRandomInt(5, 15);
         let n100 = getRandomInt(5, 15);
-        while (n100 === n50) n100 = getRandomInt(5, 15); // Ensure distinctive counts
+        // Ensure distinctive counts and prevent option duplicates
+        // Duplicates happen if n100 === n50 (handled), or n100 === n50 + 5 (Option 2 == Option 3), or n100 === n50 - 1 (Option 2 == Option 4)
+        while (n100 === n50 || n100 === n50 + 5 || n100 === n50 - 1) n100 = getRandomInt(5, 15);
         let totalVal = n50 * 50 + n100 * 100;
         let totalNotes = n50 + n100;
         newQuestions.push({

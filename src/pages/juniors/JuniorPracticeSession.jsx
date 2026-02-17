@@ -283,8 +283,8 @@ const JuniorPracticeSession = () => {
         const currentQuestion = questions[currentIndex];
 
         // Robust comparison matching handleOptionSelect
-        const val1 = String(selectedOption).trim();
-        const val2 = String(currentQuestion.correctAnswer).trim();
+        const val1 = String(selectedOption).trim().toLowerCase();
+        const val2 = String(currentQuestion.correctAnswer).trim().toLowerCase();
         const isCorrect = val1 === val2;
 
         setAnswers(prev => ({

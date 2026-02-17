@@ -68,6 +68,22 @@ const SeniorGradeSyllabus = () => {
         return acc;
     }, {});
 
+    // Add hardcoded "Application of Laws of Exponents" skill for Grade 8
+    if (parseInt(grade.replace('grade', '')) === 8 && skillsByTopic['Exponents and Power']) {
+        // Find the index of "Laws of Exponents" skill
+        const lawsIndex = skillsByTopic['Exponents and Power'].findIndex(
+            skill => skill.skill_id === 1869 || skill.skill_name.toLowerCase().includes('laws of exponent')
+        );
+
+        // Insert right after Laws of Exponents
+        const insertIndex = lawsIndex !== -1 ? lawsIndex + 1 : skillsByTopic['Exponents and Power'].length;
+        skillsByTopic['Exponents and Power'].splice(insertIndex, 0, {
+            skill_id: 8005,
+            skill_name: 'Application of Laws of Exponents',
+            topic: 'Exponents and Power'
+        });
+    }
+
     const topics = Object.keys(skillsByTopic);
 
     // Handle Closing Modal on Escape Key

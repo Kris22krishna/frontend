@@ -41,6 +41,7 @@ const IntroductionToLinearEquations = () => {
         // EASY 1: Cost Problem (Simple)
         let p1 = getRandomInt(2, 5);
         let v1 = getRandomInt(2, 5);
+        while (p1 === v1) v1 = getRandomInt(2, 5);
         let c1 = getRandomInt(5, 15) * 10;
         newQuestions.push(createQuestion(
             1,

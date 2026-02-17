@@ -171,10 +171,10 @@ export const api = {
         window.dispatchEvent(new Event('auth-change'));
     },
 
-    // Deprecated: IsAuthenticated check via local storage is no longer valid with HttpOnly cookies.
-    // Use AuthContext to check authentication state.
+    // Deprecated: IsAuthenticated check via local storage IS valid as a quick check for UI
+    // Use AuthContext for robust state management.
     isAuthenticated: () => {
-        return false; // Force check via API/Context
+        return !!sessionStorage.getItem('access_token');
     },
 
     // --- Student ---
