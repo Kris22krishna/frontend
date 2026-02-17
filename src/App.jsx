@@ -152,6 +152,27 @@ import ConditionsForConsistency from './components/practice/class-10/Pair of lin
 import ApplicationProblems from './components/practice/class-10/Pair of linear equations in two variables/ApplicationProblems';
 import StandardFormEquations from './components/practice/class-10/Pair of linear equations in two variables/StandardFormEquations';
 
+// Grade 3 - Fair Share
+import FairShareCutting from './components/practice/class-3/fair-share/cutting';
+import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
+import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
+import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
+
+// Grade 4 - The Cleanest Village
+import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
+import RepeatedSubtraction from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_subtraction';
+import AdditionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/addition_with_regrouping';
+import TwoDigitAdditionRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/two_digit_plus_two_digit_regrouping';
+import ThreeDigitAdditionRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/three_digit_plus_three_digit_regrouping';
+import SubtractionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/subtraction_with_regrouping';
+import TwoDigitSubtractionRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/two_digit_minus_two_digit_regrouping';
+import ThreeDigitSubtractionRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/three_digit_minus_three_digit_regrouping';
+import FindMissingAddend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_addend';
+import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_subtrahend';
+import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
+import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
+import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
+
 function App() {
   return (
     <Router>
