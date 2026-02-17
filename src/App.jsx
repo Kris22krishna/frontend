@@ -78,6 +78,10 @@ import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
+import RectanglePractice from './components/practice/grade-6/Perimeter and Area/Rectangle';
+import SquarePractice from './components/practice/grade-6/Perimeter and Area/Square';
+import TrianglePractice from './components/practice/grade-6/Perimeter and Area/Triangle';
+import RegularPolygonPractice from './components/practice/grade-6/Perimeter and Area/Regular Polygon';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -110,7 +114,7 @@ function App() {
             <JuniorPracticeSession />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanIntro />
@@ -128,6 +132,10 @@ function App() {
         } />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
+        <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
+        <Route path="/middle/grade/6/perimeter-area/square" element={<SquarePractice />} />
+        <Route path="/middle/grade/6/perimeter-area/triangle" element={<TrianglePractice />} />
+        <Route path="/middle/grade/6/perimeter-area/regular-polygon" element={<RegularPolygonPractice />} />
 
 
         {/* Auth Routes */}

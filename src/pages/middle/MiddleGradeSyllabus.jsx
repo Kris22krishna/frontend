@@ -66,6 +66,28 @@ const MiddleGradeSyllabus = () => {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
+            const lowerSkillName = skill.skill_name.toLowerCase();
+            const lowerTopic = (skill.topic || '').toLowerCase();
+
+            if (lowerTopic.includes('perimeter') || lowerTopic.includes('area')) {
+                if (lowerSkillName.includes('rectangle')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/rectangle`);
+                    return;
+                }
+                if (lowerSkillName.includes('square')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/square`);
+                    return;
+                }
+                if (lowerSkillName.includes('triangle')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/triangle`);
+                    return;
+                }
+                if (lowerSkillName.includes('polygon')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/regular-polygon`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -102,7 +124,7 @@ const MiddleGradeSyllabus = () => {
 
         // Filter by grade
         if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
-        if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
+        if (gradeNum === 6 && !topicName.includes("fraction") && !topicName.includes("perimeter") && !topicName.includes("area")) return acc;
         if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
 
         const topic = skill.topic || 'General';
@@ -113,6 +135,18 @@ const MiddleGradeSyllabus = () => {
         acc[topic][subTopic].push(skill);
         return acc;
     }, {});
+
+    // Manual Override for Grade 6 Perimeter and Area
+    if (parseInt(grade.replace('grade', '')) === 6) {
+        skillsByTopic['Perimeter and Area'] = {
+            'Main': [
+                { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
+                { skill_id: 'sq-6', skill_name: 'Square', topic: 'Perimeter and Area' },
+                { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
+                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' }
+            ]
+        };
+    }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 
