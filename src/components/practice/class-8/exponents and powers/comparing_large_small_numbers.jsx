@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, Pencil, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
@@ -40,6 +40,7 @@ const ComparingLargeSmallNumbers = () => {
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
+    const history = useRef({});
     const isTabActive = useRef(true);
     const SKILL_ID = 8004; // Grade 8 - Comparing Large and Small Numbers
     const SKILL_NAME = "Exponents - Comparing Large and Small Numbers";
@@ -81,6 +82,15 @@ const ComparingLargeSmallNumbers = () => {
     }, [qIndex]);
 
     const generateQuestion = (index) => {
+        if (history.current[index]) {
+            const stored = history.current[index];
+            setCurrentQuestion(stored.qData);
+            setShuffledOptions(stored.shuffledOptions);
+            setSelectedOption(stored.selectedOption);
+            setIsSubmitted(stored.isSubmitted);
+            setIsCorrect(stored.isCorrect);
+            return;
+        }
         let qData;
 
         switch (index) {
@@ -128,7 +138,16 @@ const ComparingLargeSmallNumbers = () => {
                 qData = compareSimpleLarge();
         }
 
-        setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
+        const newShuffledOptions = [...qData.options].sort(() => Math.random() - 0.5);
+        history.current[index] = {
+            qData,
+            shuffledOptions: newShuffledOptions,
+            selectedOption: null,
+            isSubmitted: false,
+            isCorrect: false
+        };
+
+        setShuffledOptions(newShuffledOptions);
         setCurrentQuestion(qData);
         setSelectedOption(null);
         setIsSubmitted(false);
@@ -403,6 +422,16 @@ const ComparingLargeSmallNumbers = () => {
     };
 
     const handleNext = async () => {
+        // Save current state before moving
+        if (history.current[qIndex]) {
+            history.current[qIndex] = {
+                ...history.current[qIndex],
+                selectedOption,
+                isSubmitted,
+                isCorrect
+            };
+        }
+
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
             setShowExplanationModal(false);
@@ -444,6 +473,26 @@ const ComparingLargeSmallNumbers = () => {
         }
     };
 
+    const handlePrevious = () => {
+        // Save current state before moving back
+        if (history.current[qIndex]) {
+            history.current[qIndex] = {
+                ...history.current[qIndex],
+                selectedOption,
+                isSubmitted,
+                isCorrect
+            };
+        }
+
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+        }
+    };
+
     const handleOptionSelect = (option) => {
         if (isSubmitted) return;
         setSelectedOption(option);
@@ -452,7 +501,7 @@ const ComparingLargeSmallNumbers = () => {
     if (!currentQuestion) return <div>Loading...</div>;
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
                     {/* Empty or Logo */}
@@ -555,6 +604,11 @@ const ComparingLargeSmallNumbers = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-prev-btn" onClick={handlePrevious} title="Previous">
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -593,6 +647,11 @@ const ComparingLargeSmallNumbers = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-prev-btn" onClick={handlePrevious} title="Previous">
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
