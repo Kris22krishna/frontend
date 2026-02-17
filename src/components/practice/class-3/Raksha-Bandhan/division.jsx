@@ -28,6 +28,7 @@ const RakshaBandhanDivision = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -230,13 +231,33 @@ const RakshaBandhanDivision = () => {
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
+        const feedbackMsg = isRight ? CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)] : "";
+
         if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+            setFeedbackMessage(feedbackMsg);
         } else {
             setShowExplanationModal(true);
         }
 
+        setHistory(prev => ({
+            ...prev,
+            [qIndex]: {
+                ...prev[qIndex],
+                selectedOption: selectedOption,
+                isSubmitted: true,
+                isCorrect: isRight,
+                feedbackMessage: feedbackMsg
+            }
+        }));
+
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const handleNext = async () => {
@@ -531,6 +552,14 @@ const RakshaBandhanDivision = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                            >
+                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -567,6 +596,21 @@ const RakshaBandhanDivision = () => {
                     </div>
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={20} strokeWidth={3} />
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}

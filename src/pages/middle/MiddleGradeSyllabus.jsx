@@ -66,6 +66,66 @@ const MiddleGradeSyllabus = () => {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
+            const lowerSkillName = skill.skill_name.toLowerCase();
+            const lowerTopic = (skill.topic || '').toLowerCase();
+
+            if (lowerTopic.includes('perimeter') || lowerTopic.includes('area')) {
+                if (lowerSkillName.includes('rectangle')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/rectangle`);
+                    return;
+                }
+                if (lowerSkillName.includes('square')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/square`);
+                    return;
+                }
+                if (lowerSkillName.includes('triangle')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/triangle`);
+                    return;
+                }
+                if (lowerSkillName.includes('polygon')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/regular-polygon`);
+                    return;
+                }
+                if (lowerSkillName.includes('mixed')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/mixed-bag`);
+                    return;
+                }
+            }
+
+            if (lowerTopic.includes('pattern')) {
+                if (lowerSkillName.includes('intro')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/intro`);
+                    return;
+                }
+                if (lowerSkillName.includes('relations')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/relations`);
+                    return;
+                }
+                if (lowerSkillName.includes('shapes')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/shapes`);
+                    return;
+                }
+            }
+
+            if (lowerTopic.includes('number play')) {
+                if (lowerSkillName.includes('tell us things')) {
+                    navigate(`/middle/grade/${grade}/number-play/numbers-things`);
+                    return;
+                }
+                if (lowerSkillName.includes('supercells')) {
+                    navigate(`/middle/grade/${grade}/number-play/supercells`);
+                    return;
+                }
+                if (lowerSkillName.includes('growing')) {
+                    navigate(`/middle/grade/${grade}/number-play/growing-patterns`);
+                    return;
+                }
+                if (lowerSkillName.includes('playing with digits')) {
+                    navigate(`/middle/grade/${grade}/number-play/playing-with-digits`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -102,7 +162,7 @@ const MiddleGradeSyllabus = () => {
 
         // Filter by grade
         if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
-        if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
+        if (gradeNum === 6 && !topicName.includes("fraction") && !topicName.includes("perimeter") && !topicName.includes("area")) return acc;
         if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
 
         const topic = skill.topic || 'General';
@@ -113,6 +173,34 @@ const MiddleGradeSyllabus = () => {
         acc[topic][subTopic].push(skill);
         return acc;
     }, {});
+
+    // Manual Override for Grade 6 Perimeter and Area
+    if (parseInt(grade.replace('grade', '')) === 6) {
+        skillsByTopic['Perimeter and Area'] = {
+            'Main': [
+                { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
+                { skill_id: 'sq-6', skill_name: 'Square', topic: 'Perimeter and Area' },
+                { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
+                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' },
+                { skill_id: 'mixed-6', skill_name: 'Mixed Bag', topic: 'Perimeter and Area' }
+            ]
+        };
+        skillsByTopic['Patterns in Mathematics'] = {
+            'Main': [
+                { skill_id: 'patterns-6', skill_name: 'Intro to Patterns', topic: 'Patterns in Mathematics' },
+                { skill_id: 'shapes-6', skill_name: 'Patterns in Shapes', topic: 'Patterns in Mathematics' },
+                { skill_id: 'relations-6', skill_name: 'Relations among Number Sequences', topic: 'Patterns in Mathematics' }
+            ]
+        };
+        skillsByTopic['Number Play'] = {
+            'Main': [
+                { skill_id: 'numbers-things-6', skill_name: 'Numbers can Tell us Things', topic: 'Number Play' },
+                { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
+                { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
+                { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
+            ]
+        };
+    }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 
