@@ -1,4 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
+import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
+import MultiplicationPracticeMultiple from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_multiple_numbers';
+import MultiplicationEndingZero from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_numbers_ending_in_zeros';
+import MultiplicationWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_word_problems';
+import DivisionPracticeOneDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_one_digit_number';
+import DivisionPracticeTwoDigit from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_by_two_digit_number';
+import DivisionEndingZero from './components/practice/class-5/WaystoMultiplyandDivide/Division/divide_numbers_ending_zeros';
+import DivisionWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Division/division_word_problems';
+import MultiDivWordProblems from './components/practice/class-5/WaystoMultiplyandDivide/Skill_application_problems/skill_application_problems';
 import MainLayout from './layouts/WebsiteLayout';
 import Home from './pages/Home';
 import AdminLogin from './pages/AdminLogin';
@@ -74,6 +84,15 @@ import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
+import PowersWithNegativeExponents from './components/practice/class-8/exponents and powers/powers_with_negative_exponents';
+import LawsOfExponents from './components/practice/class-8/exponents and powers/laws_of_exponents';
+import LawsOfExponentsApplication from './components/practice/class-8/exponents and powers/laws_of_exponents_application';
+import StandardFormSmallNumbers from './components/practice/class-8/exponents and powers/standard_form_small_numbers';
+import ComparingLargeSmallNumbers from './components/practice/class-8/exponents and powers/comparing_large_small_numbers';
+import FairShareCutting from './components/practice/class-3/fair-share/cutting';
+import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
+import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
+import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -110,7 +129,7 @@ function App() {
             <JuniorPracticeSession />
           </ProtectedRoute>
         } />
-        
+
         <Route path="/junior/grade/:grade/raksha-bandhan/intro" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanIntro />
@@ -124,6 +143,61 @@ function App() {
         <Route path="/junior/grade/:grade/raksha-bandhan/division" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/cutting" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareCutting />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/halves-doubles" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareHalvesDoubles />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/draw" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareDraw />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/guess-who" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareGuesswho />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Negative Exponents */}
+        <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
+          <ProtectedRoute redirectTo="/login">
+            <PowersWithNegativeExponents />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Laws of Exponents */}
+        <Route path="/senior/grade/8/exponents-powers/laws-of-exponents" element={
+          <ProtectedRoute redirectTo="/login">
+            <LawsOfExponents />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Laws of Exponents Application */}
+        <Route path="/senior/grade/8/exponents-powers/laws-application" element={
+          <ProtectedRoute redirectTo="/login">
+            <LawsOfExponentsApplication />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Standard Form for Small Numbers */}
+        <Route path="/senior/grade/8/exponents-powers/standard-form" element={
+          <ProtectedRoute redirectTo="/login">
+            <StandardFormSmallNumbers />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Comparing Large and Small Numbers */}
+        <Route path="/senior/grade/8/exponents-powers/comparing-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <ComparingLargeSmallNumbers />
           </ProtectedRoute>
         } />
 
@@ -204,6 +278,16 @@ function App() {
 
         {/* Full Screen Practice Sessions */}
         <Route path="/practice/:templateId" element={<PracticeSession />} />
+        <Route path="/middle/practice/9003" element={<MultiplicationPractice />} />
+        <Route path="/middle/practice/9004" element={<MultiplicationPractice3D />} />
+        <Route path="/middle/practice/9005" element={<MultiplicationPracticeMultiple />} />
+        <Route path="/middle/practice/9006" element={<MultiplicationEndingZero />} />
+        <Route path="/middle/practice/9007" element={<MultiplicationWordProblems />} />
+        <Route path="/middle/practice/9008" element={<DivisionPracticeOneDigit />} />
+        <Route path="/middle/practice/9009" element={<DivisionPracticeTwoDigit />} />
+        <Route path="/middle/practice/9010" element={<DivisionEndingZero />} />
+        <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
+        <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>

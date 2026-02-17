@@ -116,7 +116,7 @@
 .practice-board-container {
     display: grid;
     /* Desktop: 2 columns (Question | Scratchpad) */
-    grid-template-columns: minmax(0, 1fr) 350px;
+    grid-template-columns: minmax(0, 1fr) 300px;
     grid-template-rows: 1fr;
     gap: 1.5rem;
     width: 100%;
@@ -132,7 +132,7 @@
 .practice-left-col {
     position: relative;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Right Column - Desktop */
@@ -171,10 +171,10 @@
 /* Mascot - Overlapping Left of Question Card */
 .mascot-overlap {
     position: absolute;
-    left: -50px;
-    bottom: 120px;
+    left: 0px;
+    bottom: 220px;
     z-index: 25;
-    width: 200px;
+    width: 150px;
     /* Reduced size */
     filter: drop-shadow(5px 10px 15px rgba(0, 0, 0, 0.15));
     pointer-events: none;
@@ -267,7 +267,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     flex: 1;
     /* Take remaining space */
@@ -322,6 +322,29 @@
     box-shadow: 0 4px 0 #D97706;
 }
 
+/* Grey Selection Theme (Override) */
+.grey-selection-theme .option-btn-modern.selected {
+    border-color: #94A3B8;
+    background: #E2E8F0;
+    color: #334155;
+    box-shadow: 0 4px 0 #64748B;
+}
+
+/* Grey Theme Hover (Override Green) */
+.grey-selection-theme .option-btn-modern:hover:not(:disabled) {
+    border-color: #94A3B8;
+    background: #F1F5F9;
+    transform: translateY(-2px);
+}
+
+/* Base Correct/Wrong */
+.fair-share-theme .option-btn-modern.selected {
+    border-color: #7C3AED;
+    background: #EDE9FE;
+    color: #5B21B6;
+    box-shadow: 0 4px 0 #6D28D9;
+}
+
 .option-btn-modern.correct {
     background: #C8E6C9;
     border-color: #4CAF50;
@@ -334,6 +357,21 @@
     border-color: #EF5350;
     color: #B71C1C;
     box-shadow: 0 4px 0 #D32F2F;
+}
+
+/* Grey Theme Specific Feedback (Higher Specificity) */
+.grey-selection-theme .option-btn-modern.correct {
+    background: #C8E6C9 !important;
+    border-color: #4CAF50 !important;
+    color: #1B5E20 !important;
+    box-shadow: 0 4px 0 #388E3C !important;
+}
+
+.grey-selection-theme .option-btn-modern.wrong {
+    background: #FFCDD2 !important;
+    border-color: #EF5350 !important;
+    color: #B71C1C !important;
+    box-shadow: 0 4px 0 #D32F2F !important;
 }
 
 /* Feedback Mini */
@@ -1472,7 +1510,26 @@
 
 @media (max-width: 768px) {
 
-    /* Kill fixed heights everywhere */
+    /* Enable Page Scrolling */
+    .junior-practice-page {
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh;
+        overflow-y: auto !important;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Keep Footer Fixed */
+    .junior-bottom-bar {
+        position: fixed !important;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    /* Kill fixed heights everywhere else */
     html,
     body {
         height: auto !important;
@@ -1496,6 +1553,16 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start !important;
+        padding-bottom: 120px !important;
+        /* Extra space for fixed footer */
+    }
+
+    /* Scale down large visuals on mobile */
+    .question-text-modern svg {
+        max-width: 100%;
+        height: auto !important;
+        max-height: 180px;
+        /* Cap height on mobile */
     }
 
     .practice-board-container {
@@ -1587,4 +1654,36 @@
 .results-header .back-topics-top {
     z-index: 1001;
     /* Above Navbar if needed */
+}
+
+/* Previous Button - Pill Shape (Matching Next, Same Color, Reduced Length) */
+.nav-pill-prev-btn {
+    background: linear-gradient(135deg, #2979FF 0%, #448AFF 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    /* Reduced padding */
+    border-radius: 2rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.3rem;
+    box-shadow: 0 5px 0 #1565C0, 0 8px 15px rgba(41, 121, 255, 0.3);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.nav-pill-prev-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 0 #1565C0, 0 12px 20px rgba(41, 121, 255, 0.4);
+    background: linear-gradient(135deg, #448AFF 0%, #2979FF 100%);
+}
+
+.nav-pill-prev-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #1565C0;
 }
