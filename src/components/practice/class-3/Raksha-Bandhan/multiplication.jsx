@@ -10,7 +10,7 @@ import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
-import { useTheme } from 'next-themes';
+// import { useTheme } from 'next-themes';
 
 
 
