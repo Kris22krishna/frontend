@@ -94,19 +94,55 @@ const RegistrationModal = ({ isOpen, onClose }) => {
 
                     <div className="flex-1 overflow-y-auto p-0 space-y-8">
                         {status === 'success' ? (
-                            <div className="text-center py-12 px-6 space-y-4">
-                                <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <div className="text-center py-8 px-6 space-y-6">
+                                <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
                                     <CheckCircle2 size={48} className="text-green-500" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-white">Registration Successful!</h3>
-                                <p className="text-slate-400">
-                                    Thank you for registering. We've received your application and will get back to you soon.
-                                </p>
+
+                                <div className="space-y-2">
+                                    <h3 className="text-2xl font-bold text-white">Registration Submitted!</h3>
+                                    <p className="text-slate-400">Your details have been recorded successfully.</p>
+                                </div>
+
+                                <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 space-y-6">
+                                    <div className="space-y-2">
+                                        <h4 className="text-orange-400 font-bold text-lg uppercase tracking-tight">Final Step: Complete Your Registration</h4>
+                                        <p className="text-slate-300 text-sm">Please pay the registration fee of <span className="text-white font-bold">₹100</span> to confirm your seat.</p>
+                                    </div>
+
+                                    {/* QR Code */}
+                                    <div className="bg-white p-4 rounded-xl inline-block shadow-lg mx-auto">
+                                        <img
+                                            src="/QRcode.png"
+                                            alt="Payment QR Code"
+                                            className="w-48 h-48 object-contain"
+                                            onError={(e) => {
+                                                e.target.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=9632402004@upi&pn=Skill100.ai&am=100&cu=INR";
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="space-y-4 text-left">
+                                        <div className="flex gap-3 items-start p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                                            <div className="bg-blue-500 rounded-full p-1 mt-0.5 shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center">1</div>
+                                            <p className="text-slate-200 text-sm">Scan the QR code above and pay <span className="text-white font-bold">₹100</span>.</p>
+                                        </div>
+                                        <div className="flex gap-3 items-start p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                                            <div className="bg-blue-500 rounded-full p-1 mt-0.5 shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center">2</div>
+                                            <p className="text-slate-200 text-sm">Share the <span className="text-white font-bold">payment screenshot</span> on WhatsApp to <a href="https://wa.me/919632402004" target="_blank" rel="noreferrer" className="text-blue-400 underline font-semibold">+91 9632402004</a>.</p>
+                                        </div>
+                                        <div className="flex gap-3 items-start p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                                            <div className="bg-blue-500 rounded-full p-1 mt-0.5 shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center">3</div>
+                                            <p className="text-slate-200 text-sm">Or call <a href="tel:+919632402004" className="text-blue-400 font-semibold underline">+91 9632402004</a> to confirm your registration.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <button
                                     onClick={onClose}
-                                    className="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition-all"
+                                    className="w-full py-4 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-all border border-slate-700"
                                 >
-                                    Close
+                                    Close Window
                                 </button>
                             </div>
                         ) : (
