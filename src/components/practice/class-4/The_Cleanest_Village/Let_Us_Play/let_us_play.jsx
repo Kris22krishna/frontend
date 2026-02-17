@@ -1,30 +1,228 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
-import Whiteboard from '../../../Whiteboard';
-import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import StickerExit from '../../../StickerExit';
-import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
-
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+import { api } from '../../../../../services/api';
+import LatexContent from '../../../../LatexContent';
+import ExplanationModal from '../../../../ExplanationModal';
+import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You got it! ✨",
-    "🌟 Brilliant! Keep it up! 🌟",
-    "🎉 Correct! You're a math-star! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
-    "🌈 Perfect! Well done! 🌈",
+    "✨ Excellent puzzle solving! ✨",
+    "🌟 You cracked the triangle! 🌟",
+    "🎉 Correct! You're a number wizard! 🎉",
+    "✨ Fantastic thinking! ✨",
+    "🚀 Super! The triangle is complete! 🚀",
+    "🌿 Perfect! Nature loves your logic! 🌿",
     "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Excellent! 💎"
+    "💎 Spot on! Brilliant! 💎"
 ];
 
-const RakshaBandhanDivision = () => {
+/* ── Triangle Puzzle Helpers ────────────────────────────────── */
+
+// Positions: 0=top, 1=left-mid, 2=bottom-left, 3=bottom-mid, 4=bottom-right, 5=right-mid
+// Sides:
+//   Left  : positions 0, 1, 2
+//   Bottom: positions 2, 3, 4
+//   Right : positions 0, 5, 4
+
+const SIDE_INDICES = [
+    [0, 1, 2], // left side
+    [2, 3, 4], // bottom side
+    [0, 5, 4], // right side
+];
+
+function generateAllSolutions(numbers, targetSum) {
+    const solutions = [];
+    const perm = (arr, chosen) => {
+        if (chosen.length === arr.length) {
+            const valid = SIDE_INDICES.every(side => {
+                const s = side.reduce((sum, i) => sum + chosen[i], 0);
+                return s === targetSum;
+            });
+            if (valid) solutions.push([...chosen]);
+            return;
+        }
+        const used = new Set(chosen);
+        for (const n of arr) {
+            if (!used.has(n)) {
+                chosen.push(n);
+                perm(arr, chosen);
+                chosen.pop();
+            }
+        }
+    };
+    perm(numbers, []);
+    return solutions;
+}
+
+// Triangle SVG coordinates — corners of the triangle + midpoints exactly on edges
+// Matches the textbook: equilateral triangle with circles sitting on the lines
+const TRIANGLE_POSITIONS = [
+    { x: 150, y: 24 },   // 0: top corner
+    { x: 75, y: 127 },  // 1: left-side midpoint  (midpoint of 0↔2)
+    { x: 30, y: 230 },  // 2: bottom-left corner
+    { x: 150, y: 230 },  // 3: bottom-side midpoint (midpoint of 2↔4)
+    { x: 270, y: 230 },  // 4: bottom-right corner
+    { x: 225, y: 127 },  // 5: right-side midpoint  (midpoint of 0↔4)
+];
+
+const TRIANGLE_LINES = [
+    [0, 2], // left side
+    [2, 4], // bottom side
+    [4, 0], // right side
+];
+
+// React component that renders the triangle as inline SVG
+const TriangleSVG = ({ placement, blankIndex }) => {
+    const circleR = 24;
+    return (
+        <svg viewBox="0 0 300 260" style={{ width: '100%', maxWidth: '420px', margin: '0 auto', display: 'block' }}>
+            {/* Draw triangle lines */}
+            {TRIANGLE_LINES.map(([a, b], i) => (
+                <line
+                    key={i}
+                    x1={TRIANGLE_POSITIONS[a].x} y1={TRIANGLE_POSITIONS[a].y}
+                    x2={TRIANGLE_POSITIONS[b].x} y2={TRIANGLE_POSITIONS[b].y}
+                    stroke="#CBD5E0" strokeWidth="3"
+                />
+            ))}
+            {/* Draw circles with numbers */}
+            {TRIANGLE_POSITIONS.map((pos, i) => {
+                const isBlank = i === blankIndex;
+                return (
+                    <g key={i}>
+                        <circle
+                            cx={pos.x} cy={pos.y} r={circleR}
+                            fill={isBlank ? '#FFF3CD' : '#E0FBEF'}
+                            stroke={isBlank ? '#F6AD55' : '#4FB7B3'}
+                            strokeWidth="3"
+                        />
+                        <text
+                            x={pos.x} y={pos.y + 1}
+                            textAnchor="middle" dominantBaseline="central"
+                            fontSize="20" fontWeight="700"
+                            fill={isBlank ? '#F6AD55' : '#31326F'}
+                        >
+                            {isBlank ? '?' : placement[i]}
+                        </text>
+                    </g>
+                );
+            })}
+        </svg>
+    );
+};
+
+function getTriangleSVGString(placement, blankIndex) {
+    const circleR = 24;
+    const P = TRIANGLE_POSITIONS;
+    let svg = `<svg viewBox="0 0 300 260" style="width:100%;max-width:280px;margin:0 auto;display:block;">`;
+    TRIANGLE_LINES.forEach(([a, b]) => {
+        svg += `<line x1="${P[a].x}" y1="${P[a].y}" x2="${P[b].x}" y2="${P[b].y}" stroke="#CBD5E0" stroke-width="3" />`;
+    });
+    P.forEach((pos, i) => {
+        const isBlank = i === blankIndex;
+        svg += `<circle cx="${pos.x}" cy="${pos.y}" r="${circleR}" fill="${isBlank ? '#FFF3CD' : '#E0FBEF'}" stroke="${isBlank ? '#F6AD55' : '#4FB7B3'}" stroke-width="3" />`;
+        svg += `<text x="${pos.x}" y="${pos.y + 1}" text-anchor="middle" dominant-baseline="central" font-size="20" font-weight="700" fill="${isBlank ? '#F6AD55' : '#31326F'}">${isBlank ? '?' : placement[i]}</text>`;
+    });
+    svg += `</svg>`;
+    return svg;
+}
+
+function generateQuestion(difficulty, usedSolutionKeys) {
+    let numbers, targetSums;
+
+    if (difficulty === 'easy') {
+        numbers = [1, 2, 3, 4, 5, 6];
+        targetSums = [9, 10];
+    } else if (difficulty === 'medium') {
+        numbers = [1, 2, 3, 4, 5, 6];
+        targetSums = [10, 11];
+    } else {
+        numbers = [1, 2, 3, 4, 5, 6];
+        targetSums = [11, 12];
+    }
+
+    // Shuffle target sums
+    const shuffledTargets = [...targetSums].sort(() => Math.random() - 0.5);
+
+    for (const target of shuffledTargets) {
+        const solutions = generateAllSolutions(numbers, target);
+        if (solutions.length === 0) continue;
+
+        // Shuffle solutions
+        const shuffledSolutions = [...solutions].sort(() => Math.random() - 0.5);
+
+        for (const solution of shuffledSolutions) {
+            const key = solution.join(',') + ':' + target;
+            if (usedSolutionKeys.has(key)) continue;
+
+            // Pick a random blank position
+            const blankIndex = Math.floor(Math.random() * 6);
+            const correctAnswer = solution[blankIndex];
+
+            // Generate distractor options
+            const distractors = new Set();
+            distractors.add(correctAnswer);
+
+            // Add other numbers from the set that aren't in the puzzle
+            const numbersInPuzzle = solution.filter((_, i) => i !== blankIndex);
+            const availableDistractors = numbers.filter(n => n !== correctAnswer && !numbersInPuzzle.includes(n));
+
+            availableDistractors.forEach(d => distractors.add(d));
+
+            // If we still need more, add nearby numbers
+            let offset = 1;
+            while (distractors.size < 4) {
+                const candidate = correctAnswer + offset;
+                if (candidate > 0 && candidate <= 9 && !distractors.has(candidate)) {
+                    distractors.add(candidate);
+                }
+                const candidate2 = correctAnswer - offset;
+                if (candidate2 > 0 && candidate2 <= 9 && !distractors.has(candidate2)) {
+                    distractors.add(candidate2);
+                }
+                offset++;
+                if (offset > 10) break;
+            }
+
+            const options = [...distractors].slice(0, 4).map(String);
+            const shuffledOptions = options.sort(() => Math.random() - 0.5);
+
+            // Build display placement (with blank)
+            const displayPlacement = [...solution];
+
+            const triangleSVGStr = getTriangleSVGString(displayPlacement, blankIndex);
+
+            const sideLabels = ['Left side', 'Bottom side', 'Right side'];
+            const solutionText = SIDE_INDICES.map((side, si) => {
+                const vals = side.map(i => solution[i]);
+                return `${sideLabels[si]}: $${vals[0]} + ${vals[1]} + ${vals[2]} = ${target}$`;
+            }).join('<br/>');
+
+            usedSolutionKeys.add(key);
+
+            return {
+                targetSum: target,
+                placement: displayPlacement,
+                blankIndex,
+                text: `<div style="text-align:center;">${triangleSVGStr}</div>`,
+                correctAnswer: correctAnswer.toString(),
+                solution: `The missing number is <strong>${correctAnswer}</strong>.<br/><br/>
+                    Each side of the triangle must sum to <strong>${target}</strong>:<br/>
+                    ${solutionText}`,
+                shuffledOptions
+            };
+        }
+    }
+
+    // Fallback: if somehow we can't generate (shouldn't happen)
+    return null;
+}
+
+/* ── Component ──────────────────────────────────────────────── */
+
+const LetUsPlay = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -43,115 +241,20 @@ const RakshaBandhanDivision = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 9003; // Reserved ID for Raksha Bandhan Division
-    const SKILL_NAME = "Raksha Bandhan - Division";
+    const SKILL_ID = 4009;
+    const SKILL_NAME = "The Cleanest Village - Let Us Play (Triangle Puzzle)";
 
     const TOTAL_QUESTIONS = 10;
-    const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
+    const [answers, setAnswers] = useState({});
 
     useEffect(() => {
-        // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
         }
-
-        // Pre-generate unique questions
-        const questions = [];
-        const storyTypes = ["rakhis", "laddoos", "kaju", "giftBoxes", "cards"];
-        const seenCombinations = new Set();
-
-        while (questions.length < TOTAL_QUESTIONS) {
-            const storyType = storyTypes[questions.length % storyTypes.length];
-            const groupSize = randomInt(3, 6);
-            const groups = randomInt(4, 8);
-            const total = groupSize * groups;
-            const comboKey = `${storyType}-${total}-${groupSize}`;
-
-            if (!seenCombinations.has(comboKey)) {
-                seenCombinations.add(comboKey);
-
-                let questionText = "";
-                let explanation = "";
-                const correctAnswer = groups;
-
-                if (storyType === "rakhis") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} Rakhi threads to be tied.</p>
-                            <p>Each brother receives ${groupSize} Rakhis.</p>
-                            <p><strong>How many brothers are there?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total Rakhis = ${total}.<br/>Rakhis per brother = ${groupSize}.<br/>Number of brothers = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else if (storyType === "laddoos") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} delicious laddoos in a box.</p>
-                            <p>Each plate can hold ${groupSize} laddoos.</p>
-                            <p><strong>How many plates are needed?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total laddoos = ${total}.<br/>Laddoos per plate = ${groupSize}.<br/>Number of plates = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else if (storyType === "kaju") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} kaju katlis in a tray.</p>
-                            <p>${groupSize} sweets are packed in one small box.</p>
-                            <p><strong>How many boxes can be made?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total kaju katlis = ${total}.<br/>Sweets per box = ${groupSize}.<br/>Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else if (storyType === "giftBoxes") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} small gifts to be wrapped.</p>
-                            <p>Each large gift box can hold ${groupSize} gifts.</p>
-                            <p><strong>How many gift boxes do we need?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total gifts = ${total}.<br/>Gifts per box = ${groupSize}.<br/>Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                } else {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} greeting cards for Raksha Bandhan.</p>
-                            <p>Each envelope contains ${groupSize} cards.</p>
-                            <p><strong>How many envelopes are used?</strong></p>
-                        </div>
-                    `;
-                    explanation = `Total cards = ${total}.<br/>Cards per envelope = ${groupSize}.<br/>Number of envelopes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
-                }
-
-                const options = [
-                    correctAnswer.toString(),
-                    (correctAnswer + 1).toString(),
-                    (correctAnswer - 1).toString(),
-                    (correctAnswer + 3).toString()
-                ];
-
-                // Ensure unique options
-                const uniqueOptions = [...new Set(options)];
-                while (uniqueOptions.length < 4) {
-                    let rand = (correctAnswer + randomInt(4, 10)).toString();
-                    if (!uniqueOptions.includes(rand)) uniqueOptions.push(rand);
-                }
-
-                questions.push({
-                    text: questionText,
-                    correctAnswer: correctAnswer.toString(),
-                    solution: explanation,
-                    shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
-                });
-            }
-
-            // Safety break to prevent infinite loop if ranges are too small, though they aren't here
-            if (seenCombinations.size > 100) break;
-        }
-
-        setSessionQuestions(questions);
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -163,6 +266,23 @@ const RakshaBandhanDivision = () => {
             }
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // Generate 10 questions: 3 easy, 3 medium, 4 hard
+        const questions = [];
+        const usedKeys = new Set();
+
+        const difficulties = [
+            'easy', 'easy', 'easy',
+            'medium', 'medium', 'medium',
+            'hard', 'hard', 'hard', 'hard'
+        ];
+
+        for (const diff of difficulties) {
+            const q = generateQuestion(diff, usedKeys);
+            if (q) questions.push(q);
+        }
+
+        setSessionQuestions(questions);
 
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -182,9 +302,16 @@ const RakshaBandhanDivision = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
         }
     }, [qIndex, sessionQuestions]);
 
@@ -271,9 +398,7 @@ const RakshaBandhanDivision = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            if (sessionId) {
-                await api.finishSession(sessionId).catch(console.error);
-            }
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
@@ -281,6 +406,13 @@ const RakshaBandhanDivision = () => {
     const handleOptionSelect = (option) => {
         if (isSubmitted) return;
         setSelectedOption(option);
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const stats = (() => {
@@ -298,7 +430,6 @@ const RakshaBandhanDivision = () => {
         const score = stats.correct;
         const total = stats.total;
         const percentage = Math.round((score / total) * 100);
-        const avatarImg = "/src/assets/avatar.png"; // Fallback path if import is missing
 
         return (
             <div className="junior-practice-page results-view overflow-y-auto">
@@ -316,7 +447,7 @@ const RakshaBandhanDivision = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Adventure Report</h1>
+                        <h1 className="results-title">Village Report</h1>
                     </div>
                 </header>
 
@@ -363,7 +494,7 @@ const RakshaBandhanDivision = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Puzzle Log 🧩</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -433,14 +564,17 @@ const RakshaBandhanDivision = () => {
     }
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+        <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"></div>
+                <div className="header-left">
+                </div>
+
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
+
                 <div className="header-right">
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
@@ -449,54 +583,84 @@ const RakshaBandhanDivision = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={qIndex}
-                                initial={{ x: 50, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: -50, opacity: 0 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
-                            >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
-                                            <LatexContent html={currentQuestion.text} />
-                                        </h2>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '960px', width: '100%', margin: '0 auto' }}>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={qIndex}
+                            initial={{ x: 50, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: -50, opacity: 0 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            style={{ height: '100%', width: '100%' }}
+                        >
+                            <div className="question-card-modern" style={{ padding: '1.5rem 2rem' }}>
+                                {/* TOP: Main question - centered full width */}
+                                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                                    <h2 style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.6rem)', fontWeight: '700', color: '#31326F', margin: 0, lineHeight: 1.4 }}>
+                                        Place numbers so that each side of the triangle adds up to{' '}
+                                        <span style={{ color: '#4FB7B3', fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: '900' }}>{currentQuestion.targetSum}</span>.
+                                    </h2>
+                                </div>
+
+                                {/* BOTTOM ROW: Triangle LEFT  |  Sub-question + Options RIGHT */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', justifyContent: 'center', flexWrap: 'nowrap' }}>
+                                    {/* LEFT: Triangle */}
+                                    <div style={{ flex: '1 1 50%' }}>
+                                        <TriangleSVG placement={currentQuestion.placement} blankIndex={currentQuestion.blankIndex} />
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+
+                                    {/* RIGHT: Sub-question text + 2×2 Options grid */}
+                                    <div style={{ flex: '1 1 50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                        <p style={{ fontSize: 'clamp(1rem, 1.8vw, 1.25rem)', fontWeight: '500', color: '#718096', textAlign: 'center', margin: '0 0 1.5rem 0', lineHeight: 1.5 }}>
+                                            Which number replaces <span style={{ color: '#F6AD55', fontWeight: '700', fontSize: '1.4rem' }}>?</span> in the triangle?
+                                        </p>
+
+                                        {/* 2×2 option grid */}
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', width: '100%', maxWidth: '380px' }}>
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontWeight: '500' }}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '600',
+                                                        fontSize: 'clamp(1.4rem, 2.5vw, 2.2rem)',
+                                                        padding: '18px 12px',
+                                                        borderRadius: '14px',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined,
+                                                        width: '100%',
+                                                        textAlign: 'center',
+                                                        cursor: isSubmitted ? 'default' : 'pointer'
+                                                    }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
-                                                    <LatexContent html={option} />
+                                                    {option}
                                                 </button>
                                             ))}
                                         </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
                                     </div>
                                 </div>
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+
+                                {isSubmitted && isCorrect && (
+                                    <motion.div
+                                        initial={{ scale: 0.5, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        className="feedback-mini correct"
+                                        style={{ marginTop: '20px', textAlign: 'center' }}
+                                    >
+                                        {feedbackMessage}
+                                    </motion.div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             </main>
 
@@ -531,6 +695,11 @@ const RakshaBandhanDivision = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -559,14 +728,21 @@ const RakshaBandhanDivision = () => {
                         >
                             <X size={20} />
                         </button>
+
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
                                 <Eye size={18} /> Explain
                             </button>
                         )}
                     </div>
+
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
@@ -584,4 +760,4 @@ const RakshaBandhanDivision = () => {
     );
 };
 
-export default RakshaBandhanDivision;
+export default LetUsPlay;

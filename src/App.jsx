@@ -94,6 +94,17 @@ import FairShareHalvesDoubles from './components/practice/class-3/fair-share/hal
 import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
 import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
 
+// Class 4 - The Cleanest Village
+import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
+import RepeatedSubtraction from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_subtraction';
+import AdditionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Addition_with_Regrouping/addition_with_regrouping';
+import SubtractionWithRegrouping from './components/practice/class-4/The_Cleanest_Village/Subtraction_with_Regrouping/subtraction_with_regrouping';
+import FindMissingAddend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_addend';
+import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Village/Missing_Value_and_Balance/find_missing_subtrahend';
+import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
+import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
+import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
+
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
@@ -198,6 +209,53 @@ function App() {
         <Route path="/senior/grade/8/exponents-powers/comparing-numbers" element={
           <ProtectedRoute redirectTo="/login">
             <ComparingLargeSmallNumbers />
+          </ProtectedRoute>
+        } />
+
+        {/* Cleanest Village Routes */}
+        <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <RepeatedAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/repeated-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <RepeatedSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/addition-with-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <AdditionWithRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/subtraction-with-regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <SubtractionWithRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/find-missing-addend" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindMissingAddend />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/find-missing-subtrahend" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindMissingSubtrahend />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/find-how-many-more-or-less" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindHowManyMoreOrLess />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/chapter-scene-mixed-operations" element={
+          <ProtectedRoute redirectTo="/login">
+            <ChapterSceneMixedOperations />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
+          <ProtectedRoute redirectTo="/login">
+            <LetUsPlay />
           </ProtectedRoute>
         } />
 

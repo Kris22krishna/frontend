@@ -52,8 +52,8 @@ const JuniorGradeSyllabus = () => {
                 const gradeNum = grade.replace('grade', '');
                 let skillsResponse = [];
 
-                // For Grade 3, we skip fetching from API and use manual injection below
-                if (gradeNum !== '3') {
+                // For Grade 3 and 4, we skip fetching from API and use manual injection below
+                if (gradeNum !== '3' && gradeNum !== '4') {
                     skillsResponse = await api.getSkills(gradeNum);
                 }
 
@@ -64,15 +64,16 @@ const JuniorGradeSyllabus = () => {
                     if (gradeNumInt === 3) {
                         return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("fair share");
                     }
+                    // Grade 4 data will come from manual injection only, so exclude database
                     if (gradeNumInt === 4) {
-                        return topicName === "the cleanest village";
+                        return false;
                     }
                     return true;
                 });
 
-                // Manually inject special topics for Grade 3 if not present
-                if (parseInt(gradeNum) === 3) {
-                    const gradeConfigs = TOPIC_CONFIGS['3'] || {};
+                // Manually inject special topics for Grade 3 and 4 if not present
+                if (parseInt(gradeNum) === 3 || parseInt(gradeNum) === 4) {
+                    const gradeConfigs = TOPIC_CONFIGS[gradeNum] || {};
                     Object.entries(gradeConfigs).forEach(([topicName, skills]) => {
                         const topicExists = filteredSkills.some(s => (s.topic || '').toLowerCase().includes(topicName.toLowerCase()));
                         if (!topicExists) {
