@@ -51,6 +51,22 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
             return;
         }
+        if (subtopic.id === "FS-01") {
+            navigate(`/junior/grade/${grade}/fair-share/cutting`);
+            return;
+        }
+        if (subtopic.id === "FS-02") {
+            navigate(`/junior/grade/${grade}/fair-share/halves-doubles`);
+            return;
+        }
+        if (subtopic.id === "FS-03") {
+            navigate(`/junior/grade/${grade}/fair-share/draw`);
+            return;
+        }
+        if (subtopic.id === "FS-04") {
+            navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village routing
         const gradeNum = grade.replace('grade', '');
@@ -82,6 +98,14 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
             } else if (subtopic.id === "RB-03") {
                 navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            } else if (subtopic.id === "FS-01") {
+                navigate(`/junior/grade/${grade}/fair-share/cutting`);
+            } else if (subtopic.id === "FS-02") {
+                navigate(`/junior/grade/${grade}/fair-share/halves-doubles`);
+            } else if (subtopic.id === "FS-03") {
+                navigate(`/junior/grade/${grade}/fair-share/draw`);
+            } else if (subtopic.id === "FS-04") {
+                navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             } else {
                 // Grade 4 - The Cleanest Village routing
                 const gradeNum = grade.replace('grade', '');
@@ -135,15 +159,15 @@ const JuniorSubtopics = () => {
                 // Manually inject for special topics
                 const gradeConfigs = TOPIC_CONFIGS[gradeNum];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                    if (subtopicList.length === 0) {
-                        gradeConfigs[decodedTopic].forEach((skill, index) => {
+                    gradeConfigs[decodedTopic].forEach((skill, index) => {
+                        if (!subtopicList.some(s => s.id === skill.id)) {
                             subtopicList.push({
                                 id: skill.id,
                                 name: skill.name,
-                                colorIndex: index % subtopicColors.length
+                                colorIndex: (subtopicList.length + index) % subtopicColors.length
                             });
-                        });
-                    }
+                        }
+                    });
                 }
 
                 setSubtopics(subtopicList);

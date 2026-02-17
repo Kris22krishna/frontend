@@ -4,6 +4,12 @@ export const TOPIC_CONFIGS = {
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
             { id: "RB-03", name: "Division" }
+        ],
+        'Fair Share': [
+            { id: "FS-01", name: "Cutting equal parts" },
+            { id: "FS-02", name: "Halves and doubles" },
+            { id: "FS-03", name: "Drawing other half" },
+            { id: "FS-04", name: "Guess Who Am I?" }
         ]
     },
     '4': {
@@ -20,3 +26,4 @@ export const TOPIC_CONFIGS = {
         ]
     }
 };
+
