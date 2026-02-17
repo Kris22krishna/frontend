@@ -41,6 +41,7 @@ const RakshaBandhanMultiplication = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -101,7 +102,17 @@ const RakshaBandhanMultiplication = () => {
 
     useEffect(() => {
         if (shuffledItems.length > 0) {
-            generateQuestion(qIndex);
+            if (history[qIndex]) {
+                const data = history[qIndex];
+                setCurrentQuestion(data.question);
+                setShuffledOptions(data.options);
+                setSelectedOption(data.selectedOption);
+                setIsSubmitted(data.isSubmitted);
+                setIsCorrect(data.isCorrect);
+                setFeedbackMessage(data.feedbackMessage || "");
+            } else if (!answers[qIndex]) {
+                generateQuestion(qIndex);
+            }
         }
     }, [qIndex, shuffledItems]);
 
@@ -170,6 +181,18 @@ const RakshaBandhanMultiplication = () => {
         setSelectedOption(null);
         setIsSubmitted(false);
         setIsCorrect(false);
+
+        setHistory(prev => ({
+            ...prev,
+            [index]: {
+                question: qData,
+                options: qData.options,
+                selectedOption: null,
+                isSubmitted: false,
+                isCorrect: false,
+                feedbackMessage: ""
+            }
+        }));
     };
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -213,13 +236,33 @@ const RakshaBandhanMultiplication = () => {
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
 
+        const feedbackMsg = isRight ? CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)] : "";
+
         if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+            setFeedbackMessage(feedbackMsg);
         } else {
             setShowExplanationModal(true);
         }
 
+        setHistory(prev => ({
+            ...prev,
+            [qIndex]: {
+                ...prev[qIndex],
+                selectedOption: selectedOption,
+                isSubmitted: true,
+                isCorrect: isRight,
+                feedbackMessage: feedbackMsg
+            }
+        }));
+
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const handleNext = async () => {
@@ -379,6 +422,14 @@ const RakshaBandhanMultiplication = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                            >
+                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -418,6 +469,21 @@ const RakshaBandhanMultiplication = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={20} strokeWidth={3} />
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}

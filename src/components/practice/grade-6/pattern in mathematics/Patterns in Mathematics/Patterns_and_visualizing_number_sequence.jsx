@@ -76,7 +76,17 @@ const PatternsPractice = () => {
         setIsCorrect(false);
         setFeedbackMessage("");
         questionStartTime.current = Date.now();
-    }, [qIndex, answers]); // Depend on answers to allow restoration
+
+        // Save generated question to history immediately
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                question: q,
+                selectedOption: null,
+                isCorrect: false
+            }
+        }));
+    }, [qIndex]); // Removed answers from dependency to avoid loop/unnecessary re-runs, logical since we only want this on qIndex change
 
     // Modal Control - decoupled from answer state
     useEffect(() => {

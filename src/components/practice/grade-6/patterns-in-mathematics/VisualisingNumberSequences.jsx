@@ -43,7 +43,8 @@ const VisualisingNumberSequences = () => {
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
-    const [usedQuestions, setUsedQuestions] = useState(new Set()); // To ensure distinct questions
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
+    const [history, setHistory] = useState({});
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -75,7 +76,15 @@ const VisualisingNumberSequences = () => {
     }, []);
 
     useEffect(() => {
-        if (!answers[qIndex]) {
+        if (history[qIndex]) {
+            const data = history[qIndex];
+            setCurrentQuestion(data.question);
+            setShuffledOptions(data.options);
+            setSelectedOption(data.selectedOption);
+            setIsSubmitted(data.isSubmitted);
+            setIsCorrect(data.isCorrect);
+            setFeedbackMessage(data.feedbackMessage || "");
+        } else if (!answers[qIndex]) {
             generateQuestion(qIndex);
         }
     }, [qIndex]);
@@ -283,6 +292,17 @@ const VisualisingNumberSequences = () => {
             setShowExplanationModal(true);
         }
 
+        setHistory(prev => ({
+            ...prev,
+            [qIndex]: {
+                ...prev[qIndex],
+                selectedOption: selectedOption,
+                isSubmitted: true,
+                isCorrect: isRight,
+                feedbackMessage: isRight ? feedbackMessage : ""
+            }
+        }));
+
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
     };
 
@@ -323,6 +343,13 @@ const VisualisingNumberSequences = () => {
                 }
             }
             navigate(-1);
+        }
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
         }
     };
 

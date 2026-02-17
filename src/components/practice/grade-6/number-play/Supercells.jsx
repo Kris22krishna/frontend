@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, X, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -10,9 +10,9 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You found the pattern! ✨",
-    "🌟 Brilliant! You're visualizing it perfectly! 🌟",
-    "🎉 Correct! You're a sequence star! 🎉",
+    "✨ Amazing! You're a Supercell Master! ✨",
+    "🌟 Brilliant! You see the pattern! 🌟",
+    "🎉 Correct! Square power! 🎉",
     "✨ Fantastic work! ✨",
     "🚀 Super! You're on fire! 🚀",
     "🌈 Perfect! Well done! 🌈",
@@ -20,12 +20,13 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const RelationsAmongNumberSequences = () => {
+const Supercells = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [history, setHistory] = useState({});
     const [selectedOption, setSelectedOption] = useState(null);
+    const [userInput, setUserInput] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
@@ -39,14 +40,14 @@ const RelationsAmongNumberSequences = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6202; // ID for Relations Among Number Sequences
-    const SKILL_NAME = "Pattern in Mathematics - Relations Among Sequences";
+    const SKILL_ID = 6302; // ID for Number Play - Supercells
+    const SKILL_NAME = "Number Play - Supercells";
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
 
     useEffect(() => {
-        // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
@@ -81,6 +82,7 @@ const RelationsAmongNumberSequences = () => {
             setCurrentQuestion(data.question);
             setShuffledOptions(data.options);
             setSelectedOption(data.selectedOption);
+            setUserInput(data.userInput || "");
             setIsSubmitted(data.isSubmitted);
             setIsCorrect(data.isCorrect);
             setFeedbackMessage(data.feedbackMessage || "");
@@ -90,159 +92,227 @@ const RelationsAmongNumberSequences = () => {
     }, [qIndex]);
 
     const generateQuestion = (index) => {
-        const questionTypes = ["odd_sum_square", "up_down_sum", "triangular_sum", "powers_of_2"];
-        const type = questionTypes[index % 4];
+        // 8 MCQs, 2 User Inputs
+        // Force User Input on specific indices for variety (e.g., 4 and 8)
+        const isInputParams = (index === 4 || index === 8);
+        const types = ["visual_grid", "calc_cells", "calc_side", "pattern_next", "diff_squares"];
+        const type = types[index % types.length];
 
-        let questionText = "";
+        let qText = "";
+        let correct = "";
         let explanation = "";
-        let correctAnswer = "";
         let options = [];
+        let uniqueId = "";
+        let inputType = isInputParams ? "input" : "mcq";
 
-        if (type === "odd_sum_square") {
-            // Sum of first n odd numbers = n^2
-            const n = randomInt(3, 7);
-            const sum = n * n;
-            correctAnswer = sum.toString();
+        const logicDescription = "<strong>Supercells</strong> are perfect squares made of small unit cells. A Supercell of side <em>n</em> has <em>n × n</em> small cells.";
 
-            // Construct sequence: 1 + 3 + 5 + ...
-            const oddNums = [];
-            for (let i = 0; i < n; i++) oddNums.push(2 * i + 1);
-            const sequenceStr = oddNums.join(" + ");
+        let attempts = 0;
+        do {
+            attempts++;
 
-            questionText = `
-                <div class='question-container'>
-                    <p>Observe the pattern of adding odd numbers:</p>
-                    <p>$$1 = 1^2$$</p>
-                    <p>$$1 + 3 = 4 = 2^2$$</p>
-                    <p>$$1 + 3 + 5 = 9 = 3^2$$</p>
-                    <p><strong>What is the sum of:</strong></p>
-                    <p>$$${sequenceStr} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `The sum of the first $n$ odd numbers is $n^2$.<br/>Here, there are $${n}$ odd numbers.<br/>Sum = $${n}^2 = ${n} \\times ${n} = ${sum}$.`;
+            if (type === "visual_grid") {
+                const n = randomInt(2, 5);
+                const total = n * n;
 
-            options = [
-                correctAnswer,
-                (sum - 2).toString(),
-                (sum + 2).toString(),
-                (n * (n + 1)).toString()
-            ];
+                // Construct visual grid using HTML/CSS
+                const gridStyle = `
+                    display: grid; 
+                    grid-template-columns: repeat(${n}, 30px); 
+                    grid-template-rows: repeat(${n}, 30px); 
+                    gap: 2px; 
+                    margin: 10px auto; 
+                    width: fit-content;
+                `;
+                const cellStyle = `
+                    width: 30px; 
+                    height: 30px; 
+                    background-color: #4FB7B3; 
+                    border-radius: 4px;
+                `;
+                const cellsHtml = Array(total).fill(`<div style="${cellStyle}"></div>`).join("");
 
-        } else if (type === "up_down_sum") {
-            // 1 + 2 + ... + n + ... + 1 = n^2
-            const n = randomInt(4, 8);
-            const sum = n * n;
-            correctAnswer = sum.toString();
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>Look at this Supercell:</p>
+                        <div style="${gridStyle}">${cellsHtml}</div>
+                        <p>How many small cells are in this ${n} × ${n} Supercell?</p>
+                    </div>
+                `;
+                correct = total.toString();
+                explanation = `This is a square grid with side length <strong>${n}</strong>.<br/>Total cells = ${n} × ${n} = <strong>${total}</strong>.`;
+                uniqueId = `visual_${n}_${inputType}`;
 
-            const terms = [];
-            for (let i = 1; i <= n; i++) terms.push(i);
-            for (let i = n - 1; i >= 1; i--) terms.push(i);
-            const sequenceStr = terms.join(" + ");
+                if (inputType === "mcq") {
+                    options = [
+                        total.toString(),
+                        (total - 1).toString(),
+                        (total + n).toString(),
+                        (n * 2).toString()
+                    ];
+                }
 
-            questionText = `
-                <div class='question-container'>
-                    <p>Look at this addition pattern:</p>
-                    <p>$$1 + 2 + 1 = 4 = 2^2$$</p>
-                    <p>$$1 + 2 + 3 + 2 + 1 = 9 = 3^2$$</p>
-                    <p><strong>Find the sum:</strong></p>
-                    <p>$$${sequenceStr} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `The sum of numbers from $1$ to $n$ and back to $1$ is $n^2$.<br/>The peak number is $${n}$.<br/>Sum = $${n}^2 = ${sum}$.`;
+            } else if (type === "calc_cells") {
+                const n = randomInt(3, 12);
+                const total = n * n;
 
-            options = [
-                correctAnswer,
-                (sum - n).toString(),
-                (sum + n).toString(),
-                (sum + 1).toString()
-            ];
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>If a Supercell has a side length of <strong>${n}</strong>,</p>
+                        <p>how many small unit cells does it contain?</p>
+                    </div>
+                `;
+                correct = total.toString();
+                explanation = `For a side length of ${n}, the total number of cells is ${n} × ${n} = <strong>${total}</strong>.`;
+                uniqueId = `calc_cells_${n}_${inputType}`;
 
-        } else if (type === "triangular_sum") {
-            // Sum of two consecutive triangular numbers = square number
-            // T_n + T_{n+1} = (n+1)^2
-            const n = randomInt(2, 5); // Base index
-            const t1 = (n * (n + 1)) / 2;
-            const t2 = ((n + 1) * (n + 2)) / 2;
-            const sum = t1 + t2; // Should be (n+1)^2
-            correctAnswer = sum.toString();
+                if (inputType === "mcq") {
+                    options = [
+                        total.toString(),
+                        (n * 2).toString(),
+                        (total + n).toString(),
+                        (n + 2).toString()
+                    ];
+                }
 
-            questionText = `
-                <div class='question-container'>
-                    <p>Triangular numbers are: $1, 3, 6, 10, 15, \\dots$</p>
-                    <p>Adding consecutive triangular numbers gives a square number.</p>
-                    <p>For example: $1 + 3 = 4 = 2^2$.</p>
-                    <p><strong>What is sum of the ${n}^{\\text{th}} and ${(n + 1)}^{\\text{th}} triangular numbers?</strong></p>
-                    <p>$$${t1} + ${t2} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `Adding consecutive triangular numbers gives a square number.<br/>$${t1} + ${t2} = ${sum}$.<br/>Notice that $${sum} = ${(n + 1)}^2$.`;
+            } else if (type === "calc_side") {
+                const n = randomInt(3, 10);
+                const total = n * n;
 
-            options = [
-                correctAnswer,
-                (sum + 2).toString(),
-                (sum - 3).toString(),
-                (t2 * 2).toString()
-            ];
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>A Supercell is made of <strong>${total}</strong> small cells.</p>
+                        <p>What is the side length of this Supercell?</p>
+                    </div>
+                `;
+                correct = n.toString();
+                explanation = `We need to find a number that multiplied by itself gives ${total}.<br/>Since ${n} × ${n} = ${total}, the side length is <strong>${n}</strong>.`;
+                uniqueId = `calc_side_${total}_${inputType}`;
 
-        } else {
-            // Powers of 2
-            const startPower = randomInt(1, 4);
-            const terms = [];
-            for (let i = 0; i < 4; i++) {
-                terms.push(Math.pow(2, startPower + i));
+                if (inputType === "mcq") {
+                    options = [
+                        n.toString(),
+                        (n - 1).toString(),
+                        (n + 1).toString(),
+                        Math.floor(total / 2).toString()
+                    ];
+                }
+
+            } else if (type === "pattern_next") {
+                const start = randomInt(1, 3);
+                const seqLen = 4;
+                const sequence = [];
+                for (let i = 0; i < seqLen; i++) sequence.push((start + i) * (start + i));
+
+                const nextVal = (start + seqLen) * (start + seqLen);
+
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>Look at the pattern of cells in growing Supercells:</p>
+                        <p><strong style="font-size:1.4em; letter-spacing:2px;">${sequence.join(", ")}, ...</strong></p>
+                        <p>What is the next number in this pattern?</p>
+                    </div>
+                `;
+                correct = nextVal.toString();
+                explanation = `The pattern is the sequence of square numbers: ${start}², ${start + 1}², ${start + 2}², ${start + 3}²...<br/>The last number shown was ${start + seqLen - 1}² (${sequence[sequence.length - 1]}).<br/>The next one is ${start + seqLen}² = ${start + seqLen} × ${start + seqLen} = <strong>${nextVal}</strong>.`;
+                uniqueId = `pattern_${start}_${inputType}`;
+
+                if (inputType === "mcq") {
+                    options = [
+                        nextVal.toString(),
+                        (sequence[sequence.length - 1] + 2).toString(),
+                        (sequence[sequence.length - 1] * 2).toString(),
+                        (nextVal - 1).toString()
+                    ];
+                }
+
+            } else { // diff_squares
+                const n1 = randomInt(2, 6);
+                const n2 = n1 + 1;
+                const sq1 = n1 * n1;
+                const sq2 = n2 * n2;
+                const diff = sq2 - sq1;
+
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>How many <strong>more</strong> cells does a ${n2}×${n2} Supercell have compared to a ${n1}×${n1} Supercell?</p>
+                    </div>
+                `;
+                correct = diff.toString();
+                explanation = `
+                    Cells in ${n2}×${n2} = ${sq2}.<br/>
+                    Cells in ${n1}×${n1} = ${sq1}.<br/>
+                    Difference = ${sq2} - ${sq1} = <strong>${diff}</strong>.
+                `;
+                uniqueId = `diff_${n1}_${n2}_${inputType}`;
+
+                if (inputType === "mcq") {
+                    options = [
+                        diff.toString(),
+                        (n1 + n2).toString(),
+                        (diff + 1).toString(),
+                        "1"
+                    ];
+                }
             }
-            const displayedTerms = terms.slice(0, 3);
-            const nextTerm = terms[3];
-            correctAnswer = nextTerm.toString();
 
-            questionText = `
-                <div class='question-container'>
-                    <p>Observe the pattern of powers of 2:</p>
-                    <p>$$${displayedTerms.join(", ")}, \\dots$$</p>
-                    <p><strong>What is the next number?</strong></p>
-                </div>
-            `;
-            explanation = `Each number is multiplied by 2.<br/>$${displayedTerms[2]} \\times 2 = ${nextTerm}$.`;
+            if (attempts > 10) uniqueId = `force_${Date.now()}_${Math.random()}`;
 
-            options = [
-                correctAnswer,
-                (nextTerm + 2).toString(),
-                (displayedTerms[2] + 4).toString(),
-                (displayedTerms[2] * 3).toString()
-            ];
+        } while (usedQuestions.has(uniqueId));
+
+        setUsedQuestions(prev => new Set(prev).add(uniqueId));
+
+        // Shuffle options if MCQ
+        let uniqueOpts = [];
+        if (inputType === "mcq") {
+            uniqueOpts = [...new Set(options)];
+            // Ensure 4 distinct numerical options
+            if (options.every(o => !isNaN(parseInt(o)))) {
+                while (uniqueOpts.length < 4) {
+                    const rnd = randomInt(1, 100).toString();
+                    if (!uniqueOpts.includes(rnd)) uniqueOpts.push(rnd);
+                    uniqueOpts = [...new Set(uniqueOpts)];
+                }
+                uniqueOpts.sort((a, b) => parseInt(a) - parseInt(b));
+            }
+            setShuffledOptions([...uniqueOpts].sort(() => Math.random() - 0.5));
         }
 
-        // Shuffle options and ensure uniqueness
-        let uniqueOptions = [...new Set(options)];
-        while (uniqueOptions.length < 4) {
-            uniqueOptions.push((parseInt(uniqueOptions[0]) + Math.floor(Math.random() * 10) + 1).toString());
-            uniqueOptions = [...new Set(uniqueOptions)];
-        }
-
-        setShuffledOptions([...uniqueOptions].sort(() => Math.random() - 0.5));
         const newQuestion = {
-            text: questionText,
-            correctAnswer: correctAnswer,
-            solution: explanation
+            text: qText,
+            correctAnswer: correct,
+            solution: explanation,
+            type: inputType,
+            options: uniqueOpts
         };
 
         setCurrentQuestion(newQuestion);
         setSelectedOption(null);
+        setUserInput("");
         setIsSubmitted(false);
         setIsCorrect(false);
+        setFeedbackMessage("");
+        questionStartTime.current = Date.now();
 
         setHistory(prev => ({
             ...prev,
             [index]: {
                 question: newQuestion,
-                options: uniqueOptions,
+                options: uniqueOpts,
                 selectedOption: null,
+                userInput: "",
                 isSubmitted: false,
                 isCorrect: false,
                 feedbackMessage: ""
             }
         }));
     };
+
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -280,8 +350,19 @@ const RelationsAmongNumberSequences = () => {
     };
 
     const handleCheck = () => {
-        if (!selectedOption || !currentQuestion) return;
-        const isRight = selectedOption === currentQuestion.correctAnswer;
+        if (currentQuestion.type === "mcq" && !selectedOption) return;
+        if (currentQuestion.type === "input" && !userInput.trim()) return;
+
+        let isRight = false;
+
+        if (currentQuestion.type === "mcq") {
+            isRight = selectedOption === currentQuestion.correctAnswer;
+        } else {
+            const userClean = userInput.replace(/\s+/g, '').toLowerCase();
+            const correctClean = currentQuestion.correctAnswer.replace(/\s+/g, '').toLowerCase();
+            isRight = userClean === correctClean;
+        }
+
         setIsCorrect(isRight);
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
@@ -299,13 +380,14 @@ const RelationsAmongNumberSequences = () => {
             [qIndex]: {
                 ...prev[qIndex],
                 selectedOption: selectedOption,
+                userInput: userInput,
                 isSubmitted: true,
                 isCorrect: isRight,
                 feedbackMessage: feedbackMsg
             }
         }));
 
-        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+        recordQuestionAttempt(currentQuestion, currentQuestion.type === "mcq" ? selectedOption : userInput, isRight);
     };
 
     const handlePrevious = () => {
@@ -320,6 +402,7 @@ const RelationsAmongNumberSequences = () => {
             setQIndex(prev => prev + 1);
             setShowExplanationModal(false);
             setSelectedOption(null);
+            setUserInput("");
             setIsSubmitted(false);
             setIsCorrect(false);
             accumulatedTime.current = 0;
@@ -366,7 +449,7 @@ const RelationsAmongNumberSequences = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">{SKILL_NAME.split(' - ')[1]}</span>
+                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Supercells</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -399,29 +482,55 @@ const RelationsAmongNumberSequences = () => {
                                         </h2>
                                     </div>
                                     <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
+                                        {currentQuestion.type === 'mcq' ? (
+                                            <div className="options-grid-modern">
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                        className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
+                                                            ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
                                                                 : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                            : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                        `}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="w-full flex flex-col items-center gap-4">
+                                                <input
+                                                    type="text"
+                                                    value={userInput}
+                                                    onChange={(e) => setUserInput(e.target.value)}
+                                                    placeholder="Type your numerical answer"
+                                                    disabled={isSubmitted}
+                                                    className={`w-full max-w-md p-4 text-xl text-center font-bold rounded-xl border-2 outline-none transition-all
+                                                        ${isSubmitted
+                                                            ? isCorrect
+                                                                ? 'bg-green-50 border-green-500 text-green-700'
+                                                                : 'bg-red-50 border-red-500 text-red-700'
+                                                            : 'bg-white border-gray-300 focus:border-[#4FB7B3] focus:shadow-md text-[#31326F]'
                                                         }
                                                     `}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
+                                                />
+                                                {isSubmitted && !isCorrect && (
+                                                    <div className="text-gray-500">
+                                                        Correct Answer: <strong>{currentQuestion.correctAnswer}</strong>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
                                         {isSubmitted && isCorrect && (
                                             <motion.div
                                                 initial={{ scale: 0.5, opacity: 0 }}
@@ -488,7 +597,11 @@ const RelationsAmongNumberSequences = () => {
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput.trim()}
+                                >
                                     Submit <Check size={28} strokeWidth={3} />
                                 </button>
                             )}
@@ -535,7 +648,11 @@ const RelationsAmongNumberSequences = () => {
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput.trim()}
+                                >
                                     Submit
                                 </button>
                             )}
@@ -547,4 +664,4 @@ const RelationsAmongNumberSequences = () => {
     );
 };
 
-export default RelationsAmongNumberSequences;
+export default Supercells;

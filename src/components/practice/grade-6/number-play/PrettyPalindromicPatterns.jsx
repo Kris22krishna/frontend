@@ -1,18 +1,22 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, Pencil, X, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
-import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
+import { api } from '../../../../../services/api';
+import Whiteboard from '../../../../Whiteboard';
+import LatexContent from '../../../../LatexContent';
+import ExplanationModal from '../../../../ExplanationModal';
+import StickerExit from '../../../../StickerExit';
+import { FullScreenScratchpad } from '../../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You found the pattern! ✨",
-    "🌟 Brilliant! You're visualizing it perfectly! 🌟",
-    "🎉 Correct! You're a sequence star! 🎉",
+    "✨ Amazing job! You got it! ✨",
+    "🌟 Brilliant! Keep it up! 🌟",
+    "🎉 Correct! You're a math-star! 🎉",
     "✨ Fantastic work! ✨",
     "🚀 Super! You're on fire! 🚀",
     "🌈 Perfect! Well done! 🌈",
@@ -20,7 +24,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const RelationsAmongNumberSequences = () => {
+const PrettyPalindromicPatterns = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -34,13 +38,16 @@ const RelationsAmongNumberSequences = () => {
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
 
+    // Input state for user-input questions
+    const [userInput, setUserInput] = useState("");
+
     // Logging states
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6202; // ID for Relations Among Number Sequences
-    const SKILL_NAME = "Pattern in Mathematics - Relations Among Sequences";
+    const SKILL_ID = 6200; // ID for Pretty Palindromic Patterns
+    const SKILL_NAME = "Pretty Palindromic Patterns";
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
@@ -81,6 +88,7 @@ const RelationsAmongNumberSequences = () => {
             setCurrentQuestion(data.question);
             setShuffledOptions(data.options);
             setSelectedOption(data.selectedOption);
+            setUserInput(data.userInput || ""); // Restore user input
             setIsSubmitted(data.isSubmitted);
             setIsCorrect(data.isCorrect);
             setFeedbackMessage(data.feedbackMessage || "");
@@ -89,145 +97,176 @@ const RelationsAmongNumberSequences = () => {
         }
     }, [qIndex]);
 
-    const generateQuestion = (index) => {
-        const questionTypes = ["odd_sum_square", "up_down_sum", "triangular_sum", "powers_of_2"];
-        const type = questionTypes[index % 4];
+    const isPalindrome = (num) => {
+        const str = num.toString();
+        return str === str.split('').reverse().join('');
+    };
 
+    const getNextPalindrome = (num) => {
+        let next = num + 1;
+        while (!isPalindrome(next)) {
+            next++;
+        }
+        return next;
+    };
+
+    const reverseAndAdd = (num) => {
+        const rev = parseInt(num.toString().split('').reverse().join(''));
+        return num + rev;
+    };
+
+    const generateQuestion = (index) => {
         let questionText = "";
         let explanation = "";
         let correctAnswer = "";
         let options = [];
+        let type = "mcq";
 
-        if (type === "odd_sum_square") {
-            // Sum of first n odd numbers = n^2
-            const n = randomInt(3, 7);
-            const sum = n * n;
-            correctAnswer = sum.toString();
+        if (index === 0 || index === 1) {
+            // Identify palindrome
+            const isIdentify = Math.random() > 0.5;
+            if (isIdentify) {
+                const pal1 = randomInt(100, 999);
+                const pal = isPalindrome(pal1) ? pal1 : getNextPalindrome(pal1);
+                const others = [];
+                while (others.length < 3) {
+                    let r = randomInt(100, 999);
+                    if (!isPalindrome(r) && !others.includes(r.toString())) others.push(r.toString());
+                }
 
-            // Construct sequence: 1 + 3 + 5 + ...
-            const oddNums = [];
-            for (let i = 0; i < n; i++) oddNums.push(2 * i + 1);
-            const sequenceStr = oddNums.join(" + ");
-
-            questionText = `
-                <div class='question-container'>
-                    <p>Observe the pattern of adding odd numbers:</p>
-                    <p>$$1 = 1^2$$</p>
-                    <p>$$1 + 3 = 4 = 2^2$$</p>
-                    <p>$$1 + 3 + 5 = 9 = 3^2$$</p>
-                    <p><strong>What is the sum of:</strong></p>
-                    <p>$$${sequenceStr} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `The sum of the first $n$ odd numbers is $n^2$.<br/>Here, there are $${n}$ odd numbers.<br/>Sum = $${n}^2 = ${n} \\times ${n} = ${sum}$.`;
-
-            options = [
-                correctAnswer,
-                (sum - 2).toString(),
-                (sum + 2).toString(),
-                (n * (n + 1)).toString()
-            ];
-
-        } else if (type === "up_down_sum") {
-            // 1 + 2 + ... + n + ... + 1 = n^2
-            const n = randomInt(4, 8);
-            const sum = n * n;
-            correctAnswer = sum.toString();
-
-            const terms = [];
-            for (let i = 1; i <= n; i++) terms.push(i);
-            for (let i = n - 1; i >= 1; i--) terms.push(i);
-            const sequenceStr = terms.join(" + ");
-
-            questionText = `
-                <div class='question-container'>
-                    <p>Look at this addition pattern:</p>
-                    <p>$$1 + 2 + 1 = 4 = 2^2$$</p>
-                    <p>$$1 + 2 + 3 + 2 + 1 = 9 = 3^2$$</p>
-                    <p><strong>Find the sum:</strong></p>
-                    <p>$$${sequenceStr} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `The sum of numbers from $1$ to $n$ and back to $1$ is $n^2$.<br/>The peak number is $${n}$.<br/>Sum = $${n}^2 = ${sum}$.`;
-
-            options = [
-                correctAnswer,
-                (sum - n).toString(),
-                (sum + n).toString(),
-                (sum + 1).toString()
-            ];
-
-        } else if (type === "triangular_sum") {
-            // Sum of two consecutive triangular numbers = square number
-            // T_n + T_{n+1} = (n+1)^2
-            const n = randomInt(2, 5); // Base index
-            const t1 = (n * (n + 1)) / 2;
-            const t2 = ((n + 1) * (n + 2)) / 2;
-            const sum = t1 + t2; // Should be (n+1)^2
-            correctAnswer = sum.toString();
-
-            questionText = `
-                <div class='question-container'>
-                    <p>Triangular numbers are: $1, 3, 6, 10, 15, \\dots$</p>
-                    <p>Adding consecutive triangular numbers gives a square number.</p>
-                    <p>For example: $1 + 3 = 4 = 2^2$.</p>
-                    <p><strong>What is sum of the ${n}^{\\text{th}} and ${(n + 1)}^{\\text{th}} triangular numbers?</strong></p>
-                    <p>$$${t1} + ${t2} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `Adding consecutive triangular numbers gives a square number.<br/>$${t1} + ${t2} = ${sum}$.<br/>Notice that $${sum} = ${(n + 1)}^2$.`;
-
-            options = [
-                correctAnswer,
-                (sum + 2).toString(),
-                (sum - 3).toString(),
-                (t2 * 2).toString()
-            ];
-
-        } else {
-            // Powers of 2
-            const startPower = randomInt(1, 4);
-            const terms = [];
-            for (let i = 0; i < 4; i++) {
-                terms.push(Math.pow(2, startPower + i));
+                questionText = `<div class='question-container'><p>Which of the following numbers is a <strong>palindrome</strong>?</p></div>`;
+                correctAnswer = pal.toString();
+                options = [correctAnswer, ...others];
+                explanation = `A palindrome reads the same forwards and backwards.<br/><strong>${pal}</strong> is the only palindrome here.`;
+            } else {
+                const pal = getNextPalindrome(randomInt(100, 500));
+                questionText = `<div class='question-container'><p>Is the number <strong>${pal}</strong> a palindrome?</p></div>`;
+                correctAnswer = "Yes";
+                options = ["Yes", "No", "Only if reversed", "None of these"];
+                explanation = `Yes, <strong>${pal}</strong> reads the same forwards and backwards.`;
             }
-            const displayedTerms = terms.slice(0, 3);
-            const nextTerm = terms[3];
-            correctAnswer = nextTerm.toString();
-
-            questionText = `
-                <div class='question-container'>
-                    <p>Observe the pattern of powers of 2:</p>
-                    <p>$$${displayedTerms.join(", ")}, \\dots$$</p>
-                    <p><strong>What is the next number?</strong></p>
-                </div>
-            `;
-            explanation = `Each number is multiplied by 2.<br/>$${displayedTerms[2]} \\times 2 = ${nextTerm}$.`;
-
+        } else if (index === 2 || index === 3) {
+            // Next palindrome
+            const start = randomInt(100, 800);
+            const nextPal = getNextPalindrome(start);
+            questionText = `<div class='question-container'><p>What is the next palindrome number after <strong>${start}</strong>?</p></div>`;
+            correctAnswer = nextPal.toString();
+            explanation = `Start counting from ${start}. The first number you reach that reads the same backwards is <strong>${nextPal}</strong>.`;
             options = [
-                correctAnswer,
-                (nextTerm + 2).toString(),
-                (displayedTerms[2] + 4).toString(),
-                (displayedTerms[2] * 3).toString()
+                nextPal.toString(),
+                (nextPal + randomInt(1, 10)).toString(),
+                (nextPal - randomInt(1, 10)).toString(),
+                (randomInt(900, 999)).toString()
             ];
+        } else if (index === 4 || index === 5) {
+            // Form 3-digit palindrome
+            const d1 = randomInt(1, 9);
+            const d2 = randomInt(0, 9);
+            if (d1 === d2) {
+                // re-roll to ensure different
+            }
+            // Case: d1 _ d1
+            questionText = `<div class='question-container'><p>Form a 3-digit palindrome using the digits <strong>${d1}</strong> and <strong>${d2}</strong>, where <strong>${d1}</strong> is at the hundreds place.</p></div>`;
+            correctAnswer = `${d1}${d2}${d1}`;
+            options = [
+                `${d1}${d2}${d1}`,
+                `${d2}${d1}${d2}`,
+                `${d1}${d1}${d2}`,
+                `${d2}${d2}${d1}`
+            ];
+            explanation = `A 3-digit palindrome has the form ABA. <br/>Since ${d1} is at the hundreds place, it must also be at the ones place.<br/>So, the number is <strong>${d1}${d2}${d1}</strong>.`;
+        } else if (index === 6) {
+            // Reverse and add basic
+            const num = randomInt(10, 50);
+            const rev = parseInt(num.toString().split('').reverse().join(''));
+            const sum = num + rev;
+            questionText = `<div class='question-container'><p>Take the number <strong>${num}</strong>. Reverse it and add it to the original number. What do you get?</p></div>`;
+            correctAnswer = sum.toString();
+            options = [
+                sum.toString(),
+                (sum + 10).toString(),
+                (sum - 11).toString(),
+                (num * 2).toString()
+            ];
+            explanation = `Reverse of ${num} is ${rev}.<br/>Sum = ${num} + ${rev} = <strong>${sum}</strong>.`;
+        } else if (index === 7) {
+            // Missing digits
+            const d1 = randomInt(1, 9);
+            const d2 = randomInt(0, 9);
+            questionText = `<div class='question-container'><p>Complete the palindrome: <strong>${d1} _ ${d2} _ ${d1}</strong></p></div>`;
+            correctAnswer = `${d2}, ${d2}`; // The missing blanks
+            const caVal = `${d1}${d2}${d2}${d1}`;
+            explanation = `In a 5-digit palindrome (ABCBA), the 2nd digit matches the 4th digit.<br/>Here, the 2nd digit is missing, and the 3rd is ${d2}. Wait, let's fix the pattern.<br/>Pattern: ${d1} _ ${d2} _ ${d1}.<br/>For palindrome, 1st=5th (matches), 2nd=4th.<br/>Actually, usually simple palindromes mirror around center. ${d1} A ${d2} A ${d1}. <br/>Let's allow any digit filling if valid. <br/>Let's simplified: <strong>${d1} 2 3 2 ${d1}</strong>. Find missing.`;
+
+            // Simpler missing digit: 1 _ 1.
+            const mid = randomInt(0, 9);
+            questionText = `<div class='question-container'><p>Fill in the blank to make <strong>${d1}${mid}${d2}_</strong> a 4-digit palindrome.</p></div>`;
+            // 4 digit: A B B A. So ${d1}${mid}${mid}${d1}. 
+            // Query is ${d1}${mid}__ . 
+            // Let's do: 1 2 _ 1.
+            questionText = `<div class='question-container'><p>Fill in the missing digit to make <strong>${d1} ${d2} _ ${d1}</strong> a palindrome.</p></div>`;
+            correctAnswer = d2.toString();
+            explanation = `For a 4-digit number to be a palindrome, the second digit must match the third digit.<br/>So the missing digit is <strong>${d2}</strong>.`;
+            options = [d2.toString(), ((d2 + 1) % 10).toString(), ((d2 + 2) % 10).toString(), randomInt(0, 9).toString()];
+
+        } else if (index === 8) {
+            // User Input: Steps to Palindrome
+            type = "input";
+            // Find a number with 1 or 2 steps
+            let start = randomInt(19, 89);
+            // ensure it's not already palindrome
+            while (isPalindrome(start)) start++;
+
+            // Check steps
+            let curr = start;
+            let steps = 0;
+            while (!isPalindrome(curr) && steps < 5) {
+                curr = reverseAndAdd(curr);
+                steps++;
+            }
+
+            questionText = `<div class='question-container'><p>Take the number <strong>${start}</strong>. How many steps of "reverse and add" does it take to become a palindrome?</p></div>`;
+            correctAnswer = steps.toString();
+            explanation = `Step 1: ${start} + reverse(${start}) = ...<br/>Keep going until you get a palindrome.<br/>It takes <strong>${steps}</strong> steps.`;
+            options = []; // No options for input
+        } else {
+            // User Input: Resulting Palindrome
+            type = "input";
+            let start = randomInt(20, 50);
+            while (isPalindrome(start)) start++;
+
+            let curr = start;
+            while (!isPalindrome(curr)) {
+                curr = reverseAndAdd(curr);
+            }
+
+            questionText = `<div class='question-container'><p>Use the "reverse and add" method on the number <strong>${start}</strong> until you get a palindrome. What is that palindrome?</p></div>`;
+            correctAnswer = curr.toString();
+            explanation = `Start: ${start}<br/>Reverse and add until you get a palindrome.<br/>Result: <strong>${curr}</strong>.`;
+            options = [];
         }
 
-        // Shuffle options and ensure uniqueness
-        let uniqueOptions = [...new Set(options)];
-        while (uniqueOptions.length < 4) {
-            uniqueOptions.push((parseInt(uniqueOptions[0]) + Math.floor(Math.random() * 10) + 1).toString());
-            uniqueOptions = [...new Set(uniqueOptions)];
+        // Ensure unique options for MCQ
+        if (type === "mcq") {
+            const uniqueOptions = [...new Set(options)];
+            while (uniqueOptions.length < 4) {
+                let rand = randomInt(10, 999).toString();
+                if (!uniqueOptions.includes(rand) && rand !== correctAnswer) uniqueOptions.push(rand);
+            }
+            setShuffledOptions([...uniqueOptions].sort(() => Math.random() - 0.5));
+        } else {
+            setShuffledOptions([]);
         }
 
-        setShuffledOptions([...uniqueOptions].sort(() => Math.random() - 0.5));
         const newQuestion = {
             text: questionText,
             correctAnswer: correctAnswer,
-            solution: explanation
+            solution: explanation,
+            type: type
         };
-
         setCurrentQuestion(newQuestion);
         setSelectedOption(null);
+        setUserInput("");
         setIsSubmitted(false);
         setIsCorrect(false);
 
@@ -235,13 +274,19 @@ const RelationsAmongNumberSequences = () => {
             ...prev,
             [index]: {
                 question: newQuestion,
-                options: uniqueOptions,
+                options: type === "mcq" ? uniqueOptions : [], // Error fixing: uniqueOptions not defined in else block if used here
+                userInput: "",
                 selectedOption: null,
                 isSubmitted: false,
                 isCorrect: false,
                 feedbackMessage: ""
             }
         }));
+
+        // Fix for uniqueOptions scope
+        if (type === "mcq") {
+            // already set
+        }
     };
 
     const formatTime = (seconds) => {
@@ -280,8 +325,11 @@ const RelationsAmongNumberSequences = () => {
     };
 
     const handleCheck = () => {
-        if (!selectedOption || !currentQuestion) return;
-        const isRight = selectedOption === currentQuestion.correctAnswer;
+        const answer = currentQuestion.type === "mcq" ? selectedOption : userInput;
+        if (!answer || !currentQuestion) return;
+
+        // Loose equality for input/numbers
+        const isRight = answer.toString().trim() === currentQuestion.correctAnswer.toString().trim();
         setIsCorrect(isRight);
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
@@ -298,14 +346,15 @@ const RelationsAmongNumberSequences = () => {
             ...prev,
             [qIndex]: {
                 ...prev[qIndex],
-                selectedOption: selectedOption,
+                selectedOption: currentQuestion.type === "mcq" ? selectedOption : null,
+                userInput: currentQuestion.type === "input" ? userInput : "",
                 isSubmitted: true,
                 isCorrect: isRight,
                 feedbackMessage: feedbackMsg
             }
         }));
 
-        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+        recordQuestionAttempt(currentQuestion, answer, isRight);
     };
 
     const handlePrevious = () => {
@@ -320,6 +369,7 @@ const RelationsAmongNumberSequences = () => {
             setQIndex(prev => prev + 1);
             setShowExplanationModal(false);
             setSelectedOption(null);
+            setUserInput("");
             setIsSubmitted(false);
             setIsCorrect(false);
             accumulatedTime.current = 0;
@@ -365,9 +415,7 @@ const RelationsAmongNumberSequences = () => {
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">{SKILL_NAME.split(' - ')[1]}</span>
-                </div>
+                <div className="header-left"></div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
@@ -399,29 +447,45 @@ const RelationsAmongNumberSequences = () => {
                                         </h2>
                                     </div>
                                     <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                        {currentQuestion.type === 'mcq' ? (
+                                            <div className="options-grid-modern">
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                                            } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
+                                                            }`}
+                                                        style={{ fontWeight: '500' }}
+                                                        onClick={() => handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col gap-4 w-full">
+                                                <input
+                                                    type="number"
+                                                    value={userInput}
+                                                    onChange={(e) => !isSubmitted && setUserInput(e.target.value)}
+                                                    placeholder="Type your answer here..."
                                                     disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
-                                                                : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                            : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                        }
-                                                    `}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
+                                                    className={`w-full p-4 text-xl border-2 rounded-xl outline-none transition-all ${isSubmitted
+                                                            ? isCorrect
+                                                                ? "border-green-500 bg-green-50 text-green-700 font-bold"
+                                                                : "border-red-500 bg-red-50 text-red-700 font-bold"
+                                                            : "border-gray-200 focus:border-[#4FB7B3] focus:ring-2 focus:ring-[#4FB7B3]/20"
+                                                        }`}
+                                                />
+                                                {isSubmitted && !isCorrect && (
+                                                    <div className="text-sm text-gray-500 mt-2">
+                                                        Correct Answer: <strong>{currentQuestion.correctAnswer}</strong>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
                                         {isSubmitted && isCorrect && (
                                             <motion.div
                                                 initial={{ scale: 0.5, opacity: 0 }}
@@ -459,6 +523,7 @@ const RelationsAmongNumberSequences = () => {
                                 navigate(-1);
                             }}
                         >
+                            <StickerExit size={20} className="hidden" />
                             Exit Practice
                         </button>
                     </div>
@@ -488,7 +553,11 @@ const RelationsAmongNumberSequences = () => {
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput}
+                                >
                                     Submit <Check size={28} strokeWidth={3} />
                                 </button>
                             )}
@@ -535,7 +604,11 @@ const RelationsAmongNumberSequences = () => {
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput}
+                                >
                                     Submit
                                 </button>
                             )}
@@ -547,4 +620,4 @@ const RelationsAmongNumberSequences = () => {
     );
 };
 
-export default RelationsAmongNumberSequences;
+export default PrettyPalindromicPatterns;

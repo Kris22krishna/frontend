@@ -10,17 +10,17 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You found the shape pattern! ✨",
-    "🌟 Brilliant! You're visualizing it perfectly! 🌟",
-    "🎉 Correct! You're a geometry star! 🎉",
-    "✨ Fantastic work! ✨",
+    "✨ Fantastic! You're a Digit Wizard! ✨",
+    "🌟 Brilliant! You know your numbers! 🌟",
+    "🎉 Correct! Spot on! 🎉",
+    "✨ Amazing work! ✨",
     "🚀 Super! You're on fire! 🚀",
     "🌈 Perfect! Well done! 🌈",
     "🎊 Great job! Moving on... 🎊",
     "💎 Spot on! Excellent! 💎"
 ];
 
-const PatternsInShapes = () => {
+const PlayingWithDigits = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -40,8 +40,8 @@ const PatternsInShapes = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6203; // ID for Patterns in Shapes
-    const SKILL_NAME = "Pattern in Mathematics - Patterns in Shapes";
+    const SKILL_ID = 6304; // ID for Number Play - Playing with Digits
+    const SKILL_NAME = "Number Play - Playing with Digits";
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
@@ -91,11 +91,24 @@ const PatternsInShapes = () => {
         }
     }, [qIndex]);
 
+    const getDigitSum = (n) => {
+        return n.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+    };
+
+    const countDigitOccurrences = (start, end, digit) => {
+        let count = 0;
+        const dStr = digit.toString();
+        for (let i = start; i <= end; i++) {
+            count += i.toString().split(dStr).length - 1;
+        }
+        return count;
+    };
+
     const generateQuestion = (index) => {
-        // 8 MCQs, 2 User Inputs (Medium/Hard)
-        // Let's scatter inputs: Q4 and Q8
-        const isInputParams = (index === 3 || index === 7);
-        const types = ["poly_sides", "stack_triangles", "stack_squares", "rotation_pattern", "growth_pattern"];
+        // 8 MCQs, 2 User Inputs
+        // Force User Input on specific indices for variety (e.g., 2 and 6)
+        const isInputParams = (index === 2 || index === 6);
+        const types = ["count_n_digits", "calc_digit_sum", "find_number_by_sum", "digit_sum_pattern", "count_digit_freq"];
         const type = types[index % types.length];
 
         let qText = "";
@@ -105,151 +118,204 @@ const PatternsInShapes = () => {
         let uniqueId = "";
         let inputType = isInputParams ? "input" : "mcq";
 
+        const logicDescription = "<strong>Playing with Digits</strong> involves understanding the digits that make up a number and their properties.";
+
         let attempts = 0;
         do {
             attempts++;
 
-            if (type === "poly_sides") {
-                // Triangle (3), Square (4), Pentagon (5)...
-                const start = randomInt(3, 5);
-                const seq = [start, start + 1, start + 2, start + 3];
-                const shapes = {
-                    3: "Triangle", 4: "Square", 5: "Pentagon", 6: "Hexagon", 7: "Heptagon", 8: "Octagon", 9: "Nonagon", 10: "Decagon"
-                };
+            if (type === "count_n_digits") {
+                const digits = randomInt(2, 4);
+                let min, max, total;
+                if (digits === 2) { min = 10; max = 99; }
+                else if (digits === 3) { min = 100; max = 999; }
+                else { min = 1000; max = 9999; }
 
-                if (inputType === "mcq") {
-                    qText = `
-                        <div class='question-container'>
-                            <p>Observe the pattern of shapes based on number of sides:</p>
-                            <p><strong>${shapes[seq[0]]}, ${shapes[seq[1]]}, ${shapes[seq[2]]}, ...</strong></p>
-                            <p>What is the next shape?</p>
-                        </div>
-                    `;
-                    correct = shapes[seq[3]];
-                    options = [shapes[seq[3]], shapes[seq[0]], shapes[seq[3] + 2] || "Circle", "Circle"];
-                    explanation = `The number of sides increases by 1 each time: ${seq[0]}, ${seq[1]}, ${seq[2]}, <strong>${seq[3]}</strong>.`;
-                } else {
-                    qText = `
-                        <div class='question-container'>
-                            <p>Observe the pattern of shapes based on number of sides:</p>
-                            <p><strong>${shapes[seq[0]]}, ${shapes[seq[1]]}, ${shapes[seq[2]]}, ...</strong></p>
-                             <p>How many sides does the next shape have?</p>
-                        </div>
-                    `;
-                    correct = seq[3].toString();
-                    explanation = `The pattern is: ${seq[0]} sides, ${seq[1]} sides, ${seq[2]} sides. Next is <strong>${seq[3]}</strong> sides.`;
-                }
-                uniqueId = `poly_${start}_${inputType}`;
-
-            } else if (type === "stack_triangles") {
-                // 1, 4, 9, 16 small triangles
-                const layers = randomInt(2, 4);
-                const total = layers * layers;
-                const nextLayers = layers + 1;
-                const nextTotal = nextLayers * nextLayers;
-
-                if (inputType === "mcq") {
-                    qText = `
-                        <div class='question-container'>
-                            <p>A pattern of large triangles is made using small triangles.</p>
-                            <p>Layer 1: 1 small triangle</p>
-                            <p>Layer 2: 4 small triangles</p>
-                            <p>Layer ${layers}: ${total} small triangles</p>
-                            <p><strong>How many small triangles will be in Layer ${nextLayers}?</strong></p>
-                        </div>
-                    `;
-                    correct = nextTotal.toString();
-                    options = [nextTotal.toString(), (total + 2).toString(), (nextTotal + 2).toString(), (nextTotal - 1).toString()];
-                    explanation = `The number of small triangles is the square of the number of layers ($n^2$).<br/>For Layer ${nextLayers}: ${nextLayers} $\\times$ ${nextLayers} = <strong>${correct}</strong>.`;
-                } else {
-                    qText = `
-                        <div class='question-container'>
-                            <p>A pattern of large triangles is made using small triangles.</p>
-                            <p>Layer 1: 1 small triangle</p>
-                            <p>Layer 2: 4 small triangles</p>
-                            <p>Layer ${layers}: ${total} small triangles</p>
-                            <p><strong>How many small triangles will be in Layer ${nextLayers}?</strong></p>
-                        </div>
-                    `;
-                    correct = nextTotal.toString();
-                    explanation = `The number of small triangles follows square numbers ($n^2$).<br/>Layer ${nextLayers} has ${nextLayers}$^2$ = <strong>${correct}</strong>.`;
-                }
-                uniqueId = `stack_tri_${layers}_${inputType}`;
-
-            } else if (type === "stack_squares") {
-                // Tower of squares: 1, 3, 6, 10... (Sum of natural numbers / Triangular pattern for stack height?) 
-                // Or simple row add: 1, 2, 3..
-                // Let's do pyramid of squares: Row 1 has 1, Row 2 has 2... Total = n(n+1)/2
-                const rows = randomInt(3, 5);
-                const total = (rows * (rows + 1)) / 2;
-                const nextRows = rows + 1;
-                const nextTotal = (nextRows * (nextRows + 1)) / 2;
+                total = max - min + 1;
 
                 qText = `
                     <div class='question-container'>
-                        <p>Squares are stacked in a pyramid pattern.</p>
-                        <p>Row 1 (top): 1 square</p>
-                        <p>Row 2: 2 squares</p>
-                        <p>...</p>
-                        <p>Row ${rows}: ${rows} squares</p>
-                        <p><strong>What is the TOTAL number of squares in a pyramid with ${nextRows} rows?</strong></p>
-                    </div>
-                 `;
-                correct = nextTotal.toString();
-                if (inputType === "mcq") {
-                    options = [nextTotal.toString(), (total + rows).toString(), (nextTotal * 2).toString(), (nextTotal - 3).toString()];
-                }
-                explanation = `This follows the triangular number pattern (sum of 1 to $n$).<br/>Sum for ${nextRows} rows = $1 + 2 + ... + ${nextRows} = ${nextTotal}$.`;
-                uniqueId = `stack_sq_${rows}_${inputType}`; // This was missing in logic branch, fixed now.
-
-            } else if (type === "rotation_pattern") {
-                // Arrow pointing Up, Right, Down, ...
-                const dirs = ["Up", "Right", "Down", "Left"];
-                const startIdx = randomInt(0, 3);
-
-                qText = `
-                    <div class='question-container'>
-                        <p>An arrow rotates 90° clockwise in each step.</p>
-                        <p>Step 1: Arrow points <strong>${dirs[startIdx]}</strong></p>
-                        <p>Step 2: Arrow points <strong>${dirs[(startIdx + 1) % 4]}</strong></p>
-                        <p><strong>Which direction will it point in Step 3?</strong></p>
-                    </div>
-                 `;
-                correct = dirs[(startIdx + 2) % 4];
-
-                if (inputType === "mcq") {
-                    options = ["Up", "Right", "Down", "Left"];
-                } else {
-                    // For rotation, input is tricky, lets force MCQ for rotation or simplified text
-                    inputType = "mcq"; // Override
-                    options = ["Up", "Right", "Down", "Left"];
-                }
-                explanation = `The pattern is clockwise rotation.<br/>${dirs[startIdx]} -> ${dirs[(startIdx + 1) % 4]} -> <strong>${correct}</strong>.`;
-                uniqueId = `rot_${startIdx}`;
-
-            } else {
-                // Growth pattern (matchsticks)
-                // Shape 1: 4 (Square)
-                // Shape 2: 7 (2 Squares)
-                // Shape 3: 10 (3 Squares)
-                const n = randomInt(3, 5);
-                const val = 3 * n + 1;
-
-                qText = `
-                    <div class='question-container'>
-                        <p>Matchsticks are used to make a chain of linked squares.</p>
-                        <p>1 Square uses 4 matchsticks.</p>
-                        <p>2 Squares use 7 matchsticks.</p>
-                        <p>3 Squares use 10 matchsticks.</p>
-                        <p><strong>How many matchsticks for ${n} Squares?</strong></p>
+                        <p>${logicDescription}</p>
+                        <p>How many <strong>${digits}-digit</strong> numbers are there in total?</p>
                     </div>
                 `;
-                correct = val.toString();
+                correct = total.toString();
+                explanation = `The smallest ${digits}-digit number is ${min}.<br/>The largest is ${max}.<br/>Total count = (${max} - ${min}) + 1 = <strong>${total}</strong>.`;
+                uniqueId = `count_${digits}_${inputType}`;
+
                 if (inputType === "mcq") {
-                    options = [val.toString(), (val - 1).toString(), (val + 3).toString(), (4 * n).toString()];
+                    options = [
+                        total.toString(),
+                        (total - 1).toString(),
+                        (total + 1).toString(),
+                        (total / 9).toString() // Just a distractor
+                    ];
                 }
-                explanation = `The rule is $3n + 1$.<br/>For $n=${n}$: $3(${n}) + 1 = ${val}$.`;
-                uniqueId = `growth_${n}_${inputType}`;
+
+            } else if (type === "calc_digit_sum") {
+                const num = randomInt(500, 9999);
+                const sum = getDigitSum(num);
+
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>Find the sum of the digits of the number:</p>
+                        <p class="text-2xl font-bold text-indigo-600">${num}</p>
+                    </div>
+                `;
+                correct = sum.toString();
+                const digits = num.toString().split('').join(" + ");
+                explanation = `Add all the digits together:<br/>${digits} = <strong>${sum}</strong>.`;
+                uniqueId = `sum_${num}_${inputType}`;
+
+                if (inputType === "mcq") {
+                    options = [
+                        sum.toString(),
+                        (sum + randomInt(1, 3)).toString(),
+                        (sum - randomInt(1, 3)).toString(),
+                        (getDigitSum(sum)).toString() // recursive sum
+                    ];
+                }
+
+            } else if (type === "find_number_by_sum") {
+                const targetSum = randomInt(5, 12);
+                const isLargest = randomInt(0, 1) === 1;
+                const digits = randomInt(2, 3);
+
+                // Keep it simple: Smallest/Largest 2 or 3 digit number with sum S
+                let answerNum;
+
+                if (isLargest) {
+                    if (digits === 2) {
+                        // e.g. sum 10 -> 91
+                        // Maximize first digit
+                        let d1 = Math.min(9, targetSum);
+                        let d2 = targetSum - d1;
+                        if (d2 < 0) { d1 = 9; d2 = targetSum - 9; } // handle sums > 9
+                        answerNum = parseInt(`${d1}${d2}`);
+                    } else {
+                        // sum 10 -> 910
+                        let d1 = Math.min(9, targetSum);
+                        let rem = targetSum - d1;
+                        let d2 = Math.min(9, rem);
+                        let d3 = rem - d2;
+                        answerNum = parseInt(`${d1}${d2}${d3}`);
+                    }
+                    qText = `
+                        <div class='question-container'>
+                            <p>${logicDescription}</p>
+                            <p>What is the <strong>largest</strong> ${digits}-digit number whose digits add up to <strong>${targetSum}</strong>?</p>
+                        </div>
+                    `;
+                    explanation = `To make the largest number, put the biggest possible digit in the highest place value.<br/>For sum ${targetSum}:<br/>First digit: ${answerNum.toString()[0]}<br/>Second digit: ${answerNum.toString()[1]}...<br/>Number: <strong>${answerNum}</strong>.`;
+
+                } else { // Smallest
+                    if (digits === 2) {
+                        // e.g. sum 10 -> 19
+                        // Minimize first digit (cannot be 0, min 1)
+                        // d1 + d2 = S. d2 <= 9. So d1 >= S - 9.
+                        let d1 = Math.max(1, targetSum - 9);
+                        let d2 = targetSum - d1;
+                        answerNum = parseInt(`${d1}${d2}`);
+                    } else {
+                        // Smallest 3 digit. sum 10 -> 109
+                        let d1 = Math.max(1, targetSum - 18);
+                        let rem = targetSum - d1;
+                        // for remaining 2 digits sum, we want d2 small. d3 <= 9. d2 >= rem - 9.
+                        let d2 = Math.max(0, rem - 9);
+                        let d3 = rem - d2;
+                        answerNum = parseInt(`${d1}${d2}${d3}`);
+                    }
+                    qText = `
+                        <div class='question-container'>
+                            <p>${logicDescription}</p>
+                            <p>What is the <strong>smallest</strong> ${digits}-digit number whose digits add up to <strong>${targetSum}</strong>?</p>
+                        </div>
+                    `;
+                    explanation = `To make the smallest number, put the smallest possible digit in the highest place value (starts with 1).<br/>Then fill the rest to reach sum ${targetSum}.<br/>Number: <strong>${answerNum}</strong>.`;
+                }
+
+                correct = answerNum.toString();
+                uniqueId = `minmax_${targetSum}_${isLargest}_${digits}_${inputType}`;
+
+                if (inputType === "mcq") {
+                    options = [
+                        correct,
+                        (answerNum + 9).toString(),
+                        (answerNum - 9).toString(),
+                        parseInt(correct.split('').reverse().join('')).toString() // Reverse as distractor
+                    ];
+                }
+
+            } else if (type === "digit_sum_pattern") {
+                // e.g. 19, 28, 37... all have sum 10.
+                const sum = randomInt(8, 15);
+                // Generate 3 numbers with this sum
+                let seq = [];
+                for (let i = 1; i <= 3; i++) {
+                    // Find a 2 digit number with this sum, make them consecutive increasing
+                    // Start variable
+                    let d1 = Math.max(1, sum - 9) + i - 1;
+                    let d2 = sum - d1;
+                    if (d2 >= 0 && d2 <= 9) seq.push(parseInt(`${d1}${d2}`));
+                }
+
+                if (seq.length < 3) {
+                    // Fallback simple pattern if generation fails
+                    seq = [11, 22, 33];
+                }
+
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>Look at the numbers: <strong>${seq.join(", ")}...</strong></p>
+                        <p>What property do they all share?</p>
+                    </div>
+                `;
+
+                const mySum = getDigitSum(seq[0]); // Check actual sum
+                correct = `Digit sum is ${mySum}`;
+                explanation = `${seq[0]} -> ${seq[0].toString().split('').join('+')} = ${mySum}<br/>${seq[1]} -> ${getDigitSum(seq[1])}<br/>They all have a digit sum of <strong>${mySum}</strong>.`;
+
+                uniqueId = `pattern_${seq.join('_')}`;
+                // This type is naturally MCQ or specific input (hard for input). Force MCQ if in logic flow? 
+                // Let's support MCQ best.
+                inputType = "mcq";
+
+                options = [
+                    `Digit sum is ${mySum}`,
+                    `Digit sum is ${mySum + 1}`,
+                    `They are all odd`,
+                    `They are all divisible by 5`
+                ];
+
+            } else { // count_digit_freq
+                // Count how many times '1' appears from 1 to 20
+                const rangeEnd = [20, 30, 50, 100][randomInt(0, 3)];
+                const digit = 1; // Simplest to count 1s or random
+
+                const count = countDigitOccurrences(1, rangeEnd, digit);
+
+                qText = `
+                    <div class='question-container'>
+                        <p>${logicDescription}</p>
+                        <p>How many times does the digit <strong>${digit}</strong> appear in the numbers from 1 to ${rangeEnd}?</p>
+                    </div>
+                `;
+                correct = count.toString();
+                explanation = `List numbers with ${digit}:<br/>
+                               1, 10, 11 (twice), 12, 13, 14, 15, 16, 17, 18, 19...<br/>
+                               Count them carefully!<br/>Total occurrences: <strong>${count}</strong>.`;
+                uniqueId = `freq_${rangeEnd}_${digit}_${inputType}`;
+
+                if (inputType === "mcq") {
+                    options = [
+                        correct,
+                        (count - 1).toString(),
+                        (count + 1).toString(),
+                        (Math.floor(rangeEnd / 10)).toString()
+                    ];
+                }
             }
 
             if (attempts > 10) uniqueId = `force_${Date.now()}_${Math.random()}`;
@@ -262,9 +328,18 @@ const PatternsInShapes = () => {
         let uniqueOpts = [];
         if (inputType === "mcq") {
             uniqueOpts = [...new Set(options)];
-            while (uniqueOpts.length < 4) {
-                uniqueOpts.push((Math.floor(Math.random() * 100)).toString());
-                uniqueOpts = [...new Set(uniqueOpts)];
+            // Ensure 4 distinct
+            if (options.every(o => !isNaN(parseInt(o))) || options[0].includes("Digit sum")) {
+                while (uniqueOpts.length < 4) {
+                    if (uniqueOpts[0].includes("Digit sum")) {
+                        uniqueOpts.push(`Digit sum is ${randomInt(1, 20)}`);
+                    } else {
+                        const rnd = randomInt(1, 100).toString();
+                        if (!uniqueOpts.includes(rnd)) uniqueOpts.push(rnd);
+                    }
+                    uniqueOpts = [...new Set(uniqueOpts)];
+                }
+                if (!uniqueOpts[0].includes("Digit")) uniqueOpts.sort((a, b) => parseInt(a) - parseInt(b));
             }
             setShuffledOptions([...uniqueOpts].sort(() => Math.random() - 0.5));
         }
@@ -340,17 +415,14 @@ const PatternsInShapes = () => {
         if (currentQuestion.type === "input" && !userInput.trim()) return;
 
         let isRight = false;
-        let answer = "";
 
         if (currentQuestion.type === "mcq") {
+            // For "Digit sum is X" type, exact match string
             isRight = selectedOption === currentQuestion.correctAnswer;
-            answer = selectedOption;
         } else {
-            // Flexible string check
-            const userClean = userInput.trim().toLowerCase();
-            const correctClean = currentQuestion.correctAnswer.toLowerCase();
+            const userClean = userInput.replace(/\s+/g, '').toLowerCase();
+            const correctClean = currentQuestion.correctAnswer.replace(/\s+/g, '').toLowerCase();
             isRight = userClean === correctClean;
-            answer = userInput;
         }
 
         setIsCorrect(isRight);
@@ -377,7 +449,7 @@ const PatternsInShapes = () => {
             }
         }));
 
-        recordQuestionAttempt(currentQuestion, answer, isRight);
+        recordQuestionAttempt(currentQuestion, currentQuestion.type === "mcq" ? selectedOption : userInput, isRight);
     };
 
     const handlePrevious = () => {
@@ -439,7 +511,7 @@ const PatternsInShapes = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">{SKILL_NAME.split(' - ')[1]}</span>
+                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Playing with Digits</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -502,7 +574,7 @@ const PatternsInShapes = () => {
                                                     type="text"
                                                     value={userInput}
                                                     onChange={(e) => setUserInput(e.target.value)}
-                                                    placeholder="Type your answer here..."
+                                                    placeholder="Type your answer"
                                                     disabled={isSubmitted}
                                                     className={`w-full max-w-md p-4 text-xl text-center font-bold rounded-xl border-2 outline-none transition-all
                                                         ${isSubmitted
@@ -654,4 +726,4 @@ const PatternsInShapes = () => {
     );
 };
 
-export default PatternsInShapes;
+export default PlayingWithDigits;

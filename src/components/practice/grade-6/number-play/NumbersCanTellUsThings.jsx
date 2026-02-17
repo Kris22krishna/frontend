@@ -10,9 +10,9 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You found the shape pattern! ✨",
-    "🌟 Brilliant! You're visualizing it perfectly! 🌟",
-    "🎉 Correct! You're a geometry star! 🎉",
+    "✨ Amazing! You cracked the number code! ✨",
+    "🌟 Brilliant! You understand the logic perfectly! 🌟",
+    "🎉 Correct! You're a number detective! 🎉",
     "✨ Fantastic work! ✨",
     "🚀 Super! You're on fire! 🚀",
     "🌈 Perfect! Well done! 🌈",
@@ -20,7 +20,7 @@ const CORRECT_MESSAGES = [
     "💎 Spot on! Excellent! 💎"
 ];
 
-const PatternsInShapes = () => {
+const NumbersCanTellUsThings = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -40,8 +40,8 @@ const PatternsInShapes = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6203; // ID for Patterns in Shapes
-    const SKILL_NAME = "Pattern in Mathematics - Patterns in Shapes";
+    const SKILL_ID = 6301; // ID for Number Play - Numbers can Tell us Things
+    const SKILL_NAME = "Number Play - Numbers can Tell us Things";
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
@@ -91,11 +91,25 @@ const PatternsInShapes = () => {
         }
     }, [qIndex]);
 
+    const calculateTallerNeighbors = (heights) => {
+        const n = heights.length;
+        const result = [];
+        for (let i = 0; i < n; i++) {
+            let count = 0;
+            // Check Left
+            if (i > 0 && heights[i - 1] > heights[i]) count++;
+            // Check Right
+            if (i < n - 1 && heights[i + 1] > heights[i]) count++;
+            result.push(count);
+        }
+        return result;
+    };
+
     const generateQuestion = (index) => {
-        // 8 MCQs, 2 User Inputs (Medium/Hard)
-        // Let's scatter inputs: Q4 and Q8
-        const isInputParams = (index === 3 || index === 7);
-        const types = ["poly_sides", "stack_triangles", "stack_squares", "rotation_pattern", "growth_pattern"];
+        // 8 MCQs, 2 User Inputs
+        // Force User Input on specific indices for variety (e.g., 2 and 6)
+        const isInputParams = (index === 2 || index === 6);
+        const types = ["calculate_sequence", "interpret_number", "check_validity", "end_child_rule"];
         const type = types[index % types.length];
 
         let qText = "";
@@ -105,151 +119,172 @@ const PatternsInShapes = () => {
         let uniqueId = "";
         let inputType = isInputParams ? "input" : "mcq";
 
+        // Logic Rule: "Each child counts how many immediate neighbors are taller than them."
+        const logicDescription = "<strong>Rule:</strong> Each child says a number equal to the number of immediate neighbors (left or right) who are taller than them.";
+
         let attempts = 0;
         do {
             attempts++;
 
-            if (type === "poly_sides") {
-                // Triangle (3), Square (4), Pentagon (5)...
-                const start = randomInt(3, 5);
-                const seq = [start, start + 1, start + 2, start + 3];
-                const shapes = {
-                    3: "Triangle", 4: "Square", 5: "Pentagon", 6: "Hexagon", 7: "Heptagon", 8: "Octagon", 9: "Nonagon", 10: "Decagon"
-                };
+            if (type === "calculate_sequence") {
+                const len = randomInt(4, 6);
+                const heights = [];
+                for (let i = 0; i < len; i++) heights.push(randomInt(130, 160));
 
-                if (inputType === "mcq") {
+                // Ensure heights are distinct enough for clarity, or handle equals (usually Problem says taller, so equal is not taller)
+                const numbers = calculateTallerNeighbors(heights);
+                const sequence = numbers.join(", ");
+
+                if (inputType === "input") {
                     qText = `
                         <div class='question-container'>
-                            <p>Observe the pattern of shapes based on number of sides:</p>
-                            <p><strong>${shapes[seq[0]]}, ${shapes[seq[1]]}, ${shapes[seq[2]]}, ...</strong></p>
-                            <p>What is the next shape?</p>
+                            <p>${logicDescription}</p>
+                            <p>Children's heights (in cm):<br/><strong>${heights.join(", ")}</strong></p>
+                            <p>What is the sequence of numbers they say? (comma separated, e.g., 1, 0, 2...)</p>
                         </div>
                     `;
-                    correct = shapes[seq[3]];
-                    options = [shapes[seq[3]], shapes[seq[0]], shapes[seq[3] + 2] || "Circle", "Circle"];
-                    explanation = `The number of sides increases by 1 each time: ${seq[0]}, ${seq[1]}, ${seq[2]}, <strong>${seq[3]}</strong>.`;
+                    correct = sequence;
+                    explanation = `Let's check each child:<br/>` +
+                        heights.map((h, i) => {
+                            let neighbors = [];
+                            if (i > 0) neighbors.push(`${heights[i - 1]} (L)`);
+                            if (i < heights.length - 1) neighbors.push(`${heights[i + 1]} (R)`);
+                            return `Child ${i + 1} (${h} cm): Neighbors [${neighbors.join(", ")}]. Taller: <strong>${numbers[i]}</strong>`;
+                        }).join("<br/>");
                 } else {
                     qText = `
                         <div class='question-container'>
-                            <p>Observe the pattern of shapes based on number of sides:</p>
-                            <p><strong>${shapes[seq[0]]}, ${shapes[seq[1]]}, ${shapes[seq[2]]}, ...</strong></p>
-                             <p>How many sides does the next shape have?</p>
+                            <p>${logicDescription}</p>
+                            <p>Children's heights: <strong>${heights.join(", ")}</strong></p>
+                            <p>What number does the <strong>Child at position ${randomInt(2, len - 1)}</strong> (height ${heights[randomInt(2, len - 1) - 1]}) say?</p>
                         </div>
                     `;
-                    correct = seq[3].toString();
-                    explanation = `The pattern is: ${seq[0]} sides, ${seq[1]} sides, ${seq[2]} sides. Next is <strong>${seq[3]}</strong> sides.`;
-                }
-                uniqueId = `poly_${start}_${inputType}`;
+                    // Let's refine MCQ to ask for the whole sequence or a specific child to fit MCQ options better
+                    const targetIdx = randomInt(1, len - 2); // Pick a middle child
+                    correct = numbers[targetIdx].toString();
 
-            } else if (type === "stack_triangles") {
-                // 1, 4, 9, 16 small triangles
-                const layers = randomInt(2, 4);
-                const total = layers * layers;
-                const nextLayers = layers + 1;
-                const nextTotal = nextLayers * nextLayers;
-
-                if (inputType === "mcq") {
                     qText = `
                         <div class='question-container'>
-                            <p>A pattern of large triangles is made using small triangles.</p>
-                            <p>Layer 1: 1 small triangle</p>
-                            <p>Layer 2: 4 small triangles</p>
-                            <p>Layer ${layers}: ${total} small triangles</p>
-                            <p><strong>How many small triangles will be in Layer ${nextLayers}?</strong></p>
+                            <p>${logicDescription}</p>
+                            <p>Children's heights: ${heights.map((h, i) => i === targetIdx ? `<strong>${h}</strong>` : h).join(", ")}</p>
+                            <p>What number does the highlighted child (height ${heights[targetIdx]}) say?</p>
                         </div>
                     `;
-                    correct = nextTotal.toString();
-                    options = [nextTotal.toString(), (total + 2).toString(), (nextTotal + 2).toString(), (nextTotal - 1).toString()];
-                    explanation = `The number of small triangles is the square of the number of layers ($n^2$).<br/>For Layer ${nextLayers}: ${nextLayers} $\\times$ ${nextLayers} = <strong>${correct}</strong>.`;
-                } else {
+
+                    options = ["0", "1", "2", "3"]; // Max is 2
+                    explanation = `Child with height ${heights[targetIdx]} has neighbors ${heights[targetIdx - 1]} and ${heights[targetIdx + 1]}.<br/>Count taller neighbors: <strong>${correct}</strong>.`;
+                }
+                uniqueId = `calc_${heights.join('_')}_${inputType}`;
+
+            } else if (type === "interpret_number") {
+                // "A child says 2. What does this mean?"
+                if (inputType === "input") {
+                    // Hard to validate text input interpretation, force calculation for input or simple numeric answer
+                    // Convert to calculation type for Input
+                    inputType = "mcq"; // Fallback to MCQ for interpretation
+                }
+
+                const scenario = randomInt(0, 2);
+                if (scenario === 0) { // Says 2
                     qText = `
                         <div class='question-container'>
-                            <p>A pattern of large triangles is made using small triangles.</p>
-                            <p>Layer 1: 1 small triangle</p>
-                            <p>Layer 2: 4 small triangles</p>
-                            <p>Layer ${layers}: ${total} small triangles</p>
-                            <p><strong>How many small triangles will be in Layer ${nextLayers}?</strong></p>
+                            <p>${logicDescription}</p>
+                            <p>A child in the middle of the line says the number <strong>2</strong>.</p>
+                            <p>What does this logically mean?</p>
                         </div>
                     `;
-                    correct = nextTotal.toString();
-                    explanation = `The number of small triangles follows square numbers ($n^2$).<br/>Layer ${nextLayers} has ${nextLayers}$^2$ = <strong>${correct}</strong>.`;
+                    correct = "Both immediate neighbors are taller.";
+                    options = [
+                        "Both immediate neighbors are taller.",
+                        "Both immediate neighbors are shorter.",
+                        "One neighbor is taller, one is shorter.",
+                        "The child is the tallest in the line."
+                    ];
+                    explanation = "To say '2', a child must have 2 taller neighbors. Since a child only has 2 immediate neighbors, both must be taller.";
+                } else if (scenario === 1) { // Says 0
+                    qText = `
+                        <div class='question-container'>
+                            <p>${logicDescription}</p>
+                            <p>A child says the number <strong>0</strong>.</p>
+                            <p>Which statement is definitely true?</p>
+                        </div>
+                    `;
+                    correct = "No immediate neighbor is taller.";
+                    options = [
+                        "No immediate neighbor is taller.",
+                        "The child is the shortest in the line.",
+                        "The child has no neighbors.",
+                        "Both neighbors are taller."
+                    ];
+                    explanation = "Calculating 0 means count of taller neighbors is 0. So, no immediate neighbor is taller (child is a local peak).";
+                } else { // End child says 1
+                    qText = `
+                        <div class='question-container'>
+                            <p>${logicDescription}</p>
+                            <p>A child standing at the <strong>end</strong> of the line says <strong>1</strong>.</p>
+                            <p>What does this mean?</p>
+                        </div>
+                    `;
+                    correct = "Their only neighbor is taller.";
+                    options = [
+                        "Their only neighbor is taller.",
+                        "Their only neighbor is shorter.",
+                        "They have 2 taller neighbors.",
+                        "They are the tallest in the line."
+                    ];
+                    explanation = "An end child has only 1 neighbor. If they say 1, that neighbor must be taller.";
                 }
-                uniqueId = `stack_tri_${layers}_${inputType}`;
+                uniqueId = `interpret_${scenario}`;
 
-            } else if (type === "stack_squares") {
-                // Tower of squares: 1, 3, 6, 10... (Sum of natural numbers / Triangular pattern for stack height?) 
-                // Or simple row add: 1, 2, 3..
-                // Let's do pyramid of squares: Row 1 has 1, Row 2 has 2... Total = n(n+1)/2
-                const rows = randomInt(3, 5);
-                const total = (rows * (rows + 1)) / 2;
-                const nextRows = rows + 1;
-                const nextTotal = (nextRows * (nextRows + 1)) / 2;
+            } else if (type === "check_validity") {
+                if (inputType === "input") inputType = "mcq"; // Check validity is best for MCQ
 
+                // "Which sequence is valid?" OR "Is this sequence valid?"
+                const subType = randomInt(0, 1);
+
+                if (subType === 0) { // End value check
+                    qText = `
+                        <div class='question-container'>
+                            <p>${logicDescription}</p>
+                            <p>Which of these sequences is <strong>IMPOSSIBLE</strong>? (Think about the children at the ends)</p>
+                        </div>
+                    `;
+                    correct = "2, 1, 0, 1";
+                    options = ["2, 1, 0, 1", "1, 2, 1, 0", "0, 1, 1, 0", "0, 0, 0, 0"];
+                    explanation = "An end child only has 1 neighbor, so they can say at most '1'. They can never say '2'. The sequence '2, 1, 0, 1' starts with 2, which is impossible.";
+                } else { // Logic check
+                    qText = `
+                        <div class='question-container'>
+                            <p>${logicDescription}</p>
+                            <p>Consider the sequence: <strong>0, 2, 0</strong>.</p>
+                            <p>Is this sequence possible for 3 children?</p>
+                        </div>
+                    `;
+                    correct = "Yes, it is possible."; // e.g., 150, 140, 150 -> Mid(140) has neighbors 150,150(Taller). Ends(150) have/neighbor 140(Shorter). Correct: 0, 2, 0.
+                    options = [
+                        "Yes, it is possible.",
+                        "No, because the middle value cannot be 2.",
+                        "No, because the ends cannot be 0.",
+                        "No, sum must be even."
+                    ];
+                    explanation = "Example: Heights 5, 2, 5.<br/>Left(5): Neighbor 2 (Shorter) -> 0.<br/>Mid(2): Neighbors 5, 5 (Taller) -> 2.<br/>Right(5): Neighbor 2 (Shorter) -> 0.<br/>Sequence: 0, 2, 0.";
+                }
+                uniqueId = `valid_${subType}_${Math.random()}`;
+
+            } else { // end_child_rule
+                // Simple factual checks about ends
                 qText = `
                     <div class='question-container'>
-                        <p>Squares are stacked in a pyramid pattern.</p>
-                        <p>Row 1 (top): 1 square</p>
-                        <p>Row 2: 2 squares</p>
-                        <p>...</p>
-                        <p>Row ${rows}: ${rows} squares</p>
-                        <p><strong>What is the TOTAL number of squares in a pyramid with ${nextRows} rows?</strong></p>
-                    </div>
-                 `;
-                correct = nextTotal.toString();
-                if (inputType === "mcq") {
-                    options = [nextTotal.toString(), (total + rows).toString(), (nextTotal * 2).toString(), (nextTotal - 3).toString()];
-                }
-                explanation = `This follows the triangular number pattern (sum of 1 to $n$).<br/>Sum for ${nextRows} rows = $1 + 2 + ... + ${nextRows} = ${nextTotal}$.`;
-                uniqueId = `stack_sq_${rows}_${inputType}`; // This was missing in logic branch, fixed now.
-
-            } else if (type === "rotation_pattern") {
-                // Arrow pointing Up, Right, Down, ...
-                const dirs = ["Up", "Right", "Down", "Left"];
-                const startIdx = randomInt(0, 3);
-
-                qText = `
-                    <div class='question-container'>
-                        <p>An arrow rotates 90° clockwise in each step.</p>
-                        <p>Step 1: Arrow points <strong>${dirs[startIdx]}</strong></p>
-                        <p>Step 2: Arrow points <strong>${dirs[(startIdx + 1) % 4]}</strong></p>
-                        <p><strong>Which direction will it point in Step 3?</strong></p>
-                    </div>
-                 `;
-                correct = dirs[(startIdx + 2) % 4];
-
-                if (inputType === "mcq") {
-                    options = ["Up", "Right", "Down", "Left"];
-                } else {
-                    // For rotation, input is tricky, lets force MCQ for rotation or simplified text
-                    inputType = "mcq"; // Override
-                    options = ["Up", "Right", "Down", "Left"];
-                }
-                explanation = `The pattern is clockwise rotation.<br/>${dirs[startIdx]} -> ${dirs[(startIdx + 1) % 4]} -> <strong>${correct}</strong>.`;
-                uniqueId = `rot_${startIdx}`;
-
-            } else {
-                // Growth pattern (matchsticks)
-                // Shape 1: 4 (Square)
-                // Shape 2: 7 (2 Squares)
-                // Shape 3: 10 (3 Squares)
-                const n = randomInt(3, 5);
-                const val = 3 * n + 1;
-
-                qText = `
-                    <div class='question-container'>
-                        <p>Matchsticks are used to make a chain of linked squares.</p>
-                        <p>1 Square uses 4 matchsticks.</p>
-                        <p>2 Squares use 7 matchsticks.</p>
-                        <p>3 Squares use 10 matchsticks.</p>
-                        <p><strong>How many matchsticks for ${n} Squares?</strong></p>
+                        <p>${logicDescription}</p>
+                        <p>What is the <strong>maximum</strong> number a child at the <strong>end</strong> of the line can say?</p>
                     </div>
                 `;
-                correct = val.toString();
+                correct = "1";
                 if (inputType === "mcq") {
-                    options = [val.toString(), (val - 1).toString(), (val + 3).toString(), (4 * n).toString()];
+                    options = ["1", "2", "0", "Depends on line length"];
                 }
-                explanation = `The rule is $3n + 1$.<br/>For $n=${n}$: $3(${n}) + 1 = ${val}$.`;
-                uniqueId = `growth_${n}_${inputType}`;
+                explanation = "An end child has only <strong>one</strong> immediate neighbor. So, the count of taller neighbors can be either 0 or 1.";
+                uniqueId = `end_rule_${inputType}`;
             }
 
             if (attempts > 10) uniqueId = `force_${Date.now()}_${Math.random()}`;
@@ -262,9 +297,13 @@ const PatternsInShapes = () => {
         let uniqueOpts = [];
         if (inputType === "mcq") {
             uniqueOpts = [...new Set(options)];
-            while (uniqueOpts.length < 4) {
-                uniqueOpts.push((Math.floor(Math.random() * 100)).toString());
-                uniqueOpts = [...new Set(uniqueOpts)];
+            // If numeric options, ensure we have 4 distinct
+            if (options.every(o => !isNaN(parseInt(o)))) {
+                while (uniqueOpts.length < 4) {
+                    uniqueOpts.push(randomInt(0, 5).toString());
+                    uniqueOpts = [...new Set(uniqueOpts)];
+                }
+                uniqueOpts.sort((a, b) => parseInt(a) - parseInt(b)); // Sort numeric options often looks better, or shuffle. Let's shuffle.
             }
             setShuffledOptions([...uniqueOpts].sort(() => Math.random() - 0.5));
         }
@@ -340,17 +379,14 @@ const PatternsInShapes = () => {
         if (currentQuestion.type === "input" && !userInput.trim()) return;
 
         let isRight = false;
-        let answer = "";
 
         if (currentQuestion.type === "mcq") {
             isRight = selectedOption === currentQuestion.correctAnswer;
-            answer = selectedOption;
         } else {
-            // Flexible string check
-            const userClean = userInput.trim().toLowerCase();
-            const correctClean = currentQuestion.correctAnswer.toLowerCase();
+            // Flexible string check (remove spaces, match comma separated)
+            const userClean = userInput.replace(/\s+/g, '').toLowerCase();
+            const correctClean = currentQuestion.correctAnswer.replace(/\s+/g, '').toLowerCase();
             isRight = userClean === correctClean;
-            answer = userInput;
         }
 
         setIsCorrect(isRight);
@@ -377,7 +413,7 @@ const PatternsInShapes = () => {
             }
         }));
 
-        recordQuestionAttempt(currentQuestion, answer, isRight);
+        recordQuestionAttempt(currentQuestion, currentQuestion.type === "mcq" ? selectedOption : userInput, isRight);
     };
 
     const handlePrevious = () => {
@@ -439,7 +475,7 @@ const PatternsInShapes = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">{SKILL_NAME.split(' - ')[1]}</span>
+                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Numbers can Tell us Things</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
@@ -654,4 +690,4 @@ const PatternsInShapes = () => {
     );
 };
 
-export default PatternsInShapes;
+export default NumbersCanTellUsThings;

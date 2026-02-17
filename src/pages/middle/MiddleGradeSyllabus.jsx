@@ -107,6 +107,25 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('number play')) {
+                if (lowerSkillName.includes('tell us things')) {
+                    navigate(`/middle/grade/${grade}/number-play/numbers-things`);
+                    return;
+                }
+                if (lowerSkillName.includes('supercells')) {
+                    navigate(`/middle/grade/${grade}/number-play/supercells`);
+                    return;
+                }
+                if (lowerSkillName.includes('growing')) {
+                    navigate(`/middle/grade/${grade}/number-play/growing-patterns`);
+                    return;
+                }
+                if (lowerSkillName.includes('playing with digits')) {
+                    navigate(`/middle/grade/${grade}/number-play/playing-with-digits`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -171,6 +190,14 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'patterns-6', skill_name: 'Intro to Patterns', topic: 'Patterns in Mathematics' },
                 { skill_id: 'shapes-6', skill_name: 'Patterns in Shapes', topic: 'Patterns in Mathematics' },
                 { skill_id: 'relations-6', skill_name: 'Relations among Number Sequences', topic: 'Patterns in Mathematics' }
+            ]
+        };
+        skillsByTopic['Number Play'] = {
+            'Main': [
+                { skill_id: 'numbers-things-6', skill_name: 'Numbers can Tell us Things', topic: 'Number Play' },
+                { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
+                { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
+                { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
             ]
         };
     }

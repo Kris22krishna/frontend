@@ -86,6 +86,10 @@ import MixedBagPractice from './components/practice/grade-6/Perimeter and Area/M
 import VisualisingNumberSequences from './components/practice/grade-6/patterns-in-mathematics/VisualisingNumberSequences';
 import RelationsAmongNumberSequences from './components/practice/grade-6/patterns-in-mathematics/RelationsAmongNumberSequences';
 import PatternsInShapes from './components/practice/grade-6/patterns-in-mathematics/PatternsInShapes';
+import NumbersCanTellUsThings from './components/practice/grade-6/number-play/NumbersCanTellUsThings';
+import Supercells from './components/practice/grade-6/number-play/Supercells';
+import GrowingPatterns from './components/practice/grade-6/number-play/GrowingPatterns';
+import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -144,6 +148,11 @@ function App() {
         <Route path="/middle/grade/6/patterns-math/intro" element={<VisualisingNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/relations" element={<RelationsAmongNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/shapes" element={<PatternsInShapes />} />
+
+        <Route path="/middle/grade/6/number-play/numbers-things" element={<NumbersCanTellUsThings />} />
+        <Route path="/middle/grade/6/number-play/supercells" element={<Supercells />} />
+        <Route path="/middle/grade/6/number-play/growing-patterns" element={<GrowingPatterns />} />
+        <Route path="/middle/grade/6/number-play/playing-with-digits" element={<PlayingWithDigits />} />
 
 
         {/* Auth Routes */}
