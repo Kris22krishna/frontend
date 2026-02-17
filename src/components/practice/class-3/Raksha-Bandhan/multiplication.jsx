@@ -64,11 +64,16 @@ const RakshaBandhanMultiplication = () => {
     const [answers, setAnswers] = useState({}); // To track for report
 
     useEffect(() => {
+        console.log("RakshaBandhanMultiplication: Component Mounted");
         // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
+            console.log("RakshaBandhanMultiplication: Creating session for user", userId);
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
+                if (sess && sess.session_id) {
+                    console.log("RakshaBandhanMultiplication: Session created", sess.session_id);
+                    setSessionId(sess.session_id);
+                }
             }).catch(err => console.error("Failed to start session", err));
         }
 
@@ -88,8 +93,11 @@ const RakshaBandhanMultiplication = () => {
         const questions = [];
         const items = [...ITEMS].sort(() => Math.random() - 0.5);
         const seenCombinations = new Set();
+        let loopAttempts = 0;
 
-        while (questions.length < TOTAL_QUESTIONS) {
+        console.log("RakshaBandhanMultiplication: Starting question generation...");
+        while (questions.length < TOTAL_QUESTIONS && loopAttempts < 200) {
+            loopAttempts++;
             const index = questions.length;
             let groups, perGroup;
 
@@ -157,10 +165,8 @@ const RakshaBandhanMultiplication = () => {
                     shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
                 });
             }
-
-            // Safety break
-            if (seenCombinations.size > 100) break;
         }
+        console.log(`RakshaBandhanMultiplication: Generated ${questions.length} questions in ${loopAttempts} attempts.`);
 
         setSessionQuestions(questions);
 

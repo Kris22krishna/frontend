@@ -52,6 +52,15 @@ const JuniorSubtopics = () => {
             return;
         }
 
+        const gradeNumStr = String(grade).replace(/\D/g, '');
+        if (gradeNumStr === '1') {
+            const topicSlug = decodedTopic.toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/[()]/g, '');
+            navigate(`/junior/grade/1/${topicSlug}?skillId=${subtopic.id}`);
+            return;
+        }
+
         navigate(
             `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
             { state: { skills: subtopics, currentIndex: index } }
@@ -69,6 +78,11 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
             } else if (subtopic.id === "RB-03") {
                 navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            } else if (String(grade).replace(/\D/g, '') === '1') {
+                const topicSlug = decodedTopic.toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[()]/g, '');
+                navigate(`/junior/grade/1/${topicSlug}?skillId=${subtopic.id}`);
             } else {
                 navigate(
                     `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
@@ -83,16 +97,19 @@ const JuniorSubtopics = () => {
         const fetchSubtopics = async () => {
             try {
                 setLoading(true);
-                const gradeNum = grade.replace('grade', '');
+                const gradeNumStr = String(grade).replace(/\D/g, ''); // Digits only
+                const isGrade1 = gradeNumStr === '1';
+                const isGrade3 = gradeNumStr === '3';
+
                 let skillsResponse = [];
 
-                if (gradeNum !== '3') {
-                    skillsResponse = await api.getSkills(gradeNum);
+                if (!isGrade1 && !isGrade3) {
+                    skillsResponse = await api.getSkills(gradeNumStr);
                 }
 
                 // Filter by topic and get unique skills
                 const filteredSkills = (skillsResponse || [])
-                    .filter(skill => skill.topic === decodedTopic)
+                    .filter(skill => !isGrade1 && skill.topic === decodedTopic) // Block Grade 1 API topics
                     .filter((skill, index, self) =>
                         skill.skill_name && self.findIndex(s => s.skill_id === skill.skill_id) === index
                     );
@@ -106,7 +123,7 @@ const JuniorSubtopics = () => {
                 });
 
                 // Manually inject for special topics
-                const gradeConfigs = TOPIC_CONFIGS[gradeNum];
+                const gradeConfigs = TOPIC_CONFIGS[gradeNumStr];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
                     if (subtopicList.length === 0) {
                         gradeConfigs[decodedTopic].forEach((skill, index) => {

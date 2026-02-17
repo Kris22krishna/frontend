@@ -51,11 +51,16 @@ const RakshaBandhanDivision = () => {
     const [sessionQuestions, setSessionQuestions] = useState([]);
 
     useEffect(() => {
+        console.log("RakshaBandhanDivision: Component Mounted");
         // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
+            console.log("RakshaBandhanDivision: Creating session for user", userId);
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
+                if (sess && sess.session_id) {
+                    console.log("RakshaBandhanDivision: Session created", sess.session_id);
+                    setSessionId(sess.session_id);
+                }
             }).catch(err => console.error("Failed to start session", err));
         }
 
@@ -63,8 +68,11 @@ const RakshaBandhanDivision = () => {
         const questions = [];
         const storyTypes = ["rakhis", "laddoos", "kaju", "giftBoxes", "cards"];
         const seenCombinations = new Set();
+        let loopAttempts = 0;
 
-        while (questions.length < TOTAL_QUESTIONS) {
+        console.log("RakshaBandhanDivision: Starting question generation...");
+        while (questions.length < TOTAL_QUESTIONS && loopAttempts < 200) {
+            loopAttempts++;
             const storyType = storyTypes[questions.length % storyTypes.length];
             const groupSize = randomInt(3, 6);
             const groups = randomInt(4, 8);
@@ -146,10 +154,8 @@ const RakshaBandhanDivision = () => {
                     shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
                 });
             }
-
-            // Safety break to prevent infinite loop if ranges are too small, though they aren't here
-            if (seenCombinations.size > 100) break;
         }
+        console.log(`RakshaBandhanDivision: Generated ${questions.length} questions in ${loopAttempts} attempts.`);
 
         setSessionQuestions(questions);
 
