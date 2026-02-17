@@ -1,25 +1,23 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Check, ChevronRight, X, ChevronLeft, Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { api } from '../../../../services/api';
-import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
-import StickerExit from '../../../StickerExit';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const SquarePractice = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [side, setSide] = useState(0);
-    const [mode, setMode] = useState('perimeter'); // 'perimeter' or 'area'
+    const [mode, setMode] = useState('perimeter');
     const [userAnswer, setUserAnswer] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [timeElapsed, setTimeElapsed] = useState(0);
+    const [history, setHistory] = useState([]);
 
     const sessionId = useRef(null);
     const questionStartTime = useRef(Date.now());
@@ -28,12 +26,11 @@ const SquarePractice = () => {
     const TOTAL_QUESTIONS = 10;
     const SKILL_ID = 6002;
 
-    const CORRECT_MESSAGES = [
-        "✨ Excellent! You found the right answer! ✨",
-        "🌟 Square master! Great job! 🌟",
-        "🎉 Perfect calculation! 🎉",
-        "🚀 You're a geometry star! 🚀"
-    ];
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -42,7 +39,6 @@ const SquarePractice = () => {
                 if (sess && sess.session_id) sessionId.current = sess.session_id;
             }).catch(err => console.error("Failed to start session", err));
         }
-
         const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
         return () => clearInterval(timer);
     }, []);
@@ -52,15 +48,27 @@ const SquarePractice = () => {
     }, [qIndex]);
 
     const generateQuestion = () => {
-        const s = Math.floor(Math.random() * 15) + 3;
-        const newMode = Math.random() > 0.5 ? 'area' : 'perimeter';
+        if (history[qIndex]) {
+            const data = history[qIndex];
+            setSide(data.side);
+            setMode(data.mode);
+            setUserAnswer(data.userAnswer);
+            setIsSubmitted(data.isSubmitted);
+            setIsCorrect(data.isCorrect);
+            setFeedbackMessage(data.feedbackMessage || '');
+            setShowExplanation(false);
+        } else {
+            const s = Math.floor(Math.random() * 15) + 3;
+            const newMode = Math.random() > 0.5 ? 'area' : 'perimeter';
 
-        setSide(s);
-        setMode(newMode);
-        setUserAnswer('');
-        setIsSubmitted(false);
-        setIsCorrect(false);
-        setShowExplanation(false);
+            setSide(s);
+            setMode(newMode);
+            setUserAnswer('');
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            setShowExplanation(false);
+            setFeedbackMessage('');
+        }
         questionStartTime.current = Date.now();
     };
 
@@ -78,11 +86,25 @@ const SquarePractice = () => {
         setIsSubmitted(true);
         answers.current[qIndex] = isRight;
 
+        let msg = '';
         if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+            const messages = ["Great work!", "You got it!", "Square master!"];
+            msg = messages[Math.floor(Math.random() * messages.length)];
+            setFeedbackMessage(msg);
         } else {
             setShowExplanation(true);
         }
+
+        const newHistory = [...history];
+        newHistory[qIndex] = {
+            side,
+            mode,
+            userAnswer,
+            isSubmitted: true,
+            isCorrect: isRight,
+            feedbackMessage: msg
+        };
+        setHistory(newHistory);
 
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && sessionId.current) {
@@ -111,196 +133,127 @@ const SquarePractice = () => {
         }
     };
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    const handlePrevious = () => {
+        if (qIndex > 0) setQIndex(prev => prev - 1);
     };
 
     return (
-        <div className="min-h-screen bg-indigo-50 flex flex-col font-sans text-[#31326F]">
-            {/* Minimal Header */}
-            <header className="p-4 flex justify-between items-center max-w-4xl mx-auto w-full">
-                <div className="text-gray-500 font-medium">Question {qIndex + 1}/{TOTAL_QUESTIONS}</div>
-                <div className="text-xl font-bold bg-white px-4 py-2 rounded-full shadow-md border border-indigo-100">
-                    ⏱️ {formatTime(timeElapsed)}
+        <div className="min-h-screen bg-[#F0F8FF] flex flex-col font-sans text-[#31326F] pb-24">
+            <header className="p-6 flex justify-between items-center max-w-5xl mx-auto w-full">
+                <div className="bg-white px-6 py-2 rounded-full shadow-sm text-[#31326F] font-bold border border-indigo-50">
+                    Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                </div>
+                <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-indigo-50 font-bold text-[#31326F]">
+                    {formatTime(timeElapsed)}
                 </div>
             </header>
 
-            <main className="flex-1 flex flex-col items-center justify-center p-4 w-full">
-                {/* Main Card */}
-                <div className="bg-white rounded-3xl shadow-xl w-full max-w-4xl overflow-hidden border border-indigo-100">
-                    {/* Progress Bar */}
-                    <div className="h-2 bg-indigo-50 w-full">
-                        <div
-                            className="h-full bg-[#4FB7B3] transition-all duration-500"
-                            style={{ width: `${((qIndex) / TOTAL_QUESTIONS) * 100}%` }}
-                        />
+            <main className="flex-1 flex flex-col items-center justify-start p-4 w-full max-w-2xl mx-auto">
+                <div className="bg-white rounded-[32px] shadow-xl w-full overflow-hidden border border-indigo-50 p-8 flex flex-col items-center gap-8 min-h-[500px]">
+                    <div className="text-center space-y-2">
+                        <h2 className="text-2xl font-medium text-[#31326F]">
+                            Find the <span className="font-bold">{mode === 'area' ? 'Area' : 'Perimeter'}</span>
+                        </h2>
+                        <p className="text-gray-400 text-lg">of the square</p>
                     </div>
 
-                    <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        {/* Left Column: Question & Visualization */}
-                        <div className="flex flex-col items-center gap-6">
-                            <div className="text-center space-y-1">
-                                <h2 className="text-2xl md:text-3xl font-black text-[#31326F]">
-                                    Find the <span className="text-[#F471B5]">{mode.toUpperCase()}</span>
-                                </h2>
-                                <p className="text-gray-500 text-base">
-                                    of the square below
-                                </p>
-                            </div>
+                    <div className="flex-1 flex items-center justify-center w-full py-4 max-w-[340px] max-h-[340px]">
+                        <svg viewBox="0 0 300 300" className="w-full h-full drop-shadow-lg">
+                            {(() => {
+                                const rectSize = 180;
+                                const x = (300 - rectSize) / 2;
+                                const y = (300 - rectSize) / 2;
 
-                            <div className="relative w-full aspect-square max-w-[280px] bg-indigo-50/50 rounded-2xl p-4 flex items-center justify-center">
-                                <svg viewBox="0 0 300 300" className="w-full h-full drop-shadow-lg">
-                                    {(() => {
-                                        const rectSize = 180;
-                                        const x = (300 - rectSize) / 2;
-                                        const y = (300 - rectSize) / 2;
+                                return (
+                                    <g>
+                                        <rect
+                                            x={x} y={y} width={rectSize} height={rectSize}
+                                            fill={mode === 'area' ? "rgba(244, 113, 181, 0.1)" : "white"}
+                                            stroke="#31326F" strokeWidth="3" rx="4"
+                                        />
+                                        <g transform={`translate(${x - 25}, ${y + rectSize / 2})`}>
+                                            <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
+                                            <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{side} cm</text>
+                                        </g>
+                                        <g transform={`translate(${x + rectSize / 2}, ${y + rectSize + 25})`}>
+                                            <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
+                                            <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{side} cm</text>
+                                        </g>
+                                        {mode === 'perimeter' && (
+                                            <rect
+                                                x={x} y={y} width={rectSize} height={rectSize}
+                                                fill="none" stroke="#F471B5" strokeWidth="4" strokeDasharray="8,4"
+                                                className="animate-pulse" rx="4"
+                                            />
+                                        )}
+                                    </g>
+                                );
+                            })()}
+                        </svg>
+                    </div>
 
-                                        return (
-                                            <g>
-                                                <defs>
-                                                    <marker id="arrow-start" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
-                                                        <path d="M9,0 L0,3 L9,6" fill="#31326F" />
-                                                    </marker>
-                                                    <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
-                                                        <path d="M0,0 L10,3 L0,6" fill="#31326F" />
-                                                    </marker>
-                                                </defs>
-
-                                                <rect
-                                                    x={x}
-                                                    y={y}
-                                                    width={rectSize}
-                                                    height={rectSize}
-                                                    fill={mode === 'area' ? "rgba(244, 113, 181, 0.1)" : "white"}
-                                                    stroke="#31326F"
-                                                    strokeWidth="3"
-                                                    rx="4"
-                                                />
-
-                                                {/* Labels with Backgrounds */}
-                                                {/* Left Side Label */}
-                                                <g transform={`translate(${x - 25}, ${y + rectSize / 2})`}>
-                                                    <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">
-                                                        {side} cm
-                                                    </text>
-                                                </g>
-
-                                                {/* Bottom Side Label */}
-                                                <g transform={`translate(${x + rectSize / 2}, ${y + rectSize + 25})`}>
-                                                    <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">
-                                                        {side} cm
-                                                    </text>
-                                                </g>
-
-                                                {mode === 'perimeter' && (
-                                                    <rect
-                                                        x={x} y={y} width={rectSize} height={rectSize}
-                                                        fill="none" stroke="#F471B5" strokeWidth="4" strokeDasharray="8,4"
-                                                        className="animate-pulse"
-                                                        rx="4"
-                                                    />
-                                                )}
-                                            </g>
-                                        );
-                                    })()}
-                                </svg>
-                            </div>
-                        </div>
-
-                        {/* Right Column: Input Section */}
-                        <div className="flex flex-col items-center justify-center p-4 bg-indigo-50/30 rounded-3xl h-full mobile-min-h-unset">
-                            <div className="w-full max-w-sm space-y-6">
-                                {!isSubmitted ? (
-                                    <div className="flex flex-col gap-6 animate-in slide-in-from-bottom-4 fade-in duration-500">
-                                        <div className="text-center">
-                                            <label className="text-lg font-bold text-[#31326F] mb-2 block">
-                                                Your Answer:
-                                            </label>
-                                            <div className="relative">
-                                                <style>
-                                                    {`
-                                                        input[type=number]::-webkit-inner-spin-button, 
-                                                        input[type=number]::-webkit-outer-spin-button { 
-                                                            -webkit-appearance: none; 
-                                                            margin: 0; 
-                                                        }
-                                                        input[type=number] {
-                                                            -moz-appearance: textfield;
-                                                        }
-                                                    `}
-                                                </style>
-                                                <input
-                                                    type="number"
-                                                    value={userAnswer}
-                                                    onChange={(e) => setUserAnswer(e.target.value)}
-                                                    placeholder="?"
-                                                    className="w-full text-5xl font-black text-center p-6 border-2 border-indigo-200 rounded-3xl focus:outline-none focus:border-[#F471B5] focus:ring-4 focus:ring-[#F471B5]/10 transition-all text-[#31326F] placeholder:text-indigo-200 bg-white shadow-sm"
-                                                    autoFocus
-                                                    onKeyDown={(e) => e.key === 'Enter' && userAnswer && handleCheck()}
-                                                />
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xl pointer-events-none">
-                                                    {mode === 'area' ? 'cm²' : 'cm'}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={handleCheck}
-                                            disabled={!userAnswer}
-                                            className="w-full py-4 bg-[#31326F] text-white rounded-2xl font-bold text-xl hover:bg-[#252655] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-200 mt-2"
-                                        >
-                                            Check Answer
-                                        </button>
+                    <div className="w-full max-w-sm">
+                        <div className="flex flex-col items-center gap-4">
+                            {!isSubmitted ? (
+                                <div className="relative w-full">
+                                    <input
+                                        type="number"
+                                        value={userAnswer}
+                                        onChange={(e) => setUserAnswer(e.target.value)}
+                                        className="w-full bg-indigo-50/50 text-center text-2xl font-bold py-4 rounded-xl border-2 border-transparent focus:border-[#3B82F6] focus:bg-white focus:outline-none transition-all placeholder:text-gray-300 text-[#31326F]"
+                                        placeholder="Answer"
+                                        onKeyDown={(e) => e.key === 'Enter' && userAnswer && handleCheck()}
+                                    />
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">
+                                        {mode === 'area' ? 'cm²' : 'cm'}
                                     </div>
-                                ) : (
-                                    <div className="flex flex-col gap-6 animate-in zoom-in-95 duration-300 w-full">
-                                        <div className={`p-8 rounded-3xl text-center border-2 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
-                                            <div className={`text-3xl font-black mb-2 ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
-                                                {isCorrect ? "Correct! 🎉" : "Not quite"}
-                                            </div>
-                                            {isCorrect && (
-                                                <div className="text-green-700/80 font-medium text-lg">
-                                                    {feedbackMessage}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="flex flex-col gap-3">
-                                            {!isCorrect && (
-                                                <button
-                                                    onClick={() => setShowExplanation(true)}
-                                                    className="w-full py-4 bg-white border-2 border-indigo-100 text-[#31326F] rounded-2xl font-bold hover:bg-gray-50 transition-colors shadow-sm"
-                                                >
-                                                    See Steps
-                                                </button>
-                                            )}
+                                </div>
+                            ) : (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className={`w-full p-4 rounded-xl text-center border-2 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
+                                    <p className={`text-lg font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
+                                        {isCorrect ? "Correct!" : "Try Again"}
+                                    </p>
+                                    <p className="text-sm mt-1 text-gray-600">
+                                        {isCorrect ? feedbackMessage : (
                                             <button
-                                                onClick={handleNext}
-                                                className="w-full py-4 bg-[#4FB7B3] text-white rounded-2xl font-bold text-xl hover:bg-[#449e9b] active:scale-[0.98] transition-all shadow-lg shadow-teal-100"
+                                                onClick={() => setShowExplanation(true)}
+                                                className="mt-2 px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold hover:bg-red-200 transition-colors flex items-center justify-center gap-2 mx-auto"
                                             >
-                                                {qIndex < TOTAL_QUESTIONS - 1 ? "Next Question" : "Finish Practice"}
+                                                <Eye size={16} /> View Explanation
                                             </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                                        )}
+                                    </p>
+                                </motion.div>
+                            )}
                         </div>
                     </div>
                 </div>
             </main>
 
-            {/* Simple Footer */}
-            <footer className="p-6 text-center">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="text-gray-400 hover:text-[#31326F] font-semibold text-lg transition-colors flex items-center justify-center gap-2 mx-auto py-2 px-6 rounded-full hover:bg-white/50"
-                >
-                    <X size={20} /> Quit Practice
-                </button>
-            </footer>
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 pb-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-10">
+                <div className="max-w-5xl mx-auto flex items-center justify-between">
+                    <button onClick={() => navigate(-1)} className="px-6 py-3 rounded-full text-red-500 font-bold hover:bg-red-50 transition-colors flex items-center gap-2">
+                        Exit Practice
+                    </button>
+                    <div className="flex items-center gap-3">
+                        <button onClick={handlePrevious} disabled={qIndex === 0} className={`px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-[#3B82F6] text-white shadow-lg shadow-blue-200 hover:scale-105'}`}>
+                            <ChevronLeft size={20} /> PREV
+                        </button>
+                        {!isSubmitted ? (
+                            <button onClick={handleCheck} disabled={!userAnswer} className="px-8 py-3 rounded-full bg-gray-200 text-gray-500 font-bold hover:bg-gray-300 hover:text-gray-700 transition-all flex items-center gap-2 disabled:opacity-50">
+                                SUBMIT <Check size={20} />
+                            </button>
+                        ) : (
+                            <button onClick={handleNext} className="px-8 py-3 rounded-full bg-[#3B82F6] text-white font-bold shadow-lg shadow-blue-200 hover:bg-blue-600 hover:scale-105 transition-all flex items-center gap-2">
+                                {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "FINISH"} <ChevronRight size={20} />
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
 
             <ExplanationModal
                 isOpen={showExplanation}

@@ -82,6 +82,7 @@ import RectanglePractice from './components/practice/grade-6/Perimeter and Area/
 import SquarePractice from './components/practice/grade-6/Perimeter and Area/Square';
 import TrianglePractice from './components/practice/grade-6/Perimeter and Area/Triangle';
 import RegularPolygonPractice from './components/practice/grade-6/Perimeter and Area/Regular Polygon';
+import MixedBagPractice from './components/practice/grade-6/Perimeter and Area/MixedBag';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -136,6 +137,7 @@ function App() {
         <Route path="/middle/grade/6/perimeter-area/square" element={<SquarePractice />} />
         <Route path="/middle/grade/6/perimeter-area/triangle" element={<TrianglePractice />} />
         <Route path="/middle/grade/6/perimeter-area/regular-polygon" element={<RegularPolygonPractice />} />
+        <Route path="/middle/grade/6/perimeter-area/mixed-bag" element={<MixedBagPractice />} />
 
 
         {/* Auth Routes */}

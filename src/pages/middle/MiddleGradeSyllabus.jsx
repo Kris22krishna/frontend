@@ -86,6 +86,10 @@ const MiddleGradeSyllabus = () => {
                     navigate(`/middle/grade/${grade}/perimeter-area/regular-polygon`);
                     return;
                 }
+                if (lowerSkillName.includes('mixed')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/mixed-bag`);
+                    return;
+                }
             }
 
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
@@ -143,7 +147,8 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
                 { skill_id: 'sq-6', skill_name: 'Square', topic: 'Perimeter and Area' },
                 { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
-                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' }
+                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' },
+                { skill_id: 'mixed-6', skill_name: 'Mixed Bag', topic: 'Perimeter and Area' }
             ]
         };
     }
