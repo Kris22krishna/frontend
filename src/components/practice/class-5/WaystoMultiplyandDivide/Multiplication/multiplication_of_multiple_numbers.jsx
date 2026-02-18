@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // Corrected relative paths based on depth (5 levels up from src)
 import { api } from '../../../../../services/api';
@@ -38,6 +38,7 @@ const MultiplicationPracticeMultiple = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showResults, setShowResults] = useState(false);
 
     // Session / Timing State
     const [timeElapsed, setTimeElapsed] = useState(0);
@@ -235,7 +236,16 @@ const MultiplicationPracticeMultiple = () => {
         const isRight = selectedOption === currentQuestion.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                isCorrect: isRight,
+                selected: selectedOption,
+                questionText: currentQuestion.text,
+                correctAnswer: currentQuestion.correctAnswer,
+                solution: currentQuestion.solution
+            }
+        }));
 
         if (isRight) {
             setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
@@ -266,16 +276,12 @@ const MultiplicationPracticeMultiple = () => {
             questionStartTime.current = Date.now();
         } else {
             // Finish Session
-            if (sessionId) {
-                await api.finishSession(sessionId).catch(console.error);
-            }
-
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val === true).length;
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 try {
                     await api.createReport({
-                        title: SKILL_NAME,
+                        title: 'Multiplication Report',
                         type: 'practice',
                         score: (totalCorrect / TOTAL_QUESTIONS) * 100,
                         parameters: {
@@ -292,17 +298,173 @@ const MultiplicationPracticeMultiple = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            setShowResults(true);
         }
     };
 
-    if (!currentQuestion) return <div>Loading...</div>;
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+        }
+    };
+
+    const stats = (() => {
+        let correct = 0;
+        Object.values(answers).forEach(ans => {
+            if (ans.isCorrect) correct++;
+        });
+        return { correct, total: TOTAL_QUESTIONS };
+    })();
+
+    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold text-[#31326F]">Loading...</div>;
+
+    if (showResults) {
+        const score = stats.correct;
+        const total = stats.total;
+        const percentage = Math.round((score / total) * 100);
+
+        return (
+            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+                <header className="junior-practice-header results-header relative">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                    >
+                        Back to Topics
+                    </button>
+                    <div className="sun-timer-container">
+                        <div className="sun-timer">
+                            <div className="sun-rays"></div>
+                            <span className="timer-text">Done!</span>
+                        </div>
+                    </div>
+                    <div className="title-area">
+                        <h1 className="results-title">Multiplication Report</h1>
+                    </div>
+                </header>
+
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Sharply Calculated! 🎉</h2>
+
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}
+                                >
+                                    < Star
+                                        size={60}
+                                        fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
+                                        color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{total}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answers</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Multiplication Log 📜</h3>
+                        <div className="space-y-4">
+                            {Array.from({ length: TOTAL_QUESTIONS }).map((_, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                                {idx + 1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
+                                                    <LatexContent html={ans.questionText} />
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                            <LatexContent html={ans.selected} />
+                                                        </span>
+                                                    </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                <LatexContent html={ans.correctAnswer} />
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
+                                                        <LatexContent html={ans.solution} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Play Again
+                        </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>
+                            Back to Topics
+                        </button>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+        <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             {/* Header */}
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
+                    <button
+                        className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all"
+                        onClick={() => navigate(-1)}
+                    >
+                        <X size={24} />
+                    </button>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
@@ -388,7 +550,6 @@ const MultiplicationPracticeMultiple = () => {
                 onNext={() => setShowExplanationModal(false)}
             />
 
-            {/* Footer */}
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
@@ -399,20 +560,23 @@ const MultiplicationPracticeMultiple = () => {
                                 navigate(-1);
                             }}
                         >
-                            <X size={20} /> Exit
+                            Exit
                         </button>
                     </div>
-
                     <div className="bottom-center">
-                        {isSubmitted ? (
+                        {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={20} /> View Explanation
+                                <Eye size={20} /> Explain
                             </button>
-                        ) : null}
+                        )}
                     </div>
-
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious}>
+                                    <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -430,7 +594,6 @@ const MultiplicationPracticeMultiple = () => {
                     </div>
                 </div>
 
-                {/* Mobile Footer (Simplified) */}
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
                         <button
@@ -442,20 +605,28 @@ const MultiplicationPracticeMultiple = () => {
                         >
                             <X size={20} />
                         </button>
+
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
                                 <Eye size={18} /> Explain
                             </button>
                         )}
                     </div>
-                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
-                        <div className="nav-buttons-group">
+
+
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '75%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className="nav-buttons-group" style={{ gap: '6px' }}>
+                            {qIndex > 0 && (
+                                <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
+                                    Prev
+                                </button>
+                            )}
                             {isSubmitted ? (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                <button className="nav-pill-next-btn" onClick={handleNext} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
                                     Submit
                                 </button>
                             )}
