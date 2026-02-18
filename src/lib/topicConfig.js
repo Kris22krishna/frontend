@@ -63,9 +63,9 @@ export const TOPIC_CONFIGS = {
     },
     '2': {
         'What is Long, What is Round?': [
-            { id: "1001", name: "Identifying shapes (2D shapes)", route: "what-is-long-round" },
-            { id: "1002", name: "Comparing lengths", route: "what-is-long-round" },
-            { id: "1003", name: "Recognizing round objects", route: "what-is-long-round" }
+            { id: "1001", name: "Identifying shapes (2D shapes)", route: "identifying-shapes" },
+            { id: "1002", name: "Comparing lengths", route: "comparing-lengths" },
+            { id: "1003", name: "Recognizing round objects", route: "recognizing-round-objects" }
         ]
     },
     '3': {
