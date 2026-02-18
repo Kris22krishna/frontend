@@ -48,6 +48,21 @@ const JuniorSubtopics = () => {
             const subtopic = pendingSubtopic;
             const index = subtopics.findIndex(s => s.id === subtopic.id);
 
+            if (subtopic.id === "RB-01") return navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
+            if (subtopic.id === "RB-02") return navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
+            if (subtopic.id === "RB-03") return navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            if (subtopic.id === "RB-04") return navigate(`/junior/grade/${grade}/raksha-bandhan/factors`);
+
+            if (subtopic.id === "FS-01") return navigate(`/junior/grade/${grade}/fair-share/cutting`);
+            if (subtopic.id === "FS-02") return navigate(`/junior/grade/${grade}/fair-share/halves-doubles`);
+            if (subtopic.id === "FS-03") return navigate(`/junior/grade/${grade}/fair-share/draw`);
+            if (subtopic.id === "FS-04") return navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+
+            if (subtopic.id === "HH2-01") {
+                navigate(`/junior/grade/${grade}/house-of-hundreds/draw-tiles`);
+                return;
+            }
+
             navigate(
                 `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
                 { state: { skills: subtopics, currentIndex: index } }

@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar';
 import { LatexText } from '../../components/LatexText';
 import { api } from '../../services/api';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
+import { TOPIC_CONFIGS } from '../../lib/topicConfig';
 import './JuniorGradeSyllabus.css';
 
 // Topic icons with pastel colors for children
@@ -83,6 +84,28 @@ const JuniorGradeSyllabus = () => {
                         topicMap[topicName].skillCount += 1;
                     }
                 });
+
+                // Merge with local config
+                if (TOPIC_CONFIGS && TOPIC_CONFIGS[gradeNum]) {
+                    Object.entries(TOPIC_CONFIGS[gradeNum]).forEach(([topicName, skills]) => {
+                        if (!topicMap[topicName]) {
+                            topicMap[topicName] = {
+                                name: topicName,
+                                skills: [],
+                                skillCount: 0
+                            };
+                        }
+                        skills.forEach(skill => {
+                            if (!topicMap[topicName].skills.find(s => s.id === skill.id)) {
+                                topicMap[topicName].skills.push({
+                                    id: skill.id,
+                                    name: skill.name
+                                });
+                                topicMap[topicName].skillCount += 1;
+                            }
+                        });
+                    });
+                }
 
                 setTopics(Object.values(topicMap));
             } catch (error) {
