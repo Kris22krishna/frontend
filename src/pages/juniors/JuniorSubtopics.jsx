@@ -67,6 +67,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             return;
         }
+        if (subtopic.id === "HH2-01") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village routing
         const gradeNum = grade.replace('grade', '');
@@ -124,6 +128,8 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/fair-share/draw`);
             } else if (subtopic.id === "FS-04") {
                 navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            } else if (subtopic.id === "HH2-01") {
+                navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             } else if (String(grade).replace(/\D/g, '') === '1') {
                 const gradeConfigs = TOPIC_CONFIGS['1'];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {

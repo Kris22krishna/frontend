@@ -238,6 +238,12 @@ function App() {
           </ProtectedRoute>
         } />
 
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/draw-tiles" element={
+          <ProtectedRoute redirectTo="/login">
+            <DrawTiles />
+          </ProtectedRoute>
+        } />
+
         {/* Grade 8 Exponents and Powers - Negative Exponents */}
         <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
           <ProtectedRoute redirectTo="/login">
