@@ -302,6 +302,54 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/rational-numbers/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-plane-solid',
+                            skill_name: 'Plane Figures and Solid Shapes',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/plane-figures-solid-shapes'
+                        },
+                        {
+                            skill_id: 'local-fev',
+                            skill_name: 'Faces, Edges and Vertices',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/faces-edges-vertices'
+                        },
+                        {
+                            skill_id: 'local-nets',
+                            skill_name: 'Nets for Building 3-D Shapes',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/nets'
+                        },
+                        {
+                            skill_id: 'local-drawing',
+                            skill_name: 'Drawing Solids on a Flat Surface',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/drawing-solids'
+                        },
+                        {
+                            skill_id: 'local-sections',
+                            skill_name: 'Viewing Different Sections of a Solid',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/viewing-sections'
+                        },
+                        {
+                            skill_id: 'local-vss-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/chapter-test'
                         }
                     ];
                 }
@@ -324,8 +372,8 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers") && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes") && !skill.isLocal) return acc;
 
 
         const topic = skill.topic || 'General';
