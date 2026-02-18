@@ -93,6 +93,14 @@ import Associativity from './components/practice/class-8/rational-numbers/associ
 import Commutativity from './components/practice/class-8/rational-numbers/commutativity';
 import AdditiveMultiplicativeIdentity from './components/practice/class-8/rational-numbers/additive_multiplicative_identity';
 import Distributivity from './components/practice/class-8/rational-numbers/distributivity';
+import AreaOfPolygon from './components/practice/class-8/mensuration/area_of_polygon';
+import SurfaceAreaCuboid from './components/practice/class-8/mensuration/surface_area_cuboid';
+import SurfaceAreaCube from './components/practice/class-8/mensuration/surface_area_cube';
+import SurfaceAreaCylinder from './components/practice/class-8/mensuration/surface_area_cylinder';
+import VolumeOfCube from './components/practice/class-8/mensuration/volume_of_cube';
+import VolumeOfCuboid from './components/practice/class-8/mensuration/volume_of_cuboid';
+import VolumeOfCylinder from './components/practice/class-8/mensuration/volume_of_cylinder';
+import VolumeAndCapacity from './components/practice/class-8/mensuration/volume_and_capacity';
 
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
@@ -379,6 +387,48 @@ function App() {
         <Route path="/senior/grade/8/rational-numbers/distributivity" element={
           <ProtectedRoute redirectTo="/login">
             <Distributivity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Mensuration */}
+        <Route path="/senior/grade/8/mensuration/area-of-polygon" element={
+          <ProtectedRoute redirectTo="/login">
+            <AreaOfPolygon />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/surface-area-cuboid" element={
+          <ProtectedRoute redirectTo="/login">
+            <SurfaceAreaCuboid />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/surface-area-cube" element={
+          <ProtectedRoute redirectTo="/login">
+            <SurfaceAreaCube />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/surface-area-cylinder" element={
+          <ProtectedRoute redirectTo="/login">
+            <SurfaceAreaCylinder />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-of-cube" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeOfCube />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-of-cuboid" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeOfCuboid />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-of-cylinder" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeOfCylinder />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-and-capacity" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeAndCapacity />
           </ProtectedRoute>
         } />
 
