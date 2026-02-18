@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useDragControls } from 'framer-motion';
-import { ArrowLeft, RefreshCw, Check, X, Star } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Check, X, Star, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ExplanationModal from '../../../ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 // --- Tile Assets (CSS/SVG Shapes) ---
@@ -69,6 +70,10 @@ const DrawTiles = () => {
     const [score, setScore] = useState(0);
     const [showResult, setShowResult] = useState(false);
     const [feedback, setFeedback] = useState(null); // 'correct' | 'wrong' | null
+    const [isSubmitted, setIsSubmitted] = useState(false); // Controls if answer is locked
+    const [selectedMcqOption, setSelectedMcqOption] = useState(null); // Tracks selected MCQ option
+    const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [isCorrect, setIsCorrect] = useState(false);
 
     // State for Drag & Drop questions
     const [droppedTiles, setDroppedTiles] = useState({ 100: 0, 10: 0, 1: 0 });
@@ -77,23 +82,23 @@ const DrawTiles = () => {
 
     // Questions Data
     const questions = [
-        { type: 'drag-drop', target: 832, id: 1 },
-        { type: 'drag-drop', target: 504, id: 2 },
-        { type: 'drag-drop', target: 620, id: 3 },
-        { type: 'drag-drop', target: 947, id: 4 },
-        { type: 'drag-drop', target: 726, id: 5 },
-        { type: 'mcq', correct: 423, tiles: { 100: 4, 10: 2, 1: 3 }, options: [432, 423, 324, 234], id: 6 },
-        { type: 'mcq', correct: 605, tiles: { 100: 6, 10: 0, 1: 5 }, options: [506, 650, 605, 560], id: 7 },
-        { type: 'mcq', text: "Which number has 5 Hundreds and 2 Tens?", correct: 520, options: [502, 520, 250, 205], id: 8 },
-        { type: 'drag-drop', target: 700, id: 9 },
-        { type: 'mcq', correct: 134, tiles: { 100: 1, 10: 3, 1: 4 }, options: [143, 314, 134, 431], id: 10 },
+        { type: 'drag-drop', target: 832, id: 1, solution: "8 Hundreds, 3 Tens, and 2 Ones make 832." },
+        { type: 'drag-drop', target: 504, id: 2, solution: "5 Hundreds, 0 Tens, and 4 Ones make 504." },
+        { type: 'drag-drop', target: 620, id: 3, solution: "6 Hundreds, 2 Tens, and 0 Ones make 620." },
+        { type: 'drag-drop', target: 947, id: 4, solution: "9 Hundreds, 4 Tens, and 7 Ones make 947." },
+        { type: 'drag-drop', target: 726, id: 5, solution: "7 Hundreds, 2 Tens, and 6 Ones make 726." },
+        { type: 'mcq', correct: 423, tiles: { 100: 4, 10: 2, 1: 3 }, options: [432, 423, 324, 234], id: 6, solution: "Count the blocks: 4 Hundreds (400) + 2 Tens (20) + 3 Ones (3) = 423." },
+        { type: 'mcq', correct: 605, tiles: { 100: 6, 10: 0, 1: 5 }, options: [506, 650, 605, 560], id: 7, solution: "Count the blocks: 6 Hundreds (600) + 0 Tens + 5 Ones (5) = 605." },
+        { type: 'mcq', text: "Which number has 5 Hundreds and 2 Tens?", correct: 520, options: [502, 520, 250, 205], id: 8, solution: "5 Hundreds is 500. 2 Tens is 20. So the number is 520." },
+        { type: 'drag-drop', target: 700, id: 9, solution: "7 Hundreds, 0 Tens, and 0 Ones make 700." },
+        { type: 'mcq', correct: 134, tiles: { 100: 1, 10: 3, 1: 4 }, options: [143, 314, 134, 431], id: 10, solution: "Count the blocks: 1 Hundred (100) + 3 Tens (30) + 4 Ones (4) = 134." },
     ];
 
     const currentQ = questions[currentQIndex];
 
     // Helper to handle drops
     const handleDrop = (event, info, type) => {
-        if (!dropZoneRef.current) return;
+        if (!dropZoneRef.current || isSubmitted) return;
 
         // Check collision with drop zone
         const dropZoneRect = dropZoneRef.current.getBoundingClientRect();
@@ -111,33 +116,56 @@ const DrawTiles = () => {
     };
 
     const removeTile = (type) => {
+        if (isSubmitted) return;
         setDroppedTiles(prev => ({ ...prev, [type]: Math.max(0, prev[type] - 1) }));
     };
 
-    const handleCheckAnswer = (selectedOption = null) => {
-        let isCorrect = false;
+    const handleCheckAnswer = (option = null) => {
+        if (isSubmitted) return;
+
+        let isRight = false;
+        let selected = option;
 
         if (currentQ.type === 'drag-drop') {
             const currentVal = (droppedTiles[100] * 100) + (droppedTiles[10] * 10) + (droppedTiles[1] * 1);
-            isCorrect = currentVal === currentQ.target;
+            isRight = currentVal === currentQ.target;
         } else {
-            isCorrect = selectedOption === currentQ.correct;
+            // If called from footer submit without arg, use state
+            if (option === null) selected = selectedMcqOption;
+            isRight = selected === currentQ.correct;
+            setSelectedMcqOption(selected);
         }
 
-        if (isCorrect) {
+        setIsSubmitted(true);
+        setIsCorrect(isRight);
+
+        if (isRight) {
             setFeedback('correct');
             setScore(s => s + 1);
-            setTimeout(() => {
-                handleNext();
-            }, 1500);
         } else {
             setFeedback('wrong');
         }
     };
 
+    const handlePrevious = () => {
+        if (currentQIndex > 0) {
+            setCurrentQIndex(prev => prev - 1);
+            setFeedback(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            setDroppedTiles({ 100: 0, 10: 0, 1: 0 });
+            setSelectedMcqOption(null);
+            setShowExplanationModal(false);
+        }
+    };
+
     const handleNext = () => {
         setFeedback(null);
+        setIsSubmitted(false);
+        setIsCorrect(false);
         setDroppedTiles({ 100: 0, 10: 0, 1: 0 }); // Reset tiles
+        setSelectedMcqOption(null);
+        setShowExplanationModal(false);
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
         } else {
@@ -150,7 +178,14 @@ const DrawTiles = () => {
         setScore(0);
         setShowResult(false);
         setFeedback(null);
+        setIsSubmitted(false);
+        setIsCorrect(false);
         setDroppedTiles({ 100: 0, 10: 0, 1: 0 });
+        setSelectedMcqOption(null);
+    };
+
+    const handleMcqSelect = (opt) => {
+        if (!isSubmitted) setSelectedMcqOption(opt);
     };
 
     if (showResult) {
@@ -184,19 +219,18 @@ const DrawTiles = () => {
         );
     }
 
+    // Determine if submit should be disabled
+    const isSubmitDisabled = currentQ.type === 'mcq' ? selectedMcqOption === null : false;
+
     return (
         <div className="junior-practice-page" ref={containerRef}>
             {/* Header */}
             <header className="junior-practice-header flex items-center justify-between px-6 pt-4">
-                <button onClick={() => navigate(-1)} className="w-12 h-12 rounded-full bg-white border-2 border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50">
-                    <ArrowLeft size={24} />
-                </button>
                 <div className="flex-1 text-center">
                     <h2 className="text-2xl font-black text-[#31326F] bg-white/50 inline-block px-6 py-2 rounded-full backdrop-blur-sm">
                         Question {currentQIndex + 1} / {questions.length}
                     </h2>
                 </div>
-                <div className="w-12"></div>
             </header>
 
             {/* Main Content */}
@@ -205,7 +239,7 @@ const DrawTiles = () => {
 
                     {/* Feedback Overlay */}
                     {feedback && (
-                        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] animation-fade-in">
+                        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] animation-fade-in pointer-events-none">
                             <motion.div
                                 initial={{ scale: 0.5, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
@@ -224,9 +258,6 @@ const DrawTiles = () => {
                                             <X size={40} color="white" strokeWidth={4} />
                                         </div>
                                         <h2 className="text-3xl font-black text-[#B71C1C]">Try Again!</h2>
-                                        <button onClick={() => setFeedback(null)} className="mt-4 px-6 py-2 bg-white rounded-full font-bold text-[#B71C1C] hover:bg-[#FFUV00]">
-                                            Retry
-                                        </button>
                                     </>
                                 )}
                             </motion.div>
@@ -329,13 +360,6 @@ const DrawTiles = () => {
                                         </div>
                                     </div>
                                 </div>
-
-                                <button
-                                    onClick={() => handleCheckAnswer()}
-                                    className="mt-auto w-full py-4 rounded-xl bg-[#00C853] text-white font-black text-xl shadow-[0_4px_0_#009624] hover:transform hover:-translate-y-1 hover:bg-[#00E676] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-2"
-                                >
-                                    <Check strokeWidth={3} /> CHECK
-                                </button>
                             </div>
                         )}
 
@@ -345,8 +369,15 @@ const DrawTiles = () => {
                                 {currentQ.options.map((opt, i) => (
                                     <button
                                         key={i}
-                                        onClick={() => handleCheckAnswer(opt)}
-                                        className="py-6 rounded-2xl bg-white border-b-4 border-slate-200 text-3xl font-black text-[#31326F] hover:bg-blue-50 hover:border-blue-300 hover:text-[#2979FF] transition-all shadow-lg text-center"
+                                        onClick={() => handleMcqSelect(opt)}
+                                        className={`py-6 rounded-2xl border-b-4 text-3xl font-black transition-all shadow-lg text-center relative
+                                            ${selectedMcqOption === opt
+                                                ? 'bg-[#31326F] border-[#1e1f48] text-white scale-[1.02] shadow-xl z-10 ring-4 ring-blue-100'
+                                                : 'bg-white border-slate-200 text-[#31326F] hover:bg-blue-50 hover:border-blue-300 hover:text-[#2979FF] hover:-translate-y-1'}
+                                            ${isSubmitted && opt === currentQ.correct ? '!bg-green-500 !border-green-700 !text-white !ring-green-200' : ''}
+                                            ${isSubmitted && selectedMcqOption === opt && selectedMcqOption !== currentQ.correct ? '!bg-red-500 !border-red-700 !text-white !ring-red-200' : ''}
+                                        `}
+                                        disabled={isSubmitted}
                                     >
                                         {opt}
                                     </button>
@@ -356,6 +387,114 @@ const DrawTiles = () => {
                     </div>
                 </div>
             </main>
+
+            <ExplanationModal
+                isOpen={showExplanationModal}
+                isCorrect={isCorrect}
+                correctAnswer={
+                    currentQ.type === 'mcq'
+                        ? currentQ.correct
+                        : (
+                            <div className="flex flex-wrap gap-2 items-center">
+                                <span className="mr-2 text-xl font-black text-[#31326F]">{currentQ.target} =</span>
+                                {[...Array(Math.floor(currentQ.target / 100))].map((_, i) =>
+                                    <Tile100 key={`h-${i}`} style={{ width: '40px', height: '40px', borderColor: '#FFCA28', borderWidth: '1px' }} />
+                                )}
+                                {[...Array(Math.floor((currentQ.target % 100) / 10))].map((_, i) =>
+                                    <Tile10 key={`t-${i}`} style={{ height: '40px', width: '10px', borderColor: '#29B6F6', borderWidth: '1px' }} />
+                                )}
+                                {[...Array(currentQ.target % 10)].map((_, i) =>
+                                    <Tile1 key={`o-${i}`} style={{ width: '10px', height: '10px', borderColor: '#66BB6A', borderWidth: '1px' }} />
+                                )}
+                            </div>
+                        )
+                }
+                explanation={currentQ.solution}
+                onClose={() => setShowExplanationModal(false)}
+                onNext={() => setShowExplanationModal(false)}
+            />
+
+            <footer className="junior-bottom-bar">
+                <div className="desktop-footer-controls">
+                    <div className="bottom-left">
+                        <button
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            onClick={() => navigate(-1)}
+                        >
+                            <X size={20} /> Exit Practice
+                        </button>
+                    </div>
+                    <div className="bottom-center">
+                        {isSubmitted && (
+                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
+                                <Eye size={20} /> View Explanation
+                            </button>
+                        )}
+                    </div>
+                    <div className="bottom-right">
+                        <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={currentQIndex === 0}
+                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                            >
+                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                            </button>
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {currentQIndex < questions.length - 1 ? (
+                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                    ) : (
+                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                    )}
+                                </button>
+                            ) : (
+                                <button className="nav-pill-submit-btn" onClick={() => handleCheckAnswer(null)} disabled={isSubmitDisabled}>
+                                    Submit <Check size={28} strokeWidth={3} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mobile-footer-controls">
+                    <div className="flex items-center gap-2">
+                        <button
+                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
+                            onClick={() => navigate(-1)}
+                        >
+                            <X size={20} />
+                        </button>
+                        {isSubmitted && (
+                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
+                                <Eye size={18} /> Explain
+                            </button>
+                        )}
+                    </div>
+                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
+                        <div className="nav-buttons-group">
+                            <button
+                                className="nav-pill-next-btn"
+                                onClick={handlePrevious}
+                                disabled={currentQIndex === 0}
+                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, padding: '8px 12px', marginRight: '8px', backgroundColor: '#eef2ff', color: '#31326F', minWidth: 'auto' }}
+                            >
+                                <ChevronLeft size={20} strokeWidth={3} />
+                            </button>
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {currentQIndex < questions.length - 1 ? "Next" : "Done"}
+                                </button>
+                            ) : (
+                                <button className="nav-pill-submit-btn" onClick={() => handleCheckAnswer(null)} disabled={isSubmitDisabled}>
+                                    Submit
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 };

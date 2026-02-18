@@ -75,7 +75,10 @@ export const TOPIC_CONFIGS = {
             { id: "FS-04", name: "Guess Who Am I?" }
         ],
         'House of Hundreds II': [
-            { id: "HH2-01", name: "Draw tiles" }
+            { id: "HH2-01", name: "Draw tiles" },
+            { id: "HH2-02", name: "Neighbouring numbers" },
+            { id: "HH2-03", name: "Help cranes on number line" },
+            { id: "HH2-04", name: "Tambola" }
         ]
     },
     '4': {

@@ -71,6 +71,18 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             return;
         }
+        if (subtopic.id === "HH2-02") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/neighbouring-numbers`);
+            return;
+        }
+        if (subtopic.id === "HH2-03") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/help-cranes`);
+            return;
+        }
+        if (subtopic.id === "HH2-04") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/tambola`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village routing
         const gradeNum = grade.replace('grade', '');
