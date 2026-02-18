@@ -51,7 +51,15 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-rn-commutativity', skill_name: 'Commutativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-associativity', skill_name: 'Associativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-identity', skill_name: 'Additive and Multiplicative Identity', topic: 'Rational Numbers' },
-                        { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' }
+                        { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-mens-polygon', skill_name: 'Area of Polygon', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cuboid', skill_name: 'Surface Area of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cube', skill_name: 'Surface Area of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cylinder', skill_name: 'Surface Area of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cube', skill_name: 'Volume of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cuboid', skill_name: 'Volume of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cylinder', skill_name: 'Volume of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-capacity', skill_name: 'Volume and Capacity', topic: 'Mensuration' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -161,6 +169,74 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Properties of Rational Numbers',
                 isLocal: true,
                 path: '/senior/grade/8/rational-numbers/distributivity'
+            }
+        ];
+
+        // Hardcode all Grade 8 skills for Mensuration (8 skills)
+        skillsByTopic['Mensuration'] = [
+            {
+                skill_id: 'local-8-mens-polygon',
+                skill_name: 'Area of Polygon',
+                topic: 'Mensuration',
+                subtopic: 'Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/area-of-polygon'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cuboid',
+                skill_name: 'Surface Area of Cuboid',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cuboid'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cube',
+                skill_name: 'Surface Area of Cube',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cube'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cylinder',
+                skill_name: 'Surface Area of Cylinder',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cylinder'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cube',
+                skill_name: 'Volume of Cube',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cube'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cuboid',
+                skill_name: 'Volume of Cuboid',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cuboid'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cylinder',
+                skill_name: 'Volume of Cylinder',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cylinder'
+            },
+            {
+                skill_id: 'local-8-mens-vol-capacity',
+                skill_name: 'Volume and Capacity',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-and-capacity'
             }
         ];
     }
