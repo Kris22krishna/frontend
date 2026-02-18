@@ -173,6 +173,20 @@ import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Vi
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
 
+const ComingSoon = () => (
+  <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
+    <h1 className="text-6xl mb-4">🚧</h1>
+    <h2 className="text-3xl font-bold text-slate-800">Coming Soon!</h2>
+    <p className="text-slate-500 mt-2">This practice session is currently under development.</p>
+    <button
+      onClick={() => window.history.back()}
+      className="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+    >
+      Go Back
+    </button>
+  </div>
+);
+
 function App() {
   return (
     <Router>
@@ -271,6 +285,16 @@ function App() {
             <ComparingLargeSmallNumbers />
           </ProtectedRoute>
         } />
+
+        {/* Grade 5 - Tenths and Hundredths (Coming Soon Placeholders) */}
+        <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<ComingSoon />} />
+        <Route path="/middle/grade/5/tenths-hundredths/fraction-to-decimal" element={<ComingSoon />} />
+        <Route path="/middle/grade/5/tenths-hundredths/visual-representation" element={<ComingSoon />} />
+        <Route path="/middle/grade/5/tenths-hundredths/measurement" element={<ComingSoon />} />
+        <Route path="/middle/grade/5/tenths-hundredths/money" element={<ComingSoon />} />
+        <Route path="/middle/grade/5/tenths-hundredths/comparing" element={<ComingSoon />} />
+        <Route path="/middle/grade/5/tenths-hundredths/operations" element={<ComingSoon />} />
+        <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ComingSoon />} />
 
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={

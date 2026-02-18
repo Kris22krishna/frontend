@@ -322,7 +322,7 @@ const MiddleGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5
+        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
         if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers") return acc;
         if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers") && !skill.isLocal) return acc;
@@ -336,6 +336,80 @@ const MiddleGradeSyllabus = () => {
         acc[topic][subTopic].push(skill);
         return acc;
     }, {});
+
+    const gradeInt = parseInt(grade.replace('grade', ''));
+
+    // Manual Override for Grade 5 Tenths and Hundredths
+    if (gradeInt === 5) {
+        skillsByTopic['Tenths and Hundredths'] = {
+            'Decimals': [
+                {
+                    skill_id: 'g5-th-01',
+                    skill_name: 'Place Values of Decimals',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/place-values'
+                },
+                {
+                    skill_id: 'g5-th-02',
+                    skill_name: 'Fraction to Decimal Conversion',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/fraction-to-decimal'
+                },
+                {
+                    skill_id: 'g5-th-03',
+                    skill_name: 'Decimal Visual Representation',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/visual-representation'
+                },
+                {
+                    skill_id: 'g5-th-04',
+                    skill_name: 'Decimal in Measurement',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/measurement'
+                },
+                {
+                    skill_id: 'g5-th-05',
+                    skill_name: 'Decimal in Money',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/money'
+                },
+                {
+                    skill_id: 'g5-th-06',
+                    skill_name: 'Comparing Decimals',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/comparing'
+                },
+                {
+                    skill_id: 'g5-th-07',
+                    skill_name: 'Decimal Operations',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/operations'
+                },
+                {
+                    skill_id: 'g5-th-08',
+                    skill_name: 'Conversion Between Forms',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/conversion'
+                }
+            ]
+        };
+    }
 
     // Manual Override for Grade 6 Perimeter and Area
     if (parseInt(grade.replace('grade', '')) === 6) {
