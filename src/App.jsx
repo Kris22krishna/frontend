@@ -141,6 +141,12 @@ import ComparisonOfRationalNumbers from './components/practice/class-7/rational 
 import RationalNumbersBetween from './components/practice/class-7/rational numbers/RationalNumbersBetween';
 import OperationsOnRationalNumbers from './components/practice/class-7/rational numbers/OperationsOnRationalNumbers';
 import RationalNumbersTest from './components/practice/class-7/rational numbers/RationalNumbersTest';
+import PlaneFiguresSolidShapes from './components/practice/class-7/visualising solid shapes/PlaneFiguresSolidShapes';
+import FacesEdgesVertices from './components/practice/class-7/visualising solid shapes/FacesEdgesVertices';
+import NetsBuilding3DShapes from './components/practice/class-7/visualising solid shapes/NetsBuilding3DShapes';
+import DrawingSolids from './components/practice/class-7/visualising solid shapes/DrawingSolids';
+import ViewingSections from './components/practice/class-7/visualising solid shapes/ViewingSections';
+import VisualisingSolidShapesTest from './components/practice/class-7/visualising solid shapes/VisualisingSolidShapesTest';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -418,6 +424,14 @@ function App() {
         <Route path="/middle/grade/7/rational-numbers/between" element={<RationalNumbersBetween />} />
         <Route path="/middle/grade/7/rational-numbers/operations" element={<OperationsOnRationalNumbers />} />
         <Route path="/middle/grade/7/rational-numbers/chapter-test" element={<RationalNumbersTest />} />
+
+        {/* Visualising Solid Shapes */}
+        <Route path="/middle/grade/7/visualising-solid-shapes/plane-figures-solid-shapes" element={<PlaneFiguresSolidShapes />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/faces-edges-vertices" element={<FacesEdgesVertices />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/nets" element={<NetsBuilding3DShapes />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/drawing-solids" element={<DrawingSolids />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/viewing-sections" element={<ViewingSections />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/chapter-test" element={<VisualisingSolidShapesTest />} />
 
 
         {/* Auth Routes */}
