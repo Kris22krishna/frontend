@@ -81,6 +81,18 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+
+// Grade 5 Decimal Practice Components
+import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
+import FractionToDecimalConversion from './components/practice/class-5/TenthsandHundrendths/Decimals/fraction-to-decimal-conversion';
+import DecimalVisualRepresentation from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-visual-representation';
+import DecimalInMeasurement from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-measurement';
+import DecimalInMoney from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-money';
+import ComparingDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/comparing-decimals';
+import DecimalOperations from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-operations';
+import ConversionBetweenForms from './components/practice/class-5/TenthsandHundrendths/Decimals/conversion-between-forms';
+import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
+
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -286,15 +298,16 @@ function App() {
           </ProtectedRoute>
         } />
 
-        {/* Grade 5 - Tenths and Hundredths (Coming Soon Placeholders) */}
-        <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<ComingSoon />} />
-        <Route path="/middle/grade/5/tenths-hundredths/fraction-to-decimal" element={<ComingSoon />} />
-        <Route path="/middle/grade/5/tenths-hundredths/visual-representation" element={<ComingSoon />} />
-        <Route path="/middle/grade/5/tenths-hundredths/measurement" element={<ComingSoon />} />
-        <Route path="/middle/grade/5/tenths-hundredths/money" element={<ComingSoon />} />
-        <Route path="/middle/grade/5/tenths-hundredths/comparing" element={<ComingSoon />} />
-        <Route path="/middle/grade/5/tenths-hundredths/operations" element={<ComingSoon />} />
-        <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ComingSoon />} />
+        {/* Grade 5 - Tenths and Hundredths */}
+        <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/fraction-to-decimal" element={<FractionToDecimalConversion />} />
+        <Route path="/middle/grade/5/tenths-hundredths/visual-representation" element={<DecimalVisualRepresentation />} />
+        <Route path="/middle/grade/5/tenths-hundredths/measurement" element={<DecimalInMeasurement />} />
+        <Route path="/middle/grade/5/tenths-hundredths/money" element={<DecimalInMoney />} />
+        <Route path="/middle/grade/5/tenths-hundredths/comparing" element={<ComparingDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/operations" element={<DecimalOperations />} />
+        <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ConversionBetweenForms />} />
+        <Route path="/middle/grade/5/tenths-hundredths/word-problems" element={<DecimalWordProblems />} />
 
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={

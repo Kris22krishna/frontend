@@ -9,16 +9,79 @@ import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+const ShadedGrid = ({ total, shaded }) => {
+    const rows = 10;
+    const cols = total / 10;
+    const cells = [];
+    for (let i = 0; i < total; i++) {
+        cells.push(
+            <div
+                key={i}
+                className={`w-6 h-6 border border-gray-300 ${i < shaded ? 'bg-[#4FB7B3]' : 'bg-gray-100'}`}
+            ></div>
+        );
+    }
+    return (
+        <div className="flex flex-wrap gap-0 justify-center my-4" style={{ width: `${cols * 24}px`, margin: '0 auto' }}>
+            {cells}
+        </div>
+    );
+};
+
+const FractionGrid = ({ shaded }) => {
+    // 10-block strip
+    return (
+        <div className="flex h-12 w-64 border-2 border-[#31326F] overflow-hidden rounded-lg mx-auto my-6">
+            {[...Array(10)].map((_, i) => (
+                <div key={i} className={`flex-1 border-r border-[#31326F] last:border-r-0 ${i < shaded ? 'bg-[#4FB7B3]' : 'bg-white'}`}></div>
+            ))}
+        </div>
+    );
+};
+
+const NumberLine = ({ value }) => {
+    return (
+        <div className="w-full max-w-xl mx-auto my-16 relative h-20 flex items-center px-8">
+            {/* The Main Line */}
+            <div className="absolute left-8 right-8 h-1.5 bg-slate-800 rounded-full"></div>
+
+            {/* Ticks and Labels */}
+            <div className="absolute left-8 right-8 flex justify-between h-8 top-1/2 mt-1">
+                {[...Array(11)].map((_, i) => (
+                    <div key={i} className="flex flex-col items-center" style={{ width: '0' }}>
+                        <div className="w-0.5 h-4 bg-slate-800"></div>
+                        <span className="text-sm mt-2 font-black text-slate-700">{(i / 10).toFixed(1)}</span>
+                    </div>
+                ))}
+            </div>
+
+            {/* The Marker */}
+            <div className="absolute left-8 right-8 h-1.5 top-1/2 -translate-y-1/2">
+                <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                    style={{ left: `${(value * 100)}%` }}
+                    className="absolute -top-12 w-10 h-10 bg-red-500 rounded-full border-4 border-white shadow-xl flex items-center justify-center -translate-x-1/2"
+                >
+                    <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse"></div>
+                    {/* Tick pointer below marker */}
+                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-3 bg-red-500 rounded-full"></div>
+                </motion.div>
+            </div>
+        </div>
+    );
+};
+
 const CORRECT_MESSAGES = [
-    "✨ Amazing! You're a decimal expert! ✨",
-    "🌟 You're a place value wizard! 🌟",
-    "🎉 Correct! You really know your decimals! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! Keep striving for excellence! 🚀",
-    "💎 Spot on! Excellent! 💎"
+    "✨ Your eyes are like a hawk! Great job! ✨",
+    "🌟 Visual pattern master! 🌟",
+    "🎉 Correct! You visualized the decimal perfectly! 🎉",
+    "✨ Brilliant! ✨",
+    "🚀 Zooming ahead! 🚀"
 ];
 
-const PlaceValuesOfDecimals = () => {
+const DecimalVisualRepresentation = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -37,8 +100,8 @@ const PlaceValuesOfDecimals = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 1054;
-    const SKILL_NAME = "Place Values of Decimals";
+    const SKILL_ID = 1056;
+    const SKILL_NAME = "Decimal Visual Representation";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -63,138 +126,102 @@ const PlaceValuesOfDecimals = () => {
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
-        const generateEasyQuestion = (idx) => {
-            const types = ['identifyDigit', 'identifyPlace', 'decimalToWords'];
-            const type = types[idx % types.length];
-            let decimal, digitVal, placeName, questionText, correctAnswer, solution, options;
+        const generateQuestions = () => {
+            const questions = [];
+            const usedValues = new Set();
 
-            const n = randomInt(1, 99);
-            const d = randomInt(1, 9);
-            decimal = (n + d / 10).toFixed(1);
-
-            if (type === 'identifyDigit') {
-                const isTenths = Math.random() > 0.5;
-                digitVal = isTenths ? d : (n % 10);
-                placeName = isTenths ? 'tenths' : 'ones';
-                questionText = `What digit is in the <strong>${placeName}</strong> place of $${decimal}$?`;
-                correctAnswer = digitVal.toString();
-                solution = `In the decimal $${decimal}$, the digit to the right of the decimal point is the tenths place, and the digit to the left is the ones place.<br/>So, the digit in the <strong>${placeName}</strong> place is <strong>${correctAnswer}</strong>.`;
-                options = [correctAnswer, ...new Set([randomInt(0, 9).toString(), randomInt(0, 9).toString(), randomInt(0, 9).toString()])].slice(0, 4);
-            } else if (type === 'identifyPlace') {
-                const isTenths = Math.random() > 0.5;
-                digitVal = isTenths ? d : (n % 10);
-                questionText = `In the number $${decimal}$, what is the place value of the digit <strong>${digitVal}</strong>?`;
-                correctAnswer = isTenths ? 'Tenths' : 'Ones';
-                solution = `The digit <strong>${digitVal}</strong> is in the <strong>${correctAnswer}</strong> place.`;
-                options = ['Ones', 'Tens', 'Tenths', 'Hundredths'];
-            } else {
-                decimal = (d / 10).toFixed(1);
-                questionText = `How many tenths are in $${decimal}$?`;
-                correctAnswer = d.toString();
-                solution = `$${decimal}$ is equal to <strong>${d}</strong> tenths.`;
-                options = [d.toString(), (d * 10).toString(), (d + 1).toString(), '1'];
+            // Easy (3 Questions)
+            while (questions.length < 3) {
+                const shaded = randomInt(1, 9);
+                const valStr = `easy-${shaded}`;
+                if (!usedValues.has(valStr)) {
+                    usedValues.add(valStr);
+                    const correctAnswer = `0.${shaded}`;
+                    questions.push({
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2rem; font-weight: normal; text-align: center;'>
+                                Look at the grid below. What decimal is represented by the <strong>shaded part</strong>?
+                             </div>`,
+                        correctAnswer,
+                        solution: `The strip is divided into $10$ equal parts. $${shaded}$ parts are shaded. This represents $\\frac{${shaded}}{10}$ or <strong>${correctAnswer}</strong>.`,
+                        visual: <FractionGrid shaded={shaded} />,
+                        shuffledOptions: [correctAnswer, `0.0${shaded}`, `${shaded}.0`, `1.${shaded}`].sort(() => Math.random() - 0.5)
+                    });
+                }
             }
-            return { questionText, correctAnswer, solution, options };
+
+            // Medium (3 Questions)
+            while (questions.length < 6) {
+                const shaded = randomInt(11, 99);
+                const valStr = `medium-${shaded}`;
+                if (!usedValues.has(valStr)) {
+                    usedValues.add(valStr);
+                    const correctAnswer = `0.${shaded}`;
+                    questions.push({
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2rem; font-weight: normal; text-align: center;'>
+                                Identify the decimal shown by the shaded squares in this $100$-square grid.
+                             </div>`,
+                        correctAnswer,
+                        solution: `There are $100$ small squares. $${shaded}$ are shaded. This is $\\frac{${shaded}}{100}$ or <strong>${correctAnswer}</strong>.`,
+                        visual: <ShadedGrid total={100} shaded={shaded} />,
+                        shuffledOptions: [correctAnswer, `0.0${shaded}`, `${(shaded / 10).toFixed(1)}`, `1.${shaded}`].sort(() => Math.random() - 0.5)
+                    });
+                }
+            }
+
+            // Hard (4 Questions)
+            const hardTypes = ['numberLine', 'numberLine', 'mixedVisual', 'mixedVisual'].sort(() => Math.random() - 0.5);
+            let hIdx = 0;
+            while (questions.length < 10) {
+                const type = hardTypes[hIdx];
+                if (type === 'numberLine') {
+                    const val = randomInt(1, 9) / 10;
+                    const valStr = `hard-nl-${val}`;
+                    if (!usedValues.has(valStr)) {
+                        usedValues.add(valStr);
+                        const correctAnswer = val.toFixed(1);
+                        const opts = [val.toFixed(1), (val + 0.1).toFixed(1), (val - 0.1).toFixed(1), '0.5'].filter((v, i, a) => a.indexOf(v) === i);
+                        while (opts.length < 4) opts.push((randomInt(0, 10) / 10).toFixed(1));
+
+                        questions.push({
+                            text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2rem; font-weight: normal; text-align: center;'>
+                                    What decimal value is indicated by the red marker on the number line?
+                                 </div>`,
+                            correctAnswer,
+                            solution: `The marker is at the $${(val * 10).toFixed(0)}$ mark between $0$ and $1$. Each mark represents 0.1. So it is <strong>${correctAnswer}</strong>.`,
+                            visual: <NumberLine value={val} />,
+                            shuffledOptions: opts.sort(() => Math.random() - 0.5)
+                        });
+                        hIdx++;
+                    }
+                } else {
+                    const shaded = randomInt(2, 8);
+                    const valStr = `hard-mv-${shaded}`;
+                    if (!usedValues.has(valStr)) {
+                        usedValues.add(valStr);
+                        const correctAnswer = `${shaded}`;
+                        questions.push({
+                            text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2rem; font-weight: normal; text-align: center;'>
+                                    How many tenths are shaded in this figure?
+                                 </div>`,
+                            correctAnswer,
+                            solution: `The figure shows $1$ whole divided into $10$ parts. $${shaded}$ parts are shaded, so there are <strong>${shaded}</strong> tenths.`,
+                            visual: <FractionGrid shaded={shaded} />,
+                            shuffledOptions: [correctAnswer, `0.${shaded}`, `0.0${shaded}`, `${shaded * 10}`].sort(() => Math.random() - 0.5)
+                        });
+                        hIdx++;
+                    }
+                }
+            }
+            return questions;
         };
 
-        const generateMediumQuestion = (idx) => {
-            const types = ['valueOfDigit', 'expandedForm', 'compareDecimals'];
-            const type = types[idx % types.length];
-            let decimal, digitVal, placeVal, questionText, correctAnswer, solution, options;
-
-            const n = randomInt(1, 9);
-            const d1 = randomInt(1, 9);
-            const d2 = randomInt(1, 9);
-            decimal = `${n}.${d1}${d2}`;
-
-            if (type === 'valueOfDigit') {
-                const isHundredths = Math.random() > 0.5;
-                digitVal = isHundredths ? d2 : d1;
-                placeVal = isHundredths ? (d2 / 100).toFixed(2) : (d1 / 10).toFixed(1);
-                questionText = `What is the value of the digit <strong>${digitVal}</strong> in $${decimal}$?`;
-                correctAnswer = `$${placeVal}$`;
-                solution = `The digit <strong>${digitVal}</strong> is in the ${isHundredths ? 'hundredths' : 'tenths'} place, so its value is $${placeVal}$.`;
-                options = [`$${(digitVal / 10).toFixed(1)}$`, `$${(digitVal / 100).toFixed(2)}$`, `$${digitVal}$`, `$${(digitVal / 1000).toFixed(3)}$`];
-            } else if (type === 'expandedForm') {
-                questionText = `Which decimal is equal to $${n} + 0.${d1} + 0.0${d2}$?`;
-                correctAnswer = `$${decimal}$`;
-                solution = `$${n}$ ones + $${d1}$ tenths + $${d2}$ hundredths = $${decimal}$.`;
-                options = [`$${decimal}$`, `$${n}${d1}.${d2}$`, `$${n}.0${d1}${d2}$`, `$${n}.${d1 + d2}$`];
-            } else {
-                const d3 = randomInt(1, 9);
-                const dec2 = `${n}.${d1}${d3}`;
-                const isGreater = d2 > d3;
-                questionText = `Which is true?`;
-                correctAnswer = isGreater ? `$${decimal} > ${dec2}$` : `$${decimal} < ${dec2}$`;
-                solution = `Comparing $${decimal}$ and $${dec2}$: The ones and tenths are the same. In the hundredths place, $${d2}$ is ${isGreater ? 'greater' : 'less'} than $${d3}$.`;
-                options = [`$${decimal} > ${dec2}$`, `$${decimal} < ${dec2}$`, `$${decimal} = ${dec2}$`, `None of these`].sort(() => Math.random() - 0.5);
-            }
-            return { questionText, correctAnswer, solution, options };
-        };
-
-        const generateHardQuestion = (idx) => {
-            const types = ['thousandths', 'relationship', 'wordProblem', 'multiStep'];
-            const type = types[idx % types.length];
-            let decimal, questionText, correctAnswer, solution, options;
-
-            if (type === 'thousandths') {
-                const d1 = randomInt(1, 9);
-                const d2 = randomInt(1, 9);
-                const d3 = randomInt(1, 9);
-                decimal = `0.${d1}${d2}${d3}`;
-                questionText = `What is the place value of <strong>${d3}</strong> in $${decimal}$?`;
-                correctAnswer = 'Thousandths';
-                solution = `In $${decimal}$, <strong>${d1}</strong> is tenths, <strong>${d2}</strong> is hundredths, and <strong>${d3}</strong> is <strong>thousandths</strong>.`;
-                options = ['Tenths', 'Hundredths', 'Thousandths', 'Ones'];
-            } else if (type === 'relationship') {
-                const val = randomInt(2, 9);
-                questionText = `How many hundredths are equal to $${val}$ tenths?`;
-                correctAnswer = (val * 10).toString();
-                solution = `Each tenth is equal to 10 hundredths. So, $${val}$ tenths = $${val} \\times 10 =$ <strong>$${correctAnswer}$</strong> hundredths.`;
-                options = [correctAnswer, val.toString(), (val * 100).toString(), '1'];
-            } else if (type === 'wordProblem') {
-                const n1 = randomInt(1, 9);
-                const n2 = randomInt(1, 9);
-                questionText = `I have $${n1}$ tenths and $${n2}$ hundredths. What decimal am I?`;
-                correctAnswer = `$0.${n1}${n2}$`;
-                solution = `$${n1}$ tenths = $0.${n1}$, $${n2}$ hundredths = $0.0${n2}$. Combined, it is $0.${n1}${n2}$.`;
-                options = [`$0.${n1}${n2}$`, `$0.${n1 + n2}$`, `$${n1}.${n2}$`, `$0.0${n1}${n2}$`];
-            } else {
-                const n = randomInt(1, 9);
-                const d1 = randomInt(1, 9);
-                const d2 = randomInt(1, 9);
-                decimal = `${n}.${d1}${d2}`;
-                questionText = `If we add $2$ tenths to $${decimal}$, what is the new number?`;
-                const newVal = (parseFloat(decimal) + 0.2).toFixed(2);
-                correctAnswer = `$${newVal}$`;
-                solution = `$${decimal} + 0.2 = ${newVal}$. We add $2$ to the tenths place.`;
-                options = [`$${newVal}$`, `$${(parseFloat(decimal) + 0.02).toFixed(2)}$`, `$${(parseFloat(decimal) + 2).toFixed(2)}$`, `$${decimal}2$`];
-            }
-            return { questionText, correctAnswer, solution, options };
-        };
-
-        const questions = [];
-        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-            let q;
-            if (i < 3) q = generateEasyQuestion(i);
-            else if (i < 6) q = generateMediumQuestion(i);
-            else q = generateHardQuestion(i);
-
-            questions.push({
-                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>
-                        ${q.questionText}
-                     </div>`,
-                correctAnswer: q.correctAnswer,
-                solution: q.solution,
-                shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
-            });
-        }
-        setSessionQuestions(questions);
+        setSessionQuestions(generateQuestions());
 
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
     }, []);
+
 
     useEffect(() => {
         if (showResults) return;
@@ -353,13 +380,13 @@ const PlaceValuesOfDecimals = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Place Value Report</h1>
+                        <h1 className="results-title">Visual Report</h1>
                     </div>
                 </header>
 
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Well Seen! 🎉</h2>
 
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
@@ -400,7 +427,7 @@ const PlaceValuesOfDecimals = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-semibold text-[#31326F] mb-6 px-4">Place Value Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Visual Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -414,26 +441,29 @@ const PlaceValuesOfDecimals = () => {
                                         className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
                                     >
                                         <div className="flex items-start gap-4">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
                                                 {idx + 1}
                                             </div>
                                             <div className="flex-1">
                                                 <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
                                                     <LatexContent html={q.text} />
                                                 </div>
+                                                <div className="my-2 transform scale-75 origin-left">
+                                                    {q.visual}
+                                                </div>
 
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
                                                         <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
-                                                            <LatexContent html={ans.selected} />
+                                                            {ans.selected}
                                                         </span>
                                                     </div>
                                                     {!ans.isCorrect && (
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
-                                                            <span className="block text-[10px] font-semibold uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
-                                                            <span className="text-lg font-semibold text-[#31326F]">
-                                                                <LatexContent html={q.correctAnswer} />
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                {q.correctAnswer}
                                                             </span>
                                                         </div>
                                                     )}
@@ -454,10 +484,10 @@ const PlaceValuesOfDecimals = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-semibold text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
                             <RefreshCw size={24} /> Play Again
                         </button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-semibold text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>
                             Back to Topics
                         </button>
                     </div>
@@ -479,7 +509,7 @@ const PlaceValuesOfDecimals = () => {
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
@@ -505,9 +535,12 @@ const PlaceValuesOfDecimals = () => {
                             >
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
+                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2rem', fontWeight: '400', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
+                                    </div>
+                                    <div className="visual-area my-6">
+                                        {currentQuestion.visual}
                                     </div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
@@ -519,7 +552,7 @@ const PlaceValuesOfDecimals = () => {
                                                         }`}
                                                     style={{
                                                         fontFamily: '"Open Sans", sans-serif',
-                                                        fontWeight: '500',
+                                                        fontWeight: '400',
                                                         fontSize: '2rem'
                                                     }}
                                                     onClick={() => handleOptionSelect(option)}
@@ -644,4 +677,4 @@ const PlaceValuesOfDecimals = () => {
     );
 };
 
-export default PlaceValuesOfDecimals;
+export default DecimalVisualRepresentation;

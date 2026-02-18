@@ -344,7 +344,7 @@ const MiddleGradeSyllabus = () => {
         skillsByTopic['Tenths and Hundredths'] = {
             'Decimals': [
                 {
-                    skill_id: 'g5-th-01',
+                    skill_id: '1054',
                     skill_name: 'Place Values of Decimals',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
@@ -352,7 +352,7 @@ const MiddleGradeSyllabus = () => {
                     path: '/middle/grade/5/tenths-hundredths/place-values'
                 },
                 {
-                    skill_id: 'g5-th-02',
+                    skill_id: '1055',
                     skill_name: 'Fraction to Decimal Conversion',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
@@ -360,7 +360,7 @@ const MiddleGradeSyllabus = () => {
                     path: '/middle/grade/5/tenths-hundredths/fraction-to-decimal'
                 },
                 {
-                    skill_id: 'g5-th-03',
+                    skill_id: '1056',
                     skill_name: 'Decimal Visual Representation',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
@@ -368,7 +368,7 @@ const MiddleGradeSyllabus = () => {
                     path: '/middle/grade/5/tenths-hundredths/visual-representation'
                 },
                 {
-                    skill_id: 'g5-th-04',
+                    skill_id: '1057',
                     skill_name: 'Decimal in Measurement',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
@@ -376,7 +376,7 @@ const MiddleGradeSyllabus = () => {
                     path: '/middle/grade/5/tenths-hundredths/measurement'
                 },
                 {
-                    skill_id: 'g5-th-05',
+                    skill_id: '1058',
                     skill_name: 'Decimal in Money',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
@@ -384,7 +384,7 @@ const MiddleGradeSyllabus = () => {
                     path: '/middle/grade/5/tenths-hundredths/money'
                 },
                 {
-                    skill_id: 'g5-th-06',
+                    skill_id: '1059',
                     skill_name: 'Comparing Decimals',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
@@ -392,7 +392,7 @@ const MiddleGradeSyllabus = () => {
                     path: '/middle/grade/5/tenths-hundredths/comparing'
                 },
                 {
-                    skill_id: 'g5-th-07',
+                    skill_id: '1060',
                     skill_name: 'Decimal Operations',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
@@ -400,16 +400,27 @@ const MiddleGradeSyllabus = () => {
                     path: '/middle/grade/5/tenths-hundredths/operations'
                 },
                 {
-                    skill_id: 'g5-th-08',
+                    skill_id: '1061',
                     skill_name: 'Conversion Between Forms',
                     topic: 'Tenths and Hundredths',
                     sub_topic: 'Decimals',
                     isLocal: true,
                     path: '/middle/grade/5/tenths-hundredths/conversion'
                 }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '1142',
+                    skill_name: 'Decimal Word Problems',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/word-problems'
+                }
             ]
         };
     }
+
 
     // Manual Override for Grade 6 Perimeter and Area
     if (parseInt(grade.replace('grade', '')) === 6) {
@@ -478,8 +489,8 @@ const MiddleGradeSyllabus = () => {
                     {Object.entries(skillsByTopic).map(([topic, subTopics], index) => {
                         const accentColor = getAccentColor(index);
 
-                        // Define fixed order for sub-topics in "Ways to Multiply and Divide"
-                        const subTopicOrder = ["Multiplication", "Division", "Skill Application Problems"];
+                        // Define fixed order for sub-topics
+                        const subTopicOrder = ["Multiplication", "Division", "Decimals", "Skill Application Problems"];
                         const orderedSubTopics = Object.entries(subTopics).sort(([a], [b]) => {
                             const indexA = subTopicOrder.indexOf(a);
                             const indexB = subTopicOrder.indexOf(b);
