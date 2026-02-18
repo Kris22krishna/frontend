@@ -23,6 +23,7 @@ const DynamicVisual = ({ type, data }) => {
                 {shape === 'square' && <rect x="8" y="8" width="84" height="84" rx="15" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                 {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                 {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" rx="12" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                {shape === 'oval' && <ellipse cx="50" cy="50" rx="45" ry="30" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
             </svg>
         </motion.div>
     );
@@ -69,10 +70,13 @@ const IdentifyingShapes = () => {
     const generateQuestions = () => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+        const shapes = ['circle', 'square', 'triangle', 'rectangle', 'oval'];
+
+        // Shuffle shapes to ensure unique target for each of the 5 questions
+        const shuffledTargets = [...shapes].sort(() => 0.5 - Math.random());
 
         for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-            const shapes = ['circle', 'square', 'triangle', 'rectangle'];
-            const target = shapes[Math.floor(Math.random() * shapes.length)];
+            const target = shuffledTargets[i];
             const otherOptions = shapes.filter(s => s !== target);
             const question = {
                 text: `Identify this 2D shape! 🎨`,

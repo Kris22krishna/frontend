@@ -11,23 +11,63 @@ import '../../grade-1/Grade1Practice.css';
 const TOTAL_QUESTIONS = 5;
 
 const DynamicVisual = ({ data }) => {
-    const { aLength, bLength } = data;
+    const { aLength, bLength, objectType } = data;
+
+    const renderObject = (width, color, type, label) => {
+        return (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', width: '100%' }}>
+                <div style={{ fontWeight: '900', color: color, fontSize: '1.5rem', minWidth: '30px' }}>{label}</div>
+                <div className="g1-visual-item" style={{ flexGrow: 1, height: '60px', position: 'relative', background: '#f8fafc', borderRadius: '10px', padding: '10px', border: '1px dashed #cbd5e1' }}>
+                    <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${width}%` }}
+                        transition={{ type: 'spring', damping: 15, stiffness: 100 }}
+                        style={{ height: '100%', position: 'relative' }}
+                    >
+                        {type === 'pencil' && (
+                            <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                <path d="M0,5 L85,5 L95,10 L85,15 L0,15 Z" fill={color} />
+                                <path d="M85,5 L95,10 L85,15 Z" fill="#FFDBAC" />
+                                <path d="M92,8 L95,10 L92,12 Z" fill="#333" />
+                                <rect x="0" y="5" width="15" height="10" fill="#FFADAD" rx="2" />
+                                <rect x="15" y="5" width="2" height="10" fill="rgba(0,0,0,0.1)" />
+                            </svg>
+                        )}
+                        {type === 'bat' && (
+                            <svg width="100%" height="100%" viewBox="0 0 100 25" preserveAspectRatio="none">
+                                <rect x="0" y="8" width="30" height="9" rx="2" fill="#8B4513" />
+                                <path d="M30,5 L95,2 L100,5 L100,20 L95,23 L30,20 Z" fill="#DEB887" stroke="#8B4513" strokeWidth="0.5" />
+                                <rect x="0" y="9" width="15" height="7" fill="#4A90E2" rx="1" />
+                            </svg>
+                        )}
+                        {type === 'snake' && (
+                            <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                <path d="M0,10 Q10,5 20,10 T40,10 T60,10 T80,10 T100,10" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+                                <circle cx="100" cy="10" r="3" fill={color} />
+                                <circle cx="101" cy="9" r="0.5" fill="black" />
+                            </svg>
+                        )}
+                        {type === 'ruler' && (
+                            <svg width="100%" height="100%" viewBox="0 0 100 15" preserveAspectRatio="none">
+                                <rect x="0" y="2" width="100" height="11" fill="#FFD93D" stroke="#B8860B" strokeWidth="0.5" />
+                                {[...Array(20)].map((_, i) => (
+                                    <line key={i} x1={i * 5} y1="2" x2={i * 5} y2={i % 5 === 0 ? 8 : 5} stroke="#B8860B" strokeWidth="0.5" />
+                                ))}
+                            </svg>
+                        )}
+                    </motion.div>
+                </div>
+            </div>
+        );
+    };
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', width: '100%', padding: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <div style={{ fontWeight: '900', color: '#4ECDC4', fontSize: '1.5rem', minWidth: '30px' }}>A</div>
-                <motion.div
-                    initial={{ width: 0 }} animate={{ width: `${aLength}%` }}
-                    style={{ height: '30px', background: 'linear-gradient(to right, #4ECDC4, #A5F3EB)', borderRadius: '15px', border: '3px solid white', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}
-                />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', padding: '10px' }}>
+            <div style={{ fontSize: '0.9rem', color: '#64748b', textAlign: 'center', marginBottom: '10px', fontWeight: 'bold' }}>
+                📏 Align objects at the start to compare!
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <div style={{ fontWeight: '900', color: '#FF6B6B', fontSize: '1.5rem', minWidth: '30px' }}>B</div>
-                <motion.div
-                    initial={{ width: 0 }} animate={{ width: `${bLength}%` }}
-                    style={{ height: '30px', background: 'linear-gradient(to right, #FF6B6B, #FFADAD)', borderRadius: '15px', border: '3px solid white', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}
-                />
-            </div>
+            {renderObject(aLength, '#4ECDC4', objectType, 'A')}
+            {renderObject(bLength, '#FF6B6B', objectType, 'B')}
         </div>
     );
 };
@@ -72,17 +112,19 @@ const ComparingLengths = () => {
 
     const generateQuestions = () => {
         const questions = [];
+        const objectTypes = ['pencil', 'bat', 'snake', 'ruler'];
         for (let i = 0; i < TOTAL_QUESTIONS; i++) {
             const isALonger = Math.random() > 0.5;
-            const aLen = isALonger ? 80 : 40;
-            const bLen = isALonger ? 40 : 80;
+            const aLen = isALonger ? 85 : 45;
+            const bLen = isALonger ? 45 : 85;
             const longerQ = Math.random() > 0.5;
+            const objectType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
 
             const question = {
                 text: longerQ ? `Which one is LONGER? 📏` : `Which one is SHORTER? 📐`,
                 options: ['A', 'B'],
                 correct: longerQ ? (isALonger ? 'A' : 'B') : (isALonger ? 'B' : 'A'),
-                visualData: { aLength: aLen, bLength: bLen }
+                visualData: { aLength: aLen, bLength: bLen, objectType }
             };
             questions.push(question);
         }
