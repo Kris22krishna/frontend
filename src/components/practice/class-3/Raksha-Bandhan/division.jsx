@@ -44,7 +44,7 @@ const RakshaBandhanDivision = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 9003; // Reserved ID for Raksha Bandhan Division
+    const SKILL_ID = 800; // Reserved ID for Raksha Bandhan Division
     const SKILL_NAME = "Raksha Bandhan - Division";
 
     const TOTAL_QUESTIONS = 10;
