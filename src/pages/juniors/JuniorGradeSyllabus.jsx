@@ -25,6 +25,7 @@ const topicIcons = {
     'Money': { emoji: '💰', color: '#98D8C8', gradient: 'linear-gradient(135deg, #98D8C8 0%, #B8E6D5 100%)' },
     'Geometry': { emoji: '📐', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'Data': { emoji: '📊', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
+    'Fair Share': { emoji: '🍰', color: '#B39DDB', gradient: 'linear-gradient(135deg, #B39DDB 0%, #D1C4E9 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }
 };
 
@@ -48,22 +49,49 @@ const JuniorGradeSyllabus = () => {
         const fetchTopics = async () => {
             try {
                 setLoading(true);
-                const gradeNum = grade.replace('grade', '');
+                const gradeNumStr = String(grade).replace(/\D/g, ''); // Extract only digits
+                const isGrade1 = gradeNumStr === '1';
+                const isGrade3 = gradeNumStr === '3';
+                const isGrade4 = gradeNumStr === '4';
 
-                const skillsResponse = await api.getSkills(gradeNum);
+                let skillsResponse = [];
 
-                const filteredSkills = (skillsResponse || []).filter(skill => {
-                    const gradeNumInt = parseInt(gradeNum);
+                // For Grade 1 and Grade 3, we skip fetching from API and use manual injection below
+                if (!isGrade1 && !isGrade3) {
+                    skillsResponse = await api.getSkills(gradeNumStr);
+                }
+
+                let filteredSkills = (skillsResponse || []).filter(skill => {
                     const topicName = (skill.topic || 'General').toLowerCase();
 
-                    if (gradeNumInt === 3) {
+                    if (isGrade3) {
                         return topicName.includes("raksha") && topicName.includes("bandhan");
                     }
-                    if (gradeNumInt === 4) {
+                    if (isGrade4) {
                         return topicName === "the cleanest village";
+                    }
+                    if (isGrade1) {
+                        return false; // Strictly hide all API topics for Grade 1
                     }
                     return true;
                 });
+
+                // Manually inject special topics for Grade 1 and Grade 3 if not present
+                if (isGrade1 || isGrade3) {
+                    const gradeConfigs = TOPIC_CONFIGS[gradeNumStr] || {};
+                    Object.entries(gradeConfigs).forEach(([topicName, skills]) => {
+                        skills.forEach(skill => {
+                            // Only add if not already in the list to avoid duplicates
+                            if (!filteredSkills.some(fs => fs.skill_id === skill.id)) {
+                                filteredSkills.push({
+                                    skill_id: skill.id,
+                                    skill_name: skill.name,
+                                    topic: topicName
+                                });
+                            }
+                        });
+                    });
+                }
 
                 const topicMap = {};
                 filteredSkills.forEach(skill => {

@@ -26,12 +26,20 @@ export function AuthProvider({ children }) {
                 sessionStorage.removeItem('userId');
             }
         } catch (error) {
-            // If 401, it throws.
-            setUser(null);
-            setIsAuthenticated(false);
-            sessionStorage.removeItem('userType');
-            sessionStorage.removeItem('firstName');
-            sessionStorage.removeItem('userId');
+            console.error("AuthContext Check Failed:", error);
+            // Only clear storage if explicitly unauthorized (401)
+            // or if we decide network errors should logout (safer UI wise but maybe annoying).
+            // For now, let's clear ONLY if we are sure it's an auth failure, not network.
+            const isAuthError = error.message.includes('401') || error.message.includes('Unauthorized');
+
+            if (isAuthError) {
+                setUser(null);
+                setIsAuthenticated(false);
+                sessionStorage.removeItem('userType');
+                sessionStorage.removeItem('firstName');
+                sessionStorage.removeItem('userId');
+                sessionStorage.removeItem('access_token'); // Also ensure token is gone if 401
+            }
         } finally {
             setLoading(false);
         }

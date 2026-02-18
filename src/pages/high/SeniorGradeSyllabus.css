@@ -232,11 +232,96 @@
     background: #F8FAFC;
 }
 
+/* Subtopics List (Single Column) */
+.subtopics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.subtopic-section {
+    border: 1px solid #E2E8F0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: white;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.subtopic-section:hover {
+    border-color: #C7D2FE;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.subtopic-header {
+    padding: 1rem 1.5rem;
+    background: #F8FAFC;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    gap: 1rem;
+    transition: all 0.2s ease;
+}
+
+.subtopic-header:hover {
+    background: #F1F5F9;
+}
+
+.subtopic-title {
+    flex: 1;
+    font-size: 1rem;
+    color: #1E293B;
+}
+
+.subtopic-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+.subtopic-skill-count {
+    color: #4F46E5;
+    font-weight: 700;
+    background: #EEF2FF;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.75rem;
+    white-space: nowrap;
+    font-size: 0.75rem;
+}
+
+.chevron-icon {
+    color: #64748B;
+    transition: transform 0.3s ease;
+    transform: rotate(0deg);
+}
+
+.chevron-icon.expanded {
+    transform: rotate(90deg);
+}
+
 /* Skills Grid in Modal */
 .modal-skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #FAFBFC;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .skill-card-modal {

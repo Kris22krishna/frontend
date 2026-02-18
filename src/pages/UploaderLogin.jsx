@@ -15,9 +15,26 @@ const UploaderLogin = () => {
         setLoading(true);
         setError('');
         try {
-            await api.uploaderLogin(credentials.username, credentials.accessCode);
+            console.log('--- Starting Uploader Login ---');
+            const data = await api.uploaderLogin(credentials.username, credentials.accessCode);
+            console.log('--- Login API Success ---', data);
+
+            // Verify Storage
+            const storedToken = sessionStorage.getItem('access_token');
+            const storedType = sessionStorage.getItem('userType');
+            console.log('--- Checking Storage immediately after login ---');
+            console.log('Token Exists:', !!storedToken);
+            console.log('User Type:', storedType);
+
+            if (!storedToken) {
+                throw new Error("Login succeeded but token not stored!");
+            }
+
+            // Navigate
+            console.log('--- Navigating to Dashboard ---');
             navigate('/uploader-dashboard');
         } catch (err) {
+            console.error('--- Login Failed ---', err);
             setError(err.message || 'Login failed.');
         } finally {
             setLoading(false);
@@ -68,8 +85,20 @@ const UploaderLogin = () => {
                             placeholder="••••••••"
                         />
                     </div>
+                    <div style={{ color: '#666', fontSize: '10px', marginTop: '10px' }}>
+                        Debug: {credentials.username ? `User: ${credentials.username}` : ''}
+                    </div>
                     <button type="submit" disabled={loading} className="save-btn" style={{ width: '100%', marginTop: '10px' }}>
                         {loading ? 'Verifying...' : 'Login'}
+                    </button>
+                    <button type="button" onClick={() => {
+                        alert(
+                            "Storage Check:\n" +
+                            "Token: " + (sessionStorage.getItem('access_token') ? 'Yes' : 'No') + "\n" +
+                            "UserType: " + sessionStorage.getItem('userType')
+                        );
+                    }} style={{ background: 'transparent', border: 'none', color: '#999', fontSize: '10px', marginTop: '5px', cursor: 'pointer' }}>
+                        Check Storage
                     </button>
                 </form>
             </div>

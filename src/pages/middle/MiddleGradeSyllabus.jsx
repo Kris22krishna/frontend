@@ -65,7 +65,69 @@ const MiddleGradeSyllabus = () => {
         if (!isAuthenticated) {
             setPendingSkill(skill);
             setShowLoginModal(true);
+        } else if (skill.isLocal) {
+            navigate(skill.path);
         } else {
+            const lowerSkillName = skill.skill_name.toLowerCase();
+            const lowerTopic = (skill.topic || '').toLowerCase();
+
+            if (lowerTopic.includes('perimeter') || lowerTopic.includes('area')) {
+                if (lowerSkillName.includes('rectangle')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/rectangle`);
+                    return;
+                }
+                if (lowerSkillName.includes('square')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/square`);
+                    return;
+                }
+                if (lowerSkillName.includes('triangle')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/triangle`);
+                    return;
+                }
+                if (lowerSkillName.includes('polygon')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/regular-polygon`);
+                    return;
+                }
+                if (lowerSkillName.includes('mixed')) {
+                    navigate(`/middle/grade/${grade}/perimeter-area/mixed-bag`);
+                    return;
+                }
+            }
+
+            if (lowerTopic.includes('pattern')) {
+                if (lowerSkillName.includes('intro')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/intro`);
+                    return;
+                }
+                if (lowerSkillName.includes('relations')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/relations`);
+                    return;
+                }
+                if (lowerSkillName.includes('shapes')) {
+                    navigate(`/middle/grade/${grade}/patterns-math/shapes`);
+                    return;
+                }
+            }
+
+            if (lowerTopic.includes('number play')) {
+                if (lowerSkillName.includes('tell us things')) {
+                    navigate(`/middle/grade/${grade}/number-play/numbers-things`);
+                    return;
+                }
+                if (lowerSkillName.includes('supercells')) {
+                    navigate(`/middle/grade/${grade}/number-play/supercells`);
+                    return;
+                }
+                if (lowerSkillName.includes('growing')) {
+                    navigate(`/middle/grade/${grade}/number-play/growing-patterns`);
+                    return;
+                }
+                if (lowerSkillName.includes('playing with digits')) {
+                    navigate(`/middle/grade/${grade}/number-play/playing-with-digits`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -84,7 +146,166 @@ const MiddleGradeSyllabus = () => {
             try {
                 const gradeNum = grade.replace('grade', '');
                 const response = await api.getSkills(gradeNum);
-                setSkills(response || []);
+                let fetched = response || [];
+
+                if (gradeNum === '7') {
+                    fetched = [
+                        ...fetched,
+                        {
+                            skill_id: 'local-percent',
+                            skill_name: 'Percentage',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/percentage'
+                        },
+                        {
+                            skill_id: 'local-use-percent',
+                            skill_name: 'Use of Percentages',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/use-of-percentages'
+                        },
+                        {
+                            skill_id: 'local-profit-loss',
+                            skill_name: 'Profit and Loss',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/profit-and-loss'
+                        },
+                        {
+                            skill_id: 'local-simple-interest',
+                            skill_name: 'Simple Interest',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/simple-interest'
+                        },
+                        {
+                            skill_id: 'local-cq-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-exp-basics',
+                            skill_name: 'Exponents Basics',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/basics'
+                        },
+                        {
+                            skill_id: 'local-exp-laws',
+                            skill_name: 'Laws of Exponents',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/laws'
+                        },
+                        {
+                            skill_id: 'local-exp-decimal',
+                            skill_name: 'Decimal Number System',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/decimal-system'
+                        },
+                        {
+                            skill_id: 'local-exp-standard',
+                            skill_name: 'Standard Form',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/standard-form'
+                        },
+                        {
+                            skill_id: 'local-ep-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-rn-need',
+                            skill_name: 'Need For Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/need'
+                        },
+                        {
+                            skill_id: 'local-rn-what',
+                            skill_name: 'What Are Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/what'
+                        },
+                        {
+                            skill_id: 'local-rn-posneg',
+                            skill_name: 'Positive and Negative Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/positive-negative'
+                        },
+                        {
+                            skill_id: 'local-rn-line',
+                            skill_name: 'Rational Numbers on Number Line',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/number-line'
+                        },
+                        {
+                            skill_id: 'local-rn-standard',
+                            skill_name: 'Rational Numbers Validity/Standard Form',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/standard-form'
+                        },
+                        {
+                            skill_id: 'local-rn-compare',
+                            skill_name: 'Comparison of Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/comparison'
+                        },
+                        {
+                            skill_id: 'local-rn-between',
+                            skill_name: 'Rational Numbers Between Two Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/between'
+                        },
+                        {
+                            skill_id: 'local-rn-ops',
+                            skill_name: 'Operations on Rational Numbers',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/operations'
+                        },
+                        {
+                            skill_id: 'local-rn-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Rational Numbers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/rational-numbers/chapter-test'
+                        }
+                    ];
+                }
+                setSkills(fetched);
             } catch (error) {
                 console.error("Failed to fetch skills", error);
             } finally {
@@ -101,9 +322,11 @@ const MiddleGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 5 && topicName !== "ways to multiply and divide") return acc;
+        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "exponents and powers") return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers") && !skill.isLocal) return acc;
+
 
         const topic = skill.topic || 'General';
         const subTopic = skill.sub_topic || 'Main';
@@ -113,6 +336,34 @@ const MiddleGradeSyllabus = () => {
         acc[topic][subTopic].push(skill);
         return acc;
     }, {});
+
+    // Manual Override for Grade 6 Perimeter and Area
+    if (parseInt(grade.replace('grade', '')) === 6) {
+        skillsByTopic['Perimeter and Area'] = {
+            'Main': [
+                { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
+                { skill_id: 'sq-6', skill_name: 'Square', topic: 'Perimeter and Area' },
+                { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
+                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' },
+                { skill_id: 'mixed-6', skill_name: 'Mixed Bag', topic: 'Perimeter and Area' }
+            ]
+        };
+        skillsByTopic['Patterns in Mathematics'] = {
+            'Main': [
+                { skill_id: 'patterns-6', skill_name: 'Intro to Patterns', topic: 'Patterns in Mathematics' },
+                { skill_id: 'shapes-6', skill_name: 'Patterns in Shapes', topic: 'Patterns in Mathematics' },
+                { skill_id: 'relations-6', skill_name: 'Relations among Number Sequences', topic: 'Patterns in Mathematics' }
+            ]
+        };
+        skillsByTopic['Number Play'] = {
+            'Main': [
+                { skill_id: 'numbers-things-6', skill_name: 'Numbers can Tell us Things', topic: 'Number Play' },
+                { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
+                { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
+                { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
+            ]
+        };
+    }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 
