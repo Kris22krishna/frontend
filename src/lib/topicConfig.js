@@ -61,6 +61,13 @@ export const TOPIC_CONFIGS = {
             { id: "G1-CH11-05", name: "Skip counting (by 2s, 5s, 10s – basic)", route: "numbers-51-to-100" }
         ]
     },
+    '2': {
+        'What is Long, What is Round?': [
+            { id: "1001", name: "Identifying shapes (2D shapes)", route: "what-is-long-round" },
+            { id: "1002", name: "Comparing lengths", route: "what-is-long-round" },
+            { id: "1003", name: "Recognizing round objects", route: "what-is-long-round" }
+        ]
+    },
     '3': {
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
