@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, useDragControls } from 'framer-motion';
 import { ArrowLeft, RefreshCw, Check, X, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import '../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 // --- Tile Assets (CSS/SVG Shapes) ---
 const Tile100 = ({ className, style }) => (

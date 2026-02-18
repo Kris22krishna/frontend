@@ -180,7 +180,7 @@ const JuniorSubtopics = () => {
                 let skillsResponse = [];
 
                 // Skip API for grades 1 and 3 (use manual config only)
-                if (!isGrade1 && !isGrade3) {
+                if (!isGrade1) {
                     skillsResponse = await api.getSkills(gradeNumStr);
                 }
 
