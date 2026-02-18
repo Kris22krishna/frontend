@@ -160,6 +160,12 @@ import AlgebraicMethods from './components/practice/class-10/Pair of linear equa
 import ConditionsForConsistency from './components/practice/class-10/Pair of linear equations in two variables/ConditionsForConsistency';
 import ApplicationProblems from './components/practice/class-10/Pair of linear equations in two variables/ApplicationProblems';
 import StandardFormEquations from './components/practice/class-10/Pair of linear equations in two variables/StandardFormEquations';
+import RecognisingPatterns from './components/practice/class-10/Arithmetic Progressions/RecognisingPatterns';
+import UnderstandingAP from './components/practice/class-10/Arithmetic Progressions/UnderstandingAP';
+import IdentifyingTerms from './components/practice/class-10/Arithmetic Progressions/IdentifyingTerms';
+import FindingSpecificTerms from './components/practice/class-10/Arithmetic Progressions/FindingSpecificTerms';
+import SumOfTerms from './components/practice/class-10/Arithmetic Progressions/SumOfTerms';
+import ArithmeticProgressionsTest from './components/practice/class-10/Arithmetic Progressions/ArithmeticProgressionsTest';
 
 // Grade 3 - Fair Share
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
@@ -537,6 +543,13 @@ function App() {
         <Route path="/high/practice/10053" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
+        {/* Class 10: Arithmetic Progressions Routes */}
+        <Route path="/high/practice/10101" element={<RecognisingPatterns />} />
+        <Route path="/high/practice/10102" element={<UnderstandingAP />} />
+        <Route path="/high/practice/10103" element={<IdentifyingTerms />} />
+        <Route path="/high/practice/10104" element={<FindingSpecificTerms />} />
+        <Route path="/high/practice/10105" element={<SumOfTerms />} />
+        <Route path="/high/practice/10106" element={<ArithmeticProgressionsTest />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
       </Routes>
     </Router>
