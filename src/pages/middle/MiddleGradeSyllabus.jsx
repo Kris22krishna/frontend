@@ -391,22 +391,22 @@ const MiddleGradeSyllabus = () => {
     if (gradeInt === 5) {
         skillsByTopic['Area and its Boundary'] = {
             'Area': [
-                { skill_id: '5001', skill_name: 'Finding Area', topic: 'Area and its Boundary', sub_topic: 'Area' },
-                { skill_id: '5002', skill_name: 'Compare and Create Shapes with the Same Area', topic: 'Area and its Boundary', sub_topic: 'Area' },
-                { skill_id: '5003', skill_name: 'Area in Real-Life Situations', topic: 'Area and its Boundary', sub_topic: 'Area' },
-                { skill_id: '5004', skill_name: 'Choose and Interpret Appropriate Area Units', topic: 'Area and its Boundary', sub_topic: 'Area' }
+                { skill_id: '1159', skill_name: 'Finding Area', topic: 'Area and its Boundary', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/finding-area' },
+                { skill_id: '1160', skill_name: 'Compare and Create Shapes with the Same Area', topic: 'Area and its Boundary', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/compare-shapes' },
+                { skill_id: '1161', skill_name: 'Area in Real-Life Situations', topic: 'Area and its Boundary', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/real-life' },
+                { skill_id: '1162', skill_name: 'Choose and Interpret Appropriate Area Units', topic: 'Area and its Boundary', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/units' }
             ],
             'Perimeter': [
-                { skill_id: '5005', skill_name: 'Finding Perimeter', topic: 'Area and its Boundary', sub_topic: 'Perimeter' },
-                { skill_id: '5006', skill_name: 'Understand Perimeter as Boundary Length', topic: 'Area and its Boundary', sub_topic: 'Perimeter' },
-                { skill_id: '5007', skill_name: 'Same Perimeter with Different Shapes', topic: 'Area and its Boundary', sub_topic: 'Perimeter' },
-                { skill_id: '5008', skill_name: 'Perimeter in Real-Life Contexts', topic: 'Area and its Boundary', sub_topic: 'Perimeter' }
+                { skill_id: '1163', skill_name: 'Finding Perimeter', topic: 'Area and its Boundary', sub_topic: 'Perimeter', isLocal: true, path: '/middle/grade/5/area-boundary/perimeter/finding-perimeter' },
+                { skill_id: '1164', skill_name: 'Understand Perimeter as Boundary Length', topic: 'Area and its Boundary', sub_topic: 'Perimeter', isLocal: true, path: '/middle/grade/5/area-boundary/perimeter/boundary-length' },
+                { skill_id: '1165', skill_name: 'Same Perimeter with Different Shapes', topic: 'Area and its Boundary', sub_topic: 'Perimeter', isLocal: true, path: '/middle/grade/5/area-boundary/perimeter/different-shapes' },
+                { skill_id: '1166', skill_name: 'Perimeter in Real-Life Contexts', topic: 'Area and its Boundary', sub_topic: 'Perimeter', isLocal: true, path: '/middle/grade/5/area-boundary/perimeter/real-life' }
             ],
             'Area-Perimeter Relationship': [
-                { skill_id: '5009', skill_name: 'Area-Perimeter Relationship', topic: 'Area and its Boundary', sub_topic: 'Area-Perimeter Relationship' }
+                { skill_id: '1167', skill_name: 'Area-Perimeter Relationship', topic: 'Area and its Boundary', sub_topic: 'Area-Perimeter Relationship', isLocal: true, path: '/middle/grade/5/area-boundary/relationship' }
             ],
             'Skill Application Problems': [
-                { skill_id: '5010', skill_name: 'Skill Application Problems', topic: 'Area and its Boundary', sub_topic: 'Skill Application Problems' }
+                { skill_id: '1168', skill_name: 'Skill Application Problems', topic: 'Area and its Boundary', sub_topic: 'Skill Application Problems', isLocal: true, path: '/middle/grade/5/area-boundary/skill-application' }
             ]
         };
 
