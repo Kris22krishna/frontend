@@ -24,9 +24,9 @@ const CircleVisual = ({ type, data }) => {
 
                 {/* Unrolled string */}
                 <line x1="120" y1="120" x2="120" y2="20" stroke={l} strokeWidth="3" strokeDasharray="10,5" />
-                <text x="135" y="70" fontSize="10" fill={s} style={{ writingMode: 'vertical-rl' }}>Circumference</text>
+                <text x="140" y="70" fontSize="10" fill={s}>Circumference</text>
 
-                <text x="60" y="130" fontSize="10" fill={s} textAnchor="middle">Object</text>
+                <text x="60" y="130" fontSize="10" fill={s} textAnchor="middle">Circle</text>
             </svg>
         );
     }
@@ -90,7 +90,7 @@ const CircleVisual = ({ type, data }) => {
                             <path d="M10,0 L20,30 L30,0 Z" fill={l} /> {/* Down */}
                         </g>
                     ))}
-                    <text x="40" y="45" fontSize="10" fill={s} textAnchor="middle">~Rectangle</text>
+                    <text x="40" y="45" fontSize="10" fill={s} textAnchor="middle">Rectangle</text>
                 </g>
             </svg>
         );
@@ -119,13 +119,13 @@ const CircleVisual = ({ type, data }) => {
     if (type === 'wire') {
         return (
             <svg width="200" height="100" viewBox="0 0 200 100">
-                <circle cx="50" cy="50" r="30" fill="none" stroke={l} strokeWidth="3" />
-                <text x="50" y="90" fontSize="10" fill={s} textAnchor="middle">Wire Circle</text>
+                <rect x="30" y="20" width="50" height="50" fill="none" stroke={l} strokeWidth="3" />
+                <text x="55" y="80" fontSize="10" fill={s} textAnchor="middle">Square</text>
 
                 <path d="M90,50 L110,50" stroke={s} strokeWidth="2" markerEnd="url(#arrow)" />
 
-                <rect x="130" y="20" width="50" height="50" fill="none" stroke={l} strokeWidth="3" />
-                <text x="155" y="80" fontSize="10" fill={s} textAnchor="middle">Wire Square</text>
+                <circle cx="160" cy="45" r="25" fill="none" stroke={l} strokeWidth="3" />
+                <text x="160" y="80" fontSize="10" fill={s} textAnchor="middle">Circle</text>
             </svg>
         );
     }
@@ -193,6 +193,13 @@ const Circles = () => {
                 correctAnswer: "88 cm",
                 options: shuffle(["88 cm", "44 cm", "154 cm", "616 cm"]),
                 solution: `<p>\\( C = 2\\pi r = 2 \\times \\frac{22}{7} \\times 14 = 88 \\text{ cm} \\).</p>`
+            }),
+            () => ({
+                text: `<p>If the circumference is 44 cm, find the radius. (\\( \\pi = \\frac{22}{7} \\))</p>`,
+                visual: { type: 'dimensions', data: { label: 'C', val: '44 cm', isDiameter: false } },
+                correctAnswer: "7 cm",
+                options: shuffle(["7 cm", "14 cm", "22 cm", "3.5 cm"]),
+                solution: `<p>\\( 2\\pi r = 44 \\Rightarrow 2 \\times \\frac{22}{7} \\times r = 44 \\Rightarrow r = 7 \\text{ cm} \\).</p>`
             })
         ];
 
@@ -246,10 +253,10 @@ const Circles = () => {
             })
         ];
 
-        // Selection: 1 Concept, 2 Circ, 1 Semi, 2 Area, 1 Ring, 1 App
+        // Selection: 2 Concept, 3 Circ, 1 Semi, 2 Area, 1 Ring, 1 App = 10
         const selected = [
-            ...pickRandom(conceptPool, 1).map(fn => fn()),
-            ...pickRandom(circPool, 2).map(fn => fn()),
+            ...pickRandom(conceptPool, 2).map(fn => fn()),
+            ...pickRandom(circPool, 3).map(fn => fn()),
             ...pickRandom(semiPool, 1).map(fn => fn()),
             ...pickRandom(areaFormulaPool, 2).map(fn => fn()),
             ...pickRandom(ringPool, 1).map(fn => fn()),

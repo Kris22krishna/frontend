@@ -120,7 +120,8 @@ const PerimeterAreaTest = () => {
         const circPool = [
             () => ({ text: `<p>Circumference of a circle with radius 14 cm (\\( \\pi = \\frac{22}{7} \\)) is:</p>`, visual: { type: 'circle_dim', data: { r: '14 cm' } }, correctAnswer: "88 cm", options: shuffle(["88 cm", "44 cm", "154 cm", "616 cm"]), solution: `<p>\\( C = 2 \\times \\frac{22}{7} \\times 14 = 88 \\text{ cm} \\).</p>` }),
             () => ({ text: `<p>Area of circle with radius 10 cm (\\( \\pi = 3.14 \\)) is:</p>`, visual: { type: 'circle_dim', data: { r: '10 cm' } }, correctAnswer: "314 cm²", options: shuffle(["314 cm²", "31.4 cm²", "100 cm²", "628 cm²"]), solution: `<p>Area = \\( 3.14 \\times 10 \\times 10 = 314 \\text{ cm}^2 \\).</p>` }),
-            () => ({ text: `<p>A wire in shape of square (side 11 cm) is reshaped into a circle. Find radius (\\( \\pi = \\frac{22}{7} \\)).</p>`, visual: { type: 'wire' }, correctAnswer: "7 cm", options: shuffle(["7 cm", "14 cm", "11 cm", "22 cm"]), solution: `<p>Perimeter = 44 cm. \\( 2\\pi r = 44 \\Rightarrow 2 \\times \\frac{22}{7} \\times r = 44 \\Rightarrow r = 7 \\text{ cm} \\).</p>` })
+            () => ({ text: `<p>A wire in shape of square (side 11 cm) is reshaped into a circle. Find radius (\\( \\pi = \\frac{22}{7} \\)).</p>`, visual: { type: 'wire' }, correctAnswer: "7 cm", options: shuffle(["7 cm", "14 cm", "11 cm", "22 cm"]), solution: `<p>Perimeter = 44 cm. \\( 2\\pi r = 44 \\Rightarrow 2 \\times \\frac{22}{7} \\times r = 44 \\Rightarrow r = 7 \\text{ cm} \\).</p>` }),
+            () => ({ text: `<p>Find area of circle with Diameter = 20 cm (\\( \\pi = 3.14 \\)).</p>`, visual: { type: 'circle_dim', data: { r: '10 cm' } }, correctAnswer: "314 cm²", options: shuffle(["314 cm²", "100 cm²", "628 cm²", "31.4 cm²"]), solution: `<p>Radius = 10 cm. Area = \\( 3.14 \\times 100 = 314 \\text{ cm}^2 \\).</p>` })
         ];
 
         // 3 from Para, 3 from Tri, 4 from Circ => 10 Questions

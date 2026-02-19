@@ -17,14 +17,14 @@ const ParallelogramVisual = ({ type, data }) => {
     // Subtopic 1.1: Conversion
     if (type === 'conversion') {
         return (
-            <svg width="240" height="120" viewBox="0 0 240 100">
+            <svg width="280" height="120" viewBox="-10 0 260 100">
                 {/* Original Parallelogram */}
                 <path d="M20,80 L80,80 L100,20 L40,20 Z" fill={f} stroke={s} strokeWidth="2" />
                 <line x1="40" y1="20" x2="40" y2="80" stroke={l} strokeWidth="1.5" strokeDasharray="4" />
                 <path d="M40,75 L45,75 L45,80" fill="none" stroke={l} strokeWidth="1" />
 
                 <text x="60" y="95" fontSize="10" fill={s} textAnchor="middle">Base</text>
-                <text x="35" y="50" fontSize="10" fill={l} textAnchor="end">Height</text>
+                <text x="18" y="55" fontSize="10" fill={l} textAnchor="middle">Height</text>
 
                 {/* Arrow */}
                 <path d="M110,50 L130,50" stroke={s} strokeWidth="2" markerEnd="url(#arrow)" />
@@ -33,7 +33,7 @@ const ParallelogramVisual = ({ type, data }) => {
                 {/* Converted Rectangle */}
                 <rect x="150" y="20" width="60" height="60" fill={f} stroke={s} strokeWidth="2" />
                 <text x="180" y="95" fontSize="10" fill={s} textAnchor="middle">Base</text>
-                <text x="145" y="50" fontSize="10" fill={s} textAnchor="end">Height</text>
+                <text x="225" y="55" fontSize="10" fill={s} textAnchor="middle">Height</text>
             </svg>
         );
     }
@@ -41,17 +41,17 @@ const ParallelogramVisual = ({ type, data }) => {
     // Subtopic 1.2: Base and Height ID
     if (type === 'base_height') {
         return (
-            <svg width="200" height="150" viewBox="0 0 200 150">
-                <path d="M40,120 L160,120 L180,40 L60,40 Z" fill="none" stroke={s} strokeWidth="2" />
-                <text x="35" y="135" fontSize="12" fontWeight="bold" fill={s}>A</text>
-                <text x="165" y="135" fontSize="12" fontWeight="bold" fill={s}>B</text>
-                <text x="185" y="35" fontSize="12" fontWeight="bold" fill={s}>C</text>
-                <text x="55" y="35" fontSize="12" fontWeight="bold" fill={s}>D</text>
+            <svg width="240" height="160" viewBox="0 0 220 150">
+                <path d="M30,120 L170,120 L200,30 L60,30 Z" fill={f} stroke={s} strokeWidth="2" />
+                <text x="25" y="138" fontSize="13" fontWeight="bold" fill={s}>A</text>
+                <text x="175" y="138" fontSize="13" fontWeight="bold" fill={s}>B</text>
+                <text x="205" y="27" fontSize="13" fontWeight="bold" fill={s}>C</text>
+                <text x="53" y="27" fontSize="13" fontWeight="bold" fill={s}>D</text>
 
                 {/* Perpendicular DE from D to AB */}
-                <line x1="60" y1="40" x2="60" y2="120" stroke={l} strokeWidth="2" strokeDasharray="5" />
-                <rect x="60" y="110" width="10" height="10" fill="none" stroke={l} strokeWidth="1" />
-                <text x="65" y="115" fontSize="10" fill={l}>E</text>
+                <line x1="60" y1="30" x2="60" y2="120" stroke={l} strokeWidth="2" strokeDasharray="5" />
+                <rect x="60" y="108" width="10" height="10" fill="none" stroke={l} strokeWidth="1" />
+                <text x="50" y="135" fontSize="11" fill={l} textAnchor="middle">E</text>
 
                 {/* Perpendicular BF from B to AD extended? No, simpler version */}
                 {data?.showBF && (
@@ -219,11 +219,11 @@ const AreaParallelogram = () => {
             })
         ];
 
-        // Selection: 1 from Concept, 1 from BaseHeight, 2 from Formula, 1 from Comparison, 2 from Numerical
+        // Selection: 2 from Concept, 2 from BaseHeight, 3 from Formula, 1 from Comparison, 2 from Numerical
         const selected = [
-            ...pickRandom(conceptPool, 1).map(fn => fn()),
-            ...pickRandom(baseHeightPool, 1).map(fn => fn()),
-            ...pickRandom(formulaPool, 2).map(fn => fn()),
+            ...pickRandom(conceptPool, 2).map(fn => fn()),
+            ...pickRandom(baseHeightPool, 2).map(fn => fn()),
+            ...pickRandom(formulaPool, 3).map(fn => fn()),
             ...pickRandom(comparisonPool, 1).map(fn => fn()),
             ...pickRandom(numericalPool, 2).map(fn => fn())
         ];

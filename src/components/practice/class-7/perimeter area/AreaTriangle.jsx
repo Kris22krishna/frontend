@@ -28,8 +28,10 @@ const TriangleVisual = ({ type, data }) => {
 
                 <text x="50" y="95" fontSize="10" fill={s} textAnchor="middle">Base</text>
 
-                <text x="160" y="50" fontSize="10" fill={s} width="80">
-                    Two identical triangles = One Parallelogram
+                <text x="160" y="40" fontSize="9" fill={s}>
+                    <tspan x="130" dy="0">Two identical</tspan>
+                    <tspan x="130" dy="12">triangles = One</tspan>
+                    <tspan x="130" dy="12">Parallelogram</tspan>
                 </text>
             </svg>
         );
@@ -192,15 +194,21 @@ const AreaTriangle = () => {
                 correctAnswer: "6 cm²",
                 options: shuffle(["6 cm²", "12 cm²", "7 cm²", "5 cm²"]),
                 solution: `<p>Area = \\( \\frac{1}{2} \\times 3 \\times 4 = 6 \\text{ cm}^2 \\).</p>`
+            }),
+            () => ({
+                text: `<p>Find the base of a triangle with Area = 20 cm² and Height = 4 cm.</p>`,
+                correctAnswer: "10 cm",
+                options: shuffle(["10 cm", "5 cm", "80 cm", "8 cm"]),
+                solution: `<p>Area = \\( \\frac{1}{2}bh \\Rightarrow 20 = \\frac{1}{2} \\times b \\times 4 \\Rightarrow 20 = 2b \\Rightarrow b = 10 \\text{ cm} \\).</p>`
             })
         ];
 
-        // Selection: 1 Concept, 1 SameBase, 1 Obtuse, 3 Problems
+        // Selection: 2 Concept, 2 SameBase, 1 Obtuse, 5 Problems
         const selected = [
-            ...pickRandom(conceptPool, 1).map(fn => fn()),
-            ...pickRandom(sameBasePool, 1).map(fn => fn()),
+            ...pickRandom(conceptPool, 2).map(fn => fn()),
+            ...pickRandom(sameBasePool, 2).map(fn => fn()),
             ...pickRandom(obtusePool, 1).map(fn => fn()),
-            ...pickRandom(problemPool, 3).map(fn => fn())
+            ...pickRandom(problemPool, 5).map(fn => fn())
         ];
 
         setQuestions(selected);
