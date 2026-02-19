@@ -24,7 +24,7 @@ const IrrationalOperations = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10208;
+    const SKILL_ID = 1118;
     const SKILL_NAME = "Behaviour of Operations on Irrational Numbers";
     const [answers, setAnswers] = useState({});
 

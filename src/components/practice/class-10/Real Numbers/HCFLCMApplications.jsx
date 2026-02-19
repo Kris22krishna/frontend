@@ -24,7 +24,7 @@ const HCFLCMApplications = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10206;
+    const SKILL_ID = 1116;
     const SKILL_NAME = "Applying HCF and LCM to Real-Life Situations";
     const [answers, setAnswers] = useState({});
 

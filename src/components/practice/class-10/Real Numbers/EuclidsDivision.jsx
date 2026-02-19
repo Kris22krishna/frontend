@@ -24,7 +24,7 @@ const EuclidsDivision = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10202;
+    const SKILL_ID = 1112;
     const SKILL_NAME = "Divisibility of Integers Using Euclid’s Method";
     const [answers, setAnswers] = useState({});
 

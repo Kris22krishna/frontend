@@ -24,7 +24,7 @@ const PrimeFactorisation = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10203;
+    const SKILL_ID = 1113;
     const SKILL_NAME = "Breaking Numbers into Prime Factors";
     const [answers, setAnswers] = useState({});
 

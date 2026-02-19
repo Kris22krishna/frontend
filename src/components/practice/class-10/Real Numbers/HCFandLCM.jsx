@@ -24,7 +24,7 @@ const HCFandLCM = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10205;
+    const SKILL_ID = 1115;
     const SKILL_NAME = "Finding HCF and LCM Using Prime Factors";
     const [answers, setAnswers] = useState({});
 

@@ -24,7 +24,7 @@ const ProvingIrrationality = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10207;
+    const SKILL_ID = 1117;
     const SKILL_NAME = "Proving the Irrationality of Numbers";
     const [answers, setAnswers] = useState({});
 

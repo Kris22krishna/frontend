@@ -24,7 +24,7 @@ const FundamentalTheoremArithmetic = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10204;
+    const SKILL_ID = 1114;
     const SKILL_NAME = "Uniqueness of Prime Factorisation (Fundamental Theorem)";
     const [answers, setAnswers] = useState({});
 
