@@ -91,6 +91,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-in-the-centre`);
             return;
         }
+        if (subtopic.id === "HH2-07") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-puzzles`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village routing
         const gradeNum = grade.replace('grade', '');
