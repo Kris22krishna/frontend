@@ -91,7 +91,8 @@ export const TOPIC_CONFIGS = {
             { id: "FS-04", name: "Guess Who Am I?" }
         ],
         'Fun at Class Party': [
-            { id: "FCP-01", name: "Longer & Shorter Strings", route: "longer-shorter" }
+            { id: "FCP-01", name: "Longer & Shorter Strings", route: "longer-shorter" },
+            { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" }
         ]
     },
     '4': {

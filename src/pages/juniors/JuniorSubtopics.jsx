@@ -71,6 +71,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
             return;
         }
+        if (subtopic.id === "FCP-02") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
         const gradeNum = grade.replace('grade', '');
@@ -149,6 +153,8 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             } else if (subtopic.id === "FCP-01") {
                 navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
+            } else if (subtopic.id === "FCP-02") {
+                navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
             } else if (String(grade).replace(/\D/g, '') === '1') {
                 const gradeConfigs = TOPIC_CONFIGS['1'];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
