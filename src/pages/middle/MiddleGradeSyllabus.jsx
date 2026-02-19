@@ -350,6 +350,38 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/visualising-solid-shapes/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-pa-parallel',
+                            skill_name: 'Area of Parallelogram',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/parallelogram'
+                        },
+                        {
+                            skill_id: 'local-pa-triangle',
+                            skill_name: 'Area of Triangle',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/triangle'
+                        },
+                        {
+                            skill_id: 'local-pa-circles',
+                            skill_name: 'Circles',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/circles'
+                        },
+                        {
+                            skill_id: 'local-pa-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/chapter-test'
                         }
                     ];
                 }
@@ -372,8 +404,8 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes") && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "perimeter and area") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "perimeter and area") && !skill.isLocal) return acc;
 
 
         const topic = skill.topic || 'General';

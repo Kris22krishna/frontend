@@ -174,6 +174,11 @@ import DrawingSolids from './components/practice/class-7/visualising solid shape
 import ViewingSections from './components/practice/class-7/visualising solid shapes/ViewingSections';
 import VisualisingSolidShapesTest from './components/practice/class-7/visualising solid shapes/VisualisingSolidShapesTest';
 
+import AreaParallelogram from './components/practice/class-7/perimeter area/AreaParallelogram';
+import AreaTriangle from './components/practice/class-7/perimeter area/AreaTriangle';
+import Circles from './components/practice/class-7/perimeter area/Circles';
+import PerimeterAreaTest from './components/practice/class-7/perimeter area/PerimeterAreaTest';
+
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
 import HighPracticeSession from './pages/high/HighPracticeSession';
@@ -589,6 +594,13 @@ function App() {
         <Route path="/middle/grade/7/visualising-solid-shapes/viewing-sections" element={<ViewingSections />} />
         <Route path="/middle/grade/7/visualising-solid-shapes/chapter-test" element={<VisualisingSolidShapesTest />} />
 
+
+
+        {/* Perimeter and Area */}
+        <Route path="/middle/grade/7/perimeter-area/parallelogram" element={<AreaParallelogram />} />
+        <Route path="/middle/grade/7/perimeter-area/triangle" element={<AreaTriangle />} />
+        <Route path="/middle/grade/7/perimeter-area/circles" element={<Circles />} />
+        <Route path="/middle/grade/7/perimeter-area/chapter-test" element={<PerimeterAreaTest />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={<LoginPage />} />
