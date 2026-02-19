@@ -128,6 +128,26 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('data handling')) {
+                if (lowerSkillName.includes('collecting')) {
+                    navigate(`/middle/grade/${grade}/data-handling/collecting-organising`);
+                    return;
+                }
+                if (skill.skill_name === "Pictographs") {
+                    navigate(`/middle/grade/6/data-handling/pictographs`);
+                    return;
+                } else if (skill.skill_name === "Bar Graphs") {
+                    navigate(`/middle/grade/6/data-handling/bar-graphs`);
+                    return;
+                } else if (skill.skill_name === "Drawing a Bar Graph") {
+                    navigate(`/middle/grade/6/data-handling/drawing-a-bar-graph`);
+                    return;
+                } else if (skill.skill_name === "Figure It Out") {
+                    navigate(`/middle/grade/6/data-handling/figure-it-out`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -387,6 +407,7 @@ const MiddleGradeSyllabus = () => {
 
     const gradeInt = parseInt(grade.replace('grade', ''));
 
+
     // Manual Override for Grade 5 Tenths and Hundredths
     if (gradeInt === 5) {
         skillsByTopic['Tenths and Hundredths'] = {
@@ -467,6 +488,95 @@ const MiddleGradeSyllabus = () => {
                 }
             ]
         };
+
+        skillsByTopic['Ways to Multiply and Divide'] = {
+            'Multiplication': [
+                {
+                    skill_id: '9003',
+                    skill_name: 'Multiplication of 2-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9003'
+                },
+                {
+                    skill_id: '9004',
+                    skill_name: 'Multiplication of 3-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9004'
+                },
+                {
+                    skill_id: '9005',
+                    skill_name: 'Multiplication of multiple numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9005'
+                },
+                {
+                    skill_id: '9006',
+                    skill_name: 'Multiplication of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9006'
+                },
+                {
+                    skill_id: '9007',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9007'
+                }
+            ],
+            'Division': [
+                {
+                    skill_id: '9008',
+                    skill_name: 'Divide by 1-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9008'
+                },
+                {
+                    skill_id: '9009',
+                    skill_name: 'Divide by 2-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9009'
+                },
+                {
+                    skill_id: '9010',
+                    skill_name: 'Division of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9010'
+                },
+                {
+                    skill_id: '9011',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9011'
+                }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '9012',
+                    skill_name: 'Mixed Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/practice/9012'
+                }
+            ]
+        };
     }
 
 
@@ -494,6 +604,15 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
                 { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
                 { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
+            ]
+        };
+        skillsByTopic['Data Handling and Presentation'] = {
+            'Main': [
+                { skill_id: 'data-handling-6', skill_name: 'Collecting and Organising Data', topic: 'Data Handling and Presentation' },
+                { skill_id: 'pictographs-6', skill_name: 'Pictographs', topic: 'Data Handling and Presentation' },
+                { skill_id: 'drawing-bar-graph-6', skill_name: 'Drawing a Bar Graph', topic: 'Data Handling and Presentation' },
+                { skill_id: 'bar-graphs-6', skill_name: 'Bar Graphs', topic: 'Data Handling and Presentation' },
+                { skill_id: 'figure-it-out-6', skill_name: 'Figure It Out', topic: 'Data Handling and Presentation' }
             ]
         };
     }

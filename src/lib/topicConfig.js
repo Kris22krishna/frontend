@@ -71,6 +71,11 @@ export const TOPIC_CONFIGS = {
             { id: "1007", name: "Comparing weights", route: "comparing-weights" },
             { id: "1008", name: "Heavier/lighter", route: "heavier-lighter" },
             { id: "1009", name: "Estimating weight", route: "estimating-weight" }
+        ],
+        'Counting in Groups': [
+            { id: "1004", name: "Counting in pairs", route: "counting-in-pairs" },
+            { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "skip-counting" },
+            { id: "1006", name: "Introduction to multiplication as repeated addition", route: "repeated-addition" }
         ]
     },
     '3': {
@@ -97,6 +102,16 @@ export const TOPIC_CONFIGS = {
             { id: "CV-06", name: "Find How Many More or Less", route: "find-how-many-more-or-less" },
             { id: "CV-07", name: "Word Problems (Mixed Operations)", route: "chapter-scene-mixed-operations" },
             { id: "CV-09", name: "Let Us Play (Triangle Puzzle)", route: "let-us-play" }
+        ],
+        'Weigh It, Pour It': [
+            { id: "1129", name: "Gram to Kilogram (Fractions)", route: "gram-to-kilogram-fractions" },
+            { id: "1135", name: "Make 1 Kilogram Using Packets", route: "make-one-kilogram-using-packets" },
+            { id: "1136", name: "Millilitre to Litre (Fractions)", route: "millilitre-to-litre-fractions" },
+            { id: "1137", name: "Make 1 Litre Using Bottles", route: "make-one-litre-using-bottles" },
+            { id: "1138", name: "Count How Many Units Fit", route: "count-how-many-units-fit" },
+            { id: "1139", name: "Repeated Addition to One Whole", route: "repeated-addition-to-one-whole" },
+            { id: "1140", name: "Compare Weights and Capacities", route: "compare-weights-and-capacities" },
+            { id: "1141", name: "Weight and Capacity Word Problems", route: "weight-and-capacity-word-problems" }
         ]
     }
 };

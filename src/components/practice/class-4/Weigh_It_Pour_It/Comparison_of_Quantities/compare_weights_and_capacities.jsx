@@ -1,221 +1,193 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { api } from "../../../../../services/api";
-import LatexContent from "../../../../LatexContent";
-import ExplanationModal from "../../../../ExplanationModal";
-import "../../../../../pages/juniors/JuniorPracticeSession.css";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Scale, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { api } from '../../../../../services/api';
+import LatexContent from '../../../../LatexContent';
+import ExplanationModal from '../../../../ExplanationModal';
+import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const randomInt = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
-
-const TOTAL_QUESTIONS = 10;
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You got it! ✨",
-    "🌟 Brilliant! Keep it up! 🌟",
-    "🎉 Correct! You're a math-star! 🎉",
+    "✨ Amazing! You found the heavy side! ✨",
+    "🌟 Brilliant balance! 🌟",
+    "🎉 Correct! You know your weights! 🎉",
     "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
-    "🌈 Perfect! Well done! 🌈",
-    "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Excellent! 💎"
+    "🚀 Super! Scale master! 🚀"
 ];
 
-const MultiDivWordProblems = () => {
+const CompareWeightsAndCapacities = () => {
+    const { grade } = useParams();
     const navigate = useNavigate();
-
     const [qIndex, setQIndex] = useState(0);
-    const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [sessionId, setSessionId] = useState(null);
-    const [answers, setAnswers] = useState({});
-    const [showResults, setShowResults] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showResults, setShowResults] = useState(false);
+    const [balanceTilt, setBalanceTilt] = useState('level'); // 'level', 'left', 'right'
 
+    // Logging states
+    const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
-    const usedQuestions = useRef([]);
+    const isTabActive = useRef(true);
+    const SKILL_ID = 1140;
+    const SKILL_NAME = "Weigh It, Pour It - Compare Weights and Capacities";
 
-    const SKILL_ID = 9012;
-    const SKILL_NAME = "Mixed Skill Application Problems";
+    const TOTAL_QUESTIONS = 10;
+    const [sessionQuestions, setSessionQuestions] = useState([]);
+    const [answers, setAnswers] = useState({});
 
     useEffect(() => {
-        const userId =
-            sessionStorage.getItem("userId") || localStorage.getItem("userId");
-
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then((sess) => {
-                if (sess?.session_id) setSessionId(sess.session_id);
+            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
         }
 
-        const timer = setInterval(() => setTimeElapsed((p) => p + 1), 1000);
-        return () => clearInterval(timer);
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        const generateQuestion = () => {
+            const isWeight = Math.random() > 0.5;
+            const unitSmall = isWeight ? 'g' : 'mL';
+            const unitBig = isWeight ? 'kg' : 'L';
+
+            // Generate comparable values
+            // 75% chance of inequality
+            const equal = Math.random() > 0.75;
+
+            let val1, unit1, val2, unit2, val1Small, val2Small;
+
+            // Base in small units (e.g. 500g to 5000g)
+            const base1 = randomInt(5, 50) * 100;
+            let base2 = base1;
+
+            if (!equal) {
+                // Determine difference
+                do {
+                    base2 = randomInt(5, 50) * 100;
+                } while (base2 === base1);
+            }
+
+            // Assign formatting
+            // Helper to format as big unit if possible
+            const formatValue = (baseVal) => {
+                if (baseVal >= 1000 && baseVal % 1000 === 0 && Math.random() > 0.3) {
+                    return { val: baseVal / 1000, unit: unitBig };
+                } else if (baseVal >= 1000 && Math.random() > 0.6) {
+                    // e.g. 1.5 kg
+                    return { val: baseVal / 1000, unit: unitBig };
+                }
+                return { val: baseVal, unit: unitSmall };
+            };
+
+            const fmt1 = formatValue(base1);
+            val1 = fmt1.val; unit1 = fmt1.unit;
+            val1Small = base1;
+
+            const fmt2 = formatValue(base2);
+            val2 = fmt2.val; unit2 = fmt2.unit;
+            val2Small = base2;
+
+            let correctOption;
+            let explanation;
+
+            if (val1Small > val2Small) {
+                correctOption = "Left Side";
+                explanation = `The left side has ${val1Small}${unitSmall}, and the right side has ${val2Small}${unitSmall}.<br/>${val1Small} > ${val2Small}, so the <strong>Left Side</strong> goes down to show it's heavier.`;
+            } else if (val2Small > val1Small) {
+                correctOption = "Right Side";
+                explanation = `The left side has ${val1Small}${unitSmall}, and the right side has ${val2Small}${unitSmall}.<br/>${val2Small} > ${val1Small}, so the <strong>Right Side</strong> goes down to show it's heavier.`;
+            } else {
+                correctOption = "Balanced";
+                explanation = `Both sides have ${val1Small}${unitSmall}.<br/>Since they are equal, the scale remains <strong>Balanced</strong>.`;
+            }
+
+            const scaleTiltTarget = val1Small > val2Small ? 'left' : (val2Small > val1Small ? 'right' : 'level');
+
+            return {
+                val1, unit1, val2, unit2,
+                val1Small, val2Small,
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 1.8rem; text-align: center;'>
+                    Which side will go down?
+                </div>`,
+                correctAnswer: correctOption,
+                solution: explanation,
+                scaleTiltTarget: scaleTiltTarget,
+                shuffledOptions: ["Left Side", "Right Side", "Balanced"]
+            };
+        };
+
+        const questions = [];
+        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+            questions.push(generateQuestion());
+        }
+        setSessionQuestions(questions);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, []);
 
-    useEffect(() => generateQuestion(), [qIndex]);
+    useEffect(() => {
+        if (showResults) return;
+        const timer = setInterval(() => {
+            setTimeElapsed(prev => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [showResults]);
 
-    // 📚 combo problems (multiplication + division)
-    const problems = [
-        () => {
-            const people = randomInt(100, 150);
-            const perDay = 8;
-            const days = 365;
-            return {
-                q: `${people} people drink ${perDay} glasses daily. How many glasses are used in a year?`,
-                a: people * perDay * days,
-            };
-        },
-        () => {
-            const litres = 8;
-            const price = 9;
-            const days = 30;
-            return {
-                q: `A cow gives ${litres} litres of milk daily. Milk sells at ₹${price} per litre. What is the earning in 30 days?`,
-                a: litres * price * days,
-            };
-        },
-        () => {
-            const perDay = randomInt(70, 100);
-            const months = 12;
-            const days = 30;
-            return {
-                q: `A worker earns ₹${perDay} per day. How much does he earn in ${months} months?`,
-                a: perDay * days * months,
-            };
-        },
-        () => {
-            const tanks = 25;
-            const buckets = 15;
-            return {
-                q: `One tank fills ${buckets} buckets. How many buckets will 25 tanks fill?`,
-                a: tanks * buckets,
-            };
-        },
-        () => {
-            const kg = 12;
-            const laddoosPerKg = 28;
-            const perBox = 16;
-            return {
-                q: `There are ${laddoosPerKg} laddoos in 1 kg. How many boxes are needed to pack ${kg} kg if 16 laddoos fit in one box?`,
-                a: Math.ceil((kg * laddoosPerKg) / perBox),
-            };
-        },
-        () => {
-            const rooms = 26;
-            const plants = 4;
-            const cups = 2;
-            return {
-                q: `A school has ${rooms} rooms with ${plants} plants each. Each plant needs ${cups} cups of water. How many cups are needed?`,
-                a: rooms * plants * cups,
-            };
-        },
-        () => {
-            const goats = 17;
-            const earningPerGoat = 1;
-            const days = 30;
-            return {
-                q: `A boy earns ₹${earningPerGoat} per goat per day for ${goats} goats. How much does he earn in 30 days?`,
-                a: goats * earningPerGoat * days,
-            };
-        },
-        () => {
-            const perMonth = 2750;
-            const years = 2;
-            return {
-                q: `A loan of ₹${perMonth} is paid every month for ${years} years. What is the total amount paid?`,
-                a: perMonth * 12 * years,
-            };
-        },
-        () => {
-            const trees = 458;
-            const perRow = 15;
-            return {
-                q: `A gardener plants ${perRow} trees in each row from ${trees} trees. How many rows can he plant?`,
-                a: Math.floor(trees / perRow),
-            };
-        },
-        () => {
-            const hours = 2000;
-            return {
-                q: `A battery runs for ${hours} hours. How many days will it run if used continuously?`,
-                a: Math.floor(hours / 24),
-            };
-        },
-    ];
-
-    const generateQuestion = () => {
-        if (usedQuestions.current.length === problems.length) {
-            usedQuestions.current = [];
-        }
-
-        let index;
-        do {
-            index = randomInt(0, problems.length - 1);
-        } while (usedQuestions.current.includes(index));
-
-        usedQuestions.current.push(index);
-
-        const { q, a } = problems[index]();
-        const correct = a.toString();
-
-        let opts = [correct];
-        while (opts.length < 4) {
-            let fake = a + randomInt(-100, 100);
-            if (fake > 0 && !opts.includes(fake.toString()))
-                opts.push(fake.toString());
-        }
-
-        setShuffledOptions(opts.sort(() => Math.random() - 0.5));
-
-        setCurrentQuestion({
-            text: `<div class='question-container'><p>${q}</p></div>`,
-            correctAnswer: correct,
-            solution: `<strong>Solution:</strong><br/>Carefully follow the steps described in the problem using multiplication or division.<br/><br/>Answer = <strong>${correct}</strong>`,
-            difficulty: 'Hard'
-        });
-
-        setSelectedOption(null);
-        setIsSubmitted(false);
-        setIsCorrect(false);
-    };
-
-    const handleCheck = () => {
-        if (!selectedOption) return;
-        const right = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(right);
-        setIsSubmitted(true);
-        setAnswers((p) => ({
-            ...p,
-            [qIndex]: {
-                isCorrect: right,
-                selected: selectedOption,
-                questionText: currentQuestion.text,
-                correctAnswer: currentQuestion.correctAnswer,
-                solution: currentQuestion.solution
+    useEffect(() => {
+        if (sessionQuestions.length > 0) {
+            const qData = sessionQuestions[qIndex];
+            setCurrentQuestion(qData);
+            setShuffledOptions(qData.shuffledOptions);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+                // Set tilt immediately for reviewed questions
+                setBalanceTilt(qData.scaleTiltTarget);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+                setBalanceTilt('level');
             }
-        }));
-
-        if (right) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setShowExplanationModal(true);
         }
-        recordQuestionAttempt(currentQuestion, selectedOption, right);
+    }, [qIndex, sessionQuestions]);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     const recordQuestionAttempt = async (question, selected, isCorrect) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
 
-        let timeSpent = accumulatedTime.current + (Date.now() - questionStartTime.current);
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
         const seconds = Math.round(timeSpent / 1000);
 
         try {
@@ -223,7 +195,8 @@ const MultiDivWordProblems = () => {
                 user_id: parseInt(userId, 10),
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                difficulty_level: question.difficulty || 'Hard',
+                template_id: null,
+                difficulty_level: 'medium',
                 question_text: String(question.text || ''),
                 correct_answer: String(question.correctAnswer || ''),
                 student_answer: String(selected || ''),
@@ -236,19 +209,42 @@ const MultiDivWordProblems = () => {
         }
     };
 
+    const handleCheck = () => {
+        if (!selectedOption || !currentQuestion) return;
+        const isRight = selectedOption === currentQuestion.correctAnswer;
+        setIsCorrect(isRight);
+        setIsSubmitted(true);
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
+
+        // Animate scale
+        setBalanceTilt(currentQuestion.scaleTiltTarget);
+
+        if (isRight) {
+            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+        } else {
+            setShowExplanationModal(true);
+        }
+
+        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
-            setQIndex((p) => p + 1);
+            setQIndex(prev => prev + 1);
+            setShowExplanationModal(false);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
-            setShowExplanationModal(false);
+            setBalanceTilt('level');
         } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
+            if (userId && sessionId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 try {
                     await api.createReport({
-                        title: 'Multiplication & Division Report',
+                        title: SKILL_NAME,
                         type: 'practice',
                         score: (totalCorrect / TOTAL_QUESTIONS) * 100,
                         parameters: {
@@ -261,19 +257,18 @@ const MultiDivWordProblems = () => {
                         },
                         user_id: parseInt(userId, 10)
                     });
+                    await api.finishSession(sessionId);
                 } catch (err) {
                     console.error("Failed to create report", err);
                 }
             }
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    const handleOptionSelect = (option) => {
+        if (isSubmitted) return;
+        setSelectedOption(option);
     };
 
     const handlePrevious = () => {
@@ -283,15 +278,58 @@ const MultiDivWordProblems = () => {
         }
     };
 
+    const BalanceScale = ({ tilt, leftContent, rightContent }) => {
+        const rotation = tilt === 'level' ? 0 : (tilt === 'left' ? -15 : 15);
+
+        return (
+            <div className="relative w-full max-w-lg h-64 mx-auto mt-8 mb-12">
+                {/* Base */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[30px] border-l-transparent border-r-[30px] border-r-transparent border-b-[60px] border-b-[#31326F]"></div>
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-32 bg-[#31326F]"></div>
+
+                {/* Beam Container - Rotates */}
+                <motion.div
+                    className="absolute top-10 left-1/2 w-3/4 h-32 origin-top"
+                    style={{ marginLeft: '-37.5%' }} // Center of 75% width
+                    animate={{ rotate: rotation }}
+                    transition={{ type: "spring", stiffness: 60, damping: 10 }}
+                >
+                    {/* The Beam */}
+                    <div className="w-full h-2 bg-[#31326F] rounded-full relative">
+                        {/* Left Pan String */}
+                        <div className="absolute left-4 top-1 w-0.5 h-24 bg-gray-400 origin-top"></div>
+                        <div className="absolute left-4 top-24 -translate-x-1/2 w-24 h-8 bg-gray-100 border-b-4 border-gray-300 rounded-b-full flex items-end justify-center pb-1 shadow-md">
+                            <div className="absolute bottom-full mb-1 w-max text-center">
+                                {leftContent}
+                            </div>
+                        </div>
+
+                        {/* Right Pan String */}
+                        <div className="absolute right-4 top-1 w-0.5 h-24 bg-gray-400 origin-top"></div>
+                        <div className="absolute right-4 top-24 translate-x-1/2 w-24 h-8 bg-gray-100 border-b-4 border-gray-300 rounded-b-full flex items-end justify-center pb-1 shadow-md">
+                            <div className="absolute bottom-full mb-1 w-max text-center">
+                                {rightContent}
+                            </div>
+                        </div>
+
+                        {/* Center Pivot Point Visual */}
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-[#31326F] rounded-full z-10"></div>
+                    </div>
+                </motion.div>
+            </div>
+        );
+    };
+
     const stats = (() => {
         let correct = 0;
+        const total = Object.keys(answers).length;
         Object.values(answers).forEach(ans => {
             if (ans.isCorrect) correct++;
         });
         return { correct, total: TOTAL_QUESTIONS };
     })();
 
-    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold text-[#31326F]">Loading...</div>;
+    if (!currentQuestion && !showResults) return <div className="flex items-center justify-center min-h-screen"><div className="animate-pulse text-2xl font-bold text-[#31326F]">Loading Practice...</div></div>;
 
     if (showResults) {
         const score = stats.correct;
@@ -314,13 +352,13 @@ const MultiDivWordProblems = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Multiplication & Division Report</h1>
+                        <h1 className="results-title">Comparison Report</h1>
                     </div>
                 </header>
 
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Sharply Calculated! 🎉</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Comparison King! 🎉</h2>
 
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
@@ -361,9 +399,9 @@ const MultiDivWordProblems = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Problem Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Comparison Log 📜</h3>
                         <div className="space-y-4">
-                            {Array.from({ length: TOTAL_QUESTIONS }).map((_, idx) => {
+                            {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
@@ -380,21 +418,21 @@ const MultiDivWordProblems = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
-                                                    <LatexContent html={ans.questionText} />
+                                                    <LatexContent html={q.text} />
                                                 </div>
 
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
                                                         <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
-                                                            <LatexContent html={ans.selected} />
+                                                            {ans.selected}
                                                         </span>
                                                     </div>
                                                     {!ans.isCorrect && (
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
                                                             <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
                                                             <span className="text-lg font-black text-[#31326F]">
-                                                                <LatexContent html={ans.correctAnswer} />
+                                                                {q.correctAnswer}
                                                             </span>
                                                         </div>
                                                     )}
@@ -403,9 +441,12 @@ const MultiDivWordProblems = () => {
                                                 <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
                                                     <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
                                                     <div className="text-sm font-medium text-gray-600 leading-relaxed">
-                                                        <LatexContent html={ans.solution} />
+                                                        <LatexContent html={q.solution} />
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
                                             </div>
                                         </div>
                                     </motion.div>
@@ -416,9 +457,9 @@ const MultiDivWordProblems = () => {
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
                         <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
-                            <RefreshCw size={24} /> Play Again
+                            <RefreshCw size={24} /> Start New Quest
                         </button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
                             Back to Topics
                         </button>
                     </div>
@@ -430,19 +471,14 @@ const MultiDivWordProblems = () => {
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left">
-                    <button
-                        className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all"
-                        onClick={() => navigate(-1)}
-                    >
-                        <X size={24} />
-                    </button>
-                </div>
+                <div className="header-left"></div>
+
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
+
                 <div className="header-right">
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
@@ -454,31 +490,70 @@ const MultiDivWordProblems = () => {
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
-                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', fontWeight: '500', textAlign: 'center' }}>
-                                            <LatexContent html={currentQuestion.text} />
+                            <motion.div
+                                key={qIndex}
+                                initial={{ x: 50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -50, opacity: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                style={{ height: '100%', width: '100%' }}
+                            >
+                                <div className="question-card-modern" style={{ paddingLeft: '0' }}>
+                                    <div className="question-header-modern" style={{ flexDirection: 'column', gap: '1rem' }}>
+                                        <div className="text-center font-bold text-gray-500 uppercase tracking-widest text-sm mb-2">
+                                            Comparison Lab ⚖️
+                                        </div>
+
+                                        <BalanceScale
+                                            tilt={balanceTilt}
+                                            leftContent={
+                                                <div className="bg-white px-3 py-2 rounded-xl border-2 border-[#31326F] shadow-sm font-bold text-[#31326F]">
+                                                    {currentQuestion.val1} {currentQuestion.unit1}
+                                                </div>
+                                            }
+                                            rightContent={
+                                                <div className="bg-white px-3 py-2 rounded-xl border-2 border-[#31326F] shadow-sm font-bold text-[#31326F]">
+                                                    {currentQuestion.val2} {currentQuestion.unit2}
+                                                </div>
+                                            }
+                                        />
+
+                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2rem', fontWeight: '400', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
+                                            Which side will go down?
                                         </h2>
                                     </div>
-
                                     <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((opt, i) => (
+                                        <div className="options-grid-modern" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                                            {shuffledOptions.map((option, idx) => (
                                                 <button
-                                                    key={i}
-                                                    onClick={() => !isSubmitted && setSelectedOption(opt)}
-                                                    className={`option-btn-modern ${selectedOption === opt ? "selected" : ""
-                                                        } ${isSubmitted && opt === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}`}
-                                                    style={{ fontWeight: '500', fontSize: '1.2rem', fontFamily: '"Proxima Nova", sans-serif' }}
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                                        } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
+                                                        }`}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '400',
+                                                        fontSize: '1.8rem',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                    }}
+                                                    onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
-                                                    {opt}
+                                                    <LatexContent html={option} />
                                                 </button>
                                             ))}
                                         </div>
                                         {isSubmitted && isCorrect && (
-                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>
+                                            <motion.div
+                                                initial={{ scale: 0.5, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                className="feedback-mini correct"
+                                                style={{ marginTop: '20px' }}
+                                            >
                                                 {feedbackMessage}
                                             </motion.div>
                                         )}
@@ -509,13 +584,13 @@ const MultiDivWordProblems = () => {
                                 navigate(-1);
                             }}
                         >
-                            Exit
+                            Exit Practice
                         </button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={20} /> Explain
+                                <Eye size={20} /> View Explanation
                             </button>
                         )}
                     </div>
@@ -523,7 +598,7 @@ const MultiDivWordProblems = () => {
                         <div className="nav-buttons-group">
                             {qIndex > 0 && (
                                 <button className="nav-pill-next-btn" onClick={handlePrevious}>
-                                    <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
                                 </button>
                             )}
                             {isSubmitted ? (
@@ -562,12 +637,11 @@ const MultiDivWordProblems = () => {
                         )}
                     </div>
 
-
-                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '75%', display: 'flex', justifyContent: 'flex-end' }}>
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '50%', display: 'flex', justifyContent: 'flex-end' }}>
                         <div className="nav-buttons-group" style={{ gap: '6px' }}>
                             {qIndex > 0 && (
                                 <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
-                                    Prev
+                                    Previous
                                 </button>
                             )}
                             {isSubmitted ? (
@@ -587,4 +661,4 @@ const MultiDivWordProblems = () => {
     );
 };
 
-export default MultiDivWordProblems;
+export default CompareWeightsAndCapacities;
