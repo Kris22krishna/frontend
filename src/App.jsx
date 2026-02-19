@@ -172,6 +172,7 @@ import ViewingSections from './components/practice/class-7/visualising solid sha
 import VisualisingSolidShapesTest from './components/practice/class-7/visualising solid shapes/VisualisingSolidShapesTest';
 import LineSymmetry from './components/practice/class-7/symmetry/LineSymmetry';
 import RegularPolygonsSymmetry from './components/practice/class-7/symmetry/RegularPolygonsSymmetry';
+import MirrorReflectionSymmetry from './components/practice/class-7/symmetry/MirrorReflectionSymmetry';
 import RotationalSymmetry from './components/practice/class-7/symmetry/RotationalSymmetry';
 import LineRotationalRelationship from './components/practice/class-7/symmetry/LineRotationalRelationship';
 import SymmetryTest from './components/practice/class-7/symmetry/SymmetryTest';
@@ -540,6 +541,7 @@ function App() {
         {/* Symmetry */}
         <Route path="/middle/grade/7/symmetry/line-symmetry" element={<LineSymmetry />} />
         <Route path="/middle/grade/7/symmetry/regular-polygons" element={<RegularPolygonsSymmetry />} />
+        <Route path="/middle/grade/7/symmetry/mirror-reflection" element={<MirrorReflectionSymmetry />} />
         <Route path="/middle/grade/7/symmetry/rotational" element={<RotationalSymmetry />} />
         <Route path="/middle/grade/7/symmetry/relationship" element={<LineRotationalRelationship />} />
         <Route path="/middle/grade/7/symmetry/chapter-test" element={<SymmetryTest />} />

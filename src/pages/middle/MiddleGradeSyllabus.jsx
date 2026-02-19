@@ -368,6 +368,14 @@ const MiddleGradeSyllabus = () => {
                             path: '/middle/grade/7/symmetry/regular-polygons'
                         },
                         {
+                            skill_id: 'local-sym-mirror',
+                            skill_name: 'Mirror Reflection',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/mirror-reflection'
+                        },
+                        {
                             skill_id: 'local-sym-rot',
                             skill_name: 'Rotational Symmetry',
                             topic: 'Symmetry',
