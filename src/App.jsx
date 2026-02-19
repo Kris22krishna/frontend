@@ -229,6 +229,9 @@ import FairShareHalvesDoubles from './components/practice/class-3/fair-share/hal
 import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
 import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
 
+// Grade 3 - Filling and Lifting
+import Measuring from './components/practice/class-3/Filling-and-Lifting/Measuring';
+
 // Grade 4 - The Cleanest Village
 import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
 import RepeatedSubtraction from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_subtraction';
@@ -328,6 +331,12 @@ function App() {
         <Route path="/junior/grade/:grade/fair-share/guess-who" element={
           <ProtectedRoute redirectTo="/login">
             <FairShareGuesswho />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/filling-and-lifting/measuring" element={
+          <ProtectedRoute redirectTo="/login">
+            <Measuring />
           </ProtectedRoute>
         } />
 
