@@ -128,6 +128,26 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('data handling')) {
+                if (lowerSkillName.includes('collecting')) {
+                    navigate(`/middle/grade/${grade}/data-handling/collecting-organising`);
+                    return;
+                }
+                if (skill.skill_name === "Pictographs") {
+                    navigate(`/middle/grade/6/data-handling/pictographs`);
+                    return;
+                } else if (skill.skill_name === "Bar Graphs") {
+                    navigate(`/middle/grade/6/data-handling/bar-graphs`);
+                    return;
+                } else if (skill.skill_name === "Drawing a Bar Graph") {
+                    navigate(`/middle/grade/6/data-handling/drawing-a-bar-graph`);
+                    return;
+                } else if (skill.skill_name === "Figure It Out") {
+                    navigate(`/middle/grade/6/data-handling/figure-it-out`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -584,6 +604,15 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
                 { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
                 { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
+            ]
+        };
+        skillsByTopic['Data Handling and Presentation'] = {
+            'Main': [
+                { skill_id: 'data-handling-6', skill_name: 'Collecting and Organising Data', topic: 'Data Handling and Presentation' },
+                { skill_id: 'pictographs-6', skill_name: 'Pictographs', topic: 'Data Handling and Presentation' },
+                { skill_id: 'drawing-bar-graph-6', skill_name: 'Drawing a Bar Graph', topic: 'Data Handling and Presentation' },
+                { skill_id: 'bar-graphs-6', skill_name: 'Bar Graphs', topic: 'Data Handling and Presentation' },
+                { skill_id: 'figure-it-out-6', skill_name: 'Figure It Out', topic: 'Data Handling and Presentation' }
             ]
         };
     }
