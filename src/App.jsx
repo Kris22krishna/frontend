@@ -208,6 +208,15 @@ import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Vi
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
 
+// Grade 4 - Weigh It, Pour It
+import GramToKilogramFractions from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/gram_to_kilogram_fractions';
+import MakeOneKilogramUsingPackets from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/make_one_kilogram_using_packets';
+import MillilitreToLitreFractions from './components/practice/class-4/Weigh_It_Pour_It/Capacity_Unit_Conversion/millilitre_to_litre_fractions';
+import MakeOneLitreUsingBottles from './components/practice/class-4/Weigh_It_Pour_It/Capacity_Unit_Conversion/make_one_litre_using_bottles';
+import CountHowManyUnitsFit from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/count_how_many_units_fit';
+import RepeatedAdditionToOneWhole from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/repeated_addition_to_one_whole';
+import CompareWeightsAndCapacities from './components/practice/class-4/Weigh_It_Pour_It/Comparison_of_Quantities/compare_weights_and_capacities';
+import WeightAndCapacityWordProblems from './components/practice/class-4/Weigh_It_Pour_It/Mixed_Measurement_Word_Problems/weight_and_capacity_word_problems';
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
     <h1 className="text-6xl mb-4">🚧</h1>
@@ -396,6 +405,48 @@ function App() {
         <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
           <ProtectedRoute redirectTo="/login">
             <LetUsPlay />
+          </ProtectedRoute>
+        } />
+
+        {/* Weigh It, Pour It Routes */}
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
+          <ProtectedRoute redirectTo="/login">
+            <GramToKilogramFractions />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-kilogram-using-packets" element={
+          <ProtectedRoute redirectTo="/login">
+            <MakeOneKilogramUsingPackets />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/millilitre-to-litre-fractions" element={
+          <ProtectedRoute redirectTo="/login">
+            <MillilitreToLitreFractions />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-litre-using-bottles" element={
+          <ProtectedRoute redirectTo="/login">
+            <MakeOneLitreUsingBottles />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/count-how-many-units-fit" element={
+          <ProtectedRoute redirectTo="/login">
+            <CountHowManyUnitsFit />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/repeated-addition-to-one-whole" element={
+          <ProtectedRoute redirectTo="/login">
+            <RepeatedAdditionToOneWhole />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/compare-weights-and-capacities" element={
+          <ProtectedRoute redirectTo="/login">
+            <CompareWeightsAndCapacities />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/weight-and-capacity-word-problems" element={
+          <ProtectedRoute redirectTo="/login">
+            <WeightAndCapacityWordProblems />
           </ProtectedRoute>
         } />
 
