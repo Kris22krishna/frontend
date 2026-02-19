@@ -38,7 +38,15 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10052, skill_name: 'Solve equations using substitution (no word problems)', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10053, skill_name: 'Solve word problems using substitution', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10054, skill_name: 'Solve equations using elimination (no word problems)', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
-                        { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' }
+                        { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
+
+                        // Arithmetic Progressions
+                        { skill_id: 10101, skill_name: 'Recognising and Describing Number Patterns', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 10102, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 10103, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
+                        { skill_id: 10104, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
+                        { skill_id: 10105, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
+                        { skill_id: 10106, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
@@ -51,7 +59,15 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-rn-commutativity', skill_name: 'Commutativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-associativity', skill_name: 'Associativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-identity', skill_name: 'Additive and Multiplicative Identity', topic: 'Rational Numbers' },
-                        { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' }
+                        { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-mens-polygon', skill_name: 'Area of Polygon', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cuboid', skill_name: 'Surface Area of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cube', skill_name: 'Surface Area of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cylinder', skill_name: 'Surface Area of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cube', skill_name: 'Volume of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cuboid', skill_name: 'Volume of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cylinder', skill_name: 'Volume of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-capacity', skill_name: 'Volume and Capacity', topic: 'Mensuration' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -161,6 +177,74 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Properties of Rational Numbers',
                 isLocal: true,
                 path: '/senior/grade/8/rational-numbers/distributivity'
+            }
+        ];
+
+        // Hardcode all Grade 8 skills for Mensuration (8 skills)
+        skillsByTopic['Mensuration'] = [
+            {
+                skill_id: 'local-8-mens-polygon',
+                skill_name: 'Area of Polygon',
+                topic: 'Mensuration',
+                subtopic: 'Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/area-of-polygon'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cuboid',
+                skill_name: 'Surface Area of Cuboid',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cuboid'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cube',
+                skill_name: 'Surface Area of Cube',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cube'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cylinder',
+                skill_name: 'Surface Area of Cylinder',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cylinder'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cube',
+                skill_name: 'Volume of Cube',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cube'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cuboid',
+                skill_name: 'Volume of Cuboid',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cuboid'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cylinder',
+                skill_name: 'Volume of Cylinder',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cylinder'
+            },
+            {
+                skill_id: 'local-8-mens-vol-capacity',
+                skill_name: 'Volume and Capacity',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-and-capacity'
             }
         ];
     }
