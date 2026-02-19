@@ -66,6 +66,11 @@ export const TOPIC_CONFIGS = {
             { id: "1001", name: "Identifying shapes (2D shapes)", route: "identifying-shapes" },
             { id: "1002", name: "Comparing lengths", route: "comparing-lengths" },
             { id: "1003", name: "Recognizing round objects", route: "recognizing-round-objects" }
+        ],
+        'Counting in Groups': [
+            { id: "1004", name: "Counting in pairs", route: "counting-in-pairs" },
+            { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "skip-counting" },
+            { id: "1006", name: "Introduction to multiplication as repeated addition", route: "repeated-addition" }
         ]
     },
     '3': {
