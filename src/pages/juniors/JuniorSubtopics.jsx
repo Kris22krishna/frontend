@@ -68,14 +68,21 @@ const JuniorSubtopics = () => {
             return;
         }
 
-        // Grade 4 - The Cleanest Village routing
+        // Grade 4 Routing
         const gradeNum = grade.replace('grade', '');
         if (parseInt(gradeNum) === 4) {
             const gradeConfigs = TOPIC_CONFIGS['4'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
                 const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                 if (skill && skill.route) {
-                    navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
+                    let topicSlug = decodedTopic.toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[()]/g, '');
+
+                    if (decodedTopic === "The Cleanest Village") topicSlug = "the-cleanest-village";
+                    if (decodedTopic === "Equal Groups") topicSlug = "equal-groups";
+
+                    navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
                     return;
                 }
             }
@@ -166,14 +173,23 @@ const JuniorSubtopics = () => {
                     }
                 }
             } else {
-                // Grade 4 - The Cleanest Village routing
+                // Grade 4 Routing
                 const gradeNum = grade.replace('grade', '');
                 if (parseInt(gradeNum) === 4) {
                     const gradeConfigs = TOPIC_CONFIGS['4'];
                     if (gradeConfigs && gradeConfigs[decodedTopic]) {
                         const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                         if (skill && skill.route) {
-                            navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
+                            // Construct slug from topic name
+                            let topicSlug = decodedTopic.toLowerCase()
+                                .replace(/\s+/g, '-')
+                                .replace(/[()]/g, '');
+
+                            // Special case for consistency if needed, though slugify usually works
+                            if (decodedTopic === "The Cleanest Village") topicSlug = "the-cleanest-village";
+                            if (decodedTopic === "Equal Groups") topicSlug = "equal-groups";
+
+                            navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
                             setPendingSubtopic(null);
                             return;
                         }

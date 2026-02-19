@@ -92,6 +92,26 @@ export const TOPIC_CONFIGS = {
             { id: "CV-06", name: "Find How Many More or Less", route: "find-how-many-more-or-less" },
             { id: "CV-07", name: "Word Problems (Mixed Operations)", route: "chapter-scene-mixed-operations" },
             { id: "CV-09", name: "Let Us Play (Triangle Puzzle)", route: "let-us-play" }
+        ],
+        'Equal Groups': [
+            { id: "1143", name: "Jump-Based Multiples", route: "jump-based-multiples" },
+            { id: "1144", name: "Common Multiples from Jumps", route: "common-multiples-from-jumps" },
+            { id: "1145", name: "Group Size and Number of Groups", route: "group-size-and-number-of-groups" },
+            { id: "1146", name: "Arrays: Rows and Columns", route: "arrays-rows-and-columns" },
+            { id: "1147", name: "Doubling Numbers", route: "doubling-numbers" },
+            { id: "1148", name: "Doubling Patterns (Ones Digit)", route: "doubling-ones-digit-patterns" },
+            { id: "1149", name: "Multiplying by Tens", route: "multiply-using-tens" },
+            { id: "1150", name: "Multiplying by Hundreds", route: "multiply-using-hundreds" },
+            { id: "1151", name: "Break Apart Multiplication", route: "break-apart-multiplication" },
+            { id: "1152", name: "Equal Groups Story Problems", route: "equal-groups-story-problems" },
+            { id: "1153", name: "Division by Partial Groups", route: "division-by-partial-groups" },
+            { id: "1154", name: "Division with Remainders", route: "division-with-remainders" },
+            { id: "1155", name: "Dividing Using Patterns", route: "divide-using-patterns" },
+            { id: "1156", name: "Equal Sharing Division", route: "equal-sharing-division" },
+            { id: "1157", name: "Mixed Word Problems", route: "equal-groups-mixed-word-problems" },
+            { id: "1158", name: "Always, Sometimes, Never", route: "always-sometimes-never-statements" },
+            { id: "1159", name: "Find the Mistake", route: "find-the-mistake-equal-groups" },
+            { id: "1160", name: "Create Your Own Groups", route: "create-your-own-equal-groups" }
         ]
     }
 };

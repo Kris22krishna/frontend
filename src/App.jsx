@@ -196,6 +196,26 @@ import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Vi
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
 
+// Grade 4 - Equal Groups
+import JumpBasedMultiples from './components/practice/class-4/Equal_Groups/Multiples_and_Skip_Counting/jump_based_multiples';
+import CommonMultiplesFromJumps from './components/practice/class-4/Equal_Groups/Multiples_and_Skip_Counting/common_multiples_from_jumps';
+import GroupSizeAndNumberOfGroups from './components/practice/class-4/Equal_Groups/Equal_Groups_to_Multiplication/group_size_and_number_of_groups';
+import ArraysRowsAndColumns from './components/practice/class-4/Equal_Groups/Equal_Groups_to_Multiplication/arrays_rows_and_columns';
+import DoublingNumbers from './components/practice/class-4/Equal_Groups/Doubling_and_Number_Patterns/doubling_numbers';
+import DoublingOnesDigitPatterns from './components/practice/class-4/Equal_Groups/Doubling_and_Number_Patterns/doubling_ones_digit_patterns';
+import MultiplyUsingTens from './components/practice/class-4/Equal_Groups/Multiplication_Strategies/multiply_using_tens';
+import MultiplyUsingHundreds from './components/practice/class-4/Equal_Groups/Multiplication_Strategies/multiply_using_hundreds';
+import BreakApartMultiplication from './components/practice/class-4/Equal_Groups/Multiplication_Strategies/break_apart_multiplication';
+import EqualGroupsStoryProblems from './components/practice/class-4/Equal_Groups/Multiplication_Word_Problems/equal_groups_story_problems';
+import DivisionByPartialGroups from './components/practice/class-4/Equal_Groups/Division_as_Grouping/division_by_partial_groups';
+import DivisionWithRemainders from './components/practice/class-4/Equal_Groups/Division_as_Grouping/division_with_remainders';
+import DivideUsingPatterns from './components/practice/class-4/Equal_Groups/Division_Patterns_and_Sharing/divide_using_patterns';
+import EqualSharingDivision from './components/practice/class-4/Equal_Groups/Division_Patterns_and_Sharing/equal_sharing_division';
+import EqualGroupsMixedWordProblems from './components/practice/class-4/Equal_Groups/Mixed_Multiplication_Division_Word_Problems/equal_groups_mixed_word_problems';
+import AlwaysSometimesNeverStatements from './components/practice/class-4/Equal_Groups/Mathematical_Reasoning/always_sometimes_never_statements';
+import FindTheMistakeEqualGroups from './components/practice/class-4/Equal_Groups/Mathematical_Reasoning/find_the_mistake_equal_groups';
+import CreateYourOwnEqualGroups from './components/practice/class-4/Equal_Groups/Mathematical_Reasoning/create_your_own_equal_groups';
+
 function App() {
   return (
     <Router>
@@ -359,6 +379,98 @@ function App() {
         <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
           <ProtectedRoute redirectTo="/login">
             <LetUsPlay />
+          </ProtectedRoute>
+        } />
+
+        {/* Equal Groups Routes */}
+        <Route path="/junior/grade/:grade/equal-groups/jump-based-multiples" element={
+          <ProtectedRoute redirectTo="/login">
+            <JumpBasedMultiples />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/common-multiples-from-jumps" element={
+          <ProtectedRoute redirectTo="/login">
+            <CommonMultiplesFromJumps />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/group-size-and-number-of-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <GroupSizeAndNumberOfGroups />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/arrays-rows-and-columns" element={
+          <ProtectedRoute redirectTo="/login">
+            <ArraysRowsAndColumns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/doubling-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <DoublingNumbers />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/doubling-ones-digit-patterns" element={
+          <ProtectedRoute redirectTo="/login">
+            <DoublingOnesDigitPatterns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/multiply-using-tens" element={
+          <ProtectedRoute redirectTo="/login">
+            <MultiplyUsingTens />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/multiply-using-hundreds" element={
+          <ProtectedRoute redirectTo="/login">
+            <MultiplyUsingHundreds />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/break-apart-multiplication" element={
+          <ProtectedRoute redirectTo="/login">
+            <BreakApartMultiplication />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/equal-groups-story-problems" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualGroupsStoryProblems />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/division-by-partial-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionByPartialGroups />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/division-with-remainders" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionWithRemainders />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/divide-using-patterns" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivideUsingPatterns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/equal-sharing-division" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualSharingDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/equal-groups-mixed-word-problems" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualGroupsMixedWordProblems />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/always-sometimes-never-statements" element={
+          <ProtectedRoute redirectTo="/login">
+            <AlwaysSometimesNeverStatements />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/find-the-mistake-equal-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindTheMistakeEqualGroups />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/create-your-own-equal-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <CreateYourOwnEqualGroups />
           </ProtectedRoute>
         } />
 
