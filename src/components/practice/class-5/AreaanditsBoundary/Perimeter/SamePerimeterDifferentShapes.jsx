@@ -14,10 +14,10 @@ const ShapeOnGrid = ({ name, w, h, color = "#4FB7B3", cellSize = 25 }) => {
     return (
         <div className="flex flex-col items-center p-4 bg-white rounded-2xl border-2 border-slate-50 shadow-sm">
             <span className="mb-2 font-black text-[#31326F] text-lg">{name}</span>
-            <div className="relative border-2 border-slate-200 bg-slate-50/20" style={{ width: w * cellSize, height: h * cellSize }}>
+            <div className="relative border-2 border-slate-300 bg-white" style={{ width: w * cellSize, height: h * cellSize }}>
                 <div className="absolute inset-0 grid" style={{ gridTemplateColumns: `repeat(${w}, 1fr)`, gridTemplateRows: `repeat(${h}, 1fr)` }}>
                     {[...Array(w * h)].map((_, i) => (
-                        <div key={i} className={`border border-slate-100 ${color === 'none' ? '' : 'bg-indigo-400/20'}`}></div>
+                        <div key={i} className={`border border-slate-300 ${color === 'none' ? '' : 'bg-indigo-400/20'}`}></div>
                     ))}
                 </div>
             </div>
@@ -236,12 +236,18 @@ const SamePerimeterDifferentShapes = () => {
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"><button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button></div>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left">
+                    <button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
-                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
+                <div className="header-right">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                        {formatTime(timeElapsed)}
+                    </div>
+                </div>
             </header>
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>

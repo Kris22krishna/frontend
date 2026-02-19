@@ -99,23 +99,31 @@ const PerimeterRealLife = () => {
             const qs = [];
             for (let i = 0; i < 3; i++) {
                 const l = randomInt(20, 50); const w = randomInt(15, 30); const p = 2 * (l + w);
+                const optionsSet = new Set([`${p} cm`, `${l * w} cm`, `${l + w} cm`, `${p + 10} cm`]);
+                while (optionsSet.size < 4) {
+                    optionsSet.add(`${p + randomInt(2, 8) * 2} cm`);
+                }
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A photo frame is $${l}$ cm $\\times$ $${w}$ cm. How much <strong>wooden strip</strong> is needed for its outer boundary?</div>`,
                     correctAnswer: `${p} cm`,
                     solution: `The strip needed is the perimeter. Perimeter $= 2 \\times (L + W) = 2 \\times (${l} + ${w}) = ${p}$ cm.`,
                     visual: <PerimeterObjectVisual type="frame" l={l} w={w} unit="cm" />,
-                    options: [`${p} cm`, `${l * w} cm`, `${l + w} cm`, `${p + 10} cm`],
+                    options: Array.from(optionsSet),
                     difficulty: "Easy"
                 });
             }
             for (let i = 0; i < 3; i++) {
                 const l = randomInt(40, 80); const w = randomInt(25, 45); const p = 2 * (l + w);
+                const optionsSet = new Set([`${p} m`, `${l * w} m`, `${p * 2} m`, `${p - 10} m`]);
+                while (optionsSet.size < 4) {
+                    optionsSet.add(`${p + randomInt(3, 10) * 2} m`);
+                }
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A field is $${l}$ m long and $${w}$ m wide. What is the total length of <strong>wire fence</strong> needed to go around it once?</div>`,
                     correctAnswer: `${p} m`,
                     solution: `Fence length = Perimeter. Perimeter $= 2 \\times (${l} + ${w}) = ${p}$ m.`,
                     visual: <PerimeterObjectVisual type="garden" l={l} w={w} unit="m" />,
-                    options: [`${p} m`, `${l * w} m`, `${p * 2} m`, `${p - 10} m`],
+                    options: Array.from(optionsSet),
                     difficulty: "Medium"
                 });
             }
@@ -265,12 +273,18 @@ const PerimeterRealLife = () => {
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"><button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button></div>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left">
+                    <button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
-                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
+                <div className="header-right">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                        {formatTime(timeElapsed)}
+                    </div>
+                </div>
             </header>
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>

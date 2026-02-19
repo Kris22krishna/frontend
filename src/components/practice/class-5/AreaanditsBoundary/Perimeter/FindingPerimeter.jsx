@@ -109,23 +109,31 @@ const FindingPerimeter = () => {
             for (let i = 0; i < 3; i++) {
                 const w = randomInt(4, 7); const h = randomInt(3, 5); const p = 2 * (w + h);
                 const pts = []; for (let x = 0; x < w; x++) for (let y = 0; y < h; y++) pts.push([x, y]);
+                const optionsSet = new Set([`${p} cm`, `${w * h} cm`, `${p + 2} cm`, `${p - 2} cm`]);
+                while (optionsSet.size < 4) {
+                    optionsSet.add(`${p + randomInt(3, 10)} cm`);
+                }
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Find the <strong>perimeter</strong> of the shape on the grid.</div>`,
                     correctAnswer: `${p} cm`,
                     solution: `Boundary length $= ${w} + ${h} + ${w} + ${h} = ${p}$ cm.`,
                     visual: <GridPerimeter points={pts} />,
-                    options: [`${p} cm`, `${w * h} cm`, `${p + 2} cm`, `${p - 2} cm`],
+                    options: Array.from(optionsSet),
                     difficulty: "Easy"
                 });
             }
             for (let i = 0; i < 3; i++) {
                 const w = randomInt(8, 15); const h = randomInt(5, 10); const p = 2 * (w + h);
+                const optionsSet = new Set([`${p} cm`, `${w * h} cm`, `${p + 10} cm`, `${w + h} cm`]);
+                while (optionsSet.size < 4) {
+                    optionsSet.add(`${p + randomInt(2, 5) * 2} cm`);
+                }
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A rectangle has Length = $${w}$ cm and Width = $${h}$ cm. What is its <strong>perimeter</strong>?</div>`,
                     correctAnswer: `${p} cm`,
                     solution: `Perimeter $= 2 \\times (L + W) = 2 \\times (${w} + ${h}) = ${p}$ cm.`,
                     visual: <DimensionPerimeterObject w={6} h={4} />,
-                    options: [`${p} cm`, `${w * h} cm`, `${p + 10} cm`, `${w + h} cm`],
+                    options: Array.from(optionsSet),
                     difficulty: "Medium"
                 });
             }
@@ -141,12 +149,16 @@ const FindingPerimeter = () => {
                     });
                 } else {
                     const p = randomInt(30, 50) * 2; const l = randomInt(10, 20); const w = (p / 2) - l;
+                    const optionsSet = new Set([`${w} cm`, `${w + 5} cm`, `${l} cm`, `${p / 2} cm`]);
+                    while (optionsSet.size < 4) {
+                        optionsSet.add(`${w + randomInt(1, 4) * 2} cm`);
+                    }
                     qs.push({
                         text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>If Perimeter is $${p}$ cm and Length is $${l}$ cm, what is the <strong>width</strong>?</div>`,
                         correctAnswer: `${w} cm`,
                         solution: `Width $= (\\text{Perimeter} \\div 2) - \\text{Length} = (${p} \\div 2) - ${l} = ${w}$ cm.`,
                         visual: <div className="h-24 flex items-center justify-center text-4xl font-black text-indigo-400 opacity-30">P = {p}</div>,
-                        options: [`${w} cm`, `${w + 5} cm`, `${l} cm`, `${p / 2} cm`],
+                        options: Array.from(optionsSet),
                         difficulty: "Hard"
                     });
                 }
@@ -274,12 +286,18 @@ const FindingPerimeter = () => {
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"><button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button></div>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left">
+                    <button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
-                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
+                <div className="header-right">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                        {formatTime(timeElapsed)}
+                    </div>
+                </div>
             </header>
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>

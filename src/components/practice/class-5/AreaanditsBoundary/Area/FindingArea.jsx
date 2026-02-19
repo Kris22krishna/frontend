@@ -144,12 +144,16 @@ const FindingArea = () => {
                 const valStr = `easy-${w}-${h}`;
                 if (!usedValues.has(valStr)) {
                     usedValues.add(valStr);
+                    const optionsSet = new Set([`${area} sq cm`, `${area + 2} sq cm`, `${area - 1} sq cm`, `${(w + h) * 2} sq cm`]);
+                    while (optionsSet.size < 4) {
+                        optionsSet.add(`${area + randomInt(3, 8)} sq cm`);
+                    }
                     qs.push({
                         text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>What is the <strong>area</strong> of the rectangle on the grid?</div>`,
                         correctAnswer: `${area} sq cm`,
                         solution: `Count the squares: $${h}$ rows $\\times$ $${w}$ columns $= ${area}$ sq cm.`,
                         visual: <GridRectangle width={w} height={h} />,
-                        options: [`${area} sq cm`, `${area + 2} sq cm`, `${area - 1} sq cm`, `${(w + h) * 2} sq cm`],
+                        options: Array.from(optionsSet),
                         difficulty: "Easy"
                     });
                 }
@@ -160,12 +164,16 @@ const FindingArea = () => {
                 const valStr = `medium-${w}-${h}`;
                 if (!usedValues.has(valStr)) {
                     usedValues.add(valStr);
+                    const optionsSet = new Set([`${area} sq cm`, `${area + 10} sq cm`, `${(w + h) * 2} sq cm`, `${area - 5} sq cm`]);
+                    while (optionsSet.size < 4) {
+                        optionsSet.add(`${area + randomInt(5, 15)} sq cm`);
+                    }
                     qs.push({
                         text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A rectangle is $${w}$ cm long and $${h}$ cm wide. What is its <strong>area</strong>?</div>`,
                         correctAnswer: `${area} sq cm`,
                         solution: `Area $= \\text{Length} \\times \\text{Width} = ${w} \\times ${h} = ${area}$ sq cm.`,
                         visual: <DimensionRectangle width={6} height={4} unit="cm" />,
-                        options: [`${area} sq cm`, `${area + 10} sq cm`, `${(w + h) * 2} sq cm`, `${area - 5} sq cm`],
+                        options: Array.from(optionsSet),
                         difficulty: "Medium"
                     });
                 }
@@ -327,7 +335,7 @@ const FindingArea = () => {
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
                     <button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button>
                 </div>
@@ -335,7 +343,9 @@ const FindingArea = () => {
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div>
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                        {formatTime(timeElapsed)}
+                    </div>
                 </div>
             </header>
             <main className="practice-content-wrapper">

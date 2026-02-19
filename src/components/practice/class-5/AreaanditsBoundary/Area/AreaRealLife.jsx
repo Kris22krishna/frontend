@@ -106,23 +106,31 @@ const AreaRealLife = () => {
             for (let i = 0; i < 3; i++) {
                 const l = randomInt(2, 5); const w = randomInt(2, 4);
                 const area = l * w; const item = ["rug", "mat", "board"][i];
+                const optionsSet = new Set([`${area} sq m`, `${area + 2} sq m`, `${(l + w) * 2} sq m`, `${area - 1} sq m`]);
+                while (optionsSet.size < 4) {
+                    optionsSet.add(`${area + randomInt(3, 8)} sq m`);
+                }
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A <strong>${item}</strong> has length $${l}$m and width $${w}$m. What is its <strong>area</strong>?</div>`,
                     correctAnswer: `${area} sq m`,
                     solution: `Area $= ${l} \\times ${w} = ${area}$ sq m.`,
                     visual: <RealLifeVisual type="rug" dimension1={l} dimension2={w} unit="m" />,
-                    options: [`${area} sq m`, `${area + 2} sq m`, `${(l + w) * 2} sq m`, `${area - 1} sq m`],
+                    options: Array.from(optionsSet),
                     difficulty: "Easy"
                 });
             }
             for (let i = 0; i < 3; i++) {
                 const l = randomInt(10, 20); const w = randomInt(5, 12); const area = l * w;
+                const optionsSet = new Set([`${area} sq m`, `${area + 15} sq m`, `${area - 10} sq m`, `${(l + w) * 2} sq m`]);
+                while (optionsSet.size < 4) {
+                    optionsSet.add(`${area + randomInt(5, 20)} sq m`);
+                }
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A <strong>garden</strong> is $${l}$m long and $${w}$m wide. What is its total <strong>area</strong>?</div>`,
                     correctAnswer: `${area} sq m`,
                     solution: `Area $= ${l} \\times ${w} = ${area}$ sq m.`,
                     visual: <RealLifeVisual type="garden" dimension1={l} dimension2={w} unit="m" />,
-                    options: [`${area} sq m`, `${area + 15} sq m`, `${area - 10} sq m`, `${(l + w) * 2} sq m`],
+                    options: Array.from(optionsSet),
                     difficulty: "Medium"
                 });
             }
@@ -260,12 +268,18 @@ const AreaRealLife = () => {
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"><button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button></div>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left">
+                    <button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
-                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
+                <div className="header-right">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                        {formatTime(timeElapsed)}
+                    </div>
+                </div>
             </header>
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
