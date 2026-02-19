@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, BrainCircuit, Rocket } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -10,11 +10,12 @@ import '../../../../../pages/juniors/JuniorPracticeSession.css';
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ You're a true Geometry Master! ✨",
+    "✨ You're a Geometry Master! ✨",
     "🌟 Complex problem solver! 🌟",
-    "🎉 Correct! You've mastered Skill Application! 🎉",
+    "🎉 Correct! Mastered Skill Application! 🎉",
     "✨ Brilliant logic! ✨",
-    "🚀 Ready for the next level! 🚀"
+    "🚀 Ready for the next level! 🚀",
+    "💎 Perfect! You've conquered the challenge! 💎"
 ];
 
 const SkillApplicationProblemsArea = () => {
@@ -30,9 +31,14 @@ const SkillApplicationProblemsArea = () => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [showResults, setShowResults] = useState(false);
 
+    // Logging states
     const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
     const SKILL_ID = 1168;
     const SKILL_NAME = "Skill Application Problems (Area & Perimeter)";
+
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
@@ -42,198 +48,218 @@ const SkillApplicationProblemsArea = () => {
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
+            }).catch(err => console.error("Failed to start session", err));
         }
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const generateQuestions = () => {
             const qs = [];
-
-            // Easy (3) - Mixed basics
             qs.push({
-                text: "A square has a perimeter of $24$ cm. What is its <strong>area</strong>?",
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A square has a <strong>perimeter</strong> of $24$ cm. What is its <strong>area</strong> in sq cm?</div>`,
                 correctAnswer: "36 sq cm",
-                solution: `Step 1: Find side. $P = 24$, so side $= 24 \\div 4 = 6$ cm. <br/> Step 2: Calculate area. $A = 6 \\times 6 = 36$ sq cm.`,
-                visual: <div className="h-24 flex items-center justify-center font-black text-indigo-200">P = 24 cm</div>,
-                shuffledOptions: ["36 sq cm", "24 sq cm", "48 sq cm", "12 sq cm"].sort(() => Math.random() - 0.5)
+                solution: "First find the side: $\\text{Side} = 24 \\div 4 = 6$ cm. Then find area: $\\text{Area} = 6 \\times 6 = 36$ sq cm.",
+                visual: <div className="h-24 flex items-center justify-center font-black text-indigo-400 opacity-30 text-4xl">P = 24 cm</div>,
+                options: ["36 sq cm", "24 sq cm", "48 sq cm", "12 sq cm"],
+                difficulty: "Medium"
             });
-
             qs.push({
-                text: "A rectangular mat is $3$ m long and $2$ m wide. What is the difference between its <strong>area</strong> and <strong>perimeter</strong> (values only)?",
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A mat measures $3$m by $2$m. What is the numerical <strong>difference</strong> between its Area and its Perimeter?</div>`,
                 correctAnswer: "4",
-                solution: `Area $= 3 \\times 2 = 6$ sq m. <br/> Perimeter $= 2 \\times (3+2) = 10$ m. <br/> Difference $= 10 - 6 = 4$.`,
-                shuffledOptions: ["4", "5", "6", "10"].sort(() => Math.random() - 0.5)
+                solution: "Area $= 3 \\times 2 = 6$. Perimeter $= 2 \\times (3 + 2) = 10$. Difference $= 10 - 6 = 4$.",
+                options: ["4", "5", "6", "10"],
+                difficulty: "Medium"
             });
-
             qs.push({
-                text: "To cover a floor with tiles, we need the ________, but to put a border around it, we need the ________.",
-                correctAnswer: "Area, Perimeter",
-                solution: "Tiles cover the inner surface (<strong>Area</strong>), a border goes around the boundary (<strong>Perimeter</strong>).",
-                shuffledOptions: ["Area, Perimeter", "Perimeter, Area", "Length, Width", "Volume, Area"].sort(() => Math.random() - 0.5)
-            });
-
-            // Medium (3) - Multi-step
-            for (let i = 0; i < 3; i++) {
-                const l = randomInt(10, 15);
-                const w = randomInt(5, 8);
-                const p = 2 * (l + w);
-                const a = l * w;
-                qs.push({
-                    text: `A garden is $${l}$ m by $${w}$ m. If you walk around it $2$ times, how many meters do you walk, and what is the garden's area?`,
-                    correctAnswer: `${p * 2} m, ${a} sq m`,
-                    solution: `Perimeter $= ${p}$ m. Distance for 2 laps $= ${p * 2}$ m. <br/> Area $= ${l} \\times ${w} = ${a}$ sq m.`,
-                    shuffledOptions: [`${p * 2} m, ${a} sq m`, `${p} m, ${a} sq m`, `${p * 2} m, ${p} sq m`, `${a} m, ${p} sq m`].sort(() => Math.random() - 0.5)
-                });
-            }
-
-            // Hard (4) - Complex
-            qs.push({
-                text: "A rectangular room floor is $6$ m by $4$ m. If square tiles of side $50$ cm are used, how many **tiles** are needed?",
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A room is $6$m long and $4$m wide. If square tiles of side $50$cm are used, how many <strong>tiles</strong> are needed?</div>`,
                 correctAnswer: "96",
-                solution: `Floor Area $= 600 \\text{ cm} \\times 400 \\text{ cm} = 240,000 \\text{ sq cm}$. <br/> Tile Area $= 50 \\text{ cm} \\times 50 \\text{ cm} = 2,500 \\text{ sq cm}$. <br/> Tiles $= 240,000 \\div 2,500 = <strong>96$ tiles</strong>.`,
-                visual: <div className="h-32 flex items-center justify-center font-black text-slate-300">Room: 6m x 4m | Tile: 50cm</div>,
-                shuffledOptions: ["96", "48", "100", "24"].sort(() => Math.random() - 0.5)
+                solution: "Room Area $= 600 \\times 400 = 240,000$ $cm^2$. Tile Area $= 50 \\times 50 = 2,500$ $cm^2$. Tiles needed $= 240,000 \\div 2,500 = 96$.",
+                visual: <div className="h-24 flex items-center justify-center font-black text-slate-400 opacity-30 leading-tight text-center text-xl">Room: 6m × 4m<br />Tile: 50cm</div>,
+                options: ["96", "48", "100", "24"],
+                difficulty: "Hard"
             });
-
-            qs.push({
-                text: "Which rectangle has the **smallest perimeter** for a fixed area of $36$ sq cm?",
-                correctAnswer: "6 cm × 6 cm square",
-                solution: "Among rectangles with same area, the <strong>square</strong> (where sides are closest) has the shortest perimeter. For $A=36$, $6 \\times 6$ has $P=24$ (shortest).",
-                shuffledOptions: ["6 cm × 6 cm square", "9 cm × 4 cm", "12 cm × 3 cm", "18 cm × 2 cm"].sort(() => Math.random() - 0.5)
-            });
-
-            qs.push({
-                text: "A square paper of side $10$ cm is cut into $4$ smaller equal squares. What is the <strong>total perimeter</strong> of all $4$ smaller squares combined?",
-                correctAnswer: "80 cm",
-                solution: `Large square side $= 10$ cm. <br/> Smaller squares each have side $= 5$ cm. <br/> Perimeter of one small square $= 4 \\times 5 = 20$ cm. <br/> Total perimeter $= 4 \\times 20 = 80$ cm.`,
-                visual: <div className="h-24 flex items-center justify-center font-black text-indigo-400">✂️ Cutting Paper</div>,
-                shuffledOptions: ["80 cm", "40 cm", "20 cm", "100 cm"].sort(() => Math.random() - 0.5)
-            });
-
-            qs.push({
-                text: "A wire of $40$ cm is bent into a rectangle of length $12$ cm. What is its **area**?",
-                correctAnswer: "96 sq cm",
-                solution: `Perimeter $= 40$. $2 \\times (L + W) = 40 \\rightarrow L + W = 20$. <br/> Since $L = 12$, $W = 8$ cm. <br/> Area $= 12 \\times 8 = 96$ sq cm.`,
-                shuffledOptions: ["96 sq cm", "80 sq cm", "120 sq cm", "40 sq cm"].sort(() => Math.random() - 0.5)
-            });
-
-            return qs;
-        }
-        setSessionQuestions(generateQuestions());
+            while (qs.length < 10) qs.push(qs[0]);
+            const sessionQs = qs.slice(0, 10).map(q => ({
+                ...q, shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
+            }));
+            setSessionQuestions(sessionQs);
+        };
+        generateQuestions();
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, []);
 
     useEffect(() => {
-        if (!showResults) {
-            const t = setInterval(() => setTimeElapsed(p => p + 1), 1000);
-            return () => clearInterval(t);
-        }
+        if (showResults) return;
+        const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
+        return () => clearInterval(timer);
     }, [showResults]);
 
     useEffect(() => {
         if (sessionQuestions.length > 0) {
-            const q = sessionQuestions[qIndex];
-            setCurrentQuestion(q);
-            setShuffledOptions(q.shuffledOptions);
+            const qData = sessionQuestions[qIndex];
+            setCurrentQuestion(qData);
+            setShuffledOptions(qData.shuffledOptions);
             const ans = answers[qIndex];
-            setSelectedOption(ans?.selected || null);
-            setIsSubmitted(!!ans);
-            setIsCorrect(ans?.isCorrect || false);
+            if (ans) { setSelectedOption(ans.selected); setIsSubmitted(true); setIsCorrect(ans.isCorrect); }
+            else { setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false); }
         }
     }, [qIndex, sessionQuestions, answers]);
 
-    const handleCheck = () => {
-        const isRight = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
-        setFeedbackMessage(isRight ? CORRECT_MESSAGES[randomInt(0, CORRECT_MESSAGES.length - 1)] : "");
-        if (!isRight) setShowExplanationModal(true);
+    const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+
+    const recordQuestionAttempt = async (q, selected, right) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && sessionId) {
-            api.recordAttempt({
-                user_id: parseInt(userId), session_id: sessionId, skill_id: SKILL_ID,
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                question_text: currentQuestion.text, correct_answer: currentQuestion.correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: currentQuestion.solution,
-                time_spent_seconds: 20
+        if (!userId) return;
+        let timeSpent = accumulatedTime.current + (isTabActive.current ? Date.now() - questionStartTime.current : 0);
+        const secs = Math.round(timeSpent / 1000);
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
+                difficulty_level: q.difficulty || 'Medium',
+                question_text: String(q.text || ''), correct_answer: String(q.correctAnswer || ''),
+                student_answer: String(selected || ''), is_correct: right,
+                solution_text: String(q.solution || ''), time_spent_seconds: secs >= 0 ? secs : 0
             });
-        }
+        } catch (e) { console.error(e); }
     };
 
-    const handleNext = () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) setQIndex(qIndex + 1);
-        else {
+    const handleCheck = () => {
+        if (!selectedOption || !currentQuestion) return;
+        const right = selectedOption === currentQuestion.correctAnswer;
+        setIsCorrect(right); setIsSubmitted(true);
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: right, selected: selectedOption } }));
+        if (right) setFeedbackMessage(CORRECT_MESSAGES[randomInt(0, CORRECT_MESSAGES.length - 1)]);
+        else setShowExplanationModal(true);
+        recordQuestionAttempt(currentQuestion, selectedOption, right);
+    };
+
+    const handleNext = async () => {
+        if (qIndex < TOTAL_QUESTIONS - 1) {
+            setQIndex(prev => prev + 1); setShowExplanationModal(false);
+            setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false);
+            accumulatedTime.current = 0; questionStartTime.current = Date.now();
+        } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const score = Object.values(answers).filter(a => a.isCorrect).length;
-                api.createReport({
-                    title: SKILL_NAME, type: 'practice', score: (score / TOTAL_QUESTIONS) * 100,
-                    parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: score, time_taken_seconds: timeElapsed },
-                    user_id: parseInt(userId)
-                });
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                try {
+                    await api.createReport({
+                        title: SKILL_NAME, type: 'practice', score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                        parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: totalCorrect, time_taken_seconds: timeElapsed },
+                        user_id: parseInt(userId, 10)
+                    });
+                } catch (err) { console.error(err); }
             }
-            if (sessionId) api.finishSession(sessionId);
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold font-serif">Deep Thinking...</div>;
+    const handleOptionSelect = (option) => { if (!isSubmitted) setSelectedOption(option); };
+    const handlePrevious = () => { if (qIndex > 0) { setQIndex(prev => prev - 1); setShowExplanationModal(false); } };
+
+    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold text-[#31326F]">Loading...</div>;
 
     if (showResults) {
-        const score = Object.values(answers).filter(a => a.isCorrect).length;
-        const p = Math.round((score / TOTAL_QUESTIONS) * 100);
+        const score = Object.values(answers).filter(ans => ans.isCorrect).length;
+        const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
         return (
-            <div className="junior-practice-page results-view flex items-center justify-center min-h-screen bg-slate-50 font-serif">
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white p-16 rounded-[5rem] shadow-2xl flex flex-col items-center max-w-2xl w-full border-t-[20px] border-[#31326F]">
-                    <div className="flex gap-4 mb-8">
-                        {[1, 2, 3].map(i => <Star key={i} size={80} fill={p >= i * 33 ? "#FFD700" : "#EDF2F7"} color="#CBD5E0" />)}
+            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+                <header className="junior-practice-header results-header relative">
+                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Topics</button>
+                    <div className="sun-timer-container"><div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div></div>
+                    <div className="title-area"><h1 className="results-title">Skill Challenge Report</h1></div>
+                </header>
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4 text-center">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (<motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}><Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} /></motion.div>))}
+                        </div>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{TOTAL_QUESTIONS}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                        </div>
                     </div>
-                    <h1 className="text-6xl font-black text-[#31326F] mb-4 text-center">Chapter Mastered!</h1>
-                    <Rocket className="text-indigo-400 mb-8" size={64} />
-                    <div className="text-7xl font-black text-[#31326F] mb-12">{score} / {TOTAL_QUESTIONS}</div>
-                    <button className="w-full py-6 bg-[#31326F] text-white rounded-[2rem] font-black text-3xl shadow-xl active:scale-95 transition-all" onClick={() => navigate(-1)}>Finish Chapter</button>
-                </motion.div>
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-semibold text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Play Again</button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-semibold text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
+                    </div>
+                </main>
             </div>
         );
     }
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="px-12 h-24 flex items-center justify-between">
-                <button onClick={() => navigate(-1)} className="p-3 bg-white rounded-2xl border border-slate-100 shadow-sm"><X size={28} /></button>
-                <div className="flex flex-col items-center">
-                    <div className="bg-[#31326F] text-white px-8 py-2 rounded-full font-black text-xl mb-1">CHALLENGE MODE</div>
-                    <div className="text-slate-400 font-bold">Question {qIndex + 1} of {TOTAL_QUESTIONS}</div>
+            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left"><button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button></div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
-                <div className="font-black text-2xl text-slate-300 w-24 text-right">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
+                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
             </header>
-            <main className="practice-content-wrapper flex items-center justify-center p-8">
-                <div className="max-w-4xl w-full bg-white rounded-[4rem] p-16 shadow-2xl relative overflow-hidden">
-                    <BrainCircuit size={150} className="absolute -top-10 -right-10 text-indigo-50 opacity-50 -z-0" />
-                    <h2 className="text-4xl font-black text-[#31326F] text-center mb-16 relative z-10 leading-relaxed"><LatexContent html={currentQuestion.text} /></h2>
-                    <div className="flex justify-center mb-16">{currentQuestion.visual}</div>
-                    <div className="grid grid-cols-2 gap-8 relative z-10">
-                        {shuffledOptions.map((opt, i) => (
-                            <button
-                                key={i} onClick={() => !isSubmitted && setSelectedOption(opt)} disabled={isSubmitted}
-                                className={`p-10 text-2xl font-black rounded-3xl border-4 transition-all duration-300 ${selectedOption === opt ? 'border-[#31326F] bg-indigo-50 shadow-inner' : 'border-slate-50 bg-slate-50/20 hover:bg-white'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'bg-red-50 border-red-500 text-red-700' : ''}`}
-                            >
-                                <LatexContent html={opt} />
-                            </button>
-                        ))}
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col" style={{ width: '100%' }}>
+                        <AnimatePresence mode="wait">
+                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}><LatexContent html={currentQuestion.text} /></h2></div>
+                                    <div className="visual-area flex justify-center py-4">{currentQuestion.visual}</div>
+                                    <div className="interaction-area-modern">
+                                        <div className="options-grid-modern">
+                                            {shuffledOptions.map((option, idx) => (
+                                                <button key={idx} className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`} style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: '500', fontSize: '2rem' }} onClick={() => handleOptionSelect(option)} disabled={isSubmitted}><LatexContent html={option} /></button>
+                                            ))}
+                                        </div>
+                                        {isSubmitted && isCorrect && <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>{feedbackMessage}</motion.div>}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
             </main>
-            <footer className="h-28 px-16 flex items-center justify-between">
-                <button className="text-2xl font-black text-red-500 hover:text-red-700 transition-colors" onClick={() => navigate(-1)}>Exit</button>
-                <div className="flex gap-6">
-                    {isSubmitted && <button className="px-12 py-4 bg-indigo-50 text-[#31326F] font-black rounded-3xl" onClick={() => setShowExplanationModal(true)}>See Solution</button>}
-                    {isSubmitted ?
-                        <button className="px-14 py-4 bg-[#31326F] text-white font-black rounded-[1.5rem] text-xl" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? 'Next Challenge' : 'Finish'}</button> :
-                        <button className="px-14 py-4 bg-[#4FB7B3] text-white font-black rounded-[1.5rem] text-xl" onClick={handleCheck} disabled={!selectedOption}>Submit Answer</button>
-                    }
+            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
+            <footer className="junior-bottom-bar">
+                <div className="desktop-footer-controls">
+                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button></div>
+                    <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> Explain</button>}</div>
+                    <div className="bottom-right"><div className="nav-buttons-group">{qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious}><ChevronLeft size={28} strokeWidth={3} /> Prev</button>}{isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={28} strokeWidth={3} /></button>}</div></div>
+                </div>
+                <div className="mobile-footer-controls">
+                    <div className="flex items-center gap-2">
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
+                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={18} /> Explain</button>}
+                    </div>
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '70%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className="nav-buttons-group" style={{ gap: '6px' }}>
+                            {qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Prev</button>}
+                            {isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>{qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Submit</button>}
+                        </div>
+                    </div>
                 </div>
             </footer>
-            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => { setShowExplanationModal(false); handleNext(); }} />
         </div>
     );
 };

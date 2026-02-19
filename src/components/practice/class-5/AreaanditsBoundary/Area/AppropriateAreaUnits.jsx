@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Map, Compass, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
@@ -10,7 +10,6 @@ import '../../../../../pages/juniors/JuniorPracticeSession.css';
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const ScaleVisual = ({ level }) => {
-    // level: 'small', 'medium', 'large'
     const scales = {
         small: (
             <div className="flex flex-col items-center">
@@ -46,11 +45,12 @@ const ScaleVisual = ({ level }) => {
 };
 
 const CORRECT_MESSAGES = [
-    "✨ You have a great sense of scale! ✨",
-    "🌟 Excellent unit choice! 🌟",
-    "🎉 Correct! That unit fits perfectly! 🎉",
-    "✨ Brilliant! ✨",
-    "🚀 Mastering measurements! 🚀"
+    "✨ Sense of scale is amazing! ✨",
+    "🌟 Brilliant choice of units! 🌟",
+    "🎉 Correct! You're a measurement master! 🎉",
+    "✨ Fantastic work! ✨",
+    "🚀 Zooming through geometry! 🚀",
+    "💎 Perfect! You nailed it! 💎"
 ];
 
 const AppropriateAreaUnits = () => {
@@ -66,9 +66,14 @@ const AppropriateAreaUnits = () => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [showResults, setShowResults] = useState(false);
 
+    // Logging states
     const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
     const SKILL_ID = 1162;
     const SKILL_NAME = "Choose and Interpret Appropriate Area Units";
+
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
@@ -78,186 +83,218 @@ const AppropriateAreaUnits = () => {
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
-            }).catch(console.error);
+            }).catch(err => console.error("Failed to start session", err));
         }
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const generateQuestions = () => {
             const qs = [];
-
-            // Easy (3) - Small objects
-            const smallItems = [
-                { item: "a postal stamp", unit: "square centimeters (sq cm)" },
-                { item: "a student's notebook", unit: "square centimeters (sq cm)" },
-                { item: "a playing card", unit: "square centimeters (sq cm)" }
+            const items = [
+                { i: "stamp", u: "sq cm", s: "small" }, { i: "notebook", u: "sq cm", s: "small" },
+                { i: "classroom", u: "sq m", s: "medium" }, { i: "garden", u: "sq m", s: "medium" },
+                { i: "Rajasthan", u: "sq km", s: "large" }, { i: "Mumbai", u: "sq km", s: "large" }
             ];
-            for (let i = 0; i < 3; i++) {
+            items.forEach(obj => {
                 qs.push({
-                    text: `Which unit of area is most appropriate for measuring the surface of <strong>${smallItems[i].item}</strong>?`,
-                    correctAnswer: smallItems[i].unit,
-                    solution: `Since ${smallItems[i].item} is a very small object, we measure it in smaller units like <strong>square centimeters (sq cm)</strong>.`,
-                    visual: <ScaleVisual level="small" />,
-                    shuffledOptions: ["square centimeters (sq cm)", "square meters (sq m)", "square kilometers (sq km)", "kilometers (km)"].sort(() => Math.random() - 0.5)
+                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>What is the MOST appropriate unit for the area of <strong>${obj.i}</strong>?</div>`,
+                    correctAnswer: obj.u,
+                    solution: `The scale is <strong>${obj.s}</strong>, so <strong>${obj.u}</strong> is the best fit.`,
+                    visual: <ScaleVisual level={obj.s} />,
+                    options: ["sq cm", "sq m", "sq km", "km"],
+                    difficulty: obj.s === 'small' ? 'Easy' : obj.s === 'medium' ? 'Medium' : 'Hard'
                 });
-            }
-
-            // Medium (3) - Mid-sized
-            const medItems = [
-                { item: "a classroom floor", unit: "square meters (sq m)" },
-                { item: "a vegetable garden", unit: "square meters (sq m)" },
-                { item: "a swimming pool surface", unit: "square meters (sq m)" }
-            ];
-            for (let i = 0; i < 3; i++) {
-                qs.push({
-                    text: `Which unit is best to measure the area of <strong>${medItems[i].item}</strong>?`,
-                    correctAnswer: medItems[i].unit,
-                    solution: `For larger objects like a ${medItems[i].item}, **square meters (sq m)** is more appropriate than sq cm or sq km.`,
-                    visual: <ScaleVisual level="medium" />,
-                    shuffledOptions: ["square meters (sq m)", "square centimeters (sq cm)", "square kilometers (sq km)", "meters (m)"].sort(() => Math.random() - 0.5)
-                });
-            }
-
-            // Hard (4) - Very large or conversions
-            const largeItems = [
-                { item: "the state of Rajasthan", unit: "square kilometers (sq km)" },
-                { item: "the city of Mumbai", unit: "square kilometers (sq km)" }
-            ];
-            for (let i = 0; i < 2; i++) {
-                qs.push({
-                    text: `What is the most suitable unit for measuring the area of <strong>${largeItems[i].item}</strong>?`,
-                    correctAnswer: largeItems[i].unit,
-                    solution: `Geographical areas like ${largeItems[i].item} are vast, so they are measured in <strong>square kilometers (sq km)</strong>.`,
-                    visual: <ScaleVisual level="large" />,
-                    shuffledOptions: ["square kilometers (sq km)", "square meters (sq m)", "square centimeters (sq cm)", "kilometers (km)"].sort(() => Math.random() - 0.5)
-                });
-            }
-
-            // Conversion/comparison questions for Hard
+            });
             qs.push({
-                text: "Fill in the blank: $1 \\text{ square meter} =$ ______ $\\text{square centimeters}$.",
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>1 sq m is equal to how many sq cm?</div>`,
                 correctAnswer: "10,000",
-                solution: `Since $1 \\text{ meter} = 100 \\text{ cm}$, <br/> $1 \\text{ sq m} = 100 \\text{ cm} \\times 100 \\text{ cm} = 10,000 \\text{ sq cm}$.`,
-                visual: <div className="h-40 flex items-center justify-center text-5xl font-black text-indigo-400 opacity-30">$1 \\text{m}^2$</div>,
-                shuffledOptions: ["10,000", "1,000", "100", "10,00,000"].sort(() => Math.random() - 0.5)
+                solution: "$1 \\text{ m} \\times 1 \\text{ m} = 100 \\text{ cm} \\times 100 \\text{ cm} = 10,000 \\text{ sq cm}$",
+                visual: <div className="h-24 flex items-center justify-center text-4xl font-black text-indigo-400 opacity-30">1m²</div>,
+                options: ["10,000", "1,000", "100", "10,00,000"],
+                difficulty: "Hard"
             });
-
-            qs.push({
-                text: "A rectangular field is $100$ m long and $10$ m wide. What is its <strong>area and appropriate unit</strong>?",
-                correctAnswer: "1,000 sq m",
-                solution: `Area = $100 \\text{ m} \\times 10 \\text{ m} = 1,000$ square meters.`,
-                visual: <ScaleVisual level="medium" />,
-                shuffledOptions: ["1,000 sq m", "1,000 sq cm", "110 sq m", "1,000 m"].sort(() => Math.random() - 0.5)
-            });
-
-            return qs;
+            while (qs.length < 10) qs.push(qs[0]);
+            const sessionQs = qs.slice(0, 10).map(q => ({
+                ...q, shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
+            }));
+            setSessionQuestions(sessionQs);
         };
-        setSessionQuestions(generateQuestions());
+        generateQuestions();
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, []);
 
     useEffect(() => {
-        if (!showResults) {
-            const t = setInterval(() => setTimeElapsed(p => p + 1), 1000);
-            return () => clearInterval(t);
-        }
+        if (showResults) return;
+        const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
+        return () => clearInterval(timer);
     }, [showResults]);
 
     useEffect(() => {
         if (sessionQuestions.length > 0) {
-            const q = sessionQuestions[qIndex];
-            setCurrentQuestion(q);
-            setShuffledOptions(q.shuffledOptions);
+            const qData = sessionQuestions[qIndex];
+            setCurrentQuestion(qData);
+            setShuffledOptions(qData.shuffledOptions);
             const ans = answers[qIndex];
-            setSelectedOption(ans?.selected || null);
-            setIsSubmitted(!!ans);
-            setIsCorrect(ans?.isCorrect || false);
+            if (ans) { setSelectedOption(ans.selected); setIsSubmitted(true); setIsCorrect(ans.isCorrect); }
+            else { setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false); }
         }
     }, [qIndex, sessionQuestions, answers]);
 
-    const handleCheck = () => {
-        const isRight = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
-        setFeedbackMessage(isRight ? CORRECT_MESSAGES[randomInt(0, CORRECT_MESSAGES.length - 1)] : "");
-        if (!isRight) setShowExplanationModal(true);
+    const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+
+    const recordQuestionAttempt = async (q, selected, right) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && sessionId) {
-            api.recordAttempt({
-                user_id: parseInt(userId), session_id: sessionId, skill_id: SKILL_ID,
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                question_text: currentQuestion.text, correct_answer: currentQuestion.correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: currentQuestion.solution,
-                time_spent_seconds: 10
+        if (!userId) return;
+        let timeSpent = accumulatedTime.current + (isTabActive.current ? Date.now() - questionStartTime.current : 0);
+        const secs = Math.round(timeSpent / 1000);
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
+                difficulty_level: q.difficulty || 'Medium',
+                question_text: String(q.text || ''), correct_answer: String(q.correctAnswer || ''),
+                student_answer: String(selected || ''), is_correct: right,
+                solution_text: String(q.solution || ''), time_spent_seconds: secs >= 0 ? secs : 0
             });
-        }
+        } catch (e) { console.error(e); }
     };
 
-    const handleNext = () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) setQIndex(qIndex + 1);
-        else {
+    const handleCheck = () => {
+        if (!selectedOption || !currentQuestion) return;
+        const right = selectedOption === currentQuestion.correctAnswer;
+        setIsCorrect(right); setIsSubmitted(true);
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: right, selected: selectedOption } }));
+        if (right) setFeedbackMessage(CORRECT_MESSAGES[randomInt(0, CORRECT_MESSAGES.length - 1)]);
+        else setShowExplanationModal(true);
+        recordQuestionAttempt(currentQuestion, selectedOption, right);
+    };
+
+    const handleNext = async () => {
+        if (qIndex < TOTAL_QUESTIONS - 1) {
+            setQIndex(prev => prev + 1); setShowExplanationModal(false);
+            setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false);
+            accumulatedTime.current = 0; questionStartTime.current = Date.now();
+        } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const score = Object.values(answers).filter(a => a.isCorrect).length;
-                api.createReport({
-                    title: SKILL_NAME, type: 'practice', score: (score / TOTAL_QUESTIONS) * 100,
-                    parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: score, time_taken_seconds: timeElapsed },
-                    user_id: parseInt(userId)
-                });
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                try {
+                    await api.createReport({
+                        title: SKILL_NAME, type: 'practice', score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                        parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: totalCorrect, time_taken_seconds: timeElapsed },
+                        user_id: parseInt(userId, 10)
+                    });
+                } catch (err) { console.error(err); }
             }
-            if (sessionId) api.finishSession(sessionId);
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold">Loading...</div>;
+    const handleOptionSelect = (option) => { if (!isSubmitted) setSelectedOption(option); };
+    const handlePrevious = () => { if (qIndex > 0) { setQIndex(prev => prev - 1); setShowExplanationModal(false); } };
+
+    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold text-[#31326F]">Loading...</div>;
 
     if (showResults) {
-        const score = Object.values(answers).filter(a => a.isCorrect).length;
+        const score = Object.values(answers).filter(ans => ans.isCorrect).length;
         const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
         return (
-            <div className="junior-practice-page results-view p-8 flex flex-col items-center">
-                <header className="w-full flex justify-end mb-12"><button onClick={() => navigate(-1)} className="px-8 py-3 bg-slate-100 rounded-xl font-black">Close</button></header>
-                <div className="flex gap-4 mb-8">{[1, 2, 3].map(i => <Star key={i} size={80} fill={percentage >= i * 33 ? "#FFD700" : "#EDF2F7"} color="#CBD5E0" />)}</div>
-                <h1 className="text-5xl font-black text-[#31326F] mb-4">Unit Master!</h1>
-                <div className="text-3xl font-bold text-slate-500 mb-12">{score} / {TOTAL_QUESTIONS} right</div>
-                <button className="px-16 py-5 bg-[#4FB7B3] text-white rounded-[2rem] font-black text-2xl" onClick={() => navigate(-1)}>Back to Topics</button>
+            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+                <header className="junior-practice-header results-header relative">
+                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Topics</button>
+                    <div className="sun-timer-container"><div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div></div>
+                    <div className="title-area"><h1 className="results-title">Area Units Report</h1></div>
+                </header>
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4 text-center">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (<motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}><Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} /></motion.div>))}
+                        </div>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{TOTAL_QUESTIONS}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-semibold text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Play Again</button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-semibold text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
+                    </div>
+                </main>
             </div>
         );
     }
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header flex justify-between items-center px-12 h-24">
-                <button onClick={() => navigate(-1)} className="bg-white p-2 rounded-xl border-2 border-slate-50"><X size={28} /></button>
-                <div className="bg-white px-8 py-3 rounded-full border-2 border-slate-50 text-[#31326F] font-black text-2xl">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
-                <div className="w-24 text-right font-black text-xl">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
+            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left"><button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button></div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
+                </div>
+                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
             </header>
-            <main className="practice-content-wrapper flex items-center justify-center p-6">
-                <div className="max-w-4xl w-full bg-white rounded-[4rem] p-16 shadow-2xl border-4 border-slate-50">
-                    <h2 className="text-4xl font-black text-[#31326F] text-center mb-12"><LatexContent html={currentQuestion.text} /></h2>
-                    <div className="mb-12">{currentQuestion.visual}</div>
-                    <div className="grid grid-cols-2 gap-8 mt-12">
-                        {shuffledOptions.map((opt, i) => (
-                            <button
-                                key={i} onClick={() => !isSubmitted && setSelectedOption(opt)} disabled={isSubmitted}
-                                className={`p-10 text-2xl font-black rounded-3xl border-4 transition-all ${selectedOption === opt ? 'border-[#31326F] bg-indigo-50' : 'border-slate-50 bg-slate-50/20 hover:border-slate-200'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'bg-red-50 border-red-500 text-red-700' : ''}`}
-                            >
-                                <LatexContent html={opt} />
-                            </button>
-                        ))}
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col" style={{ width: '100%' }}>
+                        <AnimatePresence mode="wait">
+                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}><LatexContent html={currentQuestion.text} /></h2></div>
+                                    <div className="visual-area flex justify-center py-4">{currentQuestion.visual}</div>
+                                    <div className="interaction-area-modern">
+                                        <div className="options-grid-modern">
+                                            {shuffledOptions.map((option, idx) => (
+                                                <button key={idx} className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`} style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: '500', fontSize: '2rem' }} onClick={() => handleOptionSelect(option)} disabled={isSubmitted}><LatexContent html={option} /></button>
+                                            ))}
+                                        </div>
+                                        {isSubmitted && isCorrect && <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>{feedbackMessage}</motion.div>}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
             </main>
-            <footer className="h-28 bg-white/80 flex items-center justify-between px-16 border-t border-slate-100">
-                <button className="text-red-500 font-black text-2xl" onClick={() => navigate(-1)}>Exit</button>
-                <div className="flex gap-6">
-                    {isSubmitted && <button className="px-10 py-4 bg-indigo-50 text-indigo-700 font-black rounded-2xl" onClick={() => setShowExplanationModal(true)}>Explain</button>}
-                    {isSubmitted ?
-                        <button className="px-12 py-4 bg-[#31326F] text-white font-black rounded-2xl" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? 'Next' : 'Done'}</button> :
-                        <button className="px-12 py-4 bg-[#4FB7B3] text-white font-black rounded-2xl" onClick={handleCheck} disabled={!selectedOption}>Submit</button>
-                    }
+            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
+            <footer className="junior-bottom-bar">
+                <div className="desktop-footer-controls">
+                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button></div>
+                    <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> Explain</button>}</div>
+                    <div className="bottom-right"><div className="nav-buttons-group">{qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious}><ChevronLeft size={28} strokeWidth={3} /> Prev</button>}{isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={28} strokeWidth={3} /></button>}</div></div>
+                </div>
+                <div className="mobile-footer-controls">
+                    <div className="flex items-center gap-2">
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
+                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={18} /> Explain</button>}
+                    </div>
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '70%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className="nav-buttons-group" style={{ gap: '6px' }}>
+                            {qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Prev</button>}
+                            {isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>{qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Submit</button>}
+                        </div>
+                    </div>
                 </div>
             </footer>
-            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => { setShowExplanationModal(false); handleNext(); }} />
         </div>
     );
 };

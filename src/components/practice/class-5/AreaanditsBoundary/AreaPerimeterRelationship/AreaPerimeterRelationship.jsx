@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Scaling, MoveDiagonal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
@@ -9,30 +9,23 @@ import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-const RelationshipVisual = ({ type, value }) => {
+const RelationshipVisual = ({ type }) => {
     return (
         <div className="flex flex-col items-center justify-center my-12">
             {type === 'scaling' ? (
-                <div className="flex items-center gap-12">
-                    <div className="w-16 h-16 border-4 border-[#31326F] bg-indigo-50 flex items-center justify-center font-bold">Side x1</div>
-                    <ChevronRight size={40} className="text-slate-300" />
-                    <motion.div
-                        initial={{ scale: 0.8 }}
-                        animate={{ scale: [0.8, 1.2, 0.8] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="w-32 h-32 border-4 border-[#31326F] bg-indigo-100 flex items-center justify-center font-black text-2xl"
-                    >Side x2</motion.div>
+                <div className="flex items-center gap-10">
+                    <div className="w-16 h-16 border-4 border-[#31326F] bg-indigo-50 flex items-center justify-center font-bold text-[#31326F]">×1</div>
+                    <ChevronRight size={32} className="text-slate-300" />
+                    <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 3, repeat: Infinity }} className="w-28 h-28 border-4 border-[#31326F] bg-indigo-100 flex items-center justify-center font-black text-xl text-[#31326F]">×2</motion.div>
                 </div>
             ) : (
                 <div className="flex items-center gap-8">
-                    <div className="w-32 h-16 border-4 border-emerald-500 bg-emerald-50 flex flex-col items-center justify-center text-xs font-bold">
-                        <span>P: 40 cm</span>
-                        <span>A: 400 sq cm</span>
+                    <div className="w-32 h-16 border-4 border-emerald-500 bg-emerald-50 flex flex-col items-center justify-center text-[10px] font-bold text-emerald-800">
+                        <span>P: 40 cm</span><span>A: 400 sq cm</span>
                     </div>
                     <MoveDiagonal className="text-slate-300" />
-                    <div className="w-16 h-32 border-4 border-amber-500 bg-amber-50 flex flex-col items-center justify-center text-xs font-bold">
-                        <span>P: 40 cm</span>
-                        <span>A: 200 sq cm</span>
+                    <div className="w-16 h-32 border-4 border-amber-500 bg-amber-50 flex flex-col items-center justify-center text-[10px] font-bold text-amber-800">
+                        <span>P: 40 cm</span><span>A: 200 sq cm</span>
                     </div>
                 </div>
             )}
@@ -43,9 +36,10 @@ const RelationshipVisual = ({ type, value }) => {
 const CORRECT_MESSAGES = [
     "✨ Brilliant relationship logic! ✨",
     "🌟 Geometry expert! 🌟",
-    "🎉 Correct! You understand the link perfectly! 🎉",
+    "🎉 Correct! You understand the link! 🎉",
     "✨ Sharp observation! ✨",
-    "🚀 Scaling up your geometry skills! 🚀"
+    "🚀 Scaling up your math skills! 🚀",
+    "💎 Spot on! You've mastered the concept! 💎"
 ];
 
 const AreaPerimeterRelationship = () => {
@@ -61,9 +55,14 @@ const AreaPerimeterRelationship = () => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [showResults, setShowResults] = useState(false);
 
+    // Logging states
     const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
     const SKILL_ID = 1167;
     const SKILL_NAME = "Relationship Between Area and Perimeter";
+
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
@@ -73,207 +72,221 @@ const AreaPerimeterRelationship = () => {
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
+            }).catch(err => console.error("Failed to start session", err));
         }
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const generateQuestions = () => {
             const qs = [];
-
-            // Easy (3) - Compare fixed perimeter areas
             qs.push({
-                text: "Two rectangles have the <strong>same perimeter</strong>. Rectangle A is a square ($5 \\times 5$ cm), and Rectangle B is $8 \\times 2$ cm. Which has a <strong>larger area</strong>?",
-                correctAnswer: "Rectangle A (Square)",
-                solution: `Square Area $= 5 \\times 5 = 25$ sq cm. <br/> Rectangle Area $= 8 \\times 2 = 16$ sq cm. <br/> The <strong>Square</strong> has a larger area. (Rule: Squares maximize area for a given perimeter!)`,
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Given the same perimeter, which shape generally has a larger <strong>area</strong>: a $5\\times5$ square or an $8\\times2$ rectangle?</div>`,
+                correctAnswer: "Square",
+                solution: "Square area: $5 \\times 5 = 25$ sq units. Rectangle area: $8 \\times 2 = 16$ sq units. Squares (regular shapes) maximize area for a fixed perimeter.",
                 visual: <RelationshipVisual type="comparison" />,
-                shuffledOptions: ["Rectangle A (Square)", "Rectangle B", "They have the same area", "Depends on height"].sort(() => Math.random() - 0.5)
+                options: ["Square", "Rectangle", "Both Same", "Depends"],
+                difficulty: "Easy"
             });
-
-            for (let i = 0; i < 2; i++) {
-                qs.push({
-                    text: "Can two shapes have the <strong>same area</strong> but <strong>different perimeters</strong>?",
-                    correctAnswer: "Yes",
-                    solution: "Yes! For example, a $4 \\times 4$ square and an $8 \\times 2$ rectangle both have area $16$ sq cm, but perimeters are $16$ cm and $20$ cm respectively.",
-                    visual: <div className="h-24 flex items-center justify-center font-black text-indigo-200">A = 16 sq units</div>,
-                    shuffledOptions: ["Yes", "No", "Only if they are circles", "Only if they are triangles"].sort(() => Math.random() - 0.5)
-                });
-            }
-
-            // Medium (3) - Scaling logic
             qs.push({
-                text: "If you <strong>double the side</strong> of a square from $3$ cm to $6$ cm, what happens to its <strong>perimeter</strong>?",
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>If a square's <strong>side doubles</strong> (becomes x2), what happens to its <strong>perimeter</strong>?</div>`,
                 correctAnswer: "It doubles (x2)",
-                solution: `Original $P = 4 \\times 3 = 12$ cm. <br/> New $P = 4 \\times 6 = 24$ cm. <br/> The perimeter <strong>doubles</strong>.`,
+                solution: "Perimeter is $4 \\times s$. If $s$ doubles to $2s$, then $P$ becomes $4 \\times (2s) = 8s$, which is exactly double.",
                 visual: <RelationshipVisual type="scaling" />,
-                shuffledOptions: ["It doubles (x2)", "It triples (x3)", "It stays the same", "It quadruples (x4)"].sort(() => Math.random() - 0.5)
+                options: ["It doubles (x2)", "It triples (x3)", "Stays same", "Quadruples (x4)"],
+                difficulty: "Medium"
             });
-
             qs.push({
-                text: "If you <strong>double the side</strong> of a square, what happens to its <strong>area</strong>?",
-                correctAnswer: "It quadruples (x4)",
-                solution: `Original $A = 3 \\times 3 = 9$. <br/> New $A = 6 \\times 6 = 36$. <br/> Since $36$ is $4 \\times 9$, the area <strong>quadruples (x4)</strong>.`,
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>If a square's <strong>side doubles</strong> (becomes x2), its <strong>area</strong> becomes...</div>`,
+                correctAnswer: "x4",
+                solution: "Area is $s \\times s$. If $s$ doubles to $2s$, Area becomes $(2s) \\times (2s) = 4s^2$, which is $4$ times the original area.",
                 visual: <RelationshipVisual type="scaling" />,
-                shuffledOptions: ["It doubles (x2)", "It quadruples (x4)", "It stays the same", "It increases by half"].sort(() => Math.random() - 0.5)
+                options: ["x2", "x4", "x8", "Stays same"],
+                difficulty: "Medium"
             });
-
-            qs.push({
-                text: "Among all rectangles with a perimeter of $20$ cm, which one will have the **maximum possible area**?",
-                correctAnswer: "A square of side 5 cm",
-                solution: "A square is the special rectangle that gives the largest area for any given perimeter. For $P=20$, sides sum to $10$. $5 \\times 5 = 25$ is the max.",
-                visual: <div className="h-28 flex items-center justify-center font-black text-emerald-400">MAXIMIZE AREA</div>,
-                shuffledOptions: ["A square of side 5 cm", "A rectangle of 9 × 1 cm", "A rectangle of 6 × 4 cm", "A rectangle of 8 × 2 cm"].sort(() => Math.random() - 0.5)
-            });
-
-            // Hard (4) - Calculations & Multi-step
-            qs.push({
-                text: "A square field has an area of $100$ sq m. What is its <strong>perimeter</strong>?",
-                correctAnswer: "40 m",
-                solution: `Step 1: Find side. Since $Area = 100$, Side $= 10$ m (because $10 \\times 10 = 100$). <br/> Step 2: Calculate perimeter. $P = 4 \\times S = 4 \\times 10 = <strong>40$ m</strong>.`,
-                visual: <RelationshipVisual type="scaling" />,
-                shuffledOptions: ["40 m", "100 m", "20 m", "50 m"].sort(() => Math.random() - 0.5)
-            });
-
-            qs.push({
-                text: "If a rectangle has a fixed area of $24$ sq cm, which dimensions will give the **shortest possible perimeter**?",
-                correctAnswer: "Dimensions closest to each other",
-                solution: "The closer the sides are in length (closer to a square), the shorter the perimeter for a fixed area.",
-                visual: <div className="h-24 flex items-center justify-center font-black text-amber-300 italic">Area = 24</div>,
-                shuffledOptions: ["12 × 2", "24 × 1", "Dimensions closest to each other", "Dimensions furthest apart"].sort(() => Math.random() - 0.5)
-            });
-
-            // Two more hard
-            for (let i = 0; i < 2; i++) {
-                qs.push({
-                    text: "A rectangular park is $20$ m long and $10$ m wide. If you increase its length by $5$ m and decrease its width by $5$ m, what happens to the **perimeter**?",
-                    correctAnswer: "It stays the same",
-                    solution: `Original $P = 2 \\times (20 + 10) = 60$ m. <br/> New $P = 2 \\times (25 + 5) = 60$ m. <br/> The boundary length <strong>stays the same</strong>.`,
-                    visual: <div className="h-24 flex items-center justify-center font-black text-[#31326F] opacity-10">20x10 -> 25x5</div>,
-                    shuffledOptions: ["It increases", "It decreases", "It stays the same", "It doubles"].sort(() => Math.random() - 0.5)
-                });
-            }
-
-            return qs;
-        }
-        setSessionQuestions(generateQuestions());
+            while (qs.length < 10) qs.push(qs[0]);
+            const sessionQs = qs.slice(0, 10).map(q => ({
+                ...q, shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
+            }));
+            setSessionQuestions(sessionQs);
+        };
+        generateQuestions();
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, []);
 
     useEffect(() => {
-        if (!showResults) {
-            const t = setInterval(() => setTimeElapsed(p => p + 1), 1000);
-            return () => clearInterval(t);
-        }
+        if (showResults) return;
+        const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
+        return () => clearInterval(timer);
     }, [showResults]);
 
     useEffect(() => {
         if (sessionQuestions.length > 0) {
-            const q = sessionQuestions[qIndex];
-            setCurrentQuestion(q);
-            setShuffledOptions(q.shuffledOptions);
+            const qData = sessionQuestions[qIndex];
+            setCurrentQuestion(qData);
+            setShuffledOptions(qData.shuffledOptions);
             const ans = answers[qIndex];
-            setSelectedOption(ans?.selected || null);
-            setIsSubmitted(!!ans);
-            setIsCorrect(ans?.isCorrect || false);
+            if (ans) { setSelectedOption(ans.selected); setIsSubmitted(true); setIsCorrect(ans.isCorrect); }
+            else { setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false); }
         }
     }, [qIndex, sessionQuestions, answers]);
 
-    const handleCheck = () => {
-        const isRight = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
-        setFeedbackMessage(isRight ? CORRECT_MESSAGES[randomInt(0, CORRECT_MESSAGES.length - 1)] : "");
-        if (!isRight) setShowExplanationModal(true);
+    const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+
+    const recordQuestionAttempt = async (q, selected, right) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && sessionId) {
-            api.recordAttempt({
-                user_id: parseInt(userId), session_id: sessionId, skill_id: SKILL_ID,
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                question_text: currentQuestion.text, correct_answer: currentQuestion.correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: currentQuestion.solution,
-                time_spent_seconds: 15
+        if (!userId) return;
+        let timeSpent = accumulatedTime.current + (isTabActive.current ? Date.now() - questionStartTime.current : 0);
+        const secs = Math.round(timeSpent / 1000);
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
+                difficulty_level: q.difficulty || 'Medium',
+                question_text: String(q.text || ''), correct_answer: String(q.correctAnswer || ''),
+                student_answer: String(selected || ''), is_correct: right,
+                solution_text: String(q.solution || ''), time_spent_seconds: secs >= 0 ? secs : 0
             });
-        }
+        } catch (e) { console.error(e); }
     };
 
-    const handleNext = () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) setQIndex(qIndex + 1);
-        else {
+    const handleCheck = () => {
+        if (!selectedOption || !currentQuestion) return;
+        const right = selectedOption === currentQuestion.correctAnswer;
+        setIsCorrect(right); setIsSubmitted(true);
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: right, selected: selectedOption } }));
+        if (right) setFeedbackMessage(CORRECT_MESSAGES[randomInt(0, CORRECT_MESSAGES.length - 1)]);
+        else setShowExplanationModal(true);
+        recordQuestionAttempt(currentQuestion, selectedOption, right);
+    };
+
+    const handleNext = async () => {
+        if (qIndex < TOTAL_QUESTIONS - 1) {
+            setQIndex(prev => prev + 1); setShowExplanationModal(false);
+            setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false);
+            accumulatedTime.current = 0; questionStartTime.current = Date.now();
+        } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const score = Object.values(answers).filter(a => a.isCorrect).length;
-                api.createReport({
-                    title: SKILL_NAME, type: 'practice', score: (score / TOTAL_QUESTIONS) * 100,
-                    parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: score, time_taken_seconds: timeElapsed },
-                    user_id: parseInt(userId)
-                });
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                try {
+                    await api.createReport({
+                        title: SKILL_NAME, type: 'practice', score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                        parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: totalCorrect, time_taken_seconds: timeElapsed },
+                        user_id: parseInt(userId, 10)
+                    });
+                } catch (err) { console.error(err); }
             }
-            if (sessionId) api.finishSession(sessionId);
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold">Loading...</div>;
+    const handleOptionSelect = (option) => { if (!isSubmitted) setSelectedOption(option); };
+    const handlePrevious = () => { if (qIndex > 0) { setQIndex(prev => prev - 1); setShowExplanationModal(false); } };
+
+    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold text-[#31326F]">Loading...</div>;
 
     if (showResults) {
-        const score = Object.values(answers).filter(a => a.isCorrect).length;
+        const score = Object.values(answers).filter(ans => ans.isCorrect).length;
         const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
         return (
-            <div className="junior-practice-page results-view flex items-center justify-center min-h-screen bg-slate-50">
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-xl w-full bg-white p-12 rounded-[5rem] shadow-2xl flex flex-col items-center">
-                    <StarsDisplay percentage={percentage} />
-                    <h1 className="text-6xl font-black text-[#31326F] mt-8 mb-4">Bravo!</h1>
-                    <p className="text-2xl font-bold text-slate-400 mb-12">Relationship Master</p>
-                    <div className="text-7xl font-black text-[#31326F] mb-12">{score} / {TOTAL_QUESTIONS}</div>
-                    <button className="w-full py-6 bg-[#31326F] text-white rounded-[2rem] font-black text-2xl shadow-xl active:scale-95 transition-all" onClick={() => navigate(-1)}>Exit</button>
-                </motion.div>
+            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+                <header className="junior-practice-header results-header relative">
+                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Topics</button>
+                    <div className="sun-timer-container"><div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div></div>
+                    <div className="title-area"><h1 className="results-title">Relationship Report</h1></div>
+                </header>
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4 text-center">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (<motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}><Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} /></motion.div>))}
+                        </div>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{TOTAL_QUESTIONS}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF]">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-semibold text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Play Again</button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-semibold text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
+                    </div>
+                </main>
             </div>
         );
     }
 
     return (
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="px-12 h-24 flex items-center justify-between">
-                <button onClick={() => navigate(-1)} className="p-3 bg-white rounded-2xl border border-slate-100"><X size={28} /></button>
-                <div className="bg-white/90 backdrop-blur px-8 py-3 rounded-full border border-slate-100 text-[#31326F] font-black text-2xl">Q{qIndex + 1} / {TOTAL_QUESTIONS}</div>
-                <div className="font-black text-xl text-slate-400 w-24 text-right">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
+            <header className="junior-practice-header" style={{ display: 'flex', justifySelf: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left"><button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button></div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
+                </div>
+                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
             </header>
-            <main className="practice-content-wrapper flex items-center justify-center p-8">
-                <div className="max-w-4xl w-full bg-white rounded-[4rem] p-16 shadow-2xl relative">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-[8rem] -z-10"></div>
-                    <h2 className="text-4xl font-black text-[#31326F] text-center mb-12 leading-tight"><LatexContent html={currentQuestion.text} /></h2>
-                    <div className="flex justify-center mb-12">{currentQuestion.visual}</div>
-                    <div className="grid grid-cols-2 gap-8">
-                        {shuffledOptions.map((opt, i) => (
-                            <button
-                                key={i} onClick={() => !isSubmitted && setSelectedOption(opt)} disabled={isSubmitted}
-                                className={`p-10 text-2xl font-black rounded-3xl border-4 transition-all duration-300 ${selectedOption === opt ? 'border-[#31326F] bg-indigo-50' : 'border-slate-50 bg-slate-50/20 hover:bg-white'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'bg-red-50 border-red-500 text-red-700' : ''}`}
-                            >
-                                <LatexContent html={opt} />
-                            </button>
-                        ))}
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col" style={{ width: '100%' }}>
+                        <AnimatePresence mode="wait">
+                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}><LatexContent html={currentQuestion.text} /></h2></div>
+                                    <div className="visual-area flex justify-center py-4">{currentQuestion.visual}</div>
+                                    <div className="interaction-area-modern">
+                                        <div className="options-grid-modern">
+                                            {shuffledOptions.map((option, idx) => (
+                                                <button key={idx} className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`} style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: '500', fontSize: '2rem' }} onClick={() => handleOptionSelect(option)} disabled={isSubmitted}><LatexContent html={option} /></button>
+                                            ))}
+                                        </div>
+                                        {isSubmitted && isCorrect && <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>{feedbackMessage}</motion.div>}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
             </main>
-            <footer className="h-28 px-16 flex items-center justify-between">
-                <button className="text-2xl font-black text-red-500" onClick={() => navigate(-1)}>Exit</button>
-                <div className="flex gap-6">
-                    {isSubmitted && <button className="px-12 py-4 bg-indigo-50 text-[#31326F] font-black rounded-3xl shadow-sm" onClick={() => setShowExplanationModal(true)}>Explanation</button>}
-                    {isSubmitted ?
-                        <button className="px-14 py-4 bg-[#31326F] text-white font-black rounded-[1.5rem] text-xl" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? 'Next' : 'Done'}</button> :
-                        <button className="px-14 py-4 bg-[#4FB7B3] text-white font-black rounded-[1.5rem] text-xl" onClick={handleCheck} disabled={!selectedOption}>Submit</button>
-                    }
+            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
+            <footer className="junior-bottom-bar">
+                <div className="desktop-footer-controls">
+                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button></div>
+                    <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> Explain</button>}</div>
+                    <div className="bottom-right"><div className="nav-buttons-group">{qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious}><ChevronLeft size={28} strokeWidth={3} /> Prev</button>}{isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={28} strokeWidth={3} /></button>}</div></div>
+                </div>
+                <div className="mobile-footer-controls">
+                    <div className="flex items-center gap-2">
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
+                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={18} /> Explain</button>}
+                    </div>
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '70%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className="nav-buttons-group" style={{ gap: '6px' }}>
+                            {qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Prev</button>}
+                            {isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>{qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Submit</button>}
+                        </div>
+                    </div>
                 </div>
             </footer>
-            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => { setShowExplanationModal(false); handleNext(); }} />
         </div>
     );
 };
-
-const StarsDisplay = ({ percentage }) => (
-    <div className="flex gap-4">
-        {[1, 2, 3].map(i => <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }}>
-            <Star size={80} fill={percentage >= i * 33 ? "#FFD700" : "#EDF2F7"} color="#CBD5E0" />
-        </motion.div>)}
-    </div>
-);
 
 export default AreaPerimeterRelationship;
