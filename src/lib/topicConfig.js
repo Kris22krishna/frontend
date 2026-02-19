@@ -71,6 +71,12 @@ export const TOPIC_CONFIGS = {
             { id: "1004", name: "Counting in pairs", route: "counting-in-pairs" },
             { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "skip-counting" },
             { id: "1006", name: "Introduction to multiplication as repeated addition", route: "repeated-addition" }
+        ],
+        'Counting in Tens': [
+            { id: "1010", name: "Numbers up to 100", route: "numbers-up-to-100" },
+            { id: "1011", name: "Place value (Tens and Ones)", route: "place-value-tens-ones" },
+            { id: "1012", name: "Expanded form", route: "expanded-form" },
+            { id: "1013", name: "Comparing numbers", route: "comparing-numbers" }
         ]
     },
     '3': {
