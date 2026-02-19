@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Timer, Trophy, Star, ChevronLeft, ArrowRight, Home } from 'lucide-react';
+import { Timer, Trophy, Star, ChevronLeft, ArrowRight, Home, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { api } from '../../../../services/api';
@@ -229,26 +229,20 @@ const NumbersUpTo100 = () => {
         return (
             <div className="grade1-practice-page">
                 <Navbar />
-                <div className="g1-practice-container">
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="g1-question-card g1-results-card">
-                        <div className="g1-trophy-container">🏆</div>
-                        <h2 className="g1-question-text">Quest Completed!</h2>
-                        <div className="results-stats">
-                            <div className="g1-stat-badge">
-                                <Star color="#FFD700" fill="#FFD700" />
-                                <span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span>
+                <div className="g1-results-container">
+                    <div className="g1-practice-container">
+                        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="g1-question-card g1-results-card">
+                            <div className="g1-trophy-container">🏆</div>
+                            <h2 className="g1-question-text">Quest Complete!</h2>
+                            <div className="results-stats">
+                                <div className="g1-stat-badge"><Star color="#FFD700" fill="#FFD700" /><span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span></div>
+                                <div className="g1-stat-badge"><Timer color="#4ECDC4" /><span className="g1-stat-value">{formatTime(timer)}</span></div>
                             </div>
-                            <div className="g1-stat-badge">
-                                <Timer color="#4ECDC4" />
-                                <span className="g1-stat-value">{formatTime(timer)}</span>
+                            <div className="g1-next-action">
+                                <button className="g1-primary-btn" onClick={() => navigate(`/junior/grade/2/topic/${topicName}`)}>Return to Topics <ArrowRight /></button>
                             </div>
-                        </div>
-                        <div className="g1-next-action">
-                            <button className="g1-primary-btn" onClick={() => navigate('/junior/grade/2')}>
-                                Back to Map <ArrowRight />
-                            </button>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </div>
             </div>
         );
@@ -266,18 +260,12 @@ const NumbersUpTo100 = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={handlePrevious} disabled={qIndex === 0}>
-                        <ChevronLeft size={20} /> Prev
-                    </button>
-
-                    <div className="g1-timer-badge">
-                        <Timer size={18} />
-                        {formatTime(timer)}
+                    <div className="flex gap-2">
+                        <button className="g1-back-btn" onClick={() => qIndex > 0 && setQIndex(qIndex - 1)} disabled={qIndex === 0}><ChevronLeft size={20} /> Back</button>
+                        <button className="g1-back-btn text-red-500 border-red-100 hover:bg-red-50" onClick={() => navigate(`/junior/grade/2/topic/${topicName}`)}><X size={20} /> Quit</button>
                     </div>
-
-                    <div className="px-4 py-1.5 bg-white rounded-2xl shadow-sm font-black text-[#31326F]">
-                        {qIndex + 1} / {TOTAL_QUESTIONS}
-                    </div>
+                    <div className="g1-timer-badge"><Timer size={18} /> {formatTime(timer)}</div>
+                    <div className="px-4 py-1.5 bg-white rounded-2xl shadow-sm font-black text-[#2D3436]">{qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
 
                 <div className="g1-progress-container">

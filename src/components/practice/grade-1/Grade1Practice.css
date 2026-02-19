@@ -259,6 +259,14 @@
 }
 
 /* Results Screen Overhaul */
+.g1-results-container {
+    padding-top: 100px; /* Navbar height (80px) + 20px spacer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 .g1-results-card {
     text-align: center;
     padding: 30px 40px;

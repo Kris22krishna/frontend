@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Timer, Trophy, Star, ChevronLeft, ArrowRight, Home } from 'lucide-react';
+import { Timer, Trophy, Star, ChevronLeft, ArrowRight, Home, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { api } from '../../../../services/api';
@@ -13,21 +13,23 @@ import '../../grade-1/Grade1Practice.css';
 
 const TOTAL_QUESTIONS = 10;
 
-const ExpandedVisual = ({ num, tens, ones, hideOne = false }) => {
+const ExpandedVisual = ({ num, tens, ones, hideOne = false, hideNum = false, hideExpanded = false }) => {
     return (
         <div className="flex flex-col items-center gap-8 p-6 bg-white rounded-3xl shadow-sm border-2 border-dashed border-indigo-100 w-full">
             <div className="text-6xl font-black text-indigo-600 bg-indigo-50 px-10 py-4 rounded-3xl shadow-inner">
-                {num}
+                {hideNum ? '?' : num}
             </div>
-            <div className="flex items-center gap-4 text-4xl font-black text-gray-400">
-                <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="text-amber-500">
-                    {tens * 10}
-                </motion.div>
-                <span>+</span>
-                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="text-emerald-500">
-                    {hideOne ? '?' : ones}
-                </motion.div>
-            </div>
+            {!hideExpanded && (
+                <div className="flex items-center gap-4 text-4xl font-black text-gray-400">
+                    <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="text-amber-500">
+                        {tens * 10}
+                    </motion.div>
+                    <span>+</span>
+                    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="text-emerald-500">
+                        {hideOne ? '?' : ones}
+                    </motion.div>
+                </div>
+            )}
         </div>
     );
 };
@@ -88,16 +90,22 @@ const ExpandedForm = () => {
             const options = [target];
             while (options.length < 4) {
                 let wrong;
+                const offset = Math.floor(Math.random() * 3) + 1;
+                const sign = Math.random() > 0.5 ? 1 : -1;
+
                 if (i % 3 === 0) {
-                    const wTens = (tens + (Math.random() > 0.5 ? 1 : -1)) * 10;
-                    wrong = `$${wTens >= 0 ? wTens : tensVal} + ${ones}$`;
+                    const wTens = (tens + (sign * offset)) * 10;
+                    const wOnes = (ones + (Math.random() > 0.5 ? 1 : -1));
+                    const finalTens = wTens >= 0 && wTens <= 90 ? wTens : (tens === 10 ? 20 : 10);
+                    const finalOnes = wOnes >= 0 && wOnes <= 9 ? wOnes : (ones === 5 ? 6 : 5);
+                    wrong = `$${finalTens} + ${finalOnes}$`;
                 } else if (i % 3 === 1) {
-                    wrong = (num + (Math.random() > 0.5 ? 10 : -10)).toString();
+                    wrong = (num + (sign * (offset * 10 + (Math.random() > 0.5 ? 1 : 0)))).toString();
                 } else {
-                    wrong = (ones + (Math.random() > 0.5 ? 1 : -1)).toString();
+                    wrong = (ones + (sign * offset)).toString();
                 }
 
-                if (wrong !== target && !options.includes(wrong) && !wrong.includes('-')) {
+                if (wrong !== target && !options.includes(wrong) && !wrong.includes('-') && parseInt(wrong) !== 0) {
                     options.push(wrong);
                 }
             }
@@ -107,7 +115,14 @@ const ExpandedForm = () => {
                 options: options.sort(),
                 correct: target,
                 explanation: explanation,
-                visualData: { num, tens, ones, hideOne: (i % 3 === 2) }
+                visualData: {
+                    num,
+                    tens,
+                    ones,
+                    hideOne: (i % 3 === 2),
+                    hideNum: (i % 3 === 1),
+                    hideExpanded: (i % 3 === 0)
+                }
             });
         }
         return questions;
@@ -193,18 +208,20 @@ const ExpandedForm = () => {
         return (
             <div className="grade1-practice-page">
                 <Navbar />
-                <div className="g1-practice-container">
-                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="g1-question-card g1-results-card">
-                        <div className="g1-trophy-container">🌟</div>
-                        <h2 className="g1-question-text">Superstar!</h2>
-                        <div className="results-stats">
-                            <div className="g1-stat-badge"><Star color="#FFD700" fill="#FFD700" /><span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span></div>
-                            <div className="g1-stat-badge"><Timer color="#4ECDC4" /><span className="g1-stat-value">{formatTime(timer)}</span></div>
-                        </div>
-                        <div className="g1-next-action">
-                            <button className="g1-primary-btn" onClick={() => navigate('/junior/grade/2')}>Back to Map <ArrowRight /></button>
-                        </div>
-                    </motion.div>
+                <div className="g1-results-container">
+                    <div className="g1-practice-container">
+                        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="g1-question-card g1-results-card">
+                            <div className="g1-trophy-container">🌟</div>
+                            <h2 className="g1-question-text">Superstar!</h2>
+                            <div className="results-stats">
+                                <div className="g1-stat-badge"><Star color="#FFD700" fill="#FFD700" /><span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span></div>
+                                <div className="g1-stat-badge"><Timer color="#4ECDC4" /><span className="g1-stat-value">{formatTime(timer)}</span></div>
+                            </div>
+                            <div className="g1-next-action">
+                                <button className="g1-primary-btn" onClick={() => navigate(`/junior/grade/2/topic/${topicName}`)}>Back to Map <ArrowRight /></button>
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </div>
         );
@@ -221,7 +238,10 @@ const ExpandedForm = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => qIndex > 0 && setQIndex(qIndex - 1)} disabled={qIndex === 0}><ChevronLeft /> Prev</button>
+                    <div className="flex gap-2">
+                        <button className="g1-back-btn" onClick={() => qIndex > 0 && setQIndex(qIndex - 1)} disabled={qIndex === 0}><ChevronLeft /> Back</button>
+                        <button className="g1-back-btn text-red-500 border-red-100 hover:bg-red-50" onClick={() => navigate(`/junior/grade/2/topic/${topicName}`)}><X size={20} /> Quit</button>
+                    </div>
                     <div className="g1-timer-badge"><Timer size={18} /> {formatTime(timer)}</div>
                     <div className="px-4 py-1.5 bg-white rounded-2xl shadow-sm font-black text-indigo-900">{qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>

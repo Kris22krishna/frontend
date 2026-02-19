@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Timer, Trophy, Star, ChevronLeft, ArrowRight, Home } from 'lucide-react';
+import { Timer, Trophy, Star, ChevronLeft, ArrowRight, Home, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { api } from '../../../../services/api';
@@ -195,18 +195,20 @@ const PlaceValueTensOnes = () => {
         return (
             <div className="grade1-practice-page">
                 <Navbar />
-                <div className="g1-practice-container">
-                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="g1-question-card g1-results-card">
-                        <div className="g1-trophy-container">🏆</div>
-                        <h2 className="g1-question-text">Amazing Progress!</h2>
-                        <div className="results-stats">
-                            <div className="g1-stat-badge"><Star color="#FFD700" fill="#FFD700" /><span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span></div>
-                            <div className="g1-stat-badge"><Timer color="#4ECDC4" /><span className="g1-stat-value">{formatTime(timer)}</span></div>
-                        </div>
-                        <div className="g1-next-action">
-                            <button className="g1-primary-btn" onClick={() => navigate('/junior/grade/2')}>Back to Map <ArrowRight /></button>
-                        </div>
-                    </motion.div>
+                <div className="g1-results-container">
+                    <div className="g1-practice-container">
+                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="g1-question-card g1-results-card">
+                            <div className="g1-trophy-container">🏆</div>
+                            <h2 className="g1-question-text">Amazing Progress!</h2>
+                            <div className="results-stats">
+                                <div className="g1-stat-badge"><Star color="#FFD700" fill="#FFD700" /><span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span></div>
+                                <div className="g1-stat-badge"><Timer color="#4ECDC4" /><span className="g1-stat-value">{formatTime(timer)}</span></div>
+                            </div>
+                            <div className="g1-next-action">
+                                <button className="g1-primary-btn" onClick={() => navigate(`/junior/grade/2/topic/${topicName}`)}>Back to Map <ArrowRight /></button>
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </div>
         );
@@ -223,7 +225,10 @@ const PlaceValueTensOnes = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => qIndex > 0 && setQIndex(qIndex - 1)} disabled={qIndex === 0}><ChevronLeft size={20} /> Prev</button>
+                    <div className="flex gap-2">
+                        <button className="g1-back-btn" onClick={() => qIndex > 0 && setQIndex(qIndex - 1)} disabled={qIndex === 0}><ChevronLeft size={20} /> Back</button>
+                        <button className="g1-back-btn text-red-500 border-red-100 hover:bg-red-50" onClick={() => navigate(`/junior/grade/2/topic/${topicName}`)}><X size={20} /> Quit</button>
+                    </div>
                     <div className="g1-timer-badge"><Timer size={18} />{formatTime(timer)}</div>
                     <div className="px-4 py-1 bg-white rounded-xl shadow-sm font-black text-[#31326F]">{qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
@@ -243,17 +248,8 @@ const PlaceValueTensOnes = () => {
                     </div>
 
                     <div className="grid lg:grid-cols-2 gap-8">
-                        <div className="bg-blue-50/50 rounded-3xl p-6 flex flex-col items-center justify-center min-h-[250px]">
+                        <div className="bg-blue-50/50 rounded-3xl p-6 flex flex-col items-center justify-center min-h-[200px]">
                             <BundleVisual tens={currentQ.visualData.tens} ones={currentQ.visualData.ones} />
-                            <div className="mt-4 text-center">
-                                <div className="text-4xl font-black text-[#31326F] bg-white px-8 py-2 rounded-2xl shadow-sm border-2 border-blue-100">
-                                    {currentQ.visualData.num}
-                                </div>
-                                <div className="flex gap-4 mt-2 font-bold text-gray-500">
-                                    <span>TENS</span>
-                                    <span>ONES</span>
-                                </div>
-                            </div>
                         </div>
 
                         <div className="flex flex-col justify-center gap-4">
