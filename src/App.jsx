@@ -143,6 +143,21 @@ import CountingInPairs from './components/practice/class-2/Counting in Groups/co
 import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
 import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
 
+// Grade 5: Can you see the Pattern?
+import PatternIdentification from './components/practice/class-5/CanyouseethePattern/PatternRecognition/pattern-identification';
+import RuleBasedPatternCreation from './components/practice/class-5/CanyouseethePattern/PatternRecognition/rule-based-pattern-creation';
+import UnderstandingRotations from './components/practice/class-5/CanyouseethePattern/PatternRecognition/understanding-rotations';
+import GridPatternRecognition from './components/practice/class-5/CanyouseethePattern/PatternRecognition/grid-pattern-recognition';
+import PropertiesOfOperation from './components/practice/class-5/CanyouseethePattern/NummberProperties/properties-of-operation';
+import DigitRelationships from './components/practice/class-5/CanyouseethePattern/NummberProperties/digit-relationships';
+import PalindromeRecognition from './components/practice/class-5/CanyouseethePattern/NummberProperties/palindrome-recognition';
+import StructuredNumberPatterns from './components/practice/class-5/CanyouseethePattern/NummberProperties/structured-number-patterns';
+import RuleApplications from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/rule-applications';
+import MultiStepOperations from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/multi-step-operations';
+import MissingNumberReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/missing-number-reasoning';
+import MentalCalculationReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/mental-calculation-reasoning';
+import SkillApplicationProblems from './components/practice/class-5/CanyouseethePattern/skill-application-problems';
+
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
@@ -760,6 +775,22 @@ function App() {
         <Route path="/middle/practice/9010" element={<DivisionEndingZero />} />
         <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
         <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
+
+        {/* Can you see the Pattern? - Grade 5 */}
+        <Route path="/middle/grade/5/can-you-see-the-pattern/pattern-identification" element={<PatternIdentification />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/rule-pattern-creation" element={<RuleBasedPatternCreation />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/rotations" element={<UnderstandingRotations />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/grid-patterns" element={<GridPatternRecognition />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/properties-of-operation" element={<PropertiesOfOperation />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/digit-relationships" element={<DigitRelationships />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/palindromes" element={<PalindromeRecognition />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/structured-patterns" element={<StructuredNumberPatterns />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/rule-applications" element={<RuleApplications />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/multi-step-operations" element={<MultiStepOperations />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/missing-numbers" element={<MissingNumberReasoning />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/mental-calculation" element={<MentalCalculationReasoning />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblems />} />
+
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         {/* Class 10: Pair of Linear Equations Routes */}
         <Route path="/high/practice/10011" element={<GraphicalMethod />} />
