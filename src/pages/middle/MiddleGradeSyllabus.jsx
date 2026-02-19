@@ -350,6 +350,46 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/visualising-solid-shapes/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-sym-line',
+                            skill_name: 'Line Symmetry',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/line-symmetry'
+                        },
+                        {
+                            skill_id: 'local-sym-poly',
+                            skill_name: 'Regular Polygons',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/regular-polygons'
+                        },
+                        {
+                            skill_id: 'local-sym-rot',
+                            skill_name: 'Rotational Symmetry',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/rotational'
+                        },
+                        {
+                            skill_id: 'local-sym-rel',
+                            skill_name: 'Line & Rotational Relationship',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/relationship'
+                        },
+                        {
+                            skill_id: 'local-sym-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/chapter-test'
                         }
                     ];
                 }
@@ -372,8 +412,8 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes") && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry") && !skill.isLocal) return acc;
 
 
         const topic = skill.topic || 'General';
