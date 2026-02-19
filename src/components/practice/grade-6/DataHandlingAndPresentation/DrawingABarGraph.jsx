@@ -38,7 +38,7 @@ const DrawingABarGraph = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6507; // Placeholder ID
+    const SKILL_ID = 1065; // Placeholder ID
     const SKILL_NAME = "Drawing a Bar Graph";
 
     const TOTAL_QUESTIONS = 10;

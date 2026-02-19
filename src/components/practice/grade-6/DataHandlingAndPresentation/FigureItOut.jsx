@@ -38,7 +38,7 @@ const FigureItOut = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6508; // Placeholder ID
+    const SKILL_ID = 1066; // Placeholder ID
     const SKILL_NAME = "Figure It Out";
 
     const TOTAL_QUESTIONS = 10;

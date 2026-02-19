@@ -38,7 +38,7 @@ const CollectingAndOrganisingData = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6504; // Placeholder ID for Data Handling
+    const SKILL_ID = 1065; // Placeholder ID for Data Handling
     const SKILL_NAME = "Collecting and Organising Data";
 
     const TOTAL_QUESTIONS = 10;

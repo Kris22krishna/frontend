@@ -48,7 +48,7 @@ const Pictographs = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6505; // Placeholder ID for Pictographs
+    const SKILL_ID = 1063; // Placeholder ID for Pictographs
     const SKILL_NAME = "Pictographs";
 
     const TOTAL_QUESTIONS = 10;
