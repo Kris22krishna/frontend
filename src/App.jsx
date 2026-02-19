@@ -113,6 +113,13 @@ import VolumeOfCube from './components/practice/class-8/mensuration/volume_of_cu
 import VolumeOfCuboid from './components/practice/class-8/mensuration/volume_of_cuboid';
 import VolumeOfCylinder from './components/practice/class-8/mensuration/volume_of_cylinder';
 import VolumeAndCapacity from './components/practice/class-8/mensuration/volume_and_capacity';
+import MethodOfCommonFactors from './components/practice/class-8/factorisation/method_of_common_factors';
+import FactorisationByRegrouping from './components/practice/class-8/factorisation/factorisation_by_regrouping';
+import FactorisationUsingIdentities from './components/practice/class-8/factorisation/factorisation_using_identities';
+import FactorsOfFormXplusAXplusB from './components/practice/class-8/factorisation/factors_of_form_x_plus_a_x_plus_b';
+import DivisionMonomialByMonomial from './components/practice/class-8/factorisation/division_monomial_by_monomial';
+import DivisionPolynomialByMonomial from './components/practice/class-8/factorisation/division_polynomial_by_monomial';
+import DivisionPolynomialByPolynomial from './components/practice/class-8/factorisation/division_polynomial_by_polynomial';
 
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
@@ -129,6 +136,9 @@ import Grade1Numbers51to100 from './components/practice/grade-1/numbers-51-100';
 import IdentifyingShapes from './components/practice/class-2/what-is-long,what-is-round/identifying_shapes';
 import ComparingLengths from './components/practice/class-2/what-is-long,what-is-round/comparing_lengths';
 import RecognizingRoundObjects from './components/practice/class-2/what-is-long,what-is-round/recognizing_round_objects';
+import ComparingWeights from './components/practice/class-2/c-203/how-much-can-you-carry/ComparingWeights';
+import HeavierLighter from './components/practice/class-2/c-203/how-much-can-you-carry/HeavierLighter';
+import EstimatingWeight from './components/practice/class-2/c-203/how-much-can-you-carry/EstimatingWeight';
 import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
 import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
 import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
@@ -147,6 +157,12 @@ import PatternsInShapes from './components/practice/grade-6/patterns-in-mathemat
 import NumbersCanTellUsThings from './components/practice/grade-6/number-play/NumbersCanTellUsThings';
 import Supercells from './components/practice/grade-6/number-play/Supercells';
 import GrowingPatterns from './components/practice/grade-6/number-play/GrowingPatterns';
+import CollectingAndOrganisingData from './components/practice/grade-6/DataHandlingAndPresentation/CollectingAndOrganisingData';
+import Pictographs from './components/practice/grade-6/DataHandlingAndPresentation/Pictographs';
+import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation/BarGraphs';
+import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
+import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -173,6 +189,12 @@ import NetsBuilding3DShapes from './components/practice/class-7/visualising soli
 import DrawingSolids from './components/practice/class-7/visualising solid shapes/DrawingSolids';
 import ViewingSections from './components/practice/class-7/visualising solid shapes/ViewingSections';
 import VisualisingSolidShapesTest from './components/practice/class-7/visualising solid shapes/VisualisingSolidShapesTest';
+import LineSymmetry from './components/practice/class-7/symmetry/LineSymmetry';
+import RegularPolygonsSymmetry from './components/practice/class-7/symmetry/RegularPolygonsSymmetry';
+import MirrorReflectionSymmetry from './components/practice/class-7/symmetry/MirrorReflectionSymmetry';
+import RotationalSymmetry from './components/practice/class-7/symmetry/RotationalSymmetry';
+import LineRotationalRelationship from './components/practice/class-7/symmetry/LineRotationalRelationship';
+import SymmetryTest from './components/practice/class-7/symmetry/SymmetryTest';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -189,6 +211,17 @@ import IdentifyingTerms from './components/practice/class-10/Arithmetic Progress
 import FindingSpecificTerms from './components/practice/class-10/Arithmetic Progressions/FindingSpecificTerms';
 import SumOfTerms from './components/practice/class-10/Arithmetic Progressions/SumOfTerms';
 import ArithmeticProgressionsTest from './components/practice/class-10/Arithmetic Progressions/ArithmeticProgressionsTest';
+
+// Class 10: Real Numbers
+import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
+import EuclidsDivision from './components/practice/class-10/Real Numbers/EuclidsDivision';
+import PrimeFactorisation from './components/practice/class-10/Real Numbers/PrimeFactorisation';
+import FundamentalTheoremArithmetic from './components/practice/class-10/Real Numbers/FundamentalTheoremArithmetic';
+import HCFandLCM from './components/practice/class-10/Real Numbers/HCFandLCM';
+import HCFLCMApplications from './components/practice/class-10/Real Numbers/HCFLCMApplications';
+import ProvingIrrationality from './components/practice/class-10/Real Numbers/ProvingIrrationality';
+import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
+import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
 
 // Grade 3 - Fair Share
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
@@ -523,6 +556,43 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Grade 8 Factorisation */}
+        <Route path="/senior/grade/8/factorisation/common-factors" element={
+          <ProtectedRoute redirectTo="/login">
+            <MethodOfCommonFactors />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <FactorisationByRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/using-identities" element={
+          <ProtectedRoute redirectTo="/login">
+            <FactorisationUsingIdentities />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/factors-form-xpla-xplb" element={
+          <ProtectedRoute redirectTo="/login">
+            <FactorsOfFormXplusAXplusB />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/division-monomial-by-monomial" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionMonomialByMonomial />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/division-polynomial-by-monomial" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionPolynomialByMonomial />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/division-polynomial-by-polynomial" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionPolynomialByPolynomial />
+          </ProtectedRoute>
+        } />
+
         {/* Grade 1 Specialized Routes */}
         <Route path="/junior/grade/1/shapes-and-space" element={<ProtectedRoute redirectTo="/login"><Grade1ShapesAndSpace /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-from-one-to-nine" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers1to9 /></ProtectedRoute>} />
@@ -538,6 +608,9 @@ function App() {
         <Route path="/junior/grade/2/what-is-long-what-is-round/identifying-shapes" element={<ProtectedRoute redirectTo="/login"><IdentifyingShapes /></ProtectedRoute>} />
         <Route path="/junior/grade/2/what-is-long-what-is-round/comparing-lengths" element={<ProtectedRoute redirectTo="/login"><ComparingLengths /></ProtectedRoute>} />
         <Route path="/junior/grade/2/what-is-long-what-is-round/recognizing-round-objects" element={<ProtectedRoute redirectTo="/login"><RecognizingRoundObjects /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/how-much-can-you-carry/comparing-weights" element={<ProtectedRoute redirectTo="/login"><ComparingWeights /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/how-much-can-you-carry/heavier-lighter" element={<ProtectedRoute redirectTo="/login"><HeavierLighter /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/how-much-can-you-carry/estimating-weight" element={<ProtectedRoute redirectTo="/login"><EstimatingWeight /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-groups/counting-in-pairs" element={<ProtectedRoute redirectTo="/login"><CountingInPairs /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-groups/skip-counting" element={<ProtectedRoute redirectTo="/login"><SkipCounting /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-groups/repeated-addition" element={<ProtectedRoute redirectTo="/login"><RepeatedAdditionClass2 /></ProtectedRoute>} />
@@ -556,6 +629,11 @@ function App() {
         <Route path="/middle/grade/6/number-play/supercells" element={<Supercells />} />
         <Route path="/middle/grade/6/number-play/growing-patterns" element={<GrowingPatterns />} />
         <Route path="/middle/grade/6/number-play/playing-with-digits" element={<PlayingWithDigits />} />
+        <Route path="/middle/grade/6/data-handling/collecting-organising" element={<CollectingAndOrganisingData />} />
+        <Route path="/middle/grade/6/data-handling/pictographs" element={<Pictographs />} />
+        <Route path="/middle/grade/6/data-handling/bar-graphs" element={<BarGraphs />} />
+        <Route path="/middle/grade/6/data-handling/drawing-a-bar-graph" element={<DrawingABarGraph />} />
+        <Route path="/middle/grade/6/data-handling/figure-it-out" element={<FigureItOut />} />
         <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
         <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
         <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />
@@ -588,6 +666,14 @@ function App() {
         <Route path="/middle/grade/7/visualising-solid-shapes/drawing-solids" element={<DrawingSolids />} />
         <Route path="/middle/grade/7/visualising-solid-shapes/viewing-sections" element={<ViewingSections />} />
         <Route path="/middle/grade/7/visualising-solid-shapes/chapter-test" element={<VisualisingSolidShapesTest />} />
+
+        {/* Symmetry */}
+        <Route path="/middle/grade/7/symmetry/line-symmetry" element={<LineSymmetry />} />
+        <Route path="/middle/grade/7/symmetry/regular-polygons" element={<RegularPolygonsSymmetry />} />
+        <Route path="/middle/grade/7/symmetry/mirror-reflection" element={<MirrorReflectionSymmetry />} />
+        <Route path="/middle/grade/7/symmetry/rotational" element={<RotationalSymmetry />} />
+        <Route path="/middle/grade/7/symmetry/relationship" element={<LineRotationalRelationship />} />
+        <Route path="/middle/grade/7/symmetry/chapter-test" element={<SymmetryTest />} />
 
 
         {/* Auth Routes */}
@@ -695,6 +781,17 @@ function App() {
         <Route path="/high/practice/10105" element={<SumOfTerms />} />
         <Route path="/high/practice/10106" element={<ArithmeticProgressionsTest />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
+
+        {/* Class 10: Real Numbers Routes */}
+        <Route path="/high/practice/10201" element={<RealNumberFoundations />} />
+        <Route path="/high/practice/10202" element={<EuclidsDivision />} />
+        <Route path="/high/practice/10203" element={<PrimeFactorisation />} />
+        <Route path="/high/practice/10204" element={<FundamentalTheoremArithmetic />} />
+        <Route path="/high/practice/10205" element={<HCFandLCM />} />
+        <Route path="/high/practice/10206" element={<HCFLCMApplications />} />
+        <Route path="/high/practice/10207" element={<ProvingIrrationality />} />
+        <Route path="/high/practice/10208" element={<IrrationalOperations />} />
+        <Route path="/high/practice/10209" element={<RealNumbersTest />} />
       </Routes>
     </Router>
   );
