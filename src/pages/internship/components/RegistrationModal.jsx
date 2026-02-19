@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Calendar, MapPin, GraduationCap, Award, CheckCircle2, AlertCircle } from "lucide-react";
 import { api } from '../../../services/api';
+import axios from 'axios';
+import { generateReceiptId } from '@/services/getReciptId';
+import moment from 'moment';
 
 // Use absolute path from public folder to prevent Vite import analysis errors
 const BANNER_URL = "/internship-banner.png";
@@ -19,7 +22,9 @@ const RegistrationModal = ({ isOpen, onClose }) => {
     const [phoneError, setPhoneError] = useState('');
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
+
 
         if (formData.phoneNumber.length !== 10) {
             setPhoneError('Please enter a valid 10-digit phone number');
@@ -36,12 +41,49 @@ const RegistrationModal = ({ isOpen, onClose }) => {
 
         try {
             await api.submitInternshipRegistration(dataToSubmit);
+            await handleRazorPayPayment();
             setStatus('success');
         } catch (error) {
             console.error('Error submitting form:', error);
             setStatus('error');
         }
     };
+
+    const handleRazorPayPayment = async () => {
+        const response = await axios.post("https://skill-100-ai-backend.onrender.com/payment/create-order", {
+            "amount": 10000,
+            "receipt": generateReceiptId()
+        })
+        const data = await response.data;
+        const dataToSubmit = {
+            ...formData,
+            phoneNumber: `+91 ${formData.phoneNumber}`
+        };
+
+        const razorPayPaymentObject = {
+            "key": "rzp_test_SHDO0zwY63pph7",
+            "amount": "10000", // Amount is in currency subunits. 
+            "currency": "INR",
+            "name": "Skill 100 AI",
+            "description": "Internship regstration",
+            "image": "https://www.skill100.ai/assets/logo-DvszrrA3.jpg",
+            "order_id": data['id'], // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "callback_url": "https://www.skill100.ai/internship/payment-successful",
+            "prefill": {
+                "name": dataToSubmit.name,
+                "email": dataToSubmit.email,
+                "contact": dataToSubmit.phoneNumber
+            },
+            "notes": {
+                "address": moment().format("DD-MM-YYYY h:mm a")
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        }
+        var rzp1 = new Razorpay(razorPayPaymentObject);
+        rzp1.open();
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
