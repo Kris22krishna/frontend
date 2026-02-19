@@ -387,6 +387,7 @@ const MiddleGradeSyllabus = () => {
 
     const gradeInt = parseInt(grade.replace('grade', ''));
 
+
     // Manual Override for Grade 5 Tenths and Hundredths
     if (gradeInt === 5) {
         skillsByTopic['Tenths and Hundredths'] = {
@@ -464,6 +465,95 @@ const MiddleGradeSyllabus = () => {
                     sub_topic: 'Skill Application Problems',
                     isLocal: true,
                     path: '/middle/grade/5/tenths-hundredths/word-problems'
+                }
+            ]
+        };
+
+        skillsByTopic['Ways to Multiply and Divide'] = {
+            'Multiplication': [
+                {
+                    skill_id: '9003',
+                    skill_name: 'Multiplication of 2-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9003'
+                },
+                {
+                    skill_id: '9004',
+                    skill_name: 'Multiplication of 3-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9004'
+                },
+                {
+                    skill_id: '9005',
+                    skill_name: 'Multiplication of multiple numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9005'
+                },
+                {
+                    skill_id: '9006',
+                    skill_name: 'Multiplication of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9006'
+                },
+                {
+                    skill_id: '9007',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9007'
+                }
+            ],
+            'Division': [
+                {
+                    skill_id: '9008',
+                    skill_name: 'Divide by 1-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9008'
+                },
+                {
+                    skill_id: '9009',
+                    skill_name: 'Divide by 2-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9009'
+                },
+                {
+                    skill_id: '9010',
+                    skill_name: 'Division of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9010'
+                },
+                {
+                    skill_id: '9011',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9011'
+                }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '9012',
+                    skill_name: 'Mixed Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/practice/9012'
                 }
             ]
         };
