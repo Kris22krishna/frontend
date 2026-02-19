@@ -103,7 +103,7 @@ import PerimeterAsBoundary from './components/practice/class-5/AreaAndItsBoundar
 import SamePerimeterDifferentShapes from './components/practice/class-5/AreaAndItsBoundary/Perimeter/SamePerimeterDifferentShapes';
 import PerimeterRealLife from './components/practice/class-5/AreaAndItsBoundary/Perimeter/PerimeterRealLife';
 import AreaPerimeterRelationship from './components/practice/class-5/AreaAndItsBoundary/AreaPerimeterRelationship/AreaPerimeterRelationship';
-import SkillApplicationProblemsArea from './components/practice/class-5/AreaAndItsBoundary/SkillApplicationProblems/SkillApplicationProblems';
+import SkillApplicationProblemsArea from './components/practice/class-5/AreaAndItsBoundary/SkillApplicationProblems/SkillApplicationProblemsArea';
 
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
