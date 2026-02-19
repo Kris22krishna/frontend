@@ -28,6 +28,27 @@
     flex-shrink: 0;
 }
 
+/* Skill Name Label - Desktop (inside header-left) */
+.skill-name-label {
+    color: #31326F;
+    font-weight: 700;
+    font-size: 0.95rem;
+    max-width: 260px;
+    line-height: 1.25;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Skill Name Label - Mobile (above question card) */
+.skill-name-mobile {
+    display: none;
+}
+
 /* Sun Timer - Top Left */
 .sun-timer-container {
     position: absolute;
@@ -1031,6 +1052,23 @@
 @media (max-width: 768px) {
     .junior-practice-header {
         height: 60px;
+    }
+
+    /* Hide desktop skill label on mobile */
+    .skill-name-label {
+        display: none;
+    }
+
+    /* Show mobile skill label above question card */
+    .skill-name-mobile {
+        display: block;
+        color: #31326F;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0 1.2rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+        text-align: left;
     }
 
     .sun-timer-container {

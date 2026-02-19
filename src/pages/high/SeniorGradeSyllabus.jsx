@@ -77,7 +77,14 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-mens-vol-cube', skill_name: 'Volume of Cube', topic: 'Mensuration' },
                         { skill_id: 'local-8-mens-vol-cuboid', skill_name: 'Volume of Cuboid', topic: 'Mensuration' },
                         { skill_id: 'local-8-mens-vol-cylinder', skill_name: 'Volume of Cylinder', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-vol-capacity', skill_name: 'Volume and Capacity', topic: 'Mensuration' }
+                        { skill_id: 'local-8-mens-vol-capacity', skill_name: 'Volume and Capacity', topic: 'Mensuration' },
+                        { skill_id: 'local-8-fact-common', skill_name: 'Method of Common Factors', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-regrouping', skill_name: 'Factorisation by Regrouping', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-identities', skill_name: 'Factorisation Using Identities', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-form-xpla-xplb', skill_name: 'Factors of the form (x+a)(x+b)', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-mono-mono', skill_name: 'Division of Monomial by Monomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-poly-mono', skill_name: 'Division of Polynomial by Monomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -255,6 +262,66 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Volume',
                 isLocal: true,
                 path: '/senior/grade/8/mensuration/volume-and-capacity'
+            }
+        ];
+
+        // Hardcode all Grade 8 skills for Factorisation (7 skills)
+        skillsByTopic['Factorisation'] = [
+            {
+                skill_id: 'local-8-fact-common',
+                skill_name: 'Method of Common Factors',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/common-factors'
+            },
+            {
+                skill_id: 'local-8-fact-regrouping',
+                skill_name: 'Factorisation by Regrouping',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/regrouping'
+            },
+            {
+                skill_id: 'local-8-fact-identities',
+                skill_name: 'Factorisation Using Identities',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/using-identities'
+            },
+            {
+                skill_id: 'local-8-fact-form-xpla-xplb',
+                skill_name: 'Factors of the form (x+a)(x+b)',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/factors-form-xpla-xplb'
+            },
+            {
+                skill_id: 'local-8-fact-div-mono-mono',
+                skill_name: 'Division of Monomial by Monomial',
+                topic: 'Factorisation',
+                subtopic: 'Division of Algebraic Expressions',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/division-monomial-by-monomial'
+            },
+            {
+                skill_id: 'local-8-fact-div-poly-mono',
+                skill_name: 'Division of Polynomial by Monomial',
+                topic: 'Factorisation',
+                subtopic: 'Division of Algebraic Expressions',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/division-polynomial-by-monomial'
+            },
+            {
+                skill_id: 'local-8-fact-div-poly-poly',
+                skill_name: 'Division of Polynomial by Polynomial',
+                topic: 'Factorisation',
+                subtopic: 'Division of Algebraic Expressions',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/division-polynomial-by-polynomial'
             }
         ];
     }
