@@ -10,56 +10,42 @@ import '../../grade-1/Grade1Practice.css';
 
 const TOTAL_QUESTIONS = 5;
 
-const DynamicVisual = ({ type, pairCount, color }) => {
-    const renderPair = (index) => {
-        if (type === 'shoes') {
-            return (
-                <g key={index} transform={`translate(${index * 60}, 0)`}>
-                    {/* Left Shoe */}
-                    <path d="M5,25 Q5,5 15,5 L25,5 Q35,5 35,25 L35,35 Q35,45 20,45 L5,45 Z" fill={color} />
-                    <rect x="10" y="10" width="15" height="5" rx="2" fill="white" opacity="0.5" />
-                    {/* Right Shoe */}
-                    <path d="M40,25 Q40,5 50,5 L60,5 Q70,5 70,25 L70,35 Q70,45 55,45 L40,45 Z" fill={color} />
-                    <rect x="45" y="10" width="15" height="5" rx="2" fill="white" opacity="0.5" />
-                </g>
-            );
-        }
-        if (type === 'socks') {
-            return (
-                <g key={index} transform={`translate(${index * 50}, 0)`}>
-                    {/* Left Sock */}
-                    <path d="M5,5 L15,5 L15,25 Q15,45 30,45 L30,55 L5,55 Z" fill={color} />
-                    <rect x="5" y="5" width="10" height="5" fill="white" opacity="0.3" />
-                    {/* Right Sock */}
-                    <path d="M35,5 L45,5 L45,25 Q45,45 60,45 L60,55 L35,55 Z" fill={color} />
-                    <rect x="35" y="5" width="10" height="5" fill="white" opacity="0.3" />
-                </g>
-            );
-        }
-        if (type === 'gloves') {
-            return (
-                <g key={index} transform={`translate(${index * 60}, 0)`}>
-                    {/* Left Glove */}
-                    <path d="M5,20 Q5,5 15,5 L20,5 Q30,5 30,20 L30,45 L5,45 Z" fill={color} />
-                    <path d="M30,15 L35,15 L35,25 L30,25 Z" fill={color} />
-                    {/* Right Glove */}
-                    <path d="M40,20 Q40,5 50,5 L55,5 Q65,5 65,20 L65,45 L40,45 Z" fill={color} />
-                    <path d="M65,15 L70,15 L70,25 L65,25 Z" fill={color} />
-                </g>
-            );
-        }
-        return null;
-    };
-
+const DynamicVisual = ({ emoji, pairCount, color }) => {
     return (
         <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '150px',
+                width: '100%',
+                padding: '20px'
+            }}
         >
-            <svg width="100%" height="auto" viewBox={`0 0 ${Math.max(300, pairCount * 60)} 100`} style={{ maxWidth: '100%', maxHeight: '300px' }}>
-                {[...Array(pairCount)].map((_, i) => renderPair(i))}
-            </svg>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', justifyContent: 'center' }}>
+                {[...Array(pairCount)].map((_, i) => (
+                    <div
+                        key={i}
+                        style={{
+                            background: 'white',
+                            padding: '10px 15px',
+                            borderRadius: '15px',
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+                            display: 'flex',
+                            gap: '10px',
+                            fontSize: '2.5rem',
+                            border: `2px solid ${color}20`
+                        }}
+                    >
+                        <span>{emoji}</span>
+                        <span>{emoji}</span>
+                    </div>
+                ))}
+            </div>
         </motion.div>
     );
 };
@@ -104,17 +90,25 @@ const CountingInPairs = () => {
 
     const generateQuestions = () => {
         const questions = [];
-        const objectTypes = ['shoes', 'socks', 'gloves'];
+        const emojisPool = ['👟', '🧦', '🧤', '👂', '👀', '🍒', '👢', '🚲', '🩰', '🕶️', '🦜', '🐧'];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+
+        // Shuffle emojis to get unique ones
+        const shuffledEmojis = [...emojisPool].sort(() => 0.5 - Math.random());
 
         for (let i = 0; i < TOTAL_QUESTIONS; i++) {
             const pairCount = Math.floor(Math.random() * 4) + 2; // 2 to 5 pairs
-            const objectType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
-            const color = colors[Math.floor(Math.random() * colors.length)];
+            const emoji = shuffledEmojis[i % shuffledEmojis.length];
+            const color = colors[i % colors.length];
             const askTotal = Math.random() > 0.5;
 
             const target = askTotal ? (pairCount * 2).toString() : pairCount.toString();
             const wrongOptions = [];
+
+            // Add cross-type answer as distractor
+            const obviousWrong = askTotal ? pairCount.toString() : (pairCount * 2).toString();
+            wrongOptions.push(obviousWrong);
+
             while (wrongOptions.length < 2) {
                 const wrong = askTotal ? (pairCount * 2 + (Math.random() > 0.5 ? 2 : -2)).toString() : (pairCount + (Math.random() > 0.5 ? 1 : -1)).toString();
                 if (wrong !== target && wrong !== '0' && !wrongOptions.includes(wrong)) {
@@ -123,10 +117,10 @@ const CountingInPairs = () => {
             }
 
             questions.push({
-                text: askTotal ? `How many ${objectType} are there in total? 👟` : `How many PAIRS of ${objectType} do you see? 👫`,
-                options: [target, ...wrongOptions].sort(() => 0.5 - Math.random()),
+                text: askTotal ? `How many individual items ${emoji} are there in total?` : `How many PAIRS of ${emoji} do you see?`,
+                options: [target, ...wrongOptions].sort((a, b) => parseInt(a) - parseInt(b)),
                 correct: target,
-                visualData: { type: objectType, pairCount, color }
+                visualData: { emoji, pairCount, color }
             });
         }
         return questions;
