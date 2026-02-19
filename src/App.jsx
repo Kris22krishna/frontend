@@ -113,6 +113,13 @@ import VolumeOfCube from './components/practice/class-8/mensuration/volume_of_cu
 import VolumeOfCuboid from './components/practice/class-8/mensuration/volume_of_cuboid';
 import VolumeOfCylinder from './components/practice/class-8/mensuration/volume_of_cylinder';
 import VolumeAndCapacity from './components/practice/class-8/mensuration/volume_and_capacity';
+import MethodOfCommonFactors from './components/practice/class-8/factorisation/method_of_common_factors';
+import FactorisationByRegrouping from './components/practice/class-8/factorisation/factorisation_by_regrouping';
+import FactorisationUsingIdentities from './components/practice/class-8/factorisation/factorisation_using_identities';
+import FactorsOfFormXplusAXplusB from './components/practice/class-8/factorisation/factors_of_form_x_plus_a_x_plus_b';
+import DivisionMonomialByMonomial from './components/practice/class-8/factorisation/division_monomial_by_monomial';
+import DivisionPolynomialByMonomial from './components/practice/class-8/factorisation/division_polynomial_by_monomial';
+import DivisionPolynomialByPolynomial from './components/practice/class-8/factorisation/division_polynomial_by_polynomial';
 
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
@@ -466,6 +473,43 @@ function App() {
         <Route path="/senior/grade/8/mensuration/volume-and-capacity" element={
           <ProtectedRoute redirectTo="/login">
             <VolumeAndCapacity />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Factorisation */}
+        <Route path="/senior/grade/8/factorisation/common-factors" element={
+          <ProtectedRoute redirectTo="/login">
+            <MethodOfCommonFactors />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/regrouping" element={
+          <ProtectedRoute redirectTo="/login">
+            <FactorisationByRegrouping />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/using-identities" element={
+          <ProtectedRoute redirectTo="/login">
+            <FactorisationUsingIdentities />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/factors-form-xpla-xplb" element={
+          <ProtectedRoute redirectTo="/login">
+            <FactorsOfFormXplusAXplusB />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/division-monomial-by-monomial" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionMonomialByMonomial />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/division-polynomial-by-monomial" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionPolynomialByMonomial />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/factorisation/division-polynomial-by-polynomial" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionPolynomialByPolynomial />
           </ProtectedRoute>
         } />
 
