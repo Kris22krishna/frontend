@@ -387,8 +387,29 @@ const MiddleGradeSyllabus = () => {
 
     const gradeInt = parseInt(grade.replace('grade', ''));
 
-    // Manual Override for Grade 5 Tenths and Hundredths
+    // Manual Override for Grade 5
     if (gradeInt === 5) {
+        skillsByTopic['Area and its Boundary'] = {
+            'Area': [
+                { skill_id: '5001', skill_name: 'Finding Area', topic: 'Area and its Boundary', sub_topic: 'Area' },
+                { skill_id: '5002', skill_name: 'Compare and Create Shapes with the Same Area', topic: 'Area and its Boundary', sub_topic: 'Area' },
+                { skill_id: '5003', skill_name: 'Area in Real-Life Situations', topic: 'Area and its Boundary', sub_topic: 'Area' },
+                { skill_id: '5004', skill_name: 'Choose and Interpret Appropriate Area Units', topic: 'Area and its Boundary', sub_topic: 'Area' }
+            ],
+            'Perimeter': [
+                { skill_id: '5005', skill_name: 'Finding Perimeter', topic: 'Area and its Boundary', sub_topic: 'Perimeter' },
+                { skill_id: '5006', skill_name: 'Understand Perimeter as Boundary Length', topic: 'Area and its Boundary', sub_topic: 'Perimeter' },
+                { skill_id: '5007', skill_name: 'Same Perimeter with Different Shapes', topic: 'Area and its Boundary', sub_topic: 'Perimeter' },
+                { skill_id: '5008', skill_name: 'Perimeter in Real-Life Contexts', topic: 'Area and its Boundary', sub_topic: 'Perimeter' }
+            ],
+            'Area-Perimeter Relationship': [
+                { skill_id: '5009', skill_name: 'Area-Perimeter Relationship', topic: 'Area and its Boundary', sub_topic: 'Area-Perimeter Relationship' }
+            ],
+            'Skill Application Problems': [
+                { skill_id: '5010', skill_name: 'Skill Application Problems', topic: 'Area and its Boundary', sub_topic: 'Skill Application Problems' }
+            ]
+        };
+
         skillsByTopic['Tenths and Hundredths'] = {
             'Decimals': [
                 {
@@ -538,7 +559,7 @@ const MiddleGradeSyllabus = () => {
                         const accentColor = getAccentColor(index);
 
                         // Define fixed order for sub-topics
-                        const subTopicOrder = ["Multiplication", "Division", "Decimals", "Skill Application Problems"];
+                        const subTopicOrder = ["Multiplication", "Division", "Decimals", "Area", "Perimeter", "Area-Perimeter Relationship", "Skill Application Problems"];
                         const orderedSubTopics = Object.entries(subTopics).sort(([a], [b]) => {
                             const indexA = subTopicOrder.indexOf(a);
                             const indexB = subTopicOrder.indexOf(b);
@@ -560,7 +581,7 @@ const MiddleGradeSyllabus = () => {
                                     {orderedSubTopics.map(([subTopic, topicSkills]) => {
                                         const isExpanded = expandedSubTopics[`${topic}-${subTopic}`];
                                         const isMain = subTopic === 'Main';
-                                        const isDirectButton = subTopic === 'Skill Application Problems';
+                                        const isDirectButton = subTopic === 'Skill Application Problems' || subTopic === 'Area-Perimeter Relationship';
 
                                         return (
                                             <div key={subTopic} className={`subtopic-group ${isExpanded ? 'is-expanded' : ''} ${isMain ? 'is-main' : ''} ${isDirectButton ? 'is-direct' : ''}`}>
