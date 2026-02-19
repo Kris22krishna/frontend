@@ -78,7 +78,9 @@ export const TOPIC_CONFIGS = {
             { id: "HH2-01", name: "Draw tiles" },
             { id: "HH2-02", name: "Neighbouring numbers" },
             { id: "HH2-03", name: "Help cranes on number line" },
-            { id: "HH2-04", name: "Tambola" }
+            { id: "HH2-04", name: "Tambola" },
+            { id: "HH2-05", name: "Skip and solve" },
+            { id: "HH2-06", name: "Number in the centre" }
         ]
     },
     '4': {

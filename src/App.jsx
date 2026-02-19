@@ -85,6 +85,8 @@ import DrawTiles from './components/practice/class-3/House-of-Hundreds-II/Draw-t
 import NeighbouringNumbers from './components/practice/class-3/House-of-Hundreds-II/neighbouring-numbers';
 import HelpCranesOnNumberLine from './components/practice/class-3/House-of-Hundreds-II/Help-cranes-on-number-line';
 import Tambola from './components/practice/class-3/House-of-Hundreds-II/Tambola';
+import SkipAndSolve from './components/practice/class-3/House-of-Hundreds-II/skip-&-solve';
+import NumberInTheCentre from './components/practice/class-3/House-of-Hundreds-II/number-in-the-centre';
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -262,6 +264,18 @@ function App() {
         <Route path="/junior/grade/:grade/house-of-hundreds-ii/tambola" element={
           <ProtectedRoute redirectTo="/login">
             <Tambola />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/skip-and-solve" element={
+          <ProtectedRoute redirectTo="/login">
+            <SkipAndSolve />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/number-in-the-centre" element={
+          <ProtectedRoute redirectTo="/login">
+            <NumberInTheCentre />
           </ProtectedRoute>
         } />
 
