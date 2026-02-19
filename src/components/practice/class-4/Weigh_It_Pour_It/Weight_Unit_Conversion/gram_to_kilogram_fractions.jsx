@@ -1,221 +1,226 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { api } from "../../../../../services/api";
-import LatexContent from "../../../../LatexContent";
-import ExplanationModal from "../../../../ExplanationModal";
-import "../../../../../pages/juniors/JuniorPracticeSession.css";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Package } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { api } from '../../../../../services/api';
+import LatexContent from '../../../../LatexContent';
+import ExplanationModal from '../../../../ExplanationModal';
+import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const randomInt = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
-
-const TOTAL_QUESTIONS = 10;
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You got it! ✨",
-    "🌟 Brilliant! Keep it up! 🌟",
-    "🎉 Correct! You're a math-star! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
-    "🌈 Perfect! Well done! 🌈",
-    "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Excellent! 💎"
+    "✨ Amazing! You balanced it perfectly! ✨",
+    "🌟 Brilliant work! 🌟",
+    "🎉 Correct! You're a weighing expert! 🎉",
+    "✨ Fantastic! ✨",
+    "🚀 Super! Keep going! 🚀"
 ];
 
-const MultiDivWordProblems = () => {
+const GramToKilogramFractions = () => {
+    const { grade } = useParams();
     const navigate = useNavigate();
-
     const [qIndex, setQIndex] = useState(0);
-    const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [sessionId, setSessionId] = useState(null);
-    const [answers, setAnswers] = useState({});
-    const [showResults, setShowResults] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showResults, setShowResults] = useState(false);
 
+    // Logging states
+    const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
-    const usedQuestions = useRef([]);
+    const isTabActive = useRef(true);
+    const SKILL_ID = 1129;
+    const SKILL_NAME = "Weigh It, Pour It - Gram to Kilogram Fractions";
 
-    const SKILL_ID = 9012;
-    const SKILL_NAME = "Mixed Skill Application Problems";
+    const TOTAL_QUESTIONS = 10;
+    const [sessionQuestions, setSessionQuestions] = useState([]);
+    const [answers, setAnswers] = useState({});
 
     useEffect(() => {
-        const userId =
-            sessionStorage.getItem("userId") || localStorage.getItem("userId");
-
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then((sess) => {
-                if (sess?.session_id) setSessionId(sess.session_id);
+            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
         }
 
-        const timer = setInterval(() => setTimeElapsed((p) => p + 1), 1000);
-        return () => clearInterval(timer);
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // Generate Questions based on NCERT PDF logic (Pages 2-3)
+        // Focus on 500g, 250g, 200g, 100g relationships to 1kg
+        const questions = [];
+        let attempts = 0;
+
+        while (questions.length < TOTAL_QUESTIONS && attempts < 100) {
+            attempts++;
+
+            const type = randomInt(1, 3);
+            let qText, correct, sol, options = [];
+
+            if (type === 1) { // How many X g packets make 1 kg?
+                const weight = [500, 250, 200, 100][randomInt(0, 3)];
+                const count = 1000 / weight;
+
+                qText = `<div class="flex flex-col items-center gap-4">
+                            <span class="text-3xl font-medium">How many <strong>${weight}g</strong> packets make <strong>1 kg</strong>?</span>
+                            <div class="flex gap-2 flex-wrap justify-center mt-4">
+                                ${Array(3).fill(0).map(() =>
+                    `<div style="width: 80px; height: 100px; background: #FFF4E6; border: 3px solid #F6AD55; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #DD6B20; font-weight: bold; font-size: 1.2rem;">
+                                        <span style="font-size: 0.8rem;">Packet</span>
+                                        ${weight}g
+                                    </div>`
+                ).join('')}
+                                <span class="text-4xl self-center text-gray-400">...</span>
+                            </div>
+                          </div>`;
+                correct = count.toString();
+                sol = `We need 1000g to make 1kg.<br/>
+                        $${weight} \\times ${count} = 1000$.<br/>
+                        So, <strong>${count}</strong> packets are needed.`;
+
+                options = [count.toString()];
+                while (options.length < 4) {
+                    const wrong = randomInt(2, 10).toString();
+                    if (!options.includes(wrong)) options.push(wrong);
+                }
+
+            } else if (type === 2) { // 2 packets of 500g = ? kg
+                const weight = [500, 250, 200][randomInt(0, 2)];
+                const count = randomInt(2, 5);
+                const totalG = weight * count;
+                const totalKgFraction = totalG === 1000 ? "1" : totalG === 500 ? "1/2" : (totalG / 1000).toString();
+
+                // Only use clean fractions or whole numbers for now as per Grade 4
+                if (totalG !== 1000 && totalG !== 500 && totalG !== 2500 && totalG !== 2000) continue;
+
+                const displayTotal = totalG >= 1000 ? (totalG / 1000) + " kg" : totalG + " g";
+                const target = totalG >= 1000 ? "kg" : "g";
+
+                qText = `<div class="flex flex-col items-center gap-4">
+                            <span class="text-3xl font-medium"><strong>${count}</strong> packets of <strong>${weight}g</strong> = ?</span>
+                            <div class="flex gap-2 flex-wrap justify-center mt-4">
+                                ${Array(Math.min(count, 4)).fill(0).map(() =>
+                    `<div style="width: 70px; height: 90px; background: #E6FFFA; border: 3px solid #38B2AC; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #2C7A7B; font-weight: bold; font-size: 1rem;">
+                                        ${weight}g
+                                    </div>`
+                ).join('')}
+                                ${count > 4 ? '<span class="text-2xl self-center text-gray-400">...</span>' : ''}
+                            </div>
+                          </div>`;
+
+                correct = displayTotal;
+                sol = `$${count} \\times ${weight} \\text{ g} = ${totalG} \\text{ g}$.<br/>
+                       ${totalG} g = <strong>${displayTotal}</strong>.`;
+
+                options = [displayTotal];
+                options.push(totalG === 1000 ? "500 g" : "1 kg");
+                options.push(totalG === 1000 ? "2 kg" : "250 g");
+                options.push(totalG === 1000 ? "100 g" : "1.5 kg");
+
+            } else { // Balance scale logic (Simple)
+                const leftWeight = 1000;
+                const rightPart = 500;
+
+                qText = `<div class="flex flex-col items-center gap-4">
+                            <span class="text-3xl font-medium">Which weight will balance the scale?</span>
+                            <div class="flex items-end gap-1 mt-4">
+                                <div class="bg-blue-100 p-4 rounded-b-xl border-b-4 border-blue-300 w-32 flex flex-col items-center h-32 justify-end pb-2 transform rotate-12 origin-top-right">
+                                    <div class="w-20 h-20 bg-gray-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg border-b-4 border-gray-800">1 kg</div>
+                                </div>
+                                <div class="h-40 w-2 bg-gray-400 mx-2"></div>
+                                <div class="bg-blue-100 p-4 rounded-b-xl border-b-4 border-blue-300 w-32 flex flex-col items-center h-32 justify-end pb-2 transform -rotate-12 origin-top-left">
+                                    <div class="w-16 h-16 bg-yellow-400 rounded-lg flex items-center justify-center text-yellow-900 font-bold text-lg shadow-md border-b-4 border-yellow-600 mb-1">500g</div>
+                                    <div class="w-16 h-16 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center text-gray-400 font-bold">?</div>
+                                </div>
+                            </div>
+                          </div>`;
+                correct = "500 g";
+                sol = `Left side = 1 kg = 1000 g.<br/>
+                       Right side has 500 g.<br/>
+                       We need $1000 - 500 = 500$ g more.<br/>
+                       So, <strong>500 g</strong> is needed.`;
+                options = ["500 g", "250 g", "100 g", "1 kg"];
+            }
+
+            const duplicate = questions.find(q => q.correctAnswer === correct && q.text === qText);
+            if (duplicate) continue;
+
+            questions.push({
+                text: qText,
+                correctAnswer: correct,
+                solution: sol,
+                shuffledOptions: options.sort(() => Math.random() - 0.5)
+            });
+        }
+
+        while (questions.length < TOTAL_QUESTIONS) {
+            const q = questions[0];
+            questions.push({ ...q });
+        }
+
+        setSessionQuestions(questions);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, []);
 
-    useEffect(() => generateQuestion(), [qIndex]);
+    useEffect(() => {
+        if (showResults) return;
+        const timer = setInterval(() => {
+            setTimeElapsed(prev => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [showResults]);
 
-    // 📚 combo problems (multiplication + division)
-    const problems = [
-        () => {
-            const people = randomInt(100, 150);
-            const perDay = 8;
-            const days = 365;
-            return {
-                q: `${people} people drink ${perDay} glasses daily. How many glasses are used in a year?`,
-                a: people * perDay * days,
-            };
-        },
-        () => {
-            const litres = 8;
-            const price = 9;
-            const days = 30;
-            return {
-                q: `A cow gives ${litres} litres of milk daily. Milk sells at ₹${price} per litre. What is the earning in 30 days?`,
-                a: litres * price * days,
-            };
-        },
-        () => {
-            const perDay = randomInt(70, 100);
-            const months = 12;
-            const days = 30;
-            return {
-                q: `A worker earns ₹${perDay} per day. How much does he earn in ${months} months?`,
-                a: perDay * days * months,
-            };
-        },
-        () => {
-            const tanks = 25;
-            const buckets = 15;
-            return {
-                q: `One tank fills ${buckets} buckets. How many buckets will 25 tanks fill?`,
-                a: tanks * buckets,
-            };
-        },
-        () => {
-            const kg = 12;
-            const laddoosPerKg = 28;
-            const perBox = 16;
-            return {
-                q: `There are ${laddoosPerKg} laddoos in 1 kg. How many boxes are needed to pack ${kg} kg if 16 laddoos fit in one box?`,
-                a: Math.ceil((kg * laddoosPerKg) / perBox),
-            };
-        },
-        () => {
-            const rooms = 26;
-            const plants = 4;
-            const cups = 2;
-            return {
-                q: `A school has ${rooms} rooms with ${plants} plants each. Each plant needs ${cups} cups of water. How many cups are needed?`,
-                a: rooms * plants * cups,
-            };
-        },
-        () => {
-            const goats = 17;
-            const earningPerGoat = 1;
-            const days = 30;
-            return {
-                q: `A boy earns ₹${earningPerGoat} per goat per day for ${goats} goats. How much does he earn in 30 days?`,
-                a: goats * earningPerGoat * days,
-            };
-        },
-        () => {
-            const perMonth = 2750;
-            const years = 2;
-            return {
-                q: `A loan of ₹${perMonth} is paid every month for ${years} years. What is the total amount paid?`,
-                a: perMonth * 12 * years,
-            };
-        },
-        () => {
-            const trees = 458;
-            const perRow = 15;
-            return {
-                q: `A gardener plants ${perRow} trees in each row from ${trees} trees. How many rows can he plant?`,
-                a: Math.floor(trees / perRow),
-            };
-        },
-        () => {
-            const hours = 2000;
-            return {
-                q: `A battery runs for ${hours} hours. How many days will it run if used continuously?`,
-                a: Math.floor(hours / 24),
-            };
-        },
-    ];
-
-    const generateQuestion = () => {
-        if (usedQuestions.current.length === problems.length) {
-            usedQuestions.current = [];
-        }
-
-        let index;
-        do {
-            index = randomInt(0, problems.length - 1);
-        } while (usedQuestions.current.includes(index));
-
-        usedQuestions.current.push(index);
-
-        const { q, a } = problems[index]();
-        const correct = a.toString();
-
-        let opts = [correct];
-        while (opts.length < 4) {
-            let fake = a + randomInt(-100, 100);
-            if (fake > 0 && !opts.includes(fake.toString()))
-                opts.push(fake.toString());
-        }
-
-        setShuffledOptions(opts.sort(() => Math.random() - 0.5));
-
-        setCurrentQuestion({
-            text: `<div class='question-container'><p>${q}</p></div>`,
-            correctAnswer: correct,
-            solution: `<strong>Solution:</strong><br/>Carefully follow the steps described in the problem using multiplication or division.<br/><br/>Answer = <strong>${correct}</strong>`,
-            difficulty: 'Hard'
-        });
-
-        setSelectedOption(null);
-        setIsSubmitted(false);
-        setIsCorrect(false);
-    };
-
-    const handleCheck = () => {
-        if (!selectedOption) return;
-        const right = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(right);
-        setIsSubmitted(true);
-        setAnswers((p) => ({
-            ...p,
-            [qIndex]: {
-                isCorrect: right,
-                selected: selectedOption,
-                questionText: currentQuestion.text,
-                correctAnswer: currentQuestion.correctAnswer,
-                solution: currentQuestion.solution
+    useEffect(() => {
+        if (sessionQuestions.length > 0) {
+            const qData = sessionQuestions[qIndex];
+            setCurrentQuestion(qData);
+            setShuffledOptions(qData.shuffledOptions);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
             }
-        }));
-
-        if (right) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setShowExplanationModal(true);
         }
-        recordQuestionAttempt(currentQuestion, selectedOption, right);
+    }, [qIndex, sessionQuestions]);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     const recordQuestionAttempt = async (question, selected, isCorrect) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
 
-        let timeSpent = accumulatedTime.current + (Date.now() - questionStartTime.current);
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
         const seconds = Math.round(timeSpent / 1000);
 
         try {
@@ -223,7 +228,8 @@ const MultiDivWordProblems = () => {
                 user_id: parseInt(userId, 10),
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                difficulty_level: question.difficulty || 'Hard',
+                template_id: null,
+                difficulty_level: 'Medium',
                 question_text: String(question.text || ''),
                 correct_answer: String(question.correctAnswer || ''),
                 student_answer: String(selected || ''),
@@ -236,19 +242,38 @@ const MultiDivWordProblems = () => {
         }
     };
 
+    const handleCheck = () => {
+        if (!selectedOption || !currentQuestion) return;
+        const isRight = selectedOption === currentQuestion.correctAnswer;
+        setIsCorrect(isRight);
+        setIsSubmitted(true);
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
+
+        if (isRight) {
+            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+        } else {
+            setShowExplanationModal(true);
+        }
+
+        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
-            setQIndex((p) => p + 1);
+            setQIndex(prev => prev + 1);
+            setShowExplanationModal(false);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
-            setShowExplanationModal(false);
         } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 try {
                     await api.createReport({
-                        title: 'Multiplication & Division Report',
+                        title: SKILL_NAME,
                         type: 'practice',
                         score: (totalCorrect / TOTAL_QUESTIONS) * 100,
                         parameters: {
@@ -270,10 +295,9 @@ const MultiDivWordProblems = () => {
         }
     };
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    const handleOptionSelect = (option) => {
+        if (isSubmitted) return;
+        setSelectedOption(option);
     };
 
     const handlePrevious = () => {
@@ -285,13 +309,14 @@ const MultiDivWordProblems = () => {
 
     const stats = (() => {
         let correct = 0;
+        const total = Object.keys(answers).length;
         Object.values(answers).forEach(ans => {
             if (ans.isCorrect) correct++;
         });
         return { correct, total: TOTAL_QUESTIONS };
     })();
 
-    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold text-[#31326F]">Loading...</div>;
+    if (!currentQuestion && !showResults) return <div>Loading...</div>;
 
     if (showResults) {
         const score = stats.correct;
@@ -314,13 +339,13 @@ const MultiDivWordProblems = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Multiplication & Division Report</h1>
+                        <h1 className="results-title">Weight Report</h1>
                     </div>
                 </header>
 
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Sharply Calculated! 🎉</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Weighing Whiz! 🎉</h2>
 
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
@@ -361,9 +386,9 @@ const MultiDivWordProblems = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Problem Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Weighing Log 📜</h3>
                         <div className="space-y-4">
-                            {Array.from({ length: TOTAL_QUESTIONS }).map((_, idx) => {
+                            {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
@@ -380,21 +405,21 @@ const MultiDivWordProblems = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
-                                                    <LatexContent html={ans.questionText} />
+                                                    <LatexContent html={q.text} />
                                                 </div>
 
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
                                                         <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
-                                                            <LatexContent html={ans.selected} />
+                                                            {ans.selected}
                                                         </span>
                                                     </div>
                                                     {!ans.isCorrect && (
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
                                                             <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
                                                             <span className="text-lg font-black text-[#31326F]">
-                                                                <LatexContent html={ans.correctAnswer} />
+                                                                {q.correctAnswer}
                                                             </span>
                                                         </div>
                                                     )}
@@ -403,9 +428,12 @@ const MultiDivWordProblems = () => {
                                                 <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
                                                     <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
                                                     <div className="text-sm font-medium text-gray-600 leading-relaxed">
-                                                        <LatexContent html={ans.solution} />
+                                                        <LatexContent html={q.solution} />
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
                                             </div>
                                         </div>
                                     </motion.div>
@@ -416,9 +444,9 @@ const MultiDivWordProblems = () => {
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
                         <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
-                            <RefreshCw size={24} /> Play Again
+                            <RefreshCw size={24} /> Start New Quest
                         </button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
                             Back to Topics
                         </button>
                     </div>
@@ -431,18 +459,15 @@ const MultiDivWordProblems = () => {
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <button
-                        className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all"
-                        onClick={() => navigate(-1)}
-                    >
-                        <X size={24} />
-                    </button>
+                    {/* Placeholder */}
                 </div>
+
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
+
                 <div className="header-right">
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
@@ -454,31 +479,52 @@ const MultiDivWordProblems = () => {
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
-                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
+                            <motion.div
+                                key={qIndex}
+                                initial={{ x: 50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -50, opacity: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                style={{ height: '100%', width: '100%' }}
+                            >
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', fontWeight: '500', textAlign: 'center' }}>
+                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '400', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
-                                            {shuffledOptions.map((opt, i) => (
+                                            {shuffledOptions.map((option, idx) => (
                                                 <button
-                                                    key={i}
-                                                    onClick={() => !isSubmitted && setSelectedOption(opt)}
-                                                    className={`option-btn-modern ${selectedOption === opt ? "selected" : ""
-                                                        } ${isSubmitted && opt === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}`}
-                                                    style={{ fontWeight: '500', fontSize: '1.2rem', fontFamily: '"Proxima Nova", sans-serif' }}
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                                        } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
+                                                        }`}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '400',
+                                                        fontSize: '2.5rem',
+                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
+                                                        color: !isSubmitted ? '#1f2937' : undefined,
+                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
+                                                        borderWidth: !isSubmitted ? '2px' : undefined,
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                    }}
+                                                    onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
-                                                    {opt}
+                                                    <LatexContent html={option} />
                                                 </button>
                                             ))}
                                         </div>
                                         {isSubmitted && isCorrect && (
-                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>
+                                            <motion.div
+                                                initial={{ scale: 0.5, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                className="feedback-mini correct"
+                                                style={{ marginTop: '20px' }}
+                                            >
                                                 {feedbackMessage}
                                             </motion.div>
                                         )}
@@ -509,13 +555,13 @@ const MultiDivWordProblems = () => {
                                 navigate(-1);
                             }}
                         >
-                            Exit
+                            Exit Practice
                         </button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={20} /> Explain
+                                <Eye size={20} /> View Explanation
                             </button>
                         )}
                     </div>
@@ -523,7 +569,7 @@ const MultiDivWordProblems = () => {
                         <div className="nav-buttons-group">
                             {qIndex > 0 && (
                                 <button className="nav-pill-next-btn" onClick={handlePrevious}>
-                                    <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                    <ChevronLeft size={28} strokeWidth={3} /> Previous
                                 </button>
                             )}
                             {isSubmitted ? (
@@ -562,12 +608,11 @@ const MultiDivWordProblems = () => {
                         )}
                     </div>
 
-
-                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '75%', display: 'flex', justifyContent: 'flex-end' }}>
+                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '50%', display: 'flex', justifyContent: 'flex-end' }}>
                         <div className="nav-buttons-group" style={{ gap: '6px' }}>
                             {qIndex > 0 && (
                                 <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>
-                                    Prev
+                                    Previous
                                 </button>
                             )}
                             {isSubmitted ? (
@@ -587,4 +632,4 @@ const MultiDivWordProblems = () => {
     );
 };
 
-export default MultiDivWordProblems;
+export default GramToKilogramFractions;

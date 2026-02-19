@@ -1,32 +1,17 @@
 /* Junior Practice Session - Modern Reference Design */
 
 .junior-practice-page {
-    position: fixed;
-    /* Force full viewport coverage */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-
-    @supports (height: 100dvh) {
-        height: 100dvh;
-    }
-
+    position: relative;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     background-color: #E0F7FA;
-    /* Light cyan background */
-    font-family: 'Fredoka',
-    'Nunito',
-    sans-serif;
-    overflow: hidden;
+    font-family: 'Fredoka', 'Nunito', sans-serif;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     z-index: 50;
-    /* Ensure on top of other layout elements */
 }
 
 /* Ensure global box-sizing for this component's children if not already set globally */
@@ -99,16 +84,13 @@
 .practice-content-wrapper {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    /* Prevents top-clipping on long content */
     justify-content: center;
     position: relative;
-    padding: 0 1rem;
-    /* Reduced padding */
-    padding-bottom: 90px;
-    /* Space for bottom bar */
-    height: calc(100vh - 80px);
-    /* Fill remaining height */
-    overflow: hidden;
+    padding: 2rem 1rem 120px 1rem;
+    /* More top padding, extra bottom space */
+    min-height: calc(100vh - 80px);
 }
 
 
@@ -121,9 +103,9 @@
     gap: 1.5rem;
     width: 100%;
     max-width: 1400px;
-    height: 100%;
+    height: auto;
     /* Ensure it fits in viewport */
-    max-height: 100%;
+    min-height: 100%;
     padding: 0 1rem;
     align-items: center;
 }
@@ -132,7 +114,10 @@
 .practice-left-col {
     position: relative;
     height: 100%;
-    overflow: visible;
+    overflow: hidden;
+    /* Contain the scrollable card */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Right Column - Desktop */
@@ -189,8 +174,8 @@
 .question-card-modern {
     background: white;
     border-radius: 2.5rem;
-    padding: 1.5rem 1.5rem 1.5rem 8rem;
-    /* Reduced padding, keeping left space for mascot */
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+    /* Balanced padding */
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     width: 100%;
     height: 100%;
@@ -199,24 +184,49 @@
     position: relative;
     z-index: 10;
     border: 4px solid #FFFFFF;
-    overflow-y: auto; /* ENABLE GLOBAL SCROLL */
+    overflow-y: auto !important;
+    /* Force vertical scrolling */
     overflow-x: hidden;
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: #B2DFDB transparent;
+    flex: 1;
+    /* Take available space */
+    min-height: 0;
+    /* Allow shrinking for scroll */
+}
+
+/* Custom Scrollbar for Webkit */
+.question-card-modern::-webkit-scrollbar {
+    width: 8px;
+}
+
+.question-card-modern::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.question-card-modern::-webkit-scrollbar-thumb {
+    background-color: #B2DFDB;
+    border-radius: 20px;
 }
 
 /* Question Styling */
 .question-header-modern {
-    margin-bottom: 0.5rem;
+    margin-bottom: 2rem;
     text-align: center;
     width: 100%;
     flex-shrink: 0;
 }
 
+/* ... existing styles ... */
+
 .question-text-modern {
     /* Fluid scaling: Min 1.2rem, Preferred 2.5vw, Max 2rem */
     font-size: clamp(1.2rem, 2.5vw, 2.2rem);
-    font-weight: 800;
+    font-weight: 500;
     color: #2D3748;
-    line-height: 1.3;
+    line-height: 1.5;
+    /* Improved line height */
     margin: 0;
     display: flex;
     flex-direction: row;
@@ -226,22 +236,7 @@
     overflow: visible;
 }
 
-
-.question-number-modern {
-    color: #00BFA5;
-    font-size: 1.8rem;
-    margin-bottom: 0;
-    line-height: 1;
-}
-
-/* Exit Button Position */
-.exit-practice-container {
-    position: absolute;
-    right: 2rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 25;
-}
+/* ... */
 
 /* Interaction Area */
 .interaction-area-modern {
@@ -267,31 +262,34 @@
     display: grid;
     /* Auto-fit: create as many columns as fit */
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 1.5rem;
+    /* Increased gap */
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
-    flex: 1;
-    /* Take remaining space */
+    /* flex: 1; */
+    /* Let it take necessary space */
     align-content: center;
-    /* Center vertically */
 }
 
 .option-btn-modern {
     background: white;
     border: 3px solid #E2E8F0;
     border-radius: 1.2rem;
-    padding: 0.5rem 1rem;
+    padding: 1rem 1.5rem;
+    /* Increased padding */
     /* Fluid font size for options */
     font-size: clamp(1rem, 2vw, 1.5rem);
-    font-weight: 700;
+    font-weight: 500;
     color: #4A5568;
     box-shadow: 0 4px 0 #CBD5E0;
     cursor: pointer;
     transition: all 0.1s;
     font-family: 'Fredoka', sans-serif;
-    min-height: clamp(50px, 8vh, 80px);
-    /* Responsive height */
+    min-height: 100px;
+    /* Fixed min-height for symmetry */
+    height: 100%;
+    /* Stretch to grid cell height */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1715,13 +1713,14 @@
 
 /* Landscape Mode: Question Scrollability & Layout */
 @media (max-height: 500px) and (orientation: landscape) {
+
     /* Make practice content scrollable */
     .practice-content-wrapper {
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         padding-bottom: 90px !important;
     }
-    
+
     /* Ensure question card doesn't have max-height restrictions */
     .question-card-modern {
         max-height: none !important;
@@ -1729,38 +1728,38 @@
         margin-bottom: 1.2rem !important;
         padding: 1.2rem !important;
     }
-    
+
     /* Make interaction area fully visible */
     .interaction-area-modern {
         max-height: none !important;
         overflow: visible !important;
     }
-    
+
     /* Reduce header height in landscape */
     .junior-practice-header {
         height: 55px !important;
     }
-    
+
     /* Smaller timer in landscape */
     .sun-timer-container {
         transform: translateY(-50%) scale(0.65) !important;
     }
-    
+
     .sun-timer {
         width: 50px !important;
         height: 50px !important;
     }
-    
+
     .timer-text {
         font-size: 0.85rem !important;
     }
-    
+
     /* Adjust footer height */
     .junior-bottom-bar {
         height: 58px !important;
         padding: 0 0.4rem !important;
     }
-    
+
     /* Smaller footer buttons in landscape */
     .nav-pill-next-btn,
     .nav-pill-submit-btn,
@@ -1769,19 +1768,19 @@
         font-size: 0.65rem !important;
         height: 28px !important;
     }
-    
+
     .view-explanation-btn {
         padding: 0.2rem 0.4rem !important;
         font-size: 0.6rem !important;
         height: 26px !important;
     }
-    
+
     /* Compact question text */
     .question-text-modern {
         font-size: 1rem !important;
         line-height: 1.3 !important;
     }
-    
+
     /* Smaller options */
     .option-btn-modern {
         min-height: 42px !important;
@@ -1792,29 +1791,30 @@
 
 /* Very Short Landscape Screens (e.g., folding phones) */
 @media (max-height: 400px) and (orientation: landscape) {
+
     /* More aggressive header reduction */
     .junior-practice-header {
         height: 48px !important;
     }
-    
+
     /* Smaller footer */
     .junior-bottom-bar {
         height: 52px !important;
     }
-    
+
     /* Even tighter question spacing */
     .question-card-modern {
         padding: 0.8rem !important;
         gap: 0.6rem !important;
     }
-    
+
     /* More compact option buttons */
     .option-btn-modern {
         min-height: 38px !important;
         padding: 0.4rem 0.7rem !important;
         font-size: 0.85rem !important;
     }
-    
+
     /* Tiny footer buttons */
     .nav-pill-next-btn,
     .nav-pill-submit-btn,
@@ -1822,5 +1822,39 @@
         padding: 0.15rem 0.35rem !important;
         font-size: 0.6rem !important;
         height: 26px !important;
+    }
+}
+
+/* NEW LANDSCAPE FIXES */
+@media (max-width: 900px) and (orientation: landscape) {
+    .practice-board-container {
+        display: flex !important;
+        flex-direction: row !important;
+        /* Use width! */
+        align-items: flex-start !important;
+        gap: 20px;
+        padding-top: 10px;
+    }
+
+    .practice-left-col {
+        width: 100% !important;
+    }
+
+    .question-card-modern {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 1rem !important;
+    }
+
+    .interaction-area-modern {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .options-grid-modern {
+        grid-template-columns: repeat(2, 1fr) !important;
+        /* Back to 2 cols if space allows */
     }
 }

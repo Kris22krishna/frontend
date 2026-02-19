@@ -81,6 +81,18 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+
+// Grade 5 Decimal Practice Components
+import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
+import FractionToDecimalConversion from './components/practice/class-5/TenthsandHundrendths/Decimals/fraction-to-decimal-conversion';
+import DecimalVisualRepresentation from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-visual-representation';
+import DecimalInMeasurement from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-measurement';
+import DecimalInMoney from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-money';
+import ComparingDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/comparing-decimals';
+import DecimalOperations from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-operations';
+import ConversionBetweenForms from './components/practice/class-5/TenthsandHundrendths/Decimals/conversion-between-forms';
+import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
+
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -117,6 +129,9 @@ import Grade1Numbers51to100 from './components/practice/grade-1/numbers-51-100';
 import IdentifyingShapes from './components/practice/class-2/what-is-long,what-is-round/identifying_shapes';
 import ComparingLengths from './components/practice/class-2/what-is-long,what-is-round/comparing_lengths';
 import RecognizingRoundObjects from './components/practice/class-2/what-is-long,what-is-round/recognizing_round_objects';
+import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
+import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
+import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -181,6 +196,17 @@ import FindingSpecificTerms from './components/practice/class-10/Arithmetic Prog
 import SumOfTerms from './components/practice/class-10/Arithmetic Progressions/SumOfTerms';
 import ArithmeticProgressionsTest from './components/practice/class-10/Arithmetic Progressions/ArithmeticProgressionsTest';
 
+// Class 10: Real Numbers
+import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
+import EuclidsDivision from './components/practice/class-10/Real Numbers/EuclidsDivision';
+import PrimeFactorisation from './components/practice/class-10/Real Numbers/PrimeFactorisation';
+import FundamentalTheoremArithmetic from './components/practice/class-10/Real Numbers/FundamentalTheoremArithmetic';
+import HCFandLCM from './components/practice/class-10/Real Numbers/HCFandLCM';
+import HCFLCMApplications from './components/practice/class-10/Real Numbers/HCFLCMApplications';
+import ProvingIrrationality from './components/practice/class-10/Real Numbers/ProvingIrrationality';
+import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
+import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
+
 // Grade 3 - Fair Share
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
 import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
@@ -201,6 +227,29 @@ import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Vi
 import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
+
+// Grade 4 - Weigh It, Pour It
+import GramToKilogramFractions from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/gram_to_kilogram_fractions';
+import MakeOneKilogramUsingPackets from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/make_one_kilogram_using_packets';
+import MillilitreToLitreFractions from './components/practice/class-4/Weigh_It_Pour_It/Capacity_Unit_Conversion/millilitre_to_litre_fractions';
+import MakeOneLitreUsingBottles from './components/practice/class-4/Weigh_It_Pour_It/Capacity_Unit_Conversion/make_one_litre_using_bottles';
+import CountHowManyUnitsFit from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/count_how_many_units_fit';
+import RepeatedAdditionToOneWhole from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/repeated_addition_to_one_whole';
+import CompareWeightsAndCapacities from './components/practice/class-4/Weigh_It_Pour_It/Comparison_of_Quantities/compare_weights_and_capacities';
+import WeightAndCapacityWordProblems from './components/practice/class-4/Weigh_It_Pour_It/Mixed_Measurement_Word_Problems/weight_and_capacity_word_problems';
+const ComingSoon = () => (
+  <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
+    <h1 className="text-6xl mb-4">🚧</h1>
+    <h2 className="text-3xl font-bold text-slate-800">Coming Soon!</h2>
+    <p className="text-slate-500 mt-2">This practice session is currently under development.</p>
+    <button
+      onClick={() => window.history.back()}
+      className="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+    >
+      Go Back
+    </button>
+  </div>
+);
 
 function App() {
   return (
@@ -301,6 +350,17 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Grade 5 - Tenths and Hundredths */}
+        <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/fraction-to-decimal" element={<FractionToDecimalConversion />} />
+        <Route path="/middle/grade/5/tenths-hundredths/visual-representation" element={<DecimalVisualRepresentation />} />
+        <Route path="/middle/grade/5/tenths-hundredths/measurement" element={<DecimalInMeasurement />} />
+        <Route path="/middle/grade/5/tenths-hundredths/money" element={<DecimalInMoney />} />
+        <Route path="/middle/grade/5/tenths-hundredths/comparing" element={<ComparingDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/operations" element={<DecimalOperations />} />
+        <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ConversionBetweenForms />} />
+        <Route path="/middle/grade/5/tenths-hundredths/word-problems" element={<DecimalWordProblems />} />
+
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
           <ProtectedRoute redirectTo="/login">
@@ -365,6 +425,48 @@ function App() {
         <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
           <ProtectedRoute redirectTo="/login">
             <LetUsPlay />
+          </ProtectedRoute>
+        } />
+
+        {/* Weigh It, Pour It Routes */}
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
+          <ProtectedRoute redirectTo="/login">
+            <GramToKilogramFractions />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-kilogram-using-packets" element={
+          <ProtectedRoute redirectTo="/login">
+            <MakeOneKilogramUsingPackets />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/millilitre-to-litre-fractions" element={
+          <ProtectedRoute redirectTo="/login">
+            <MillilitreToLitreFractions />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-litre-using-bottles" element={
+          <ProtectedRoute redirectTo="/login">
+            <MakeOneLitreUsingBottles />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/count-how-many-units-fit" element={
+          <ProtectedRoute redirectTo="/login">
+            <CountHowManyUnitsFit />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/repeated-addition-to-one-whole" element={
+          <ProtectedRoute redirectTo="/login">
+            <RepeatedAdditionToOneWhole />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/compare-weights-and-capacities" element={
+          <ProtectedRoute redirectTo="/login">
+            <CompareWeightsAndCapacities />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/weight-and-capacity-word-problems" element={
+          <ProtectedRoute redirectTo="/login">
+            <WeightAndCapacityWordProblems />
           </ProtectedRoute>
         } />
 
@@ -453,6 +555,9 @@ function App() {
         <Route path="/junior/grade/2/what-is-long-what-is-round/identifying-shapes" element={<ProtectedRoute redirectTo="/login"><IdentifyingShapes /></ProtectedRoute>} />
         <Route path="/junior/grade/2/what-is-long-what-is-round/comparing-lengths" element={<ProtectedRoute redirectTo="/login"><ComparingLengths /></ProtectedRoute>} />
         <Route path="/junior/grade/2/what-is-long-what-is-round/recognizing-round-objects" element={<ProtectedRoute redirectTo="/login"><RecognizingRoundObjects /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups/counting-in-pairs" element={<ProtectedRoute redirectTo="/login"><CountingInPairs /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups/skip-counting" element={<ProtectedRoute redirectTo="/login"><SkipCounting /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups/repeated-addition" element={<ProtectedRoute redirectTo="/login"><RepeatedAdditionClass2 /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
@@ -612,6 +717,17 @@ function App() {
         <Route path="/high/practice/10105" element={<SumOfTerms />} />
         <Route path="/high/practice/10106" element={<ArithmeticProgressionsTest />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
+
+        {/* Class 10: Real Numbers Routes */}
+        <Route path="/high/practice/10201" element={<RealNumberFoundations />} />
+        <Route path="/high/practice/10202" element={<EuclidsDivision />} />
+        <Route path="/high/practice/10203" element={<PrimeFactorisation />} />
+        <Route path="/high/practice/10204" element={<FundamentalTheoremArithmetic />} />
+        <Route path="/high/practice/10205" element={<HCFandLCM />} />
+        <Route path="/high/practice/10206" element={<HCFLCMApplications />} />
+        <Route path="/high/practice/10207" element={<ProvingIrrationality />} />
+        <Route path="/high/practice/10208" element={<IrrationalOperations />} />
+        <Route path="/high/practice/10209" element={<RealNumbersTest />} />
       </Routes>
     </Router>
   );

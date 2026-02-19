@@ -58,7 +58,7 @@ const JuniorGradeSyllabus = () => {
                 let skillsResponse = [];
 
                 // For Grade 1, 2 and 3, we skip fetching from API and use manual injection below
-                if (!isGrade1 && !isGrade2 && !isGrade3) {
+                if (!isGrade1 && !isGrade2 && !isGrade3 && !isGrade4) {
                     skillsResponse = await api.getSkills(gradeNumStr);
                 }
 
@@ -78,7 +78,7 @@ const JuniorGradeSyllabus = () => {
                 });
 
                 // Manually inject special topics for Grade 1, 2 and 3 if not present
-                if (isGrade1 || isGrade2 || isGrade3) {
+                if (isGrade1 || isGrade2 || isGrade3 || isGrade4) {
                     const gradeConfigs = TOPIC_CONFIGS[gradeNumStr] || {};
                     Object.entries(gradeConfigs).forEach(([topicName, skills]) => {
                         skills.forEach(skill => {

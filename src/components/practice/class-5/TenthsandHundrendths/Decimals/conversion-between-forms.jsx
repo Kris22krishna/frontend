@@ -1,221 +1,227 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { api } from "../../../../../services/api";
-import LatexContent from "../../../../LatexContent";
-import ExplanationModal from "../../../../ExplanationModal";
-import "../../../../../pages/juniors/JuniorPracticeSession.css";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { api } from '../../../../../services/api';
+import LatexContent from '../../../../LatexContent';
+import ExplanationModal from '../../../../ExplanationModal';
+import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const randomInt = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
-
-const TOTAL_QUESTIONS = 10;
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You got it! ✨",
-    "🌟 Brilliant! Keep it up! 🌟",
-    "🎉 Correct! You're a math-star! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
-    "🌈 Perfect! Well done! 🌈",
-    "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Excellent! 💎"
+    "✨ You're a shape-shifter of numbers! ✨",
+    "🌟 Conversion complete! Perfect! 🌟",
+    "🎉 Correct! You handle all forms of decimals beautifully! 🎉",
+    "✨ Great job! ✨",
+    "🚀 Mastering the forms! 🚀"
 ];
 
-const MultiDivWordProblems = () => {
+const ConversionBetweenForms = () => {
+    const { grade } = useParams();
     const navigate = useNavigate();
-
     const [qIndex, setQIndex] = useState(0);
-    const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [sessionId, setSessionId] = useState(null);
-    const [answers, setAnswers] = useState({});
-    const [showResults, setShowResults] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showResults, setShowResults] = useState(false);
 
+    // Logging states
+    const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
-    const usedQuestions = useRef([]);
+    const isTabActive = useRef(true);
+    const SKILL_ID = 1061;
+    const SKILL_NAME = "Conversion Between Forms";
 
-    const SKILL_ID = 9012;
-    const SKILL_NAME = "Mixed Skill Application Problems";
+    const TOTAL_QUESTIONS = 10;
+    const [sessionQuestions, setSessionQuestions] = useState([]);
+    const [answers, setAnswers] = useState({});
 
     useEffect(() => {
-        const userId =
-            sessionStorage.getItem("userId") || localStorage.getItem("userId");
-
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then((sess) => {
-                if (sess?.session_id) setSessionId(sess.session_id);
+            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
         }
 
-        const timer = setInterval(() => setTimeElapsed((p) => p + 1), 1000);
-        return () => clearInterval(timer);
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        const generateQuestions = () => {
+            const questions = [];
+            const usedValues = new Set();
+
+            // Easy (3 Questions)
+            while (questions.length < 3) {
+                const types = ['tenth', 'hundredth'];
+                const type = types[randomInt(0, 1)];
+                const val = type === 'tenth' ? randomInt(1, 9) : randomInt(5, 95);
+                const valStr = `easy-${type}-${val}`;
+
+                if (!usedValues.has(valStr)) {
+                    usedValues.add(valStr);
+                    let questionText, correctAnswer, solution, options;
+                    if (type === 'tenth') {
+                        questionText = `Convert the fraction $\\frac{${val}}{10}$ to a decimal.`;
+                        correctAnswer = `0.${val}`;
+                        solution = `$\\frac{1}{10}$ is one-tenth or $0.1$.<br/>So, $\\frac{${val}}{10}$ is $${val} \\times 0.1 =$ <strong>$${correctAnswer}$</strong>.`;
+                        options = [`0.${val}`, `0.0${val}`, `${val}.0`, `1.${val}`];
+                    } else {
+                        questionText = `Convert the fraction $\\frac{${val}}{100}$ to a decimal.`;
+                        correctAnswer = `0.${val.toString().padStart(2, '0')}`;
+                        solution = `$\\frac{1}{100}$ is one-hundredth or $0.01$.<br/>So, $\\frac{${val}}{100}$ is <strong>$${correctAnswer}$</strong>.`;
+                        options = [`0.${val.toString().padStart(2, '0')}`, `0.${val}`, `1.${val}`, `${val}.0`].filter((v, i, a) => a.indexOf(v) === i);
+                        while (options.length < 4) options.push(`0.00${randomInt(1, 9)}`);
+                    }
+                    questions.push({
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>
+                                ${questionText}
+                             </div>`,
+                        correctAnswer,
+                        solution,
+                        shuffledOptions: [...options].sort(() => Math.random() - 0.5)
+                    });
+                }
+            }
+
+            // Medium (3 Questions)
+            while (questions.length < 6) {
+                const types = ['mixed', 'decimalToFraction'];
+                const type = types[randomInt(0, 1)];
+                const w = randomInt(1, 5);
+                const n = randomInt(1, 9);
+                const valStr = `medium-${type}-${w}-${n}`;
+
+                if (!usedValues.has(valStr)) {
+                    usedValues.add(valStr);
+                    let questionText, correctAnswer, solution, options;
+                    if (type === 'mixed') {
+                        questionText = `Convert the mixed number $${w} \\frac{${n}}{10}$ to a decimal.`;
+                        correctAnswer = `${w}.${n}`;
+                        solution = `$${w}$ is the whole part. $\\frac{${n}}{10}$ is the decimal part ($0.${n}$).<br/>Total = $${w} + 0.${n} =$ <strong>$${correctAnswer}$</strong>.`;
+                        options = [`${w}.${n}`, `${w}.0${n}`, `0.${w}${n}`, `${w}${n}.0`];
+                    } else {
+                        const decs = [0.5, 0.25, 0.75, 0.2];
+                        const d = decs[randomInt(0, decs.length - 1)];
+                        questionText = `Express $${d}$ as a fraction in simplest form.`;
+                        const fracs = { 0.5: '\\frac{1}{2}', 0.25: '\\frac{1}{4}', 0.75: '\\frac{3}{4}', 0.2: '\\frac{1}{5}' };
+                        correctAnswer = `$${fracs[d]}$`;
+                        solution = `$${d} = \\frac{${d * 100}}{100}$. Simplified, it becomes <strong>$${fracs[d]}$</strong>.`;
+                        options = [`$${fracs[d]}$`, `$\\frac{${Math.floor(d * 10)}}{10}$`, `$\\frac{1}{10}$`, `$\\frac{2}{3}$`].filter((v, i, a) => a.indexOf(v) === i);
+                        while (options.length < 4) options.push(`$\\frac{${randomInt(1, 4)}}{${randomInt(5, 9)}}$`);
+                    }
+                    questions.push({
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>
+                                ${questionText}
+                             </div>`,
+                        correctAnswer,
+                        solution,
+                        shuffledOptions: [...options].sort(() => Math.random() - 0.5)
+                    });
+                }
+            }
+
+            // Hard (4 Questions)
+            while (questions.length < 10) {
+                const types = ['complexMixed', 'wordProblem'];
+                const type = types[randomInt(0, 1)];
+                const w = randomInt(10, 20);
+                const n = randomInt(5, 95);
+                const valStr = `hard-${type}-${w}-${n}`;
+
+                if (!usedValues.has(valStr)) {
+                    usedValues.add(valStr);
+                    let questionText, correctAnswer, solution, options;
+                    if (type === 'complexMixed') {
+                        questionText = `Convert $${w} \\frac{${n}}{100}$ to a decimal.`;
+                        correctAnswer = `${w}.${n.toString().padStart(2, '0')}`;
+                        solution = `$${w}$ is the whole number. $\\frac{${n}}{100} = 0.${n.toString().padStart(2, '0')}$.<br/>Combine them: <strong>${correctAnswer}</strong>.`;
+                        options = [correctAnswer, `${w}.0${n}`, `0.${w}${n}`, `${w}${n}.0`].filter((v, i, a) => a.indexOf(v) === i);
+                        while (options.length < 4) options.push(`${randomInt(1, 9)}.${randomInt(1, 9)}`);
+                    } else {
+                        const n1 = randomInt(1, 4);
+                        const n2 = randomInt(5, 9);
+                        questionText = `If a runner completes $${n1} \\frac{${n2}}{10}$ km, how many km is that in decimal form?`;
+                        correctAnswer = `${n1}.${n2}`;
+                        solution = `$${n1}$ km and $\\frac{${n2}}{10}$ km ($0.${n2}$ km) =$ <strong>$${n1}.${n2} \\text{ km}$</strong>.`;
+                        options = [`${n1}.${n2}`, `${n1}.0${n2}`, `0.${n1}${n2}`, `${n1}${n2}.0`];
+                    }
+                    questions.push({
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>
+                                ${questionText}
+                             </div>`,
+                        correctAnswer,
+                        solution,
+                        shuffledOptions: [...options].sort(() => Math.random() - 0.5)
+                    });
+                }
+            }
+            return questions;
+        };
+
+        setSessionQuestions(generateQuestions());
+
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, []);
 
-    useEffect(() => generateQuestion(), [qIndex]);
+    useEffect(() => {
+        if (showResults) return;
+        const timer = setInterval(() => {
+            setTimeElapsed(prev => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [showResults]);
 
-    // 📚 combo problems (multiplication + division)
-    const problems = [
-        () => {
-            const people = randomInt(100, 150);
-            const perDay = 8;
-            const days = 365;
-            return {
-                q: `${people} people drink ${perDay} glasses daily. How many glasses are used in a year?`,
-                a: people * perDay * days,
-            };
-        },
-        () => {
-            const litres = 8;
-            const price = 9;
-            const days = 30;
-            return {
-                q: `A cow gives ${litres} litres of milk daily. Milk sells at ₹${price} per litre. What is the earning in 30 days?`,
-                a: litres * price * days,
-            };
-        },
-        () => {
-            const perDay = randomInt(70, 100);
-            const months = 12;
-            const days = 30;
-            return {
-                q: `A worker earns ₹${perDay} per day. How much does he earn in ${months} months?`,
-                a: perDay * days * months,
-            };
-        },
-        () => {
-            const tanks = 25;
-            const buckets = 15;
-            return {
-                q: `One tank fills ${buckets} buckets. How many buckets will 25 tanks fill?`,
-                a: tanks * buckets,
-            };
-        },
-        () => {
-            const kg = 12;
-            const laddoosPerKg = 28;
-            const perBox = 16;
-            return {
-                q: `There are ${laddoosPerKg} laddoos in 1 kg. How many boxes are needed to pack ${kg} kg if 16 laddoos fit in one box?`,
-                a: Math.ceil((kg * laddoosPerKg) / perBox),
-            };
-        },
-        () => {
-            const rooms = 26;
-            const plants = 4;
-            const cups = 2;
-            return {
-                q: `A school has ${rooms} rooms with ${plants} plants each. Each plant needs ${cups} cups of water. How many cups are needed?`,
-                a: rooms * plants * cups,
-            };
-        },
-        () => {
-            const goats = 17;
-            const earningPerGoat = 1;
-            const days = 30;
-            return {
-                q: `A boy earns ₹${earningPerGoat} per goat per day for ${goats} goats. How much does he earn in 30 days?`,
-                a: goats * earningPerGoat * days,
-            };
-        },
-        () => {
-            const perMonth = 2750;
-            const years = 2;
-            return {
-                q: `A loan of ₹${perMonth} is paid every month for ${years} years. What is the total amount paid?`,
-                a: perMonth * 12 * years,
-            };
-        },
-        () => {
-            const trees = 458;
-            const perRow = 15;
-            return {
-                q: `A gardener plants ${perRow} trees in each row from ${trees} trees. How many rows can he plant?`,
-                a: Math.floor(trees / perRow),
-            };
-        },
-        () => {
-            const hours = 2000;
-            return {
-                q: `A battery runs for ${hours} hours. How many days will it run if used continuously?`,
-                a: Math.floor(hours / 24),
-            };
-        },
-    ];
-
-    const generateQuestion = () => {
-        if (usedQuestions.current.length === problems.length) {
-            usedQuestions.current = [];
-        }
-
-        let index;
-        do {
-            index = randomInt(0, problems.length - 1);
-        } while (usedQuestions.current.includes(index));
-
-        usedQuestions.current.push(index);
-
-        const { q, a } = problems[index]();
-        const correct = a.toString();
-
-        let opts = [correct];
-        while (opts.length < 4) {
-            let fake = a + randomInt(-100, 100);
-            if (fake > 0 && !opts.includes(fake.toString()))
-                opts.push(fake.toString());
-        }
-
-        setShuffledOptions(opts.sort(() => Math.random() - 0.5));
-
-        setCurrentQuestion({
-            text: `<div class='question-container'><p>${q}</p></div>`,
-            correctAnswer: correct,
-            solution: `<strong>Solution:</strong><br/>Carefully follow the steps described in the problem using multiplication or division.<br/><br/>Answer = <strong>${correct}</strong>`,
-            difficulty: 'Hard'
-        });
-
-        setSelectedOption(null);
-        setIsSubmitted(false);
-        setIsCorrect(false);
-    };
-
-    const handleCheck = () => {
-        if (!selectedOption) return;
-        const right = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(right);
-        setIsSubmitted(true);
-        setAnswers((p) => ({
-            ...p,
-            [qIndex]: {
-                isCorrect: right,
-                selected: selectedOption,
-                questionText: currentQuestion.text,
-                correctAnswer: currentQuestion.correctAnswer,
-                solution: currentQuestion.solution
+    useEffect(() => {
+        if (sessionQuestions.length > 0) {
+            const qData = sessionQuestions[qIndex];
+            setCurrentQuestion(qData);
+            setShuffledOptions(qData.shuffledOptions);
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
+                setIsSubmitted(true);
+                setIsCorrect(previousAnswer.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
             }
-        }));
-
-        if (right) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setShowExplanationModal(true);
         }
-        recordQuestionAttempt(currentQuestion, selectedOption, right);
+    }, [qIndex, sessionQuestions]);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     const recordQuestionAttempt = async (question, selected, isCorrect) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
 
-        let timeSpent = accumulatedTime.current + (Date.now() - questionStartTime.current);
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
         const seconds = Math.round(timeSpent / 1000);
 
         try {
@@ -223,7 +229,8 @@ const MultiDivWordProblems = () => {
                 user_id: parseInt(userId, 10),
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                difficulty_level: question.difficulty || 'Hard',
+                template_id: null,
+                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
                 question_text: String(question.text || ''),
                 correct_answer: String(question.correctAnswer || ''),
                 student_answer: String(selected || ''),
@@ -238,17 +245,20 @@ const MultiDivWordProblems = () => {
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
-            setQIndex((p) => p + 1);
+            setQIndex(prev => prev + 1);
+            setShowExplanationModal(false);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
-            setShowExplanationModal(false);
         } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 try {
                     await api.createReport({
-                        title: 'Multiplication & Division Report',
+                        title: SKILL_NAME,
                         type: 'practice',
                         score: (totalCorrect / TOTAL_QUESTIONS) * 100,
                         parameters: {
@@ -270,10 +280,25 @@ const MultiDivWordProblems = () => {
         }
     };
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    const handleCheck = () => {
+        if (!selectedOption || !currentQuestion) return;
+        const isRight = selectedOption === currentQuestion.correctAnswer;
+        setIsCorrect(isRight);
+        setIsSubmitted(true);
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
+
+        if (isRight) {
+            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+        } else {
+            setShowExplanationModal(true);
+        }
+
+        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+    };
+
+    const handleOptionSelect = (option) => {
+        if (isSubmitted) return;
+        setSelectedOption(option);
     };
 
     const handlePrevious = () => {
@@ -314,13 +339,13 @@ const MultiDivWordProblems = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Multiplication & Division Report</h1>
+                        <h1 className="results-title">Conversion Report</h1>
                     </div>
                 </header>
 
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Sharply Calculated! 🎉</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Master of Forms! 🎉</h2>
 
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
@@ -361,9 +386,9 @@ const MultiDivWordProblems = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Problem Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Conversion Log 📜</h3>
                         <div className="space-y-4">
-                            {Array.from({ length: TOTAL_QUESTIONS }).map((_, idx) => {
+                            {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
@@ -380,7 +405,7 @@ const MultiDivWordProblems = () => {
                                             </div>
                                             <div className="flex-1">
                                                 <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
-                                                    <LatexContent html={ans.questionText} />
+                                                    <LatexContent html={q.text} />
                                                 </div>
 
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
@@ -394,7 +419,7 @@ const MultiDivWordProblems = () => {
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
                                                             <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
                                                             <span className="text-lg font-black text-[#31326F]">
-                                                                <LatexContent html={ans.correctAnswer} />
+                                                                <LatexContent html={q.correctAnswer} />
                                                             </span>
                                                         </div>
                                                     )}
@@ -403,7 +428,7 @@ const MultiDivWordProblems = () => {
                                                 <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
                                                     <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
                                                     <div className="text-sm font-medium text-gray-600 leading-relaxed">
-                                                        <LatexContent html={ans.solution} />
+                                                        <LatexContent html={q.solution} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -438,11 +463,13 @@ const MultiDivWordProblems = () => {
                         <X size={24} />
                     </button>
                 </div>
+
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
+
                 <div className="header-right">
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
@@ -454,31 +481,48 @@ const MultiDivWordProblems = () => {
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
-                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
+                            <motion.div
+                                key={qIndex}
+                                initial={{ x: 50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -50, opacity: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                style={{ height: '100%', width: '100%' }}
+                            >
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', fontWeight: '500', textAlign: 'center' }}>
+                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
-                                            {shuffledOptions.map((opt, i) => (
+                                            {shuffledOptions.map((option, idx) => (
                                                 <button
-                                                    key={i}
-                                                    onClick={() => !isSubmitted && setSelectedOption(opt)}
-                                                    className={`option-btn-modern ${selectedOption === opt ? "selected" : ""
-                                                        } ${isSubmitted && opt === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}`}
-                                                    style={{ fontWeight: '500', fontSize: '1.2rem', fontFamily: '"Proxima Nova", sans-serif' }}
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                                        } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
+                                                        }`}
+                                                    style={{
+                                                        fontFamily: '"Open Sans", sans-serif',
+                                                        fontWeight: '500',
+                                                        fontSize: '1.2rem',
+                                                        padding: '1rem'
+                                                    }}
+                                                    onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
-                                                    {opt}
+                                                    <LatexContent html={option} />
                                                 </button>
                                             ))}
                                         </div>
                                         {isSubmitted && isCorrect && (
-                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>
+                                            <motion.div
+                                                initial={{ scale: 0.5, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                className="feedback-mini correct"
+                                                style={{ marginTop: '20px' }}
+                                            >
                                                 {feedbackMessage}
                                             </motion.div>
                                         )}
@@ -587,4 +631,4 @@ const MultiDivWordProblems = () => {
     );
 };
 
-export default MultiDivWordProblems;
+export default ConversionBetweenForms;
