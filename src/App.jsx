@@ -81,6 +81,18 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+
+// Grade 5 Decimal Practice Components
+import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
+import FractionToDecimalConversion from './components/practice/class-5/TenthsandHundrendths/Decimals/fraction-to-decimal-conversion';
+import DecimalVisualRepresentation from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-visual-representation';
+import DecimalInMeasurement from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-measurement';
+import DecimalInMoney from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-money';
+import ComparingDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/comparing-decimals';
+import DecimalOperations from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-operations';
+import ConversionBetweenForms from './components/practice/class-5/TenthsandHundrendths/Decimals/conversion-between-forms';
+import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
+
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -196,6 +208,20 @@ import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Vi
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
 
+const ComingSoon = () => (
+  <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
+    <h1 className="text-6xl mb-4">🚧</h1>
+    <h2 className="text-3xl font-bold text-slate-800">Coming Soon!</h2>
+    <p className="text-slate-500 mt-2">This practice session is currently under development.</p>
+    <button
+      onClick={() => window.history.back()}
+      className="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+    >
+      Go Back
+    </button>
+  </div>
+);
+
 function App() {
   return (
     <Router>
@@ -294,6 +320,17 @@ function App() {
             <ComparingLargeSmallNumbers />
           </ProtectedRoute>
         } />
+
+        {/* Grade 5 - Tenths and Hundredths */}
+        <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/fraction-to-decimal" element={<FractionToDecimalConversion />} />
+        <Route path="/middle/grade/5/tenths-hundredths/visual-representation" element={<DecimalVisualRepresentation />} />
+        <Route path="/middle/grade/5/tenths-hundredths/measurement" element={<DecimalInMeasurement />} />
+        <Route path="/middle/grade/5/tenths-hundredths/money" element={<DecimalInMoney />} />
+        <Route path="/middle/grade/5/tenths-hundredths/comparing" element={<ComparingDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/operations" element={<DecimalOperations />} />
+        <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ConversionBetweenForms />} />
+        <Route path="/middle/grade/5/tenths-hundredths/word-problems" element={<DecimalWordProblems />} />
 
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
