@@ -88,6 +88,9 @@ import Tambola from './components/practice/class-3/House-of-Hundreds-II/Tambola'
 import SkipAndSolve from './components/practice/class-3/House-of-Hundreds-II/skip-&-solve';
 import NumberInTheCentre from './components/practice/class-3/House-of-Hundreds-II/number-in-the-centre';
 import NumberPuzzles from './components/practice/class-3/House-of-Hundreds-II/number-puzzles';
+import TheNumberDetective from './components/practice/class-3/House-of-Hundreds-II/The-number-detective';
+import PaperSlips from './components/practice/class-3/House-of-Hundreds-II/Paper-slips';
+import GuessTheNumber from './components/practice/class-3/House-of-Hundreds-II/Guess-the-number';
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -283,6 +286,24 @@ function App() {
         <Route path="/junior/grade/:grade/house-of-hundreds-ii/number-puzzles" element={
           <ProtectedRoute redirectTo="/login">
             <NumberPuzzles />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/the-number-detective" element={
+          <ProtectedRoute redirectTo="/login">
+            <TheNumberDetective />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/paper-slips" element={
+          <ProtectedRoute redirectTo="/login">
+            <PaperSlips />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/guess-the-number" element={
+          <ProtectedRoute redirectTo="/login">
+            <GuessTheNumber />
           </ProtectedRoute>
         } />
 

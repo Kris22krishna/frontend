@@ -95,6 +95,18 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-puzzles`);
             return;
         }
+        if (subtopic.id === "HH2-08") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/the-number-detective`);
+            return;
+        }
+        if (subtopic.id === "HH2-09") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/paper-slips`);
+            return;
+        }
+        if (subtopic.id === "HH2-10") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/guess-the-number`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village routing
         const gradeNum = grade.replace('grade', '');

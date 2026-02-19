@@ -81,7 +81,10 @@ export const TOPIC_CONFIGS = {
             { id: "HH2-04", name: "Tambola" },
             { id: "HH2-05", name: "Skip and solve" },
             { id: "HH2-06", name: "Number in the centre" },
-            { id: "HH2-07", name: "Number Puzzles" }
+            { id: "HH2-07", name: "Number Puzzles" },
+            { id: "HH2-08", name: "The Number Detective" },
+            { id: "HH2-09", name: "Paper Slips" },
+            { id: "HH2-10", name: "Guess the Number" }
         ]
     },
     '4': {
