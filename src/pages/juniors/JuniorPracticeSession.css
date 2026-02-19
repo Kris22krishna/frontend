@@ -199,7 +199,8 @@
     position: relative;
     z-index: 10;
     border: 4px solid #FFFFFF;
-    overflow: hidden;
+    overflow-y: auto; /* ENABLE GLOBAL SCROLL */
+    overflow-x: hidden;
 }
 
 /* Question Styling */
@@ -248,15 +249,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: 1;
-    min-height: 0;
+    flex: none; /* Allow it to grow */
+    min-height: min-content;
     /* Crucial for nested flex scrolling */
     justify-content: flex-start;
     /* Start from top */
-    overflow-y: auto;
+    overflow-y: visible; /* DISABLE INTERNAL SCROLL */
     padding-top: 0.5rem;
     padding-bottom: 3rem;
     /* Extra padding at bottom */
+    height: auto;
 }
 
 

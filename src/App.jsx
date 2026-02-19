@@ -132,6 +132,12 @@ import PatternsInShapes from './components/practice/grade-6/patterns-in-mathemat
 import NumbersCanTellUsThings from './components/practice/grade-6/number-play/NumbersCanTellUsThings';
 import Supercells from './components/practice/grade-6/number-play/Supercells';
 import GrowingPatterns from './components/practice/grade-6/number-play/GrowingPatterns';
+import CollectingAndOrganisingData from './components/practice/grade-6/DataHandlingAndPresentation/CollectingAndOrganisingData';
+import Pictographs from './components/practice/grade-6/DataHandlingAndPresentation/Pictographs';
+import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation/BarGraphs';
+import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
+import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -462,6 +468,11 @@ function App() {
         <Route path="/middle/grade/6/number-play/supercells" element={<Supercells />} />
         <Route path="/middle/grade/6/number-play/growing-patterns" element={<GrowingPatterns />} />
         <Route path="/middle/grade/6/number-play/playing-with-digits" element={<PlayingWithDigits />} />
+        <Route path="/middle/grade/6/data-handling/collecting-organising" element={<CollectingAndOrganisingData />} />
+        <Route path="/middle/grade/6/data-handling/pictographs" element={<Pictographs />} />
+        <Route path="/middle/grade/6/data-handling/bar-graphs" element={<BarGraphs />} />
+        <Route path="/middle/grade/6/data-handling/drawing-a-bar-graph" element={<DrawingABarGraph />} />
+        <Route path="/middle/grade/6/data-handling/figure-it-out" element={<FigureItOut />} />
         <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
         <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
         <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />
