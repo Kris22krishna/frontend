@@ -1,32 +1,17 @@
 /* Junior Practice Session - Modern Reference Design */
 
 .junior-practice-page {
-    position: fixed;
-    /* Force full viewport coverage */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-
-    @supports (height: 100dvh) {
-        height: 100dvh;
-    }
-
+    position: relative;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     background-color: #E0F7FA;
-    /* Light cyan background */
-    font-family: 'Fredoka',
-    'Nunito',
-    sans-serif;
-    overflow: hidden;
+    font-family: 'Fredoka', 'Nunito', sans-serif;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     z-index: 50;
-    /* Ensure on top of other layout elements */
 }
 
 /* Ensure global box-sizing for this component's children if not already set globally */
@@ -99,16 +84,13 @@
 .practice-content-wrapper {
     flex: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    /* Prevents top-clipping on long content */
     justify-content: center;
     position: relative;
-    padding: 0 1rem;
-    /* Reduced padding */
-    padding-bottom: 90px;
-    /* Space for bottom bar */
-    height: calc(100vh - 80px);
-    /* Fill remaining height */
-    overflow: hidden;
+    padding: 2rem 1rem 120px 1rem;
+    /* More top padding, extra bottom space */
+    min-height: calc(100vh - 80px);
 }
 
 
@@ -121,9 +103,9 @@
     gap: 1.5rem;
     width: 100%;
     max-width: 1400px;
-    height: 100%;
+    height: auto;
     /* Ensure it fits in viewport */
-    max-height: 100%;
+    min-height: 100%;
     padding: 0 1rem;
     align-items: center;
 }
@@ -241,7 +223,7 @@
 .question-text-modern {
     /* Fluid scaling: Min 1.2rem, Preferred 2.5vw, Max 2rem */
     font-size: clamp(1.2rem, 2.5vw, 2.2rem);
-    font-weight: 800;
+    font-weight: 500;
     color: #2D3748;
     line-height: 1.5;
     /* Improved line height */
@@ -297,7 +279,7 @@
     /* Increased padding */
     /* Fluid font size for options */
     font-size: clamp(1rem, 2vw, 1.5rem);
-    font-weight: 700;
+    font-weight: 500;
     color: #4A5568;
     box-shadow: 0 4px 0 #CBD5E0;
     cursor: pointer;
