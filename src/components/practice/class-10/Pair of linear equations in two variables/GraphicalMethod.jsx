@@ -603,7 +603,7 @@ const GraphicalMethod = () => {
                                             style={{
                                                 flex: 1,
                                                 padding: '0.8rem',
-                                                background: '#FEE2E2', color: '#DC2626', border: 'none', borderRadius: '12px',
+                                                background: '#FEE2E2', color: '#DC2626', borderRadius: '12px',
                                                 fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s', border: '2px solid transparent'
                                             }}
                                             onMouseOver={(e) => e.currentTarget.style.borderColor = '#FCA5A5'}

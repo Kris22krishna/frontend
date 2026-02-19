@@ -244,15 +244,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: 1;
-    min-height: 0;
+    flex: none; /* Allow it to grow */
+    min-height: min-content;
+    /* Crucial for nested flex scrolling */
     justify-content: flex-start;
-    /* Remove separate scroll from here as parent now scrolls */
-    overflow: visible;
+    /* Start from top */
+    overflow-y: visible; /* DISABLE INTERNAL SCROLL */
     padding-top: 0.5rem;
     padding-bottom: 3rem;
-    flex-shrink: 0;
-    /* Prevent crushing */
+    /* Extra padding at bottom */
+    height: auto;
 }
 
 

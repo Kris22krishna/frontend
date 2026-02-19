@@ -67,6 +67,11 @@ export const TOPIC_CONFIGS = {
             { id: "1002", name: "Comparing lengths", route: "comparing-lengths" },
             { id: "1003", name: "Recognizing round objects", route: "recognizing-round-objects" }
         ],
+        'How Much Can You Carry?': [
+            { id: "1007", name: "Comparing weights", route: "comparing-weights" },
+            { id: "1008", name: "Heavier/lighter", route: "heavier-lighter" },
+            { id: "1009", name: "Estimating weight", route: "estimating-weight" }
+        ],
         'Counting in Groups': [
             { id: "1004", name: "Counting in pairs", route: "counting-in-pairs" },
             { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "skip-counting" },
