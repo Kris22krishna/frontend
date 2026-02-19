@@ -152,6 +152,17 @@ import ConditionsForConsistency from './components/practice/class-10/Pair of lin
 import ApplicationProblems from './components/practice/class-10/Pair of linear equations in two variables/ApplicationProblems';
 import StandardFormEquations from './components/practice/class-10/Pair of linear equations in two variables/StandardFormEquations';
 
+// Class 10: Real Numbers
+import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
+import EuclidsDivision from './components/practice/class-10/Real Numbers/EuclidsDivision';
+import PrimeFactorisation from './components/practice/class-10/Real Numbers/PrimeFactorisation';
+import FundamentalTheoremArithmetic from './components/practice/class-10/Real Numbers/FundamentalTheoremArithmetic';
+import HCFandLCM from './components/practice/class-10/Real Numbers/HCFandLCM';
+import HCFLCMApplications from './components/practice/class-10/Real Numbers/HCFLCMApplications';
+import ProvingIrrationality from './components/practice/class-10/Real Numbers/ProvingIrrationality';
+import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
+import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
+
 // Grade 3 - Fair Share
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
 import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
@@ -518,6 +529,17 @@ function App() {
         <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
+
+        {/* Class 10: Real Numbers Routes */}
+        <Route path="/high/practice/10201" element={<RealNumberFoundations />} />
+        <Route path="/high/practice/10202" element={<EuclidsDivision />} />
+        <Route path="/high/practice/10203" element={<PrimeFactorisation />} />
+        <Route path="/high/practice/10204" element={<FundamentalTheoremArithmetic />} />
+        <Route path="/high/practice/10205" element={<HCFandLCM />} />
+        <Route path="/high/practice/10206" element={<HCFLCMApplications />} />
+        <Route path="/high/practice/10207" element={<ProvingIrrationality />} />
+        <Route path="/high/practice/10208" element={<IrrationalOperations />} />
+        <Route path="/high/practice/10209" element={<RealNumbersTest />} />
       </Routes>
     </Router>
   );
