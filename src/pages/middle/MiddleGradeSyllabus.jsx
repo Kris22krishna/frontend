@@ -302,6 +302,54 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/rational-numbers/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-plane-solid',
+                            skill_name: 'Plane Figures and Solid Shapes',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/plane-figures-solid-shapes'
+                        },
+                        {
+                            skill_id: 'local-fev',
+                            skill_name: 'Faces, Edges and Vertices',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/faces-edges-vertices'
+                        },
+                        {
+                            skill_id: 'local-nets',
+                            skill_name: 'Nets for Building 3-D Shapes',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/nets'
+                        },
+                        {
+                            skill_id: 'local-drawing',
+                            skill_name: 'Drawing Solids on a Flat Surface',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/drawing-solids'
+                        },
+                        {
+                            skill_id: 'local-sections',
+                            skill_name: 'Viewing Different Sections of a Solid',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/viewing-sections'
+                        },
+                        {
+                            skill_id: 'local-vss-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/chapter-test'
                         }
                     ];
                 }
@@ -322,10 +370,10 @@ const MiddleGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
-        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5
+        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers") && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes") && !skill.isLocal) return acc;
 
 
         const topic = skill.topic || 'General';
@@ -336,6 +384,181 @@ const MiddleGradeSyllabus = () => {
         acc[topic][subTopic].push(skill);
         return acc;
     }, {});
+
+    const gradeInt = parseInt(grade.replace('grade', ''));
+
+
+    // Manual Override for Grade 5 Tenths and Hundredths
+    if (gradeInt === 5) {
+        skillsByTopic['Tenths and Hundredths'] = {
+            'Decimals': [
+                {
+                    skill_id: '1054',
+                    skill_name: 'Place Values of Decimals',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/place-values'
+                },
+                {
+                    skill_id: '1055',
+                    skill_name: 'Fraction to Decimal Conversion',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/fraction-to-decimal'
+                },
+                {
+                    skill_id: '1056',
+                    skill_name: 'Decimal Visual Representation',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/visual-representation'
+                },
+                {
+                    skill_id: '1057',
+                    skill_name: 'Decimal in Measurement',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/measurement'
+                },
+                {
+                    skill_id: '1058',
+                    skill_name: 'Decimal in Money',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/money'
+                },
+                {
+                    skill_id: '1059',
+                    skill_name: 'Comparing Decimals',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/comparing'
+                },
+                {
+                    skill_id: '1060',
+                    skill_name: 'Decimal Operations',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/operations'
+                },
+                {
+                    skill_id: '1061',
+                    skill_name: 'Conversion Between Forms',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Decimals',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/conversion'
+                }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '1142',
+                    skill_name: 'Decimal Word Problems',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/word-problems'
+                }
+            ]
+        };
+
+        skillsByTopic['Ways to Multiply and Divide'] = {
+            'Multiplication': [
+                {
+                    skill_id: '9003',
+                    skill_name: 'Multiplication of 2-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9003'
+                },
+                {
+                    skill_id: '9004',
+                    skill_name: 'Multiplication of 3-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9004'
+                },
+                {
+                    skill_id: '9005',
+                    skill_name: 'Multiplication of multiple numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9005'
+                },
+                {
+                    skill_id: '9006',
+                    skill_name: 'Multiplication of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9006'
+                },
+                {
+                    skill_id: '9007',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9007'
+                }
+            ],
+            'Division': [
+                {
+                    skill_id: '9008',
+                    skill_name: 'Divide by 1-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9008'
+                },
+                {
+                    skill_id: '9009',
+                    skill_name: 'Divide by 2-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9009'
+                },
+                {
+                    skill_id: '9010',
+                    skill_name: 'Division of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9010'
+                },
+                {
+                    skill_id: '9011',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9011'
+                }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '9012',
+                    skill_name: 'Mixed Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/practice/9012'
+                }
+            ]
+        };
+    }
+
 
     // Manual Override for Grade 6 Perimeter and Area
     if (parseInt(grade.replace('grade', '')) === 6) {
@@ -404,8 +627,8 @@ const MiddleGradeSyllabus = () => {
                     {Object.entries(skillsByTopic).map(([topic, subTopics], index) => {
                         const accentColor = getAccentColor(index);
 
-                        // Define fixed order for sub-topics in "Ways to Multiply and Divide"
-                        const subTopicOrder = ["Multiplication", "Division", "Skill Application Problems"];
+                        // Define fixed order for sub-topics
+                        const subTopicOrder = ["Multiplication", "Division", "Decimals", "Skill Application Problems"];
                         const orderedSubTopics = Object.entries(subTopics).sort(([a], [b]) => {
                             const indexA = subTopicOrder.indexOf(a);
                             const indexB = subTopicOrder.indexOf(b);

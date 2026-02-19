@@ -81,6 +81,18 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+
+// Grade 5 Decimal Practice Components
+import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
+import FractionToDecimalConversion from './components/practice/class-5/TenthsandHundrendths/Decimals/fraction-to-decimal-conversion';
+import DecimalVisualRepresentation from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-visual-representation';
+import DecimalInMeasurement from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-measurement';
+import DecimalInMoney from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-in-money';
+import ComparingDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/comparing-decimals';
+import DecimalOperations from './components/practice/class-5/TenthsandHundrendths/Decimals/decimal-operations';
+import ConversionBetweenForms from './components/practice/class-5/TenthsandHundrendths/Decimals/conversion-between-forms';
+import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
+
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -93,6 +105,14 @@ import Associativity from './components/practice/class-8/rational-numbers/associ
 import Commutativity from './components/practice/class-8/rational-numbers/commutativity';
 import AdditiveMultiplicativeIdentity from './components/practice/class-8/rational-numbers/additive_multiplicative_identity';
 import Distributivity from './components/practice/class-8/rational-numbers/distributivity';
+import AreaOfPolygon from './components/practice/class-8/mensuration/area_of_polygon';
+import SurfaceAreaCuboid from './components/practice/class-8/mensuration/surface_area_cuboid';
+import SurfaceAreaCube from './components/practice/class-8/mensuration/surface_area_cube';
+import SurfaceAreaCylinder from './components/practice/class-8/mensuration/surface_area_cylinder';
+import VolumeOfCube from './components/practice/class-8/mensuration/volume_of_cube';
+import VolumeOfCuboid from './components/practice/class-8/mensuration/volume_of_cuboid';
+import VolumeOfCylinder from './components/practice/class-8/mensuration/volume_of_cylinder';
+import VolumeAndCapacity from './components/practice/class-8/mensuration/volume_and_capacity';
 
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
@@ -106,6 +126,12 @@ import Grade1Numbers21to50 from './components/practice/grade-1/numbers-21-50';
 import Grade1DataHandling from './components/practice/grade-1/data-handling';
 import Grade1Patterns from './components/practice/grade-1/patterns';
 import Grade1Numbers51to100 from './components/practice/grade-1/numbers-51-100';
+import IdentifyingShapes from './components/practice/class-2/what-is-long,what-is-round/identifying_shapes';
+import ComparingLengths from './components/practice/class-2/what-is-long,what-is-round/comparing_lengths';
+import RecognizingRoundObjects from './components/practice/class-2/what-is-long,what-is-round/recognizing_round_objects';
+import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
+import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
+import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -141,6 +167,12 @@ import ComparisonOfRationalNumbers from './components/practice/class-7/rational 
 import RationalNumbersBetween from './components/practice/class-7/rational numbers/RationalNumbersBetween';
 import OperationsOnRationalNumbers from './components/practice/class-7/rational numbers/OperationsOnRationalNumbers';
 import RationalNumbersTest from './components/practice/class-7/rational numbers/RationalNumbersTest';
+import PlaneFiguresSolidShapes from './components/practice/class-7/visualising solid shapes/PlaneFiguresSolidShapes';
+import FacesEdgesVertices from './components/practice/class-7/visualising solid shapes/FacesEdgesVertices';
+import NetsBuilding3DShapes from './components/practice/class-7/visualising solid shapes/NetsBuilding3DShapes';
+import DrawingSolids from './components/practice/class-7/visualising solid shapes/DrawingSolids';
+import ViewingSections from './components/practice/class-7/visualising solid shapes/ViewingSections';
+import VisualisingSolidShapesTest from './components/practice/class-7/visualising solid shapes/VisualisingSolidShapesTest';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -151,6 +183,12 @@ import AlgebraicMethods from './components/practice/class-10/Pair of linear equa
 import ConditionsForConsistency from './components/practice/class-10/Pair of linear equations in two variables/ConditionsForConsistency';
 import ApplicationProblems from './components/practice/class-10/Pair of linear equations in two variables/ApplicationProblems';
 import StandardFormEquations from './components/practice/class-10/Pair of linear equations in two variables/StandardFormEquations';
+import RecognisingPatterns from './components/practice/class-10/Arithmetic Progressions/RecognisingPatterns';
+import UnderstandingAP from './components/practice/class-10/Arithmetic Progressions/UnderstandingAP';
+import IdentifyingTerms from './components/practice/class-10/Arithmetic Progressions/IdentifyingTerms';
+import FindingSpecificTerms from './components/practice/class-10/Arithmetic Progressions/FindingSpecificTerms';
+import SumOfTerms from './components/practice/class-10/Arithmetic Progressions/SumOfTerms';
+import ArithmeticProgressionsTest from './components/practice/class-10/Arithmetic Progressions/ArithmeticProgressionsTest';
 
 // Class 10: Real Numbers
 import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
@@ -183,6 +221,29 @@ import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Vi
 import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
+
+// Grade 4 - Weigh It, Pour It
+import GramToKilogramFractions from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/gram_to_kilogram_fractions';
+import MakeOneKilogramUsingPackets from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/make_one_kilogram_using_packets';
+import MillilitreToLitreFractions from './components/practice/class-4/Weigh_It_Pour_It/Capacity_Unit_Conversion/millilitre_to_litre_fractions';
+import MakeOneLitreUsingBottles from './components/practice/class-4/Weigh_It_Pour_It/Capacity_Unit_Conversion/make_one_litre_using_bottles';
+import CountHowManyUnitsFit from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/count_how_many_units_fit';
+import RepeatedAdditionToOneWhole from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/repeated_addition_to_one_whole';
+import CompareWeightsAndCapacities from './components/practice/class-4/Weigh_It_Pour_It/Comparison_of_Quantities/compare_weights_and_capacities';
+import WeightAndCapacityWordProblems from './components/practice/class-4/Weigh_It_Pour_It/Mixed_Measurement_Word_Problems/weight_and_capacity_word_problems';
+const ComingSoon = () => (
+  <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
+    <h1 className="text-6xl mb-4">🚧</h1>
+    <h2 className="text-3xl font-bold text-slate-800">Coming Soon!</h2>
+    <p className="text-slate-500 mt-2">This practice session is currently under development.</p>
+    <button
+      onClick={() => window.history.back()}
+      className="mt-8 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+    >
+      Go Back
+    </button>
+  </div>
+);
 
 function App() {
   return (
@@ -283,6 +344,17 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Grade 5 - Tenths and Hundredths */}
+        <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/fraction-to-decimal" element={<FractionToDecimalConversion />} />
+        <Route path="/middle/grade/5/tenths-hundredths/visual-representation" element={<DecimalVisualRepresentation />} />
+        <Route path="/middle/grade/5/tenths-hundredths/measurement" element={<DecimalInMeasurement />} />
+        <Route path="/middle/grade/5/tenths-hundredths/money" element={<DecimalInMoney />} />
+        <Route path="/middle/grade/5/tenths-hundredths/comparing" element={<ComparingDecimals />} />
+        <Route path="/middle/grade/5/tenths-hundredths/operations" element={<DecimalOperations />} />
+        <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ConversionBetweenForms />} />
+        <Route path="/middle/grade/5/tenths-hundredths/word-problems" element={<DecimalWordProblems />} />
+
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
           <ProtectedRoute redirectTo="/login">
@@ -350,6 +422,48 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Weigh It, Pour It Routes */}
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
+          <ProtectedRoute redirectTo="/login">
+            <GramToKilogramFractions />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-kilogram-using-packets" element={
+          <ProtectedRoute redirectTo="/login">
+            <MakeOneKilogramUsingPackets />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/millilitre-to-litre-fractions" element={
+          <ProtectedRoute redirectTo="/login">
+            <MillilitreToLitreFractions />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-litre-using-bottles" element={
+          <ProtectedRoute redirectTo="/login">
+            <MakeOneLitreUsingBottles />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/count-how-many-units-fit" element={
+          <ProtectedRoute redirectTo="/login">
+            <CountHowManyUnitsFit />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/repeated-addition-to-one-whole" element={
+          <ProtectedRoute redirectTo="/login">
+            <RepeatedAdditionToOneWhole />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/compare-weights-and-capacities" element={
+          <ProtectedRoute redirectTo="/login">
+            <CompareWeightsAndCapacities />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/weight-and-capacity-word-problems" element={
+          <ProtectedRoute redirectTo="/login">
+            <WeightAndCapacityWordProblems />
+          </ProtectedRoute>
+        } />
+
         {/* Grade 8 Rational Numbers - Commutativity */}
         <Route path="/senior/grade/8/rational-numbers/commutativity" element={
           <ProtectedRoute redirectTo="/login">
@@ -378,6 +492,48 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Grade 8 Mensuration */}
+        <Route path="/senior/grade/8/mensuration/area-of-polygon" element={
+          <ProtectedRoute redirectTo="/login">
+            <AreaOfPolygon />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/surface-area-cuboid" element={
+          <ProtectedRoute redirectTo="/login">
+            <SurfaceAreaCuboid />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/surface-area-cube" element={
+          <ProtectedRoute redirectTo="/login">
+            <SurfaceAreaCube />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/surface-area-cylinder" element={
+          <ProtectedRoute redirectTo="/login">
+            <SurfaceAreaCylinder />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-of-cube" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeOfCube />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-of-cuboid" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeOfCuboid />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-of-cylinder" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeOfCylinder />
+          </ProtectedRoute>
+        } />
+        <Route path="/senior/grade/8/mensuration/volume-and-capacity" element={
+          <ProtectedRoute redirectTo="/login">
+            <VolumeAndCapacity />
+          </ProtectedRoute>
+        } />
+
         {/* Grade 1 Specialized Routes */}
         <Route path="/junior/grade/1/shapes-and-space" element={<ProtectedRoute redirectTo="/login"><Grade1ShapesAndSpace /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-from-one-to-nine" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers1to9 /></ProtectedRoute>} />
@@ -390,6 +546,12 @@ function App() {
         <Route path="/junior/grade/1/data-handling" element={<ProtectedRoute redirectTo="/login"><Grade1DataHandling /></ProtectedRoute>} />
         <Route path="/junior/grade/1/patterns" element={<ProtectedRoute redirectTo="/login"><Grade1Patterns /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-51-to-100" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers51to100 /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/what-is-long-what-is-round/identifying-shapes" element={<ProtectedRoute redirectTo="/login"><IdentifyingShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/what-is-long-what-is-round/comparing-lengths" element={<ProtectedRoute redirectTo="/login"><ComparingLengths /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/what-is-long-what-is-round/recognizing-round-objects" element={<ProtectedRoute redirectTo="/login"><RecognizingRoundObjects /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups/counting-in-pairs" element={<ProtectedRoute redirectTo="/login"><CountingInPairs /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups/skip-counting" element={<ProtectedRoute redirectTo="/login"><SkipCounting /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups/repeated-addition" element={<ProtectedRoute redirectTo="/login"><RepeatedAdditionClass2 /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
@@ -429,6 +591,14 @@ function App() {
         <Route path="/middle/grade/7/rational-numbers/between" element={<RationalNumbersBetween />} />
         <Route path="/middle/grade/7/rational-numbers/operations" element={<OperationsOnRationalNumbers />} />
         <Route path="/middle/grade/7/rational-numbers/chapter-test" element={<RationalNumbersTest />} />
+
+        {/* Visualising Solid Shapes */}
+        <Route path="/middle/grade/7/visualising-solid-shapes/plane-figures-solid-shapes" element={<PlaneFiguresSolidShapes />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/faces-edges-vertices" element={<FacesEdgesVertices />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/nets" element={<NetsBuilding3DShapes />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/drawing-solids" element={<DrawingSolids />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/viewing-sections" element={<ViewingSections />} />
+        <Route path="/middle/grade/7/visualising-solid-shapes/chapter-test" element={<VisualisingSolidShapesTest />} />
 
 
         {/* Auth Routes */}
@@ -528,6 +698,13 @@ function App() {
         <Route path="/high/practice/10053" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
+        {/* Class 10: Arithmetic Progressions Routes */}
+        <Route path="/high/practice/10101" element={<RecognisingPatterns />} />
+        <Route path="/high/practice/10102" element={<UnderstandingAP />} />
+        <Route path="/high/practice/10103" element={<IdentifyingTerms />} />
+        <Route path="/high/practice/10104" element={<FindingSpecificTerms />} />
+        <Route path="/high/practice/10105" element={<SumOfTerms />} />
+        <Route path="/high/practice/10106" element={<ArithmeticProgressionsTest />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
         {/* Class 10: Real Numbers Routes */}
