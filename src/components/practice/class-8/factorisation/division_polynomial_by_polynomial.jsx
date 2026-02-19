@@ -64,35 +64,44 @@ const DivisionPolynomialByPolynomialComponent = () => {
         setShuffledOptions(so); setCurrentQuestion(q); setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false);
     };
 
-    // EASY 1: (x²+5x+6) ÷ (x+2) = x+3
-    const easy1 = () => { const a = randomInt(1, 5), b = randomInt(1, 5); const sum = a + b, prod = a * b; return { text: `<div class='question-container'><p>Divide: $(x^2 + ${sum}x + ${prod}) \\div (x + ${a})$</p></div>`, correctAnswer: `$(x + ${b})$`, solution: `$x^2 + ${sum}x + ${prod} = (x + ${a})(x + ${b})$<br/><br/>$\\frac{(x + ${a})(x + ${b})}{(x + ${a})} = (x + ${b})$`, options: [`$(x + ${b})$`, `$(x + ${a})$`, `$(x - ${b})$`, `$(x + ${sum})$`] }; };
+    // Helper: ensure all options are unique strings
+    const uniqueOpts = (correct, wrongs) => {
+        const opts = [correct];
+        for (const w of wrongs) { if (!opts.includes(w)) opts.push(w); }
+        let s = 2;
+        while (opts.length < 4) { const f = `$(x + ${s})$`; if (!opts.includes(f)) opts.push(f); s++; }
+        return opts;
+    };
 
-    // EASY 2: (x²-bx) ÷ x = x-b
-    const easy2 = () => { const b = randomInt(2, 7); return { text: `<div class='question-container'><p>Divide: $(x^2 - ${b}x) \\div x$</p></div>`, correctAnswer: `$(x - ${b})$`, solution: `$\\frac{x^2 - ${b}x}{x} = \\frac{x(x - ${b})}{x} = (x - ${b})$`, options: [`$(x - ${b})$`, `$(x + ${b})$`, `$x^2 - ${b}$`, `$(${b}x - 1)$`] }; };
+    // EASY 1: (x²+5x+6) ÷ (x+2) = x+3
+    const easy1 = () => { let a, b; do { a = randomInt(1, 5); b = randomInt(1, 5); } while (a === b); const sum = a + b, prod = a * b; return { text: `<div class='question-container'><p>Divide: $(x^2 + ${sum}x + ${prod}) \\div (x + ${a})$</p></div>`, correctAnswer: `$(x + ${b})$`, solution: `$x^2 + ${sum}x + ${prod} = (x + ${a})(x + ${b})$<br/><br/>$\\frac{(x + ${a})(x + ${b})}{(x + ${a})} = (x + ${b})$`, options: uniqueOpts(`$(x + ${b})$`, [`$(x + ${a})$`, `$(x - ${b})$`, `$(x + ${sum})$`]) }; };
+
+    // EASY 2
+    const easy2 = () => { const b = randomInt(2, 7); return { text: `<div class='question-container'><p>Divide: $(x^2 - ${b}x) \\div x$</p></div>`, correctAnswer: `$(x - ${b})$`, solution: `$\\frac{x^2 - ${b}x}{x} = (x - ${b})$`, options: uniqueOpts(`$(x - ${b})$`, [`$(x + ${b})$`, `$x^2 - ${b}$`, `$(${b}x - 1)$`]) }; };
 
     // EASY 3: (a²-b²) ÷ (a+b) = a-b
-    const easy3 = () => { const b = randomInt(2, 8), b2 = b * b; return { text: `<div class='question-container'><p>Divide: $(x^2 - ${b2}) \\div (x + ${b})$</p></div>`, correctAnswer: `$(x - ${b})$`, solution: `$x^2 - ${b2} = (x + ${b})(x - ${b})$<br/><br/>$\\frac{(x + ${b})(x - ${b})}{(x + ${b})} = (x - ${b})$`, options: [`$(x - ${b})$`, `$(x + ${b})$`, `$(x - ${b2})$`, `$(x + ${b2})$`] }; };
+    const easy3 = () => { const b = randomInt(2, 8), b2 = b * b; return { text: `<div class='question-container'><p>Divide: $(x^2 - ${b2}) \\div (x + ${b})$</p></div>`, correctAnswer: `$(x - ${b})$`, solution: `$x^2 - ${b2} = (x + ${b})(x - ${b})$<br/><br/>$\\frac{(x + ${b})(x - ${b})}{(x + ${b})} = (x - ${b})$`, options: uniqueOpts(`$(x - ${b})$`, [`$(x + ${b})$`, `$(x - ${b2})$`, `$(x + ${b2})$`]) }; };
 
-    // MED 1: (x²-(a+b)x+ab) ÷ (x-a) = (x-b)
-    const med1 = () => { const a = randomInt(2, 6), b = randomInt(2, 6); const sum = a + b, prod = a * b; return { text: `<div class='question-container'><p>Divide: $(x^2 - ${sum}x + ${prod}) \\div (x - ${a})$</p></div>`, correctAnswer: `$(x - ${b})$`, solution: `$x^2 - ${sum}x + ${prod} = (x - ${a})(x - ${b})$<br/><br/>$\\frac{(x - ${a})(x - ${b})}{(x - ${a})} = (x - ${b})$`, options: [`$(x - ${b})$`, `$(x + ${b})$`, `$(x - ${a})$`, `$(x + ${a})$`] }; };
+    // MED 1
+    const med1 = () => { let a, b; do { a = randomInt(2, 6); b = randomInt(2, 6); } while (a === b); const sum = a + b, prod = a * b; return { text: `<div class='question-container'><p>Divide: $(x^2 - ${sum}x + ${prod}) \\div (x - ${a})$</p></div>`, correctAnswer: `$(x - ${b})$`, solution: `$x^2 - ${sum}x + ${prod} = (x - ${a})(x - ${b})$<br/><br/>$= (x - ${b})$`, options: uniqueOpts(`$(x - ${b})$`, [`$(x + ${b})$`, `$(x - ${a})$`, `$(x + ${a})$`]) }; };
 
-    // MED 2: (ax²+bx) ÷ x = ax+b
-    const med2 = () => { const a = randomInt(2, 5), b = randomInt(2, 6), c = randomInt(1, 5); const ac = a * c, bc = b * c; return { text: `<div class='question-container'><p>Divide: $(${ac}x^2 + ${bc}x) \\div ${c}x$</p></div>`, correctAnswer: `$(${a}x + ${b})$`, solution: `$\\frac{${ac}x^2 + ${bc}x}{${c}x} = \\frac{${c}x(${a}x + ${b})}{${c}x} = (${a}x + ${b})$`, options: [`$(${a}x + ${b})$`, `$(${a}x - ${b})$`, `$(${b}x + ${a})$`, `$(${c}x + ${a})$`] }; };
+    // MED 2
+    const med2 = () => { let a, b, c; do { a = randomInt(2, 5); b = randomInt(2, 6); c = randomInt(1, 5); } while (a === b); const ac = a * c, bc = b * c; return { text: `<div class='question-container'><p>Divide: $(${ac}x^2 + ${bc}x) \\div ${c}x$</p></div>`, correctAnswer: `$(${a}x + ${b})$`, solution: `$\\frac{${ac}x^2 + ${bc}x}{${c}x} = (${a}x + ${b})$`, options: uniqueOpts(`$(${a}x + ${b})$`, [`$(${a}x - ${b})$`, `$(${b}x + ${a})$`, `$(${c}x + ${a})$`]) }; };
 
     // MED 3: (4x²-9) ÷ (2x+3) = (2x-3)
-    const med3 = () => { const a = randomInt(2, 4), b = randomInt(2, 5); const a2 = a * a, b2 = b * b; return { text: `<div class='question-container'><p>Divide: $(${a2}x^2 - ${b2}) \\div (${a}x + ${b})$</p></div>`, correctAnswer: `$(${a}x - ${b})$`, solution: `$${a2}x^2 - ${b2} = (${a}x)^2 - ${b}^2 = (${a}x + ${b})(${a}x - ${b})$<br/><br/>$\\frac{(${a}x + ${b})(${a}x - ${b})}{(${a}x + ${b})} = (${a}x - ${b})$`, options: [`$(${a}x - ${b})$`, `$(${a}x + ${b})$`, `$(${b}x - ${a})$`, `$(${a}x - ${b2})$`] }; };
+    const med3 = () => { let a, b; do { a = randomInt(2, 4); b = randomInt(2, 5); } while (a === b); const a2 = a * a, b2 = b * b; return { text: `<div class='question-container'><p>Divide: $(${a2}x^2 - ${b2}) \\div (${a}x + ${b})$</p></div>`, correctAnswer: `$(${a}x - ${b})$`, solution: `$${a2}x^2 - ${b2} = (${a}x + ${b})(${a}x - ${b})$<br/><br/>$= (${a}x - ${b})$`, options: uniqueOpts(`$(${a}x - ${b})$`, [`$(${a}x + ${b})$`, `$(${b}x - ${a})$`, `$(${a}x - ${b2})$`]) }; };
 
-    // HARD 1: (x²+2ab+b²) ÷ (x+b) = (x+b)
-    const hard1 = () => { const b = randomInt(2, 7); const mid = 2 * b, b2 = b * b; return { text: `<div class='question-container'><p>Divide: $(x^2 + ${mid}x + ${b2}) \\div (x + ${b})$</p></div>`, correctAnswer: `$(x + ${b})$`, solution: `$x^2 + ${mid}x + ${b2} = (x + ${b})^2$<br/><br/>$\\frac{(x + ${b})^2}{(x + ${b})} = (x + ${b})$`, options: [`$(x + ${b})$`, `$(x - ${b})$`, `$(x + ${b})^2$`, `$(x + ${mid})$`] }; };
+    // HARD 1
+    const hard1 = () => { const b = randomInt(2, 7); const mid = 2 * b, b2 = b * b; return { text: `<div class='question-container'><p>Divide: $(x^2 + ${mid}x + ${b2}) \\div (x + ${b})$</p></div>`, correctAnswer: `$(x + ${b})$`, solution: `$x^2 + ${mid}x + ${b2} = (x + ${b})^2$<br/><br/>$= (x + ${b})$`, options: uniqueOpts(`$(x + ${b})$`, [`$(x - ${b})$`, `$(x + ${b})^2$`, `$(x + ${mid})$`]) }; };
 
-    // HARD 2: Trinomial ÷ binomial with different signs
-    const hard2 = () => { const a = randomInt(2, 6), b = randomInt(1, a - 1); const mid = a - b, prod = a * b; return { text: `<div class='question-container'><p>Divide: $(x^2 + ${mid}x - ${prod}) \\div (x - ${b})$</p></div>`, correctAnswer: `$(x + ${a})$`, solution: `$x^2 + ${mid}x - ${prod} = (x + ${a})(x - ${b})$<br/><br/>$\\frac{(x + ${a})(x - ${b})}{(x - ${b})} = (x + ${a})$`, options: [`$(x + ${a})$`, `$(x - ${a})$`, `$(x + ${b})$`, `$(x - ${b})$`] }; };
+    // HARD 2
+    const hard2 = () => { const a = randomInt(2, 6), b = randomInt(1, a - 1); const mid = a - b, prod = a * b; return { text: `<div class='question-container'><p>Divide: $(x^2 + ${mid}x - ${prod}) \\div (x - ${b})$</p></div>`, correctAnswer: `$(x + ${a})$`, solution: `$x^2 + ${mid}x - ${prod} = (x + ${a})(x - ${b})$<br/><br/>$= (x + ${a})$`, options: uniqueOpts(`$(x + ${a})$`, [`$(x - ${a})$`, `$(x + ${b})$`, `$(x - ${b})$`]) }; };
 
-    // HARD 3: (a³-b³) type
-    const hard3 = () => { const b = randomInt(1, 4), b2 = b * b, b3 = b * b * b; return { text: `<div class='question-container'><p>Divide: $(x^3 - ${b3}) \\div (x - ${b})$</p></div>`, correctAnswer: `$(x^2 + ${b}x + ${b2})$`, solution: `Using $a^3 - b^3 = (a-b)(a^2 + ab + b^2)$<br/><br/>$x^3 - ${b3} = (x - ${b})(x^2 + ${b}x + ${b2})$<br/><br/>$\\frac{(x - ${b})(x^2 + ${b}x + ${b2})}{(x - ${b})} = (x^2 + ${b}x + ${b2})$`, options: [`$(x^2 + ${b}x + ${b2})$`, `$(x^2 - ${b}x + ${b2})$`, `$(x^2 + ${b}x - ${b2})$`, `$(x^2 - ${b2})$`] }; };
+    // HARD 3
+    const hard3 = () => { const b = randomInt(1, 4), b2 = b * b, b3 = b * b * b; return { text: `<div class='question-container'><p>Divide: $(x^3 - ${b3}) \\div (x - ${b})$</p></div>`, correctAnswer: `$(x^2 + ${b}x + ${b2})$`, solution: `Using $a^3 - b^3 = (a-b)(a^2+ab+b^2)$<br/><br/>$= (x^2 + ${b}x + ${b2})$`, options: uniqueOpts(`$(x^2 + ${b}x + ${b2})$`, [`$(x^2 - ${b}x + ${b2})$`, `$(x^2 + ${b}x - ${b2})$`, `$(x^2 - ${b2})$`]) }; };
 
     // BONUS
-    const bonus = () => { const a = randomInt(2, 5), b = randomInt(2, 5); const sum = a + b, prod = a * b; return { text: `<div class='question-container'><p>The area of a rectangle is $x^2 + ${sum}x + ${prod}$. If one side is $(x + ${a})$, find the other side.</p></div>`, correctAnswer: `$(x + ${b})$`, solution: `Other side $= \\frac{x^2 + ${sum}x + ${prod}}{x + ${a}} = \\frac{(x + ${a})(x + ${b})}{(x + ${a})} = (x + ${b})$`, options: [`$(x + ${b})$`, `$(x - ${b})$`, `$(x + ${a})$`, `$(x + ${sum})$`] }; };
+    const bonus = () => { let a, b; do { a = randomInt(2, 5); b = randomInt(2, 5); } while (a === b); const sum = a + b, prod = a * b; return { text: `<div class='question-container'><p>The area of a rectangle is $x^2 + ${sum}x + ${prod}$. If one side is $(x + ${a})$, find the other side.</p></div>`, correctAnswer: `$(x + ${b})$`, solution: `Other side $= \\frac{x^2 + ${sum}x + ${prod}}{x + ${a}} = (x + ${b})$`, options: uniqueOpts(`$(x + ${b})$`, [`$(x - ${b})$`, `$(x + ${a})$`, `$(x + ${sum})$`]) }; };
 
     const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
     const recordQuestionAttempt = async (question, selected, correct) => { const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId'); if (!userId) return; let ts = accumulatedTime.current; if (isTabActive.current) ts += Date.now() - questionStartTime.current; const sec = Math.round(ts / 1000); try { await api.recordAttempt({ user_id: parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID, template_id: null, difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard', question_text: String(question.text || ''), correct_answer: String(question.correctAnswer || ''), student_answer: String(selected || ''), is_correct: correct, solution_text: String(question.solution || ''), time_spent_seconds: sec >= 0 ? sec : 0 }); } catch (e) { console.error("Failed to record attempt", e); } };

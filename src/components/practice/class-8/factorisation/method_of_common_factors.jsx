@@ -98,12 +98,36 @@ const MethodOfCommonFactorsComponent = () => {
         setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false);
     };
 
-    // EASY 1: Factorise linear expression like ax + ay
+    // Helper: ensure all options are unique strings; replace duplicates
+    const uniqueOptions = (correct, wrongs) => {
+        const opts = [correct];
+        for (const w of wrongs) {
+            if (!opts.includes(w)) opts.push(w);
+        }
+        // fill any missing slots with slight variations
+        let suffix = 2;
+        while (opts.length < 4) {
+            const filler = `$${suffix}(${suffix + 1}x + ${suffix + 2}y)$`;
+            if (!opts.includes(filler)) opts.push(filler);
+            suffix++;
+        }
+        return opts;
+    };
+
+    // Pick b,c coprime and distinct from a, preventing unsimplified answers
+    const coprimeDistinct = (a) => {
+        let b, c;
+        do {
+            b = randomInt(2, 9);
+            c = randomInt(2, 9);
+        } while (gcd(b, c) !== 1 || b === a || c === a || b === c);
+        return [b, c];
+    };
+
+    // EASY 1: Factorise linear expression like ax + ay (fully simplified)
     const easyLinear = () => {
         const a = randomInt(2, 9);
-        const b = randomInt(2, 9);
-        const c = randomInt(2, 9);
-        const g = gcd(b, c);
+        const [b, c] = coprimeDistinct(a);
         const coeff1 = a * b;
         const coeff2 = a * c;
         const correctAnswer = `$${a}(${b}x + ${c}y)$`;
@@ -111,39 +135,40 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>Factorise: $${coeff1}x + ${coeff2}y$</p></div>`,
             correctAnswer,
             solution: `$${coeff1}x + ${coeff2}y$<br/><br/>$= ${a} \\times ${b}x + ${a} \\times ${c}y$<br/><br/>$= ${a}(${b}x + ${c}y)$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${b}(${a}x + ${c}y)$`,
                 `$${c}(${b}x + ${a}y)$`,
                 `$${a + 1}(${b}x + ${c}y)$`
-            ]
+            ])
         };
     };
 
     // EASY 2: Factorise monomial common factor
     const easyMonomial = () => {
-        const a = randomInt(2, 6);
-        const b = randomInt(2, 6);
+        let a, b;
+        do { a = randomInt(2, 6); b = randomInt(2, 6); } while (a === b);
         const coeff1 = a * b;
         const correctAnswer = `$${a}x(${b}x + 1)$`;
         return {
             text: `<div class='question-container'><p>Factorise: $${coeff1}x^2 + ${a}x$</p></div>`,
             correctAnswer,
             solution: `$${coeff1}x^2 + ${a}x$<br/><br/>$= ${a}x \\times ${b}x + ${a}x \\times 1$<br/><br/>$= ${a}x(${b}x + 1)$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${b}x(${a}x + 1)$`,
                 `$${a}(${b}x^2 + x)$`,
                 `$x(${coeff1}x + ${a})$`
-            ]
+            ])
         };
     };
 
-    // EASY 3: Simple two-term with number common factor
+    // EASY 3: Simple two-term with number common factor (fully simplified)
     const easyBinomial = () => {
-        const cf = randomInt(3, 8);
-        const a = randomInt(2, 7);
-        const b = randomInt(2, 7);
+        let cf, a, b;
+        do {
+            cf = randomInt(3, 8);
+            a = randomInt(2, 7);
+            b = randomInt(2, 7);
+        } while (gcd(a, b) !== 1 || cf === a || cf === b || a === b);
         const t1 = cf * a;
         const t2 = cf * b;
         const correctAnswer = `$${cf}(${a}a + ${b}b)$`;
@@ -151,20 +176,22 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>Factorise: $${t1}a + ${t2}b$</p></div>`,
             correctAnswer,
             solution: `$${t1}a + ${t2}b$<br/><br/>$= ${cf} \\times ${a}a + ${cf} \\times ${b}b$<br/><br/>$= ${cf}(${a}a + ${b}b)$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${a}(${cf}a + ${b}b)$`,
                 `$${cf + 1}(${a}a + ${b}b)$`,
                 `$${b}(${a}a + ${cf}b)$`
-            ]
+            ])
         };
     };
 
-    // MEDIUM 1: Common algebraic factor with subtraction
+    // MEDIUM 1: Common algebraic factor with subtraction (fully simplified)
     const medCommon = () => {
-        const a = randomInt(2, 6);
-        const b = randomInt(2, 6);
-        const c = randomInt(2, 6);
+        let a, b, c;
+        do {
+            a = randomInt(2, 6);
+            b = randomInt(2, 6);
+            c = randomInt(2, 6);
+        } while (gcd(b, c) !== 1 || a === b || a === c || b === c);
         const coeff1 = a * b;
         const coeff2 = a * c;
         const correctAnswer = `$${a}y(${b}y - ${c})$`;
@@ -172,21 +199,23 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>Factorise: $${coeff1}y^2 - ${coeff2}y$</p></div>`,
             correctAnswer,
             solution: `$${coeff1}y^2 - ${coeff2}y$<br/><br/>$= ${a}y \\times ${b}y - ${a}y \\times ${c}$<br/><br/>$= ${a}y(${b}y - ${c})$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${b}y(${a}y - ${c})$`,
                 `$${a}(${b}y^2 - ${c}y)$`,
                 `$${a}y(${b}y + ${c})$`
-            ]
+            ])
         };
     };
 
-    // MEDIUM 2: Three terms with common factor
+    // MEDIUM 2: Three terms with common factor (fully simplified)
     const medTrinomial = () => {
-        const cf = randomInt(2, 5);
-        const a = randomInt(1, 5);
-        const b = randomInt(1, 5);
-        const c = randomInt(1, 5);
+        let cf, a, b, c;
+        do {
+            cf = randomInt(2, 5);
+            a = randomInt(1, 5);
+            b = randomInt(1, 5);
+            c = randomInt(1, 5);
+        } while (gcd(gcd(a, b), c) !== 1 || cf === a);
         const t1 = cf * a;
         const t2 = cf * b;
         const t3 = cf * c;
@@ -195,20 +224,22 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>Factorise: $${t1}x^2 + ${t2}x + ${t3}$</p></div>`,
             correctAnswer,
             solution: `$${t1}x^2 + ${t2}x + ${t3}$<br/><br/>$= ${cf}(${a}x^2 + ${b}x + ${c})$<br/><br/>Taking $${cf}$ common from all terms.`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${a}(${cf}x^2 + ${b}x + ${c})$`,
                 `$${cf}(${a}x^2 - ${b}x + ${c})$`,
                 `$${cf + 1}(${a}x^2 + ${b}x + ${c})$`
-            ]
+            ])
         };
     };
 
-    // MEDIUM 3: Multi-variable common factor
+    // MEDIUM 3: Multi-variable common factor (fully simplified)
     const medMultiVar = () => {
-        const a = randomInt(2, 5);
-        const b = randomInt(2, 5);
-        const c = randomInt(2, 5);
+        let a, b, c;
+        do {
+            a = randomInt(2, 5);
+            b = randomInt(2, 5);
+            c = randomInt(2, 5);
+        } while (gcd(b, c) !== 1 || a === b || a === c || b === c);
         const coeff1 = a * b;
         const coeff2 = a * c;
         const correctAnswer = `$${a}ab(${b}a + ${c}b)$`;
@@ -216,21 +247,23 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>Factorise: $${coeff1}a^2b + ${coeff2}ab^2$</p></div>`,
             correctAnswer,
             solution: `$${coeff1}a^2b + ${coeff2}ab^2$<br/><br/>$= ${a}ab \\times ${b}a + ${a}ab \\times ${c}b$<br/><br/>$= ${a}ab(${b}a + ${c}b)$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${a}a(${b}ab + ${c}b^2)$`,
                 `$${a}b(${b}a^2 + ${c}ab)$`,
                 `$${b}ab(${a}a + ${c}b)$`
-            ]
+            ])
         };
     };
 
-    // HARD 1: Three terms with variable common factor
+    // HARD 1: Three terms with variable common factor (fully simplified)
     const hardThreeTerm = () => {
-        const a = randomInt(2, 4);
-        const b = randomInt(2, 5);
-        const c = randomInt(2, 5);
-        const d = randomInt(2, 5);
+        let a, b, c, d;
+        do {
+            a = randomInt(2, 4);
+            b = randomInt(2, 5);
+            c = randomInt(2, 5);
+            d = randomInt(2, 5);
+        } while (gcd(gcd(b, c), d) !== 1 || a === b);
         const t1 = a * b;
         const t2 = a * c;
         const t3 = a * d;
@@ -239,41 +272,39 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>Factorise: $${t1}x^3 + ${t2}x^2 + ${t3}x$</p></div>`,
             correctAnswer,
             solution: `$${t1}x^3 + ${t2}x^2 + ${t3}x$<br/><br/>$= ${a}x(${b}x^2 + ${c}x + ${d})$<br/><br/>Taking $${a}x$ common from all terms.`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${a}(${b}x^3 + ${c}x^2 + ${d}x)$`,
                 `$${a}x^2(${b}x + ${c} + ${d})$`,
                 `$x(${t1}x^2 + ${t2}x + ${t3})$`
-            ]
+            ])
         };
     };
 
     // HARD 2: Nested common factor with brackets
     const hardNested = () => {
-        const a = randomInt(2, 5);
-        const b = randomInt(2, 5);
+        let a, b;
+        do { a = randomInt(2, 5); b = randomInt(2, 5); } while (a === b);
         const correctAnswer = `$(x + ${a})(${b}x + 1)$`;
-        // Expression: b*x*(x+a) + 1*(x+a) = (x+a)(bx+1)
-        // Expanded: bx^2 + abx + x + a = bx^2 + (ab+1)x + a
-        const mid = a * b + 1;
         return {
             text: `<div class='question-container'><p>Factorise: $${b}x(x + ${a}) + (x + ${a})$</p></div>`,
             correctAnswer,
             solution: `$${b}x(x + ${a}) + 1 \\cdot (x + ${a})$<br/><br/>Taking $(x + ${a})$ common:<br/><br/>$= (x + ${a})(${b}x + 1)$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$(x + ${a})(${b}x - 1)$`,
                 `$(x - ${a})(${b}x + 1)$`,
                 `$${b}(x + ${a})(x + 1)$`
-            ]
+            ])
         };
     };
 
-    // HARD 3: Multi-step factoring
+    // HARD 3: Multi-step factoring (fully simplified)
     const hardMultiStep = () => {
-        const a = randomInt(2, 4);
-        const b = randomInt(2, 4);
-        const c = randomInt(2, 4);
+        let a, b, c;
+        do {
+            a = randomInt(2, 4);
+            b = randomInt(2, 4);
+            c = randomInt(2, 4);
+        } while (gcd(b, c) !== 1 || a === b || a === c || b === c);
         const coeff1 = a * b * c;
         const coeff2 = a * b;
         const coeff3 = a * c;
@@ -282,20 +313,22 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>Factorise: $${coeff1}x^2y + ${coeff2}xy + ${coeff3}y^2$</p></div>`,
             correctAnswer,
             solution: `$${coeff1}x^2y + ${coeff2}xy + ${coeff3}y^2$<br/><br/>HCF of ${coeff1}, ${coeff2}, ${coeff3} is $${a}$<br/><br/>$= ${a}(${b * c}x^2y + ${b}xy + ${c}y^2)$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${b}(${a * c}x^2y + ${a}xy + ${c}y^2)$`,
                 `$${c}(${a * b}x^2y + ${b}xy + ${a}y^2)$`,
                 `$${a + 1}(${b * c}x^2y + ${b}xy + ${c}y^2)$`
-            ]
+            ])
         };
     };
 
-    // BONUS: Real-world context
+    // BONUS: Real-world context (fully simplified)
     const bonusRealWorld = () => {
-        const a = randomInt(2, 6);
-        const b = randomInt(3, 8);
-        const c = randomInt(2, 7);
+        let a, b, c;
+        do {
+            a = randomInt(2, 6);
+            b = randomInt(3, 8);
+            c = randomInt(2, 7);
+        } while (gcd(b, c) !== 1 || a === b || a === c || b === c);
         const t1 = a * b;
         const t2 = a * c;
         const correctAnswer = `$${a}(${b}l + ${c}b)$`;
@@ -303,12 +336,11 @@ const MethodOfCommonFactorsComponent = () => {
             text: `<div class='question-container'><p>The perimeter of a rectangle can be written as $${t1}l + ${t2}b$. Express it as a product of a common factor and a sum.</p></div>`,
             correctAnswer,
             solution: `$${t1}l + ${t2}b$<br/><br/>$= ${a} \\times ${b}l + ${a} \\times ${c}b$<br/><br/>$= ${a}(${b}l + ${c}b)$`,
-            options: [
-                correctAnswer,
+            options: uniqueOptions(correctAnswer, [
                 `$${b}(${a}l + ${c}b)$`,
                 `$${a + 1}(${b}l + ${c}b)$`,
                 `$${c}(${b}l + ${a}b)$`
-            ]
+            ])
         };
     };
 
