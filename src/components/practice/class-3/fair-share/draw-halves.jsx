@@ -145,7 +145,8 @@ const FairShareDraw = () => {
         const pos = getPointerPos(e);
         const gridPos = getGridIndex(pos.x, pos.y);
 
-        if (gridPos) {
+        // Only allow drawing on the RIGHT half (columns >= center) so we can connect to axis
+        if (gridPos && gridPos.col >= CENTER_COL) {
             setIsDragging(true);
             setDragStartPoint(gridPos);
             setCurrentPointer(pos); // Start rubberband
@@ -160,7 +161,8 @@ const FairShareDraw = () => {
 
         // Auto-connect check
         const gridPos = getGridIndex(pos.x, pos.y);
-        if (gridPos) {
+        // Only allow connecting to dots on the RIGHT half
+        if (gridPos && gridPos.col >= CENTER_COL) {
             // If moved to a DIFFERENT dot than dragStartPoint
             if (gridPos.col !== dragStartPoint.col || gridPos.row !== dragStartPoint.row) {
                 // Add Line
@@ -169,8 +171,6 @@ const FairShareDraw = () => {
                     c2: gridPos.col, r2: gridPos.row
                 };
 
-                // Add to userLines if not already existing?
-                // Allow drawing over same line? No harm.
                 setUserLines(prev => [...prev, newLine]);
 
                 // Move start point to this new point (continue drawing chain)
@@ -373,24 +373,6 @@ const FairShareDraw = () => {
                         </svg>
                     </div>
 
-                    {/* Toolbar */}
-                    <div className="flex justify-center gap-4 mt-4">
-                        <button
-                            onClick={() => setUserLines(prev => prev.slice(0, -1))}
-                            disabled={userLines.length === 0 || isSubmitted}
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold flex items-center gap-2 disabled:opacity-50"
-                        >
-                            <RotateCcw size={18} /> Undo
-                        </button>
-                        <button
-                            onClick={() => setUserLines([])}
-                            disabled={userLines.length === 0 || isSubmitted}
-                            className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg font-bold flex items-center gap-2 disabled:opacity-50"
-                        >
-                            <Trash2 size={18} /> Clear
-                        </button>
-                    </div>
-
                     {/* Feedback Overlay */}
                     <AnimatePresence>
                         {isSubmitted && (
@@ -405,6 +387,24 @@ const FairShareDraw = () => {
                             </motion.div>
                         )}
                     </AnimatePresence>
+                </div>
+
+                {/* Toolbar - Outside card, with padding to clear footer */}
+                <div className="flex justify-center gap-4 mt-6 pb-24 relative z-10">
+                    <button
+                        onClick={() => setUserLines(prev => prev.slice(0, -1))}
+                        disabled={userLines.length === 0 || isSubmitted}
+                        className="bg-white border-2 border-gray-200 hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50 shadow-sm transition-all hover:scale-105"
+                    >
+                        <RotateCcw size={20} /> Undo
+                    </button>
+                    <button
+                        onClick={() => setUserLines([])}
+                        disabled={userLines.length === 0 || isSubmitted}
+                        className="bg-red-50 border-2 border-red-100 hover:bg-red-100 text-red-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50 shadow-sm transition-all hover:scale-105"
+                    >
+                        <Trash2 size={20} /> Clear
+                    </button>
                 </div>
             </main>
 
