@@ -34,6 +34,7 @@ const VisualisingSolidShapesTest = () => {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [answers, setAnswers] = useState({});
+    const [isFinished, setIsFinished] = useState(false);
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
@@ -104,42 +105,55 @@ const VisualisingSolidShapesTest = () => {
             () => ({ text: `<p>The shadow of a cylinder from the side is:</p>`, correctAnswer: "Rectangle", options: shuffle(["Rectangle", "Circle", "Square", "Oval"]), solution: `<p>Side shadow of a cylinder → <b>Rectangle</b>. Top shadow → Circle.</p>` }),
         ];
 
-        // Pick: 3 + 3 + 3 + 3 + 3 = 15
+        // Pick: 5 + 5 + 5 + 5 + 5 = 25
         const selected = [
-            ...pickRandom(topic1Pool, 3).map(fn => fn()),
-            ...pickRandom(topic2Pool, 3).map(fn => fn()),
-            ...pickRandom(topic3Pool, 3).map(fn => fn()),
-            ...pickRandom(topic4Pool, 3).map(fn => fn()),
-            ...pickRandom(topic5Pool, 3).map(fn => fn()),
+            ...pickRandom(topic1Pool, 5).map(fn => fn()),
+            ...pickRandom(topic2Pool, 5).map(fn => fn()),
+            ...pickRandom(topic3Pool, 5).map(fn => fn()),
+            ...pickRandom(topic4Pool, 5).map(fn => fn()),
+            ...pickRandom(topic5Pool, 5).map(fn => fn()),
         ];
 
         setQuestions(selected);
     }, []);
 
     useEffect(() => {
+        if (isFinished) return;
         const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (uid && !sessionId) api.createPracticeSession(uid, SKILL_ID).then(s => s && setSessionId(s.session_id)).catch(console.error);
         const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
         const hv = () => { if (document.hidden) { accumulatedTime.current += Date.now() - questionStartTime.current; isTabActive.current = false; } else { questionStartTime.current = Date.now(); isTabActive.current = true; } };
         document.addEventListener("visibilitychange", hv);
         return () => { clearInterval(timer); document.removeEventListener("visibilitychange", hv); };
-    }, [sessionId]);
+    }, [sessionId, isFinished]);
 
-    const recordAttempt = async (q, sel, cor) => {
+    const recordAttempt = async (q, sel, cor, isSkipped = false) => {
         const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!uid) return;
         let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
-        try { await api.recordAttempt({ user_id: parseInt(uid), session_id: sessionId, skill_id: SKILL_ID, difficulty_level: 'Medium', question_text: String(q.text), correct_answer: String(q.correctAnswer), student_answer: String(sel), is_correct: cor, solution_text: String(q.solution), time_spent_seconds: Math.max(0, Math.round(t / 1000)) }); } catch (e) { console.error(e); }
+        const seconds = Math.max(0, Math.round(t / 1000));
+        try { await api.recordAttempt({ user_id: parseInt(uid), session_id: sessionId, skill_id: SKILL_ID, difficulty_level: 'Medium', question_text: String(q.text), correct_answer: String(q.correctAnswer), student_answer: String(sel), is_correct: cor, solution_text: String(q.solution), time_spent_seconds: seconds }); } catch (e) { console.error(e); }
     };
 
-    const handleCheck = () => {
+    const handleQuestionComplete = () => {
         if (!selectedOption || !questions[qIndex]) return;
         const right = selectedOption === questions[qIndex].correctAnswer;
-        setIsCorrect(right); setIsSubmitted(true);
-        if (right) setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        else setShowExplanationModal(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect: right } }));
+
+        let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
+        const timeSpent = Math.max(0, Math.round(t / 1000));
+
+        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect: right, timeSpent, isSkipped: false } }));
         recordAttempt(questions[qIndex], selectedOption, right);
+        handleNext();
+    };
+
+    const handleSkip = () => {
+        let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
+        const timeSpent = Math.max(0, Math.round(t / 1000));
+
+        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption: 'Skipped', isCorrect: false, timeSpent, isSkipped: true } }));
+        recordAttempt(questions[qIndex], 'Skipped', false, true);
+        handleNext();
     };
 
     const handleNext = async () => {
@@ -153,18 +167,106 @@ const VisualisingSolidShapesTest = () => {
                 const c = Object.values(answers).filter(v => v.isCorrect).length;
                 await api.createReport({ title: SKILL_NAME, type: 'practice', score: (c / questions.length) * 100, parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: questions.length, correct_answers: c, time_taken_seconds: timeElapsed }, user_id: parseInt(uid) }).catch(console.error);
             }
-            navigate(-1);
+            setIsFinished(true);
         }
     };
 
     useEffect(() => {
-        const saved = answers[qIndex];
-        if (saved) { setSelectedOption(saved.selectedOption); setIsCorrect(saved.isCorrect); setIsSubmitted(true); }
-        else { setSelectedOption(null); setIsCorrect(false); setIsSubmitted(false); }
+        setSelectedOption(null);
+        setIsCorrect(false);
+        setIsSubmitted(false);
         setShowExplanationModal(false);
     }, [qIndex]);
 
     if (questions.length === 0) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: '#31326F' }}>Loading questions...</div>;
+    if (isFinished) {
+        const attempted = Object.values(answers).filter(a => !a.isSkipped).length;
+        const correct = Object.values(answers).filter(a => a.isCorrect).length;
+        const wrong = attempted - correct;
+        const skipped = Object.values(answers).filter(a => a.isSkipped).length;
+
+        return (
+            <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif', padding: '2rem', paddingBottom: '5rem', backgroundColor: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
+                <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-3xl p-8 shadow-xl border-2 border-[#4FB7B3]/20 mb-8 mt-8">
+                        <div className="text-center mb-8">
+                            <img src={mascotImg} alt="Mascot" className="w-24 h-24 mx-auto mb-4 object-contain" />
+                            <h2 className="text-3xl font-bold text-[#31326F] mb-2">Test Complete!</h2>
+                            <p className="text-gray-500">Here's how you performed in {SKILL_NAME}</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                            <div className="bg-blue-50 p-4 rounded-2xl text-center border border-blue-100">
+                                <div className="text-blue-500 font-bold text-sm mb-1 uppercase tracking-wider">Total Time</div>
+                                <div className="text-2xl font-black text-[#31326F]">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
+                            </div>
+                            <div className="bg-green-50 p-4 rounded-2xl text-center border border-green-100">
+                                <div className="text-green-500 font-bold text-sm mb-1 uppercase tracking-wider">Correct</div>
+                                <div className="text-2xl font-black text-[#31326F]">{correct}</div>
+                            </div>
+                            <div className="bg-red-50 p-4 rounded-2xl text-center border border-red-100">
+                                <div className="text-red-500 font-bold text-sm mb-1 uppercase tracking-wider">Wrong</div>
+                                <div className="text-2xl font-black text-[#31326F]">{wrong}</div>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-2xl text-center border border-gray-100">
+                                <div className="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wider">Skipped</div>
+                                <div className="text-2xl font-black text-[#31326F]">{skipped}</div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-bold text-[#31326F] border-b pb-2">Detailed Report</h3>
+                            {questions.map((q, idx) => {
+                                const ans = answers[idx] || { isSkipped: true, selectedOption: 'Not Attempted', isCorrect: false, timeSpent: 0 };
+                                return (
+                                    <div key={idx} className="p-6 rounded-2xl border-2 border-gray-100 hover:border-[#4FB7B3]/30 transition-all bg-white shadow-sm">
+                                        <div className="flex justify-between items-start gap-4 mb-4">
+                                            <div className="flex items-center gap-3">
+                                                <span className="w-8 h-8 rounded-full bg-[#31326F] text-white flex items-center justify-center font-bold text-sm">{idx + 1}</span>
+                                                <div className="flex items-center gap-2 text-sm font-semibold text-gray-500">
+                                                    Time: {ans.timeSpent}s
+                                                </div>
+                                            </div>
+                                            {ans.isSkipped ? (
+                                                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600 font-bold text-xs uppercase">Skipped</span>
+                                            ) : ans.isCorrect ? (
+                                                <span className="px-3 py-1 rounded-full bg-green-100 text-green-600 font-bold text-xs uppercase">Correct</span>
+                                            ) : (
+                                                <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 font-bold text-xs uppercase">Incorrect</span>
+                                            )}
+                                        </div>
+                                        <div className="text-[#31326F] mb-4 font-medium"><LatexContent html={q.text} /></div>
+                                        {q.visual && <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}><ShapeVisual {...q.visual} /></div>}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-sm">
+                                            <div className="p-3 rounded-xl bg-gray-50 border border-gray-100">
+                                                <span className="text-gray-400 block mb-1">Your Answer:</span>
+                                                <span className={ans.isCorrect ? "text-green-600 font-bold" : "text-red-500 font-bold"}>
+                                                    <LatexContent html={ans.selectedOption} />
+                                                </span>
+                                            </div>
+                                            <div className="p-3 rounded-xl bg-green-50 border border-green-100">
+                                                <span className="text-green-400 block mb-1">Correct Answer:</span>
+                                                <span className="text-green-700 font-bold"><LatexContent html={q.correctAnswer} /></span>
+                                            </div>
+                                        </div>
+                                        <div className="p-4 rounded-xl bg-amber-50/50 border border-amber-100 text-[#31326F] text-sm italic">
+                                            <span className="font-bold block mb-1 not-italic text-amber-700">Explanation:</span>
+                                            <LatexContent html={q.solution} />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="mt-10 flex justify-center">
+                            <button className="bg-[#31326F] text-white px-12 py-4 rounded-2xl font-black text-xl hover:scale-105 transition-transform shadow-xl" onClick={() => navigate(-1)}>Done</button>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
+        );
+    }
+
     const cq = questions[qIndex];
 
     return (
@@ -190,44 +292,40 @@ const VisualisingSolidShapesTest = () => {
                             <div className="interaction-area-modern">
                                 <div className="options-grid-modern">
                                     {cq.options.map((opt, i) => (
-                                        <button key={i} className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === cq.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}`} onClick={() => !isSubmitted && setSelectedOption(opt)} disabled={isSubmitted}><LatexContent html={opt} /></button>
+                                        <button key={i} className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''}`} onClick={() => setSelectedOption(opt)}><LatexContent html={opt} /></button>
                                     ))}
                                 </div>
-                                <AnimatePresence>{isSubmitted && isCorrect && (
-                                    <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}><div className="flex items-center gap-3"><img src={mascotImg} alt="Mascot" className="w-12 h-12 object-contain" /><span>{feedbackMessage}</span></div></motion.div>
-                                )}</AnimatePresence>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
 
-            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={cq.correctAnswer} explanation={cq.solution} onClose={() => setShowExplanationModal(false)} />
-
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>Exit</button></div>
-                    <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> View Explanation</button>}</div>
+                    <div className="bottom-center"></div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
-                            <button className="nav-pill-next-btn bg-gray-200 text-gray-600" onClick={() => setQIndex(i => Math.max(0, i - 1))} disabled={qIndex === 0}><ChevronLeft size={28} strokeWidth={3} /> Prev</button>
-                            {isSubmitted ? (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < questions.length - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}</button>
-                            ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={28} strokeWidth={3} /></button>
-                            )}
+                            <button className="nav-pill-next-btn bg-gray-500 text-white border-2 border-gray-600" onClick={handleSkip}>
+                                Skip <ChevronRight size={28} strokeWidth={3} />
+                            </button>
+                            <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
+                                {qIndex < questions.length - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}
+                            </button>
                         </div>
                     </div>
                 </div>
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
                         <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
-                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={18} /> Explain</button>}
                     </div>
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
-                            <button className="nav-pill-next-btn bg-gray-200 text-gray-600 p-2" onClick={() => setQIndex(i => Math.max(0, i - 1))} disabled={qIndex === 0}><ChevronLeft size={20} /></button>
-                            {isSubmitted ? (<button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < questions.length - 1 ? "Next" : "Done"}</button>) : (<button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit</button>)}
+                            <button className="nav-pill-next-btn bg-gray-500 text-white p-2 border border-gray-600" onClick={handleSkip}>Skip</button>
+                            <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
+                                {qIndex < questions.length - 1 ? "Next" : "Done"}
+                            </button>
                         </div>
                     </div>
                 </div>

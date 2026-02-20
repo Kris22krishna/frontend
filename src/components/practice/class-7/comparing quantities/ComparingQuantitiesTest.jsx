@@ -37,6 +37,7 @@ const ComparingQuantitiesTest = () => {
     const SKILL_ID = 34; // Placeholder for Chapter Test
     const SKILL_NAME = "Class 7 - Comparing Quantities - Chapter Test";
     const [answers, setAnswers] = useState({});
+    const [isFinished, setIsFinished] = useState(false);
 
     useEffect(() => {
         const generateQuestions = () => {
@@ -109,7 +110,7 @@ const ComparingQuantitiesTest = () => {
                 }
             ];
 
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 20; i++) {
                 const generator = generators[rand(0, generators.length - 1)];
                 newQuestions.push(generator());
             }
@@ -119,6 +120,7 @@ const ComparingQuantitiesTest = () => {
     }, []);
 
     useEffect(() => {
+        if (isFinished) return;
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
@@ -145,7 +147,7 @@ const ComparingQuantitiesTest = () => {
             clearInterval(timer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, [sessionId]);
+    }, [sessionId, isFinished]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -153,7 +155,7 @@ const ComparingQuantitiesTest = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+    const recordQuestionAttempt = async (question, selected, isCorrect, isSkipped = false) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
 
@@ -161,7 +163,7 @@ const ComparingQuantitiesTest = () => {
         if (isTabActive.current) {
             timeSpent += Date.now() - questionStartTime.current;
         }
-        const seconds = Math.round(timeSpent / 1000);
+        const seconds = Math.max(0, Math.round(timeSpent / 1000));
 
         try {
             await api.recordAttempt({
@@ -175,7 +177,7 @@ const ComparingQuantitiesTest = () => {
                 student_answer: String(selected || ''),
                 is_correct: isCorrect,
                 solution_text: String(question.solution || ''),
-                time_spent_seconds: seconds >= 0 ? seconds : 0
+                time_spent_seconds: seconds
             });
         } catch (e) {
             console.error("Failed to record attempt", e);
@@ -188,35 +190,38 @@ const ComparingQuantitiesTest = () => {
         }
     };
 
-    const handleCheck = () => {
+    const handleQuestionComplete = () => {
         if (!selectedOption || !questions[qIndex]) return;
         const currentQuestion = questions[qIndex];
 
         const isRight = selectedOption === currentQuestion.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setShowExplanationModal(true);
-        }
 
-        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect: isRight } }));
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) timeSpent += Date.now() - questionStartTime.current;
+        const seconds = Math.max(0, Math.round(timeSpent / 1000));
+
+        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect: isRight, timeSpent: seconds, isSkipped: false } }));
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+        handleNext();
+    };
+
+    const handleSkip = () => {
+        const currentQuestion = questions[qIndex];
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) timeSpent += Date.now() - questionStartTime.current;
+        const seconds = Math.max(0, Math.round(timeSpent / 1000));
+
+        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption: 'Skipped', isCorrect: false, timeSpent: seconds, isSkipped: true } }));
+        recordQuestionAttempt(currentQuestion, 'Skipped', false, true);
+        handleNext();
     };
 
     useEffect(() => {
-        const savedAnswer = answers[qIndex];
-        if (savedAnswer) {
-            setSelectedOption(savedAnswer.selectedOption);
-            setIsCorrect(savedAnswer.isCorrect);
-            setIsSubmitted(true);
-        } else {
-            setSelectedOption(null);
-            setIsCorrect(false);
-            setIsSubmitted(false);
-        }
-    }, [qIndex, answers]);
+        setSelectedOption(null);
+        setIsCorrect(false);
+        setIsSubmitted(false);
+    }, [qIndex]);
 
     useEffect(() => {
         setShowExplanationModal(false);
@@ -255,7 +260,7 @@ const ComparingQuantitiesTest = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setIsFinished(true);
         }
     };
 
@@ -265,6 +270,93 @@ const ComparingQuantitiesTest = () => {
     };
 
     if (questions.length === 0) return <div>Loading...</div>;
+
+    if (isFinished) {
+        const attempted = Object.values(answers).filter(a => !a.isSkipped).length;
+        const correct = Object.values(answers).filter(a => a.isCorrect).length;
+        const wrong = attempted - correct;
+        const skipped = Object.values(answers).filter(a => a.isSkipped).length;
+
+        return (
+            <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif', padding: '2rem', paddingBottom: '5rem', backgroundColor: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
+                <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-3xl p-8 shadow-xl border-2 border-[#4FB7B3]/20 mb-8 mt-8">
+                        <div className="text-center mb-8">
+                            <img src={mascotImg} alt="Mascot" className="w-24 h-24 mx-auto mb-4 object-contain" />
+                            <h2 className="text-3xl font-bold text-[#31326F] mb-2">Test Complete!</h2>
+                            <p className="text-gray-500">Here's how you performed in {SKILL_NAME}</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                            <div className="bg-blue-50 p-4 rounded-2xl text-center border border-blue-100">
+                                <div className="text-blue-500 font-bold text-sm mb-1 uppercase tracking-wider">Total Time</div>
+                                <div className="text-2xl font-black text-[#31326F]">{formatTime(timeElapsed)}</div>
+                            </div>
+                            <div className="bg-green-50 p-4 rounded-2xl text-center border border-green-100">
+                                <div className="text-green-500 font-bold text-sm mb-1 uppercase tracking-wider">Correct</div>
+                                <div className="text-2xl font-black text-[#31326F]">{correct}</div>
+                            </div>
+                            <div className="bg-red-50 p-4 rounded-2xl text-center border border-red-100">
+                                <div className="text-red-500 font-bold text-sm mb-1 uppercase tracking-wider">Wrong</div>
+                                <div className="text-2xl font-black text-[#31326F]">{wrong}</div>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-2xl text-center border border-gray-100">
+                                <div className="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wider">Skipped</div>
+                                <div className="text-2xl font-black text-[#31326F]">{skipped}</div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-bold text-[#31326F] border-b pb-2">Detailed Report</h3>
+                            {questions.map((q, idx) => {
+                                const ans = answers[idx] || { isSkipped: true, selectedOption: 'Not Attempted', isCorrect: false, timeSpent: 0 };
+                                return (
+                                    <div key={idx} className="p-6 rounded-2xl border-2 border-gray-100 hover:border-[#4FB7B3]/30 transition-all bg-white shadow-sm">
+                                        <div className="flex justify-between items-start gap-4 mb-4">
+                                            <div className="flex items-center gap-3">
+                                                <span className="w-8 h-8 rounded-full bg-[#31326F] text-white flex items-center justify-center font-bold text-sm">{idx + 1}</span>
+                                                <div className="flex items-center gap-2 text-sm font-semibold text-gray-500">
+                                                    Time: {ans.timeSpent}s
+                                                </div>
+                                            </div>
+                                            {ans.isSkipped ? (
+                                                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600 font-bold text-xs uppercase">Skipped</span>
+                                            ) : ans.isCorrect ? (
+                                                <span className="px-3 py-1 rounded-full bg-green-100 text-green-600 font-bold text-xs uppercase">Correct</span>
+                                            ) : (
+                                                <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 font-bold text-xs uppercase">Incorrect</span>
+                                            )}
+                                        </div>
+                                        <div className="text-[#31326F] mb-4 font-medium"><LatexContent html={q.text} /></div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-sm">
+                                            <div className="p-3 rounded-xl bg-gray-50 border border-gray-100">
+                                                <span className="text-gray-400 block mb-1">Your Answer:</span>
+                                                <span className={ans.isCorrect ? "text-green-600 font-bold" : "text-red-500 font-bold"}>
+                                                    <LatexContent html={ans.selectedOption} />
+                                                </span>
+                                            </div>
+                                            <div className="p-3 rounded-xl bg-green-50 border border-green-100">
+                                                <span className="text-green-400 block mb-1">Correct Answer:</span>
+                                                <span className="text-green-700 font-bold"><LatexContent html={q.correctAnswer} /></span>
+                                            </div>
+                                        </div>
+                                        <div className="p-4 rounded-xl bg-amber-50/50 border border-amber-100 text-[#31326F] text-sm italic">
+                                            <span className="font-bold block mb-1 not-italic text-amber-700">Explanation:</span>
+                                            <LatexContent html={q.solution} />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="mt-10 flex justify-center">
+                            <button className="bg-[#31326F] text-white px-12 py-4 rounded-2xl font-black text-xl hover:scale-105 transition-transform shadow-xl" onClick={() => navigate(-1)}>Done</button>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
+        );
+    }
 
     const currentQuestion = questions[qIndex];
 
@@ -299,43 +391,19 @@ const ComparingQuantitiesTest = () => {
                                     {currentQuestion.options.map((option, idx) => (
                                         <button
                                             key={idx}
-                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
-                                                } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
+                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
                                             style={{ fontWeight: '500' }}
-                                            onClick={() => handleOptionSelect(option)}
-                                            disabled={isSubmitted}
+                                            onClick={() => setSelectedOption(option)}
                                         >
                                             <LatexContent html={option} />
                                         </button>
                                     ))}
-                                    {isSubmitted && isCorrect && (
-                                        <motion.div
-                                            initial={{ scale: 0.5, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            className="feedback-mini correct"
-                                            style={{ marginTop: '20px' }}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <img src={mascotImg} alt="Mascot" className="w-12 h-12 object-contain" />
-                                                <span>{feedbackMessage}</span>
-                                            </div>
-                                        </motion.div>
-                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
-
-            <ExplanationModal
-                isOpen={showExplanationModal}
-                isCorrect={isCorrect}
-                correctAnswer={currentQuestion.correctAnswer}
-                explanation={currentQuestion.solution}
-                onClose={() => setShowExplanationModal(false)}
-                onNext={() => { setShowExplanationModal(false); }}
-            />
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
@@ -351,26 +419,15 @@ const ComparingQuantitiesTest = () => {
                         </button>
                     </div>
                     <div className="bottom-center">
-                        {isSubmitted && (
-                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={20} /> View Explanation
-                            </button>
-                        )}
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
-                            <button className="nav-pill-next-btn bg-gray-200 text-gray-600" onClick={handlePrevious} disabled={qIndex === 0}>
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                            <button className="nav-pill-next-btn bg-gray-500 text-white border-2 border-gray-600" onClick={handleSkip}>
+                                Skip <ChevronRight size={28} strokeWidth={3} />
                             </button>
-                            {isSubmitted ? (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < questions.length - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}
-                                </button>
-                            ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit <Check size={28} strokeWidth={3} />
-                                </button>
-                            )}
+                            <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
+                                {qIndex < questions.length - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -386,26 +443,15 @@ const ComparingQuantitiesTest = () => {
                         >
                             <X size={20} />
                         </button>
-                        {isSubmitted && (
-                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={18} /> Explain
-                            </button>
-                        )}
                     </div>
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
-                            <button className="nav-pill-next-btn bg-gray-200 text-gray-600 p-2" onClick={handlePrevious} disabled={qIndex === 0}>
-                                <ChevronLeft size={20} />
+                            <button className="nav-pill-next-btn bg-gray-500 text-white p-2 border border-gray-600" onClick={handleSkip}>
+                                Skip
                             </button>
-                            {isSubmitted ? (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < questions.length - 1 ? "Next" : "Done"}
-                                </button>
-                            ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit
-                                </button>
-                            )}
+                            <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
+                                {qIndex < questions.length - 1 ? "Next" : "Done"}
+                            </button>
                         </div>
                     </div>
                 </div>
