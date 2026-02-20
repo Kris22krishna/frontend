@@ -67,6 +67,54 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             return;
         }
+        if (subtopic.id === "FCP-01") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
+            return;
+        }
+        if (subtopic.id === "FCP-02") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
+            return;
+        }
+        if (subtopic.id === "HH2-01") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
+            return;
+        }
+        if (subtopic.id === "HH2-02") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/neighbouring-numbers`);
+            return;
+        }
+        if (subtopic.id === "HH2-03") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/help-cranes`);
+            return;
+        }
+        if (subtopic.id === "HH2-04") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/tambola`);
+            return;
+        }
+        if (subtopic.id === "HH2-05") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/skip-and-solve`);
+            return;
+        }
+        if (subtopic.id === "HH2-06") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-in-the-centre`);
+            return;
+        }
+        if (subtopic.id === "HH2-07") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-puzzles`);
+            return;
+        }
+        if (subtopic.id === "HH2-08") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/the-number-detective`);
+            return;
+        }
+        if (subtopic.id === "HH2-09") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/paper-slips`);
+            return;
+        }
+        if (subtopic.id === "HH2-10") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/guess-the-number`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
         const gradeNum = grade.replace('grade', '');
@@ -75,13 +123,15 @@ const JuniorSubtopics = () => {
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
                 const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                 if (skill && skill.route) {
-                    if (decodedTopic === "The Cleanest Village") {
-                        navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
-                        return;
-                    } else if (decodedTopic === "Weigh It, Pour It") {
-                        navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
-                        return;
-                    }
+                    let topicSlug = decodedTopic.toLowerCase()
+                        .replace(/\s+/g, '-')
+                        .replace(/[()]/g, '');
+
+                    if (decodedTopic === "The Cleanest Village") topicSlug = "the-cleanest-village";
+                    if (decodedTopic === "Equal Groups") topicSlug = "equal-groups";
+
+                    navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
+                    return;
                 }
             }
         }
@@ -143,6 +193,12 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/fair-share/draw`);
             } else if (subtopic.id === "FS-04") {
                 navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            } else if (subtopic.id === "FCP-01") {
+                navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
+            } else if (subtopic.id === "FCP-02") {
+                navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
+            } else if (subtopic.id === "HH2-01") {
+                navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             } else if (String(grade).replace(/\D/g, '') === '1') {
                 const gradeConfigs = TOPIC_CONFIGS['1'];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
@@ -178,11 +234,16 @@ const JuniorSubtopics = () => {
                     if (gradeConfigs && gradeConfigs[decodedTopic]) {
                         const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                         if (skill && skill.route) {
-                            if (decodedTopic === "The Cleanest Village") {
-                                navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
-                            } else if (decodedTopic === "Weigh It, Pour It") {
-                                navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
-                            }
+                            // Construct slug from topic name
+                            let topicSlug = decodedTopic.toLowerCase()
+                                .replace(/\s+/g, '-')
+                                .replace(/[()]/g, '');
+
+                            // Special case for consistency if needed, though slugify usually works
+                            if (decodedTopic === "The Cleanest Village") topicSlug = "the-cleanest-village";
+                            if (decodedTopic === "Equal Groups") topicSlug = "equal-groups";
+
+                            navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
                             setPendingSubtopic(null);
                             return;
                         }
