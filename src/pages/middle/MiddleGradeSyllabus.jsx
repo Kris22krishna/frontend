@@ -625,6 +625,113 @@ const MiddleGradeSyllabus = () => {
                 }
             ]
         };
+
+        skillsByTopic['How Big? How Heavy?'] = {
+            'Volume Measurement': [
+                {
+                    skill_id: '1212',
+                    skill_name: 'Volume by Displacement',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Volume Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/volume-by-displacement'
+                },
+                {
+                    skill_id: '1213',
+                    skill_name: 'Units of Volume',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Volume Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/units-of-volume'
+                },
+                {
+                    skill_id: '1214',
+                    skill_name: 'Volume Estimation',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Volume Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/volume-estimation'
+                },
+                {
+                    skill_id: '1215',
+                    skill_name: 'Volume using unit cubes',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Volume Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/volume-unit-cubes'
+                }
+            ],
+            'Mass Measurement': [
+                {
+                    skill_id: '1216',
+                    skill_name: 'Units of Mass',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Mass Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/units-of-mass'
+                },
+                {
+                    skill_id: '1217',
+                    skill_name: 'Mass Conversion',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Mass Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/mass-conversion'
+                },
+                {
+                    skill_id: '1218',
+                    skill_name: 'Mass Calculation',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Mass Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/mass-calculation'
+                },
+                {
+                    skill_id: '1219',
+                    skill_name: 'Weight Estimation and Comparison',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Mass Measurement',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/weight-estimation'
+                }
+            ],
+            'Measurement Based Reasoning': [
+                {
+                    skill_id: '1220',
+                    skill_name: '3D shape Construction',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Measurement Based Reasoning',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/3d-construction'
+                },
+                {
+                    skill_id: '1221',
+                    skill_name: 'Packaging and Layering',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Measurement Based Reasoning',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/packaging-layering'
+                },
+                {
+                    skill_id: '1222',
+                    skill_name: 'Measurement in Real life',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Measurement Based Reasoning',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/measurement-real-life'
+                }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '1223',
+                    skill_name: 'Skill Application Problem',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/skill-application'
+                }
+            ]
+        };
     }
 
 
@@ -705,7 +812,7 @@ const MiddleGradeSyllabus = () => {
                         const accentColor = getAccentColor(index);
 
                         // Define fixed order for sub-topics
-                        const subTopicOrder = ["Multiplication", "Division", "Decimals", "Skill Application Problems"];
+                        const subTopicOrder = ["Multiplication", "Division", "Decimals", "Volume Measurement", "Mass Measurement", "Measurement Based Reasoning", "Skill Application Problems"];
                         const orderedSubTopics = Object.entries(subTopics).sort(([a], [b]) => {
                             const indexA = subTopicOrder.indexOf(a);
                             const indexB = subTopicOrder.indexOf(b);
