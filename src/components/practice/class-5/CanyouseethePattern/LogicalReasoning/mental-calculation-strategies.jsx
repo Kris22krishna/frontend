@@ -9,14 +9,14 @@ import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const CORRECT_MESSAGES = [
-    "✨ Multi-step Master! ✨",
-    "🌟 Complex logic, simple solution! 🌟",
-    "🎉 Correct! You've navigated the steps! 🎉",
-    "✨ Amazing focus on detail! ✨",
-    "🚀 Super! Multiple steps are no problem for you! 🚀"
+    "✨ Human Calculator! ✨",
+    "🌟 Lightning fast thinking! 🌟",
+    "🎉 Correct! You've mastered the shortcut! 🎉",
+    "✨ Amazing mental math! ✨",
+    "🚀 Super! Your brain is a supercomputer! 🚀"
 ];
 
-const MultiStepOperations = () => {
+const MentalCalculationStrategies = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const MultiStepOperations = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 1185;
-    const SKILL_NAME = "Multi-Step Operations";
+    const SKILL_ID = 1187;
+    const SKILL_NAME = "Mental Calculation Strategies";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -63,64 +63,64 @@ const MultiStepOperations = () => {
         const generateQuestions = () => {
             const qs = [];
             qs.push({
-                text: "A number is doubled and then 5 is added. If the result is 25, what is the number?",
-                correctAnswer: "10",
-                options: ["10", "15", "20", "5"],
-                solution: "Step 1: Subtract 5 ($25-5=20$). Step 2: Divide by 2 ($20÷2=10$)."
+                text: "To solve $45 + 19$ mentally, we can do $45 + 20$ and then:",
+                correctAnswer: "Subtract 1",
+                options: ["Subtract 1", "Add 1", "Keep it same", "Subtract 10"],
+                solution: "Since 19 is 1 less than 20, we add 20 ($45+20=65$) and then subtract 1 ($65-1=64$)."
             });
             qs.push({
-                text: "Add 12 to 8, then multiply by 3. What is the final answer?",
-                correctAnswer: "60",
-                options: ["60", "36", "44", "23"],
-                solution: "Step 1: $12 + 8 = 20$. Step 2: $20 \\times 3 = 60$."
+                text: "To solve $84 - 29$ mentally, a shortcut is $84 - 30$ then:",
+                correctAnswer: "Add 1",
+                options: ["Add 1", "Subtract 1", "Add 10", "Multiply by 2"],
+                solution: "Subtracting 30 is too much by 1. Add 1 back to compensate: $54 + 1 = 55$."
             });
             qs.push({
-                text: "Divide 40 by 5, then subtract 3. What is the result?",
-                correctAnswer: "5",
-                options: ["5", "8", "3", "11"],
-                solution: "Step 1: $40 ÷ 5 = 8$. Step 2: $8 - 3 = 5$."
+                text: "What is $125 + 99$ using the compensation strategy?",
+                correctAnswer: "224",
+                options: ["224", "225", "223", "200"],
+                solution: "$125 + 100 = 225$. Then subtract 1: $224$."
             });
             qs.push({
-                text: "Take 10, add 6, divide by 4, and then multiply by 2. What do you get?",
-                correctAnswer: "8",
-                options: ["8", "4", "16", "10"],
-                solution: "Step 1: $10+6=16$. Step 2: $16÷4=4$. Step 3: $4\\times2=8$."
+                text: "Strategy: Double and Halve. For $5 \\times 18$, we can solve $10 \\times ?$",
+                correctAnswer: "9",
+                options: ["9", "18", "36", "5"],
+                solution: "Double 5 is 10. Halve 18 is 9. $10 \\times 9 = 90$."
             });
             qs.push({
-                text: "One-third of a number is 10. If we add 5 to that number and then double it, what is the result?",
-                correctAnswer: "70",
-                options: ["70", "35", "30", "60"],
-                solution: "Step 1: The number is $10\\times3=30$. Step 2: $30+5=35$. Step 3: $35\\times2=70$."
-            });
-            qs.push({
-                text: "A square has a side of 4 cm. Double the side, then find the perimeter of the new square.",
-                correctAnswer: "32",
-                options: ["32", "16", "64", "24"],
-                solution: "Step 1: New side is $4\\times2=8$. Step 2: Perimeter is $8\\times4=32$."
-            });
-            qs.push({
-                text: "Start with 100. Subtract 20, divide by 4, add 10, and subtract original number's 10% value. What is left?",
-                correctAnswer: "20",
-                options: ["20", "30", "15", "25"],
-                solution: "1. $100-20=80$. 2. $80/4=20$. 3. $20+10=30$. 4. 10% of 100 is 10. 5. $30-10=20$."
-            });
-            qs.push({
-                text: "If $x + 5 = 12$ and $y = 2x$, what is $y + 10$?",
-                correctAnswer: "24",
-                options: ["24", "14", "34", "22"],
-                solution: "Step 1: $x = 12-5=7$. Step 2: $y = 2\\times7=14$. Step 3: $14+10=24$."
-            });
-            qs.push({
-                text: "Multiply 11 by 11, subtract 121, then add 50. What is the result?",
+                text: "Use 'Double and Halve' for $4 \\times 25$. It becomes $2 \\times ?$",
                 correctAnswer: "50",
-                options: ["50", "0", "121", "171"],
-                solution: "$121 - 121 + 50 = 50$."
+                options: ["50", "100", "25", "75"],
+                solution: "Halve 4 is 2. Double 25 is 50. $2 \\times 50 = 100$."
             });
             qs.push({
-                text: "A pattern goes: $2, 5, 11, 23, ...$ (Rule: *2+1). What is the value after 23?",
-                correctAnswer: "47",
-                options: ["47", "46", "49", "45"],
-                solution: "$23 \\times 2 + 1 = 46 + 1 = 47$."
+                text: "Strategy: Breaking Apart. Solve $15 \\times 6$ by doing $(10 \\times 6) + (? \\times 6)$.",
+                correctAnswer: "5",
+                options: ["5", "10", "15", "6"],
+                solution: "Break 15 into $10 + 5$. So, $(10\\times6) + (5\\times6) = 60 + 30 = 90$."
+            });
+            qs.push({
+                text: "Solve $25 \\times 12$ mentally using any strategy.",
+                correctAnswer: "300",
+                options: ["300", "250", "275", "325"],
+                solution: "Double and Halve twice: $25\\times12 = 50\\times6 = 100\\times3 = 300$."
+            });
+            qs.push({
+                text: "What is $48 \\times 5$ mentally?",
+                correctAnswer: "240",
+                options: ["240", "200", "250", "480"],
+                solution: "Multiply by 10 and then halve: $480 / 2 = 240$."
+            });
+            qs.push({
+                text: "Solve $99 \\times 7$ by doing $(100 \\times 7) - 7$. The answer is:",
+                correctAnswer: "693",
+                options: ["693", "700", "697", "707"],
+                solution: "$700 - 7 = 693$."
+            });
+            qs.push({
+                text: "Which strategy is best for $123 + 456$ without carrying error?",
+                correctAnswer: "Place Value (Add hundreds, then tens, then ones)",
+                options: ["Place Value (Add hundreds, then tens, then ones)", "Double and Halve", "Compensation", "Guess and Check"],
+                solution: "$100+400=500, 20+50=70, 3+6=9. Sum = 579$."
             });
 
             return qs;
@@ -237,7 +237,7 @@ const MultiStepOperations = () => {
         if (qIndex > 0) setQIndex(prev => prev - 1);
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Solving multi-level logic...</div>;
+    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Warming up your mental engine...</div>;
 
     if (showResults) {
         const score = Object.values(answers).filter(val => val.isCorrect).length;
@@ -250,11 +250,11 @@ const MultiStepOperations = () => {
                     <div className="sun-timer-container">
                         <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
                     </div>
-                    <div className="title-area"><h1 className="results-title">Multi-Step Mastery</h1></div>
+                    <div className="title-area"><h1 className="results-title">Brain Power Log</h1></div>
                 </header>
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Pathfinder! 🚀</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-1">Strategies Unlocked! 🧠</h2>
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
                                 <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
@@ -283,7 +283,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Path Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Shortcut Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -319,7 +319,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> New Path</button>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> New Strategies</button>
                         <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
                     </div>
                 </main>
@@ -390,4 +390,4 @@ const MultiStepOperations = () => {
     );
 };
 
-export default MultiStepOperations;
+export default MentalCalculationStrategies;

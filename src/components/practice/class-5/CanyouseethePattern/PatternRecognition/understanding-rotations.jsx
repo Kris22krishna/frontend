@@ -5,7 +5,38 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
+import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
+
+const CORRECT_MESSAGES = [
+    "✨ Perfect rotation! ✨",
+    "🌟 You've got a great sense of direction! 🌟",
+    "🎉 Correct! That shape turned perfectly! 🎉",
+    "✨ Amazing spatial reasoning! ✨",
+    "🚀 Super! You're a rotation expert! 🚀"
+];
+
+const ShapeRotation = ({ type, angle, color = "#4FB7B3", size = 60 }) => {
+    const renderShape = () => {
+        switch (type) {
+            case 'L': return <path d="M15,10 V40 H35" fill="none" stroke={color} strokeWidth="5" strokeLinecap="round" />;
+            case 'arrow': return <path d="M25,10 V40 M15,20 L25,10 L35,20" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />;
+            case 'flag': return <g><line x1="20" y1="40" x2="20" y2="10" stroke="#31326F" strokeWidth="2" /><rect x="20" y="10" width="20" height="15" fill={color} stroke="#31326F" strokeWidth="1" /></g>;
+            case 'triangle': return <polygon points="25,10 40,40 10,40" fill={color} stroke="#31326F" strokeWidth="2" />;
+            default: return null;
+        }
+    };
+
+    return (
+        <div className="flex justify-center items-center">
+            <motion.div animate={{ rotate: angle }} transition={{ duration: 0.5 }}>
+                <svg width={size} height={size} viewBox="0 0 50 50">
+                    {renderShape()}
+                </svg>
+            </motion.div>
+        </div>
+    );
+};
 
 const UnderstandingRotations = () => {
     const { grade } = useParams();
@@ -18,72 +49,133 @@ const UnderstandingRotations = () => {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
+    const [feedbackMessage, setFeedbackMessage] = useState("");
     const [showResults, setShowResults] = useState(false);
 
-    const SKILL_ID = 2003;
+    const [sessionId, setSessionId] = useState(null);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
+    const SKILL_ID = 1178;
     const SKILL_NAME = "Understanding Rotations";
+
     const TOTAL_QUESTIONS = 10;
+    const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
-        const generateQuestion = (idx) => {
-            const types = ['clock', 'shape', 'degree'];
-            const type = types[idx % types.length];
-            let questionText, correctAnswer, solution, options;
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId && !sessionId) {
+            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => console.error("Failed to start session", err));
+        }
 
-            if (type === 'clock') {
-                questionText = `A clock hand points at 12. If it rotates $90^\\circ$ clockwise, where will it point?`;
-                correctAnswer = "3";
-                solution = `A full circle is $360^\\circ$. $90^\\circ$ is a quarter turn. From 12, a quarter turn clockwise lands on <strong>3</strong>.`;
-                options = ["3", "6", "9", "1"];
-            } else if (type === 'shape') {
-                questionText = `An arrow points UP. If you turn it by half a turn ($180^\\circ$), where will it point?`;
-                correctAnswer = "Down";
-                solution = `A $180^\\circ$ turn is exactly opposite. The opposite of "Up" is <strong>Down</strong>.`;
-                options = ["Down", "Left", "Right", "Up"];
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
             } else {
-                questionText = `How many $90^\\circ$ turns make a full $360^\\circ$ rotation?`;
-                correctAnswer = "4";
-                solution = `$360 \\div 90 = 4$. So, <strong>4</strong> quarter turns make a full circle.`;
-                options = ["4", "2", "3", "36"];
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
             }
-            return { questionText, correctAnswer, solution, options };
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        const generateQuestions = () => {
+            const qs = [];
+            const easyData = [
+                { type: 'arrow', start: 0, turn: 90, desc: "a quarter turn (90° clockwise)" },
+                { type: 'L', start: 0, turn: 180, desc: "a half turn (180°)" },
+                { type: 'flag', start: 0, turn: 90, desc: "a quarter turn (90° clockwise)" }
+            ];
+
+            easyData.forEach(d => {
+                qs.push({
+                    text: `If we give this shape ${d.desc}, which one shows the new position?`,
+                    visual: <ShapeRotation type={d.type} angle={d.start} />,
+                    correctAnswer: d.turn.toString(),
+                    options: ["0", "90", "180", "270"],
+                    isCustomOptions: true,
+                    optionVisuals: [0, 90, 180, 270].map(a => <ShapeRotation type={d.type} angle={a} size={40} />),
+                    solution: `A ${d.desc} means the shape rotates by ${d.turn} degrees. Imagine the shape turning like the hand of a clock.`
+                });
+            });
+
+            const medData = [
+                { type: 'triangle', start: 0, end: 90, ans: "90°" },
+                { type: 'arrow', start: 0, end: 270, ans: "270°" },
+                { type: 'flag', start: 0, end: 180, ans: "180°" }
+            ];
+
+            medData.forEach(d => {
+                qs.push({
+                    text: "By how many degrees has this shape rotated?",
+                    visual: (
+                        <div className="flex gap-12 items-center justify-center py-4">
+                            <div className="text-center">
+                                <span className="text-sm font-bold text-gray-400 block mb-2">Original</span>
+                                <ShapeRotation type={d.type} angle={d.start} color="#31326F" size={50} />
+                            </div>
+                            <div className="text-3xl text-gray-300">→</div>
+                            <div className="text-center">
+                                <span className="text-sm font-bold text-[#4FB7B3] block mb-2">Rotated</span>
+                                <ShapeRotation type={d.type} angle={d.end} color="#4FB7B3" size={50} />
+                            </div>
+                        </div>
+                    ),
+                    correctAnswer: d.ans,
+                    options: ["90°", "180°", "270°", "360°"],
+                    isCustomOptions: false,
+                    solution: `Observe it has turned ${d.ans} clockwise from the original position.`
+                });
+            });
+
+            const hardData = [
+                { text: "Arrow after two 90° clockwise turns?", ans: "180°" },
+                { text: "A 90° anti-clockwise turn is equal to ____ clockwise.", ans: "270°" },
+                { text: "3/4 of a full circle turn in degrees?", ans: "270°" },
+                { text: "Degrees needed for a full circle return?", ans: "360°" }
+            ];
+
+            hardData.forEach(d => {
+                qs.push({
+                    text: d.text,
+                    correctAnswer: d.ans,
+                    options: ["90°", "180°", "270°", "360°"],
+                    isCustomOptions: false,
+                    solution: `A quarter turn is 90°. A half turn is 180°. A 3/4 turn is 270°. A full turn is 360°.`
+                });
+            });
+
+            return qs;
         };
 
-        const questions = [];
-        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-            const q = generateQuestion(i);
-            questions.push({
-                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>${q.questionText}</div>`,
-                correctAnswer: q.correctAnswer,
-                solution: q.solution,
-                shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
-            });
-        }
-        setCurrentQuestion(questions[0]);
-        setShuffledOptions(questions[0].shuffledOptions);
-        setSessionQuestions(questions);
+        setSessionQuestions(generateQuestions());
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, []);
 
-    const [sessionQuestions, setSessionQuestions] = useState([]);
-
     useEffect(() => {
-        if (!showResults) {
-            const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
-            return () => clearInterval(timer);
-        }
+        if (showResults) return;
+        const timer = setInterval(() => {
+            setTimeElapsed(prev => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
     }, [showResults]);
 
     useEffect(() => {
         if (sessionQuestions.length > 0) {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
-            setShuffledOptions(qData.shuffledOptions);
-            const prev = answers[qIndex];
-            if (prev) {
-                setSelectedOption(prev.selected);
+            setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
+            const previousAnswer = answers[qIndex];
+            if (previousAnswer) {
+                setSelectedOption(previousAnswer.selected);
                 setIsSubmitted(true);
-                setIsCorrect(prev.isCorrect);
+                setIsCorrect(previousAnswer.isCorrect);
             } else {
                 setSelectedOption(null);
                 setIsSubmitted(false);
@@ -92,55 +184,247 @@ const UnderstandingRotations = () => {
         }
     }, [qIndex, sessionQuestions]);
 
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (!userId) return;
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) timeSpent += Date.now() - questionStartTime.current;
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: SKILL_ID,
+                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
+                is_correct: isCorrect,
+                solution_text: String(question.solution || ''),
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
+
+    const handleNext = async () => {
+        if (qIndex < TOTAL_QUESTIONS - 1) {
+            setQIndex(prev => prev + 1);
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
+        } else {
+            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            if (userId) {
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                try {
+                    await api.createReport({
+                        title: SKILL_NAME,
+                        type: 'practice',
+                        score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                        parameters: {
+                            skill_id: SKILL_ID,
+                            skill_name: SKILL_NAME,
+                            total_questions: TOTAL_QUESTIONS,
+                            correct_answers: totalCorrect,
+                            time_taken_seconds: timeElapsed
+                        },
+                        user_id: parseInt(userId, 10)
+                    });
+                } catch (err) {
+                    console.error("Failed to create report", err);
+                }
+            }
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            setShowResults(true);
+        }
+    };
+
     const handleCheck = () => {
         if (!selectedOption || !currentQuestion) return;
         const isRight = selectedOption === currentQuestion.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
-        if (!isRight) setShowExplanationModal(true);
+        if (isRight) setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+        else setShowExplanationModal(true);
+        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
     };
 
-    const handleNext = () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) setQIndex(prev => prev + 1);
-        else setShowResults(true);
+    const handlePrevious = () => {
+        if (qIndex > 0) setQIndex(prev => prev - 1);
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex h-screen items-center justify-center text-2xl font-bold">Loading...</div>;
+    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Spinning up the patterns...</div>;
 
     if (showResults) {
+        const score = Object.values(answers).filter(val => val.isCorrect).length;
+        const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
+
         return (
-            <div className="junior-practice-page results-view overflow-y-auto">
-                <main className="practice-content results-content text-center mt-12">
-                    <h2 className="text-4xl font-black">Score: {Object.values(answers).filter(a => a.isCorrect).length}/{TOTAL_QUESTIONS}</h2>
-                    <button className="magic-pad-btn play-again mt-8 px-12 py-4 rounded-2xl bg-[#31326F] text-white font-semibold" onClick={() => navigate(-1)}>Back to Topics</button>
+            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+                <header className="junior-practice-header results-header relative">
+                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Topics</button>
+                    <div className="sun-timer-container">
+                        <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
+                    </div>
+                    <div className="title-area"><h1 className="results-title">Spatial Mastery</h1></div>
+                </header>
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Rotation Expert! 🔄</h2>
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (
+                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
+                                    <Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} />
+                                </motion.div>
+                            ))}
+                        </div>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{TOTAL_QUESTIONS}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Score</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score * 10} pts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Rotation Log 📜</h3>
+                        <div className="space-y-4">
+                            {sessionQuestions.map((q, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <div key={idx} className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}>
+                                        <div className="flex items-start gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
+                                            <div className="flex-1">
+                                                <div className="text-lg font-bold text-[#31326F] mb-4"><LatexContent html={q.text} /></div>
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>{ans.selected}</span>
+                                                    </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">{q.correctAnswer}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Solution 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600"><LatexContent html={q.solution} /></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Spin Again</button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
+                    </div>
                 </main>
             </div>
         );
     }
 
     return (
-        <div className="junior-practice-page village-theme">
-            <header className="junior-practice-header flex justify-between items-center px-8">
-                <button onClick={() => navigate(-1)} className="bg-white/90 p-2 rounded-xl border-2 border-[#4FB7B3]/30"><X size={24} /></button>
-                <div className="bg-white/90 px-6 py-2 rounded-full border-2 border-[#4FB7B3]/30 font-semibold text-xl">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
-                <div className="bg-white/90 px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 font-bold text-lg">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
+        <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left"></div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
+                </div>
+                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{formatTime(timeElapsed)}</div></div>
             </header>
-            <main className="practice-content-wrapper flex flex-col items-center mt-12">
-                <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="question-card-modern w-full max-w-3xl p-8 bg-white rounded-3xl shadow-xl">
-                    <h2 className="text-3xl font-medium text-center mb-12"><LatexContent html={currentQuestion.text} /></h2>
-                    <div className="grid grid-cols-2 gap-4">
-                        {shuffledOptions.map((opt, i) => (
-                            <button key={i} className={`option-btn-modern p-6 rounded-2xl border-4 text-2xl font-medium ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF]' : 'border-gray-100'}`} onClick={() => !isSubmitted && setSelectedOption(opt)} disabled={isSubmitted}><LatexContent html={opt} /></button>
-                        ))}
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col" style={{ width: '100%' }}>
+                        <AnimatePresence mode="wait">
+                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '400', textAlign: 'center' }}><LatexContent html={currentQuestion.text} /></h2></div>
+                                    {currentQuestion.visual && <div className="my-4">{currentQuestion.visual}</div>}
+                                    <div className="interaction-area-modern">
+                                        <div className="options-grid-modern">
+                                            {shuffledOptions.map((option, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
+                                                    onClick={() => !isSubmitted && setSelectedOption(option)}
+                                                    disabled={isSubmitted}
+                                                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', minHeight: '120px' }}
+                                                >
+                                                    {currentQuestion.isCustomOptions ? (
+                                                        <>
+                                                            {currentQuestion.optionVisuals[currentQuestion.options.indexOf(option)]}
+                                                            <span className="text-sm font-bold text-[#31326F]">{option}°</span>
+                                                        </>
+                                                    ) : (
+                                                        <LatexContent html={option} />
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {isSubmitted && isCorrect && (
+                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>{feedbackMessage}</motion.div>
+                                        )}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
-                </motion.div>
+                </div>
             </main>
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
-            <footer className="junior-bottom-bar fixed bottom-0 w-full bg-white p-6 shadow-2xl flex justify-between items-center">
-                <button className="bg-red-50 text-red-500 px-8 py-3 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate(-1)}>Exit</button>
-                <div className="flex gap-4">
-                    {isSubmitted ? <button className="nav-pill-next-btn px-8 py-3 rounded-xl bg-[#31326F] text-white font-bold" onClick={handleNext}>Next</button> : <button className="nav-pill-submit-btn px-8 py-3 rounded-xl bg-[#4FB7B3] text-white font-bold" onClick={handleCheck} disabled={!selectedOption}>Submit</button>}
+            <footer className="junior-bottom-bar">
+                <div className="desktop-footer-controls">
+                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>Exit Session</button></div>
+                    <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> View Explanation</button>}</div>
+                    <div className="bottom-right">
+                        <div className="nav-buttons-group">
+                            {qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious}><ChevronLeft size={28} strokeWidth={3} /> Prev</button>}
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? <>Next <ChevronRight size={28} strokeWidth={3} /></> : <>Done <Check size={28} strokeWidth={3} /></>}</button>
+                            ) : (
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={28} strokeWidth={3} /></button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="mobile-footer-controls">
+                    <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
+                    <div className="nav-buttons-group">
+                        {isSubmitted ? (
+                            <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}</button>
+                        ) : (
+                            <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit</button>
+                        )}
+                    </div>
                 </div>
             </footer>
         </div>

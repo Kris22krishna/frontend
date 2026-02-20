@@ -9,14 +9,14 @@ import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const CORRECT_MESSAGES = [
-    "✨ Multi-step Master! ✨",
-    "🌟 Complex logic, simple solution! 🌟",
-    "🎉 Correct! You've navigated the steps! 🎉",
-    "✨ Amazing focus on detail! ✨",
-    "🚀 Super! Multiple steps are no problem for you! 🚀"
+    "✨ Master of application! ✨",
+    "🌟 You've solved the real-world mystery! 🌟",
+    "🎉 Correct! You can apply these patterns anywhere! 🎉",
+    "✨ Brilliant pattern application! ✨",
+    "🚀 Super! You're ready for any challenge! 🚀"
 ];
 
-const MultiStepOperations = () => {
+const SkillApplicationProblemsPatterns = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const MultiStepOperations = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 1185;
-    const SKILL_NAME = "Multi-Step Operations";
+    const SKILL_ID = 1203;
+    const SKILL_NAME = "Skill Application Problems - Patterns";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -63,64 +63,64 @@ const MultiStepOperations = () => {
         const generateQuestions = () => {
             const qs = [];
             qs.push({
-                text: "A number is doubled and then 5 is added. If the result is 25, what is the number?",
-                correctAnswer: "10",
-                options: ["10", "15", "20", "5"],
-                solution: "Step 1: Subtract 5 ($25-5=20$). Step 2: Divide by 2 ($20÷2=10$)."
+                text: "A post office uses a pattern for PIN codes: 101, 202, 303, ... What is the PIN code for the 10th office?",
+                correctAnswer: "1010",
+                options: ["1010", "1001", "909", "111"],
+                solution: "Pattern: $Office \\# \\times 101$. For the 10th office: $10 \\times 101 = 1010$."
             });
             qs.push({
-                text: "Add 12 to 8, then multiply by 3. What is the final answer?",
-                correctAnswer: "60",
-                options: ["60", "36", "44", "23"],
-                solution: "Step 1: $12 + 8 = 20$. Step 2: $20 \\times 3 = 60$."
-            });
-            qs.push({
-                text: "Divide 40 by 5, then subtract 3. What is the result?",
-                correctAnswer: "5",
-                options: ["5", "8", "3", "11"],
-                solution: "Step 1: $40 ÷ 5 = 8$. Step 2: $8 - 3 = 5$."
-            });
-            qs.push({
-                text: "Take 10, add 6, divide by 4, and then multiply by 2. What do you get?",
-                correctAnswer: "8",
-                options: ["8", "4", "16", "10"],
-                solution: "Step 1: $10+6=16$. Step 2: $16÷4=4$. Step 3: $4\\times2=8$."
-            });
-            qs.push({
-                text: "One-third of a number is 10. If we add 5 to that number and then double it, what is the result?",
-                correctAnswer: "70",
-                options: ["70", "35", "30", "60"],
-                solution: "Step 1: The number is $10\\times3=30$. Step 2: $30+5=35$. Step 3: $35\\times2=70$."
-            });
-            qs.push({
-                text: "A square has a side of 4 cm. Double the side, then find the perimeter of the new square.",
+                text: "A scientist observes a bacterium that doubles every hour. If there are 2 bacteria at 1 PM, how many at 5 PM?",
                 correctAnswer: "32",
-                options: ["32", "16", "64", "24"],
-                solution: "Step 1: New side is $4\\times2=8$. Step 2: Perimeter is $8\\times4=32$."
+                options: ["32", "16", "64", "10"],
+                solution: "1 PM: 2. 2 PM: 4. 3 PM: 8. 4 PM: 16. 5 PM: 32. Doubling each step."
             });
             qs.push({
-                text: "Start with 100. Subtract 20, divide by 4, add 10, and subtract original number's 10% value. What is left?",
-                correctAnswer: "20",
-                options: ["20", "30", "15", "25"],
-                solution: "1. $100-20=80$. 2. $80/4=20$. 3. $20+10=30$. 4. 10% of 100 is 10. 5. $30-10=20$."
+                text: "Rohan is making a tower. Level 1: 1 block, Level 2: 3, Level 3: 6. How many in Level 5? (Triangular numbers)",
+                correctAnswer: "15",
+                options: ["15", "10", "21", "12"],
+                solution: "Level 1: 1. Level 2: $1+2=3$. Level 3: $3+3=6$. Level 4: $6+4=10$. Level 5: $10+5=15$."
             });
             qs.push({
-                text: "If $x + 5 = 12$ and $y = 2x$, what is $y + 10$?",
-                correctAnswer: "24",
-                options: ["24", "14", "34", "22"],
-                solution: "Step 1: $x = 12-5=7$. Step 2: $y = 2\\times7=14$. Step 3: $14+10=24$."
+                text: "A secret message uses A=1, B=2, C=3... What does the sequence 13-1-20-8 mean?",
+                correctAnswer: "MATH",
+                options: ["MATH", "FAST", "COOL", "READ"],
+                solution: "13=M, 1=A, 20=T, 8=H. So, MATH."
             });
             qs.push({
-                text: "Multiply 11 by 11, subtract 121, then add 50. What is the result?",
-                correctAnswer: "50",
-                options: ["50", "0", "121", "171"],
-                solution: "$121 - 121 + 50 = 50$."
+                text: "A digital clock shows 1:01. What is the next palindrome time after this?",
+                correctAnswer: "1:11",
+                options: ["1:11", "2:02", "1:21", "1:51"],
+                solution: "1:01, then 1:11, then 1:21... the very next one is 1:11."
             });
             qs.push({
-                text: "A pattern goes: $2, 5, 11, 23, ...$ (Rule: *2+1). What is the value after 23?",
-                correctAnswer: "47",
-                options: ["47", "46", "49", "45"],
-                solution: "$23 \\times 2 + 1 = 46 + 1 = 47$."
+                text: "A garden has rows of trees. Row 1: 5. Row 2: 10. Row 3: 15. Which row will have 50 trees?",
+                correctAnswer: "10",
+                options: ["10", "15", "5", "50"],
+                solution: "Trees = $5 \\times row \\#$. $50 = 5 \\times 10$."
+            });
+            qs.push({
+                text: "To pay for a toy costing ₹99, I give a ₹100 note. Best mental calculation for change?",
+                correctAnswer: "100 - 99 = 1",
+                options: ["100 - 99 = 1", "100 - 90 - 9", "Keep the 100", "Add 99 to 100"],
+                solution: "Compensation strategy: Simply subtract 99 from 100 to get ₹1."
+            });
+            qs.push({
+                text: "A floor uses square tiles. Stage 1: 1. Stage 2: 4. Stage 3: 9. How many tiles in Stage 10?",
+                correctAnswer: "100",
+                options: ["100", "50", "81", "110"],
+                solution: "Square numbers: $Stage^2$. $10 \\times 10 = 100$."
+            });
+            qs.push({
+                text: "Rule: 'Divide by 2 then add 5'. If a number goes through twice and becomes 10, what was the start?",
+                correctAnswer: "10",
+                options: ["10", "20", "5", "15"],
+                solution: "Backwards: $(10-5)\\times2 = 10$. Then $(10-5)\\times2 = 10$. Start was 10."
+            });
+            qs.push({
+                text: "Grid row 1: 2, 4, 6. Row 2: 4, 8, 12. What are Row 3 numbers?",
+                correctAnswer: "6, 12, 18",
+                options: ["6, 12, 18", "6, 8, 10", "8, 16, 24", "7, 14, 21"],
+                solution: "Row 1: $2 \\times (1,2,3)$. Row 2: $4 \\times (1,2,3)$. Row 3: $6 \\times (1,2,3) = 6, 12, 18$."
             });
 
             return qs;
@@ -237,7 +237,7 @@ const MultiStepOperations = () => {
         if (qIndex > 0) setQIndex(prev => prev - 1);
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Solving multi-level logic...</div>;
+    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Connecting all skills...</div>;
 
     if (showResults) {
         const score = Object.values(answers).filter(val => val.isCorrect).length;
@@ -250,11 +250,11 @@ const MultiStepOperations = () => {
                     <div className="sun-timer-container">
                         <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
                     </div>
-                    <div className="title-area"><h1 className="results-title">Multi-Step Mastery</h1></div>
+                    <div className="title-area"><h1 className="results-title">Challenge Log</h1></div>
                 </header>
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Pathfinder! 🚀</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-1">Application Ace! 🎓</h2>
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
                                 <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
@@ -283,7 +283,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Path Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Mastery Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -319,7 +319,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> New Path</button>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> New Challenge</button>
                         <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
                     </div>
                 </main>
@@ -390,4 +390,4 @@ const MultiStepOperations = () => {
     );
 };
 
-export default MultiStepOperations;
+export default SkillApplicationProblemsPatterns;

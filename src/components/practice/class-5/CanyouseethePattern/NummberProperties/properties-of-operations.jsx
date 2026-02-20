@@ -9,14 +9,14 @@ import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const CORRECT_MESSAGES = [
-    "✨ Multi-step Master! ✨",
-    "🌟 Complex logic, simple solution! 🌟",
-    "🎉 Correct! You've navigated the steps! 🎉",
-    "✨ Amazing focus on detail! ✨",
-    "🚀 Super! Multiple steps are no problem for you! 🚀"
+    "✨ You're a property expert! ✨",
+    "🌟 Brilliant understanding of operations! 🌟",
+    "🎉 Correct! You've mastered the rules of math! 🎉",
+    "✨ Amazing work on these properties! ✨",
+    "🚀 Super! Math rules are your strength! 🚀"
 ];
 
-const MultiStepOperations = () => {
+const PropertiesOfOperations = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const MultiStepOperations = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 1185;
-    const SKILL_NAME = "Multi-Step Operations";
+    const SKILL_ID = 1180;
+    const SKILL_NAME = "Properties of Operations";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -62,65 +62,58 @@ const MultiStepOperations = () => {
 
         const generateQuestions = () => {
             const qs = [];
+            for (let i = 0; i < 3; i++) {
+                const a = 12 + i * 5;
+                const b = 8 + i * 3;
+                qs.push({
+                    text: `Which expression is the same as $${a} + ${b}$?`,
+                    correctAnswer: `$${b} + ${a}$`,
+                    options: [`$${b} + ${a}$`, `$${a + 1} + ${b}$`, `$${a} - ${b}$`, `$${a} \\times ${b}$`],
+                    solution: `The <b>Commutative Property</b> states that the order of numbers doesn't change the sum: $a + b = b + a$.`
+                });
+            }
+
             qs.push({
-                text: "A number is doubled and then 5 is added. If the result is 25, what is the number?",
-                correctAnswer: "10",
-                options: ["10", "15", "20", "5"],
-                solution: "Step 1: Subtract 5 ($25-5=20$). Step 2: Divide by 2 ($20÷2=10$)."
+                text: "Complete the equation: $(15 + 25) + 10 = 15 + (... + 10)$",
+                correctAnswer: "25",
+                options: ["25", "15", "10", "40"],
+                solution: "The <b>Associative Property</b> allows us to group numbers differently without changing the total."
             });
             qs.push({
-                text: "Add 12 to 8, then multiply by 3. What is the final answer?",
-                correctAnswer: "60",
-                options: ["60", "36", "44", "23"],
-                solution: "Step 1: $12 + 8 = 20$. Step 2: $20 \\times 3 = 60$."
+                text: "What is $5 \\times (10 + 2)$ equal to?",
+                correctAnswer: "$(5 \\times 10) + (5 \\times 2)$",
+                options: ["$(5 \\times 10) + (5 \\times 2)$", "$(5 + 10) \\times (5 + 2)$", "$5 \\times 10 + 2$", "$5 + 12$"],
+                solution: "The <b>Distributive Property</b> means we multiply each number inside the parentheses by the number outside: $a(b + c) = ab + ac$."
             });
             qs.push({
-                text: "Divide 40 by 5, then subtract 3. What is the result?",
-                correctAnswer: "5",
-                options: ["5", "8", "3", "11"],
-                solution: "Step 1: $40 ÷ 5 = 8$. Step 2: $8 - 3 = 5$."
+                text: "Which property is shown here? $24 \\times 1 = 24$",
+                correctAnswer: "Identity Property",
+                options: ["Identity Property", "Zero Property", "Commutative Property", "Associative Property"],
+                solution: "The <b>Identity Property of Multiplication</b> states that any number multiplied by 1 stays the same."
             });
             qs.push({
-                text: "Take 10, add 6, divide by 4, and then multiply by 2. What do you get?",
-                correctAnswer: "8",
-                options: ["8", "4", "16", "10"],
-                solution: "Step 1: $10+6=16$. Step 2: $16÷4=4$. Step 3: $4\\times2=8$."
+                text: "To solve $99 \\times 5$ easily, we can write it as:",
+                correctAnswer: "$(100 - 1) \\times 5$",
+                options: ["$(100 - 1) \\times 5$", "$(90 + 9) + 5$", "$99 + 99 + 99 + 99$", "$100 \\times 5$"],
+                solution: "Using the <b>Distributive Property</b> ($100-1$) makes it easier: $500 - 5 = 495$."
             });
             qs.push({
-                text: "One-third of a number is 10. If we add 5 to that number and then double it, what is the result?",
-                correctAnswer: "70",
-                options: ["70", "35", "30", "60"],
-                solution: "Step 1: The number is $10\\times3=30$. Step 2: $30+5=35$. Step 3: $35\\times2=70$."
+                text: "Solve using property: $12 \\times 5 + 12 \\times 5 = ?$",
+                correctAnswer: "120",
+                options: ["120", "60", "72", "112"],
+                solution: "$12 \\times (5 + 5) = 12 \\times 10 = 120$."
             });
             qs.push({
-                text: "A square has a side of 4 cm. Double the side, then find the perimeter of the new square.",
-                correctAnswer: "32",
-                options: ["32", "16", "64", "24"],
-                solution: "Step 1: New side is $4\\times2=8$. Step 2: Perimeter is $8\\times4=32$."
+                text: "What is the missing number? $36 + (4 + 19) = (... + 4) + 19$",
+                correctAnswer: "36",
+                options: ["36", "4", "19", "40"],
+                solution: "This is the <b>Associative Property of Addition</b>."
             });
             qs.push({
-                text: "Start with 100. Subtract 20, divide by 4, add 10, and subtract original number's 10% value. What is left?",
-                correctAnswer: "20",
-                options: ["20", "30", "15", "25"],
-                solution: "1. $100-20=80$. 2. $80/4=20$. 3. $20+10=30$. 4. 10% of 100 is 10. 5. $30-10=20$."
-            });
-            qs.push({
-                text: "If $x + 5 = 12$ and $y = 2x$, what is $y + 10$?",
-                correctAnswer: "24",
-                options: ["24", "14", "34", "22"],
-                solution: "Step 1: $x = 12-5=7$. Step 2: $y = 2\\times7=14$. Step 3: $14+10=24$."
-            });
-            qs.push({
-                text: "Multiply 11 by 11, subtract 121, then add 50. What is the result?",
-                correctAnswer: "50",
-                options: ["50", "0", "121", "171"],
-                solution: "$121 - 121 + 50 = 50$."
-            });
-            qs.push({
-                text: "A pattern goes: $2, 5, 11, 23, ...$ (Rule: *2+1). What is the value after 23?",
-                correctAnswer: "47",
-                options: ["47", "46", "49", "45"],
-                solution: "$23 \\times 2 + 1 = 46 + 1 = 47$."
+                text: "Which of these is NOT true?",
+                correctAnswer: "$20 - 5 = 5 - 20$",
+                options: ["$20 - 5 = 5 - 20$", "$20 + 5 = 5 + 20$", "$20 \\times 5 = 5 \\times 20$", "$(2 + 3) + 4 = 2 + (3 + 4)$"],
+                solution: "The <b>Commutative Property</b> does not apply to subtraction or division."
             });
 
             return qs;
@@ -237,7 +230,7 @@ const MultiStepOperations = () => {
         if (qIndex > 0) setQIndex(prev => prev - 1);
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Solving multi-level logic...</div>;
+    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Loading Math Rules...</div>;
 
     if (showResults) {
         const score = Object.values(answers).filter(val => val.isCorrect).length;
@@ -250,11 +243,11 @@ const MultiStepOperations = () => {
                     <div className="sun-timer-container">
                         <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
                     </div>
-                    <div className="title-area"><h1 className="results-title">Multi-Step Mastery</h1></div>
+                    <div className="title-area"><h1 className="results-title">Math Rules Mastery</h1></div>
                 </header>
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Pathfinder! 🚀</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Properties Champion! 🏆</h2>
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
                                 <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
@@ -262,7 +255,7 @@ const MultiStepOperations = () => {
                                 </motion.div>
                             ))}
                         </div>
-                        <div className="results-stats-grid grid grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-3xl">
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
                             <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
                                 <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
                                 <span className="text-3xl font-black text-[#31326F]">{score}/{TOTAL_QUESTIONS}</span>
@@ -283,7 +276,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Path Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Properties Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -319,7 +312,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> New Path</button>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Practice More</button>
                         <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
                     </div>
                 </main>
@@ -390,4 +383,4 @@ const MultiStepOperations = () => {
     );
 };
 
-export default MultiStepOperations;
+export default PropertiesOfOperations;

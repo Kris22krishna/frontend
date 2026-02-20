@@ -9,14 +9,14 @@ import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const CORRECT_MESSAGES = [
-    "✨ Multi-step Master! ✨",
-    "🌟 Complex logic, simple solution! 🌟",
-    "🎉 Correct! You've navigated the steps! 🎉",
-    "✨ Amazing focus on detail! ✨",
-    "🚀 Super! Multiple steps are no problem for you! 🚀"
+    "✨ Logic Wizard! ✨",
+    "🌟 Rules followed perfectly! 🌟",
+    "🎉 Correct! You've mastered the rules! 🎉",
+    "✨ Fantastic logic! ✨",
+    "🚀 Super! No rule is too complex for you! 🚀"
 ];
 
-const MultiStepOperations = () => {
+const RuleApplication = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -34,8 +34,8 @@ const MultiStepOperations = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 1185;
-    const SKILL_NAME = "Multi-Step Operations";
+    const SKILL_ID = 1184;
+    const SKILL_NAME = "Rule Application";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -62,65 +62,62 @@ const MultiStepOperations = () => {
 
         const generateQuestions = () => {
             const qs = [];
-            qs.push({
-                text: "A number is doubled and then 5 is added. If the result is 25, what is the number?",
-                correctAnswer: "10",
-                options: ["10", "15", "20", "5"],
-                solution: "Step 1: Subtract 5 ($25-5=20$). Step 2: Divide by 2 ($20÷2=10$)."
+            const easyRules = [
+                { input: 5, rule: "Multiply by 10 then add 2", ans: 52 },
+                { input: 20, rule: "Divide by 4 then subtract 1", ans: 4 },
+                { input: 12, rule: "Add 8 then divide by 2", ans: 10 }
+            ];
+
+            easyRules.forEach(r => {
+                qs.push({
+                    text: `Apply this rule to the number ${r.input}: "${r.rule}". What is the final result?`,
+                    correctAnswer: r.ans.toString(),
+                    options: [r.ans.toString(), (r.ans + 5).toString(), (r.ans - 2).toString(), (r.ans * 2).toString()],
+                    solution: `Follow the steps: ${r.rule.replace('Multiply by 10', `${r.input} × 10 = ${r.input * 10}`).replace('add 2', `${r.input * 10} + 2 = ${r.ans}`)}`
+                });
             });
+
             qs.push({
-                text: "Add 12 to 8, then multiply by 3. What is the final answer?",
-                correctAnswer: "60",
-                options: ["60", "36", "44", "23"],
-                solution: "Step 1: $12 + 8 = 20$. Step 2: $20 \\times 3 = 60$."
-            });
-            qs.push({
-                text: "Divide 40 by 5, then subtract 3. What is the result?",
+                text: "Rule: Multiply by 3 and subtract 5. If the final result is 10, what was the starting number?",
                 correctAnswer: "5",
-                options: ["5", "8", "3", "11"],
-                solution: "Step 1: $40 ÷ 5 = 8$. Step 2: $8 - 3 = 5$."
+                options: ["5", "3", "25", "15"],
+                solution: `Work backwards: 1. $10 + 5 = 15$. 2. $15 / 3 = 5$. Check: $5 \\times 3 - 5 = 10$.`
             });
             qs.push({
-                text: "Take 10, add 6, divide by 4, and then multiply by 2. What do you get?",
-                correctAnswer: "8",
-                options: ["8", "4", "16", "10"],
-                solution: "Step 1: $10+6=16$. Step 2: $16÷4=4$. Step 3: $4\\times2=8$."
-            });
-            qs.push({
-                text: "One-third of a number is 10. If we add 5 to that number and then double it, what is the result?",
-                correctAnswer: "70",
-                options: ["70", "35", "30", "60"],
-                solution: "Step 1: The number is $10\\times3=30$. Step 2: $30+5=35$. Step 3: $35\\times2=70$."
-            });
-            qs.push({
-                text: "A square has a side of 4 cm. Double the side, then find the perimeter of the new square.",
-                correctAnswer: "32",
-                options: ["32", "16", "64", "24"],
-                solution: "Step 1: New side is $4\\times2=8$. Step 2: Perimeter is $8\\times4=32$."
-            });
-            qs.push({
-                text: "Start with 100. Subtract 20, divide by 4, add 10, and subtract original number's 10% value. What is left?",
-                correctAnswer: "20",
-                options: ["20", "30", "15", "25"],
-                solution: "1. $100-20=80$. 2. $80/4=20$. 3. $20+10=30$. 4. 10% of 100 is 10. 5. $30-10=20$."
-            });
-            qs.push({
-                text: "If $x + 5 = 12$ and $y = 2x$, what is $y + 10$?",
+                text: "Input: 8. Rule: Double the number and add it to itself. What is the result?",
                 correctAnswer: "24",
-                options: ["24", "14", "34", "22"],
-                solution: "Step 1: $x = 12-5=7$. Step 2: $y = 2\\times7=14$. Step 3: $14+10=24$."
+                options: ["24", "16", "32", "12"],
+                solution: `1. Double it: $8 \\times 2 = 16$. 2. Add to itself: $16 + 8 = 24$.`
             });
             qs.push({
-                text: "Multiply 11 by 11, subtract 121, then add 50. What is the result?",
-                correctAnswer: "50",
-                options: ["50", "0", "121", "171"],
-                solution: "$121 - 121 + 50 = 50$."
+                text: "Condition: If even, divide by 2. If odd, multiply by 3 and add 1. Apply to 6.",
+                correctAnswer: "3",
+                options: ["3", "19", "12", "9"],
+                solution: "6 is even, so $6 / 2 = 3$."
             });
             qs.push({
-                text: "A pattern goes: $2, 5, 11, 23, ...$ (Rule: *2+1). What is the value after 23?",
-                correctAnswer: "47",
-                options: ["47", "46", "49", "45"],
-                solution: "$23 \\times 2 + 1 = 46 + 1 = 47$."
+                text: "Apply same rule (Even: /2, Odd: *3+1) to 7.",
+                correctAnswer: "22",
+                options: ["22", "3.5", "21", "24"],
+                solution: "7 is odd, so $7 \\times 3 + 1 = 21 + 1 = 22$."
+            });
+            qs.push({
+                text: "Mystery Box: Put in 10, get 21. Put in 5, get 11. What is the rule?",
+                correctAnswer: "Multiply by 2 and add 1",
+                options: ["Multiply by 2 and add 1", "Add 11", "Multiply by 3 then subtract 9", "Square the number"],
+                solution: "Check: $10 \\times 2 + 1 = 21$. $5 \\times 2 + 1 = 11$. The rule matches both."
+            });
+            qs.push({
+                text: "Apply rule 'Subtract 10 until you can't' to 45. What is the remainder?",
+                correctAnswer: "5",
+                options: ["5", "0", "15", "4"],
+                solution: "$45 - 10 - 10 - 10 - 10 = 5$. Since 5 < 10, we stop."
+            });
+            qs.push({
+                text: "Rule: Square the number then add 1. Apply to 4.",
+                correctAnswer: "17",
+                options: ["17", "16", "9", "25"],
+                solution: "$4 \\times 4 = 16$. $16 + 1 = 17$."
             });
 
             return qs;
@@ -237,7 +234,7 @@ const MultiStepOperations = () => {
         if (qIndex > 0) setQIndex(prev => prev - 1);
     };
 
-    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Solving multi-level logic...</div>;
+    if (!currentQuestion && !showResults) return <div className="flex justify-center items-center h-screen text-[#31326F] font-bold">Applying logic rules...</div>;
 
     if (showResults) {
         const score = Object.values(answers).filter(val => val.isCorrect).length;
@@ -250,11 +247,11 @@ const MultiStepOperations = () => {
                     <div className="sun-timer-container">
                         <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
                     </div>
-                    <div className="title-area"><h1 className="results-title">Multi-Step Mastery</h1></div>
+                    <div className="title-area"><h1 className="results-title">Logic Complete</h1></div>
                 </header>
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Pathfinder! 🚀</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Rule Master! 📏</h2>
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
                                 <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
@@ -262,7 +259,7 @@ const MultiStepOperations = () => {
                                 </motion.div>
                             ))}
                         </div>
-                        <div className="results-stats-grid grid grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-3xl">
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
                             <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
                                 <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
                                 <span className="text-3xl font-black text-[#31326F]">{score}/{TOTAL_QUESTIONS}</span>
@@ -283,7 +280,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Path Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Logic Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -319,7 +316,7 @@ const MultiStepOperations = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> New Path</button>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> New Rule</button>
                         <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
                     </div>
                 </main>
@@ -390,4 +387,4 @@ const MultiStepOperations = () => {
     );
 };
 
-export default MultiStepOperations;
+export default RuleApplication;
