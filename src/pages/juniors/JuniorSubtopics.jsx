@@ -344,7 +344,7 @@ const JuniorSubtopics = () => {
                                 return (
                                     <button
                                         key={subtopic.id}
-                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''}`}
+                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''} ${subtopic.name.toLowerCase().includes('chapter test') ? 'chapter-test-pill' : ''}`}
                                         style={{
                                             '--pill-color': style.color,
                                             '--pill-gradient': style.gradient,
@@ -358,9 +358,11 @@ const JuniorSubtopics = () => {
                                         <div className="pill-glow"></div>
 
                                         {/* Icon container */}
-                                        <div className="pill-icon">
-                                            <span className="number-icon">{index + 1}</span>
-                                        </div>
+                                        {!subtopic.name.toLowerCase().includes('chapter test') && (
+                                            <div className="pill-icon">
+                                                <span className="number-icon">{index + 1}</span>
+                                            </div>
+                                        )}
 
                                         {/* Text */}
                                         <span className="pill-text"><LatexText text={capitalizeFirstLetter(subtopic.name)} /></span>

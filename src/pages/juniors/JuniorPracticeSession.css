@@ -198,16 +198,20 @@
 .question-card-modern {
     background: white;
     border-radius: 2.5rem;
-    padding: 2rem;
-    /* Increased padding slightly */
+    padding: 3rem;
+    /* Increased padding */
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     width: 100%;
-    min-height: 450px;
-    /* Ensure card feels substantial */
+    min-height: 500px;
+    /* Substantial minimum height */
     max-height: 100%;
     /* Fit within wrapper */
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* Center content vertically */
+    align-items: center;
+    /* Center content horizontally */
     position: relative;
     z-index: 10;
     border: 4px solid #FFFFFF;
@@ -263,18 +267,20 @@
 /* ... existing styles ... */
 
 .question-text-modern {
-    /* Reduced font size for better fit */
-    font-size: clamp(1rem, 2vw, 1.8rem);
-    font-weight: 500;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: clamp(1.2rem, 2.2vw, 2rem);
+    font-weight: 400 !important;
+    /* Non-bold */
     color: #2D3748;
-    line-height: 1.4;
+    line-height: 1.6;
     margin: 0;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 0.8rem;
     overflow: visible;
+    text-align: center;
 }
 
 /* ... */
@@ -288,7 +294,8 @@
     flex-shrink: 0;
     /* Keep options fixed at the bottom */
     justify-content: center;
-    padding-top: 0.5rem;
+    padding-top: 2rem;
+    /* More space between question and options */
     padding-bottom: 0.5rem;
     /* Reduced padding */
     height: auto;
@@ -301,10 +308,11 @@
 .options-grid-modern {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    /* Smaller gap */
+    gap: 2.5rem;
+    /* Large gap for spreading out */
     width: 100%;
-    max-width: 600px;
+    max-width: 900px;
+    /* Wider grid */
     margin: 0 auto;
     align-content: center;
 }
@@ -313,17 +321,17 @@
     background: white;
     border: 3px solid #E2E8F0;
     border-radius: 1.2rem;
-    padding: 0.6rem 0.8rem;
-    /* Tighter padding */
-    font-size: clamp(0.85rem, 1.6vw, 1.2rem);
-    font-weight: 500;
+    padding: 1rem 1.5rem;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-weight: 400 !important;
+    /* Non-bold */
     color: #4A5568;
     box-shadow: 0 4px 0 #CBD5E0;
     cursor: pointer;
     transition: all 0.1s;
-    font-family: 'Fredoka', sans-serif;
-    min-height: 50px;
-    /* Even smaller min-height */
+    min-height: 70px;
+    /* Taller buttons */
     height: 100%;
     display: flex;
     align-items: center;
@@ -1906,5 +1914,62 @@
     .options-grid-modern {
         grid-template-columns: repeat(2, 1fr) !important;
         /* Back to 2 cols if space allows */
+    }
+}
+
+/* Picture Based Questions - Split Layout */
+.question-card-modern.picture-layout {
+    max-width: 1200px;
+    width: 95%;
+}
+
+.picture-question-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    align-items: center;
+    width: 100%;
+}
+
+.picture-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 2rem;
+    border: 3px solid #E2E8F0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.content-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.content-section .question-header-modern {
+    margin-bottom: 2rem;
+}
+
+.content-section .question-text-modern {
+    text-align: left !important;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem) !important;
+}
+
+.content-section .options-grid-modern {
+    max-width: 100% !important;
+    gap: 1.5rem !important;
+}
+
+@media (max-width: 1024px) {
+    .picture-question-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .picture-section {
+        padding: 1rem;
     }
 }

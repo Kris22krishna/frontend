@@ -73,25 +73,14 @@ function generateTrianglePuzzle() {
         if (!options.includes(r)) options.push(r);
     }
 
-    const svgStr = getTriangleSVGString(placement, blankIndex);
-
     return {
+        isPictureBased: true,
         type: 'html',
-        text: `<div style="text-align:center;">${svgStr}</div><p style="text-align:center; margin-top:1rem;">Which number replaces <strong>?</strong> so each side sums to <strong>${target}</strong>?</p>`,
+        image: <TriangleSVG placement={placement} blankIndex={blankIndex} />,
+        text: `<p style="text-align:center; font-size: 1.5rem;">Target Sum: ${target}</p><p style="text-align:center; margin-top:1rem;">Which number replaces '?' so each side sums to ${target}?</p>`,
         correctAnswer: correctAnswer.toString(),
-        solution: `The missing number is <strong>${correctAnswer}</strong>.`,
-        shuffledOptions: options.sort(() => Math.random() - 0.5),
-        specialComponent: (props) => (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <div style={{ flex: '1 1 300px' }}>
-                    <TriangleSVG placement={placement} blankIndex={blankIndex} />
-                </div>
-                <div style={{ flex: '1 1 300px', textAlign: 'center' }}>
-                    <h3 style={{ color: '#31326F' }}>Target Sum: {target}</h3>
-                    <p>Which number fits?</p>
-                </div>
-            </div>
-        )
+        solution: `The missing number is <strong>${correctAnswer}</strong>. Each side of the triangle sums to <strong>${target}</strong>.`,
+        shuffledOptions: options.sort(() => Math.random() - 0.5)
     };
 }
 
@@ -130,82 +119,130 @@ const generateRepeatedAddition = () => {
 };
 
 const generateRepeatedSubtraction = () => {
-    // Application: Cutting length or distributing items
-    const total = randomInt(30, 60);
-    const subtract = randomInt(4, 9);
-    const times = 3;
-    const remaining = total - (subtract * times);
+    const isWordProblem = Math.random() > 0.5;
 
-    const text = `<div class='question-container'>
-        A ribbon is ${total} cm long.<br/>
-        I cut off ${subtract} cm pieces for 3 friends.<br/>
-        How much ribbon is left?
-    </div>`;
+    if (isWordProblem) {
+        const total = randomInt(30, 80);
+        const subtract = randomInt(5, 12);
+        const times = randomInt(3, 4);
+        const remaining = total - (subtract * times);
 
-    const options = [remaining.toString()];
-    while (options.length < 4) {
-        let r = (remaining + randomInt(-10, 10)).toString();
-        if (r !== "0" && !options.includes(r)) options.push(r);
+        const text = `<div class='question-container'>
+            A ribbon is ${total} cm long.<br/>
+            I cut off ${subtract} cm pieces for ${times} friends.<br/>
+            How much ribbon is left?
+        </div>`;
+
+        const options = [remaining.toString()];
+        while (options.length < 4) {
+            let r = (remaining + randomInt(-10, 10)).toString();
+            if (parseInt(r) >= 0 && !options.includes(r)) options.push(r);
+        }
+
+        return {
+            text,
+            correctAnswer: remaining.toString(),
+            solution: `Remaining = ${total} - (${times} × ${subtract}) = ${total} - ${times * subtract} = ${remaining}`,
+            shuffledOptions: options.sort(() => Math.random() - 0.5)
+        };
+    } else {
+        const groups = randomInt(3, 5);
+        const perGroup = randomInt(4, 12);
+        const rem = randomInt(2, 20);
+        const start = (groups * perGroup) + rem;
+
+        const repeated = Array(groups).fill(perGroup).join(' − ');
+        const text = `<div class='question-container' style='text-align: center; font-size: 1.5rem;'>
+            ${start} − ${repeated} = ?
+        </div>`;
+
+        const result = start - (groups * perGroup);
+        const options = [result.toString()];
+        while (options.length < 4) {
+            let r = (result + randomInt(-10, 10)).toString();
+            if (parseInt(r) >= 0 && !options.includes(r)) options.push(r);
+        }
+
+        return {
+            text,
+            correctAnswer: result.toString(),
+            solution: `${start} - (${groups} × ${perGroup}) = ${start} - ${groups * perGroup} = ${result}`,
+            shuffledOptions: options.sort(() => Math.random() - 0.5)
+        };
     }
-
-    return {
-        text,
-        correctAnswer: remaining.toString(),
-        solution: `Cut 1: ${total}-${subtract}=${total - subtract}<br/>Cut 2: ${total - subtract}-${subtract}=${total - subtract * 2}<br/>Cut 3: ${total - subtract * 2}-${subtract}=${remaining}`,
-        shuffledOptions: options.sort(() => Math.random() - 0.5)
-    };
 };
 
 const generateAdditionWithRegrouping = () => {
-    // Tricky: Sum of Largest 2-digit and something, or "I thought of a number..."
-    // Let's do a fast money problem
-    const n1 = randomInt(150, 450);
-    const n2 = randomInt(150, 450);
+    const is3Digit = Math.random() > 0.5;
+    let n1, n2, text, solution;
+
+    if (is3Digit) {
+        n1 = randomInt(150, 450);
+        n2 = randomInt(150, 450);
+        text = `<div class='question-container'>
+            Rohan saved ₹${n1}. His sister saved ₹${n2}.<br/>
+            They want to buy a gift that costs ₹${n1 + n2 + 50}.<br/>
+            How much money do they have together?
+        </div>`;
+        solution = `Rohan: ₹${n1}<br/>Sister: ₹${n2}<br/>Total: ${n1} + ${n2} = ₹${n1 + n2}`;
+    } else {
+        n1 = randomInt(45, 95);
+        n2 = randomInt(45, 95);
+        text = `<div class='question-container'>
+            A recycling center collected ${n1} kg of paper last week and ${n2} kg this week.<br/>
+            What is the total weight of paper collected?
+        </div>`;
+        solution = `Last week: ${n1} kg<br/>This week: ${n2} kg<br/>Total: ${n1} + ${n2} = ${n1 + n2} kg`;
+    }
+
     const total = n1 + n2;
-
-    const text = `<div class='question-container'>
-        Rohan saved ₹${n1}. His sister saved ₹${n2}.<br/>
-        They want to buy a gift that costs ₹${total + 50}.<br/>
-        How much money do they have together?
-    </div>`;
-
     const options = [total.toString()];
     while (options.length < 4) {
         let r = (total + randomInt(-20, 20)).toString();
-        if (!options.includes(r)) options.push(r);
+        if (!options.includes(r) && parseInt(r) > 0) options.push(r);
     }
 
     return {
         text,
         correctAnswer: total.toString(),
-        solution: `Rohan: ₹${n1}<br/>Sister: ₹${n2}<br/>Total: ${n1} + ${n2} = ₹${total}`,
+        solution,
         shuffledOptions: options.sort(() => Math.random() - 0.5)
     };
 };
 
 const generateSubtractionWithRegrouping = () => {
-    // Tricky: Change problem
-    const price = randomInt(125, 375);
-    const paid = Math.ceil(price / 100) * 100; // Next hundred (200, 300, 400)
-    if (paid === price) paid += 100;
-    const change = paid - price;
+    const is3Digit = Math.random() > 0.5;
+    let n1, n2, text, solution;
 
-    const text = `<div class='question-container'>
-        A toy costs ₹${price}.<br/>
-        I paid with a ₹${paid} note.<br/>
-        How much change should I get back?
-    </div>`;
+    if (is3Digit) {
+        n1 = randomInt(500, 900);
+        n2 = randomInt(150, 450);
+        text = `<div class='question-container'>
+            The village library had ${n1} books. ${n2} books were donated to another village.<br/>
+            How many books are left in the library now?
+        </div>`;
+        solution = `${n1} - ${n2} = ${n1 - n2}`;
+    } else {
+        n1 = randomInt(60, 95);
+        n2 = randomInt(15, 45);
+        text = `<div class='question-container'>
+            A gardener had ${n1} flower seeds. He planted ${n2} seeds yesterday.<br/>
+            How many seeds does he have left to plant?
+        </div>`;
+        solution = `${n1} - ${n2} = ${n1 - n2}`;
+    }
 
-    const options = [change.toString()];
+    const diff = n1 - n2;
+    const options = [diff.toString()];
     while (options.length < 4) {
-        let r = (change + randomInt(-20, 20)).toString();
-        if (parseInt(r) > 0 && !options.includes(r)) options.push(r);
+        let r = (diff + randomInt(-20, 20)).toString();
+        if (!options.includes(r) && parseInt(r) > 0) options.push(r);
     }
 
     return {
         text,
-        correctAnswer: change.toString(),
-        solution: `${paid} - ${price} = ${change}`,
+        correctAnswer: diff.toString(),
+        solution,
         shuffledOptions: options.sort(() => Math.random() - 0.5)
     };
 };
@@ -237,12 +274,25 @@ const generateMissingAddend = () => {
 };
 
 const generateMissingSubtrahend = () => {
-    const start = randomInt(50, 150);
-    const left = randomInt(10, start - 20);
-    const taken = start - left;
+    const scenarios = [
+        (start, left) => ({
+            text: `<div class='question-container'>There were ${start} plastic bags. After selling some, ${left} are left. How many bags were sold?</div>`,
+            solution: `Start - Left = Sold<br/>${start} - ${left} = ${start - left}`
+        }),
+        (start, left) => ({
+            text: `<div class='question-container'>A tank had ${start} litres of milk. After distributing some, ${left} litres remain. How much milk was distributed?</div>`,
+            solution: `Start - Left = Distributed<br/>${start} - ${left} = ${start - left}`
+        }),
+        (start, left) => ({
+            text: `<div class='question-container'>The gardener had ${start} flower pots. Some were gifted, and now ${left} pots are left. How many were gifted?</div>`,
+            solution: `Start - Left = Gifted<br/>${start} - ${left} = ${start - left}`
+        })
+    ];
 
-    const text = `<div class='question-container'>A shop had ${start} clean bags. Some were sold, and now ${left} are left.<br/>How many were sold?<br/>
-    ${start} - ? = ${left}</div>`;
+    const start = randomInt(100, 350);
+    const left = randomInt(20, start - 30);
+    const taken = start - left;
+    const scenario = scenarios[randomInt(0, scenarios.length - 1)](start, left);
 
     const options = [taken.toString()];
     while (options.length < 4) {
@@ -251,19 +301,33 @@ const generateMissingSubtrahend = () => {
     }
 
     return {
-        text,
+        text: scenario.text,
         correctAnswer: taken.toString(),
-        solution: `Start - Left = Sold<br/>${start} - ${left} = ${taken}`,
+        solution: scenario.solution,
         shuffledOptions: options.sort(() => Math.random() - 0.5)
     };
 };
 
 const generateHowManyMoreLess = () => {
-    const n1 = randomInt(120, 300);
-    const n2 = randomInt(50, n1 - 30);
-    const diff = n1 - n2;
+    const scenarios = [
+        (n1, n2) => ({
+            text: `<div class='question-container'>Team A collected ${n1} kg of waste. Team B collected ${n2} kg.<br/>How much more did Team A collect?</div>`,
+            solution: `${n1} - ${n2} = ${n1 - n2}`
+        }),
+        (n1, n2) => ({
+            text: `<div class='question-container'>The village planted ${n1} saplings on Monday and ${n2} on Tuesday.<br/>How many fewer saplings were planted on Tuesday?</div>`,
+            solution: `${n1} - ${n2} = ${n1 - n2}`
+        }),
+        (n1, n2) => ({
+            text: `<div class='question-container'>A water tank holds ${n1} litres. Another tank holds ${n2} litres.<br/>What is the difference in their capacity?</div>`,
+            solution: `${n1} - ${n2} = ${n1 - n2}`
+        })
+    ];
 
-    const text = `<div class='question-container'>Team A collected ${n1} kg of waste. Team B collected ${n2} kg.<br/>How much more did Team A collect?</div>`;
+    const n1 = randomInt(120, 450);
+    const n2 = randomInt(50, n1 - 40);
+    const diff = n1 - n2;
+    const scenario = scenarios[randomInt(0, scenarios.length - 1)](n1, n2);
 
     const options = [diff.toString()];
     while (options.length < 4) {
@@ -272,19 +336,33 @@ const generateHowManyMoreLess = () => {
     }
 
     return {
-        text,
+        text: scenario.text,
         correctAnswer: diff.toString(),
-        solution: `${n1} - ${n2} = ${diff}`,
+        solution: scenario.solution,
         shuffledOptions: options.sort(() => Math.random() - 0.5)
     };
 };
 
 const generateWordProblem = () => {
-    const n1 = randomInt(100, 400);
-    const n2 = randomInt(100, 400);
-    const sum = n1 + n2;
+    const scenarios = [
+        (n1, n2) => ({
+            text: `<div class='question-container'>To clean the park, ${n1} volunteers came on Saturday and ${n2} came on Sunday.<br/>How many volunteers helped in total?</div>`,
+            solution: `${n1} + ${n2} = ${n1 + n2}`
+        }),
+        (n1, n2) => ({
+            text: `<div class='question-container'>The village spent ₹${n1} on new dustbins and ₹${n2} on gloves.<br/>What was the total expenditure for cleaning supplies?</div>`,
+            solution: `₹${n1} + ₹${n2} = ₹${n1 + n2}`
+        }),
+        (n1, n2) => ({
+            text: `<div class='question-container'>In a waste sorting drive, ${n1} plastic bottles and ${n2} glass bottles were collected.<br/>How many bottles were collected altogether?</div>`,
+            solution: `${n1} + ${n2} = ${n1 + n2}`
+        })
+    ];
 
-    const text = `<div class='question-container'>To clean the park, ${n1} volunteers came on Saturday and ${n2} came on Sunday.<br/>How many volunteers helped in total?</div>`;
+    const n1 = randomInt(100, 450);
+    const n2 = randomInt(100, 450);
+    const sum = n1 + n2;
+    const scenario = scenarios[randomInt(0, scenarios.length - 1)](n1, n2);
 
     const options = [sum.toString()];
     while (options.length < 4) {
@@ -293,9 +371,9 @@ const generateWordProblem = () => {
     }
 
     return {
-        text,
+        text: scenario.text,
         correctAnswer: sum.toString(),
-        solution: `${n1} + ${n2} = ${sum}`,
+        solution: scenario.solution,
         shuffledOptions: options.sort(() => Math.random() - 0.5)
     };
 };
@@ -345,20 +423,26 @@ const ChapterTest = () => {
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
-        // Generate 20 questions
-        const qs = [
-            generateRepeatedAddition(), generateRepeatedAddition(),
-            generateRepeatedSubtraction(), generateRepeatedSubtraction(),
-            generateAdditionWithRegrouping(), generateAdditionWithRegrouping(),
-            generateSubtractionWithRegrouping(), generateSubtractionWithRegrouping(),
-            generateMissingAddend(), generateMissingAddend(),
-            generateMissingSubtrahend(), generateMissingSubtrahend(),
-            generateHowManyMoreLess(), generateHowManyMoreLess(),
-            generateWordProblem(), generateWordProblem(), generateWordProblem(),
-            generateTrianglePuzzle(), generateTrianglePuzzle(), generateTrianglePuzzle()
+        // Generate 20 questions in the order of skills on the frontend
+        const generators = [
+            generateRepeatedAddition,           // CV-01
+            generateRepeatedSubtraction,        // CV-08
+            generateAdditionWithRegrouping,    // CV-02
+            generateSubtractionWithRegrouping, // CV-03
+            generateMissingAddend,             // CV-04
+            generateMissingSubtrahend,          // CV-05
+            generateHowManyMoreLess,           // CV-06
+            generateWordProblem,               // CV-07
+            generateTrianglePuzzle             // CV-09
         ];
 
-        // Ensure every question has shuffledOptions even if not explicitly provided by generator
+        const qs = [];
+        while (qs.length < TOTAL_QUESTIONS) {
+            const genIndex = qs.length % generators.length;
+            qs.push(generators[genIndex]());
+        }
+
+        // Map without shuffling to maintain sequence
         const preparedQs = qs.map(q => ({
             ...q,
             shuffledOptions: q.shuffledOptions || []
@@ -419,7 +503,7 @@ const ChapterTest = () => {
                 session_id: sessionId,
                 skill_id: SKILL_ID,
                 template_id: null,
-                difficulty_level: 'Mixed',
+                difficulty_level: 'Medium',
                 question_text: String(question.text || ''),
                 correct_answer: String(question.correctAnswer || ''),
                 student_answer: String(selected || ''),
@@ -641,7 +725,7 @@ const ChapterTest = () => {
     }
 
     return (
-        <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+        <div className="junior-practice-page village-theme">
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
                     <span style={{ fontWeight: '800', fontSize: '1.2rem', color: '#c53030' }}>CHAPTER TEST</span>
@@ -672,30 +756,63 @@ const ChapterTest = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern">
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern">
-                                            {currentQuestion.type === 'html' ?
-                                                <div dangerouslySetInnerHTML={{ __html: currentQuestion.text }} />
-                                                : <LatexContent html={currentQuestion.text} />
-                                            }
-                                        </h2>
-                                    </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
-                                                    onClick={() => handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
+                                <div className={`question-card-modern ${currentQuestion.isPictureBased ? 'picture-layout' : ''}`}>
+                                    {currentQuestion.isPictureBased ? (
+                                        <div className="picture-question-grid">
+                                            <div className="picture-section">
+                                                {currentQuestion.image}
+                                            </div>
+                                            <div className="content-section">
+                                                <div className="question-header-modern">
+                                                    <h2 className="question-text-modern">
+                                                        {currentQuestion.type === 'html' ?
+                                                            <div dangerouslySetInnerHTML={{ __html: currentQuestion.text }} />
+                                                            : <LatexContent html={currentQuestion.text} />
+                                                        }
+                                                    </h2>
+                                                </div>
+                                                <div className="interaction-area-modern">
+                                                    <div className="options-grid-modern">
+                                                        {shuffledOptions.map((option, idx) => (
+                                                            <button
+                                                                key={idx}
+                                                                className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                                                onClick={() => handleOptionSelect(option)}
+                                                                disabled={isSubmitted}
+                                                            >
+                                                                <LatexContent html={option} />
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        {/* Feedback mini removed for Chapter Test */}
-                                    </div>
+                                    ) : (
+                                        <>
+                                            <div className="question-header-modern">
+                                                <h2 className="question-text-modern">
+                                                    {currentQuestion.type === 'html' ?
+                                                        <div dangerouslySetInnerHTML={{ __html: currentQuestion.text }} />
+                                                        : <LatexContent html={currentQuestion.text} />
+                                                    }
+                                                </h2>
+                                            </div>
+                                            <div className="interaction-area-modern">
+                                                <div className="options-grid-modern">
+                                                    {shuffledOptions.map((option, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                                            onClick={() => handleOptionSelect(option)}
+                                                            disabled={isSubmitted}
+                                                        >
+                                                            <LatexContent html={option} />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </motion.div>
                         </AnimatePresence>
@@ -707,7 +824,8 @@ const ChapterTest = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 transition-colors flex items-center gap-2"
+                            style={{ fontFamily: "'Open Sans', sans-serif", fontWeight: 400 }}
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 navigate(-1);
@@ -736,7 +854,11 @@ const ChapterTest = () => {
                                 </button>
                             ) : (
                                 <div className="flex gap-4">
-                                    <button className="px-8 py-3 bg-amber-50 text-amber-600 rounded-2xl border-2 border-amber-100 font-black text-xl hover:bg-amber-100 transition-all flex items-center gap-2" onClick={handleSkip}>
+                                    <button
+                                        className="px-8 py-3 bg-amber-50 text-amber-600 rounded-2xl border-2 border-amber-100 transition-all flex items-center gap-2"
+                                        style={{ fontFamily: "'Open Sans', sans-serif", fontWeight: 400, fontSize: '1.25rem' }}
+                                        onClick={handleSkip}
+                                    >
                                         Skip <ChevronRight size={24} />
                                     </button>
                                     <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
