@@ -128,6 +128,26 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('data handling')) {
+                if (lowerSkillName.includes('collecting')) {
+                    navigate(`/middle/grade/${grade}/data-handling/collecting-organising`);
+                    return;
+                }
+                if (skill.skill_name === "Pictographs") {
+                    navigate(`/middle/grade/6/data-handling/pictographs`);
+                    return;
+                } else if (skill.skill_name === "Bar Graphs") {
+                    navigate(`/middle/grade/6/data-handling/bar-graphs`);
+                    return;
+                } else if (skill.skill_name === "Drawing a Bar Graph") {
+                    navigate(`/middle/grade/6/data-handling/drawing-a-bar-graph`);
+                    return;
+                } else if (skill.skill_name === "Figure It Out") {
+                    navigate(`/middle/grade/6/data-handling/figure-it-out`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -350,6 +370,142 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/visualising-solid-shapes/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-pa-parallel',
+                            skill_name: 'Area of Parallelogram',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/parallelogram'
+                        },
+                        {
+                            skill_id: 'local-pa-triangle',
+                            skill_name: 'Area of Triangle',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/triangle'
+                        },
+                        {
+                            skill_id: 'local-pa-circles',
+                            skill_name: 'Circles',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/circles'
+                        },
+                        {
+                            skill_id: 'local-pa-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/perimeter-area/chapter-test'
+                        },
+                        {
+                            skill_id: 'local-sym-line',
+                            skill_name: 'Line Symmetry',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/line-symmetry'
+                        },
+                        {
+                            skill_id: 'local-sym-poly',
+                            skill_name: 'Regular Polygons',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/regular-polygons'
+                        },
+                        {
+                            skill_id: 'local-sym-mirror',
+                            skill_name: 'Mirror Reflection',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/mirror-reflection'
+                        },
+                        {
+                            skill_id: 'local-sym-rot',
+                            skill_name: 'Rotational Symmetry',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/rotational'
+                        },
+                        {
+                            skill_id: 'local-sym-rel',
+                            skill_name: 'Line & Rotational Relationship',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/relationship'
+                        },
+                        {
+                            skill_id: 'local-sym-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/chapter-test'
+                        },
+                        {
+                            skill_id: '1094',
+                            skill_name: 'Formation of Algebraic Expressions',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/formation'
+                        },
+                        {
+                            skill_id: '1095',
+                            skill_name: 'Terms and Factors',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/terms-factors'
+                        },
+                        {
+                            skill_id: '1096',
+                            skill_name: 'Coefficients',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/coefficients'
+                        },
+                        {
+                            skill_id: '1097',
+                            skill_name: 'Like and Unlike Terms',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/like-unlike'
+                        },
+                        {
+                            skill_id: '1098',
+                            skill_name: 'Types of Expressions',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/polynomials'
+                        },
+                        {
+                            skill_id: '1099',
+                            skill_name: 'Finding the Value of an Expression',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/finding-value'
+                        },
+                        {
+                            skill_id: '1100',
+                            skill_name: 'Chapter Test',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/chapter-test'
                         }
                     ];
                 }
@@ -372,8 +528,9 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes") && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
+
 
 
         const topic = skill.topic || 'General';
@@ -387,7 +544,8 @@ const MiddleGradeSyllabus = () => {
 
     const gradeInt = parseInt(grade.replace('grade', ''));
 
-    // Manual Override for Grade 5
+
+    // Manual Override for Grade 5 Tenths and Hundredths
     if (gradeInt === 5) {
         skillsByTopic['Area and its Boundary'] = {
             'Area': [
@@ -488,6 +646,220 @@ const MiddleGradeSyllabus = () => {
                 }
             ]
         };
+
+        skillsByTopic['Ways to Multiply and Divide'] = {
+            'Multiplication': [
+                {
+                    skill_id: '9003',
+                    skill_name: 'Multiplication of 2-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9003'
+                },
+                {
+                    skill_id: '9004',
+                    skill_name: 'Multiplication of 3-digit numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9004'
+                },
+                {
+                    skill_id: '9005',
+                    skill_name: 'Multiplication of multiple numbers',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9005'
+                },
+                {
+                    skill_id: '9006',
+                    skill_name: 'Multiplication of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9006'
+                },
+                {
+                    skill_id: '9007',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Multiplication',
+                    isLocal: true,
+                    path: '/middle/practice/9007'
+                }
+            ],
+            'Division': [
+                {
+                    skill_id: '9008',
+                    skill_name: 'Divide by 1-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9008'
+                },
+                {
+                    skill_id: '9009',
+                    skill_name: 'Divide by 2-digit number',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9009'
+                },
+                {
+                    skill_id: '9010',
+                    skill_name: 'Division of numbers ending in zeros',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9010'
+                },
+                {
+                    skill_id: '9011',
+                    skill_name: 'Word Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Division',
+                    isLocal: true,
+                    path: '/middle/practice/9011'
+                }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '9012',
+                    skill_name: 'Mixed Problems',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/practice/9012'
+                }
+            ]
+        };
+
+        skillsByTopic['Can you see the Pattern ?'] = {
+            'Pattern Recognition': [
+                {
+                    skill_id: '2001',
+                    skill_name: 'Pattern Identification',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Pattern Recognition',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/pattern-identification'
+                },
+                {
+                    skill_id: '2002',
+                    skill_name: 'Rule-based Pattern Creation',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Pattern Recognition',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/rule-pattern-creation'
+                },
+                {
+                    skill_id: '2003',
+                    skill_name: 'Understanding Rotations',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Pattern Recognition',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/rotations'
+                },
+                {
+                    skill_id: '2004',
+                    skill_name: 'Grid Pattern Recognition',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Pattern Recognition',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/grid-patterns'
+                }
+            ],
+            'Number properties': [
+                {
+                    skill_id: '2005',
+                    skill_name: 'Properties of Operation',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Number properties',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/properties-of-operation'
+                },
+                {
+                    skill_id: '2006',
+                    skill_name: 'Digit Relationships',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Number properties',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/digit-relationships'
+                },
+                {
+                    skill_id: '2007',
+                    skill_name: 'Palindrome Recognition',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Number properties',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/palindromes'
+                },
+                {
+                    skill_id: '2008',
+                    skill_name: 'Structured Number Patterns',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Number properties',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/structured-patterns'
+                }
+            ],
+            'Logical Reasoning': [
+                {
+                    skill_id: '2009',
+                    skill_name: 'Rule Applications',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Logical Reasoning',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/rule-applications'
+                },
+                {
+                    skill_id: '2010',
+                    skill_name: 'Multi-step Operations',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Logical Reasoning',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/multi-step-operations'
+                },
+                {
+                    skill_id: '2011',
+                    skill_name: 'Missing Number Reasoning',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Logical Reasoning',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/missing-numbers'
+                },
+                {
+                    skill_id: '2012',
+                    skill_name: 'Mental Calculation Reasoning',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Logical Reasoning',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/mental-calculation'
+                }
+            ],
+            'Skill Application Problems': [
+                {
+                    skill_id: '2013',
+                    skill_name: 'Skill Application Problems',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Skill Application Problems',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/skill-application'
+                }
+            ],
+            'Chapter Test': [
+                {
+                    skill_id: '2000',
+                    skill_name: 'Chapter Test',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Chapter Test',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/chapter-test'
+                }
+            ]
+        };
     }
 
 
@@ -515,6 +887,15 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
                 { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
                 { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
+            ]
+        };
+        skillsByTopic['Data Handling and Presentation'] = {
+            'Main': [
+                { skill_id: 'data-handling-6', skill_name: 'Collecting and Organising Data', topic: 'Data Handling and Presentation' },
+                { skill_id: 'pictographs-6', skill_name: 'Pictographs', topic: 'Data Handling and Presentation' },
+                { skill_id: 'drawing-bar-graph-6', skill_name: 'Drawing a Bar Graph', topic: 'Data Handling and Presentation' },
+                { skill_id: 'bar-graphs-6', skill_name: 'Bar Graphs', topic: 'Data Handling and Presentation' },
+                { skill_id: 'figure-it-out-6', skill_name: 'Figure It Out', topic: 'Data Handling and Presentation' }
             ]
         };
     }
@@ -559,7 +940,7 @@ const MiddleGradeSyllabus = () => {
                         const accentColor = getAccentColor(index);
 
                         // Define fixed order for sub-topics
-                        const subTopicOrder = ["Multiplication", "Division", "Decimals", "Area", "Perimeter", "Area-Perimeter Relationship", "Skill Application Problems"];
+                        const subTopicOrder = ["Pattern Recognition", "Number properties", "Logical Reasoning", "Multiplication", "Division", "Decimals", "Area", "Perimeter", "Area-Perimeter Relationship", "Skill Application Problems", "Chapter Test"];
                         const orderedSubTopics = Object.entries(subTopics).sort(([a], [b]) => {
                             const indexA = subTopicOrder.indexOf(a);
                             const indexB = subTopicOrder.indexOf(b);

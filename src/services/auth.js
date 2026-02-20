@@ -65,13 +65,19 @@ export const authService = {
     /**
      * Initiates Google OAuth flow.
      */
-    async loginWithGoogle() {
+    /**
+     * Initiates Google OAuth flow.
+     */
+    async loginWithGoogle(role = null, googleUser = null) {
         try {
-            if (!auth || !googleProvider) {
-                throw new Error("Google Login is not configured. Please contact support.");
+            let user = googleUser;
+            if (!user) {
+                if (!auth || !googleProvider) {
+                    throw new Error("Google Login is not configured. Please contact support.");
+                }
+                const result = await signInWithPopup(auth, googleProvider);
+                user = result.user;
             }
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
 
             // Send user details to backend
             const payload = {
@@ -79,10 +85,17 @@ export const authService = {
                 first_name: user.displayName ? user.displayName.split(' ')[0] : 'User',
                 last_name: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : '',
                 google_id: user.uid,
-                photo_url: user.photoURL
+                photo_url: user.photoURL,
+                role: role // Optional: Only if registering
             };
 
             const response = await api.googleLogin(payload);
+
+            // If backend says we need a role, return that info along with the user object
+            if (response.needs_role) {
+                return { ...response, googleUser: user };
+            }
+
             return response;
         } catch (error) {
             console.error("Google Login Error:", error);
