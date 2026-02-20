@@ -152,6 +152,10 @@ import EstimatingWeight from './components/practice/class-2/c-203/how-much-can-y
 import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
 import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
 import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
+import NumbersUpTo100 from './components/practice/class-2/Counting in Tens/numbers_up_to_100';
+import PlaceValueTensOnes from './components/practice/class-2/Counting in Tens/place_value_tens_ones';
+import ExpandedForm from './components/practice/class-2/Counting in Tens/expanded_form';
+import ComparingNumbers from './components/practice/class-2/Counting in Tens/comparing_numbers';
 
 // Grade 5: Can you see the Pattern?
 import PatternIdentification from './components/practice/class-5/CanyouseethePattern/PatternRecognition/pattern-identification';
@@ -720,6 +724,10 @@ function App() {
         <Route path="/junior/grade/2/counting-in-groups/counting-in-pairs" element={<ProtectedRoute redirectTo="/login"><CountingInPairs /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-groups/skip-counting" element={<ProtectedRoute redirectTo="/login"><SkipCounting /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-groups/repeated-addition" element={<ProtectedRoute redirectTo="/login"><RepeatedAdditionClass2 /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-tens/numbers-up-to-100" element={<ProtectedRoute redirectTo="/login"><NumbersUpTo100 /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-tens/place-value-tens-ones" element={<ProtectedRoute redirectTo="/login"><PlaceValueTensOnes /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-tens/expanded-form" element={<ProtectedRoute redirectTo="/login"><ExpandedForm /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-tens/comparing-numbers" element={<ProtectedRoute redirectTo="/login"><ComparingNumbers /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
