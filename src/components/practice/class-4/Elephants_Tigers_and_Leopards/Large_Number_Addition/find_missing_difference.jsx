@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Scissors, MinusCircle } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Map, Compass, Footprints } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const EstimateFirstSubtraction = () => {
+const HiddenPathDifference = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -26,8 +26,8 @@ const EstimateFirstSubtraction = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 1196;
-    const SKILL_NAME = "Elephants, Tigers, and Leopards - Estimation Before Subtraction";
+    const SKILL_ID = 1195;
+    const SKILL_NAME = "Elephants, Tigers, and Leopards - Hidden Path Difference";
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
@@ -97,60 +97,70 @@ const EstimateFirstSubtraction = () => {
     };
 
     const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-    const roundTo = (num, place) => Math.round(num / place) * place;
 
     const generateQuestion = (difficulty, index) => {
-        // Theme: Estimate differences.
+        // Theme: "Start + ? = End" or "End - ? = Start"
+        // Missing Addend / Subtrahend.
 
-        let n1, n2, est1, est2, diffEst;
+        let start, end, diff, ans;
         let questionText = "";
         let explanation = "";
+        let type = 'add'; // add, sub
 
         if (difficulty === 'easy') {
-            // Round to 10
-            n1 = randomInt(50, 95);
-            n2 = randomInt(11, n1 - 10);
-            if (n1 % 10 === 0) n1 += 2;
-            if (n2 % 10 === 0) n2 += 3;
+            start = randomInt(50, 200);
+            diff = randomInt(10, 50);
+            end = start + diff;
 
-            est1 = roundTo(n1, 10);
-            est2 = roundTo(n2, 10);
-            diffEst = est1 - est2;
-
-            questionText = `Estimate **${n1} - ${n2}** by rounding to the nearest **10**.`;
-            explanation = `${n1} → ${est1}.<br/>${n2} → ${est2}.<br/>Estimated Difference: ${est1} - ${est2} = ${diffEst}.`;
+            if (Math.random() > 0.5) {
+                // Start + ? = End
+                questionText = `You start at **${start}** meters. You want to reach **${end}** meters. How many more meters to go?`;
+                explanation = `${end} - ${start} = ${diff}.<br/>(Because ${start} + ${diff} = ${end})`;
+                ans = diff;
+            } else {
+                // End - ? = Start (Walking back)
+                questionText = `You are at **${end}**. How much do you need to walk back to reach **${start}**?`;
+                explanation = `${end} - ${start} = ${diff}`;
+                ans = diff;
+            }
         } else if (difficulty === 'medium') {
-            // Round to 100
-            n1 = randomInt(500, 900);
-            n2 = randomInt(100, 400);
+            // Larger numbers
+            start = randomInt(1000, 3000);
+            diff = randomInt(100, 900);
+            end = start + diff;
 
-            est1 = roundTo(n1, 100);
-            est2 = roundTo(n2, 100);
-            diffEst = est1 - est2;
+            questionText = `**${start}** + <span style="color:#D97706">?</span> = **${end}**`;
+            explanation = `To find the missing number, subtract the start from the total.<br/>${end} - ${start} = ${diff}`;
+            ans = diff;
+        } else { // Hard 
+            // Finding the Start? "? - 500 = 1200" => ? = 1700
+            // Or "Total distance is 5000. We did 2300 in morning, ? in evening."
 
-            questionText = `The population dropped from **${n1}** to **${n2}**. Estimate the decrease (Round to 100).`;
-            explanation = `${n1} ≈ ${est1}, ${n2} ≈ ${est2}.<br/>Decrease ≈ ${est1} - ${est2} = **${diffEst}**.`;
-        } else { // Hard
-            // Round to 1000
-            n1 = randomInt(5000, 9000);
-            n2 = randomInt(1000, 4000);
+            end = randomInt(4000, 8000);
+            let part1 = randomInt(1000, 3000);
+            let part2 = end - part1;
+            ans = part2;
 
-            est1 = roundTo(n1, 1000);
-            est2 = roundTo(n2, 1000);
-            diffEst = est1 - est2;
+            if (Math.random() > 0.5) {
+                questionText = `Total journey is **${end}** km. We travelled **${part1}** km. How much is left?`;
+                explanation = `${end} - ${part1} = ${part2}`;
+            } else {
+                // Unknown Start
+                let removed = randomInt(1000, 2000);
+                let remaining = randomInt(2000, 4000);
+                let original = removed + remaining;
+                ans = original;
 
-            questionText = `Start: **${n1}**, End: **${n2}**. About how much was removed? (Nearest 1000)`;
-            explanation = `${n1} → ${est1}, ${n2} → ${est2}.<br/>Result ≈ ${diffEst}.`;
+                questionText = `After unloading **${removed}** kg, the truck still has **${remaining}** kg. What was the **original** weight?`;
+                explanation = `Original = Unloaded + Remaining<br/>${removed} + ${remaining} = ${original}`;
+            }
         }
 
-        const correctVal = diffEst.toString();
+        const correctVal = ans.toString();
         const distractors = new Set([correctVal]);
-        const roundBase = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 100 : 1000;
-
         while (distractors.size < 4) {
-            let d = diffEst + (randomInt(-2, 2) * roundBase);
-            if (d >= 0 && d !== diffEst) distractors.add(d.toString());
-            if (distractors.size < 4) distractors.add((diffEst + 5 * roundBase).toString());
+            let d = parseInt(correctVal) + randomInt(-200, 200);
+            if (d > 0 && d !== parseInt(correctVal)) distractors.add(d.toString());
         }
 
         return {
@@ -158,7 +168,7 @@ const EstimateFirstSubtraction = () => {
             text: questionText,
             correctAnswer: correctVal,
             solution: explanation,
-            shuffledOptions: Array.from(distractors).sort((a, b) => parseInt(a) - parseInt(b))
+            shuffledOptions: Array.from(distractors).sort(() => Math.random() - 0.5)
         };
     };
 
@@ -173,7 +183,7 @@ const EstimateFirstSubtraction = () => {
         setIsCorrect(isRight);
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
-        if (isRight) setFeedbackMessage("Spot on! 🎯");
+        if (isRight) setFeedbackMessage("Path found! 🗺️");
         else setShowExplanationModal(true);
 
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -228,11 +238,11 @@ const EstimateFirstSubtraction = () => {
             <div className="junior-practice-page results-view overflow-y-auto">
                 <header className="junior-practice-header results-header relative">
                     <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back</button>
-                    <div className="title-area"><h1 className="results-title">Subtraction Scout!</h1></div>
+                    <div className="title-area"><h1 className="results-title">Exploration Report</h1></div>
                 </header>
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4 text-center">
                     <h2 className="text-4xl font-black text-[#31326F] mb-6">Score: {score}/{TOTAL_QUESTIONS}</h2>
-                    <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl" onClick={() => window.location.reload()}>Try Again</button>
+                    <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl" onClick={() => window.location.reload()}>Find New Path</button>
                 </main>
             </div>
         );
@@ -241,7 +251,7 @@ const EstimateFirstSubtraction = () => {
     if (!currentQuestion) return <div>Loading...</div>;
 
     return (
-        <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif', background: '#FFEBEE' }}>
+        <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif', background: '#FFF3E0' }}>
             <header className="junior-practice-header">
                 <div className="bg-white/90 px-4 py-2 rounded-xl text-[#31326F] font-bold">Q {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 <div className="bg-white/90 px-4 py-2 rounded-xl text-[#31326F] font-bold">{formatTime(timeElapsed)}</div>
@@ -250,9 +260,9 @@ const EstimateFirstSubtraction = () => {
             <main className="practice-content-wrapper">
                 <div className="flex flex-col items-center justify-center p-4 max-w-4xl mx-auto">
 
-                    <div className="bg-white rounded-[3rem] p-8 shadow-xl border-b-8 border-red-200 w-full text-center">
-                        <div className="flex justify-center mb-6">
-                            <div className="bg-red-100 p-4 rounded-full"><Scissors size={48} className="text-red-600" /></div>
+                    <div className="bg-white rounded-[3rem] p-8 shadow-xl border-b-8 border-orange-200 w-full text-center">
+                        <div className="flex justify-center gap-4 mb-6">
+                            <div className="bg-orange-100 p-4 rounded-full"><Map size={48} className="text-orange-600" /></div>
                         </div>
 
                         <h2 className="text-3xl font-black text-[#31326F] mb-8 leading-relaxed">
@@ -268,8 +278,8 @@ const EstimateFirstSubtraction = () => {
                                     className={`
                                          p-6 rounded-2xl text-2xl font-black transition-all border-4 shadow-sm
                                          ${selectedOption === opt
-                                            ? 'border-red-400 bg-red-50 text-red-900'
-                                            : 'border-red-50 bg-white text-gray-600 hover:border-red-200'}
+                                            ? 'border-orange-400 bg-orange-50 text-orange-900'
+                                            : 'border-orange-50 bg-white text-gray-600 hover:border-orange-200'}
                                          ${isSubmitted && opt === currentQuestion.correctAnswer ? '!border-green-500 !bg-green-100 !text-green-700' : ''}
                                          ${isSubmitted && selectedOption === opt && !isCorrect ? '!border-red-500 !bg-red-100 !text-red-700' : ''}
                                      `}
@@ -281,7 +291,7 @@ const EstimateFirstSubtraction = () => {
 
                         {isSubmitted && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`mt-8 font-bold text-xl ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
-                                {isCorrect ? feedbackMessage : "Check the drop!"}
+                                {isCorrect ? feedbackMessage : "Retrace your steps!"}
                             </motion.div>
                         )}
                     </div>
@@ -329,4 +339,4 @@ const EstimateFirstSubtraction = () => {
     );
 };
 
-export default EstimateFirstSubtraction;
+export default HiddenPathDifference;

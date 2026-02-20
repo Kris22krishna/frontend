@@ -1,11 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
+
+// Custom Animal Icons (SVG)
+const ElephantIcon = () => (
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 18v2h16v-2" /><path d="M19 18a4 4 0 0 0-4-14H9a4 4 0 0 0-4 14" /><path d="M15 4v14" /><path d="M9 4v14" />
+        <circle cx="12" cy="11" r="1" fill="currentColor" />
+    </svg>
+);
+// Using simple Lucide proxies for now where specific animal icons might not exist in standard sets, 
+// or simple SVG paths if we want to be fancy. Stick to emoji/text for reliability alongside icons.
+
+const CORRECT_MESSAGES = [
+    "🐘 Trunktastic! Correct!",
+    "🐅 Roar! You got it right!",
+    "🐆 Spot on! Fast and accurate!",
+    "✨ Wildly correct! ✨",
+    "🌿 Nature genius! 🌿"
+];
+
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const WildlifePopulationWordProblems = () => {
     const { grade } = useParams();
@@ -26,8 +46,8 @@ const WildlifePopulationWordProblems = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 0; // TODO: Replace with actual Skill ID
-    const SKILL_NAME = "Elephants, Tigers, and Leopards - Wildlife Population Word Problems";
+    const SKILL_ID = 1202; // Usage based
+    const SKILL_NAME = "Elephants, Tigers, and Leopards - Wildlife Population";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -52,13 +72,13 @@ const WildlifePopulationWordProblems = () => {
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
-        // Placeholder Question Generation Logic
-        const questions = Array.from({ length: TOTAL_QUESTIONS }, (_, i) => ({
-            text: `Question ${i + 1} (Placeholder)`,
-            correctAnswer: "Answer",
-            solution: "Solution explanation here.",
-            shuffledOptions: ["Answer", "Option 2", "Option 3", "Option 4"].sort(() => Math.random() - 0.5)
-        }));
+        // Generate Questions
+        const questions = [];
+        const difficulties = ['easy', 'easy', 'easy', 'medium', 'medium', 'medium', 'hard', 'hard', 'hard', 'hard'];
+
+        difficulties.forEach((diff, idx) => {
+            questions.push(generateQuestion(diff, idx));
+        });
 
         setSessionQuestions(questions);
 
@@ -99,6 +119,113 @@ const WildlifePopulationWordProblems = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const generateQuestion = (difficulty, index) => {
+        const parks = ["Kaziranga", "Corbett", "Bandipur", "Kanha", "Sundarbans"];
+        const selectedPark = parks[randomInt(0, parks.length - 1)];
+
+        // Data Generation
+        let elephants = 0, tigers = 0, leopards = 0, rhinos = 0;
+
+        if (difficulty === 'easy') {
+            // Smaller numbers, simpler questions
+            elephants = randomInt(20, 100);
+            tigers = randomInt(5, 30);
+            leopards = randomInt(10, 40);
+        } else if (difficulty === 'medium') {
+            // Hundreds
+            elephants = randomInt(100, 500);
+            tigers = randomInt(50, 150);
+            leopards = randomInt(50, 200);
+        } else {
+            // Thousands or complex sums
+            elephants = randomInt(1200, 3000);
+            tigers = randomInt(150, 400);
+            leopards = randomInt(200, 500);
+            rhinos = randomInt(1000, 2500);
+        }
+
+        const data = [
+            { name: "Elephants", count: elephants, icon: "🐘" },
+            { name: "Tigers", count: tigers, icon: "🐅" },
+            { name: "Leopards", count: leopards, icon: "🐆" }
+        ];
+        if (difficulty === 'hard') {
+            data.push({ name: "Rhinos", count: rhinos, icon: "🦏" });
+        }
+
+        let questionText = "";
+        let correctAnswer = 0;
+        let explanation = "";
+        let options = [];
+
+        // Question Logic
+        const type = randomInt(1, 3); // 1: Total, 2: Difference, 3: Comparison/ordering (handled simply)
+
+        if (difficulty === 'easy') {
+            if (type === 1) {
+                questionText = `In ${selectedPark}, finding the total number of **Big Cats** (Tigers + Leopards).`;
+                correctAnswer = tigers + leopards;
+                explanation = `Count of Tigers = ${tigers}<br/>Count of Leopards = ${leopards}<br/>Total = ${tigers} + ${leopards} = ${correctAnswer}`;
+            } else {
+                questionText = `How many more **Elephants** are there than **Tigers** in ${selectedPark}?`;
+                correctAnswer = elephants - tigers;
+                explanation = `Elephants = ${elephants}<br/>Tigers = ${tigers}<br/>Difference = ${elephants} - ${tigers} = ${correctAnswer}`;
+            }
+        } else if (difficulty === 'medium') {
+            if (type === 1) {
+                questionText = `Calculate the total population of **Elephants** and **Tigers** combined.`;
+                correctAnswer = elephants + tigers;
+                explanation = `Elephants: ${elephants}<br/>Tigers: ${tigers}<br/>Sum: ${elephants} + ${tigers} = ${correctAnswer}`;
+            } else {
+                questionText = `If 50 more **Leopards** move into ${selectedPark}, what will be the new total of Leopards?`;
+                correctAnswer = leopards + 50;
+                explanation = `Current Leopards = ${leopards}<br/>New arrivals = 50<br/>Total = ${leopards} + 50 = ${correctAnswer}`;
+            }
+        } else { // Hard
+            if (type === 1) {
+                questionText = `What is the **total number of animals** shown in the census table?`;
+                correctAnswer = data.reduce((sum, item) => sum + item.count, 0);
+                const sumString = data.map(d => d.count).join(" + ");
+                explanation = `Add all counts:<br/>${sumString} = ${correctAnswer}`;
+            } else if (type === 2) {
+                questionText = `How many fewer **Tigers** are there compared to **Rhinos**?`;
+                correctAnswer = rhinos - tigers;
+                explanation = `Rhinos = ${rhinos}<br/>Tigers = ${tigers}<br/>Difference = ${rhinos} - ${tigers} = ${correctAnswer}`;
+            } else {
+                questionText = `The park wants to reach 3000 **Elephants**. How many more are needed?`;
+                const target = 3000;
+                // Ensure target is > elephants for positive answer
+                const cap = Math.max(target, elephants + 500);
+                correctAnswer = cap - elephants;
+                questionText = `The park wants to reach ${cap} **Elephants**. How many more are needed?`;
+                explanation = `Target = ${cap}<br/>Current = ${elephants}<br/>Needed = ${cap} - ${elephants} = ${correctAnswer}`;
+            }
+        }
+
+        // Generate Options
+        const correctVal = parseInt(correctAnswer);
+        const distractors = new Set([correctVal]);
+
+        while (distractors.size < 4) {
+            let offset = randomInt(1, 4) * (difficulty === 'easy' ? 1 : (difficulty === 'medium' ? 10 : 100));
+            if (Math.random() > 0.5) offset *= -1;
+            const res = correctVal + offset;
+            if (res > 0 && res !== correctVal) distractors.add(res);
+        }
+
+        options = Array.from(distractors).sort(() => Math.random() - 0.5);
+
+        return {
+            id: index,
+            text: questionText,
+            correctAnswer: correctVal.toString(),
+            solution: explanation,
+            tableData: data,
+            parkName: selectedPark,
+            shuffledOptions: options.map(String)
+        };
+    };
+
     const recordQuestionAttempt = async (question, selected, isCorrect) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
@@ -136,7 +263,7 @@ const WildlifePopulationWordProblems = () => {
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
         if (isRight) {
-            setFeedbackMessage("Correct!");
+            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
         } else {
             setShowExplanationModal(true);
         }
@@ -155,7 +282,7 @@ const WildlifePopulationWordProblems = () => {
             questionStartTime.current = Date.now();
         } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
+            if (userId && sessionId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 try {
                     await api.createReport({
@@ -172,11 +299,11 @@ const WildlifePopulationWordProblems = () => {
                         },
                         user_id: parseInt(userId, 10)
                     });
+                    await api.finishSession(sessionId);
                 } catch (err) {
                     console.error("Failed to create report", err);
                 }
             }
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
@@ -225,13 +352,13 @@ const WildlifePopulationWordProblems = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Practice Report</h1>
+                        <h1 className="results-title">Ranger Report</h1>
                     </div>
                 </header>
 
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Practice Complete! 🎉</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Wildlife Expert! 🌿</h2>
 
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
@@ -272,7 +399,7 @@ const WildlifePopulationWordProblems = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Question Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Census Log 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -310,16 +437,6 @@ const WildlifePopulationWordProblems = () => {
                                                         </div>
                                                     )}
                                                 </div>
-
-                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
-                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explanation 💡</span>
-                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
-                                                        <LatexContent html={q.solution} />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
-                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
                                             </div>
                                         </div>
                                     </motion.div>
@@ -361,7 +478,7 @@ const WildlifePopulationWordProblems = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '900px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -372,14 +489,58 @@ const WildlifePopulationWordProblems = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                <div className="question-card-modern" style={{ padding: '0 0 2rem 0' }}>
+
+                                    {/* Table Area - Full Width */}
+                                    <div className="w-full bg-[#E0FBEF] p-6 mb-6 rounded-b-[3rem] border-b-4 border-[#4FB7B3]/20 flex flex-col items-center">
+                                        <h3 className="text-[#31326F] font-black text-xl uppercase tracking-widest mb-4 flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-[#4FB7B3]"></div>
+                                            {currentQuestion.parkName} Census
+                                            <div className="w-2 h-2 rounded-full bg-[#4FB7B3]"></div>
+                                        </h3>
+
+                                        <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm border-2 border-[#4FB7B3]/30 overflow-hidden">
+                                            <div className="grid grid-cols-[auto_1fr_auto] gap-x-6 gap-y-0 text-lg">
+                                                <div className="bg-[#31326F] text-white font-bold p-4 col-span-3 grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+                                                    <span className="w-12 text-center">Icon</span>
+                                                    <span>Animal Specie</span>
+                                                    <span>Count</span>
+                                                </div>
+
+                                                {currentQuestion.tableData.map((item, idx) => (
+                                                    <div key={idx} className="contents group">
+                                                        <div className={`
+                                                            p-4 flex items-center justify-center font-bold text-3xl
+                                                            ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
+                                                        `}>
+                                                            <span className="transform group-hover:scale-125 transition-transform">{item.icon}</span>
+                                                        </div>
+                                                        <div className={`
+                                                            p-4 flex items-center font-bold text-[#31326F]
+                                                            ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
+                                                        `}>{item.name}</div>
+                                                        <div className={`
+                                                            p-4 flex items-center justify-end font-black text-[#4FB7B3] text-2xl
+                                                            ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
+                                                        `}>
+                                                            {item.count}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Question Area */}
+                                    <div className="px-8 mb-8 text-center">
+                                        <h2 className="text-[#31326F] font-bold text-2xl md:text-3xl leading-snug">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+
+                                    {/* Interaction Area */}
+                                    <div className="interaction-area-modern px-8">
+                                        <div className="options-grid-modern grid grid-cols-2 gap-4 max-w-2xl mx-auto">
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
@@ -388,13 +549,15 @@ const WildlifePopulationWordProblems = () => {
                                                         }`}
                                                     style={{
                                                         fontFamily: '"Open Sans", sans-serif',
-                                                        fontWeight: '400',
-                                                        fontSize: '2.5rem',
+                                                        fontWeight: '700',
+                                                        fontSize: '2rem',
                                                         backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
                                                         color: !isSubmitted ? '#1f2937' : undefined,
                                                         borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
                                                         borderWidth: !isSubmitted ? '2px' : undefined,
-                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined,
+                                                        padding: '1.5rem',
+                                                        borderRadius: '1rem'
                                                     }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}

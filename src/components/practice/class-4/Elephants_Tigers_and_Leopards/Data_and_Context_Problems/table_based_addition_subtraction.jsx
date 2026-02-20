@@ -1,11 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Truck, Car, Bus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
+
+const CORRECT_MESSAGES = [
+    "🚙 Beep beep! Correct!",
+    "🚌 Excellent analysis!",
+    "🚐 You're driving correctly!",
+    "✨ Perfect calculation! ✨",
+    "🛣️ Road to success! 🛣️"
+];
+
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+// Custom Icons
+const JeepIcon = () => <Truck size={32} className="text-orange-500" />;
+const BusIcon = () => <Bus size={32} className="text-blue-500" />;
+const VanIcon = () => <Car size={32} className="text-green-500" />;
 
 const TableBasedAdditionSubtraction = () => {
     const { grade } = useParams();
@@ -26,8 +41,8 @@ const TableBasedAdditionSubtraction = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 0; // TODO: Replace with actual Skill ID
-    const SKILL_NAME = "Elephants, Tigers, and Leopards - Table Based Addition Subtraction";
+    const SKILL_ID = 1201;
+    const SKILL_NAME = "Elephants, Tigers, and Leopards - Safari Vehicle Analysis";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -52,13 +67,12 @@ const TableBasedAdditionSubtraction = () => {
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
-        // Placeholder Question Generation Logic
-        const questions = Array.from({ length: TOTAL_QUESTIONS }, (_, i) => ({
-            text: `Question ${i + 1} (Placeholder)`,
-            correctAnswer: "Answer",
-            solution: "Solution explanation here.",
-            shuffledOptions: ["Answer", "Option 2", "Option 3", "Option 4"].sort(() => Math.random() - 0.5)
-        }));
+        const questions = [];
+        const difficulties = ['easy', 'easy', 'easy', 'medium', 'medium', 'medium', 'hard', 'hard', 'hard', 'hard'];
+
+        difficulties.forEach((diff, idx) => {
+            questions.push(generateQuestion(diff, idx));
+        });
 
         setSessionQuestions(questions);
 
@@ -99,6 +113,101 @@ const TableBasedAdditionSubtraction = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const generateQuestion = (difficulty, index) => {
+        // Data Context: Safari Gate Entry Log
+        // Gates: North, South, East, West (subset)
+
+        let multiplier = 1;
+        if (difficulty === 'medium') multiplier = 10;
+        if (difficulty === 'hard') multiplier = 100;
+
+        const jeeps = randomInt(5, 15) * multiplier;
+        const buses = randomInt(2, 8) * multiplier;
+        const vans = randomInt(4, 12) * multiplier;
+
+        const data = [
+            { type: "Jeeps", count: jeeps, icon: <JeepIcon /> },
+            { type: "Buses", count: buses, icon: <BusIcon /> },
+            { type: "Vans", count: vans, icon: <VanIcon /> },
+        ];
+
+        let questionText = "";
+        let correctAnswer = 0;
+        let explanation = "";
+
+        // Easy: Simple Sum or Direct Comparison
+        // Medium: Difference or Sum of two out of three
+        // Hard: Multi-step, "How many more needed for target", or "Vehicles if 2 trips each"
+
+        const qType = randomInt(1, 4);
+
+        if (difficulty === 'easy') {
+            if (qType <= 2) {
+                questionText = "What is the **total number** of Jeeps and Buses?";
+                correctAnswer = jeeps + buses;
+                explanation = `Jeeps = ${jeeps}<br/>Buses = ${buses}<br/>Total = ${jeeps} + ${buses} = ${correctAnswer}`;
+            } else {
+                questionText = "Which vehicle type has the highest number?";
+                correctAnswer = Math.max(jeeps, buses, vans); // Trick: the question asks for type, but options usually numeric. 
+                // Let's simplify: "What is the count of the most common vehicle?"
+                questionText = "What is the number of the **most common** vehicle?";
+                explanation = `Compare quantities:<br/>Jeeps: ${jeeps}, Buses: ${buses}, Vans: ${vans}.<br/>Highest is ${correctAnswer}.`;
+            }
+        } else if (difficulty === 'medium') {
+            if (qType <= 2) {
+                questionText = "How many **more** Jeeps are there than Buses?";
+                correctAnswer = jeeps - buses;
+                explanation = `Jeeps = ${jeeps}<br/>Buses = ${buses}<br/>Difference = ${jeeps} - ${buses} = ${correctAnswer}`;
+            } else {
+                questionText = "What is the **total** number of all vehicles entered today?";
+                correctAnswer = jeeps + buses + vans;
+                explanation = `${jeeps} + ${buses} + ${vans} = ${correctAnswer}`;
+            }
+        } else { // Hard
+            if (qType === 1) {
+                const target = (Math.ceil((jeeps + buses + vans) / 1000) * 1000) + 500;
+                questionText = `The park limit is ${target} vehicles. How many **more** vehicles can enter?`;
+                const current = jeeps + buses + vans;
+                correctAnswer = target - current;
+                explanation = `Current Total = ${current}<br/>Limit = ${target}<br/>Can Enter = ${target} - ${current} = ${correctAnswer}`;
+            } else if (qType === 2) {
+                questionText = "If **125 more** Vans enter, what will be the total number of Vans?";
+                correctAnswer = vans + 125;
+                explanation = `Current Vans = ${vans}<br/>New Vans = 125<br/>Total = ${vans} + 125 = ${correctAnswer}`;
+            } else {
+                questionText = "If each **Bus** carries 2 groups, how many groups are on Buses?";
+                // This effectively simple multiplication but framed as addition (Bus + Bus)
+                correctAnswer = buses * 2;
+                explanation = `Each Bus has 2 groups.<br/>${buses} buses + ${buses} buses = ${correctAnswer} groups.`;
+                // Or simple subtraction with Regrouping focus
+                const diff = Math.abs(jeeps - vans);
+                questionText = "What is the difference between the number of **Jeeps** and **Vans**?";
+                correctAnswer = diff;
+                explanation = `Jeeps: ${jeeps}, Vans: ${vans}<br/>Difference: ${Math.max(jeeps, vans)} - ${Math.min(jeeps, vans)} = ${diff}`;
+            }
+        }
+
+        // Generate Options
+        const correctVal = parseInt(correctAnswer);
+        const distractors = new Set([correctVal]);
+
+        while (distractors.size < 4) {
+            let offset = randomInt(1, 5) * (difficulty === 'hard' ? 5 : 1);
+            if (Math.random() > 0.5) offset *= -1;
+            const res = correctVal + offset;
+            if (res > 0 && res !== correctVal) distractors.add(res);
+        }
+
+        return {
+            id: index,
+            text: questionText,
+            correctAnswer: correctVal.toString(),
+            solution: explanation,
+            tableData: data,
+            shuffledOptions: Array.from(distractors).sort(() => Math.random() - 0.5).map(String)
+        };
+    };
+
     const recordQuestionAttempt = async (question, selected, isCorrect) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
@@ -136,7 +245,7 @@ const TableBasedAdditionSubtraction = () => {
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
         if (isRight) {
-            setFeedbackMessage("Correct!");
+            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
         } else {
             setShowExplanationModal(true);
         }
@@ -155,7 +264,7 @@ const TableBasedAdditionSubtraction = () => {
             questionStartTime.current = Date.now();
         } else {
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
+            if (userId && sessionId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 try {
                     await api.createReport({
@@ -172,11 +281,11 @@ const TableBasedAdditionSubtraction = () => {
                         },
                         user_id: parseInt(userId, 10)
                     });
+                    await api.finishSession(sessionId);
                 } catch (err) {
                     console.error("Failed to create report", err);
                 }
             }
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
         }
     };
@@ -225,13 +334,13 @@ const TableBasedAdditionSubtraction = () => {
                         </div>
                     </div>
                     <div className="title-area">
-                        <h1 className="results-title">Practice Report</h1>
+                        <h1 className="results-title">Logbook Report</h1>
                     </div>
                 </header>
 
                 <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
                     <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Practice Complete! 🎉</h2>
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Gate Master! 🚧</h2>
 
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
@@ -272,7 +381,7 @@ const TableBasedAdditionSubtraction = () => {
                     </div>
 
                     <div className="detailed-breakdown w-full mb-12">
-                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Question Log 📜</h3>
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Daily Logs 📜</h3>
                         <div className="space-y-4">
                             {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
@@ -310,16 +419,6 @@ const TableBasedAdditionSubtraction = () => {
                                                         </div>
                                                     )}
                                                 </div>
-
-                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
-                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explanation 💡</span>
-                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
-                                                        <LatexContent html={q.solution} />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
-                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
                                             </div>
                                         </div>
                                     </motion.div>
@@ -361,7 +460,7 @@ const TableBasedAdditionSubtraction = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '900px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -372,14 +471,50 @@ const TableBasedAdditionSubtraction = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                <div className="question-card-modern" style={{ padding: '0 0 2rem 0' }}>
+
+                                    {/* Table Area */}
+                                    <div className="w-full bg-[#EBF8FF] p-6 mb-6 rounded-b-[3rem] border-b-4 border-blue-200 flex flex-col items-center">
+                                        <h3 className="text-[#31326F] font-black text-xl uppercase tracking-widest mb-4 flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                                            Safari Entry Log
+                                            <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                                        </h3>
+
+                                        <div className="bg-white rounded-3xl shadow-sm border-2 border-blue-100 overflow-hidden w-full max-w-lg">
+                                            <table className="w-full text-lg">
+                                                <thead className="bg-[#31326F] text-white">
+                                                    <tr>
+                                                        <th className="p-4 text-left">Vehicle Type</th>
+                                                        <th className="p-4 text-right">Count</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {currentQuestion.tableData.map((item, idx) => (
+                                                        <tr key={idx} className={idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                                                            <td className="p-4 font-bold text-[#31326F] flex items-center gap-3">
+                                                                {item.icon} {item.type}
+                                                            </td>
+                                                            <td className="p-4 font-black text-right text-2xl text-blue-500">
+                                                                {item.count}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    {/* Question Area */}
+                                    <div className="px-8 mb-8 text-center">
+                                        <h2 className="text-[#31326F] font-bold text-2xl md:text-3xl leading-snug">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+
+                                    {/* Interaction Area */}
+                                    <div className="interaction-area-modern px-8">
+                                        <div className="options-grid-modern grid grid-cols-2 gap-4 max-w-2xl mx-auto">
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
@@ -388,13 +523,15 @@ const TableBasedAdditionSubtraction = () => {
                                                         }`}
                                                     style={{
                                                         fontFamily: '"Open Sans", sans-serif',
-                                                        fontWeight: '400',
-                                                        fontSize: '2.5rem',
+                                                        fontWeight: '700',
+                                                        fontSize: '2rem',
                                                         backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
                                                         color: !isSubmitted ? '#1f2937' : undefined,
                                                         borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
                                                         borderWidth: !isSubmitted ? '2px' : undefined,
-                                                        borderStyle: !isSubmitted ? 'solid' : undefined
+                                                        borderStyle: !isSubmitted ? 'solid' : undefined,
+                                                        padding: '1.5rem',
+                                                        borderRadius: '1rem'
                                                     }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
