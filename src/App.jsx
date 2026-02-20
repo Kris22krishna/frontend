@@ -130,6 +130,8 @@ import FactorsOfFormXplusAXplusB from './components/practice/class-8/factorisati
 import DivisionMonomialByMonomial from './components/practice/class-8/factorisation/division_monomial_by_monomial';
 import DivisionPolynomialByMonomial from './components/practice/class-8/factorisation/division_polynomial_by_monomial';
 import DivisionPolynomialByPolynomial from './components/practice/class-8/factorisation/division_polynomial_by_polynomial';
+import ChapterTest from './components/practice/class-8/exponents and powers/chaptertest';
+
 
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
@@ -473,6 +475,13 @@ function App() {
         <Route path="/senior/grade/8/exponents-powers/comparing-numbers" element={
           <ProtectedRoute redirectTo="/login">
             <ComparingLargeSmallNumbers />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 8 Exponents and Powers - Chapter Test */}
+        <Route path="/senior/grade/8/exponents-powers/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ChapterTest />
           </ProtectedRoute>
         } />
 

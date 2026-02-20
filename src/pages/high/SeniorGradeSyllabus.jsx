@@ -169,6 +169,14 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Understanding Exponents',
                 isLocal: true,
                 path: '/senior/grade/8/exponents-powers/comparing-numbers'
+            },
+            {
+                skill_id: 'local-8-exp-chapter-test',
+                skill_name: 'Exponents and Powers Chapter Test',
+                topic: 'Exponents and Powers',
+                subtopic: 'Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-powers/chapter-test'
             }
         ];
 
