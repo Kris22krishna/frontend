@@ -82,13 +82,26 @@ export const TOPIC_CONFIGS = {
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
-            { id: "RB-03", name: "Division" }
+            { id: "RB-03", name: "Division" },
+            { id: "RB-04", name: "Factors" }
         ],
         'Fair Share': [
             { id: "FS-01", name: "Cutting equal parts" },
             { id: "FS-02", name: "Halves and doubles" },
             { id: "FS-03", name: "Drawing other half" },
             { id: "FS-04", name: "Guess Who Am I?" }
+        ],
+        'House of Hundreds II': [
+            { id: "HH2-01", name: "Draw tiles" },
+            { id: "HH2-02", name: "Neighbouring numbers" },
+            { id: "HH2-03", name: "Help cranes on number line" },
+            { id: "HH2-04", name: "Tambola" },
+            { id: "HH2-05", name: "Skip and solve" },
+            { id: "HH2-06", name: "Number in the centre" },
+            { id: "HH2-07", name: "Number Puzzles" },
+            { id: "HH2-08", name: "The Number Detective" },
+            { id: "HH2-09", name: "Paper Slips" },
+            { id: "HH2-10", name: "Guess the Number" }
         ]
     },
     '4': {

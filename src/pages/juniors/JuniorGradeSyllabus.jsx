@@ -26,6 +26,7 @@ const topicIcons = {
     'Geometry': { emoji: '📐', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'Data': { emoji: '📊', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
     'Fair Share': { emoji: '🍰', color: '#B39DDB', gradient: 'linear-gradient(135deg, #B39DDB 0%, #D1C4E9 100%)' },
+    'House of Hundreds': { emoji: '🏠', color: '#FFCCBC', gradient: 'linear-gradient(135deg, #FFCCBC 0%, #FFAB91 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }
 };
 
@@ -66,7 +67,7 @@ const JuniorGradeSyllabus = () => {
                     const topicName = (skill.topic || 'General').toLowerCase();
 
                     if (isGrade3) {
-                        return topicName.includes("raksha") && topicName.includes("bandhan");
+                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii");
                     }
                     if (isGrade4) {
                         return topicName === "the cleanest village";
@@ -113,6 +114,28 @@ const JuniorGradeSyllabus = () => {
                         topicMap[topicName].skillCount += 1;
                     }
                 });
+
+                // Merge with local config
+                if (TOPIC_CONFIGS && TOPIC_CONFIGS[gradeNumStr]) {
+                    Object.entries(TOPIC_CONFIGS[gradeNumStr]).forEach(([topicName, skills]) => {
+                        if (!topicMap[topicName]) {
+                            topicMap[topicName] = {
+                                name: topicName,
+                                skills: [],
+                                skillCount: 0
+                            };
+                        }
+                        skills.forEach(skill => {
+                            if (!topicMap[topicName].skills.find(s => s.id === skill.id)) {
+                                topicMap[topicName].skills.push({
+                                    id: skill.id,
+                                    name: skill.name
+                                });
+                                topicMap[topicName].skillCount += 1;
+                            }
+                        });
+                    });
+                }
 
                 setTopics(Object.values(topicMap));
             } catch (error) {
