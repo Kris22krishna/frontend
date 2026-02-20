@@ -123,7 +123,7 @@ const InputSection = ({ question, selectedAnswer, onAnswer, hasAnswered }) => {
     );
 };
 
-export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNext, onExit, onViewExplanation, onToggleScratchpad, showViewExplanation, canGoNext }) {
+export function QuestionCard({ question, serialNumber, selectedAnswer, onAnswer, onClear, onNext, onExit, onViewExplanation, onToggleScratchpad, showViewExplanation, canGoNext }) {
     const isImageQuestion = question.type === 'image' && !!question.image;
     const isInputQuestion = question.type === 'input' || (!question.options || question.options.length === 0);
     const hasAnswered = !!selectedAnswer;
@@ -193,7 +193,7 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNe
                         <div className="flex-1 md:w-2/5 flex flex-col min-h-0">
                             {/* Question Header */}
                             <div className="shrink-0 flex items-start gap-2 mb-4">
-                                <span className="text-xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
+                                <span className="text-xl font-bold text-[#4FB7B3] mt-0.5">{serialNumber || question.id}.</span>
                                 <div className="text-lg md:text-xl font-bold text-[#31326F] leading-snug">
                                     <LatexContent html={question.text} block={true} />
                                 </div>
@@ -232,7 +232,7 @@ export function QuestionCard({ question, selectedAnswer, onAnswer, onClear, onNe
                     <>
                         {/* Header */}
                         <div className="shrink-0 flex items-start gap-4 mb-4 sm:mb-6">
-                            <span className="text-lg md:text-2xl font-bold text-[#4FB7B3] mt-0.5">{question.id}.</span>
+                            <span className="text-lg md:text-2xl font-bold text-[#4FB7B3] mt-0.5">{serialNumber || question.id}.</span>
                             <div className="text-lg md:text-2xl font-bold text-[#31326F] leading-snug w-full">
                                 <LatexContent html={question.text} block={true} />
                             </div>
