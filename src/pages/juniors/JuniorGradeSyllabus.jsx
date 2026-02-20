@@ -26,6 +26,7 @@ const topicIcons = {
     'Geometry': { emoji: '📐', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'Data': { emoji: '📊', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
     'Fair Share': { emoji: '🍰', color: '#B39DDB', gradient: 'linear-gradient(135deg, #B39DDB 0%, #D1C4E9 100%)' },
+    'Fun at Class Party': { emoji: '🎈', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
     'Equal Groups': { emoji: '👥', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'House of Hundreds': { emoji: '🏠', color: '#FFCCBC', gradient: 'linear-gradient(135deg, #FFCCBC 0%, #FFAB91 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }

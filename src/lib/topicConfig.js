@@ -98,6 +98,10 @@ export const TOPIC_CONFIGS = {
             { id: "FS-03", name: "Drawing other half" },
             { id: "FS-04", name: "Guess Who Am I?" }
         ],
+        'Fun at Class Party': [
+            { id: "FCP-01", name: "Longer & Shorter Strings", route: "longer-shorter" },
+            { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" }
+        ],
         'House of Hundreds II': [
             { id: "HH2-01", name: "Draw tiles" },
             { id: "HH2-02", name: "Neighbouring numbers" },

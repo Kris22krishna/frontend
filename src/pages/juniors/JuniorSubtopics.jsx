@@ -67,6 +67,14 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             return;
         }
+        if (subtopic.id === "FCP-01") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
+            return;
+        }
+        if (subtopic.id === "FCP-02") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
+            return;
+        }
         if (subtopic.id === "HH2-01") {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             return;
@@ -185,6 +193,10 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/fair-share/draw`);
             } else if (subtopic.id === "FS-04") {
                 navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            } else if (subtopic.id === "FCP-01") {
+                navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
+            } else if (subtopic.id === "FCP-02") {
+                navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
             } else if (subtopic.id === "HH2-01") {
                 navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             } else if (String(grade).replace(/\D/g, '') === '1') {
