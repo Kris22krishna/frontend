@@ -81,6 +81,16 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+import DrawTiles from './components/practice/class-3/House-of-Hundreds-II/Draw-tiles';
+import NeighbouringNumbers from './components/practice/class-3/House-of-Hundreds-II/neighbouring-numbers';
+import HelpCranesOnNumberLine from './components/practice/class-3/House-of-Hundreds-II/Help-cranes-on-number-line';
+import Tambola from './components/practice/class-3/House-of-Hundreds-II/Tambola';
+import SkipAndSolve from './components/practice/class-3/House-of-Hundreds-II/skip-&-solve';
+import NumberInTheCentre from './components/practice/class-3/House-of-Hundreds-II/number-in-the-centre';
+import NumberPuzzles from './components/practice/class-3/House-of-Hundreds-II/number-puzzles';
+import TheNumberDetective from './components/practice/class-3/House-of-Hundreds-II/The-number-detective';
+import PaperSlips from './components/practice/class-3/House-of-Hundreds-II/Paper-slips';
+import GuessTheNumber from './components/practice/class-3/House-of-Hundreds-II/Guess-the-number';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -203,6 +213,10 @@ import LikeUnlikeTerms from './components/practice/class-7/algebraic expressions
 import Polynomials from './components/practice/class-7/algebraic expressions/Polynomials';
 import FindingValue from './components/practice/class-7/algebraic expressions/FindingValue';
 import AlgebraicExpressionsTest from './components/practice/class-7/algebraic expressions/AlgebraicExpressionsTest';
+import AreaParallelogram from './components/practice/class-7/perimeter area/AreaParallelogram';
+import AreaTriangle from './components/practice/class-7/perimeter area/AreaTriangle';
+import Circles from './components/practice/class-7/perimeter area/Circles';
+import PerimeterAreaTest from './components/practice/class-7/perimeter area/PerimeterAreaTest';
 
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
@@ -336,6 +350,66 @@ function App() {
         <Route path="/junior/grade/:grade/fair-share/guess-who" element={
           <ProtectedRoute redirectTo="/login">
             <FairShareGuesswho />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/draw-tiles" element={
+          <ProtectedRoute redirectTo="/login">
+            <DrawTiles />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/neighbouring-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <NeighbouringNumbers />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/help-cranes" element={
+          <ProtectedRoute redirectTo="/login">
+            <HelpCranesOnNumberLine />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/tambola" element={
+          <ProtectedRoute redirectTo="/login">
+            <Tambola />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/skip-and-solve" element={
+          <ProtectedRoute redirectTo="/login">
+            <SkipAndSolve />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/number-in-the-centre" element={
+          <ProtectedRoute redirectTo="/login">
+            <NumberInTheCentre />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/number-puzzles" element={
+          <ProtectedRoute redirectTo="/login">
+            <NumberPuzzles />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/the-number-detective" element={
+          <ProtectedRoute redirectTo="/login">
+            <TheNumberDetective />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/paper-slips" element={
+          <ProtectedRoute redirectTo="/login">
+            <PaperSlips />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/guess-the-number" element={
+          <ProtectedRoute redirectTo="/login">
+            <GuessTheNumber />
           </ProtectedRoute>
         } />
 
@@ -692,6 +766,13 @@ function App() {
         <Route path="/middle/grade/7/algebraic-expressions/finding-value" element={<FindingValue />} />
         <Route path="/middle/grade/7/algebraic-expressions/chapter-test" element={<AlgebraicExpressionsTest />} />
 
+
+
+        {/* Perimeter and Area */}
+        <Route path="/middle/grade/7/perimeter-area/parallelogram" element={<AreaParallelogram />} />
+        <Route path="/middle/grade/7/perimeter-area/triangle" element={<AreaTriangle />} />
+        <Route path="/middle/grade/7/perimeter-area/circles" element={<Circles />} />
+        <Route path="/middle/grade/7/perimeter-area/chapter-test" element={<PerimeterAreaTest />} />
 
         {/* Auth Routes */}
         <Route path="/login" element={<LoginPage />} />

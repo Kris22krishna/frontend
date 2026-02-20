@@ -18,11 +18,12 @@ const firebaseConfig = {
 let app;
 let auth = null;
 let googleProvider = null;
+let analytics = null;
 
 try {
     if (firebaseConfig.projectId) {
         app = initializeApp(firebaseConfig);
-        // analytics = getAnalytics(app); // Only if needed in specific components
+        analytics = getAnalytics(app);
         auth = getAuth(app);
         googleProvider = new GoogleAuthProvider();
     } else {
@@ -32,4 +33,4 @@ try {
     console.error("Firebase initialization failed:", error);
 }
 
-export { auth, googleProvider, signInWithPopup };
+export { auth, googleProvider, signInWithPopup, analytics };
