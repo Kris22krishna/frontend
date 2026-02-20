@@ -115,10 +115,11 @@ const JuniorSubtopics = () => {
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
                 const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                 if (skill && skill.route) {
-                    if (decodedTopic === "The Cleanest Village") {
+                    const slug = decodedTopic.toLowerCase().replace(/,/g, '').replace(/\s+/g, '-');
+                    if (slug === "the-cleanest-village") {
                         navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
                         return;
-                    } else if (decodedTopic === "Weigh It, Pour It") {
+                    } else if (slug === "weigh-it-pour-it") {
                         navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
                         return;
                     }
@@ -220,9 +221,10 @@ const JuniorSubtopics = () => {
                     if (gradeConfigs && gradeConfigs[decodedTopic]) {
                         const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                         if (skill && skill.route) {
-                            if (decodedTopic === "The Cleanest Village") {
+                            const slug = decodedTopic.toLowerCase().replace(/,/g, '').replace(/\s+/g, '-');
+                            if (slug === "the-cleanest-village") {
                                 navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
-                            } else if (decodedTopic === "Weigh It, Pour It") {
+                            } else if (slug === "weigh-it-pour-it") {
                                 navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
                             }
                             setPendingSubtopic(null);

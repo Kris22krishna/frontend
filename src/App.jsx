@@ -293,6 +293,7 @@ import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Vi
 import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
+import ChapterTest from './components/practice/class-4/The_Cleanest_Village/Chapter_Test/chapter_test';
 
 // Grade 4 - Weigh It, Pour It
 import GramToKilogramFractions from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/gram_to_kilogram_fractions';
@@ -551,6 +552,17 @@ function App() {
         <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
           <ProtectedRoute redirectTo="/login">
             <LetUsPlay />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ChapterTest />
+          </ProtectedRoute>
+        } />
+        {/* Fallback for spaces in URL */}
+        <Route path="/junior/grade/:grade/the cleanest village/chapter test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ChapterTest />
           </ProtectedRoute>
         } />
 
