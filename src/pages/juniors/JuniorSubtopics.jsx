@@ -81,6 +81,9 @@ const JuniorSubtopics = () => {
                     } else if (decodedTopic === "Weigh It, Pour It") {
                         navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
                         return;
+                    } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
+                        navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
+                        return;
                     }
                 }
             }
@@ -182,6 +185,8 @@ const JuniorSubtopics = () => {
                                 navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
                             } else if (decodedTopic === "Weigh It, Pour It") {
                                 navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
+                            } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
+                                navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
                             }
                             setPendingSubtopic(null);
                             return;
