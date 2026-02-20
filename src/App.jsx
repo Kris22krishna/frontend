@@ -228,6 +228,7 @@ import FairShareCutting from './components/practice/class-3/fair-share/cutting';
 import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
 import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
 import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
+import FairShareChapterTest from './components/practice/class-3/fair-share/Chapter-test';
 
 // Grade 3 - Filling and Lifting
 import Measuring from './components/practice/class-3/Filling-and-Lifting/Measuring';
@@ -331,6 +332,11 @@ function App() {
         <Route path="/junior/grade/:grade/fair-share/guess-who" element={
           <ProtectedRoute redirectTo="/login">
             <FairShareGuesswho />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fair-share/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareChapterTest />
           </ProtectedRoute>
         } />
 

@@ -67,6 +67,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             return;
         }
+        if (subtopic.id === "FS-05") {
+            navigate(`/junior/grade/${grade}/fair-share/chapter-test`);
+            return;
+        }
         if (subtopic.id === "FL-01") {
             navigate(`/junior/grade/${grade}/filling-and-lifting/measuring`);
             return;
@@ -147,6 +151,8 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/fair-share/draw`);
             } else if (subtopic.id === "FS-04") {
                 navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            } else if (subtopic.id === "FS-05") {
+                navigate(`/junior/grade/${grade}/fair-share/chapter-test`);
             } else if (subtopic.id === "FL-01") {
                 navigate(`/junior/grade/${grade}/filling-and-lifting/measuring`);
             } else if (String(grade).replace(/\D/g, '') === '1') {
