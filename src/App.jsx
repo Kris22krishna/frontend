@@ -196,6 +196,14 @@ import RotationalSymmetry from './components/practice/class-7/symmetry/Rotationa
 import LineRotationalRelationship from './components/practice/class-7/symmetry/LineRotationalRelationship';
 import SymmetryTest from './components/practice/class-7/symmetry/SymmetryTest';
 
+import Formation from './components/practice/class-7/algebraic expressions/Formation';
+import TermsFactors from './components/practice/class-7/algebraic expressions/TermsFactors';
+import Coefficients from './components/practice/class-7/algebraic expressions/Coefficients';
+import LikeUnlikeTerms from './components/practice/class-7/algebraic expressions/LikeUnlikeTerms';
+import Polynomials from './components/practice/class-7/algebraic expressions/Polynomials';
+import FindingValue from './components/practice/class-7/algebraic expressions/FindingValue';
+import AlgebraicExpressionsTest from './components/practice/class-7/algebraic expressions/AlgebraicExpressionsTest';
+
 // Senior Pages (Grades 8-10 professional design)
 import SeniorGradeSyllabus from './pages/high/SeniorGradeSyllabus';
 import HighPracticeSession from './pages/high/HighPracticeSession';
@@ -674,6 +682,15 @@ function App() {
         <Route path="/middle/grade/7/symmetry/rotational" element={<RotationalSymmetry />} />
         <Route path="/middle/grade/7/symmetry/relationship" element={<LineRotationalRelationship />} />
         <Route path="/middle/grade/7/symmetry/chapter-test" element={<SymmetryTest />} />
+
+        {/* Algebraic Expressions */}
+        <Route path="/middle/grade/7/algebraic-expressions/formation" element={<Formation />} />
+        <Route path="/middle/grade/7/algebraic-expressions/terms-factors" element={<TermsFactors />} />
+        <Route path="/middle/grade/7/algebraic-expressions/coefficients" element={<Coefficients />} />
+        <Route path="/middle/grade/7/algebraic-expressions/like-unlike" element={<LikeUnlikeTerms />} />
+        <Route path="/middle/grade/7/algebraic-expressions/polynomials" element={<Polynomials />} />
+        <Route path="/middle/grade/7/algebraic-expressions/finding-value" element={<FindingValue />} />
+        <Route path="/middle/grade/7/algebraic-expressions/chapter-test" element={<AlgebraicExpressionsTest />} />
 
 
         {/* Auth Routes */}

@@ -418,6 +418,62 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/symmetry/chapter-test'
+                        },
+                        {
+                            skill_id: '1094',
+                            skill_name: 'Formation of Algebraic Expressions',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/formation'
+                        },
+                        {
+                            skill_id: '1095',
+                            skill_name: 'Terms and Factors',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/terms-factors'
+                        },
+                        {
+                            skill_id: '1096',
+                            skill_name: 'Coefficients',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/coefficients'
+                        },
+                        {
+                            skill_id: '1097',
+                            skill_name: 'Like and Unlike Terms',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/like-unlike'
+                        },
+                        {
+                            skill_id: '1098',
+                            skill_name: 'Types of Expressions',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/polynomials'
+                        },
+                        {
+                            skill_id: '1099',
+                            skill_name: 'Finding the Value of an Expression',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/finding-value'
+                        },
+                        {
+                            skill_id: '1100',
+                            skill_name: 'Chapter Test',
+                            topic: 'Algebraic Expressions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/algebraic-expressions/chapter-test'
                         }
                     ];
                 }
@@ -440,8 +496,8 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry") && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions") return acc;
+        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
 
 
         const topic = skill.topic || 'General';
