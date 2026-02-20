@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, FastForward } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -55,31 +55,31 @@ const ChapterTest = () => {
                 text: "What is the next number in this sequence of triangular numbers: $1, 3, 6, 10, \\dots$?",
                 correctAnswer: "15",
                 options: ["12", "15", "18", "20"],
-                solution: "Add 2, then 3, then 4, then 5: $10 + 5 = 15$."
+                solution: "Triangular numbers represent the number of dots in an equilateral triangle. The pattern is formed by adding consecutive integers: <br/>1st: $1$<br/>2nd: $1 + 2 = 3$<br/>3rd: $3 + 3 = 6$<br/>4th: $6 + 4 = 10$<br/>5th: $10 + 5 = 15$. <br/>Therefore, the next number is found by adding the next integer, which is 5."
             });
             qs.push({
                 text: "Identify the pattern to find the next term: $2, 6, 18, 54, \\dots$?",
                 correctAnswer: "162",
                 options: ["162", "108", "150", "120"],
-                solution: "The pattern is multiplying by 3: $54 \\times 3 = 162$."
+                solution: "This is a geometric sequence where each term is found by multiplying the previous term by a constant factor (common ratio). Let's check the ratio: <br/>$6 \\div 2 = 3$<br/>$18 \\div 6 = 3$<br/>$54 \\div 18 = 3$.<br/>Since the common ratio is 3, the next term is $54 \\times 3 = 162$."
             });
             qs.push({
                 text: "A square tile is turned $45^\\circ$ clockwise, then $90^\\circ$ clockwise, then $45^\\circ$ clockwise again. What is the total angle of rotation?",
                 correctAnswer: "$180^\\circ$",
                 options: ["$90^\\circ$", "$180^\\circ$", "$135^\\circ$", "$360^\\circ$"],
-                solution: "$45 + 90 + 45 = 180$. The tile is now upside down."
+                solution: "To find the total rotation, we simply sum up all individual clockwise turns: <br/>$45^\\circ + 90^\\circ + 45^\\circ = 180^\\circ$.<br/>A rotation of $180^\\circ$ is equivalent to a half-turn, meaning the tile will appear upside down relative to its starting position."
             });
             qs.push({
                 text: "In a $3 \\times 3$ grid, each row sums to 20. If Row 3 has $(?, 4, 9)$, what is '?'?",
                 correctAnswer: "7",
                 options: ["5", "7", "9", "10"],
-                solution: "$20 - (4 + 9) = 20 - 13 = 7$."
+                solution: "This problem uses algebraic reasoning within a grid pattern. We are given that the sum of the row is 20. <br/>Row Sum = $? + 4 + 9 = 20$<br/>$? + 13 = 20$<br/>$? = 20 - 13$<br/>$? = 7$.<br/>Checking the work: $7 + 4 + 9 = 11 + 9 = 20$, which is correct."
             });
             qs.push({
                 text: "Which rule describes this sequence: $101, 202, 303, 404, \\dots$?",
                 correctAnswer: "Add 101",
                 options: ["Add 101", "Add 100", "Multiply by 2", "Add 1"],
-                solution: "Each term increases by 101: $101 + 101 = 202$."
+                solution: "Let's find the difference between consecutive terms:<br/>$202 - 101 = 101$<br/>$303 - 202 = 101$<br/>$404 - 303 = 101$.<br/>Since the difference is constant, the rule is to <b>add 101</b> to each term to get the next one. This is also called an arithmetic progression."
             });
 
             // --- NUMBER PROPERTIES (5 QS) ---
@@ -87,31 +87,31 @@ const ChapterTest = () => {
                 text: "Using properties of operations, $56 \\times 99$ is equivalent to:",
                 correctAnswer: "$56 \\times (100 - 1)$",
                 options: ["$56 \\times (100 - 1)$", "$56 \\times 100 + 1$", "$56 \\times 90 + 9$", "$56 \\times 100 - 56$"],
-                solution: "Using the <b>Distributive Property</b>, $99$ becomes $100 - 1$."
+                solution: "The <b>Distributive Property</b> allows us to break down a difficult multiplication into two easier ones. <br/>$56 \\times 99$ can be written as $56 \\times (100 - 1)$. <br/>In the next step, you would calculate $(56 \\times 100) - (56 \\times 1)$, which is $5600 - 56 = 5544$. This is much easier than multiplying by 99 directly."
             });
             qs.push({
                 text: "In the number 4,444, how many times greater is the 4 in the hundreds place than the 4 in the tens place?",
                 correctAnswer: "10 times",
                 options: ["10 times", "100 times", "5 times", "1,000 times"],
-                solution: "Each place to the left is 10 times the value of the place to its right."
+                solution: "In our base-10 number system, each place value is exactly 10 times larger than the place to its immediate right. <br/>- The 4 in the hundreds place represents 400.<br/>- The 4 in the tens place represents 40.<br/>$400 \div 40 = 10$.<br/>Therefore, it is exactly 10 times greater."
             });
             qs.push({
                 text: "Identify which of the following is a number palindrome:",
                 correctAnswer: "10101",
                 options: ["10101", "12312", "11221", "404040"],
-                solution: "10101 reads the same forward and backward."
+                solution: "A palindrome is a sequence that reads the same forward and backward. <br/>- <b>10101</b>: Forward: 1-0-1-0-1 | Backward: 1-0-1-0-1. (Match!)<br/>- 11221: Forward: 1-1-2-2-1 | Backward: 1-2-2-1-1. (Mismatch)<br/>Palindromes are symmetric around their center digit."
             });
             qs.push({
                 text: "What is the sum of the first three square numbers?",
                 correctAnswer: "14",
                 options: ["9", "14", "10", "15"],
-                solution: "$1^2 + 2^2 + 3^2 = 1 + 4 + 9 = 14$."
+                solution: "A square number is the result of multiplying a number by itself.<br/>1st square: $1 \times 1 = 1$<br/>2nd square: $2 \times 2 = 4$<br/>3rd square: $3 \times 3 = 9$<br/>Total Sum = $1 + 4 + 9 = 14$.<br/>Note: Square numbers can be visualized as dots arranged in a perfect square grid."
             });
             qs.push({
                 text: "Which property states that $a + b = b + a$?",
                 correctAnswer: "Commutative Property",
                 options: ["Commutative Property", "Associative Property", "Distributive Property", "Identity Property"],
-                solution: "The order of numbers in addition doesn't change the sum."
+                solution: "The <b>Commutative Property of Addition</b> states that changing the order of the numbers does not change the result. For example, $5 + 3$ gives the same sum as $3 + 5$. Think of 'commuting' as 'moving around'—the numbers can move, but the answer stays the same."
             });
 
             // --- LOGICAL REASONING (5 QS) ---
@@ -119,31 +119,31 @@ const ChapterTest = () => {
                 text: "If a secret number is doubled and then 5 is added, the result is 25. What is the number?",
                 correctAnswer: "10",
                 options: ["10", "15", "20", "5"],
-                solution: "Work backward: $25 - 5 = 20$, then $20 \\div 2 = 10$."
+                solution: "To find the original number, we perform the inverse (opposite) operations in reverse order: <br/>1. The last step was 'add 5', so we subtract 5: $25 - 5 = 20$.<br/>2. The first step was 'doubled', so we divide by 2: $20 \div 2 = 10$.<br/>Verification: $(10 \times 2) + 5 = 20 + 5 = 25$. Correct!"
             });
             qs.push({
                 text: "Rule: 'If even, divide by 2. If odd, add 1'. Starting with 15, what is the result after 2 steps?",
                 correctAnswer: "8",
                 options: ["8", "16", "7", "9"],
-                solution: "Step 1: $15+1=16$. Step 2: $16 \\div 2 = 8$."
+                solution: "We must follow the rule carefully step-by-step: <br/><b>Step 1</b>: 15 is ODD, so we add 1. $15 + 1 = 16$.<br/><b>Step 2</b>: 16 is EVEN, so we divide by 2. $16 \div 2 = 8$.<br/>The final result after two operations is 8."
             });
             qs.push({
                 text: "In a number tower, a block is the sum of the two below it. If the base blocks are $(5, 10, 5)$, what is at the top?",
                 correctAnswer: "30",
                 options: ["20", "25", "30", "40"],
-                solution: "Level 2: $(15, 15)$. Top: $15 + 15 = 30$."
+                solution: "Let's build the tower level by level from the bottom up:<br/>Level 1 (Base): [5, 10, 5]<br/>Level 2: [5+10, 10+5] = [15, 15]<br/>Level 3 (Top): [15+15] = 30.<br/>Working with towers requires keeping track of each pairwise sum carefully."
             });
             qs.push({
                 text: "Solve $195 + 155$ mentally by 'breaking apart' or compensation.",
                 correctAnswer: "350",
                 options: ["350", "340", "360", "345"],
-                solution: "$(200 - 5) + (150 + 5) = 200 + 150 = 350$."
+                solution: "Compensation involves moving a small amount from one number to another to make them 'friendly' or rounded. <br/>1. Take 5 from 155 and give it to 195.<br/>2. Now you have $200 + 150$.<br/>3. $200 + 150 = 350$.<br/>Alternatively, $(190 + 5) + (150 + 5) = 190 + 150 + 10 = 340 + 10 = 350$."
             });
             qs.push({
-                text: "Strategy: Double and Halve. $25 \\times 12$ is equivalent to $50 \\times ?$",
+                text: "Strategy: Double and Halve. $25 \times 12$ is equivalent to $50 \times ?$",
                 correctAnswer: "6",
                 options: ["6", "12", "24", "4"],
-                solution: "If we double 25 to 50, we must halve 12 to 6."
+                solution: "The <b>Double and Halve</b> strategy works because if you multiply one factor by 2 and divide the other by 2, the total product remains unchanged ($2 \times 0.5 = 1$).<br/>- Double 25 $\rightarrow$ 50.<br/>- Halve 12 $\rightarrow$ 6.<br/>So, $25 \times 12$ is the same as $50 \times 6$, which is 300. This makes long multiplication much simpler to do mentally."
             });
 
             return qs;
@@ -184,7 +184,7 @@ const ChapterTest = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+    const recordQuestionAttempt = async (question, selected, isCorrect, isSkipped = false) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!userId) return;
         let timeSpent = accumulatedTime.current;
@@ -199,7 +199,7 @@ const ChapterTest = () => {
                 difficulty_level: 'Mixed',
                 question_text: String(question.text || ''),
                 correct_answer: String(question.correctAnswer || ''),
-                student_answer: String(selected || ''),
+                student_answer: isSkipped ? "Skipped" : String(selected || ''),
                 is_correct: isCorrect,
                 solution_text: String(question.solution || ''),
                 time_spent_seconds: seconds >= 0 ? seconds : 0
@@ -213,40 +213,57 @@ const ChapterTest = () => {
         if (!selectedOption) return;
 
         const isRight = selectedOption === currentQuestion.correctAnswer;
-        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption, isSkipped: false } }));
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
 
+        proceedToNext();
+    };
+
+    const handleSkip = async () => {
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: false, selected: "Skipped", isSkipped: true } }));
+        recordQuestionAttempt(currentQuestion, "Skipped", false, true);
+        proceedToNext();
+    };
+
+    const proceedToNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const updatedAnswers = { ...answers, [qIndex]: { isCorrect: isRight, selected: selectedOption } };
-                const totalCorrect = Object.values(updatedAnswers).filter(val => val.isCorrect === true).length;
-                try {
-                    await api.createReport({
-                        title: SKILL_NAME,
-                        type: 'practice',
-                        score: (totalCorrect / TOTAL_QUESTIONS) * 100,
-                        parameters: {
-                            skill_id: SKILL_ID,
-                            skill_name: SKILL_NAME,
-                            total_questions: TOTAL_QUESTIONS,
-                            correct_answers: totalCorrect,
-                            time_taken_seconds: timeElapsed
-                        },
-                        user_id: parseInt(userId, 10)
-                    });
-                } catch (err) {
-                    console.error("Failed to create report", err);
-                }
-            }
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            setShowResults(true);
+            finalizeAssessment();
         }
     };
+
+    const finalizeAssessment = async () => {
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId) {
+            // Re-calculate based on state since answers might not have the last update yet in async flow
+            // But state updates are queued, so we should be careful. 
+            // In assessment flow, we can just let showResults calculate from the latest answers state.
+        }
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        setShowResults(true);
+
+        const userIdInt = parseInt(userId, 10);
+        if (userIdInt) {
+            const results = Object.values(answers);
+            const totalCorrect = results.filter(r => r.isCorrect).length;
+            api.createReport({
+                title: SKILL_NAME,
+                type: 'practice',
+                score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                parameters: {
+                    skill_id: SKILL_ID,
+                    skill_name: SKILL_NAME,
+                    total_questions: TOTAL_QUESTIONS,
+                    correct_answers: totalCorrect,
+                    time_taken_seconds: timeElapsed
+                },
+                user_id: userIdInt
+            }).catch(err => console.error("Failed to create report", err));
+        }
+    }
 
     const handlePrevious = () => {
         if (qIndex > 0) setQIndex(prev => prev - 1);
@@ -322,8 +339,8 @@ const ChapterTest = () => {
                                                     )}
                                                 </div>
                                                 <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
-                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Solution 💡</span>
-                                                    <div className="text-sm font-medium text-gray-600"><LatexContent html={q.solution} /></div>
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Detailed Solution 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed"><LatexContent html={q.solution} /></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -378,6 +395,9 @@ const ChapterTest = () => {
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
                             {qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious}><ChevronLeft size={28} strokeWidth={3} /> Prev</button>}
+                            {!selectedOption && qIndex < TOTAL_QUESTIONS - 1 && (
+                                <button className="bg-gray-50 text-gray-400 px-8 py-4 rounded-full border-2 border-gray-200 font-black flex items-center gap-2 hover:bg-gray-100 transition-all" onClick={handleSkip}>Skip <FastForward size={20} /></button>
+                            )}
                             <button className="nav-pill-submit-btn" onClick={handleNext} disabled={!selectedOption}>{qIndex < TOTAL_QUESTIONS - 1 ? <>Next Question <ChevronRight size={28} strokeWidth={3} /></> : <>Finish Assessment <Check size={28} strokeWidth={3} /></>}</button>
                         </div>
                     </div>
