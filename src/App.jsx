@@ -171,6 +171,7 @@ import MultiStepOperations from './components/practice/class-5/CanyouseethePatte
 import MissingNumberReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/missing-number-reasoning';
 import MentalCalculationReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/mental-calculation-strategies';
 import SkillApplicationProblems from './components/practice/class-5/CanyouseethePattern/SkillApplicationProblems/skill-application-problems-patterns';
+import ChapterTestPatterns from './components/practice/class-5/CanyouseethePattern/ChapterTest/chapter-test';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -905,6 +906,7 @@ function App() {
         <Route path="/middle/grade/5/can-you-see-the-pattern/missing-numbers" element={<MissingNumberReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/mental-calculation" element={<MentalCalculationReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblems />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
 
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         {/* Class 10: Pair of Linear Equations Routes */}
