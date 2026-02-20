@@ -248,6 +248,15 @@ import IdentifyingTerms from './components/practice/class-10/Arithmetic Progress
 import FindingSpecificTerms from './components/practice/class-10/Arithmetic Progressions/FindingSpecificTerms';
 import SumOfTerms from './components/practice/class-10/Arithmetic Progressions/SumOfTerms';
 import ArithmeticProgressionsTest from './components/practice/class-10/Arithmetic Progressions/ArithmeticProgressionsTest';
+import FoundationsQuadratic from './components/practice/class-10/Quadratic Equations/FoundationsQuadratic';
+import RepresentingSituations from './components/practice/class-10/Quadratic Equations/RepresentingSituations';
+import IdentifyingQuadratic from './components/practice/class-10/Quadratic Equations/IdentifyingQuadratic';
+import RootsByFactorisation from './components/practice/class-10/Quadratic Equations/RootsByFactorisation';
+import WordProblemsFactorisation from './components/practice/class-10/Quadratic Equations/WordProblemsFactorisation';
+import NatureOfRoots from './components/practice/class-10/Quadratic Equations/NatureOfRoots';
+import DiscriminantAnalysis from './components/practice/class-10/Quadratic Equations/DiscriminantAnalysis';
+import RealLifeApplications from './components/practice/class-10/Quadratic Equations/RealLifeApplications';
+import QuadraticEquationsTest from './components/practice/class-10/Quadratic Equations/QuadraticEquationsTest';
 
 // Class 10: Real Numbers
 import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
@@ -909,6 +918,16 @@ function App() {
         <Route path="/high/practice/10104" element={<FindingSpecificTerms />} />
         <Route path="/high/practice/10105" element={<SumOfTerms />} />
         <Route path="/high/practice/10106" element={<ArithmeticProgressionsTest />} />
+        {/* Class 10: Quadratic Equations Routes */}
+        <Route path="/high/practice/10201" element={<FoundationsQuadratic />} />
+        <Route path="/high/practice/10202" element={<RepresentingSituations />} />
+        <Route path="/high/practice/10203" element={<IdentifyingQuadratic />} />
+        <Route path="/high/practice/10204" element={<RootsByFactorisation />} />
+        <Route path="/high/practice/10205" element={<WordProblemsFactorisation />} />
+        <Route path="/high/practice/10206" element={<NatureOfRoots />} />
+        <Route path="/high/practice/10207" element={<DiscriminantAnalysis />} />
+        <Route path="/high/practice/10208" element={<RealLifeApplications />} />
+        <Route path="/high/practice/10209" element={<QuadraticEquationsTest />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
         {/* Class 10: Real Numbers Routes */}
