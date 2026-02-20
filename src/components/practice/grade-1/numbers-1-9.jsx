@@ -11,7 +11,6 @@ import ExplanationModal from '../../ExplanationModal';
 import mascotImg from '../../../assets/mascot.png';
 import './Grade1Practice.css';
 
-const TOTAL_QUESTIONS = 5;
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'counting' || data.forceCounting) {
@@ -104,6 +103,7 @@ const Numbers1to9 = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
+    const totalQuestions = 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -134,10 +134,10 @@ const Numbers1to9 = () => {
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
         const objTypes = ['circle', 'star', 'square'];
 
-        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        for (let i = 0; i < totalQuestions; i++) {
             let question = {};
 
-            if (selectedSkill === 'G1-CH2-01' || !selectedSkill) {
+            if (selectedSkill === '201' || !selectedSkill) {
                 // Counting objects
                 const count = Math.floor(Math.random() * 9) + 1;
                 const objType = objTypes[i % objTypes.length];
@@ -149,7 +149,7 @@ const Numbers1to9 = () => {
                     visualData: { count, objType, color: colors[i % colors.length] },
                     explanation: `By counting carefully, we can see there are exactly ${count} ${objType}s.`
                 };
-            } else if (selectedSkill === 'G1-CH2-02') {
+            } else if (selectedSkill === '202') {
                 // Number recognition
                 const names = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
                 const num = Math.floor(Math.random() * 9) + 1;
@@ -161,7 +161,7 @@ const Numbers1to9 = () => {
                     visualData: { num, color: colors[i % colors.length] },
                     explanation: `The number ${num} is written as '${names[num - 1].toUpperCase()}'.`
                 };
-            } else if (selectedSkill === 'G1-CH2-04') {
+            } else if (selectedSkill === '204') {
                 // Comparison
                 const n1 = Math.floor(Math.random() * 5) + 1;
                 const n2 = Math.floor(Math.random() * 4) + 6;
@@ -175,7 +175,7 @@ const Numbers1to9 = () => {
                     visualData: { n1, n2 },
                     explanation: `Group A has ${n1} and Group B has ${n2}. So ${correct} clearly has ${isMore ? 'more' : 'fewer'}.`
                 };
-            } else if (selectedSkill === 'G1-CH2-03') {
+            } else if (selectedSkill === '203') {
                 // Writing numbers 1-9 (Count and Write)
                 const count = Math.floor(Math.random() * 9) + 1;
                 const objType = objTypes[i % objTypes.length];
@@ -251,7 +251,7 @@ const Numbers1to9 = () => {
     };
 
     const handleNext = async () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) {
+        if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
             setShowResults(true);
@@ -262,7 +262,7 @@ const Numbers1to9 = () => {
                         session_id: sessionId,
                         user_id: user?.id,
                         score: score,
-                        total_questions: TOTAL_QUESTIONS,
+                        total_questions: totalQuestions,
                         time_spent: timer,
                         answers: Object.values(answers)
                     });
@@ -290,7 +290,7 @@ const Numbers1to9 = () => {
                         <div className="results-stats">
                             <div className="g1-stat-badge">
                                 <Star color="#FFD700" fill="#FFD700" />
-                                <span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span>
+                                <span className="g1-stat-value">{score}/{totalQuestions}</span>
                             </div>
                             <div className="g1-stat-badge">
                                 <Timer color="#4ECDC4" />
@@ -335,12 +335,12 @@ const Numbers1to9 = () => {
                     </div>
 
                     <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {TOTAL_QUESTIONS}
+                        Question {qIndex + 1} of {totalQuestions}
                     </div>
                 </div>
 
                 <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
-                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / TOTAL_QUESTIONS) * 100}%` }}></div>
+                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalQuestions) * 100}%` }}></div>
                 </div>
 
                 <div className="g1-topic-skill-header">
@@ -407,7 +407,7 @@ const Numbers1to9 = () => {
                                 </motion.div>
                             )}
                             <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                                {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
                             </button>
                         </div>
                     )}

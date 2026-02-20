@@ -13,7 +13,6 @@ import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
 import './Grade1Practice.css';
 
-const TOTAL_QUESTIONS = 5;
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'shape') {
@@ -95,7 +94,8 @@ const ShapesAndSpace = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
-
+    const isTest = skillId === '104';
+    const totalQuestions = isTest ? 10 : 5;
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
@@ -123,14 +123,32 @@ const ShapesAndSpace = () => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
-        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        for (let i = 0; i < totalQuestions; i++) {
             let question = {};
 
             // Skill Allocation Logic
-            if (selectedSkill === 'G1-CH1-01' || !selectedSkill) {
+            let typeToGen = 'shape';
+            if (isTest) {
+                if (i < 4) typeToGen = 'shape';
+                else if (i < 7) typeToGen = 'position';
+                else typeToGen = 'size';
+            } else if (selectedSkill === '101' || !selectedSkill) {
+                typeToGen = 'shape';
+            } else if (selectedSkill === '102') {
+                typeToGen = 'position';
+            } else if (selectedSkill === '103') {
+                typeToGen = 'size';
+            }
+
+            if (typeToGen === 'shape') {
                 // Identifying shapes
                 const shapes = ['circle', 'square', 'triangle', 'rectangle'];
-                const target = shapes[Math.floor(Math.random() * shapes.length)];
+                let target;
+                if (isTest) {
+                    target = shapes[i % shapes.length];
+                } else {
+                    target = shapes[Math.floor(Math.random() * shapes.length)];
+                }
                 const otherOptions = shapes.filter(s => s !== target);
                 question = {
                     text: `What shape is this? 🔍`,
@@ -140,7 +158,7 @@ const ShapesAndSpace = () => {
                     visualData: { shape: target, color: colors[i % colors.length] },
                     explanation: `This object has the characteristics of a ${target.toUpperCase()}.`
                 };
-            } else if (selectedSkill === 'G1-CH1-02') {
+            } else if (typeToGen === 'position') {
                 // Understanding positions
                 const posTypes = [
                     { q: 'Where is the yellow ball? 🎾', a: 'top' },
@@ -148,7 +166,12 @@ const ShapesAndSpace = () => {
                     { q: 'Where is the ball located? 📍', a: 'bottom' },
                     { q: 'Where can you see the ball? 👀', a: 'outside' }
                 ];
-                const item = posTypes[Math.floor(Math.random() * posTypes.length)];
+                let item;
+                if (isTest) {
+                    item = posTypes[(i - 4) % posTypes.length];
+                } else {
+                    item = posTypes[Math.floor(Math.random() * posTypes.length)];
+                }
                 question = {
                     text: item.q,
                     options: ['top', 'bottom', 'inside', 'outside'].sort(() => 0.5 - Math.random()),
@@ -157,7 +180,7 @@ const ShapesAndSpace = () => {
                     visualData: { pos: item.a },
                     explanation: `The ball is positioned at the ${item.a.toUpperCase()} in this visual representation.`
                 };
-            } else if (selectedSkill === 'G1-CH1-03') {
+            } else if (typeToGen === 'size') {
                 // Comparing sizes
                 const sizeQuestions = [
                     { q: 'Which bar is HIGHER? 🏢', a: 'A', aSize: 180, bSize: 80, exp: 'Bar A is taller than Bar B.' },
@@ -165,7 +188,12 @@ const ShapesAndSpace = () => {
                     { q: 'Which bar is SHORTER? 📏', a: 'B', aSize: 140, bSize: 70, exp: 'Bar B is not as long/tall as Bar A.' },
                     { q: 'Pick the LONGER one! 🚀', a: 'A', aSize: 170, bSize: 90, exp: 'Bar A extends further than Bar B.' }
                 ];
-                const item = sizeQuestions[Math.floor(Math.random() * sizeQuestions.length)];
+                let item;
+                if (isTest) {
+                    item = sizeQuestions[(i - 7) % sizeQuestions.length];
+                } else {
+                    item = sizeQuestions[Math.floor(Math.random() * sizeQuestions.length)];
+                }
                 question = {
                     text: item.q,
                     options: ['A', 'B'],
@@ -239,11 +267,13 @@ const ShapesAndSpace = () => {
                 explanation: sessionQuestions[qIndex].explanation
             }
         }));
-        setShowExplanationModal(true);
+        if (!isTest) {
+            setShowExplanationModal(true);
+        }
     };
 
     const handleNext = async () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) {
+        if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
             setShowResults(true);
@@ -254,13 +284,28 @@ const ShapesAndSpace = () => {
                         session_id: sessionId,
                         user_id: user?.id,
                         score: score,
-                        total_questions: TOTAL_QUESTIONS,
+                        total_questions: totalQuestions,
                         time_spent: timer,
-                        answers: Object.values(answers)
+                        answers: Object.values(answers).filter(a => a !== undefined)
                     });
                 }
             } catch (e) { console.error(e); }
         }
+    };
+
+    const handleSkip = () => {
+        if (isAnswered) return;
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                selectedOption: 'Skipped',
+                isCorrect: false,
+                questionText: sessionQuestions[qIndex].text,
+                correctAnswer: sessionQuestions[qIndex].correct,
+                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+            }
+        }));
+        handleNext();
     };
 
     const formatTime = (s) => {
@@ -272,7 +317,7 @@ const ShapesAndSpace = () => {
     if (sessionQuestions.length === 0) return <div className="grade1-practice-page"><div className="g1-loading-blob" /></div>;
 
     if (showResults) {
-        const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
+        const percentage = Math.round((score / totalQuestions) * 100);
         return (
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
@@ -315,7 +360,7 @@ const ShapesAndSpace = () => {
                         <div className="results-stats-grid">
                             <div className="stat-card">
                                 <span className="stat-label">Correct</span>
-                                <span className="stat-value-large">{score}/{TOTAL_QUESTIONS}</span>
+                                <span className="stat-value-large">{score}/{totalQuestions}</span>
                             </div>
                             <div className="stat-card">
                                 <span className="stat-label">Time</span>
@@ -418,8 +463,14 @@ const ShapesAndSpace = () => {
                     </div>
 
                     <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '5px 12px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {TOTAL_QUESTIONS}
+                        Question {qIndex + 1} of {totalQuestions}
                     </div>
+
+                    {isTest && !isAnswered && (
+                        <button className="g1-skip-btn" onClick={handleSkip}>
+                            Skip Quest ⏭️
+                        </button>
+                    )}
 
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
                         <StickerExit onClick={() => navigate('/junior/grade/1')} />
@@ -427,7 +478,7 @@ const ShapesAndSpace = () => {
                 </div>
 
                 <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
-                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / TOTAL_QUESTIONS) * 100}%` }}></div>
+                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalQuestions) * 100}%` }}></div>
                 </div>
 
                 <div className="g1-topic-skill-header">
@@ -449,8 +500,8 @@ const ShapesAndSpace = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
                                         disabled={isAnswered}
@@ -464,7 +515,7 @@ const ShapesAndSpace = () => {
 
                     {isAnswered && (
                         <div className="flex flex-col items-center gap-4 mt-8">
-                            {motivation && (
+                            {motivation && !isTest && (
                                 <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
                                     <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
                                     <span className="g1-motivation-text">{motivation.text}</span>
@@ -472,7 +523,7 @@ const ShapesAndSpace = () => {
                                 </motion.div>
                             )}
                             <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                                {qIndex === totalQuestions - 1 ? (isTest ? 'Submit Test 📝' : 'Finish Quest 🏆') : 'Next Challenge 🚀'} <ArrowRight />
                             </button>
                         </div>
                     )}

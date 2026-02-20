@@ -13,7 +13,6 @@ import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
 import './Grade1Practice.css';
 
-const TOTAL_QUESTIONS = 5;
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'visual') {
@@ -76,6 +75,7 @@ const Subtraction = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
+    const totalQuestions = 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -104,12 +104,12 @@ const Subtraction = () => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
-        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
 
-            if (selectedSkill === 'G1-CH4-01' || !selectedSkill) {
+            if (selectedSkill === '401' || !selectedSkill) {
                 // Visual Subtraction
                 const n1 = Math.floor(Math.random() * 5) + 5;
                 const n2 = Math.floor(Math.random() * 4) + 1;
@@ -122,7 +122,7 @@ const Subtraction = () => {
                     explanation: `We started with ${n1} objects and crossed out ${n2}. Counting what's left gives us ${n1 - n2}.`,
                     solution: `${n1} - ${n2} = ${n1 - n2}`
                 };
-            } else if (selectedSkill === 'G1-CH4-02') {
+            } else if (selectedSkill === '402') {
                 // Numeric
                 const n1 = Math.floor(Math.random() * 9) + 1;
                 const n2 = Math.floor(Math.random() * n1);
@@ -135,7 +135,7 @@ const Subtraction = () => {
                     explanation: `Starting from ${n1}, counting back ${n2} steps leads us to ${n1 - n2}.`,
                     solution: `${n1} - ${n2} = ${n1 - n2}`
                 };
-            } else if (selectedSkill === 'G1-CH4-03') {
+            } else if (selectedSkill === '403') {
                 // Zero
                 const n = Math.floor(Math.random() * 9) + 1;
                 const subtractSame = Math.random() > 0.5;
@@ -289,7 +289,7 @@ const Subtraction = () => {
                         <div className="results-stats-grid">
                             <div className="stat-card">
                                 <span className="stat-label">Correct</span>
-                                <span className="stat-value-large">{score}/{TOTAL_QUESTIONS}</span>
+                                <span className="stat-value-large">{score}/{totalQuestions}</span>
                             </div>
                             <div className="stat-card">
                                 <span className="stat-label">Time</span>
@@ -392,7 +392,7 @@ const Subtraction = () => {
                     </div>
 
                     <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {TOTAL_QUESTIONS}
+                        Question {qIndex + 1} of {totalQuestions}
                     </div>
 
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
@@ -401,7 +401,7 @@ const Subtraction = () => {
                 </div>
 
                 <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
-                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / TOTAL_QUESTIONS) * 100}%` }}></div>
+                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalQuestions) * 100}%` }}></div>
                 </div>
 
                 <div className="g1-topic-skill-header">
@@ -445,7 +445,7 @@ const Subtraction = () => {
                                 </motion.div>
                             )}
                             <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                                {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
                             </button>
                         </div>
                     )}
