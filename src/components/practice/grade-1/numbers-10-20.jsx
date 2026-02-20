@@ -8,7 +8,6 @@ import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import './Grade1Practice.css';
 
-const TOTAL_QUESTIONS = 5;
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'counting' || type === 'names' || type === 'tens-ones') {
@@ -100,6 +99,7 @@ const Numbers10to20 = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
+    const totalQuestions = 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -127,12 +127,12 @@ const Numbers10to20 = () => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
-        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+        for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
 
-            if (selectedSkill === 'G1-CH5-01' || !selectedSkill) {
+            if (selectedSkill === '501' || !selectedSkill) {
                 // Counting and recognition
                 const count = Math.floor(Math.random() * 11) + 10;
                 const isWord = Math.random() > 0.5;
@@ -149,7 +149,7 @@ const Numbers10to20 = () => {
                     type: 'counting',
                     visualData: { num: count, color: color1 }
                 };
-            } else if (selectedSkill === 'G1-CH5-02') {
+            } else if (selectedSkill === '502') {
                 // Tens and Ones
                 const num = Math.floor(Math.random() * 11) + 10;
                 const tens = Math.floor(num / 10);
@@ -228,7 +228,7 @@ const Numbers10to20 = () => {
     };
 
     const handleNext = async () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) {
+        if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
             setSelectedOption(null);
             setIsAnswered(false);
@@ -242,7 +242,7 @@ const Numbers10to20 = () => {
                         session_id: sessionId,
                         user_id: user?.id,
                         score: score,
-                        total_questions: TOTAL_QUESTIONS,
+                        total_questions: totalQuestions,
                         time_spent: timer,
                         answers: answers
                     });
@@ -270,7 +270,7 @@ const Numbers10to20 = () => {
                         <div className="results-stats">
                             <div className="g1-stat-badge">
                                 <Star color="#FFD700" fill="#FFD700" />
-                                <span className="g1-stat-value">{score}/{TOTAL_QUESTIONS}</span>
+                                <span className="g1-stat-value">{score}/{totalQuestions}</span>
                             </div>
                             <div className="g1-stat-badge">
                                 <Timer color="#4ECDC4" />
@@ -310,12 +310,12 @@ const Numbers10to20 = () => {
                     </div>
 
                     <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {TOTAL_QUESTIONS}
+                        Question {qIndex + 1} of {totalQuestions}
                     </div>
                 </div>
 
                 <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
-                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / TOTAL_QUESTIONS) * 100}%` }}></div>
+                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalQuestions) * 100}%` }}></div>
                 </div>
 
                 <div className="g1-topic-skill-header">
@@ -324,26 +324,29 @@ const Numbers10to20 = () => {
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <div className="g1-visual-area">
-                        <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
-                    </div>
-
                     <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <div className="g1-content-split">
+                        <div className="g1-visual-area">
+                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                        </div>
 
-                    <div className="g1-options-grid">
-                        {currentQ.options.map((opt, i) => (
-                            <button
-                                key={i}
-                                className={`g1-option-btn 
-                                    ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                    ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
-                                `}
-                                onClick={() => handleOptionSelect(opt)}
-                                disabled={isAnswered}
-                            >
-                                {opt}
-                            </button>
-                        ))}
+                        <div className="g1-quiz-side">
+                            <div className="g1-options-grid">
+                                {currentQ.options.map((opt, i) => (
+                                    <button
+                                        key={i}
+                                        className={`g1-option-btn 
+                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
+                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                        `}
+                                        onClick={() => handleOptionSelect(opt)}
+                                        disabled={isAnswered}
+                                    >
+                                        {opt}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <AnimatePresence>
@@ -363,7 +366,7 @@ const Numbers10to20 = () => {
                                     </motion.div>
                                 )}
                                 <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                                    {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
                                 </button>
                             </motion.div>
                         )}

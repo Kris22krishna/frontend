@@ -56,7 +56,18 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10103, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
                         { skill_id: 10104, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
                         { skill_id: 10105, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
-                        { skill_id: 10106, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' }
+                        { skill_id: 10106, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
+
+                        // Quadratic Equations
+                        { skill_id: 10201, skill_name: 'Foundations and Meaning of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Foundations and Meaning of Quadratic Equations' },
+                        { skill_id: 10202, skill_name: 'Representing Real-Life Situations Mathematically', topic: 'Quadratic Equations', subtopic: 'Representing Real-Life Situations Mathematically' },
+                        { skill_id: 10203, skill_name: 'Identifying and Verifying Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Identifying and Verifying Quadratic Equations' },
+                        { skill_id: 10204, skill_name: 'Finding Roots by Factorisation', topic: 'Quadratic Equations', subtopic: 'Finding Roots by Factorisation' },
+                        { skill_id: 10205, skill_name: 'Solving Word Problems Using Factorisation', topic: 'Quadratic Equations', subtopic: 'Solving Word Problems Using Factorisation' },
+                        { skill_id: 10206, skill_name: 'Understanding Roots and Their Nature', topic: 'Quadratic Equations', subtopic: 'Understanding Roots and Their Nature' },
+                        { skill_id: 10207, skill_name: 'Using the Discriminant to Analyse Roots', topic: 'Quadratic Equations', subtopic: 'Using the Discriminant to Analyse Roots' },
+                        { skill_id: 10208, skill_name: 'Applying Quadratic Equations to Real-Life Situations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
+                        { skill_id: 10209, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
