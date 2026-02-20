@@ -6,6 +6,9 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
+import { LatexText } from '../../LatexText';
+import ExplanationModal from '../../ExplanationModal';
+import mascotImg from '../../../assets/mascot.png';
 import './Grade1Practice.css';
 
 const TOTAL_QUESTIONS = 5;
@@ -72,10 +75,11 @@ const Addition = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [answers, setAnswers] = useState([]);
+    const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [motivation, setMotivation] = useState(null);
+    const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -106,7 +110,9 @@ const Addition = () => {
                     options: [n1 + n2, (n1 + n2 + 1) % 11 || 1, Math.max(1, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: n1 + n2,
                     type: 'visual',
-                    visualData: { n1, n2, color1, color2 }
+                    visualData: { n1, n2, color1, color2 },
+                    explanation: `We have ${n1} circles and ${n2} more circles. Counting them all gives us ${n1 + n2}.`,
+                    solution: `${n1} + ${n2} = ${n1 + n2}`
                 };
             } else if (selectedSkill === 'G1-CH3-02') {
                 // Numeric
@@ -117,21 +123,27 @@ const Addition = () => {
                     options: [n1 + n2, n1 + n2 + 2, Math.max(0, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: n1 + n2,
                     type: 'numeric',
-                    visualData: { n1, n2, color1, color2 }
+                    visualData: { n1, n2, color1, color2 },
+                    explanation: `Starting from ${n1}, if we count forward ${n2} times, we reach ${n1 + n2}.`,
+                    solution: `${n1} + ${n2} = ${n1 + n2}`
                 };
             } else if (selectedSkill === 'G1-CH3-03') {
                 // Zero
                 const n = Math.floor(Math.random() * 9) + 1;
                 const withZeroFirst = Math.random() > 0.5;
+                const n1 = withZeroFirst ? 0 : n;
+                const n2 = withZeroFirst ? n : 0;
                 question = {
                     text: `Add zero to the number! ✨`,
                     options: [n, 0, n + 1].sort(() => 0.5 - Math.random()),
                     correct: n,
                     type: 'numeric',
-                    visualData: { n1: withZeroFirst ? 0 : n, n2: withZeroFirst ? n : 0, color1, color2 }
+                    visualData: { n1, n2, color1, color2 },
+                    explanation: `Adding zero to any number doesn't change it. So ${n1} + ${n2} is still ${n}.`,
+                    solution: `${n1} + ${n2} = ${n}`
                 };
             } else {
-                question = { text: "Add them up!", options: ["2"], correct: "2", type: "numeric", visualData: { n1: 1, n2: 1, color1, color2 } };
+                question = { text: "Add them up!", options: ["2"], correct: "2", type: "numeric", visualData: { n1: 1, n2: 1, color1, color2 }, explanation: "Simple addition!" };
             }
             questions.push(question);
         }
@@ -158,6 +170,20 @@ const Addition = () => {
         return () => clearInterval(interval);
     }, [showResults, sessionQuestions]);
 
+    useEffect(() => {
+        setShowExplanationModal(false);
+    }, [qIndex]);
+
+    useEffect(() => {
+        if (answers[qIndex]) {
+            setSelectedOption(answers[qIndex].selectedOption);
+            setIsAnswered(true);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+        }
+    }, [qIndex, answers]);
+
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
@@ -170,20 +196,16 @@ const Addition = () => {
             setMotivation(null);
         }
 
-        setAnswers([...answers, {
-            question: sessionQuestions[qIndex].text,
-            selected: option,
-            correct: sessionQuestions[qIndex].correct,
-            isCorrect
-        }]);
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: { selectedOption: option, isCorrect }
+        }));
+        setShowExplanationModal(true);
     };
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(v => v + 1);
-            setSelectedOption(null);
-            setIsAnswered(false);
-            setMotivation(null);
         } else {
             setShowResults(true);
             try {
@@ -195,7 +217,7 @@ const Addition = () => {
                         score: score,
                         total_questions: TOTAL_QUESTIONS,
                         time_spent: timer,
-                        answers: answers
+                        answers: Object.values(answers)
                     });
                 }
             } catch (e) { console.error(e); }
@@ -251,9 +273,14 @@ const Addition = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)}>
+                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
                         <ChevronLeft size={20} /> Back
                     </button>
+                    {qIndex > 0 && (
+                        <button className="g1-back-btn" style={{ marginLeft: '10px' }} onClick={() => setQIndex(v => v - 1)}>
+                            <ChevronLeft size={20} /> Previous
+                        </button>
+                    )}
 
                     <div className="g1-timer-badge">
                         <Timer size={18} />
@@ -271,56 +298,62 @@ const Addition = () => {
 
                 <div className="g1-topic-skill-header">
                     <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name">{skillName}</h1>
+                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <div className="g1-visual-area">
-                        <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
-                    </div>
+                    <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
-                    <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <div className="g1-content-split">
+                        <div className="g1-visual-area">
+                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                        </div>
 
-                    <div className="g1-options-grid">
-                        {currentQ.options.map((opt, i) => (
-                            <button
-                                key={i}
-                                className={`g1-option-btn 
-                                    ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                    ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
-                                `}
-                                onClick={() => handleOptionSelect(opt)}
-                                disabled={isAnswered}
-                            >
-                                {opt}
-                            </button>
-                        ))}
-                    </div>
-
-                    <AnimatePresence>
-                        {isAnswered && (
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
-                                className="g1-next-action"
-                                style={{ flexDirection: 'column', gap: '20px' }}
-                            >
-                                {motivation && (
-                                    <motion.div
-                                        initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                                        className="g1-motivation-container"
+                        <div className="g1-quiz-side">
+                            <div className="g1-options-grid">
+                                {currentQ.options.map((opt, i) => (
+                                    <button
+                                        key={i}
+                                        className={`g1-option-btn 
+                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
+                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                        `}
+                                        onClick={() => handleOptionSelect(opt)}
+                                        disabled={isAnswered}
                                     >
-                                        <span className="g1-motivation-text">{motivation.text}</span>
-                                        <span className="g1-motivation-sub">{motivation.sub}</span>
-                                    </motion.div>
-                                )}
-                                <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                                        <LatexText text={opt.toString()} />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {isAnswered && (
+                        <div className="flex flex-col items-center gap-4 mt-8">
+                            {motivation && (
+                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
+                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
+                                    <span className="g1-motivation-text">{motivation.text}</span>
+                                    <span className="g1-motivation-sub">{motivation.sub}</span>
+                                </motion.div>
+                            )}
+                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
+                                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
             </div>
+
+            <ExplanationModal
+                isOpen={showExplanationModal}
+                isCorrect={answers[qIndex]?.isCorrect}
+                correctAnswer={currentQ.correct}
+                explanation={currentQ.explanation}
+                solution={currentQ.solution}
+                onClose={() => setShowExplanationModal(false)}
+                onNext={handleNext}
+            />
         </div>
     );
 };

@@ -6,6 +6,9 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
+import { LatexText } from '../../LatexText';
+import ExplanationModal from '../../ExplanationModal';
+import mascotImg from '../../../assets/mascot.png';
 import './Grade1Practice.css';
 
 const TOTAL_QUESTIONS = 5;
@@ -97,10 +100,11 @@ const ShapesAndSpace = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [answers, setAnswers] = useState([]);
+    const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [motivation, setMotivation] = useState(null);
+    const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -131,7 +135,8 @@ const ShapesAndSpace = () => {
                     options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
                     correct: target,
                     type: 'shape',
-                    visualData: { shape: target, color: colors[i % colors.length] }
+                    visualData: { shape: target, color: colors[i % colors.length] },
+                    explanation: `This object has the characteristics of a ${target.toUpperCase()}.`
                 };
             } else if (selectedSkill === 'G1-CH1-02') {
                 // Understanding positions
@@ -147,15 +152,16 @@ const ShapesAndSpace = () => {
                     options: ['top', 'bottom', 'inside', 'outside'].sort(() => 0.5 - Math.random()),
                     correct: item.a,
                     type: 'position',
-                    visualData: { pos: item.a }
+                    visualData: { pos: item.a },
+                    explanation: `The ball is positioned at the ${item.a.toUpperCase()} in this visual representation.`
                 };
             } else if (selectedSkill === 'G1-CH1-03') {
                 // Comparing sizes
                 const sizeQuestions = [
-                    { q: 'Which bar is HIGHER? 🏢', a: 'A', aSize: 180, bSize: 80 },
-                    { q: 'Which one is SMALLER? 🐜', a: 'B', aSize: 160, bSize: 40 },
-                    { q: 'Which bar is SHORTER? 📏', a: 'B', aSize: 140, bSize: 70 },
-                    { q: 'Pick the LONGER one! 🚀', a: 'A', aSize: 170, bSize: 90 }
+                    { q: 'Which bar is HIGHER? 🏢', a: 'A', aSize: 180, bSize: 80, exp: 'Bar A is taller than Bar B.' },
+                    { q: 'Which one is SMALLER? 🐜', a: 'B', aSize: 160, bSize: 40, exp: 'Bar B has a smaller height than Bar A.' },
+                    { q: 'Which bar is SHORTER? 📏', a: 'B', aSize: 140, bSize: 70, exp: 'Bar B is not as long/tall as Bar A.' },
+                    { q: 'Pick the LONGER one! 🚀', a: 'A', aSize: 170, bSize: 90, exp: 'Bar A extends further than Bar B.' }
                 ];
                 const item = sizeQuestions[Math.floor(Math.random() * sizeQuestions.length)];
                 question = {
@@ -163,11 +169,12 @@ const ShapesAndSpace = () => {
                     options: ['A', 'B'],
                     correct: item.a,
                     type: 'size',
-                    visualData: { aSize: item.aSize, bSize: item.bSize }
+                    visualData: { aSize: item.aSize, bSize: item.bSize },
+                    explanation: item.exp
                 };
             } else {
                 // Default fallback
-                question = { text: "Look at the object!", options: ["Yes"], correct: "Yes", type: "shape", visualData: { shape: 'circle', color: '#FF6B6B' } };
+                question = { text: "Look at the object!", options: ["Yes"], correct: "Yes", type: "shape", visualData: { shape: 'circle', color: '#FF6B6B' }, explanation: "Visual matching is key here!" };
             }
             questions.push(question);
         }
@@ -194,6 +201,20 @@ const ShapesAndSpace = () => {
         return () => clearInterval(interval);
     }, [showResults, sessionQuestions]);
 
+    useEffect(() => {
+        setShowExplanationModal(false);
+    }, [qIndex]);
+
+    useEffect(() => {
+        if (answers[qIndex]) {
+            setSelectedOption(answers[qIndex].selectedOption);
+            setIsAnswered(true);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+        }
+    }, [qIndex, answers]);
+
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
@@ -206,20 +227,16 @@ const ShapesAndSpace = () => {
             setMotivation(null);
         }
 
-        setAnswers([...answers, {
-            question: sessionQuestions[qIndex].text,
-            selected: option,
-            correct: sessionQuestions[qIndex].correct,
-            isCorrect
-        }]);
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: { selectedOption: option, isCorrect }
+        }));
+        setShowExplanationModal(true);
     };
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(v => v + 1);
-            setSelectedOption(null);
-            setIsAnswered(false);
-            setMotivation(null);
         } else {
             setShowResults(true);
             try {
@@ -231,7 +248,7 @@ const ShapesAndSpace = () => {
                         score: score,
                         total_questions: TOTAL_QUESTIONS,
                         time_spent: timer,
-                        answers: answers
+                        answers: Object.values(answers)
                     });
                 }
             } catch (e) { console.error(e); }
@@ -287,9 +304,14 @@ const ShapesAndSpace = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)}>
+                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
                         <ChevronLeft size={20} /> Back
                     </button>
+                    {qIndex > 0 && (
+                        <button className="g1-back-btn" style={{ marginLeft: '10px' }} onClick={() => setQIndex(v => v - 1)}>
+                            <ChevronLeft size={20} /> Previous
+                        </button>
+                    )}
 
                     <div className="g1-timer-badge">
                         <Timer size={18} />
@@ -307,11 +329,11 @@ const ShapesAndSpace = () => {
 
                 <div className="g1-topic-skill-header">
                     <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name">{skillName}</h1>
+                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
                     <div className="g1-content-split">
                         <div className="g1-visual-area">
@@ -330,37 +352,38 @@ const ShapesAndSpace = () => {
                                         onClick={() => handleOptionSelect(opt)}
                                         disabled={isAnswered}
                                     >
-                                        {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                                        <LatexText text={opt.charAt(0).toUpperCase() + opt.slice(1)} />
                                     </button>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    <AnimatePresence>
-                        {isAnswered && (
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
-                                className="g1-next-action"
-                                style={{ flexDirection: 'column', gap: '20px' }}
-                            >
-                                {motivation && (
-                                    <motion.div
-                                        initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                                        className="g1-motivation-container"
-                                    >
-                                        <span className="g1-motivation-text">{motivation.text}</span>
-                                        <span className="g1-motivation-sub">{motivation.sub}</span>
-                                    </motion.div>
-                                )}
-                                <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {isAnswered && (
+                        <div className="flex flex-col items-center gap-4 mt-8">
+                            {motivation && (
+                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
+                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
+                                    <span className="g1-motivation-text">{motivation.text}</span>
+                                    <span className="g1-motivation-sub">{motivation.sub}</span>
+                                </motion.div>
+                            )}
+                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
+                                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
             </div>
+
+            <ExplanationModal
+                isOpen={showExplanationModal}
+                isCorrect={answers[qIndex]?.isCorrect}
+                correctAnswer={currentQ.correct}
+                explanation={currentQ.explanation}
+                onClose={() => setShowExplanationModal(false)}
+                onNext={handleNext}
+            />
         </div>
     );
 };

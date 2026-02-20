@@ -6,6 +6,9 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
+import { LatexText } from '../../LatexText';
+import ExplanationModal from '../../ExplanationModal';
+import mascotImg from '../../../assets/mascot.png';
 import './Grade1Practice.css';
 
 const TOTAL_QUESTIONS = 5;
@@ -97,10 +100,11 @@ const Measurement = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [answers, setAnswers] = useState([]);
+    const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [motivation, setMotivation] = useState(null);
+    const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -138,15 +142,16 @@ const Measurement = () => {
                 const l2 = l1 + (Math.random() > 0.5 ? 40 : -40);
                 const label1 = type === 'length' ? "Pencil A" : "Tree A";
                 const label2 = type === 'length' ? "Pencil B" : "Tree B";
-                const adj = type === 'length' ? (isLonger ? 'LONGER' : 'SHORTER') : (isLonger ? 'TALLER' : 'SHORTER');
+                const adj = type === 'length' ? (isLonger ? 'longer' : 'shorter') : (isLonger ? 'taller' : 'shorter');
                 const correct = (isLonger ? (l1 > l2 ? label1 : label2) : (l1 < l2 ? label1 : label2));
 
                 question = {
-                    text: `Look at the two subjects! Which one is ${adj}? 📏`,
+                    text: `Look at the two objects! Which one is ${adj}? 📏`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type,
-                    visualData: { l1, l2, color1, color2, label1, label2, isVertical: type === 'height' }
+                    visualData: { l1, l2, color1, color2, label1, label2, isVertical: type === 'height' },
+                    explanation: `Comparing ${label1} and ${label2}, we can see that ${correct} is definitely ${adj}.`
                 };
             } else {
                 const isHeavier = Math.random() > 0.5;
@@ -154,14 +159,16 @@ const Measurement = () => {
                 const w2 = w1 + (Math.random() > 0.5 ? 20 : -20);
                 const label1 = "Fruit A";
                 const label2 = "Fruit B";
+                const adj = isHeavier ? 'heavier' : 'lighter';
                 const correct = (isHeavier ? (w1 > w2 ? label1 : label2) : (w1 < w2 ? label1 : label2));
 
                 question = {
-                    text: `Check the balance scale! Which one is ${isHeavier ? 'HEAVIER' : 'LIGHTER'}? ⚖️`,
+                    text: `Check the balance scale! Which one is ${adj}? ⚖️`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type: 'weight',
-                    visualData: { w1, w2, color1, color2, label1, label2 }
+                    visualData: { w1, w2, color1, color2, label1, label2 },
+                    explanation: `The balance scale tilts towards the heavier object. Here, ${correct} is the ${adj} one.`
                 };
             }
             questions.push(question);
@@ -189,6 +196,20 @@ const Measurement = () => {
         return () => clearInterval(interval);
     }, [showResults, sessionQuestions]);
 
+    useEffect(() => {
+        setShowExplanationModal(false);
+    }, [qIndex]);
+
+    useEffect(() => {
+        if (answers[qIndex]) {
+            setSelectedOption(answers[qIndex].selectedOption);
+            setIsAnswered(true);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+        }
+    }, [qIndex, answers]);
+
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
@@ -201,20 +222,16 @@ const Measurement = () => {
             setMotivation(null);
         }
 
-        setAnswers([...answers, {
-            question: sessionQuestions[qIndex].text,
-            selected: option,
-            correct: sessionQuestions[qIndex].correct,
-            isCorrect
-        }]);
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: { selectedOption: option, isCorrect }
+        }));
+        setShowExplanationModal(true);
     };
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(v => v + 1);
-            setSelectedOption(null);
-            setIsAnswered(false);
-            setMotivation(null);
         } else {
             setShowResults(true);
             try {
@@ -226,7 +243,7 @@ const Measurement = () => {
                         score: score,
                         total_questions: TOTAL_QUESTIONS,
                         time_spent: timer,
-                        answers: answers
+                        answers: Object.values(answers)
                     });
                 }
             } catch (e) { console.error(e); }
@@ -282,9 +299,14 @@ const Measurement = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)}>
+                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
                         <ChevronLeft size={20} /> Back
                     </button>
+                    {qIndex > 0 && (
+                        <button className="g1-back-btn" style={{ marginLeft: '10px' }} onClick={() => setQIndex(v => v - 1)}>
+                            <ChevronLeft size={20} /> Previous
+                        </button>
+                    )}
 
                     <div className="g1-timer-badge">
                         <Timer size={18} />
@@ -302,56 +324,61 @@ const Measurement = () => {
 
                 <div className="g1-topic-skill-header">
                     <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name">{skillName}</h1>
+                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <div className="g1-visual-area">
-                        <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
-                    </div>
+                    <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
-                    <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <div className="g1-content-split">
+                        <div className="g1-visual-area">
+                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                        </div>
 
-                    <div className="g1-options-grid">
-                        {currentQ.options.map((opt, i) => (
-                            <button
-                                key={i}
-                                className={`g1-option-btn 
-                                    ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                    ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
-                                `}
-                                onClick={() => handleOptionSelect(opt)}
-                                disabled={isAnswered}
-                            >
-                                {opt}
-                            </button>
-                        ))}
-                    </div>
-
-                    <AnimatePresence>
-                        {isAnswered && (
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
-                                className="g1-next-action"
-                                style={{ flexDirection: 'column', gap: '20px' }}
-                            >
-                                {motivation && (
-                                    <motion.div
-                                        initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                                        className="g1-motivation-container"
+                        <div className="g1-quiz-side">
+                            <div className="g1-options-grid">
+                                {currentQ.options.map((opt, i) => (
+                                    <button
+                                        key={i}
+                                        className={`g1-option-btn 
+                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
+                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                        `}
+                                        onClick={() => handleOptionSelect(opt)}
+                                        disabled={isAnswered}
                                     >
-                                        <span className="g1-motivation-text">{motivation.text}</span>
-                                        <span className="g1-motivation-sub">{motivation.sub}</span>
-                                    </motion.div>
-                                )}
-                                <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                                        <LatexText text={opt.toString()} />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {isAnswered && (
+                        <div className="flex flex-col items-center gap-4 mt-8">
+                            {motivation && (
+                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
+                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
+                                    <span className="g1-motivation-text">{motivation.text}</span>
+                                    <span className="g1-motivation-sub">{motivation.sub}</span>
+                                </motion.div>
+                            )}
+                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
+                                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
             </div>
+
+            <ExplanationModal
+                isOpen={showExplanationModal}
+                isCorrect={answers[qIndex]?.isCorrect}
+                correctAnswer={currentQ.correct}
+                explanation={currentQ.explanation}
+                onClose={() => setShowExplanationModal(false)}
+                onNext={handleNext}
+            />
         </div>
     );
 };

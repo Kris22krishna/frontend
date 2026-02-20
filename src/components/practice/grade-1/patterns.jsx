@@ -255,26 +255,29 @@ const Patterns = () => {
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <div className="g1-visual-area">
-                        <DynamicVisual data={currentQ.visualData} />
-                    </div>
-
                     <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <div className="g1-content-split">
+                        <div className="g1-visual-area">
+                            <DynamicVisual data={currentQ.visualData} />
+                        </div>
 
-                    <div className="g1-options-grid">
-                        {currentQ.options.map((opt, i) => (
-                            <button
-                                key={i}
-                                className={`g1-option-btn 
-                                    ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                    ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
-                                `}
-                                onClick={() => handleOptionSelect(opt)}
-                                disabled={isAnswered}
-                            >
-                                <span style={{ textTransform: 'capitalize' }}>{opt.replace('-', ' ')}</span>
-                            </button>
-                        ))}
+                        <div className="g1-quiz-side">
+                            <div className="g1-options-grid">
+                                {currentQ.options.map((opt, i) => (
+                                    <button
+                                        key={i}
+                                        className={`g1-option-btn 
+                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
+                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                        `}
+                                        onClick={() => handleOptionSelect(opt)}
+                                        disabled={isAnswered}
+                                    >
+                                        <span style={{ textTransform: 'capitalize' }}>{opt.replace('-', ' ')}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <AnimatePresence>

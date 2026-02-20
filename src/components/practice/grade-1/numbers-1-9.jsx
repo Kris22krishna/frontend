@@ -6,6 +6,9 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
+import { LatexText } from '../../LatexText';
+import ExplanationModal from '../../ExplanationModal';
+import mascotImg from '../../../assets/mascot.png';
 import './Grade1Practice.css';
 
 const TOTAL_QUESTIONS = 5;
@@ -108,11 +111,12 @@ const Numbers1to9 = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [answers, setAnswers] = useState([]);
+    const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [motivation, setMotivation] = useState(null);
     const [userInput, setUserInput] = useState('');
+    const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -142,7 +146,8 @@ const Numbers1to9 = () => {
                     options: [count, (count + 1) % 10 || 1, (count - 1) || 9].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: count,
                     type: 'counting',
-                    visualData: { count, objType, color: colors[i % colors.length] }
+                    visualData: { count, objType, color: colors[i % colors.length] },
+                    explanation: `By counting carefully, we can see there are exactly ${count} ${objType}s.`
                 };
             } else if (selectedSkill === 'G1-CH2-02') {
                 // Number recognition
@@ -153,19 +158,22 @@ const Numbers1to9 = () => {
                     options: [names[num - 1], names[num % 9], names[(num + 2) % 9]].sort(() => 0.5 - Math.random()),
                     correct: names[num - 1],
                     type: 'recognition',
-                    visualData: { num, color: colors[i % colors.length] }
+                    visualData: { num, color: colors[i % colors.length] },
+                    explanation: `The number ${num} is written as '${names[num - 1].toUpperCase()}'.`
                 };
             } else if (selectedSkill === 'G1-CH2-04') {
                 // Comparison
                 const n1 = Math.floor(Math.random() * 5) + 1;
                 const n2 = Math.floor(Math.random() * 4) + 6;
                 const isMore = Math.random() > 0.5;
+                const correct = isMore ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 question = {
-                    text: `Which group has ${isMore ? 'MORE' : 'FEWER'} items?`,
+                    text: `Which group has ${isMore ? 'more' : 'fewer'} items?`,
                     options: ['Group A', 'Group B'],
-                    correct: isMore ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B'),
+                    correct: correct,
                     type: 'comparison',
-                    visualData: { n1, n2 }
+                    visualData: { n1, n2 },
+                    explanation: `Group A has ${n1} and Group B has ${n2}. So ${correct} clearly has ${isMore ? 'more' : 'fewer'}.`
                 };
             } else if (selectedSkill === 'G1-CH2-03') {
                 // Writing numbers 1-9 (Count and Write)
@@ -176,10 +184,11 @@ const Numbers1to9 = () => {
                     options: [], // No MCQ options
                     correct: count.toString(),
                     type: 'userinput',
-                    visualData: { count, objType, color: colors[i % colors.length], forceCounting: true }
+                    visualData: { count, objType, color: colors[i % colors.length], forceCounting: true },
+                    explanation: `We count ${count} items. We write this as the number ${count}.`
                 };
             } else {
-                question = { text: "Count the items!", options: ["1"], correct: "1", type: "counting", visualData: { count: 1, objType: 'circle', color: '#FF6B6B' } };
+                question = { text: "Count the items!", options: ["1"], correct: "1", type: "counting", visualData: { count: 1, objType: 'circle', color: '#FF6B6B' }, explanation: "Counting is fun!" };
             }
             questions.push(question);
         }
@@ -206,11 +215,27 @@ const Numbers1to9 = () => {
         return () => clearInterval(interval);
     }, [showResults, sessionQuestions]);
 
+    useEffect(() => {
+        setShowExplanationModal(false);
+    }, [qIndex]);
+
+    useEffect(() => {
+        if (answers[qIndex]) {
+            setSelectedOption(answers[qIndex].selectedOption);
+            setIsAnswered(true);
+            if (currentQ?.type === 'userinput') setUserInput(answers[qIndex].selectedOption);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+            setUserInput('');
+        }
+    }, [qIndex, answers]);
+
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
+        const isCorrect = option.toString().toLowerCase() === sessionQuestions[qIndex].correct.toString().toLowerCase();
         if (isCorrect) {
             setScore(s => s + 1);
             setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
@@ -218,21 +243,16 @@ const Numbers1to9 = () => {
             setMotivation(null);
         }
 
-        setAnswers([...answers, {
-            question: sessionQuestions[qIndex].text,
-            selected: option,
-            correct: sessionQuestions[qIndex].correct,
-            isCorrect
-        }]);
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: { selectedOption: option, isCorrect }
+        }));
+        setShowExplanationModal(true);
     };
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(v => v + 1);
-            setSelectedOption(null);
-            setIsAnswered(false);
-            setMotivation(null);
-            setUserInput('');
         } else {
             setShowResults(true);
             try {
@@ -244,7 +264,7 @@ const Numbers1to9 = () => {
                         score: score,
                         total_questions: TOTAL_QUESTIONS,
                         time_spent: timer,
-                        answers: answers
+                        answers: Object.values(answers)
                     });
                 }
             } catch (e) { console.error(e); }
@@ -300,9 +320,14 @@ const Numbers1to9 = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)}>
+                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
                         <ChevronLeft size={20} /> Back
                     </button>
+                    {qIndex > 0 && (
+                        <button className="g1-back-btn" style={{ marginLeft: '10px' }} onClick={() => setQIndex(v => v - 1)}>
+                            <ChevronLeft size={20} /> Previous
+                        </button>
+                    )}
 
                     <div className="g1-timer-badge">
                         <Timer size={18} />
@@ -320,78 +345,83 @@ const Numbers1to9 = () => {
 
                 <div className="g1-topic-skill-header">
                     <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name">{skillName}</h1>
+                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <div className="g1-visual-area">
-                        <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
-                    </div>
+                    <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
-                    <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <div className="g1-content-split">
+                        <div className="g1-visual-area">
+                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                        </div>
 
-                    <div className="g1-options-grid">
-                        {currentQ.type === 'userinput' ? (
-                            <div className="g1-input-container">
-                                <input
-                                    type="text"
-                                    className="g1-number-input"
-                                    placeholder="?"
-                                    value={userInput}
-                                    onChange={(e) => setUserInput(e.target.value)}
-                                    disabled={isAnswered}
-                                    onKeyPress={(e) => e.key === 'Enter' && userInput && handleOptionSelect(userInput.trim())}
-                                    autoFocus
-                                />
-                                <button
-                                    className="g1-submit-btn"
-                                    onClick={() => handleOptionSelect(userInput.trim())}
-                                    disabled={isAnswered || !userInput}
-                                >
-                                    Check Answer <ArrowRight size={20} />
-                                </button>
-                            </div>
-                        ) : (
-                            currentQ.options.map((opt, i) => (
-                                <button
-                                    key={i}
-                                    className={`g1-option-btn 
-                                        ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                        ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
-                                    `}
-                                    onClick={() => handleOptionSelect(opt)}
-                                    disabled={isAnswered}
-                                >
-                                    {typeof opt === 'string' ? opt.toUpperCase() : opt}
-                                </button>
-                            ))
-                        )}
-                    </div>
-
-                    <AnimatePresence>
-                        {isAnswered && (
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
-                                className="g1-next-action"
-                                style={{ flexDirection: 'column', gap: '20px' }}
-                            >
-                                {motivation && (
-                                    <motion.div
-                                        initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                                        className="g1-motivation-container"
-                                    >
-                                        <span className="g1-motivation-text">{motivation.text}</span>
-                                        <span className="g1-motivation-sub">{motivation.sub}</span>
-                                    </motion.div>
+                        <div className="g1-quiz-side">
+                            <div className="g1-options-grid">
+                                {currentQ.type === 'userinput' ? (
+                                    <div className="g1-input-container">
+                                        <input
+                                            type="text"
+                                            className="g1-number-input"
+                                            placeholder="?"
+                                            value={userInput}
+                                            onChange={(e) => setUserInput(e.target.value)}
+                                            disabled={isAnswered}
+                                            onKeyPress={(e) => e.key === 'Enter' && userInput && handleOptionSelect(userInput.trim())}
+                                            autoFocus
+                                        />
+                                        <button
+                                            className="g1-submit-btn"
+                                            onClick={() => handleOptionSelect(userInput.trim())}
+                                            disabled={isAnswered || !userInput}
+                                        >
+                                            Check Answer <ArrowRight size={20} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    currentQ.options.map((opt, i) => (
+                                        <button
+                                            key={i}
+                                            className={`g1-option-btn 
+                                                ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
+                                                ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                            `}
+                                            onClick={() => handleOptionSelect(opt)}
+                                            disabled={isAnswered}
+                                        >
+                                            <LatexText text={typeof opt === 'string' ? opt : opt.toString()} />
+                                        </button>
+                                    ))
                                 )}
-                                <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                            </div>
+                        </div>
+                    </div>
+
+                    {isAnswered && (
+                        <div className="flex flex-col items-center gap-4 mt-8">
+                            {motivation && (
+                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
+                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
+                                    <span className="g1-motivation-text">{motivation.text}</span>
+                                    <span className="g1-motivation-sub">{motivation.sub}</span>
+                                </motion.div>
+                            )}
+                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
+                                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
             </div>
+
+            <ExplanationModal
+                isOpen={showExplanationModal}
+                isCorrect={answers[qIndex]?.isCorrect}
+                correctAnswer={currentQ.correct}
+                explanation={currentQ.explanation}
+                onClose={() => setShowExplanationModal(false)}
+                onNext={handleNext}
+            />
         </div>
     );
 };

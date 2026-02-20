@@ -18,6 +18,7 @@
     font-family: 'Nunito', sans-serif;
     color: var(--text-main);
     position: relative;
+    overflow-x: hidden;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -30,7 +31,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
 }
 
@@ -134,7 +135,7 @@
 }
 
 .g1-skill-name {
-    font-family: 'Fredoka', cursive;
+    font-family: 'Fredoka', cursive !important;
     font-size: 2.2rem;
     color: #2D3436;
     font-weight: 800;
@@ -173,7 +174,7 @@
 }
 
 .g1-question-text {
-    font-family: 'Fredoka', cursive;
+    font-family: 'Fredoka', cursive !important;
     font-size: 2.8rem;
     font-weight: 700;
     text-align: center;
