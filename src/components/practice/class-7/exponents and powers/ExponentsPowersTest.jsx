@@ -60,7 +60,13 @@ const ExponentsPowersTest = () => {
                         text: `<div class='question-container'><p>Write $${expanded}$ in exponential form.</p></div>`,
                         correctAnswer: `$${base}^{${exp}}$`,
                         solution: `The base $${base}$ is multiplied $${exp}$ times, so it is written as $${base}^{${exp}}$.`,
-                        options: shuffle([`$${base}^{${exp}}$`, `$${exp}^{${base}}$`, `$${base} \\times ${exp}$`, `$${base}^{${exp + 1}}$`])
+                        options: shuffle([
+                            `$${base}^{${exp}}$`,
+                            `$${exp}^{${base}}$`,
+                            `$${base} \\times ${exp}$`,
+                            `$${base}^{${exp + 1}}$`,
+                            `$${base + 1}^{${exp}}$`
+                        ]).slice(0, 4)
                     };
                 },
                 // 2. Laws of Exponents (Product Law)
@@ -74,7 +80,13 @@ const ExponentsPowersTest = () => {
                         text: `<div class='question-container'><p>Simplify $${base}^{${m}} \\times ${base}^{${n}}$.</p></div>`,
                         correctAnswer: `$${base}^{${m + n}}$`,
                         solution: `Using the Law of Exponents: $a^m \\times a^n = a^{m+n}$.\n$$${base}^{${m}} \\times ${base}^{${n}} = ${base}^{${m} + ${n}} = ${base}^{${m + n}}$$`,
-                        options: shuffle([`$${base}^{${m + n}}$`, `$${base}^{${m * n}}$`, `$${base}^{${Math.abs(m - n)}}$`, `$${base * 2}^{${m + n}}$`])
+                        options: shuffle([
+                            `$${base}^{${m + n}}$`,
+                            `$${base}^{${m * n}}$`,
+                            `$${base}^{${m + n + 1}}$`,
+                            `$${base}^{${Math.abs(m - n)}}$`,
+                            `$${base * 2}^{${m + n}}$`
+                        ]).slice(0, 4)
                     };
                 },
                 // 3. Decimal Number System (Expanded Form)
@@ -88,7 +100,12 @@ const ExponentsPowersTest = () => {
                         text: `<div class='question-container'><p>What is the expanded form of $${num}$ using exponents?</p></div>`,
                         correctAnswer: `$${expanded}$`,
                         solution: `Each digit is multiplied by its place value represented as a power of 10:\n$$${num} = ${expanded}$$`,
-                        options: shuffle([`$${expanded}$`, `$${num.toString().split("").map((d, i) => `${d} \\times 10^{${i}}`).join(" + ")}$`, `$${num} \\times 10^1$`, `$${expanded.replace("10^{", "10^")}$`])
+                        options: shuffle([
+                            `$${expanded}$`,
+                            `$${num.toString().split("").map((d, i) => `${d} \\times 10^{${i}}`).join(" + ")}$`,
+                            `$${num} \\times 10^1$`,
+                            `$${digits.map((d, i) => `${d} \\times 10^{${digits.length - i}}`).join(" + ")}$`
+                        ])
                     };
                 },
                 // 4. Standard Form (Scientific Notation)
@@ -102,7 +119,13 @@ const ExponentsPowersTest = () => {
                         text: `<div class='question-container'><p>Write $${num.toLocaleString()}$ in standard form.</p></div>`,
                         correctAnswer: `$${d} \\times 10^{${e}}$`,
                         solution: `Move the decimal point $${e}$ places to the left to get a number between 1 and 10:\n$$${num.toLocaleString()} = ${d} \\times 10^{${e}}$$`,
-                        options: shuffle([`$${d} \\times 10^{${e}}$`, `$${d} \\times 10^{${e - 1}}$`, `$${d * 10} \\times 10^{${e}}$`, `$${d} \\times 10^{${e + 1}}$`])
+                        options: shuffle([
+                            `$${d} \\times 10^{${e}}$`,
+                            `$${d} \\times 10^{${e - 1}}$`,
+                            `$${d * 10} \\times 10^{${e - 1}}$`,
+                            `$${d} \\times 10^{${e + 1}}$`,
+                            `$${d + 0.1} \\times 10^{${e}}$`
+                        ]).slice(0, 4)
                     };
                 }
             ];
