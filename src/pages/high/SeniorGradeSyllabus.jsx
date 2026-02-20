@@ -38,7 +38,25 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10052, skill_name: 'Solve equations using substitution (no word problems)', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10053, skill_name: 'Solve word problems using substitution', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10054, skill_name: 'Solve equations using elimination (no word problems)', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
-                        { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' }
+                        { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
+
+                        // Real Numbers
+                        { skill_id: 10201, skill_name: 'Real Number Foundations', topic: 'Real Numbers', subtopic: 'Real Number Foundations' },
+                        { skill_id: 10202, skill_name: 'Euclid\'s Division Lemma', topic: 'Real Numbers', subtopic: 'Euclid\'s Division Lemma' },
+                        { skill_id: 10203, skill_name: 'Breaking Numbers into Prime Factors', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 10204, skill_name: 'Uniqueness of Prime Factorisation (Fundamental Theorem)', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 10205, skill_name: 'Finding HCF and LCM Using Prime Factors', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 10206, skill_name: 'Applying HCF and LCM to Real-Life Situations', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 10207, skill_name: 'Proving the Irrationality of Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
+                        { skill_id: 10208, skill_name: 'Behaviour of Operations on Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
+                        { skill_id: 10209, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
+                        // Arithmetic Progressions
+                        { skill_id: 10101, skill_name: 'Recognising and Describing Number Patterns', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 10102, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 10103, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
+                        { skill_id: 10104, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
+                        { skill_id: 10105, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
+                        { skill_id: 10106, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
@@ -51,7 +69,22 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-rn-commutativity', skill_name: 'Commutativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-associativity', skill_name: 'Associativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-identity', skill_name: 'Additive and Multiplicative Identity', topic: 'Rational Numbers' },
-                        { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' }
+                        { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-mens-polygon', skill_name: 'Area of Polygon', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cuboid', skill_name: 'Surface Area of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cube', skill_name: 'Surface Area of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cylinder', skill_name: 'Surface Area of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cube', skill_name: 'Volume of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cuboid', skill_name: 'Volume of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cylinder', skill_name: 'Volume of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-capacity', skill_name: 'Volume and Capacity', topic: 'Mensuration' },
+                        { skill_id: 'local-8-fact-common', skill_name: 'Method of Common Factors', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-regrouping', skill_name: 'Factorisation by Regrouping', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-identities', skill_name: 'Factorisation Using Identities', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-form-xpla-xplb', skill_name: 'Factors of the form (x+a)(x+b)', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-mono-mono', skill_name: 'Division of Monomial by Monomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-poly-mono', skill_name: 'Division of Polynomial by Monomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -161,6 +194,134 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Properties of Rational Numbers',
                 isLocal: true,
                 path: '/senior/grade/8/rational-numbers/distributivity'
+            }
+        ];
+
+        // Hardcode all Grade 8 skills for Mensuration (8 skills)
+        skillsByTopic['Mensuration'] = [
+            {
+                skill_id: 'local-8-mens-polygon',
+                skill_name: 'Area of Polygon',
+                topic: 'Mensuration',
+                subtopic: 'Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/area-of-polygon'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cuboid',
+                skill_name: 'Surface Area of Cuboid',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cuboid'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cube',
+                skill_name: 'Surface Area of Cube',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cube'
+            },
+            {
+                skill_id: 'local-8-mens-sa-cylinder',
+                skill_name: 'Surface Area of Cylinder',
+                topic: 'Mensuration',
+                subtopic: 'Surface Area',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/surface-area-cylinder'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cube',
+                skill_name: 'Volume of Cube',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cube'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cuboid',
+                skill_name: 'Volume of Cuboid',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cuboid'
+            },
+            {
+                skill_id: 'local-8-mens-vol-cylinder',
+                skill_name: 'Volume of Cylinder',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-of-cylinder'
+            },
+            {
+                skill_id: 'local-8-mens-vol-capacity',
+                skill_name: 'Volume and Capacity',
+                topic: 'Mensuration',
+                subtopic: 'Volume',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/volume-and-capacity'
+            }
+        ];
+
+        // Hardcode all Grade 8 skills for Factorisation (7 skills)
+        skillsByTopic['Factorisation'] = [
+            {
+                skill_id: 'local-8-fact-common',
+                skill_name: 'Method of Common Factors',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/common-factors'
+            },
+            {
+                skill_id: 'local-8-fact-regrouping',
+                skill_name: 'Factorisation by Regrouping',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/regrouping'
+            },
+            {
+                skill_id: 'local-8-fact-identities',
+                skill_name: 'Factorisation Using Identities',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/using-identities'
+            },
+            {
+                skill_id: 'local-8-fact-form-xpla-xplb',
+                skill_name: 'Factors of the form (x+a)(x+b)',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Methods',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/factors-form-xpla-xplb'
+            },
+            {
+                skill_id: 'local-8-fact-div-mono-mono',
+                skill_name: 'Division of Monomial by Monomial',
+                topic: 'Factorisation',
+                subtopic: 'Division of Algebraic Expressions',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/division-monomial-by-monomial'
+            },
+            {
+                skill_id: 'local-8-fact-div-poly-mono',
+                skill_name: 'Division of Polynomial by Monomial',
+                topic: 'Factorisation',
+                subtopic: 'Division of Algebraic Expressions',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/division-polynomial-by-monomial'
+            },
+            {
+                skill_id: 'local-8-fact-div-poly-poly',
+                skill_name: 'Division of Polynomial by Polynomial',
+                topic: 'Factorisation',
+                subtopic: 'Division of Algebraic Expressions',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/division-polynomial-by-polynomial'
             }
         ];
     }

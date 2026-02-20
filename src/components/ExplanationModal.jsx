@@ -9,23 +9,23 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-2">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 sm:p-2">
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
-                        className="bg-white dark:bg-slate-900 rounded-[20px] lg:rounded-[32px] max-w-2xl w-full shadow-2xl flex flex-col max-h-[95vh] border-4 border-white dark:border-slate-800 overflow-hidden"
+                        className="bg-white dark:bg-slate-900 rounded-[20px] lg:rounded-[32px] max-w-3xl w-full shadow-2xl flex flex-col lg:flex-row max-h-[85vh] sm:max-h-[95vh] border-4 border-white dark:border-slate-800 overflow-hidden"
                     >
-                        {/* Top: Mascot Area - smaller in landscape */}
-                        <div className="flex-shrink-0 bg-[#E0FBEF] flex flex-col items-center justify-center p-3 lg:p-6 relative">
-                            <img src={mascotImg} alt="Mascot" className="w-20 h-20 lg:w-32 lg:h-32 object-contain drop-shadow-xl" />
+                        {/* Left: Mascot Area (side panel on desktop, top on mobile) */}
+                        <div className="flex-shrink-0 bg-[#E0FBEF] flex flex-col items-center justify-center p-3 lg:p-6 lg:w-[220px] relative">
+                            <img src={mascotImg} alt="Mascot" className="w-20 h-20 lg:w-36 lg:h-36 object-contain drop-shadow-xl" />
                             <div className="mt-2 lg:mt-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-1 rounded-full border border-[#4FB7B3]/30">
                                 <span className="text-[#31326F] dark:text-[#A8FBD3] font-bold text-sm lg:text-base">Keep going!</span>
                             </div>
                         </div>
 
-                        {/* Bottom: Scrollable Explanation Content */}
-                        <div className="flex-1 overflow-y-auto p-4 lg:p-8">
+                        {/* Right: Scrollable Explanation Content */}
+                        <div className="flex-1 overflow-y-auto p-4 pb-6 lg:p-8">
                             <div className="flex items-center gap-3 mb-4 lg:mb-6">
                                 {!isCorrect ? (
                                     <>
@@ -60,13 +60,13 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
 
                             <div className="flex-1">
                                 <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
-                                <div className="text-gray-600 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin whitespace-pre-line">
+                                <div className="text-gray-600 text-lg leading-relaxed pr-4 scrollbar-thin whitespace-pre-line">
                                     {/* Render explanation text with LaTeX support */}
                                     <LatexText text={explanation || "Great effort! Keep practicing to master this concept."} />
                                 </div>
                             </div>
 
-                            <div className="flex justify-end">
+                            <div className="flex justify-end mt-4">
                                 <button
                                     onClick={onNext || onClose}
                                     className="flex items-center gap-2 px-6 lg:px-10 py-3 lg:py-4 bg-[#31326F] text-white rounded-2xl font-black text-base lg:text-lg shadow-lg hover:shadow-xl hover:bg-[#25265E] transition-all"
