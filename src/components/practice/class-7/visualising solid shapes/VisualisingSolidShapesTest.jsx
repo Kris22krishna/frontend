@@ -35,6 +35,8 @@ const VisualisingSolidShapesTest = () => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [answers, setAnswers] = useState({});
     const [isFinished, setIsFinished] = useState(false);
+    const [showReview, setShowReview] = useState(false);
+    const [fromReview, setFromReview] = useState(false);
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
@@ -142,9 +144,34 @@ const VisualisingSolidShapesTest = () => {
         let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
         const timeSpent = Math.max(0, Math.round(t / 1000));
 
-        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect: right, timeSpent, isSkipped: false } }));
+        const updatedAnswers = { ...answers, [qIndex]: { selectedOption, isCorrect: right, timeSpent, isSkipped: false } };
+        setAnswers(updatedAnswers);
         recordAttempt(questions[qIndex], selectedOption, right);
-        handleNext();
+
+        if (fromReview) {
+            setFromReview(false);
+            setShowReview(true);
+            return;
+        }
+
+        if (qIndex < questions.length - 1) {
+            setQIndex(prev => prev + 1);
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
+        } else {
+            const skippedIndices = questions.map((_, i) => i).filter(i => !updatedAnswers[i] || updatedAnswers[i].isSkipped);
+            if (skippedIndices.length > 0) {
+                setShowReview(true);
+            } else {
+                handleFinalSubmit();
+            }
+        }
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+        }
     };
 
     const handleSkip = () => {
@@ -153,6 +180,12 @@ const VisualisingSolidShapesTest = () => {
 
         setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption: 'Skipped', isCorrect: false, timeSpent, isSkipped: true } }));
         recordAttempt(questions[qIndex], 'Skipped', false, true);
+
+        if (fromReview) {
+            setFromReview(false);
+            setShowReview(true);
+            return;
+        }
         handleNext();
     };
 
@@ -161,18 +194,33 @@ const VisualisingSolidShapesTest = () => {
             setQIndex(prev => prev + 1);
             accumulatedTime.current = 0; questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (uid) {
-                const c = Object.values(answers).filter(v => v.isCorrect).length;
-                await api.createReport({ title: SKILL_NAME, type: 'practice', score: (c / questions.length) * 100, parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: questions.length, correct_answers: c, time_taken_seconds: timeElapsed }, user_id: parseInt(uid) }).catch(console.error);
+            const skippedIndices = questions.map((_, i) => i).filter(i => !answers[i] || answers[i].isSkipped);
+            if (skippedIndices.length > 0) {
+                setShowReview(true);
+            } else {
+                await handleFinalSubmit();
             }
-            setIsFinished(true);
         }
     };
 
+    const handleFinalSubmit = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (uid) {
+            const c = Object.values(answers).filter(v => v.isCorrect).length;
+            await api.createReport({ title: SKILL_NAME, type: 'practice', score: (c / questions.length) * 100, parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: questions.length, correct_answers: c, time_taken_seconds: timeElapsed }, user_id: parseInt(uid) }).catch(console.error);
+        }
+        setIsFinished(true);
+        setShowReview(false);
+    };
+
     useEffect(() => {
-        setSelectedOption(null);
+        const saved = answers[qIndex];
+        if (saved && !saved.isSkipped) {
+            setSelectedOption(saved.selectedOption);
+        } else {
+            setSelectedOption(null);
+        }
         setIsCorrect(false);
         setIsSubmitted(false);
         setShowExplanationModal(false);
@@ -186,71 +234,71 @@ const VisualisingSolidShapesTest = () => {
         const skipped = Object.values(answers).filter(a => a.isSkipped).length;
 
         return (
-            <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif', padding: '2rem', paddingBottom: '5rem', backgroundColor: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
-                <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-3xl p-8 shadow-xl border-2 border-[#4FB7B3]/20 mb-8 mt-8">
-                        <div className="text-center mb-8">
-                            <img src={mascotImg} alt="Mascot" className="w-24 h-24 mx-auto mb-4 object-contain" />
-                            <h2 className="text-3xl font-bold text-[#31326F] mb-2">Test Complete!</h2>
-                            <p className="text-gray-500">Here's how you performed in {SKILL_NAME}</p>
+            <div className="junior-practice-page raksha-theme p-3 sm:p-8 pb-24 sm:pb-32" style={{ fontFamily: '"Open Sans", sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
+                <div className="max-w-3xl mx-auto w-full">
+                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl border-2 border-[#4FB7B3]/20 my-4 sm:my-8">
+                        <div className="text-center mb-6 sm:mb-8">
+                            <img src={mascotImg} alt="Mascot" className="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-3 sm:mb-4 object-contain" />
+                            <h2 className="text-2xl sm:text-3xl font-bold text-[#31326F] mb-1 sm:mb-2 text-balance">Test Complete!</h2>
+                            <p className="text-sm sm:text-base text-gray-500 line-clamp-2">How you performed in<br />{SKILL_NAME}</p>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                            <div className="bg-blue-50 p-4 rounded-2xl text-center border border-blue-100">
-                                <div className="text-blue-500 font-bold text-sm mb-1 uppercase tracking-wider">Total Time</div>
-                                <div className="text-2xl font-black text-[#31326F]">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-8">
+                            <div className="bg-blue-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-blue-100">
+                                <div className="text-blue-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Total Time</div>
+                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
                             </div>
-                            <div className="bg-green-50 p-4 rounded-2xl text-center border border-green-100">
-                                <div className="text-green-500 font-bold text-sm mb-1 uppercase tracking-wider">Correct</div>
-                                <div className="text-2xl font-black text-[#31326F]">{correct}</div>
+                            <div className="bg-green-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-green-100">
+                                <div className="text-green-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Correct</div>
+                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{correct}</div>
                             </div>
-                            <div className="bg-red-50 p-4 rounded-2xl text-center border border-red-100">
-                                <div className="text-red-500 font-bold text-sm mb-1 uppercase tracking-wider">Wrong</div>
-                                <div className="text-2xl font-black text-[#31326F]">{wrong}</div>
+                            <div className="bg-red-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-red-100">
+                                <div className="text-red-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Wrong</div>
+                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{wrong}</div>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-2xl text-center border border-gray-100">
-                                <div className="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wider">Skipped</div>
-                                <div className="text-2xl font-black text-[#31326F]">{skipped}</div>
+                            <div className="bg-gray-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-gray-100">
+                                <div className="text-gray-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Skipped</div>
+                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{skipped}</div>
                             </div>
                         </div>
 
-                        <div className="space-y-6">
-                            <h3 className="text-xl font-bold text-[#31326F] border-b pb-2">Detailed Report</h3>
+                        <div className="space-y-4 sm:space-y-6">
+                            <h3 className="text-lg sm:text-xl font-bold text-[#31326F] border-b pb-2">Detailed Report</h3>
                             {questions.map((q, idx) => {
                                 const ans = answers[idx] || { isSkipped: true, selectedOption: 'Not Attempted', isCorrect: false, timeSpent: 0 };
                                 return (
-                                    <div key={idx} className="p-6 rounded-2xl border-2 border-gray-100 hover:border-[#4FB7B3]/30 transition-all bg-white shadow-sm">
-                                        <div className="flex justify-between items-start gap-4 mb-4">
+                                    <div key={idx} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 border-gray-100 hover:border-[#4FB7B3]/30 transition-all bg-white shadow-sm">
+                                        <div className="flex justify-between items-start gap-2 mb-3 sm:mb-4">
                                             <div className="flex items-center gap-3">
-                                                <span className="w-8 h-8 rounded-full bg-[#31326F] text-white flex items-center justify-center font-bold text-sm">{idx + 1}</span>
-                                                <div className="flex items-center gap-2 text-sm font-semibold text-gray-500">
+                                                <span className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#31326F] text-white flex items-center justify-center font-bold text-xs sm:text-sm">{idx + 1}</span>
+                                                <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold text-gray-500">
                                                     Time: {ans.timeSpent}s
                                                 </div>
                                             </div>
                                             {ans.isSkipped ? (
-                                                <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600 font-bold text-xs uppercase">Skipped</span>
+                                                <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-gray-100 text-gray-600 font-bold text-[9px] sm:text-xs uppercase">Skipped</span>
                                             ) : ans.isCorrect ? (
-                                                <span className="px-3 py-1 rounded-full bg-green-100 text-green-600 font-bold text-xs uppercase">Correct</span>
+                                                <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-green-100 text-green-600 font-bold text-[9px] sm:text-xs uppercase">Correct</span>
                                             ) : (
-                                                <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 font-bold text-xs uppercase">Incorrect</span>
+                                                <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-red-100 text-red-600 font-bold text-[9px] sm:text-xs uppercase">Incorrect</span>
                                             )}
                                         </div>
-                                        <div className="text-[#31326F] mb-4 font-medium"><LatexContent html={q.text} /></div>
-                                        {q.visual && <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}><ShapeVisual {...q.visual} /></div>}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-sm">
-                                            <div className="p-3 rounded-xl bg-gray-50 border border-gray-100">
-                                                <span className="text-gray-400 block mb-1">Your Answer:</span>
+                                        <div className="text-[#31326F] mb-3 sm:mb-4 font-medium text-sm sm:text-base leading-relaxed"><LatexContent html={q.text} /></div>
+                                        {q.visual && <div className="flex justify-center my-4 sm:my-6 overflow-x-auto"><ShapeVisual {...q.visual} /></div>}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4 text-xs sm:text-sm">
+                                            <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gray-50 border border-gray-100">
+                                                <span className="text-gray-400 block mb-0.5 sm:mb-1 text-[9px] sm:text-xs">Your Answer:</span>
                                                 <span className={ans.isCorrect ? "text-green-600 font-bold" : "text-red-500 font-bold"}>
                                                     <LatexContent html={ans.selectedOption} />
                                                 </span>
                                             </div>
-                                            <div className="p-3 rounded-xl bg-green-50 border border-green-100">
-                                                <span className="text-green-400 block mb-1">Correct Answer:</span>
+                                            <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-green-50 border border-green-100">
+                                                <span className="text-green-400 block mb-0.5 sm:mb-1 text-[9px] sm:text-xs">Correct Answer:</span>
                                                 <span className="text-green-700 font-bold"><LatexContent html={q.correctAnswer} /></span>
                                             </div>
                                         </div>
-                                        <div className="p-4 rounded-xl bg-amber-50/50 border border-amber-100 text-[#31326F] text-sm italic">
-                                            <span className="font-bold block mb-1 not-italic text-amber-700">Explanation:</span>
+                                        <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-50/50 border border-amber-100 text-[#31326F] text-xs sm:text-sm italic">
+                                            <span className="font-bold block mb-0.5 sm:mb-1 not-italic text-amber-700">Explanation:</span>
                                             <LatexContent html={q.solution} />
                                         </div>
                                     </div>
@@ -258,8 +306,58 @@ const VisualisingSolidShapesTest = () => {
                             })}
                         </div>
 
-                        <div className="mt-10 flex justify-center">
-                            <button className="bg-[#31326F] text-white px-12 py-4 rounded-2xl font-black text-xl hover:scale-105 transition-transform shadow-xl" onClick={() => navigate(-1)}>Done</button>
+                        <div className="mt-8 sm:mt-10 flex justify-center">
+                            <button className="bg-[#31326F] text-white w-full sm:w-auto px-12 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-lg sm:text-xl hover:scale-105 active:scale-95 transition-all shadow-xl" onClick={() => navigate(-1)}>Done</button>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
+        );
+    }
+
+    // Review screen for unanswered questions
+    if (showReview) {
+        const skippedIndices = questions.map((_, i) => i).filter(i => !answers[i] || answers[i].isSkipped);
+        return (
+            <div className="junior-practice-page raksha-theme p-3 sm:p-8" style={{ fontFamily: '"Open Sans", sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh' }}>
+                <div className="max-w-3xl mx-auto w-full">
+                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-xl border-2 border-[#4FB7B3]/20 my-4 sm:my-8">
+                        <div className="text-center mb-6 sm:mb-8">
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                                <Eye className="text-amber-600" size={36} />
+                            </div>
+                            <h2 className="text-2xl sm:text-3xl font-bold text-[#31326F] mb-2">Review Your Test</h2>
+                            <p className="text-gray-500 text-base sm:text-lg">You have <span className="font-bold text-amber-600">{skippedIndices.length}</span> unanswered question{skippedIndices.length > 1 ? 's' : ''}.</p>
+                        </div>
+
+                        <div className="mb-6 sm:mb-8">
+                            <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Tap to answer</p>
+                            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3">
+                                {skippedIndices.map(idx => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => { setQIndex(idx); setShowReview(false); setFromReview(true); }}
+                                        className="aspect-square rounded-xl border-2 border-amber-200 bg-amber-50 text-[#31326F] font-bold text-lg sm:text-xl hover:bg-amber-100 hover:border-amber-300 active:scale-95 transition-all flex items-center justify-center shadow-sm"
+                                    >
+                                        Q{idx + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                            <button
+                                onClick={() => { setQIndex(questions.length - 1); setShowReview(false); }}
+                                className="px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl border-2 border-[#31326F] text-[#31326F] font-bold text-base sm:text-lg hover:bg-gray-50 transition-all"
+                            >
+                                Go Back
+                            </button>
+                            <button
+                                onClick={handleFinalSubmit}
+                                className="px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-[#31326F] text-white font-black text-base sm:text-lg hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 justify-center"
+                            >
+                                Submit Anyway <Check size={22} />
+                            </button>
                         </div>
                     </motion.div>
                 </div>
@@ -303,30 +401,40 @@ const VisualisingSolidShapesTest = () => {
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
-                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>Exit</button></div>
+                    <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>Exit</button>
                     <div className="bottom-center"></div>
-                    <div className="bottom-right">
-                        <div className="nav-buttons-group">
-                            <button className="nav-pill-next-btn bg-gray-500 text-white border-2 border-gray-600" onClick={handleSkip}>
-                                Skip <ChevronRight size={28} strokeWidth={3} />
-                            </button>
-                            <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
-                                {qIndex < questions.length - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}
-                            </button>
-                        </div>
+                    <div className="nav-buttons-group">
+                        <button
+                            className="nav-pill-next-btn bg-gray-200 text-gray-700 border-2 border-gray-300"
+                            onClick={handlePrevious}
+                            disabled={qIndex === 0}
+                            style={{ opacity: qIndex === 0 ? 0.5 : 1 }}
+                        >
+                            <ChevronLeft size={28} strokeWidth={3} /> Prev
+                        </button>
+                        <button className="nav-pill-next-btn bg-gray-500 text-white border-2 border-gray-600" onClick={handleSkip}>
+                            Skip <ChevronRight size={28} strokeWidth={3} />
+                        </button>
+                        <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
+                            {qIndex < questions.length - 1 ? <>Next <ChevronRight size={28} strokeWidth={3} /></> : <>Done <Check size={28} strokeWidth={3} /></>}
+                        </button>
                     </div>
                 </div>
                 <div className="mobile-footer-controls">
-                    <div className="flex items-center gap-2">
-                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
-                    </div>
-                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
-                        <div className="nav-buttons-group">
-                            <button className="nav-pill-next-btn bg-gray-500 text-white p-2 border border-gray-600" onClick={handleSkip}>Skip</button>
-                            <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
-                                {qIndex < questions.length - 1 ? "Next" : "Done"}
-                            </button>
-                        </div>
+                    <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
+                    <div className="nav-buttons-group">
+                        <button
+                            className="nav-pill-next-btn bg-gray-200 text-gray-700 p-2 border border-gray-300"
+                            onClick={handlePrevious}
+                            disabled={qIndex === 0}
+                            style={{ opacity: qIndex === 0 ? 0.5 : 1, minWidth: 'auto' }}
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+                        <button className="nav-pill-next-btn bg-gray-500 text-white p-2 border border-gray-600" onClick={handleSkip}>Skip</button>
+                        <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
+                            {qIndex < questions.length - 1 ? "Next" : "Done"}
+                        </button>
                     </div>
                 </div>
             </footer>
