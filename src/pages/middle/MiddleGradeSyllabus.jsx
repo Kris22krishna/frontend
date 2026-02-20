@@ -827,6 +827,16 @@ const MiddleGradeSyllabus = () => {
                     isLocal: true,
                     path: '/middle/grade/5/can-you-see-the-pattern/skill-application'
                 }
+            ],
+            'Chapter Test': [
+                {
+                    skill_id: '2000',
+                    skill_name: 'Chapter Test',
+                    topic: 'Can you see the Pattern ?',
+                    sub_topic: 'Chapter Test',
+                    isLocal: true,
+                    path: '/middle/grade/5/can-you-see-the-pattern/chapter-test'
+                }
             ]
         };
     }
@@ -909,7 +919,7 @@ const MiddleGradeSyllabus = () => {
                         const accentColor = getAccentColor(index);
 
                         // Define fixed order for sub-topics
-                        const subTopicOrder = ["Pattern Recognition", "Number properties", "Logical Reasoning", "Multiplication", "Division", "Decimals", "Skill Application Problems"];
+                        const subTopicOrder = ["Pattern Recognition", "Number properties", "Logical Reasoning", "Multiplication", "Division", "Decimals", "Skill Application Problems", "Chapter Test"];
                         const orderedSubTopics = Object.entries(subTopics).sort(([a], [b]) => {
                             const indexA = subTopicOrder.indexOf(a);
                             const indexB = subTopicOrder.indexOf(b);
