@@ -24,7 +24,7 @@ const NatureOfRoots = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10206; // Understanding Roots and Their Nature
+    const SKILL_ID = 1125; // Understanding Roots and Their Nature
     const SKILL_NAME = "Understanding Roots and Their Nature";
     const [answers, setAnswers] = useState({});
 

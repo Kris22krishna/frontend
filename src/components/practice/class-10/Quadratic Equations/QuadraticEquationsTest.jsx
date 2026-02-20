@@ -24,7 +24,7 @@ const QuadraticEquationsTest = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10209; // Quadratic Equations Chapter Assessment
+    const SKILL_ID = 1128; // Quadratic Equations Chapter Assessment
     const SKILL_NAME = "Quadratic Equations Chapter Assessment";
     const [answers, setAnswers] = useState({});
 

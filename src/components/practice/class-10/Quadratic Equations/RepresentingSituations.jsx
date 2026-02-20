@@ -24,7 +24,7 @@ const RepresentingSituations = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10202; // Representing Real-Life Situations
+    const SKILL_ID = 1121; // Representing Real-Life Situations
     const SKILL_NAME = "Representing Real-Life Situations";
     const [answers, setAnswers] = useState({});
 

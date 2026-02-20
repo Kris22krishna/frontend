@@ -24,7 +24,7 @@ const RealLifeApplications = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10208; // Applying Quadratic Equations to Real-Life Situations
+    const SKILL_ID = 1127; // Applying Quadratic Equations to Real-Life Situations
     const SKILL_NAME = "Applying Quadratic Equations to Real-Life Situations";
     const [answers, setAnswers] = useState({});
 

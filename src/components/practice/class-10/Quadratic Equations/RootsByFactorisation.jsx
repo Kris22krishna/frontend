@@ -24,7 +24,7 @@ const RootsByFactorisation = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10204; // Finding Roots by Factorisation
+    const SKILL_ID = 1123; // Finding Roots by Factorisation
     const SKILL_NAME = "Finding Roots by Factorisation";
     const [answers, setAnswers] = useState({});
 

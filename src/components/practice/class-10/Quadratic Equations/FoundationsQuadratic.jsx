@@ -25,7 +25,7 @@ const FoundationsQuadratic = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10201; // Foundations and Meaning of Quadratic Equations
+    const SKILL_ID = 1120; // Foundations and Meaning of Quadratic Equations
     const SKILL_NAME = "Foundations and Meaning of Quadratic Equations";
     const [answers, setAnswers] = useState({});
 

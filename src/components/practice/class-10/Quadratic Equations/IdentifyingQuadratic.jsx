@@ -24,7 +24,7 @@ const IdentifyingQuadratic = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10203; // Identifying and Verifying Quadratic Equations
+    const SKILL_ID = 1122; // Identifying and Verifying Quadratic Equations
     const SKILL_NAME = "Identifying and Verifying Quadratic Equations";
     const [answers, setAnswers] = useState({});
 

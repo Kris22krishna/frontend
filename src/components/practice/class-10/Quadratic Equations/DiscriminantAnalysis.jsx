@@ -24,7 +24,7 @@ const DiscriminantAnalysis = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10207; // Using the Discriminant to Analyse Roots
+    const SKILL_ID = 1126; // Using the Discriminant to Analyse Roots
     const SKILL_NAME = "Using the Discriminant to Analyse Roots";
     const [answers, setAnswers] = useState({});
 

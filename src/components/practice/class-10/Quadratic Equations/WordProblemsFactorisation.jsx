@@ -24,7 +24,7 @@ const WordProblemsFactorisation = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 10205; // Solving Word Problems Using Factorisation
+    const SKILL_ID = 1124; // Solving Word Problems Using Factorisation
     const SKILL_NAME = "Solving Word Problems Using Factorisation";
     const [answers, setAnswers] = useState({});
 
