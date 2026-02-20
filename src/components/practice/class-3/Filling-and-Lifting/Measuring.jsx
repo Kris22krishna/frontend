@@ -96,6 +96,82 @@ const VesselSVG = ({ type, fillRatio = 1, color = '#60A5FA', label, size = 80 })
     return vessels[type] || vessels.glass;
 };
 
+// ─── Inline SVG string generator (for HTML template literals) ─────────────────
+const vesselSVGStr = (type, fillRatio = 1, color = '#60A5FA', name = '', size = 100) => {
+    const fr = Math.min(Math.max(fillRatio, 0), 1);
+    const uid = name + type + Math.random().toString(36).slice(2, 7);
+    const shadow = `filter:drop-shadow(0 6px 16px rgba(0,0,0,0.18))`;
+
+    const gradId = `grad_${uid}`;
+    const grad = `<defs>
+        <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="${color}" stop-opacity="0.55"/>
+        </linearGradient>
+    </defs>`;
+
+    let inner = '';
+    let vw = 70, vh = 100;
+
+    if (type === 'bottle') {
+        vh = 100; vw = 60;
+        const clipY = 85 - (85 - 35) * fr;
+        inner = `${grad}
+            <path d="M15 17 Q10 25 10 35 L10 80 Q10 85 15 85 L45 85 Q50 85 50 80 L50 35 Q50 25 45 17 Z" fill="#EFF6FF" stroke="#94A3B8" stroke-width="2"/>
+            <rect x="20" y="5" width="20" height="12" rx="3" fill="#CBD5E1"/>
+            <clipPath id="clip_${uid}"><rect x="10" y="${clipY}" width="40" height="${(85 - 35) * fr}"/></clipPath>
+            <path d="M15 17 Q10 25 10 35 L10 80 Q10 85 15 85 L45 85 Q50 85 50 80 L50 35 Q50 25 45 17 Z" fill="url(#${gradId})" clip-path="url(#clip_${uid})"/>
+            <path d="M10 ${clipY + 2} Q30 ${clipY - 3} 50 ${clipY + 2}" fill="none" stroke="white" stroke-width="2" opacity="0.6"/>`;
+    } else if (type === 'glass') {
+        vh = 80; vw = 60;
+        const clipY = 10 + 52 * (1 - fr);
+        inner = `${grad}
+            <path d="M12 10 L14 62 Q14 68 20 68 L40 68 Q46 68 46 62 L48 10 Z" fill="#EFF6FF" stroke="#94A3B8" stroke-width="2"/>
+            <clipPath id="clip_${uid}"><rect x="12" y="${clipY}" width="36" height="${52 * fr}"/></clipPath>
+            <path d="M12 10 L14 62 Q14 68 20 68 L40 68 Q46 68 46 62 L48 10 Z" fill="url(#${gradId})" clip-path="url(#clip_${uid})"/>
+            <path d="M12 ${clipY + 2} Q30 ${clipY - 3} 48 ${clipY + 2}" fill="none" stroke="white" stroke-width="2" opacity="0.6"/>`;
+    } else if (type === 'mug') {
+        vh = 80; vw = 72;
+        const clipY = 65 - 55 * fr;
+        inner = `${grad}
+            <rect x="10" y="10" width="40" height="55" rx="5" fill="#EFF6FF" stroke="#94A3B8" stroke-width="2"/>
+            <path d="M50 20 Q65 20 65 32 Q65 44 50 44" fill="none" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+            <clipPath id="clip_${uid}"><rect x="10" y="${clipY}" width="40" height="${55 * fr}"/></clipPath>
+            <rect x="10" y="10" width="40" height="55" rx="5" fill="url(#${gradId})" clip-path="url(#clip_${uid})"/>
+            <path d="M10 ${clipY + 2} Q30 ${clipY - 3} 50 ${clipY + 2}" fill="none" stroke="white" stroke-width="2" opacity="0.6"/>`;
+    } else if (type === 'bowl') {
+        vh = 70; vw = 72;
+        const clipY = 55 - 35 * fr;
+        inner = `${grad}
+            <path d="M5 20 Q5 55 35 55 Q65 55 65 20 Z" fill="#EFF6FF" stroke="#94A3B8" stroke-width="2"/>
+            <clipPath id="clip_${uid}"><rect x="5" y="${clipY}" width="60" height="${35 * fr}"/></clipPath>
+            <path d="M5 20 Q5 55 35 55 Q65 55 65 20 Z" fill="url(#${gradId})" clip-path="url(#clip_${uid})"/>`;
+    } else if (type === 'bucket') {
+        vh = 90; vw = 72;
+        const clipY = 78 - 63 * fr;
+        inner = `${grad}
+            <path d="M10 15 L15 70 Q15 78 35 78 Q55 78 55 70 L60 15 Z" fill="#EFF6FF" stroke="#94A3B8" stroke-width="2"/>
+            <path d="M10 15 Q35 5 60 15" fill="none" stroke="#94A3B8" stroke-width="3"/>
+            <clipPath id="clip_${uid}"><rect x="10" y="${clipY}" width="50" height="${63 * fr}"/></clipPath>
+            <path d="M10 15 L15 70 Q15 78 35 78 Q55 78 55 70 L60 15 Z" fill="url(#${gradId})" clip-path="url(#clip_${uid})"/>
+            <path d="M10 ${clipY + 2} Q35 ${clipY - 3} 60 ${clipY + 2}" fill="none" stroke="white" stroke-width="2" opacity="0.6"/>`;
+    } else if (type === 'jug') {
+        vh = 105; vw = 72;
+        const clipY = 88 - 76 * fr;
+        inner = `${grad}
+            <path d="M15 12 L12 80 Q12 88 35 88 Q58 88 58 80 L55 12 Z" fill="#EFF6FF" stroke="#94A3B8" stroke-width="2"/>
+            <path d="M55 22 Q70 22 70 38 Q70 54 55 54" fill="none" stroke="#94A3B8" stroke-width="3" stroke-linecap="round"/>
+            <path d="M35 12 Q20 6 15 12" fill="none" stroke="#94A3B8" stroke-width="2"/>
+            <clipPath id="clip_${uid}"><rect x="12" y="${clipY}" width="46" height="${76 * fr}"/></clipPath>
+            <path d="M15 12 L12 80 Q12 88 35 88 Q58 88 58 80 L55 12 Z" fill="url(#${gradId})" clip-path="url(#clip_${uid})"/>
+            <path d="M12 ${clipY + 2} Q35 ${clipY - 3} 58 ${clipY + 2}" fill="none" stroke="white" stroke-width="2" opacity="0.6"/>`;
+    }
+
+    if (!inner) return '';
+    const w = size; const h = Math.round(size * vh / vw);
+    return `<svg viewBox="0 0 ${vw} ${vh}" width="${w}" height="${h}" style="${shadow};display:block;margin:0 auto;">${inner}</svg>`;
+};
+
 // ─── Question Generators ──────────────────────────────────────────────────────
 
 const VESSEL_COLORS = {
@@ -108,31 +184,29 @@ const VESSEL_TYPES = ['bottle', 'glass', 'mug', 'bowl', 'bucket', 'jug'];
 // Q-TYPE 1: Who holds the MOST / LEAST liquid?
 const genMostLeast = () => {
     const names = shuffle(NAMES).slice(0, 3);
-    const amounts = shuffle([1, 0.5, 0.25]); // litre amounts
+    const amounts = shuffle([1, 0.5, 0.25]);
     const data = names.map((n, i) => ({ name: n, amt: amounts[i] }));
     const isMax = Math.random() > 0.5;
     const sorted = [...data].sort((a, b) => isMax ? b.amt - a.amt : a.amt - b.amt);
     const correctName = sorted[0].name;
     const vesselType = pick(VESSEL_TYPES);
-    const amtLabel = (a) => a === 1 ? '1 litre' : a === 0.5 ? '½ litre' : '¼ litre';
+    const amtLabel = (a) => a === 1 ? '1 L' : a === 0.5 ? '½ L' : '¼ L';
+    const vesselColors = ['#60A5FA', '#F472B6', '#34D399'];
 
-    const visual = `
-        <div style="display:flex;gap:20px;justify-content:center;align-items:flex-end;margin:12px 0">
-            ${data.map(d => `
-                <div style="text-align:center">
-                    <div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:4px">${amtLabel(d.amt)}</div>
-                </div>
-            `).join('')}
-        </div>
-    `;
     const questionText = `
         <div style="text-align:center">
-            <p style="font-weight:700;font-size:17px;color:#1E3A8A;margin-bottom:10px">
-                ${data.map(d => `<strong>${d.name}</strong>'s ${vesselType} holds <strong>${amtLabel(d.amt)}</strong>`).join(' &nbsp;|&nbsp; ')}
+            <p style="font-weight:700;font-size:16px;color:#1E3A8A;margin-bottom:10px">
+                Who holds <strong style="color:${isMax ? '#16A34A' : '#DC2626'};font-size:18px">${isMax ? 'the MOST 🏆' : 'the LEAST 🔍'}</strong> liquid?
             </p>
-            <p style="font-size:16px;color:#374151;margin-top:8px">
-                Who holds <strong style="color:${isMax ? '#16A34A' : '#DC2626'}">${isMax ? 'the most' : 'the least'}</strong> liquid?
-            </p>
+            <div style="display:flex;gap:12px;justify-content:center;align-items:flex-end;flex-wrap:wrap">
+                ${data.map((d, i) => `
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(135deg,${vesselColors[i]}18,${vesselColors[i]}30);border-radius:14px;padding:8px 12px;border:2px solid ${vesselColors[i]}50;">
+                        <div style="font-size:11px;font-weight:800;color:${vesselColors[i]};letter-spacing:0.5px;text-transform:uppercase">${d.name}</div>
+                        ${vesselSVGStr(vesselType, d.amt === 1 ? 0.9 : d.amt === 0.5 ? 0.5 : 0.25, vesselColors[i], d.name, 55)}
+                        <div style="background:${vesselColors[i]};color:white;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;margin-top:2px">${amtLabel(d.amt)}</div>
+                    </div>
+                `).join('')}
+            </div>
         </div>
     `;
     const options = shuffle([...new Set(names)]);
@@ -143,12 +217,12 @@ const genMostLeast = () => {
 // Q-TYPE 2: More than / Less than / Exactly 1 litre?
 const genMoreLessExactly = () => {
     const vessels = [
-        { name: 'glass', fills: 0.25, label: 'a glass' },
-        { name: 'mug', fills: 0.5, label: 'a mug' },
-        { name: 'jug', fills: 1, label: 'a jug' },
-        { name: 'bucket', fills: 4, label: 'a bucket' },
-        { name: 'bowl', fills: 0.25, label: 'a small bowl' },
-        { name: 'bottle', fills: 0.75, label: 'a bottle' },
+        { name: 'glass', fills: 0.25, label: 'a glass', fillRatio: 0.25, color: '#60A5FA' },
+        { name: 'mug', fills: 0.5, label: 'a mug', fillRatio: 0.5, color: '#A78BFA' },
+        { name: 'jug', fills: 1, label: 'a jug', fillRatio: 0.9, color: '#34D399' },
+        { name: 'bucket', fills: 4, label: 'a bucket', fillRatio: 1, color: '#FB923C' },
+        { name: 'bowl', fills: 0.25, label: 'a small bowl', fillRatio: 0.25, color: '#F472B6' },
+        { name: 'bottle', fills: 0.75, label: 'a bottle', fillRatio: 0.75, color: '#FACC15' },
     ];
     const v = pick(vessels);
     const opts = ['more than 1 litre', 'less than 1 litre', 'exactly 1 litre'];
@@ -159,10 +233,14 @@ const genMoreLessExactly = () => {
     const options = shuffle(opts);
     const questionText = `
         <div style="text-align:center">
-            <p style="font-size:17px;font-weight:700;color:#1E3A8A;margin-bottom:8px">
-                How much water does <strong>${v.label}</strong> hold?
+            <p style="font-size:16px;font-weight:700;color:#1E3A8A;margin-bottom:10px">
+                How much water does <strong style="color:${v.color};font-size:18px">${v.label}</strong> hold?
             </p>
-            <p style="font-size:13px;color:#64748B">(Think about a standard 1 litre bottle!)</p>
+            <div style="display:inline-flex;flex-direction:column;align-items:center;background:linear-gradient(135deg,${v.color}15,${v.color}30);border-radius:18px;padding:10px 22px;border:2px solid ${v.color}50;margin-bottom:6px;">
+                ${vesselSVGStr(v.name, v.fillRatio, v.color, v.name, 65)}
+                <div style="margin-top:8px;background:${v.color};color:white;border-radius:20px;padding:3px 16px;font-weight:700;font-size:12px;text-transform:capitalize;">${v.label.replace('a ', '').replace('small ', '')}</div>
+            </div>
+            <p style="font-size:12px;color:#64748B;margin-top:2px">💡 Compare with a standard 1 litre bottle!</p>
         </div>
     `;
     const explanation = `A ${v.label.replace('a ', '')} holds approximately <strong>${v.fills} litre${v.fills !== 1 ? 's' : ''}</strong>, so the answer is <strong>${correctAnswer}</strong>.`;
@@ -205,22 +283,34 @@ const genMoreLessComparison = () => {
 // Q-TYPE 4: How many small glasses fill a bigger vessel?
 const genFillCount = () => {
     const scenarios = [
-        { small: 'glass (¼ litre)', big: 'jug (1 litre)', answer: '4', distractors: ['2', '3', '6'] },
-        { small: 'glass (¼ litre)', big: 'bottle (½ litre)', answer: '2', distractors: ['3', '4', '5'] },
-        { small: 'mug (½ litre)', big: 'bucket (2 litres)', answer: '4', distractors: ['2', '3', '6'] },
-        { small: 'cup (¼ litre)', big: 'mug (½ litre)', answer: '2', distractors: ['3', '4', '1'] },
-        { small: 'bottle (1 litre)', big: 'bucket (5 litres)', answer: '5', distractors: ['3', '4', '6'] },
-        { small: 'mug (½ litre)', big: 'jug (1 litre)', answer: '2', distractors: ['3', '4', '5'] },
-        { small: 'glass (¼ litre)', big: 'big bottle (2 litres)', answer: '8', distractors: ['4', '6', '10'] },
+        { smallType: 'glass', small: 'glass (¼ L)', bigType: 'jug', big: 'jug (1 L)', answer: '4', distractors: ['2', '3', '6'], smallFr: 0.25, bigFr: 0.9 },
+        { smallType: 'glass', small: 'glass (¼ L)', bigType: 'bottle', big: 'bottle (½ L)', answer: '2', distractors: ['3', '4', '5'], smallFr: 0.25, bigFr: 0.5 },
+        { smallType: 'mug', small: 'mug (½ L)', bigType: 'bucket', big: 'bucket (2 L)', answer: '4', distractors: ['2', '3', '6'], smallFr: 0.5, bigFr: 0.95 },
+        { smallType: 'glass', small: 'cup (¼ L)', bigType: 'mug', big: 'mug (½ L)', answer: '2', distractors: ['3', '4', '1'], smallFr: 0.25, bigFr: 0.5 },
+        { smallType: 'bottle', small: 'bottle (1 L)', bigType: 'bucket', big: 'bucket (5 L)', answer: '5', distractors: ['3', '4', '6'], smallFr: 0.9, bigFr: 1.0 },
+        { smallType: 'mug', small: 'mug (½ L)', bigType: 'jug', big: 'jug (1 L)', answer: '2', distractors: ['3', '4', '5'], smallFr: 0.5, bigFr: 0.9 },
     ];
     const s = pick(scenarios);
     const options = shuffle([s.answer, ...s.distractors.slice(0, 3)]);
     const questionText = `
         <div style="text-align:center">
-            <p style="font-size:17px;font-weight:700;color:#1E3A8A;margin-bottom:6px">
-                How many <strong>${s.small}</strong> glasses are needed to fill a <strong>${s.big}</strong>?
+            <p style="font-size:15px;font-weight:700;color:#1E3A8A;margin-bottom:10px">
+                How many <strong style="color:#7C3AED">${s.small}</strong> are needed to fill a <strong style="color:#0369A1">${s.big}</strong>?
             </p>
-            <p style="font-size:13px;color:#64748B">Think and choose the right answer!</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;background:linear-gradient(135deg,#F3E8FF,#EDE9FE);border-radius:14px;padding:8px 14px;border:2px solid #C4B5FD;">
+                    <div style="font-size:10px;font-weight:800;color:#7C3AED;text-transform:uppercase;letter-spacing:0.5px">Small</div>
+                    ${vesselSVGStr(s.smallType, s.smallFr, '#A78BFA', 'small', 52)}
+                    <div style="background:#7C3AED;color:white;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">${s.small}</div>
+                </div>
+                <div style="font-size:26px;color:#64748B;font-weight:900">×?</div>
+                <div style="font-size:20px;color:#64748B">→</div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;background:linear-gradient(135deg,#E0F2FE,#BAE6FD);border-radius:14px;padding:8px 14px;border:2px solid #7DD3FC;">
+                    <div style="font-size:10px;font-weight:800;color:#0369A1;text-transform:uppercase;letter-spacing:0.5px">Big</div>
+                    ${vesselSVGStr(s.bigType, s.bigFr, '#38BDF8', 'big', 52)}
+                    <div style="background:#0369A1;color:white;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">${s.big}</div>
+                </div>
+            </div>
         </div>
     `;
     const explanation = `Divide the capacity of the big vessel by the small one. The answer is <strong>${s.answer}</strong>.`;
@@ -230,27 +320,34 @@ const genFillCount = () => {
 // Q-TYPE 5: Which holds MORE between two vessels?
 const genWhichHoldsMore = () => {
     const pairs = [
-        { a: 'bucket', b: 'mug', aFill: 0.8, bFill: 0.5, aLabel: 'Bucket', bLabel: 'Mug', correct: 'Bucket' },
-        { a: 'bottle', b: 'glass', aFill: 1, bFill: 0.25, aLabel: 'Bottle', bLabel: 'Glass', correct: 'Bottle' },
-        { a: 'jug', b: 'bowl', aFill: 0.9, bFill: 0.4, aLabel: 'Jug', bLabel: 'Bowl', correct: 'Jug' },
-        { a: 'mug', b: 'glass', aFill: 0.5, bFill: 0.25, aLabel: 'Mug', bLabel: 'Glass', correct: 'Mug' },
-        { a: 'bucket', b: 'jug', aFill: 1, bFill: 0.7, aLabel: 'Bucket', bLabel: 'Jug', correct: 'Bucket' },
+        { a: 'bucket', b: 'mug', aFill: 0.85, bFill: 0.5, aLabel: 'Bucket', bLabel: 'Mug', correct: 'Bucket', aColor: '#FB923C', bColor: '#60A5FA' },
+        { a: 'bottle', b: 'glass', aFill: 0.9, bFill: 0.3, aLabel: 'Bottle', bLabel: 'Glass', correct: 'Bottle', aColor: '#34D399', bColor: '#A78BFA' },
+        { a: 'jug', b: 'bowl', aFill: 0.85, bFill: 0.4, aLabel: 'Jug', bLabel: 'Bowl', correct: 'Jug', aColor: '#60A5FA', bColor: '#F472B6' },
+        { a: 'mug', b: 'glass', aFill: 0.6, bFill: 0.25, aLabel: 'Mug', bLabel: 'Glass', correct: 'Mug', aColor: '#FACC15', bColor: '#34D399' },
+        { a: 'bucket', b: 'jug', aFill: 0.95, bFill: 0.65, aLabel: 'Bucket', bLabel: 'Jug', correct: 'Bucket', aColor: '#FB923C', bColor: '#60A5FA' },
     ];
     const p = pick(pairs);
-    const colors = shuffle(['#60A5FA', '#F472B6', '#34D399', '#FB923C']);
-    const isReversed = Math.random() > 0.5;
-    const correct = isReversed ? p.bLabel : p.correct;
+    const correct = p.correct;
     const options = shuffle([p.aLabel, p.bLabel, 'Both equal', 'Cannot tell']);
     const questionText = `
         <div style="text-align:center">
-            <p style="font-size:17px;font-weight:700;color:#1E3A8A;margin-bottom:12px">
-                Look at the vessels below. Which one holds <strong style="color:#16A34A">more</strong> water?
+            <p style="font-size:16px;font-weight:700;color:#1E3A8A;margin-bottom:12px">
+                Which vessel holds <strong style="color:#16A34A;font-size:18px">MORE 💧</strong> water?
             </p>
-            <div style="display:flex;gap:24px;justify-content:center;align-items:flex-end">
-                <div style="text-align:center;font-weight:bold;color:#374151">${p.aLabel}</div>
-                <div style="text-align:center;font-weight:bold;color:#374151">${p.bLabel}</div>
+            <div style="display:flex;gap:16px;justify-content:center;align-items:flex-end;flex-wrap:wrap">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(135deg,${p.aColor}18,${p.aColor}35);border-radius:18px;padding:10px 16px;border:2px solid ${p.aColor}60;">
+                    <div style="font-size:11px;font-weight:800;color:${p.aColor};text-transform:uppercase;letter-spacing:0.5px">${p.aLabel}</div>
+                    ${vesselSVGStr(p.a, p.aFill, p.aColor, p.aLabel, 62)}
+                </div>
+                <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px">
+                    <div style="font-size:24px">⚖️</div>
+                    <div style="font-size:12px;color:#94A3B8;font-weight:600">vs</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(135deg,${p.bColor}18,${p.bColor}35);border-radius:18px;padding:10px 16px;border:2px solid ${p.bColor}60;">
+                    <div style="font-size:11px;font-weight:800;color:${p.bColor};text-transform:uppercase;letter-spacing:0.5px">${p.bLabel}</div>
+                    ${vesselSVGStr(p.b, p.bFill, p.bColor, p.bLabel, 62)}
+                </div>
             </div>
-            <p style="font-size:13px;color:#64748B;margin-top:6px">(A ${p.aLabel.toLowerCase()} is generally bigger than a ${p.bLabel.toLowerCase()})</p>
         </div>
     `;
     const explanation = `A <strong>${p.correct.toLowerCase()}</strong> holds more liquid than a ${p.correct === p.aLabel ? p.bLabel.toLowerCase() : p.aLabel.toLowerCase()}.`;
@@ -565,8 +662,8 @@ const Measuring = () => {
                 </div>
             </header>
 
-            <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+            <main className="practice-content-wrapper" style={{ padding: '0.75rem 1rem 90px 1rem', minHeight: 'unset', flex: 1 }}>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto', minHeight: 'unset', padding: '0 0.5rem' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -577,21 +674,29 @@ const Measuring = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%' }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem', paddingTop: '1rem', paddingBottom: '0.5rem', overflow: 'hidden' }}>
+                                    <div className="question-header-modern" style={{ marginBottom: '0.5rem' }}>
+                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(0.9rem, 1.8vw, 1.4rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%' }}>
                                             <span dangerouslySetInnerHTML={{ __html: currentQuestion.questionText }} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+                                    <div className="interaction-area-modern" style={{ paddingBottom: '0.5rem', paddingTop: '0.25rem' }}>
+                                        <div className="options-grid-modern" style={{ gap: '0.75rem' }}>
                                             {currentQuestion.options.map((option, idx) => (
                                                 <button
                                                     key={idx}
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontWeight: '500', fontSize: '1.2rem' }}
+                                                    style={{
+                                                        fontWeight: '500', fontSize: '1.1rem', minHeight: '60px', padding: '0.5rem 1rem',
+                                                        ...(isSubmitted && option === currentQuestion.correctAnswer ? {
+                                                            background: '#C8E6C9', borderColor: '#4CAF50', color: '#1B5E20', boxShadow: '0 4px 0 #388E3C'
+                                                        } : {}),
+                                                        ...(isSubmitted && selectedOption === option && !isCorrect ? {
+                                                            background: '#FFCDD2', borderColor: '#EF5350', color: '#B71C1C', boxShadow: '0 4px 0 #D32F2F'
+                                                        } : {}),
+                                                    }}
                                                     onClick={() => !isSubmitted && setSelectedOption(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -604,7 +709,7 @@ const Measuring = () => {
                                                 initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
+                                                style={{ marginTop: '8px' }}
                                             >
                                                 {feedbackMessage}
                                             </motion.div>
@@ -616,6 +721,7 @@ const Measuring = () => {
                     </div>
                 </div>
             </main>
+
 
             <ExplanationModal
                 isOpen={showExplanationModal}
