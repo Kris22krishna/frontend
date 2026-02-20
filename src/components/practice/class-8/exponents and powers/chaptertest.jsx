@@ -8,6 +8,13 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
+const shuffleAndUnique = (correct, distractors) => {
+    // Ensure the correct answer is always present
+    const uniqueDistractors = [...new Set(distractors.filter(d => d !== correct))];
+    const finalOptions = [correct, ...uniqueDistractors.slice(0, 3)];
+    return finalOptions.sort(() => Math.random() - 0.5);
+};
+
 const ChapterTest = () => {
     const navigate = useNavigate();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -17,158 +24,173 @@ const ChapterTest = () => {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [questions, setQuestions] = useState([]);
 
+    // Logging states
+    const [sessionId, setSessionId] = useState(null);
+    const [isQuestionSubmitted, setIsQuestionSubmitted] = useState(false);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
     const timerRef = useRef(null);
 
     const TEST_NAME = "Exponents and Powers - Chapter Test";
-    const SKILL_ID = 8005;
+    const SKILL_ID = 1210;
     const SKILL_NAME = "Exponents and Powers - Chapter Test";
 
     // --- Generator Functions ---
 
     const generateNegativeExponents = () => {
-        const type = randomInt(1, 4);
+        const type = randomInt(1, 3);
         let text, correctAnswer, solution, options;
 
         if (type === 1) {
-            const base = randomInt(2, 6);
-            const exp = randomInt(2, 4);
+            // Basic evaluation: a^-n
+            const base = randomInt(2, 5);
+            const exp = randomInt(1, 3);
             const val = Math.pow(base, exp);
             text = `Evaluate the value of $${base}^{-${exp}}$.`;
             correctAnswer = `$\\frac{1}{${val}}$`;
             solution = `$${base}^{-${exp}} = \\frac{1}{${base}^{${exp}}} = \\frac{1}{${val}}$`;
-            options = [correctAnswer, `$\\frac{1}{${val - 1}}$`, `$-${val}$`, `$${val}$`].sort(() => Math.random() - 0.5);
+            options = shuffleAndUnique(correctAnswer, [`$\\frac{1}{${base * exp}}$`, `$-${val}$`, `$${val}$`, `$\\frac{1}{${base + exp}}$`]);
         } else if (type === 2) {
-            const base = [10, 2, 3, 5][randomInt(0, 3)];
-            const exp = randomInt(5, 100);
+            // Basic Multiplicative inverse
+            const base = [2, 3, 5, 10][randomInt(0, 3)];
+            const exp = randomInt(2, 5);
             text = `What is the multiplicative inverse of $${base}^{-${exp}}$?`;
             correctAnswer = `$${base}^{${exp}}$`;
             solution = `Multiplicative inverse of $a^{-n}$ is $a^n$. So, for $${base}^{-${exp}}$, it is $${base}^{${exp}}$.`;
-            options = [correctAnswer, `$${base}^{-${exp}}$`, `$-${base}^{${exp}}$`, `$1$`].sort(() => Math.random() - 0.5);
-        } else if (type === 3) {
+            options = shuffleAndUnique(correctAnswer, [`$${base}^{-${exp}}$`, `$\\frac{1}{${base}^{${exp}}}$`, `$1$`, `$0$`]);
+        } else {
+            // Simple difference: (1/a)^-1 - (1/b)^-1
             const a = randomInt(2, 4);
             const b = randomInt(a + 1, 6);
             text = `Evaluate: $(\\frac{1}{${a}})^{-1} - (\\frac{1}{${b}})^{-1}$`;
-            correctAnswer = `${a - b}`;
+            correctAnswer = `$${a - b}$`;
             solution = `$(\\frac{1}{${a}})^{-1} = ${a}$ and $(\\frac{1}{${b}})^{-1} = ${b}$. So, $${a} - ${b} = ${a - b}$.`;
-            options = [`${a - b}`, `${b - a}`, `${a + b}`, `$0$`].sort(() => Math.random() - 0.5);
-        } else {
-            const exp1 = randomInt(100, 999);
-            const exp2 = exp1 + 1;
-            text = `Find the value of $(-1)^{${exp1}} \\times (-1)^{${exp2}}$.`;
-            correctAnswer = `-1`;
-            solution = `One exponent is odd, one is even. $(-1)^{odd} = -1$, $(-1)^{even} = 1$. So $(-1) \\times (1) = -1$.`;
-            options = ["-1", "1", "0", `${exp1 + exp2}`].sort(() => Math.random() - 0.5);
+            options = shuffleAndUnique(correctAnswer, [`$${b - a}$`, `$${a + b}$`, `$0$`, `$${a * b}$`]);
         }
         return { text, options, correctAnswer, solution };
     };
 
     const generateLawsOfExponents = () => {
-        const type = randomInt(1, 4);
+        const type = randomInt(1, 3);
         let text, correctAnswer, solution, options;
 
         if (type === 1) {
+            // Finding x in a^x = b
             const base = [2, 3, 5][randomInt(0, 2)];
-            const exp = randomInt(3, 5);
+            const exp = randomInt(2, 4);
             const val = Math.pow(base, exp);
             text = `Find the value of $x$ if $${base}^x = ${val}$.`;
-            correctAnswer = `${exp}`;
+            correctAnswer = `$${exp}$`;
             solution = `$${val} = ${base}^{${exp}}$. Therefore $x = ${exp}$.`;
-            options = [`${exp}`, `${exp - 1}`, `${exp + 1}`, `${exp - 2}`].sort(() => Math.random() - 0.5);
+            options = shuffleAndUnique(correctAnswer, [`$${exp - 1}$`, `$${exp + 1}$`, `$${exp + 2}$`, `$0$`]);
         } else if (type === 2) {
-            const base = randomInt(2, 5);
-            const m = randomInt(2, 5);
-            const n = randomInt(2, 5);
-            const k = m + n + randomInt(1, 3);
-            text = `Find $x$: $${base}^{m+1} \\times ${base}^{${n}} = ${base}^{x}$`;
-            correctAnswer = `${m + 1 + n}`;
-            solution = `Using $a^m \\times a^n = a^{m+n}$, the exponent on LHS is $(m+1) + ${n} = ${m + 1 + n}$.`;
-            options = [`${m + 1 + n}`, `${m + n}`, `${m + n - 1}`, `${m + n + 2}`].sort(() => Math.random() - 0.5);
-        } else if (type === 3) {
-            const a = randomInt(2, 4);
-            const b = randomInt(2, 4);
-            const exp = randomInt(2, 4);
-            text = `Simplify: $\\frac{(${a}\\times${b})^{${exp}}}{${a}^{${exp}}}$`;
-            correctAnswer = `$${b}^{${exp}}$`;
-            solution = `$(a \\times b)^n = a^n \\times b^n$. So $\\frac{${a}^{${exp}} \\times ${b}^{${exp}}}{${a}^{${exp}}} = ${b}^{${exp}}$.`;
-            options = [`$${b}^{${exp}}$`, `$${a}^{${exp}}$`, `$${a}$`, `$${b}$`].sort(() => Math.random() - 0.5);
+            // Product law: a^m * a^n
+            const base = randomInt(2, 4);
+            const m = randomInt(2, 3);
+            const n = randomInt(1, 4);
+            text = `Simplify: $${base}^{${m}} \\times ${base}^{${n}}$`;
+            correctAnswer = `$${base}^{${m + n}}$`;
+            solution = `Using $a^m \\times a^n = a^{m+n}$, we get $${base}^{${m}+${n}} = ${base}^{${m + n}}$.`;
+            options = shuffleAndUnique(`$${base}^{${m + n}}$`, [`$${base}^{${m * n}}$`, `$${base}^{${m - n}}$`, `$${base + base}^{${m + n}}$`, `$${base}^{${n}}$`]);
         } else {
-            text = "Evaluate: $(\\frac{a^m}{a^n})^{m+n} \\times (\\frac{a^n}{a^l})^{n+l} \\times (\\frac{a^l}{a^m})^{l+m}$";
-            correctAnswer = "1";
-            solution = "LHS simplifies to $a^{(m-n)(m+n)} \\times a^{(n-l)(n+l)} \\times a^{(l-m)(l+m)} = a^{m^2-n^2 + n^2-l^2 + l^2-m^2} = a^0 = 1$.";
-            options = ["1", "0", "a", "$a^{m+n+l}$"].sort(() => Math.random() - 0.5);
+            // Power of a power: (a^m)^n
+            const base = randomInt(2, 3);
+            const m = randomInt(2, 3);
+            const n = randomInt(2, 4);
+            text = `Evaluate: $(${base}^{${m}})^{${n}}$`;
+            correctAnswer = `$${base}^{${m * n}}$`;
+            solution = `Using $(a^m)^n = a^{mn}$, we get $${base}^{${m} \\times ${n}} = ${base}^{${m * n}}$.`;
+            options = shuffleAndUnique(`$${base}^{${m * n}}$`, [`$${base}^{${m + n}}$`, `$${base}^{${m - n}}$`, `$${base}^{${m}^{${n}}}$`, `$${base}^{${m}}$`]);
         }
         return { text, options, correctAnswer, solution };
     };
 
     const generateScientificNotation = () => {
-        const type = randomInt(1, 3);
+        const type = randomInt(1, 2);
         let text, correctAnswer, solution, options;
 
         if (type === 1) {
+            // Standard form of small numbers
             const num = randomInt(1, 9);
-            const zeros = randomInt(5, 10);
+            const zeros = randomInt(3, 5);
             const valStr = "0." + "0".repeat(zeros) + num;
             text = `Standard form of $${valStr}$ is:`;
             correctAnswer = `$${num} \\times 10^{-${zeros + 1}}$`;
             solution = `Moving the decimal ${zeros + 1} places to the right gives $${num} \\times 10^{-${zeros + 1}}$.`;
-            options = [correctAnswer, `$${num} \\times 10^{-${zeros}}$`, `$${num} \\times 10^{${zeros + 1}}$`, `$${num}0 \\times 10^{-${zeros + 2}}$`].sort(() => Math.random() - 0.5);
-        } else if (type === 2) {
-            const num = randomInt(10, 99) / 10;
-            const exp = randomInt(2, 5);
+            options = shuffleAndUnique(correctAnswer, [`$${num} \\times 10^{-${zeros}}$`, `$${num} \\times 10^{${zeros + 1}}$`, `$${num} \\times 10^{${zeros}}$`, `$${num} \\times 10^{-1}$`]);
+        } else {
+            // Usual form
+            const num = randomInt(2, 8);
+            const exp = randomInt(3, 5);
             text = `Usual form of $${num} \\times 10^{-${exp}}$ is:`;
             const val = num * Math.pow(10, -exp);
-            correctAnswer = `${val.toFixed(exp + 1).replace(/\.?0+$/, '')}`;
+            correctAnswer = `$${val.toFixed(exp)}$`;
             solution = `Move decimal ${exp} places to the left.`;
-            options = [correctAnswer, `${(num * Math.pow(10, -exp - 1)).toFixed(exp + 2)}`, `${(num * Math.pow(10, -exp + 1)).toFixed(exp)}`, `${num}${"0".repeat(exp)}`].sort(() => Math.random() - 0.5);
-        } else {
-            const num = randomInt(100, 999);
-            const zeros = randomInt(6, 9);
-            const valStr = num + "0".repeat(zeros);
-            const lead = num / 100;
-            const totalExp = zeros + 2;
-            text = `Standard form of $${valStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}$ is:`;
-            correctAnswer = `$${lead} \\times 10^{${totalExp}}$`;
-            solution = `Decimal moves ${totalExp} places to the left. So $${lead} \\times 10^{${totalExp}}$.`;
-            options = [correctAnswer, `$${lead} \\times 10^{${totalExp - 1}}$`, `$${lead * 10} \\times 10^{${totalExp}}$`, `$${lead} \\times 10^{-${totalExp}}$`].sort(() => Math.random() - 0.5);
+            options = shuffleAndUnique(correctAnswer, [`$${(num * Math.pow(10, -exp - 1)).toFixed(exp + 1)}$`, `$${(num * Math.pow(10, -exp + 1)).toFixed(exp - 1)}$`, `$0.0${num}$`, `$0.${num}$`]);
         }
         return { text, options, correctAnswer, solution };
     };
 
     const generateComparingQuantities = () => {
-        const type = randomInt(1, 3);
+        const type = randomInt(1, 2);
         let text, correctAnswer, solution, options;
 
         if (type === 1) {
-            const e1 = randomInt(10, 15);
-            const e2 = randomInt(5, 9);
-            text = `Compare: $2.7 \\times 10^{${e1}}$ ___ $1.5 \\times 10^{${e2}}$`;
+            // Compare powers of 10
+            const c1 = (randomInt(10, 95) / 10).toFixed(1);
+            const c2 = (randomInt(10, 95) / 10).toFixed(1);
+            const e1 = randomInt(6, 9);
+            const e2 = randomInt(3, 5);
+            text = `Compare: $${c1} \\times 10^{${e1}}$ ___ $${c2} \\times 10^{${e2}}$`;
             correctAnswer = "$>$";
-            solution = `Since $10^{${e1}} > 10^{${e2}}$, the first number is much larger.`;
-            options = [">", "<", "=", "Cannot compare"];
-        } else if (type === 2) {
-            const b1 = 5, p1 = 3; // 125
-            const b2 = 3, p2 = 5; // 243
-            text = `Which is greater: $${b1}^{${p1}}$ or $${b2}^{${p2}}$?`;
-            correctAnswer = `$${b2}^{${p2}}$`;
-            solution = `$${b1}^{${p1}} = ${Math.pow(b1, p1)}$, $${b2}^{${p2}} = ${Math.pow(b2, p2)}$. So $${b2}^{${p2}}$ is greater.`;
-            options = [`$${b1}^{${p1}}$`, `$${b2}^{${p2}}$`, "Equal", "None"].sort(() => Math.random() - 0.5);
+            solution = `Comparing powers of 10, $10^{${e1}}$ is much larger than $10^{${e2}}$.`;
+            options = ["$>$", "$<$", "$=$", "$\\text{Cannot compare}$"];
         } else {
-            const exp = randomInt(5, 8);
-            text = `Which is smaller?`;
-            correctAnswer = `$10^{-${exp + 1}}$`;
-            solution = `A larger negative exponent means a smaller value. $10^{-${exp + 1}}$ is smaller than $10^{-${exp}}$.`;
-            options = [`$10^{-${exp + 1}}$`, `$10^{-${exp}}$`, `$10^{-${exp - 1}}$`, `$0.1$`].sort(() => Math.random() - 0.5);
+            // Compare small powers
+            const a = randomInt(2, 5);
+            const b = randomInt(2, 5);
+            const expA = randomInt(2, 3);
+            const expB = randomInt(2, 3);
+            const valA = Math.pow(a, expA);
+            const valB = Math.pow(b, expB);
+
+            text = `Which is greater: $${a}^{${expA}}$ or $${b}^{${expB}}$?`;
+            if (valA > valB) {
+                correctAnswer = `$${a}^{${expA}}$`;
+            } else if (valB > valA) {
+                correctAnswer = `$${b}^{${expB}}$`;
+            } else {
+                correctAnswer = "$\\text{Equal}$";
+            }
+            solution = `$${a}^{${expA}} = ${valA}$ and $${b}^{${expB}} = ${valB}$. ${valA === valB ? 'They are equal.' : `Since ${Math.max(valA, valB)} > ${Math.min(valA, valB)}, $${valA > valB ? a : b}^{${valA > valB ? expA : expB}}$ is greater.`}`;
+            options = shuffleAndUnique(correctAnswer, [`$${a}^{${expA}}$`, `$${b}^{${expB}}$`, "$\\text{Equal}$", "$\\text{None}$", "$10^2$"]);
         }
         return { text, options, correctAnswer, solution };
     };
 
     const generateQuestionBank = () => {
         const qBank = [];
-        // 5 Questions from each skill
-        for (let i = 0; i < 5; i++) qBank.push(generateNegativeExponents());
-        for (let i = 0; i < 5; i++) qBank.push(generateLawsOfExponents());
-        for (let i = 0; i < 5; i++) qBank.push(generateScientificNotation());
-        for (let i = 0; i < 5; i++) qBank.push(generateComparingQuantities());
+        const seenTexts = new Set();
+
+        const addUnique = (generator, count) => {
+            let added = 0;
+            let attempts = 0;
+            while (added < count && attempts < 100) {
+                const q = generator();
+                if (!seenTexts.has(q.text)) {
+                    qBank.push(q);
+                    seenTexts.add(q.text);
+                    added++;
+                }
+                attempts++;
+            }
+        };
+
+        addUnique(generateNegativeExponents, 5);
+        addUnique(generateLawsOfExponents, 5);
+        addUnique(generateScientificNotation, 5);
+        addUnique(generateComparingQuantities, 5);
 
         // Add IDs
         return qBank.map((q, idx) => ({ ...q, id: idx + 1 }));
@@ -176,19 +198,73 @@ const ChapterTest = () => {
 
     useEffect(() => {
         setQuestions(generateQuestionBank());
+
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId && !sessionId) {
+            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => console.error("Failed to start session", err));
+        }
+
         timerRef.current = setInterval(() => {
             setTimeElapsed(prev => prev + 1);
         }, 1000);
 
-        return () => clearInterval(timerRef.current);
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            clearInterval(timerRef.current);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, []);
 
     useEffect(() => {
         if (isTestSubmitted) {
             clearInterval(timerRef.current);
+            if (sessionId) {
+                api.finishSession(sessionId).catch(console.error);
+            }
             submitReport();
         }
     }, [isTestSubmitted]);
+
+    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (!userId) return;
+
+        let timeSpent = accumulatedTime.current;
+        if (isTabActive.current) {
+            timeSpent += Date.now() - questionStartTime.current;
+        }
+        const seconds = Math.round(timeSpent / 1000);
+
+        try {
+            await api.recordAttempt({
+                user_id: parseInt(userId, 10),
+                session_id: sessionId,
+                skill_id: SKILL_ID,
+                template_id: null,
+                difficulty_level: 'Medium',
+                question_text: String(question.text || ''),
+                correct_answer: String(question.correctAnswer || ''),
+                student_answer: String(selected || ''),
+                is_correct: isCorrect,
+                solution_text: String(question.solution || ''),
+                time_spent_seconds: seconds >= 0 ? seconds : 0
+            });
+        } catch (e) {
+            console.error("Failed to record attempt", e);
+        }
+    };
 
     const submitReport = async () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -222,33 +298,64 @@ const ChapterTest = () => {
     };
 
     const handleOptionSelect = (option) => {
-        if (isTestSubmitted) return;
+        if (isQuestionSubmitted) return;
         setSelectedOption(option);
     };
 
-    const handleNext = () => {
-        if (selectedOption !== null) {
-            setAnswers(prev => ({ ...prev, [currentQuestionIndex]: selectedOption }));
-        }
+    const handleSubmit = () => {
+        if (!selectedOption) return;
+        const isCorrect = selectedOption === currentQuestion.correctAnswer;
+        setAnswers(prev => ({ ...prev, [currentQuestionIndex]: selectedOption }));
+        recordQuestionAttempt(currentQuestion, selectedOption, isCorrect);
+        setIsQuestionSubmitted(true);
+    };
+
+    const handleSkip = () => {
+        // Record skipped attempt
+        recordQuestionAttempt(currentQuestion, "Skipped", false);
 
         if (currentQuestionIndex < questions.length - 1) {
             const nextIndex = currentQuestionIndex + 1;
             setCurrentQuestionIndex(nextIndex);
+
+            // Re-check if the next question was already submitted
+            setIsQuestionSubmitted(!!answers[nextIndex]);
             setSelectedOption(answers[nextIndex] || null);
+
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
+        } else {
+            setIsTestSubmitted(true);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            const nextIndex = currentQuestionIndex + 1;
+            setCurrentQuestionIndex(nextIndex);
+
+            // Check if we've already submitted this next question
+            setIsQuestionSubmitted(!!answers[nextIndex]);
+            setSelectedOption(answers[nextIndex] || null);
+
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
         } else {
             setIsTestSubmitted(true);
         }
     };
 
     const handlePrevious = () => {
-        if (selectedOption !== null) {
-            setAnswers(prev => ({ ...prev, [currentQuestionIndex]: selectedOption }));
-        }
-
         if (currentQuestionIndex > 0) {
             const prevIndex = currentQuestionIndex - 1;
             setCurrentQuestionIndex(prevIndex);
+
+            // Restore submission state for the previous question
+            setIsQuestionSubmitted(!!answers[prevIndex]);
             setSelectedOption(answers[prevIndex] || null);
+
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
         }
     };
 
@@ -265,7 +372,6 @@ const ChapterTest = () => {
     if (questions.length === 0) return <div>Loading Test...</div>;
 
     const currentQuestion = questions[currentQuestionIndex];
-    const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
 
     if (isTestSubmitted) {
         const score = getScore();
@@ -377,13 +483,6 @@ const ChapterTest = () => {
                 </div>
             </header>
 
-            <div className="w-full h-1.5 bg-gray-200 fixed top-[72px] z-10">
-                <div
-                    className="h-full bg-[#4FB7B3] transition-all duration-300 ease-out"
-                    style={{ width: `${progressPercentage}%` }}
-                />
-            </div>
-
             <main className="practice-content-wrapper" style={{ paddingTop: '40px' }}>
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
@@ -408,8 +507,13 @@ const ChapterTest = () => {
                                                 <button
                                                     key={idx}
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
-                                                    style={{ fontWeight: '500', borderColor: selectedOption === option ? '#4FB7B3' : '' }}
+                                                    style={{
+                                                        fontWeight: '500',
+                                                        borderColor: selectedOption === option ? '#4FB7B3' : '',
+                                                        opacity: isQuestionSubmitted && selectedOption !== option ? 0.7 : 1
+                                                    }}
                                                     onClick={() => handleOptionSelect(option)}
+                                                    disabled={isQuestionSubmitted}
                                                 >
                                                     <div className="w-full flex items-center justify-between">
                                                         <LatexContent html={option} />
@@ -430,8 +534,11 @@ const ChapterTest = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
+                            onClick={async () => {
+                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                                navigate(-1);
+                            }}
                             className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                            onClick={() => navigate(-1)}
                         >
                             <X size={20} />
                             Exit Test
@@ -448,15 +555,35 @@ const ChapterTest = () => {
                             )}
 
                             <button
-                                className="nav-pill-next-btn"
-                                onClick={handleNext}
+                                className="px-6 py-2 rounded-full font-bold border-2 border-orange-200 text-orange-500 hover:bg-orange-50 transition-colors flex items-center gap-2 shadow-sm"
+                                onClick={handleSkip}
                             >
-                                {currentQuestionIndex < questions.length - 1 ? (
-                                    <>Next <ChevronRight size={28} strokeWidth={3} /></>
-                                ) : (
-                                    <>Finish <Check size={28} strokeWidth={3} /></>
-                                )}
+                                Skip
                             </button>
+
+                            {isQuestionSubmitted ? (
+                                <button
+                                    className="nav-pill-next-btn"
+                                    onClick={handleNext}
+                                >
+                                    {currentQuestionIndex < questions.length - 1 ? (
+                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                    ) : (
+                                        <>Finish <Check size={28} strokeWidth={3} /></>
+                                    )}
+                                </button>
+                            ) : (
+                                <button
+                                    className={`nav-pill-next-btn transition-all ${selectedOption
+                                        ? 'opacity-100 shadow-lg'
+                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50'
+                                        }`}
+                                    onClick={handleSubmit}
+                                    disabled={!selectedOption}
+                                >
+                                    Submit <Check size={28} strokeWidth={3} />
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -464,7 +591,10 @@ const ChapterTest = () => {
                 <div className="mobile-footer-controls">
                     <button
                         className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                        onClick={() => navigate(-1)}
+                        onClick={async () => {
+                            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                            navigate(-1);
+                        }}
                     >
                         <X size={20} />
                     </button>
@@ -478,11 +608,31 @@ const ChapterTest = () => {
                             )}
 
                             <button
-                                className="nav-pill-next-btn"
-                                onClick={handleNext}
+                                className="bg-orange-50 text-orange-500 px-4 py-2 rounded-lg font-bold text-sm border border-orange-100"
+                                onClick={handleSkip}
                             >
-                                {currentQuestionIndex < questions.length - 1 ? "Next" : "Finish"}
+                                Skip
                             </button>
+
+                            {isQuestionSubmitted ? (
+                                <button
+                                    className="nav-pill-next-btn"
+                                    onClick={handleNext}
+                                >
+                                    {currentQuestionIndex < questions.length - 1 ? "Next" : "Finish"}
+                                </button>
+                            ) : (
+                                <button
+                                    className={`nav-pill-next-btn px-4 py-2 text-sm transition-all ${selectedOption
+                                        ? 'opacity-100'
+                                        : 'bg-gray-200 text-gray-400 opacity-50'
+                                        }`}
+                                    onClick={handleSubmit}
+                                    disabled={!selectedOption}
+                                >
+                                    Submit
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

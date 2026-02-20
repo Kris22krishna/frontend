@@ -174,7 +174,7 @@ const SeniorGradeSyllabus = () => {
                 skill_id: 'local-8-exp-chapter-test',
                 skill_name: 'Exponents and Powers Chapter Test',
                 topic: 'Exponents and Powers',
-                subtopic: 'Chapter Assessment',
+                subtopic: 'Chapter Test',
                 isLocal: true,
                 path: '/senior/grade/8/exponents-powers/chapter-test'
             }
@@ -474,7 +474,18 @@ const SeniorGradeSyllabus = () => {
                                     <div key={subtopic} className="subtopic-section">
                                         <div
                                             className="subtopic-header"
-                                            onClick={() => setExpandedSubtopic(expandedSubtopic === subtopic ? null : subtopic)}
+                                            onClick={() => {
+                                                if ((subtopic === 'Chapter Test' || subtopic === 'Chapter Assessment') && subtopics[subtopic].length === 1) {
+                                                    const skill = subtopics[subtopic][0];
+                                                    if (skill.isLocal) {
+                                                        navigate(skill.path);
+                                                    } else {
+                                                        navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
+                                                    }
+                                                } else {
+                                                    setExpandedSubtopic(expandedSubtopic === subtopic ? null : subtopic);
+                                                }
+                                            }}
                                         >
                                             <div className="subtopic-title">
                                                 <LatexText text={subtopic} />
