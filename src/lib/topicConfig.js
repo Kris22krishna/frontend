@@ -66,19 +66,48 @@ export const TOPIC_CONFIGS = {
             { id: "1001", name: "Identifying shapes (2D shapes)", route: "identifying-shapes" },
             { id: "1002", name: "Comparing lengths", route: "comparing-lengths" },
             { id: "1003", name: "Recognizing round objects", route: "recognizing-round-objects" }
+        ],
+        'How Much Can You Carry?': [
+            { id: "1007", name: "Comparing weights", route: "comparing-weights" },
+            { id: "1008", name: "Heavier/lighter", route: "heavier-lighter" },
+            { id: "1009", name: "Estimating weight", route: "estimating-weight" }
+        ],
+        'Counting in Groups': [
+            { id: "1004", name: "Counting in pairs", route: "counting-in-pairs" },
+            { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "skip-counting" },
+            { id: "1006", name: "Introduction to multiplication as repeated addition", route: "repeated-addition" }
+        ],
+        'Counting in Tens': [
+            { id: "1010", name: "Numbers up to 100", route: "numbers-up-to-100" },
+            { id: "1011", name: "Place value (Tens and Ones)", route: "place-value-tens-ones" },
+            { id: "1012", name: "Expanded form", route: "expanded-form" },
+            { id: "1013", name: "Comparing numbers", route: "comparing-numbers" }
         ]
     },
     '3': {
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
-            { id: "RB-03", name: "Division" }
+            { id: "RB-03", name: "Division" },
+            { id: "RB-04", name: "Factors" }
         ],
         'Fair Share': [
             { id: "FS-01", name: "Cutting equal parts" },
             { id: "FS-02", name: "Halves and doubles" },
             { id: "FS-03", name: "Drawing other half" },
             { id: "FS-04", name: "Guess Who Am I?" }
+        ],
+        'House of Hundreds II': [
+            { id: "HH2-01", name: "Draw tiles" },
+            { id: "HH2-02", name: "Neighbouring numbers" },
+            { id: "HH2-03", name: "Help cranes on number line" },
+            { id: "HH2-04", name: "Tambola" },
+            { id: "HH2-05", name: "Skip and solve" },
+            { id: "HH2-06", name: "Number in the centre" },
+            { id: "HH2-07", name: "Number Puzzles" },
+            { id: "HH2-08", name: "The Number Detective" },
+            { id: "HH2-09", name: "Paper Slips" },
+            { id: "HH2-10", name: "Guess the Number" }
         ]
     },
     '4': {
@@ -112,6 +141,16 @@ export const TOPIC_CONFIGS = {
             { id: "1158", name: "Always, Sometimes, Never", route: "always-sometimes-never-statements" },
             { id: "1159", name: "Find the Mistake", route: "find-the-mistake-equal-groups" },
             { id: "1160", name: "Create Your Own Groups", route: "create-your-own-equal-groups" }
+        ],
+        'Weigh It, Pour It': [
+            { id: "1129", name: "Gram to Kilogram (Fractions)", route: "gram-to-kilogram-fractions" },
+            { id: "1135", name: "Make 1 Kilogram Using Packets", route: "make-one-kilogram-using-packets" },
+            { id: "1136", name: "Millilitre to Litre (Fractions)", route: "millilitre-to-litre-fractions" },
+            { id: "1137", name: "Make 1 Litre Using Bottles", route: "make-one-litre-using-bottles" },
+            { id: "1138", name: "Count How Many Units Fit", route: "count-how-many-units-fit" },
+            { id: "1139", name: "Repeated Addition to One Whole", route: "repeated-addition-to-one-whole" },
+            { id: "1140", name: "Compare Weights and Capacities", route: "compare-weights-and-capacities" },
+            { id: "1141", name: "Weight and Capacity Word Problems", route: "weight-and-capacity-word-problems" }
         ]
     }
 };

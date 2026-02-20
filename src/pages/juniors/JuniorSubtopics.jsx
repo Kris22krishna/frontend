@@ -67,8 +67,48 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             return;
         }
+        if (subtopic.id === "HH2-01") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
+            return;
+        }
+        if (subtopic.id === "HH2-02") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/neighbouring-numbers`);
+            return;
+        }
+        if (subtopic.id === "HH2-03") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/help-cranes`);
+            return;
+        }
+        if (subtopic.id === "HH2-04") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/tambola`);
+            return;
+        }
+        if (subtopic.id === "HH2-05") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/skip-and-solve`);
+            return;
+        }
+        if (subtopic.id === "HH2-06") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-in-the-centre`);
+            return;
+        }
+        if (subtopic.id === "HH2-07") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-puzzles`);
+            return;
+        }
+        if (subtopic.id === "HH2-08") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/the-number-detective`);
+            return;
+        }
+        if (subtopic.id === "HH2-09") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/paper-slips`);
+            return;
+        }
+        if (subtopic.id === "HH2-10") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/guess-the-number`);
+            return;
+        }
 
-        // Grade 4 Routing
+        // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
         const gradeNum = grade.replace('grade', '');
         if (parseInt(gradeNum) === 4) {
             const gradeConfigs = TOPIC_CONFIGS['4'];
@@ -145,6 +185,8 @@ const JuniorSubtopics = () => {
                 navigate(`/junior/grade/${grade}/fair-share/draw`);
             } else if (subtopic.id === "FS-04") {
                 navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            } else if (subtopic.id === "HH2-01") {
+                navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             } else if (String(grade).replace(/\D/g, '') === '1') {
                 const gradeConfigs = TOPIC_CONFIGS['1'];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
@@ -173,7 +215,7 @@ const JuniorSubtopics = () => {
                     }
                 }
             } else {
-                // Grade 4 Routing
+                // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
                 const gradeNum = grade.replace('grade', '');
                 if (parseInt(gradeNum) === 4) {
                     const gradeConfigs = TOPIC_CONFIGS['4'];
@@ -213,11 +255,12 @@ const JuniorSubtopics = () => {
                 const isGrade1 = gradeNumStr === '1';
                 const isGrade2 = gradeNumStr === '2';
                 const isGrade3 = gradeNumStr === '3';
+                const isGrade4 = gradeNumStr === '4';
 
                 let skillsResponse = [];
 
                 // Skip API for grades 1, 2 and 3 (use manual config only)
-                if (!isGrade1 && !isGrade2 && !isGrade3) {
+                if (!isGrade1 && !isGrade2 && !isGrade3 && !isGrade4) {
                     skillsResponse = await api.getSkills(gradeNumStr);
                 }
 
