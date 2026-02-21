@@ -287,10 +287,10 @@ const JuniorSubtopics = () => {
                                 return (
                                     <button
                                         key={subtopic.id}
-                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''}`}
+                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''} ${subtopic.name.toLowerCase().includes('chapter test') ? 'chapter-test-pill' : ''}`}
                                         style={{
-                                            '--pill-color': style.color,
-                                            '--pill-gradient': style.gradient,
+                                            '--pill-color': subtopic.name.toLowerCase().includes('chapter test') ? '#FFD700' : style.color,
+                                            '--pill-gradient': subtopic.name.toLowerCase().includes('chapter test') ? 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFD700 100%)' : style.gradient,
                                             '--animation-delay': `${index * 0.1}s`
                                         }}
                                         onMouseEnter={() => setHoveredSubtopic(subtopic.id)}
@@ -302,7 +302,11 @@ const JuniorSubtopics = () => {
 
                                         {/* Icon container */}
                                         <div className="pill-icon">
-                                            <span className="number-icon">{index + 1}</span>
+                                            {subtopic.name.toLowerCase().includes('chapter test') ? (
+                                                <span className="number-icon" style={{ fontSize: '1.2rem' }}>🏆</span>
+                                            ) : (
+                                                <span className="number-icon">{index + 1}</span>
+                                            )}
                                         </div>
 
                                         {/* Text */}
@@ -314,7 +318,7 @@ const JuniorSubtopics = () => {
                                         {/* Hover label */}
                                         {hoveredSubtopic === subtopic.id && !subtopic.completed && (
                                             <div className="hover-label">
-                                                Click to start! 🚀
+                                                {subtopic.name.toLowerCase().includes('chapter test') ? 'Take the test! 📝' : 'Click to start! 🚀'}
                                             </div>
                                         )}
                                     </button>

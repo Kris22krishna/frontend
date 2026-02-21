@@ -10,56 +10,65 @@ export const TOPIC_CONFIGS = {
             { id: "201", name: "Counting objects (1–9)", route: "numbers-from-one-to-nine" },
             { id: "202", name: "Number recognition", route: "numbers-from-one-to-nine" },
             { id: "203", name: "Writing numbers 1–9", route: "numbers-from-one-to-nine" },
-            { id: "204", name: "Comparing numbers (more/less)", route: "numbers-from-one-to-nine" }
+            { id: "204", name: "Comparing numbers (more/less)", route: "numbers-from-one-to-nine" },
+            { id: "205", name: "Chapter Test - Numbers from One to Nine", route: "numbers-from-one-to-nine" }
         ],
         'Addition': [
             { id: "301", name: "Concept of combining groups", route: "addition" },
             { id: "302", name: "Single-digit addition (using objects/pictures)", route: "addition" },
-            { id: "303", name: "Number line introduction", route: "addition" }
+            { id: "303", name: "Number line introduction", route: "addition" },
+            { id: "304", name: "Chapter Test - Addition", route: "addition" }
         ],
         'Subtraction': [
             { id: "401", name: "Concept of taking away", route: "subtraction" },
             { id: "402", name: "Single-digit subtraction", route: "subtraction" },
-            { id: "403", name: "Understanding zero", route: "subtraction" }
+            { id: "403", name: "Properties of zero in subtraction", route: "subtraction" },
+            { id: "404", name: "Chapter Test - Subtraction", route: "subtraction" }
         ],
         'Numbers from Ten to Twenty': [
-            { id: "501", name: "Counting 10–20", route: "numbers-from-ten-to-twenty" },
-            { id: "502", name: "Number names (10–20)", route: "numbers-from-ten-to-twenty" },
-            { id: "503", name: "Writing numbers 10–20", route: "numbers-from-ten-to-twenty" },
-            { id: "504", name: "Comparing numbers", route: "numbers-from-ten-to-twenty" }
+            { id: "501", name: "Counting and number names (10–20)", route: "numbers-10-20" },
+            { id: "502", name: "Tens and ones", route: "numbers-10-20" },
+            { id: "503", name: "Comparison and ordering", route: "numbers-10-20" },
+            { id: "504", name: "Chapter Test - Numbers 10-20", route: "numbers-10-20" }
         ],
         'Time': [
             { id: "601", name: "Day and night", route: "time" },
             { id: "602", name: "Days of the week", route: "time" },
             { id: "603", name: "Concepts of before/after", route: "time" },
-            { id: "604", name: "Reading time (hour hand only – informal introduction)", route: "time" }
+            { id: "604", name: "Reading time (hour hand only – informal introduction)", route: "time" },
+            { id: "605", name: "Chapter Test - Time", route: "time" }
         ],
         'Measurement': [
             { id: "701", name: "Comparing lengths (longer/shorter)", route: "measurement" },
             { id: "702", name: "Comparing weights (heavier/lighter)", route: "measurement" },
-            { id: "703", name: "Comparing capacities (more/less)", route: "measurement" }
+            { id: "703", name: "Comparing capacities (more/less)", route: "measurement" },
+            { id: "704", name: "Chapter Test - Measurement", route: "measurement" }
         ],
         'Numbers from Twenty-One to Fifty': [
             { id: "801", name: "Counting 21–50", route: "numbers-from-twenty-one-to-fifty" },
             { id: "802", name: "Number names 21–50", route: "numbers-from-twenty-one-to-fifty" },
             { id: "803", name: "Place value (tens and ones – basic introduction)", route: "numbers-from-twenty-one-to-fifty" },
-            { id: "804", name: "Comparing numbers", route: "numbers-from-twenty-one-to-fifty" }
+            { id: "804", name: "Comparing numbers", route: "numbers-from-twenty-one-to-fifty" },
+            { id: "805", name: "Chapter Test - Numbers 21-50", route: "numbers-from-twenty-one-to-fifty" }
         ],
         'Data Handling': [
             { id: "901", name: "Sorting objects", route: "data-handling" },
             { id: "902", name: "Simple pictographs (informal)", route: "data-handling" },
-            { id: "903", name: "Counting and grouping", route: "data-handling" }
+            { id: "903", name: "Counting and grouping", route: "data-handling" },
+            { id: "904", name: "Chapter Test - Data Handling", route: "data-handling" }
         ],
         'Patterns': [
             { id: "1001", name: "Identifying patterns (shapes, numbers, objects)", route: "patterns" },
-            { id: "1002", name: "Creating simple repeating patterns", route: "patterns" }
+            { id: "1002", name: "Creating simple repeating patterns", route: "patterns" },
+            { id: "1003", name: "Chapter Test - Patterns", route: "patterns" }
         ],
         'Numbers (51 to 100)': [
             { id: "1101", name: "Counting 51–100", route: "numbers-51-to-100" },
             { id: "1102", name: "Writing numbers 51–100", route: "numbers-51-to-100" },
             { id: "1103", name: "Number names", route: "numbers-51-to-100" },
             { id: "1104", name: "Comparing numbers", route: "numbers-51-to-100" },
-            { id: "1105", name: "Skip counting (by 2s, 5s, 10s – basic)", route: "numbers-51-to-100" }
+            { id: "1105", name: "Skip counting (by 2s, 5s, 10s – basic)", route: "numbers-51-to-100" },
+            { id: "1106", name: "Chapter Test - Numbers 51-100", route: "numbers-51-to-100" }
         ]
     },
     '2': {
