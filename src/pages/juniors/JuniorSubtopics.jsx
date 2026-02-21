@@ -73,7 +73,7 @@ const JuniorSubtopics = () => {
         if (parseInt(gradeNum) === 4) {
             const gradeConfigs = TOPIC_CONFIGS['4'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                 if (skill && skill.route) {
                     if (decodedTopic === "The Cleanest Village") {
                         navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
@@ -93,7 +93,7 @@ const JuniorSubtopics = () => {
         if (gradeNumStr === '1') {
             const gradeConfigs = TOPIC_CONFIGS['1'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                 if (skill && skill.route) {
                     navigate(`/junior/grade/1/${skill.route}?skillId=${subtopic.id}`);
                     return;
@@ -110,7 +110,7 @@ const JuniorSubtopics = () => {
         if (gradeNumStr === '2') {
             const gradeConfigs = TOPIC_CONFIGS['2'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                 if (skill && skill.route) {
                     const topicSlug = decodedTopic.toLowerCase()
                         .replace(/\s+/g, '-')
@@ -149,7 +149,7 @@ const JuniorSubtopics = () => {
             } else if (String(grade).replace(/\D/g, '') === '1') {
                 const gradeConfigs = TOPIC_CONFIGS['1'];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                    const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                    const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                     if (skill && skill.route) {
                         navigate(`/junior/grade/1/${skill.route}?skillId=${subtopic.id}`);
                         setPendingSubtopic(null);
@@ -163,7 +163,7 @@ const JuniorSubtopics = () => {
             } else if (String(grade).replace(/\D/g, '') === '2') {
                 const gradeConfigs = TOPIC_CONFIGS['2'];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                    const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                    const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                     if (skill && skill.route) {
                         const topicSlug = decodedTopic.toLowerCase()
                             .replace(/\s+/g, '-')
@@ -179,7 +179,7 @@ const JuniorSubtopics = () => {
                 if (parseInt(gradeNum) === 4) {
                     const gradeConfigs = TOPIC_CONFIGS['4'];
                     if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                        const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                        const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                         if (skill && skill.route) {
                             if (decodedTopic === "The Cleanest Village") {
                                 navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
@@ -239,7 +239,7 @@ const JuniorSubtopics = () => {
                 const gradeConfigs = TOPIC_CONFIGS[gradeNumStr];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
                     gradeConfigs[decodedTopic].forEach((skill, index) => {
-                        if (!subtopicList.some(s => s.id === skill.id)) {
+                        if (!subtopicList.some(s => String(s.id) === String(skill.id))) {
                             subtopicList.push({
                                 id: skill.id,
                                 name: skill.name,

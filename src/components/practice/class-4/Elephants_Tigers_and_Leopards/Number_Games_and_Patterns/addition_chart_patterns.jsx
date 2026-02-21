@@ -308,7 +308,7 @@ const AdditionChartPatterns = () => {
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
                                             <div className="flex-1">
-                                                <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question"><LatexContent html={q.text} /></div>
+                                                <div className="text-lg font-normal text-[#31326F] mb-4 breakdown-question"><LatexContent html={q.text} /></div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
@@ -369,30 +369,37 @@ const AdditionChartPatterns = () => {
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
-                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
+                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper" style={{ height: 'calc(100vh - 180px)', overflow: 'hidden' }}>
-                <div className="flex flex-col md:flex-row h-full max-w-7xl mx-auto gap-8 p-6">
-                    <div className="flex-1 flex items-center justify-center overflow-auto">
-                        <Grid100 />
-                    </div>
-                    <div className="flex-1 flex flex-col justify-center bg-white rounded-[3rem] p-10 shadow-2xl border-b-8 border-blue-100 overflow-y-auto">
-                        <div className="flex justify-center mb-6">
-                            <div className="bg-blue-50 p-4 rounded-full shadow-sm border-2 border-blue-100"><GridIcon size={48} className="text-blue-600" /></div>
+            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
+                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
+
+                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
+                        <div className="w-full flex justify-center mb-6">
+                            <Grid100 />
                         </div>
-                        <h2 className="text-2xl md:text-3xl font-bold text-[#31326F] mb-10 leading-relaxed text-center">
+                    </div>
+
+                    <div className="flex-1 flex flex-col justify-center items-center">
+                        <div className="flex justify-center mb-6">
+                            <div className="bg-blue-100 p-4 rounded-full shadow-md"><GridIcon size={48} className="text-blue-600" /></div>
+                        </div>
+                        <h2 className="text-2xl md:text-3xl font-normal text-[#31326F] text-center mb-8 leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
-                        <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto w-full">
-                            {shuffledOptions.map((option, idx) => (
-                                <button key={idx} className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`} style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.5rem', padding: '1.5rem' }} onClick={() => handleAnswer(option)} disabled={isSubmitted}>
-                                    <LatexContent html={option} />
+
+                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
+                            {shuffledOptions.map((opt, i) => (
+                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
+                                    {opt}
                                 </button>
                             ))}
                         </div>
-                        {isSubmitted && isCorrect && (
-                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>{feedbackMessage}</motion.div>
+                        {isSubmitted && (
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-xl md:text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {isCorrect ? feedbackMessage : "Check the grid pattern!"}
+                            </motion.div>
                         )}
                     </div>
                 </div>
@@ -402,7 +409,7 @@ const AdditionChartPatterns = () => {
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
-                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors" onClick={() => navigate(-1)}>Exit Practice</button></div>
+                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors" onClick={() => navigate(-1)}>Exit Practice</button></div>
                     <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> View Explanation</button>}</div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">

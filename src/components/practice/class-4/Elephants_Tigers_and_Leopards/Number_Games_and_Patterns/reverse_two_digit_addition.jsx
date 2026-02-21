@@ -302,7 +302,7 @@ const MagicMirrorAddition = () => {
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
                                             <div className="flex-1">
-                                                <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question"><LatexContent html={q.text} /></div>
+                                                <div className="text-lg font-normal text-[#31326F] mb-4 breakdown-question"><LatexContent html={q.text} /></div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
@@ -345,60 +345,55 @@ const MagicMirrorAddition = () => {
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
                 </div>
-                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
+                <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <AnimatePresence mode="wait">
-                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
-                                <div className="question-card-modern" style={{ padding: '0 0 2rem 0' }}>
-                                    <div className="w-full bg-white/50 p-8 mb-8 rounded-b-[3rem] border-b-4 border-blue-100 flex flex-col items-center">
+            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
+                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
 
-                                        {/* Magic Mirror Visual */}
-                                        <div className="flex items-center gap-6 mb-8">
-                                            <div className="relative group">
-                                                <AnimatePresence mode="wait">
-                                                    <motion.div key={currentQuestion.num} initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} className="w-24 h-32 bg-white border-4 border-[#31326F] rounded-2xl flex items-center justify-center shadow-xl mb-1">
-                                                        <span className="text-4xl font-semibold text-[#31326F]">{currentQuestion.num || "?"}</span>
-                                                    </motion.div>
-                                                </AnimatePresence>
-                                                <div className="text-center text-[10px] font-semibold uppercase text-gray-400">Number</div>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <Sparkles size={32} className="text-yellow-400 animate-pulse mb-1" />
-                                                <Repeat size={32} className="text-[#4FB7B3]" />
-                                            </div>
-                                            <div className="relative">
-                                                <AnimatePresence mode="wait">
-                                                    <motion.div key={currentQuestion.rev} initial={{ rotateY: -90 }} animate={{ rotateY: 0 }} transition={{ delay: 0.2 }} className="w-24 h-32 bg-white border-4 border-[#4FB7B3] rounded-2xl flex items-center justify-center shadow-xl mb-1">
-                                                        <span className="text-4xl font-semibold text-[#4FB7B3]">{currentQuestion.rev || "?"}</span>
-                                                    </motion.div>
-                                                </AnimatePresence>
-                                                <div className="text-center text-[10px] font-semibold uppercase text-gray-400">Reverse</div>
-                                            </div>
-                                        </div>
+                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
+                        {/* Magic Mirror Visual */}
+                        <div className="flex items-center gap-6 mb-8">
+                            <div className="relative group">
+                                <AnimatePresence mode="wait">
+                                    <motion.div key={currentQuestion.num} initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} className="w-24 h-32 bg-white border-4 border-[#31326F] rounded-2xl flex items-center justify-center shadow-xl mb-1">
+                                        <span className="text-4xl font-normal text-[#31326F]">{currentQuestion.num || "?"}</span>
+                                    </motion.div>
+                                </AnimatePresence>
+                                <div className="text-center text-[10px] font-normal uppercase text-gray-400">Number</div>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <Sparkles size={32} className="text-yellow-400 animate-pulse mb-1" />
+                                <Repeat size={32} className="text-[#4FB7B3]" />
+                            </div>
+                            <div className="relative">
+                                <AnimatePresence mode="wait">
+                                    <motion.div key={currentQuestion.rev} initial={{ rotateY: -90 }} animate={{ rotateY: 0 }} transition={{ delay: 0.2 }} className="w-24 h-32 bg-white border-4 border-[#4FB7B3] rounded-2xl flex items-center justify-center shadow-xl mb-1">
+                                        <span className="text-4xl font-normal text-[#4FB7B3]">{currentQuestion.rev || "?"}</span>
+                                    </motion.div>
+                                </AnimatePresence>
+                                <div className="text-center text-[10px] font-normal uppercase text-gray-400">Reverse</div>
+                            </div>
+                        </div>
 
-                                        <h2 className="text-[#31326F] font-bold text-2xl md:text-3xl leading-snug text-center">
-                                            <LatexContent html={currentQuestion.text} />
-                                        </h2>
-                                    </div>
-                                    <div className="interaction-area-modern px-8">
-                                        <div className="options-grid-modern grid grid-cols-2 gap-4 max-w-2xl mx-auto">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button key={idx} className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`} style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.5rem', padding: '1.5rem' }} onClick={() => handleAnswer(option)} disabled={isSubmitted}>
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>{feedbackMessage}</motion.div>
-                                        )}
-                                    </div>
-                                </div>
+                        <h2 className="text-2xl md:text-3xl font-normal text-[#31326F] text-center mb-4 leading-relaxed tracking-wider">
+                            <LatexContent html={currentQuestion.text} />
+                        </h2>
+                    </div>
+
+                    <div className="flex-1 flex flex-col justify-center items-center">
+                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
+                            {shuffledOptions.map((opt, i) => (
+                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
+                                    <LatexContent html={opt} />
+                                </button>
+                            ))}
+                        </div>
+                        {isSubmitted && (
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-xl md:text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {isCorrect ? feedbackMessage : "Keep trying!"}
                             </motion.div>
-                        </AnimatePresence>
+                        )}
                     </div>
                 </div>
             </main>
@@ -407,7 +402,7 @@ const MagicMirrorAddition = () => {
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
-                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors" onClick={() => navigate(-1)}>Exit Practice</button></div>
+                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors" onClick={() => navigate(-1)}>Exit Practice</button></div>
                     <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> View Explanation</button>}</div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
