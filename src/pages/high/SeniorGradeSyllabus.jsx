@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
@@ -11,12 +13,40 @@ import './SeniorGradeSyllabus.css';
 const SeniorGradeSyllabus = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingSkill, setPendingSkill] = useState(null);
 
     // Grid + Modal Logic
     const [selectedTopic, setSelectedTopic] = useState(null);
     const [expandedSubtopic, setExpandedSubtopic] = useState(null);
+
+    const navigateToSkill = (skill) => {
+        if (skill.isLocal) {
+            navigate(skill.path);
+        } else {
+            navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
+        }
+    };
+
+    const handleSkillClick = (skill) => {
+        if (!isAuthenticated) {
+            setPendingSkill(skill);
+            setShowLoginModal(true);
+        } else {
+            navigateToSkill(skill);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingSkill) {
+            navigateToSkill(pendingSkill);
+            setPendingSkill(null);
+        }
+    };
 
     // Fetch Skills or Set Hardcoded for Grade 10
     useEffect(() => {
@@ -488,13 +518,7 @@ const SeniorGradeSyllabus = () => {
                                                     <div
                                                         key={skill.skill_id}
                                                         className="skill-card-modal"
-                                                        onClick={() => {
-                                                            if (skill.isLocal) {
-                                                                navigate(skill.path);
-                                                            } else {
-                                                                navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
-                                                            }
-                                                        }}
+                                                        onClick={() => handleSkillClick(skill)}
                                                     >
                                                         <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                                         <div className="skill-card-footer">
@@ -514,6 +538,12 @@ const SeniorGradeSyllabus = () => {
                     </div>
                 </div>
             )}
+
+            <LoginPromptModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };

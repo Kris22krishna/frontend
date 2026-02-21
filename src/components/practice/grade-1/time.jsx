@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft } from 'lucide-react';
+import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
+import { LatexText } from '../../LatexText';
+import ExplanationModal from '../../ExplanationModal';
+import StickerExit from '../../StickerExit';
+import mascotImg from '../../../assets/mascot.png';
+import avatarImg from '../../../assets/avatar.png';
 import './Grade1Practice.css';
 
 
@@ -44,34 +49,141 @@ const DynamicVisual = ({ type, data }) => {
         const hourAngle = (hour % 12) * 30;
         return (
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="g1-clock-visual">
-                <svg width="100%" height="auto" style={{ maxWidth: '180px', filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.1))' }} viewBox="0 0 120 120">
+                <svg width="100%" height="auto" style={{ maxWidth: '220px', filter: 'drop-shadow(0 12px 20px rgba(0,0,0,0.15))' }} viewBox="0 0 120 120">
                     <defs>
-                        <linearGradient id="clockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
-                            <stop offset="100%" style={{ stopColor: '#f0f0f0', stopOpacity: 1 }} />
-                        </linearGradient>
+                        <radialGradient id="clockFace" cx="50%" cy="50%" r="50%">
+                            <stop offset="85%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+                            <stop offset="100%" style={{ stopColor: '#f8f9fa', stopOpacity: 1 }} />
+                        </radialGradient>
                     </defs>
-                    <circle cx="60" cy="60" r="55" fill="url(#clockGrad)" stroke="#333" strokeWidth="2.5" />
+                    <circle cx="60" cy="60" r="58" fill="#333" />
+                    <circle cx="60" cy="60" r="55" fill="url(#clockFace)" />
+
+                    {/* Tick Marks */}
+                    {Array.from({ length: 60 }).map((_, i) => {
+                        const angle = i * 6 * Math.PI / 180;
+                        const isMajor = i % 5 === 0;
+                        return (
+                            <line
+                                key={i}
+                                x1={60 + (isMajor ? 48 : 50) * Math.sin(angle)}
+                                y1={60 - (isMajor ? 48 : 50) * Math.cos(angle)}
+                                x2={60 + 53 * Math.sin(angle)}
+                                y2={60 - 53 * Math.cos(angle)}
+                                stroke={isMajor ? "#333" : "#999"}
+                                strokeWidth={isMajor ? 1.5 : 0.8}
+                            />
+                        );
+                    })}
+
+                    {/* Numbers */}
                     {Array.from({ length: 12 }).map((_, i) => {
                         const angle = (i + 1) * 30 * Math.PI / 180;
                         return (
                             <text
-                                key={i} x={60 + 42 * Math.sin(angle)} y={60 - 42 * Math.cos(angle)}
-                                textAnchor="middle" fontSize="9" fontWeight="800" fill="#333" dominantBaseline="middle"
+                                key={i} x={60 + 38 * Math.sin(angle)} y={60 - 38 * Math.cos(angle)}
+                                textAnchor="middle" fontSize="10" fontWeight="900" fill="#2D3436" dominantBaseline="middle"
+                                style={{ fontFamily: 'Fredoka, sans-serif' }}
                             >
                                 {i + 1}
                             </text>
                         );
                     })}
+
                     {/* Hour Hand */}
-                    <motion.line
-                        x1="60" y1="60" x2="60" y2="35" animate={{ rotate: hourAngle }} style={{ transformOrigin: '60px 60px' }}
-                        stroke="#333" strokeWidth="5" strokeLinecap="round"
-                    />
-                    {/* Minute Hand (Always at 12 for Grade 1 o'clock) */}
-                    <line x1="60" y1="60" x2="60" y2="25" stroke="#FF6B6B" strokeWidth="3" strokeLinecap="round" />
-                    <circle cx="60" cy="60" r="4" fill="#333" />
+                    <g transform={`rotate(${hourAngle}, 60, 60)`}>
+                        <line x1="60" y1="60" x2="60" y2="35" stroke="#333" strokeWidth="6" strokeLinecap="round" />
+                    </g>
+
+                    {/* Minute Hand (Always at 12 for Grade 1) */}
+                    <line x1="60" y1="60" x2="60" y2="22" stroke="#FF6B6B" strokeWidth="4" strokeLinecap="round" />
+
+                    <circle cx="60" cy="60" r="5" fill="#333" />
+                    <circle cx="60" cy="60" r="2" fill="#fff" />
                 </svg>
+            </motion.div>
+        );
+    }
+    if (type === 'days-week') {
+        const { day, isAfter, label } = data;
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        return (
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="g1-calendar-visual-full">
+                <div style={{
+                    background: 'white',
+                    padding: '25px',
+                    borderRadius: '35px',
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+                    border: '4px solid #F0F4F8',
+                    maxWidth: '650px'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <h3 style={{ margin: 0, color: '#31326F', fontWeight: 900, fontSize: '1.2rem', fontFamily: 'Fredoka' }}>
+                            {label === 'ORDER' ? 'WEEKLY ORDER 🔢' : 'WEEKLY CALENDAR 📅'}
+                        </h3>
+                        <div style={{ background: '#F0F4F8', padding: '5px 15px', borderRadius: '15px', fontSize: '0.8rem', color: '#64748B', fontWeight: 800 }}>
+                            7 DAYS
+                        </div>
+                    </div>
+
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(7, 1fr)',
+                        gap: '10px',
+                        marginBottom: '15px'
+                    }}>
+                        {days.map((d, i) => (
+                            <div key={d} style={{ textAlign: 'center' }}>
+                                <div style={{
+                                    fontSize: '0.7rem',
+                                    fontWeight: 900,
+                                    color: '#94A3B8',
+                                    marginBottom: '5px'
+                                }}>
+                                    {i + 1}{i === 0 ? 'st' : i === 1 ? 'nd' : i === 2 ? 'rd' : 'th'}
+                                </div>
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    style={{
+                                        background: d === day ? (label === 'ORDER' ? '#4C51BF' : '#FF6B6B') : '#F8FAFC',
+                                        color: d === day ? 'white' : '#475569',
+                                        padding: '12px 5px',
+                                        borderRadius: '12px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 800,
+                                        border: d === day ? 'none' : '2px solid #E2E8F0',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                        minHeight: '60px',
+                                        justifyContent: 'center',
+                                        boxShadow: d === day ? '0 8px 15px rgba(0,0,0,0.1)' : 'none'
+                                    }}
+                                >
+                                    <span style={{ fontSize: '1rem' }}>
+                                        {d === 'Sunday' ? '🏠' : d === 'Saturday' ? '🎉' : '📅'}
+                                    </span>
+                                    {d.substring(0, 3)}
+                                </motion.div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {label === 'ORDER' ? (
+                        <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '20px', textAlign: 'center', border: '2px dashed #C3DAFE' }}>
+                            <span style={{ color: '#4C51BF', fontWeight: 800, fontSize: '0.95rem' }}>
+                                Can you count to the correct day? 🧐
+                            </span>
+                        </div>
+                    ) : (
+                        <div style={{ background: '#FFF5F5', padding: '15px', borderRadius: '20px', textAlign: 'center', border: '2px dashed #FED7D7' }}>
+                            <span style={{ color: '#E53E3E', fontWeight: 800, fontSize: '0.95rem' }}>
+                                {isAfter ? `Looking for the day AFTER ${day} ➡️` : `Looking for the day BEFORE ${day} ⬅️`}
+                            </span>
+                        </div>
+                    )}
+                </div>
             </motion.div>
         );
     }
@@ -93,7 +205,8 @@ const Time = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
-    const totalQuestions = 5;
+    const isTest = skillId === '605';
+    const totalQuestions = isTest ? 15 : 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -101,10 +214,11 @@ const Time = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [answers, setAnswers] = useState([]);
+    const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [motivation, setMotivation] = useState(null);
+    const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -123,10 +237,18 @@ const Time = () => {
 
         for (let i = 0; i < totalQuestions; i++) {
             let type = '';
-            if (selectedSkill === '601') type = 'clock';
-            else if (selectedSkill === '602') type = 'days-week';
-            else if (selectedSkill === '603') type = 'day-night';
-            else type = types[i % types.length];
+            if (isTest) {
+                if (i < 3) type = 'day-night';
+                else if (i < 7) type = 'days-week';
+                else if (i < 11) type = 'before-after';
+                else type = 'clock';
+            } else {
+                if (selectedSkill === '601') type = 'day-night';
+                else if (selectedSkill === '602') type = 'days-week';
+                else if (selectedSkill === '603') type = 'before-after';
+                else if (selectedSkill === '604') type = 'clock';
+                else type = types[i % types.length];
+            }
 
             let question = {};
 
@@ -148,13 +270,40 @@ const Time = () => {
             } else if (type === 'days-week') {
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 const dayIdx = Math.floor(Math.random() * days.length);
+                const orderText = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
+
+                // Mix of order and simple identifying
+                const isOrderQ = Math.random() > 0.5;
+                if (isOrderQ) {
+                    const idx = Math.floor(Math.random() * 7);
+                    question = {
+                        text: `If Sunday is the first day, which day is the ${orderText[idx]} day of the week? 🗓️`,
+                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7]].sort(() => 0.5 - Math.random()),
+                        correct: days[idx],
+                        type: 'days-week',
+                        visualData: { day: days[idx], isAfter: true, label: 'ORDER' } // Custom label for visual
+                    };
+                } else {
+                    const idx = Math.floor(Math.random() * 7);
+                    question = {
+                        text: `Look at this day! Can you find its name from the options? 🎯`,
+                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7]].sort(() => 0.5 - Math.random()),
+                        correct: days[idx],
+                        type: 'days-week',
+                        visualData: { day: days[idx], isAfter: true, label: 'NAME' }
+                    };
+                }
+            } else if (type === 'before-after') {
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const dayIdx = Math.floor(Math.random() * days.length);
                 const isAfter = Math.random() > 0.5;
                 const targetIdx = isAfter ? (dayIdx + 1) % 7 : (dayIdx - 1 + 7) % 7;
                 question = {
                     text: `Checking the calendar! Which day comes ${isAfter ? 'AFTER' : 'BEFORE'} ${days[dayIdx]}? 📅`,
                     options: [days[targetIdx], days[(targetIdx + 2) % 7], days[(targetIdx + 4) % 7]].sort(() => 0.5 - Math.random()),
                     correct: days[targetIdx],
-                    type: 'days-week'
+                    type: 'days-week', // Reuse visual
+                    visualData: { day: days[dayIdx], isAfter }
                 };
             } else {
                 const hour = Math.floor(Math.random() * 12) + 1;
@@ -184,6 +333,25 @@ const Time = () => {
     }, [user, skillId]);
 
     useEffect(() => {
+        setShowExplanationModal(false);
+    }, [qIndex]);
+
+    useEffect(() => {
+        if (answers[qIndex]) {
+            setSelectedOption(answers[qIndex].selectedOption);
+            setIsAnswered(true);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+        }
+    }, [qIndex, answers]);
+
+    const handleSkip = () => {
+        if (isAnswered) return;
+        handleNext();
+    };
+
+    useEffect(() => {
         let interval;
         if (!showResults && sessionQuestions.length > 0) {
             interval = setInterval(() => setTimer(v => v + 1), 1000);
@@ -198,25 +366,26 @@ const Time = () => {
         const isCorrect = option === sessionQuestions[qIndex].correct;
         if (isCorrect) {
             setScore(s => s + 1);
-            setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
-        } else {
-            setMotivation(null);
+            if (!isTest) {
+                setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
+            }
         }
 
-        setAnswers([...answers, {
-            question: sessionQuestions[qIndex].text,
-            selected: option,
-            correct: sessionQuestions[qIndex].correct,
-            isCorrect
-        }]);
+        setAnswers({
+            ...answers,
+            [qIndex]: {
+                questionText: sessionQuestions[qIndex].text,
+                selectedOption: option,
+                correctAnswer: sessionQuestions[qIndex].correct,
+                isCorrect,
+                explanation: sessionQuestions[qIndex].explanation || "Time concepts help us understand our day!"
+            }
+        });
     };
 
     const handleNext = async () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
-            setSelectedOption(null);
-            setIsAnswered(false);
-            setMotivation(null);
         } else {
             setShowResults(true);
             try {
@@ -228,7 +397,7 @@ const Time = () => {
                         score: score,
                         total_questions: totalQuestions,
                         time_spent: timer,
-                        answers: answers
+                        answers: Object.values(answers).filter(a => a !== undefined)
                     });
                 }
             } catch (e) { console.error(e); }
@@ -244,30 +413,155 @@ const Time = () => {
     if (sessionQuestions.length === 0) return <div className="grade1-practice-page"><div className="g1-loading-blob" /></div>;
 
     if (showResults) {
+        const percentage = Math.round((score / totalQuestions) * 100);
         return (
-            <div className="grade1-practice-page">
+            <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
-                <div className="g1-practice-container">
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="g1-question-card g1-results-card">
-                        <div className="g1-trophy-container">🏆</div>
-                        <h2 className="g1-question-text">Quest Complete!</h2>
-                        <div className="results-stats">
-                            <div className="g1-stat-badge">
-                                <Star color="#FFD700" fill="#FFD700" />
-                                <span className="g1-stat-value">{score}/{totalQuestions}</span>
+                <header className="results-header">
+                    <div className="sun-timer-results">
+                        <div className="sun-timer">
+                            <div className="sun-rays"></div>
+                            <span className="timer-text-sun">{formatTime(timer)}</span>
+                        </div>
+                    </div>
+                    <h1 className="results-title">Adventure Report</h1>
+                    <div className="exit-container">
+                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                    </div>
+                </header>
+
+                <main className="results-content">
+                    <div className="results-hero-section">
+                        <img src={avatarImg} alt="Mascot" style={{ width: '120px', height: '120px', margin: '0 auto 20px' }} />
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#31326F', fontFamily: 'Fredoka, cursive' }}>Quest Complete! 🎉</h2>
+
+                        <div className="stars-container">
+                            {[1, 2, 3].map(i => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className="star-wrapper"
+                                >
+                                    <Star
+                                        size={60}
+                                        fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
+                                        color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="results-stats-grid">
+                            <div className="stat-card">
+                                <span className="stat-label">Correct</span>
+                                <span className="stat-value-large">{score}/{totalQuestions}</span>
                             </div>
-                            <div className="g1-stat-badge">
-                                <Timer color="#4ECDC4" />
-                                <span className="g1-stat-value">{formatTime(timer)}</span>
+                            <div className="stat-card">
+                                <span className="stat-label">Time</span>
+                                <span className="stat-value-large">{formatTime(timer)}</span>
+                            </div>
+                            <div className="stat-card">
+                                <span className="stat-label">Accuracy</span>
+                                <span className="stat-value-large">{percentage}%</span>
+                            </div>
+                            <div className="stat-card">
+                                <span className="stat-label">Score</span>
+                                <span className="stat-value-large">{score * 10}</span>
                             </div>
                         </div>
-                        <div className="g1-next-action">
-                            <button className="g1-primary-btn" onClick={() => navigate('/junior/grade/1')}>
-                                Back to Map <ArrowRight />
-                            </button>
+                    </div>
+
+                    {isTest ? (
+                        <div className="detailed-breakdown">
+                            <h3 className="breakdown-title">Quest Log 📜</h3>
+                            <div className="quest-log-list">
+                                {sessionQuestions.map((q, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        className="quest-log-item"
+                                    >
+                                        <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
+                                            {idx + 1}
+                                        </div>
+                                        <div className="log-content">
+                                            <div className="log-question">
+                                                <LatexText text={ans.questionText} />
+                                            </div>
+                                            <div className="log-answers">
+                                                <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
+                                                    <span className="log-label">Your Answer</span>
+                                                    <span className="log-value">{ans.selectedOption}</span>
+                                                </div>
+                                                {!ans.isCorrect && (
+                                                    <div className="log-answer-box correct-box">
+                                                        <span className="log-label">Correct Answer</span>
+                                                        <span className="log-value">{ans.correctAnswer}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="log-explanation">
+                                                <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
+                                                <LatexText text={ans.explanation} />
+                                            </div>
+                                        </div>
+                                        <div className="log-icon">
+                                            {ans.isCorrect ? (
+                                                <Check size={32} color="#4FB7B3" strokeWidth={3} />
+                                            ) : (
+                                                <X size={32} color="#FF6B6B" strokeWidth={3} />
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                            </div>
                         </div>
-                    </motion.div>
-                </div>
+                    ) : (
+                        <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                                {Object.values(answers).map((ans, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        style={{
+                                            width: '50px', height: '50px', borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: '1.5rem',
+                                            background: ans.isCorrect ? '#C6F6D5' : '#FED7D7',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        {ans.isCorrect ? '✅' : '❌'}
+                                    </motion.div>
+                                ))}
+                            </div>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                                {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
+                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                 '🌱 Nice try! Practice makes perfect!'}
+                            </p>
+                        </div>
+                    )}
+
+                    <div className="results-actions">
+                        <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Start New Quest
+                        </button>
+                        <button className="action-btn-large back-topics-btn" onClick={() => navigate('/junior/grade/1')}>
+                            <FileText size={24} /> Back to Topics
+                        </button>
+                    </div>
+                </main>
             </div>
         );
     }
@@ -284,7 +578,7 @@ const Time = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)}>
+                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
                         <ChevronLeft size={20} /> Back
                     </button>
 
@@ -296,6 +590,34 @@ const Time = () => {
                     <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
                         Question {qIndex + 1} of {totalQuestions}
                     </div>
+
+                    {isTest && (
+                        <button
+                            className="g1-skip-btn"
+                            onClick={handleSkip}
+                            disabled={isAnswered}
+                            style={{
+                                marginLeft: '10px',
+                                background: '#EDF2F7',
+                                color: '#4A5568',
+                                padding: '8px 15px',
+                                borderRadius: '15px',
+                                fontWeight: 700,
+                                fontSize: '0.9rem',
+                                border: 'none',
+                                cursor: isAnswered ? 'not-allowed' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            Skip Quest ⏭️
+                        </button>
+                    )}
+
+                    <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
+                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                    </div>
                 </div>
 
                 <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
@@ -304,11 +626,11 @@ const Time = () => {
 
                 <div className="g1-topic-skill-header">
                     <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name">{skillName}</h1>
+                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
                     <div className="g1-content-split">
                         <div className="g1-visual-area">
                             <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
@@ -320,43 +642,44 @@ const Time = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
                                         disabled={isAnswered}
                                     >
-                                        {opt}
+                                        <LatexText text={opt.toString()} />
                                     </button>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    <AnimatePresence>
-                        {isAnswered && (
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
-                                className="g1-next-action"
-                                style={{ flexDirection: 'column', gap: '20px' }}
-                            >
-                                {motivation && (
-                                    <motion.div
-                                        initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                                        className="g1-motivation-container"
-                                    >
-                                        <span className="g1-motivation-text">{motivation.text}</span>
-                                        <span className="g1-motivation-sub">{motivation.sub}</span>
-                                    </motion.div>
-                                )}
-                                <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {isAnswered && (
+                        <div className="flex flex-col items-center gap-4 mt-8">
+                            {motivation && (
+                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
+                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
+                                    <span className="g1-motivation-text">{motivation.text}</span>
+                                    <span className="g1-motivation-sub">{motivation.sub}</span>
+                                </motion.div>
+                            )}
+                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
+                                {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
             </div>
+
+            <ExplanationModal
+                isOpen={showExplanationModal}
+                isCorrect={answers[qIndex]?.isCorrect}
+                correctAnswer={currentQ.correct}
+                explanation={currentQ.explanation}
+                onClose={() => setShowExplanationModal(false)}
+                onNext={handleNext}
+            />
         </div>
     );
 };

@@ -2,13 +2,15 @@
 
 .junior-practice-page {
     position: relative;
-    min-height: 100vh;
+    height: 100vh;
+    /* Fixed height */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     background-color: #E0F7FA;
     font-family: 'Fredoka', 'Nunito', sans-serif;
-    overflow-x: hidden;
+    overflow: hidden;
+    /* Prevent body scrolling */
     display: flex;
     flex-direction: column;
     z-index: 50;
@@ -22,8 +24,8 @@
 
 /* Header */
 .junior-practice-header {
-    height: 64px;
-    /* Reduced height */
+    height: 60px;
+    /* Thinner header */
     position: relative;
     z-index: 20;
     flex-shrink: 0;
@@ -106,13 +108,15 @@
 .practice-content-wrapper {
     flex: 1;
     display: flex;
-    align-items: flex-start;
-    /* Prevents top-clipping on long content */
+    align-items: center;
+    /* Center horizontally/vertically */
     justify-content: center;
     position: relative;
-    padding: 2rem 1rem 120px 1rem;
-    /* More top padding, extra bottom space */
-    min-height: calc(100vh - 80px);
+    padding: 0.5rem;
+    /* Reduced padding */
+    overflow: hidden;
+    /* Contain children */
+    /* Height is now managed by flexbox */
 }
 
 
@@ -125,11 +129,10 @@
     gap: 1.5rem;
     width: 100%;
     max-width: 1400px;
-    height: auto;
-    /* Ensure it fits in viewport */
-    min-height: 100%;
+    height: 100%;
     padding: 0 1rem;
-    align-items: center;
+    align-items: stretch;
+    /* Stretch columns to fill height */
 }
 
 /* Left Column */
@@ -179,10 +182,10 @@
 .mascot-overlap {
     position: absolute;
     left: 0px;
-    bottom: 220px;
+    bottom: 100px;
+    /* Lower position */
     z-index: 25;
-    width: 150px;
-    /* Reduced size */
+    width: 120px;
     filter: drop-shadow(5px 10px 15px rgba(0, 0, 0, 0.15));
     pointer-events: none;
 }
@@ -196,25 +199,27 @@
 .question-card-modern {
     background: white;
     border-radius: 2.5rem;
-    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
-    /* Balanced padding */
+    padding: 3rem;
+    /* Increased padding */
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     width: 100%;
-    height: 100%;
+    min-height: 500px;
+    /* Substantial minimum height */
+    max-height: 100%;
+    /* Fit within wrapper */
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* Center content vertically */
+    align-items: center;
+    /* Center content horizontally */
     position: relative;
     z-index: 10;
     border: 4px solid #FFFFFF;
-    /* overflow-y: auto !important; REMOVED per user request */
-    /* overflow-x: hidden; */
-    scrollbar-width: thin;
-    /* Firefox */
-    scrollbar-color: #B2DFDB transparent;
-    flex: 1;
-    /* Take available space */
-    min-height: 0;
-    /* Allow shrinking for scroll */
+    overflow: hidden;
+    /* Prevent the card itself from scrolling */
+    flex: 0 1 auto;
+    /* Only take space needed, up to 100% */
 }
 
 /* Custom Scrollbar for Webkit */
@@ -233,28 +238,50 @@
 
 /* Question Styling */
 .question-header-modern {
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
+    /* Reduced margin */
     text-align: center;
     width: 100%;
-    flex-shrink: 0;
+    flex: 0 1 auto;
+    /* Don't force stretch if text is short */
+    overflow-y: auto;
+    /* Only the question text area scrolls */
+    padding-right: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: #B2DFDB transparent;
+}
+
+/* Custom Scrollbar for Question Text */
+.question-header-modern::-webkit-scrollbar {
+    width: 6px;
+}
+
+.question-header-modern::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.question-header-modern::-webkit-scrollbar-thumb {
+    background-color: #B2DFDB;
+    border-radius: 10px;
 }
 
 /* ... existing styles ... */
 
 .question-text-modern {
-    /* Fluid scaling: Min 1.2rem, Preferred 2.5vw, Max 2rem */
-    font-size: clamp(1.2rem, 2.5vw, 2.2rem);
-    font-weight: 500;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: clamp(1.2rem, 2.2vw, 2rem);
+    font-weight: 400 !important;
+    /* Non-bold */
     color: #2D3748;
-    line-height: 1.5;
-    /* Improved line height */
+    line-height: 1.6;
     margin: 0;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 0.8rem;
     overflow: visible;
+    text-align: center;
 }
 
 /* ... */
@@ -265,33 +292,29 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: none;
-    /* Allow it to grow */
-    min-height: min-content;
-    /* Crucial for nested flex scrolling */
-    justify-content: flex-start;
-    /* Start from top */
-    overflow-y: visible;
-    /* DISABLE INTERNAL SCROLL */
-    padding-top: 0.5rem;
-    padding-bottom: 3rem;
-    /* Extra padding at bottom */
+    flex-shrink: 0;
+    /* Keep options fixed at the bottom */
+    justify-content: center;
+    padding-top: 2rem;
+    /* More space between question and options */
+    padding-bottom: 0.5rem;
+    /* Reduced padding */
     height: auto;
+    border-top: 2px dashed #F1F5F9;
+    /* Subtle separator */
 }
 
 
 /* Options Grid - Responsive */
 .options-grid-modern {
     display: grid;
-    /* Auto-fit: create as many columns as fit */
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    /* Increased gap */
+    gap: 2.5rem;
+    /* Large gap for spreading out */
     width: 100%;
-    max-width: 600px;
+    max-width: 900px;
+    /* Wider grid */
     margin: 0 auto;
-    /* flex: 1; */
-    /* Let it take necessary space */
     align-content: center;
 }
 
@@ -300,19 +323,17 @@
     border: 3px solid #E2E8F0;
     border-radius: 1.2rem;
     padding: 1rem 1.5rem;
-    /* Increased padding */
-    /* Fluid font size for options */
-    font-size: clamp(1rem, 2vw, 1.5rem);
-    font-weight: 500;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-weight: 400 !important;
+    /* Non-bold */
     color: #4A5568;
     box-shadow: 0 4px 0 #CBD5E0;
     cursor: pointer;
     transition: all 0.1s;
-    font-family: 'Fredoka', sans-serif;
-    min-height: 100px;
-    /* Fixed min-height for symmetry */
+    min-height: 70px;
+    /* Taller buttons */
     height: 100%;
-    /* Stretch to grid cell height */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -479,16 +500,14 @@
 /* Bottom Action Bar */
 
 .junior-bottom-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
     width: 100%;
-    height: 80px;
+    height: 60px;
+    /* Thinner footer */
     background: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 2rem;
+    padding: 0 1.5rem;
     box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.1);
     z-index: 30;
     border-top-left-radius: 2rem;
@@ -1903,5 +1922,62 @@
     .options-grid-modern {
         grid-template-columns: repeat(2, 1fr) !important;
         /* Back to 2 cols if space allows */
+    }
+}
+
+/* Picture Based Questions - Split Layout */
+.question-card-modern.picture-layout {
+    max-width: 1200px;
+    width: 95%;
+}
+
+.picture-question-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    align-items: center;
+    width: 100%;
+}
+
+.picture-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 2rem;
+    border: 3px solid #E2E8F0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.content-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.content-section .question-header-modern {
+    margin-bottom: 2rem;
+}
+
+.content-section .question-text-modern {
+    text-align: left !important;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem) !important;
+}
+
+.content-section .options-grid-modern {
+    max-width: 100% !important;
+    gap: 1.5rem !important;
+}
+
+@media (max-width: 1024px) {
+    .picture-question-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .picture-section {
+        padding: 1rem;
     }
 }

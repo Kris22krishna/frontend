@@ -103,6 +103,32 @@ import DecimalOperations from './components/practice/class-5/TenthsandHundrendth
 import ConversionBetweenForms from './components/practice/class-5/TenthsandHundrendths/Decimals/conversion-between-forms';
 import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
 
+// Grade 5 Area and its Boundary Components
+import FindingArea from './components/practice/class-5/AreaanditsBoundary/Area/FindingArea';
+import CompareShapesSameArea from './components/practice/class-5/AreaanditsBoundary/Area/CompareShapesSameArea';
+import AreaRealLife from './components/practice/class-5/AreaanditsBoundary/Area/AreaRealLife';
+import AppropriateAreaUnits from './components/practice/class-5/AreaanditsBoundary/Area/AppropriateAreaUnits';
+import FindingPerimeter from './components/practice/class-5/AreaanditsBoundary/Perimeter/FindingPerimeter';
+import PerimeterAsBoundary from './components/practice/class-5/AreaanditsBoundary/Perimeter/PerimeterAsBoundary';
+import SamePerimeterDifferentShapes from './components/practice/class-5/AreaanditsBoundary/Perimeter/SamePerimeterDifferentShapes';
+import PerimeterRealLife from './components/practice/class-5/AreaanditsBoundary/Perimeter/PerimeterRealLife';
+import AreaPerimeterRelationship from './components/practice/class-5/AreaanditsBoundary/AreaPerimeterRelationship/AreaPerimeterRelationship';
+import SkillApplicationProblemsArea from './components/practice/class-5/AreaanditsBoundary/Skillapplicationproblems/SkillApplicationProblemsArea';
+
+// Grade 5 - How Big? How Heavy?
+import VolumeByDisplacement from './components/practice/class-5/Howbighowheavy/volume measurement/volume-by-displacement';
+import UnitsOfVolume from './components/practice/class-5/Howbighowheavy/volume measurement/units-of-volume';
+import VolumeEstimation from './components/practice/class-5/Howbighowheavy/volume measurement/volume-estimation';
+import VolumeUsingUnitCubes from './components/practice/class-5/Howbighowheavy/volume measurement/volume-using-unit-cubes';
+import UnitsOfMass from './components/practice/class-5/Howbighowheavy/mass measurement/units-of-mass';
+import MassConversion from './components/practice/class-5/Howbighowheavy/mass measurement/mass-conversion';
+import MassCalculation from './components/practice/class-5/Howbighowheavy/mass measurement/mass-calculation';
+import WeightEstimationComparison from './components/practice/class-5/Howbighowheavy/mass measurement/weight-estimation-comparison';
+import ThreeDShapeConstruction from './components/practice/class-5/Howbighowheavy/measurement based reasoning/3d-shape-construction';
+import PackagingAndLayering from './components/practice/class-5/Howbighowheavy/measurement based reasoning/packaging-and-layering';
+import MeasurementInRealLife from './components/practice/class-5/Howbighowheavy/measurement based reasoning/measurement-in-real-life';
+import SkillApplicationProblems from './components/practice/class-5/Howbighowheavy/skill application problem/skill-application-problem';
+
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -170,7 +196,7 @@ import RuleApplications from './components/practice/class-5/CanyouseethePattern/
 import MultiStepOperations from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/multi-step-operations';
 import MissingNumberReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/missing-number-reasoning';
 import MentalCalculationReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/mental-calculation-strategies';
-import SkillApplicationProblems from './components/practice/class-5/CanyouseethePattern/SkillApplicationProblems/skill-application-problems-patterns';
+import SkillApplicationProblemsPatterns from './components/practice/class-5/CanyouseethePattern/SkillApplicationProblems/skill-application-problems-patterns';
 import ChapterTestPatterns from './components/practice/class-5/CanyouseethePattern/ChapterTest/chapter-test';
 
 // Middle Pages (Grades 5-7 professional design)
@@ -296,6 +322,7 @@ import FindMissingSubtrahend from './components/practice/class-4/The_Cleanest_Vi
 import FindHowManyMoreOrLess from './components/practice/class-4/The_Cleanest_Village/Comparison_and_Difference/find_how_many_more_or_less';
 import ChapterSceneMixedOperations from './components/practice/class-4/The_Cleanest_Village/Word_Problems/chapter_scene_mixed_operations';
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
+import ChapterTest from './components/practice/class-4/The_Cleanest_Village/Chapter_Test/chapter_test';
 
 // Grade 4 - Equal Groups
 import JumpBasedMultiples from './components/practice/class-4/Equal_Groups/Multiples_and_Skip_Counting/jump_based_multiples';
@@ -519,6 +546,18 @@ function App() {
         <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ConversionBetweenForms />} />
         <Route path="/middle/grade/5/tenths-hundredths/word-problems" element={<DecimalWordProblems />} />
 
+        {/* Grade 5 - Area and its Boundary */}
+        <Route path="/middle/grade/5/area-boundary/area/finding-area" element={<FindingArea />} />
+        <Route path="/middle/grade/5/area-boundary/area/compare-shapes" element={<CompareShapesSameArea />} />
+        <Route path="/middle/grade/5/area-boundary/area/real-life" element={<AreaRealLife />} />
+        <Route path="/middle/grade/5/area-boundary/area/units" element={<AppropriateAreaUnits />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/finding-perimeter" element={<FindingPerimeter />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/boundary-length" element={<PerimeterAsBoundary />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/different-shapes" element={<SamePerimeterDifferentShapes />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/real-life" element={<PerimeterRealLife />} />
+        <Route path="/middle/grade/5/area-boundary/relationship" element={<AreaPerimeterRelationship />} />
+        <Route path="/middle/grade/5/area-boundary/skill-application" element={<SkillApplicationProblemsArea />} />
+
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
           <ProtectedRoute redirectTo="/login">
@@ -583,6 +622,17 @@ function App() {
         <Route path="/junior/grade/:grade/the-cleanest-village/let-us-play" element={
           <ProtectedRoute redirectTo="/login">
             <LetUsPlay />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/the-cleanest-village/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ChapterTest />
+          </ProtectedRoute>
+        } />
+        {/* Fallback for spaces in URL */}
+        <Route path="/junior/grade/:grade/the cleanest village/chapter test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ChapterTest />
           </ProtectedRoute>
         } />
 
@@ -675,45 +725,45 @@ function App() {
         <Route path="/junior/grade/:grade/equal-groups/create-your-own-equal-groups" element={
           <ProtectedRoute redirectTo="/login">
             <CreateYourOwnEqualGroups />
-        </ProtectedRoute>
+          </ProtectedRoute>
         } />
         {/* Weigh It, Pour It Routes */}
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/gram-to-kilogram-fractions" element={
           <ProtectedRoute redirectTo="/login">
             <GramToKilogramFractions />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-kilogram-using-packets" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/make-one-kilogram-using-packets" element={
           <ProtectedRoute redirectTo="/login">
             <MakeOneKilogramUsingPackets />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/millilitre-to-litre-fractions" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/millilitre-to-litre-fractions" element={
           <ProtectedRoute redirectTo="/login">
             <MillilitreToLitreFractions />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/make-one-litre-using-bottles" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/make-one-litre-using-bottles" element={
           <ProtectedRoute redirectTo="/login">
             <MakeOneLitreUsingBottles />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/count-how-many-units-fit" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/count-how-many-units-fit" element={
           <ProtectedRoute redirectTo="/login">
             <CountHowManyUnitsFit />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/repeated-addition-to-one-whole" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/repeated-addition-to-one-whole" element={
           <ProtectedRoute redirectTo="/login">
             <RepeatedAdditionToOneWhole />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/compare-weights-and-capacities" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/compare-weights-and-capacities" element={
           <ProtectedRoute redirectTo="/login">
             <CompareWeightsAndCapacities />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/weigh-it-pour-it/weight-and-capacity-word-problems" element={
+        <Route path="/junior/grade/:grade/weigh-it,-pour-it/weight-and-capacity-word-problems" element={
           <ProtectedRoute redirectTo="/login">
             <WeightAndCapacityWordProblems />
           </ProtectedRoute>
@@ -831,7 +881,7 @@ function App() {
         <Route path="/junior/grade/1/numbers-from-one-to-nine" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers1to9 /></ProtectedRoute>} />
         <Route path="/junior/grade/1/addition" element={<ProtectedRoute redirectTo="/login"><Grade1Addition /></ProtectedRoute>} />
         <Route path="/junior/grade/1/subtraction" element={<ProtectedRoute redirectTo="/login"><Grade1Subtraction /></ProtectedRoute>} />
-        <Route path="/junior/grade/1/numbers-from-ten-to-twenty" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers10to20 /></ProtectedRoute>} />
+        <Route path="/junior/grade/1/numbers-10-20" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers10to20 /></ProtectedRoute>} />
         <Route path="/junior/grade/1/time" element={<ProtectedRoute redirectTo="/login"><Grade1Time /></ProtectedRoute>} />
         <Route path="/junior/grade/1/measurement" element={<ProtectedRoute redirectTo="/login"><Grade1Measurement /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-from-twenty-one-to-fifty" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers21to50 /></ProtectedRoute>} />
@@ -1014,6 +1064,19 @@ function App() {
         <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
         <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
 
+        {/* Grade 5 - How Big? How Heavy? */}
+        <Route path="/middle/grade/5/how-big-how-heavy/volume-by-displacement" element={<VolumeByDisplacement />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/units-of-volume" element={<UnitsOfVolume />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/volume-estimation" element={<VolumeEstimation />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/volume-unit-cubes" element={<VolumeUsingUnitCubes />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/units-of-mass" element={<UnitsOfMass />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/mass-conversion" element={<MassConversion />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/mass-calculation" element={<MassCalculation />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/weight-estimation" element={<WeightEstimationComparison />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/3d-construction" element={<ThreeDShapeConstruction />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/packaging-layering" element={<PackagingAndLayering />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/measurement-real-life" element={<MeasurementInRealLife />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/skill-application" element={<SkillApplicationProblems />} />
         {/* Can you see the Pattern? - Grade 5 */}
         <Route path="/middle/grade/5/can-you-see-the-pattern/pattern-identification" element={<PatternIdentification />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/rule-pattern-creation" element={<RuleBasedPatternCreation />} />
@@ -1027,7 +1090,7 @@ function App() {
         <Route path="/middle/grade/5/can-you-see-the-pattern/multi-step-operations" element={<MultiStepOperations />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/missing-numbers" element={<MissingNumberReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/mental-calculation" element={<MentalCalculationReasoning />} />
-        <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblems />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblemsPatterns />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
 
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
