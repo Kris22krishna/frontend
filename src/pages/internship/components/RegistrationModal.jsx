@@ -80,7 +80,7 @@ const RegistrationModal = ({ isOpen, onClose }) => {
                     <div className="p-6 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-slate-900 z-10">
                         <div>
                             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <span className="text-orange-500">🔥</span> Exclusive Opportunity
+                                Exclusive Opportunity
                             </h2>
                             <p className="text-slate-400 text-sm">Summer Internship Program 2026</p>
                         </div>
@@ -104,37 +104,44 @@ const RegistrationModal = ({ isOpen, onClose }) => {
                                     <p className="text-slate-400">Your details have been recorded successfully.</p>
                                 </div>
 
-                                <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 space-y-6">
-                                    <div className="space-y-2">
-                                        <h4 className="text-orange-400 font-bold text-lg uppercase tracking-tight">Final Step: Complete Your Registration</h4>
-                                        <p className="text-slate-300 text-sm">Please pay the registration fee of <span className="text-white font-bold">₹100</span> to confirm your seat.</p>
+                                <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 space-y-6 text-left">
+                                    {/* Final Step Header */}
+                                    <div className="text-center space-y-1">
+                                        <h4 className="text-orange-400 font-bold text-lg uppercase tracking-tight">Final Step: Confirm Your Seat</h4>
+                                        <p className="text-slate-400 text-sm">Seats are limited and allotted on a first-come, first-served basis.</p>
                                     </div>
 
-                                    {/* QR Code */}
-                                    <div className="bg-white p-4 rounded-xl inline-block shadow-lg mx-auto">
-                                        <img
-                                            src="/QRcode.png"
-                                            alt="Payment QR Code"
-                                            className="w-48 h-48 object-contain"
-                                            onError={(e) => {
-                                                e.target.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=9632402004@upi&pn=Skill100.ai&am=100&cu=INR";
-                                            }}
-                                        />
+                                    <div className="h-px bg-slate-700" />
+
+                                    {/* "To secure your seat" + phone CTA */}
+                                    <div className="space-y-3">
+                                        <p className="text-slate-300 text-sm font-semibold uppercase tracking-wide">To secure your seat:</p>
+
+                                        <a
+                                            href="tel:+919632402004"
+                                            className="flex items-center justify-center gap-3 w-full py-4 bg-green-600 hover:bg-green-500 transition-colors rounded-xl shadow-lg shadow-green-700/30"
+                                        >
+                                            <span className="text-2xl">📞</span>
+                                            <span className="text-white font-bold text-lg">Call +91 96324 02004</span>
+                                        </a>
                                     </div>
 
-                                    <div className="space-y-4 text-left">
+                                    {/* Steps */}
+                                    <div className="space-y-3">
                                         <div className="flex gap-3 items-start p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                                            <div className="bg-blue-500 rounded-full p-1 mt-0.5 shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center">1</div>
-                                            <p className="text-slate-200 text-sm">Scan the QR code above and pay <span className="text-white font-bold">₹100</span>.</p>
+                                            <div className="bg-blue-500 rounded-full shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center mt-0.5">1</div>
+                                            <p className="text-slate-200 text-sm">Confirm your <span className="text-white font-bold">registration details</span> with our team.</p>
                                         </div>
                                         <div className="flex gap-3 items-start p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                                            <div className="bg-blue-500 rounded-full p-1 mt-0.5 shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center">2</div>
-                                            <p className="text-slate-200 text-sm">Share the <span className="text-white font-bold">payment screenshot</span> on WhatsApp to <a href="https://wa.me/919632402004" target="_blank" rel="noreferrer" className="text-blue-400 underline font-semibold">+91 9632402004</a>.</p>
+                                            <div className="bg-blue-500 rounded-full shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center mt-0.5">2</div>
+                                            <p className="text-slate-200 text-sm">Complete the <span className="text-white font-bold">₹100 registration fee</span> after confirmation.</p>
                                         </div>
-                                        <div className="flex gap-3 items-start p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                                            <div className="bg-blue-500 rounded-full p-1 mt-0.5 shrink-0 text-white font-bold text-[10px] w-5 h-5 flex items-center justify-center">3</div>
-                                            <p className="text-slate-200 text-sm">Or call <a href="tel:+919632402004" className="text-blue-400 font-semibold underline">+91 9632402004</a> to confirm your registration.</p>
-                                        </div>
+                                    </div>
+
+                                    {/* Payment note */}
+                                    <div className="flex gap-3 items-start p-4 bg-amber-500/10 rounded-xl border border-amber-500/30">
+                                        <span className="text-amber-400 text-lg shrink-0">ℹ️</span>
+                                        <p className="text-amber-200 text-sm">Payment instructions will be provided during the call.</p>
                                     </div>
                                 </div>
 
