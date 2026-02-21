@@ -134,7 +134,8 @@ export const TOPIC_CONFIGS = {
             { id: "CV-05", name: "Find Missing Subtrahend", route: "find-missing-subtrahend" },
             { id: "CV-06", name: "Find How Many More or Less", route: "find-how-many-more-or-less" },
             { id: "CV-07", name: "Word Problems (Mixed Operations)", route: "chapter-scene-mixed-operations" },
-            { id: "CV-09", name: "Let Us Play (Triangle Puzzle)", route: "let-us-play" }
+            { id: "CV-09", name: "Let Us Play (Triangle Puzzle)", route: "let-us-play" },
+            { id: "CV-10", name: "Chapter Test", route: "chapter-test" }
         ],
         'Equal Groups': [
             { id: "1143", name: "Jump-Based Multiples", route: "jump-based-multiples" },

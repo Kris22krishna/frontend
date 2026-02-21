@@ -117,12 +117,9 @@ const JuniorSubtopics = () => {
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
                 const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                 if (skill && skill.route) {
-                    let topicSlug = decodedTopic.toLowerCase()
-                        .replace(/\s+/g, '-')
-                        .replace(/[()]/g, '');
-
-                    if (decodedTopic === "The Cleanest Village") topicSlug = "the-cleanest-village";
-                    if (decodedTopic === "Equal Groups") topicSlug = "equal-groups";
+                    const topicSlug = decodedTopic.toLowerCase()
+                        .replace(/[(),]/g, '')
+                        .replace(/\s+/g, '-');
 
                     navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
                     return;
