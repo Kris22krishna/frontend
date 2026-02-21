@@ -10,6 +10,9 @@ const LatexContent = ({ html, className, block = false }) => {
         if (!raw) return '';
         let processed = String(raw);
 
+        // Parse **text** into <strong>text</strong>
+        processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
         // Check for existing delimiters ($$, $, \[, \()
         const hasDelimiters = processed.includes('$$') || processed.includes('$') || processed.includes('\\[') || processed.includes('\\(');
 
@@ -39,7 +42,7 @@ const LatexContent = ({ html, className, block = false }) => {
                 console.error("KaTeX rendering error:", e);
             }
         }
-    }, [html]);
+    }, [finalHtml]);
 
     const Tag = block ? 'div' : 'span';
 
@@ -47,7 +50,7 @@ const LatexContent = ({ html, className, block = false }) => {
         <Tag
             ref={containerRef}
             className={className}
-            dangerouslySetInnerHTML={{ __html: html }}
+            dangerouslySetInnerHTML={{ __html: finalHtml }}
         />
     );
 };
