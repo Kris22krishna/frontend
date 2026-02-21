@@ -169,31 +169,27 @@ const AdditionChartPatterns = () => {
             explanation = `Start at ${r}.<br/>${vSteps} steps down = +${vSteps * 10} (${r + vSteps * 10}).<br/>${hSteps} steps right = +${hSteps}.<br/>Total: $$${r} + ${vSteps * 10} + ${hSteps} = ${correctAnswer}$$.`;
         }
 
-        const distractors = new Set([correctAnswer.toString()]);
-        while (distractors.size < 4) {
-            let offset = randomInt(-15, 15);
-            if (offset === 0) offset = 1;
-            const res = (parseInt(correctAnswer) + offset).toString();
-            if (parseInt(res) > 0 && parseInt(res) <= 100 && res !== correctAnswer.toString()) distractors.add(res);
-        }
-
         return {
             id: index,
             text: questionText,
             correctAnswer: correctAnswer.toString(),
             solution: explanation,
-            patternCells: patternCells,
-            shuffledOptions: Array.from(distractors).sort(() => Math.random() - 0.5)
+            patternCells: patternCells
         };
     };
 
-    const handleAnswer = (val) => {
+    const handleInputValue = (val) => {
         if (isSubmitted) return;
-        setSelectedOption(val);
+        // Only allow numbers up to 3 digits
+        if (/^\d{0,3}$/.test(val)) {
+            setSelectedOption(val);
+        }
     };
 
     const handleSubmit = () => {
+        // If nothing entered, return
         if (!selectedOption || !currentQuestion) return;
+
         const isRight = selectedOption === currentQuestion.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
@@ -345,16 +341,38 @@ const AdditionChartPatterns = () => {
     if (!currentQuestion) return <div>Loading...</div>;
 
     const Grid100 = () => (
-        <div className="grid grid-cols-10 gap-1 md:gap-2 p-4 bg-white rounded-3xl border-4 border-blue-100 shadow-xl mx-auto max-w-md md:max-w-lg aspect-square">
+        <div className="grid grid-cols-10 gap-1 md:gap-2 p-4 bg-white/80 rounded-3xl border-4 border-blue-100 shadow-lg mx-auto w-[min(90vw,600px)] aspect-square self-center justify-self-center">
             {Array.from({ length: 100 }, (_, i) => i + 1).map(num => {
                 const isHighlighted = highlightedCells.includes(num);
-                const isCorrectAns = isSubmitted && num === parseInt(currentQuestion.correctAnswer);
-                let bgClass = "bg-white text-[#31326F] border border-gray-100";
-                if (isHighlighted) bgClass = "bg-[#4FB7B3] text-white font-semibold scale-110 shadow-lg z-10";
-                if (isCorrectAns) bgClass = isCorrect ? "bg-green-500 text-white font-semibold animate-pulse" : "bg-red-400 text-white font-semibold";
+                const isTargetCell = num === parseInt(currentQuestion.correctAnswer);
+
+                let bgClass = "bg-white text-[#31326F] border-2 border-gray-100";
+
+                if (isHighlighted) {
+                    bgClass = "bg-[#4FB7B3] text-white font-bold scale-105 shadow-md z-10 border-none relative overflow-visible after:content-[''] after:absolute after:inset-0 after:border-2 after:border-white after:rounded-lg";
+                }
+
+                if (isTargetCell) {
+                    return (
+                        <div key={num} className={`flex items-center justify-center rounded-lg transition-all ${isSubmitted ? (isCorrect ? 'bg-green-500 border-none' : 'bg-red-500 border-none') : 'bg-yellow-100 border-2 border-yellow-400 outline outline-2 outline-yellow-400 shadow-inner'}`}>
+                            <input
+                                autoFocus
+                                type="text"
+                                inputMode="numeric"
+                                pattern="\d*"
+                                value={selectedOption || ''}
+                                onChange={(e) => handleInputValue(e.target.value)}
+                                disabled={isSubmitted}
+                                className={`w-full h-full text-center bg-transparent focus:outline-none text-sm md:text-xl lg:text-2xl font-bold rounded-lg ${isSubmitted ? 'text-white' : 'text-[#31326F]'}`}
+                                placeholder="?"
+                                style={{ WebkitAppearance: 'none', margin: 0 }}
+                            />
+                        </div>
+                    );
+                }
 
                 return (
-                    <div key={num} className={`flex items-center justify-center rounded-lg text-[10px] md:text-sm lg:text-base transition-all ${bgClass}`}>
+                    <div key={num} className={`flex items-center justify-center rounded-lg text-xs md:text-base lg:text-xl transition-all ${bgClass}`}>
                         {num}
                     </div>
                 );
@@ -372,34 +390,30 @@ const AdditionChartPatterns = () => {
                 <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
-                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
+            <main className="practice-content-wrapper flex flex-col justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
+                <div className="w-full max-w-6xl mx-auto bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-4 md:p-6 lg:p-8 flex flex-col gap-6 items-stretch">
 
-                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
-                        <div className="w-full flex justify-center mb-6">
-                            <Grid100 />
-                        </div>
-                    </div>
-
-                    <div className="flex-1 flex flex-col justify-center items-center">
-                        <div className="flex justify-center mb-6">
-                            <div className="bg-blue-100 p-4 rounded-full shadow-md"><GridIcon size={48} className="text-blue-600" /></div>
-                        </div>
-                        <h2 className="text-2xl md:text-3xl font-normal text-[#31326F] text-center mb-8 leading-relaxed tracking-wider">
+                    <div className="flex flex-col justify-center items-center w-full max-w-3xl mx-auto text-center">
+                        <div className="bg-blue-100 p-4 rounded-full mb-4 shadow-md hidden md:block"><GridIcon size={32} className="text-blue-600" /></div>
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-normal text-[#31326F] leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
+                    </div>
 
-                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
-                            {shuffledOptions.map((opt, i) => (
-                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
-                                    {opt}
-                                </button>
-                            ))}
-                        </div>
+                    <div className="w-full flex justify-center pb-6 border-b-2 border-dashed border-gray-200">
+                        <Grid100 />
+                    </div>
+
+                    <div className="flex flex-col justify-center items-center min-h-[60px]">
                         {isSubmitted && (
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-xl md:text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`font-normal text-xl md:text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                 {isCorrect ? feedbackMessage : "Check the grid pattern!"}
                             </motion.div>
+                        )}
+                        {!isSubmitted && (
+                            <div className="text-gray-400 text-lg md:text-xl font-normal italic">
+                                Type your answer straight into the yellow box!
+                            </div>
                         )}
                     </div>
                 </div>

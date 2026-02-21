@@ -267,8 +267,6 @@ import BalanceScaleEstimation from './components/practice/class-4/Elephants_Tige
 import QuickCompare from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/compare_without_calculating';
 import SmartShortcuts from './components/practice/class-4/Elephants_Tigers_and_Leopards/Mental_Math_Strategies/near_hundred_add_subtract';
 import CompensationStrategy from './components/practice/class-4/Elephants_Tigers_and_Leopards/Mental_Math_Strategies/compensation_strategy_questions';
-import SafariVehicleAnalysis from './components/practice/class-4/Elephants_Tigers_and_Leopards/Data_and_Context_Problems/table_based_addition_subtraction';
-import WildlifePopulation from './components/practice/class-4/Elephants_Tigers_and_Leopards/Data_and_Context_Problems/wildlife_population_word_problems';
 
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
@@ -567,16 +565,6 @@ function App() {
         <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/compensation-strategy" element={
           <ProtectedRoute redirectTo="/login">
             <CompensationStrategy />
-          </ProtectedRoute>
-        } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/safari-vehicle-analysis" element={
-          <ProtectedRoute redirectTo="/login">
-            <SafariVehicleAnalysis />
-          </ProtectedRoute>
-        } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/wildlife-population" element={
-          <ProtectedRoute redirectTo="/login">
-            <WildlifePopulation />
           </ProtectedRoute>
         } />
 

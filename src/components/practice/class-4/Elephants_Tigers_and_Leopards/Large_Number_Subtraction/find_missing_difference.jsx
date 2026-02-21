@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Search, Map } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -19,7 +19,6 @@ const CORRECT_MESSAGES = [
 ];
 
 const FindMissingDifference = () => {
-    const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -28,13 +27,12 @@ const FindMissingDifference = () => {
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [showResults, setShowResults] = useState(false);
 
     // Logging
     const [sessionId, setSessionId] = useState(null);
-    const questionStartTime = useRef(Date.now());
+    const questionStartTime = useRef(null);
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1195;
@@ -42,70 +40,6 @@ const FindMissingDifference = () => {
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
-
-    useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            }).catch(err => console.error("Failed to start session", err));
-        }
-
-        const handleVisibilityChange = () => {
-            if (document.hidden) {
-                accumulatedTime.current += Date.now() - questionStartTime.current;
-                isTabActive.current = false;
-            } else {
-                questionStartTime.current = Date.now();
-                isTabActive.current = true;
-            }
-        };
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
-        const generatedQuestions = [];
-        const difficulties = ['easy', 'easy', 'easy', 'medium', 'medium', 'medium', 'hard', 'hard', 'hard', 'hard'];
-
-        difficulties.forEach((diff, idx) => {
-            generatedQuestions.push(generateQuestion(diff, idx));
-        });
-        setSessionQuestions(generatedQuestions);
-
-        return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (showResults) return;
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
-        return () => clearInterval(timer);
-    }, [showResults]);
-
-    useEffect(() => {
-        if (sessionQuestions.length > 0) {
-            const qData = sessionQuestions[qIndex];
-            setCurrentQuestion(qData);
-            setShuffledOptions(qData.shuffledOptions);
-            const previousAnswer = answers[qIndex];
-            if (previousAnswer) {
-                setSelectedOption(previousAnswer.selected);
-                setIsSubmitted(true);
-                setIsCorrect(previousAnswer.isCorrect);
-            } else {
-                setSelectedOption(null);
-                setIsSubmitted(false);
-                setIsCorrect(false);
-            }
-        }
-    }, [qIndex, sessionQuestions]);
-
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    };
 
     const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -186,11 +120,83 @@ const FindMissingDifference = () => {
             text: questionText,
             correctAnswer: correctVal,
             solution: explanation,
-            shuffledOptions: Array.from(distractors).sort(() => Math.random() - 0.5)
+            min: min || 0,
+            sub: sub || 0,
+            diff: diff || 0,
+            missing: missing || '',
+            shuffledOptions: [] // No longer used
         };
     };
 
-    const handleAnswer = (val) => {
+    useEffect(() => {
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId && !sessionId) {
+            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            }).catch(err => console.error("Failed to start session", err));
+        }
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        const generatedQuestions = [];
+        const difficulties = ['easy', 'easy', 'easy', 'medium', 'medium', 'medium', 'hard', 'hard', 'hard', 'hard'];
+
+        difficulties.forEach((diff, idx) => {
+            generatedQuestions.push(generateQuestion(diff, idx));
+        });
+        setTimeout(() => {
+            setSessionQuestions(generatedQuestions);
+        }, 0);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (showResults) return;
+        const timer = setInterval(() => {
+            setTimeElapsed(prev => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [showResults]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (sessionQuestions.length > 0) {
+                const qData = sessionQuestions[qIndex];
+                setCurrentQuestion(qData);
+                const previousAnswer = answers[qIndex];
+                if (previousAnswer) {
+                    setSelectedOption(previousAnswer.selected);
+                    setIsSubmitted(true);
+                    setIsCorrect(previousAnswer.isCorrect);
+                } else {
+                    setSelectedOption(null);
+                    setIsSubmitted(false);
+                    setIsCorrect(false);
+                }
+            }
+        }, 0);
+    }, [qIndex, sessionQuestions, answers]);
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handleInputValue = (val) => {
         if (isSubmitted) return;
         setSelectedOption(val);
     };
@@ -361,24 +367,83 @@ const FindMissingDifference = () => {
                 <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
 
                     <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
-                        <div className="bg-orange-100 p-6 rounded-full mb-8 shadow-md border-4 border-orange-200"><Search size={64} className="text-orange-600" /></div>
+                        <div className="bg-orange-100 p-6 rounded-full mb-8 shadow-md border-4 border-orange-200"><Map size={64} className="text-orange-600" /></div>
                         <h2 className="text-2xl md:text-3xl font-normal text-[#31326F] text-center mb-4 leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center items-center">
-                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
-                            {shuffledOptions.map((opt, i) => (
-                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
-                                    {opt}
-                                </button>
-                            ))}
+                        <div className="w-full max-w-lg flex flex-col items-center gap-8 relative">
+                            {/* Path Builder Visual */}
+                            <div className="flex items-center justify-between w-full relative z-10 px-4">
+                                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-[#31326F] bg-white shadow-xl flex items-center justify-center flex-col z-20">
+                                    <span className="text-3xl md:text-4xl font-normal text-[#31326F]">
+                                        {currentQuestion.missing === 'min' ? '?' : currentQuestion.min}
+                                    </span>
+                                    <span className="text-[10px] uppercase text-gray-400 font-semibold mt-1">Start</span>
+                                </div>
+
+                                <div className="flex-1 flex justify-center items-center relative z-10">
+                                    <div className="absolute w-full h-2 bg-gray-300 rounded-full top-1/2 transform -translate-y-1/2 -z-10" />
+                                    <div className={`p-4 md:p-6 w-32 md:w-40 flex flex-col items-center justify-center rounded-3xl transition-all shadow-lg border-4 ${isSubmitted && isCorrect ? 'border-green-500 bg-green-50 shadow-green-200' : isSubmitted && !isCorrect ? 'border-red-500 bg-red-50 shadow-red-200' : 'border-[#4FB7B3] bg-[#E0FBEF] shadow-[#4FB7B3]/20'}`}>
+                                        <div className="flex items-center gap-1 mb-2 text-[#4FB7B3]">
+                                            <span className="text-2xl font-bold">-</span>
+                                        </div>
+                                        {currentQuestion.missing === 'sub' ? (
+                                            <input
+                                                type="text"
+                                                inputMode="text"
+                                                value={selectedOption || ''}
+                                                onChange={(e) => handleInputValue(e.target.value)}
+                                                disabled={isSubmitted}
+                                                className={`w-full text-center bg-transparent focus:outline-none text-2xl md:text-3xl font-normal border-b-2 border-dashed ${isSubmitted ? 'border-transparent' : 'border-[#4FB7B3]'} ${isSubmitted && isCorrect ? 'text-green-600' : isSubmitted && !isCorrect ? 'text-red-600' : 'text-[#31326F]'}`}
+                                                placeholder="?"
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <span className="text-2xl md:text-3xl font-normal text-[#31326F]">{currentQuestion.sub}</span>
+                                        )}
+                                        <span className="text-[10px] uppercase text-[#4FB7B3] font-semibold mt-2">Step</span>
+                                    </div>
+                                </div>
+
+                                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-[#31326F] bg-[#31326F] text-white shadow-xl flex items-center justify-center flex-col z-20">
+                                    <span className="text-3xl md:text-4xl font-normal">
+                                        {currentQuestion.missing === 'diff' ? '?' : currentQuestion.diff}
+                                    </span>
+                                    <span className="text-[10px] uppercase text-white/70 font-semibold mt-1">End</span>
+                                </div>
+                            </div>
+
+                            {(currentQuestion.missing === 'min' || currentQuestion.missing === 'diff') && (
+                                <div className={`mt-8 p-4 md:p-6 w-full max-w-sm flex flex-col items-center justify-center rounded-[2rem] transition-all shadow-lg border-4 mx-auto ${isSubmitted && isCorrect ? 'border-green-500 bg-green-50 shadow-green-200' : isSubmitted && !isCorrect ? 'border-red-500 bg-red-50 shadow-red-200' : 'border-[#4FB7B3] bg-[#E0FBEF] shadow-[#4FB7B3]/20'}`}>
+                                    <span className="text-sm font-semibold text-[#4FB7B3] uppercase tracking-wider mb-2">
+                                        {currentQuestion.missing === 'min' ? 'Find Start Number' : 'Find End Number'}
+                                    </span>
+                                    <input
+                                        type="text"
+                                        inputMode="text"
+                                        value={selectedOption || ''}
+                                        onChange={(e) => handleInputValue(e.target.value)}
+                                        disabled={isSubmitted}
+                                        className={`w-full text-center bg-transparent focus:outline-none text-3xl md:text-4xl font-normal ${isSubmitted && isCorrect ? 'text-green-600' : isSubmitted && !isCorrect ? 'text-red-600' : 'text-[#31326F]'}`}
+                                        placeholder="Type answer here..."
+                                        autoFocus
+                                    />
+                                </div>
+                            )}
+
                         </div>
                         {isSubmitted && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-xl md:text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                 {isCorrect ? feedbackMessage : "Check your math!"}
                             </motion.div>
+                        )}
+                        {!isSubmitted && (
+                            <div className="mt-8 text-gray-400 text-lg md:text-xl font-normal italic">
+                                Fill in the missing stone to complete the path!
+                            </div>
                         )}
                     </div>
                 </div>

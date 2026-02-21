@@ -1,25 +1,95 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Repeat, Sparkles } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Sparkles, Repeat } from 'lucide-react';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const CORRECT_MESSAGES = [
-    "✨ Magical reflection! You solved it! ✨",
-    "🌟 You have the eye of a sorcerer! 🌟",
-    "🎉 Correct! The mirror reveals the truth! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! Keep striving for excellence! 🚀",
+    "✨ Mirror mirror on the wall, perfect! ✨",
+    "🌟 Excellent reflection skills! 🌟",
+    "🎉 Correct! The magic is working! 🎉",
+    "✨ Fantastic addition! ✨",
+    "🚀 Super fast reflection! 🚀",
     "🌿 Perfect! Nature loves such symmetry! 🌿",
-    "🎊 Great job! Moving on... 🎊",
     "💎 Spot on! Excellent! 💎"
 ];
 
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const reverseNumber = (n) => parseInt(n.toString().split('').reverse().join(''));
+
+const generateQuestion = (difficulty, index) => {
+    let num, rev, sum;
+    let questionText = "";
+    let correctAnswer = "";
+    let explanation = "";
+
+    if (difficulty === 'easy') {
+        num = randomInt(12, 85);
+        rev = reverseNumber(num);
+        sum = num + rev;
+        questionText = `What do you get if you add **${num}** to its **reverse**?`;
+        correctAnswer = sum.toString();
+        explanation = `Number: ${num}<br/>Reverse: ${rev}<br/>Sum: $$${num} + ${rev} = ${correctAnswer}$$.`;
+    } else if (difficulty === 'medium') {
+        num = randomInt(12, 89);
+        rev = reverseNumber(num);
+        sum = num + rev;
+
+        if (Math.random() > 0.5) {
+            questionText = `**${num}** + <span style="color:#4FB7B3">?</span> = **${sum}**`;
+            correctAnswer = rev.toString();
+            explanation = `The missing number is the **reverse** of ${num}.<br/>Reverse of ${num} is ${rev}.`;
+        } else {
+            let a = randomInt(1, 4);
+            let b = randomInt(1, 4);
+            num = a * 10 + b;
+            rev = reverseNumber(num);
+            sum = num + rev;
+            questionText = `Take **${num}**. Add its reverse **${rev}**. Is the answer a **special number** (reads same forwards and backwards)?`;
+            correctAnswer = "Yes, it is " + sum;
+            explanation = `$$${num} + ${rev} = ${sum}$$.<br/>${sum} reads the same backwards. It is a palindrome!`;
+        }
+    } else {
+        if (Math.random() > 0.5) {
+            num = 67; rev = 76; sum = 143;
+            questionText = `A number plus its reverse equals **${sum}**. If the number ends with **7**, what is the number?`;
+            correctAnswer = "67";
+            explanation = `If the number ends in 7, its reverse must start with 7.<br/>70 + 60 = 130, plus 7 + 6 = 13... total 143.<br/>The number is **67**.`;
+        } else {
+            questionText = `Complete the pattern: 12+21=33, 23+32=55, 45+54=99. All these sums are always divisible by which number?`;
+            correctAnswer = "11";
+            explanation = `The sum of any 2-digit number and its reverse is always a multiple of **11**.<br/>Try it: $$11 \\times (a + b)$$.`;
+        }
+    }
+
+    const distractors = new Set([correctAnswer]);
+    while (distractors.size < 4) {
+        let d;
+        if (parseInt(correctAnswer)) {
+            d = (parseInt(correctAnswer) + randomInt(-10, 10)).toString();
+            if (d === correctAnswer) continue;
+        } else {
+            d = "No, it is " + (num + rev + 1);
+            distractors.add("No, it is not");
+            distractors.add("Yes, it is " + (num + rev + 11));
+            break;
+        }
+        distractors.add(d);
+    }
+
+    return {
+        id: index,
+        text: questionText,
+        correctAnswer: correctAnswer,
+        solution: explanation,
+        num: num || 0,
+        rev: rev || 0,
+    };
+};
+
 const MagicMirrorAddition = () => {
-    const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -28,13 +98,12 @@ const MagicMirrorAddition = () => {
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [showResults, setShowResults] = useState(false);
 
     // Logging
     const [sessionId, setSessionId] = useState(null);
-    const questionStartTime = useRef(Date.now());
+    const questionStartTime = useRef(null);
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1190;
@@ -42,6 +111,8 @@ const MagicMirrorAddition = () => {
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
+
+    // Remove generateQuestion from the component scope
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -73,6 +144,7 @@ const MagicMirrorAddition = () => {
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -87,7 +159,6 @@ const MagicMirrorAddition = () => {
         if (sessionQuestions.length > 0) {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
-            setShuffledOptions(qData.shuffledOptions);
             const previousAnswer = answers[qIndex];
             if (previousAnswer) {
                 setSelectedOption(previousAnswer.selected);
@@ -99,89 +170,15 @@ const MagicMirrorAddition = () => {
                 setIsCorrect(false);
             }
         }
-    }, [qIndex, sessionQuestions]);
+    }, [qIndex, sessionQuestions, answers]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+        return `${mins}:${secs.toString().padStart(2, '0')} `;
     };
 
-    const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-    const reverseNumber = (n) => parseInt(n.toString().split('').reverse().join(''));
-
-    const generateQuestion = (difficulty, index) => {
-        let num, rev, sum;
-        let questionText = "";
-        let correctAnswer = "";
-        let explanation = "";
-
-        if (difficulty === 'easy') {
-            num = randomInt(12, 85);
-            rev = reverseNumber(num);
-            sum = num + rev;
-            questionText = `What do you get if you add **${num}** to its **reverse**?`;
-            correctAnswer = sum.toString();
-            explanation = `Number: ${num}<br/>Reverse: ${rev}<br/>Sum: $$${num} + ${rev} = ${correctAnswer}$$.`;
-        } else if (difficulty === 'medium') {
-            num = randomInt(12, 89);
-            rev = reverseNumber(num);
-            sum = num + rev;
-
-            if (Math.random() > 0.5) {
-                questionText = `**${num}** + <span style="color:#4FB7B3">?</span> = **${sum}**`;
-                correctAnswer = rev.toString();
-                explanation = `The missing number is the **reverse** of ${num}.<br/>Reverse of ${num} is ${rev}.`;
-            } else {
-                let a = randomInt(1, 4);
-                let b = randomInt(1, 4);
-                num = a * 10 + b;
-                rev = reverseNumber(num);
-                sum = num + rev;
-                questionText = `Take **${num}**. Add its reverse **${rev}**. Is the answer a **special number** (reads same forwards and backwards)?`;
-                correctAnswer = "Yes, it is " + sum;
-                explanation = `$$${num} + ${rev} = ${sum}$$.<br/>${sum} reads the same backwards. It is a palindrome!`;
-            }
-        } else {
-            if (Math.random() > 0.5) {
-                num = 67; rev = 76; sum = 143;
-                questionText = `A number plus its reverse equals **${sum}**. If the number ends with **7**, what is the number?`;
-                correctAnswer = "67";
-                explanation = `If the number ends in 7, its reverse must start with 7.<br/>70 + 60 = 130, plus 7 + 6 = 13... total 143.<br/>The number is **67**.`;
-            } else {
-                questionText = `Complete the pattern: 12+21=33, 23+32=55, 45+54=99. All these sums are always divisible by which number?`;
-                correctAnswer = "11";
-                explanation = `The sum of any 2-digit number and its reverse is always a multiple of **11**.<br/>Try it: $$11 \\times (a + b)$$.`;
-            }
-        }
-
-        const distractors = new Set([correctAnswer]);
-        while (distractors.size < 4) {
-            let d;
-            if (parseInt(correctAnswer)) {
-                d = (parseInt(correctAnswer) + randomInt(-10, 10)).toString();
-                if (d === correctAnswer) continue;
-            } else {
-                d = "No, it is " + (num + rev + 1);
-                distractors.add("No, it is not");
-                distractors.add("Yes, it is " + (num + rev + 11));
-                break;
-            }
-            distractors.add(d);
-        }
-
-        return {
-            id: index,
-            text: questionText,
-            correctAnswer: correctAnswer,
-            solution: explanation,
-            num: num || 0,
-            rev: rev || 0,
-            shuffledOptions: Array.from(distractors).sort(() => Math.random() - 0.5)
-        };
-    };
-
-    const handleAnswer = (val) => {
+    const handleInputValue = (val) => {
         if (isSubmitted) return;
         setSelectedOption(val);
     };
@@ -267,7 +264,7 @@ const MagicMirrorAddition = () => {
                         <h2 className="text-4xl font-semibold text-[#31326F] mb-2">Mirror Master! 🪞</h2>
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
-                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
+                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star - wrapper ${percentage >= (i * 33) ? 'active' : ''} `}>
                                     <Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} />
                                 </motion.div>
                             ))}
@@ -298,15 +295,15 @@ const MagicMirrorAddition = () => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
-                                    <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}>
+                                    <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className={`p - 6 rounded - [2rem] border - 4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}>
                                         <div className="flex items-start gap-4">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
+                                            <div className={`w - 10 h - 10 rounded - full flex items - center justify - center font - semibold text - white shrink - 0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'} `}>{idx + 1}</div>
                                             <div className="flex-1">
                                                 <div className="text-lg font-normal text-[#31326F] mb-4 breakdown-question"><LatexContent html={q.text} /></div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
-                                                        <span className={`text-lg font-semibold ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>{ans.selected}</span>
+                                                        <span className={`text - lg font - semibold ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'} `}>{ans.selected}</span>
                                                     </div>
                                                     {!ans.isCorrect && (
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
@@ -382,17 +379,29 @@ const MagicMirrorAddition = () => {
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center items-center">
-                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
-                            {shuffledOptions.map((opt, i) => (
-                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
-                                    <LatexContent html={opt} />
-                                </button>
-                            ))}
+                        <div className="w-full max-w-md flex flex-col items-center gap-6">
+                            <div className={`p-4 md:p-6 w-full max-w-sm flex items-center justify-center rounded-[2rem] transition-all transform hover:scale-105 shadow-lg border-4 ${isSubmitted && isCorrect ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : isSubmitted && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : 'border-[#4FB7B3] bg-[#E0FBEF] shadow-[#4FB7B3]/20'}`}>
+                                <input
+                                    type="text"
+                                    inputMode="text"
+                                    value={selectedOption || ''}
+                                    onChange={(e) => handleInputValue(e.target.value)}
+                                    disabled={isSubmitted}
+                                    className={`w-full text-center bg-transparent focus:outline-none text-3xl md:text-4xl font-normal ${isSubmitted ? '' : 'text-[#31326F]'}`}
+                                    placeholder="Type answer here..."
+                                    autoFocus
+                                />
+                            </div>
                         </div>
                         {isSubmitted && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-xl md:text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                 {isCorrect ? feedbackMessage : "Keep trying!"}
                             </motion.div>
+                        )}
+                        {!isSubmitted && (
+                            <div className="mt-8 text-gray-400 text-lg md:text-xl font-normal italic">
+                                Look in the magic mirror!
+                            </div>
                         )}
                     </div>
                 </div>

@@ -131,10 +131,7 @@ export const TOPIC_CONFIGS = {
             { id: "1198", name: "Quick Compare", route: "quick-compare" },
             // Strategies
             { id: "1199", name: "Smart Shortcuts", route: "smart-shortcuts" },
-            { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" },
-            // Data & Context
-            { id: "1201", name: "Safari Vehicle Analysis", route: "safari-vehicle-analysis" },
-            { id: "1202", name: "Wildlife Population", route: "wildlife-population" }
+            { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" }
         ]
     }
 };

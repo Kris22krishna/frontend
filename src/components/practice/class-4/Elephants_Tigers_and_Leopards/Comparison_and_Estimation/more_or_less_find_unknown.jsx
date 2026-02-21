@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Scale, Info } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Scale } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -8,9 +8,9 @@ import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const CORRECT_MESSAGES = [
-    "✨ Brilliant estimation! You're a pro! ✨",
-    "🌟 Your logic is perfectly balanced! 🌟",
-    "🎉 Correct! The village is cleaner thanks to you! 🎉",
+    "✨ Perfectly balanced! As all things should be. ✨",
+    "🌟 Excellent estimation skills! 🌟",
+    "🎉 Correct! You've mastered the scales! 🎉",
     "✨ Fantastic work! ✨",
     "🚀 Super! Keep striving for excellence! 🚀",
     "🌿 Perfect! Green and clean! 🌿",
@@ -104,7 +104,7 @@ const BalanceScaleComparison = () => {
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
+        return `${mins}:${secs.toString().padStart(2, '0')} `;
     };
 
     const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -113,54 +113,60 @@ const BalanceScaleComparison = () => {
         let questionText = "";
         let correctAnswer = "";
         let explanation = "";
+        let leftWeight = 0;
+        let rightWeight = 0;
+        let options = ["More than", "Less than", "Equal to"];
 
         if (difficulty === 'easy') {
             let n1 = randomInt(500, 900);
             let n2 = randomInt(500, 900);
             let sum = n1 + n2;
             let target = Math.round(sum / 100) * 100;
-            if (target === sum) target += 50;
+            if (target === sum) target += 50; // Ensure target is different from sum for comparison
 
-            questionText = `Is sum of **${n1}** and **${n2}** more than or less than **${target}**?`;
-            correctAnswer = sum > target ? "More than" : "Less than";
-            explanation = `${n1} + ${n2} = ${sum}.<br/>${sum} is **${correctAnswer}** ${target}.`;
+            questionText = `Is sum of ** ${n1}** and ** ${n2}** more than or less than ** ${target}**? `;
+            leftWeight = sum;
+            rightWeight = target;
+            if (sum > target) correctAnswer = "More than";
+            else if (sum < target) correctAnswer = "Less than";
+            else correctAnswer = "Equal to";
+            explanation = `${n1} + ${n2} = ${sum}.<br />${sum} is ** ${correctAnswer}** ${target}.`;
+            options = ["More than", "Less than", "Equal to"].sort(() => Math.random() - 0.5);
         } else if (difficulty === 'medium') {
             let n1 = randomInt(1100, 2200);
             let n2 = randomInt(1100, 2200);
             let val = n1 + n2;
 
-            questionText = `Without calculating exactly, estimates **${n1}** + **${n2}**. Is it closest to:`;
+            questionText = `Without calculating exactly, estimate ** ${n1}** + ** ${n2}**.Is it closest to: `;
             let correctEst = Math.round(val / 1000) * 1000;
+            // Adjust if very close to midpoint
             if (Math.abs(val - correctEst) > 400 && Math.abs(val - (correctEst + 1000)) < 400) correctEst += 1000;
+            if (Math.abs(val - correctEst) > 400 && Math.abs(val - (correctEst - 1000)) < 400) correctEst -= 1000;
 
-            correctAnswer = correctEst.toString();
-            return {
-                id: index,
-                text: questionText,
-                correctAnswer: correctAnswer,
-                solution: `${n1} + ${n2} = ${val}. This is closest to ${correctAnswer}.`,
-                shuffledOptions: [correctAnswer, (correctEst - 1000).toString(), (correctEst + 1000).toString(), (correctEst + 2000).toString()].sort(() => Math.random() - 0.5)
-            };
-        } else {
+            leftWeight = val; // The actual sum
+            rightWeight = correctEst; // The estimated value
+            if (val > correctEst) correctAnswer = "More than";
+            else if (val < correctEst) correctAnswer = "Less than";
+            else correctAnswer = "Equal to";
+            explanation = `${n1} + ${n2} = ${val}. This is closest to ${correctEst}.`;
+            options = ["More than", "Less than", "Equal to"].sort(() => Math.random() - 0.5);
+        } else { // hard
             let min = 2000;
             let max = 3000;
             let mid = 2500;
             let correctN = randomInt(mid + 1, max - 1);
 
-            questionText = `I am a number between **${min}** and **${max}**. I am larger than **${mid}**. Who am I?`;
-            correctAnswer = correctN.toString();
-
-            let optTooSmallRange = randomInt(min + 1, mid - 1);
-            let optWaySmall = randomInt(1000, 1999);
-            let optWayLarge = randomInt(3001, 4000);
-
-            return {
-                id: index,
-                text: questionText,
-                correctAnswer: correctN.toString(),
-                solution: `The number must be between ${min} and ${max}, AND greater than ${mid}.<br/>${correctN} fits all rules.`,
-                shuffledOptions: [correctN.toString(), optTooSmallRange.toString(), optWaySmall.toString(), optWayLarge.toString()].sort(() => Math.random() - 0.5)
-            };
+            questionText = `I am a number between ** ${min}** and ** ${max}**.I am larger than ** ${mid}**.Who am I ? `;
+            // For hard questions, we might not have a direct "left vs right" weight comparison in the same way.
+            // We can adapt this to a comparison of the 'correctN' vs a 'midpoint' or 'average' value.
+            // Let's make it a comparison of 'correctN' vs 'mid'.
+            leftWeight = correctN;
+            rightWeight = mid;
+            if (correctN > mid) correctAnswer = "More than";
+            else if (correctN < mid) correctAnswer = "Less than";
+            else correctAnswer = "Equal to";
+            explanation = `The number must be between ${min} and ${max}, AND greater than ${mid}.<br />${correctN} fits all rules.`;
+            options = ["More than", "Less than", "Equal to"].sort(() => Math.random() - 0.5);
         }
 
         return {
@@ -168,7 +174,9 @@ const BalanceScaleComparison = () => {
             text: questionText,
             correctAnswer: correctAnswer,
             solution: explanation,
-            shuffledOptions: ["More than", "Less than", "Equal to", "Cannot say"].sort(() => Math.random() - 0.5)
+            leftWeight: leftWeight,
+            rightWeight: rightWeight,
+            shuffledOptions: options
         };
     };
 
@@ -254,7 +262,7 @@ const BalanceScaleComparison = () => {
                         <h2 className="text-4xl font-normal text-[#31326F] mb-2">Estimation Mission Complete! 🎉</h2>
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
-                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
+                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star - wrapper ${percentage >= (i * 33) ? 'active' : ''} `}>
                                     <Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} />
                                 </motion.div>
                             ))}
@@ -285,15 +293,15 @@ const BalanceScaleComparison = () => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
-                                    <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}>
+                                    <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className={`p - 6 rounded - [2rem] border - 4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}>
                                         <div className="flex items-start gap-4">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-normal text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
+                                            <div className={`w - 10 h - 10 rounded - full flex items - center justify - center font - normal text - white shrink - 0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'} `}>{idx + 1}</div>
                                             <div className="flex-1">
                                                 <div className="text-lg font-normal text-[#31326F] mb-4 breakdown-question"><LatexContent html={q.text} /></div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-normal uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
-                                                        <span className={`text-lg font-normal ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>{ans.selected}</span>
+                                                        <span className={`text - lg font - normal ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'} `}>{ans.selected}</span>
                                                     </div>
                                                     {!ans.isCorrect && (
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
@@ -335,30 +343,67 @@ const BalanceScaleComparison = () => {
                 <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
-                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
+            <main className="practice-content-wrapper flex flex-col justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
+                <div className="w-full max-w-6xl mx-auto bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-4 md:p-6 lg:p-10 flex flex-col items-center">
 
-                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
+                    <div className="flex flex-col justify-center items-center w-full max-w-3xl mb-8 border-b-2 border-dashed border-gray-200 pb-6">
                         <div className="flex justify-center mb-6">
-                            <div className="bg-purple-100 p-4 rounded-full shadow-md"><Scale size={48} className="text-purple-600" /></div>
+                            <div className="bg-purple-100 p-4 rounded-full shadow-md"><Scale size={32} className="text-purple-600" /></div>
                         </div>
-                        <h2 className="text-2xl md:text-4xl font-normal text-[#31326F] text-center mb-4 leading-relaxed tracking-wider">
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-normal text-[#31326F] text-center leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
                     </div>
 
-                    <div className="flex-1 flex flex-col justify-center items-center">
-                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
+                    <div className="flex justify-center items-center w-full max-w-2xl mb-12 relative h-48 md:h-64">
+                        {/* Interactive Balance Scale Visual */}
+                        <div className="absolute bottom-0 w-32 h-4 md:w-48 bg-gray-400 rounded-full z-10 hidden md:block" />
+                        <div className="absolute bottom-2 w-4 h-32 md:h-48 bg-gray-600 z-10" />
+                        <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-yellow-400 rounded-full z-30 transform -translate-x-1/2 -translate-y-1/2" />
+
+                        {/* Scale Beam */}
+                        <motion.div
+                            className="absolute top-1/2 w-full max-w-[300px] md:max-w-[400px] h-3 bg-gray-500 rounded-full z-20 origin-center"
+                            animate={{ rotate: isSubmitted ? (isCorrect ? (selectedOption === "More than" ? -15 : 15) : 0) : 0 }}
+                            transition={{ type: "spring", stiffness: 60, damping: 12 }}
+                        >
+                            {/* Left Pan */}
+                            <div className="absolute left-0 -translate-x-1/2 top-0 flex flex-col items-center origin-top" style={{ transform: "translateY(0px)" }}>
+                                <div className="w-16 h-16 md:w-24 md:h-24 bg-purple-100 border-4 border-purple-300 rounded-full flex justify-center items-center shadow-md -translate-y-1/2">
+                                    <span className="text-sm md:text-xl font-bold text-wrap text-center px-1">L</span>
+                                </div>
+                                <div className="w-0.5 h-16 md:h-24 bg-gray-400" />
+                                <div className="w-24 h-4 md:w-32 bg-gray-800 rounded-b-full shadow-xl" />
+                            </div>
+
+                            {/* Right Pan */}
+                            <div className="absolute right-0 translate-x-1/2 top-0 flex flex-col items-center origin-top" style={{ transform: "translateY(0px)" }}>
+                                <div className="w-16 h-16 md:w-24 md:h-24 bg-blue-100 border-4 border-blue-300 rounded-full flex justify-center items-center shadow-md -translate-y-1/2">
+                                    <span className="text-sm md:text-xl font-bold text-wrap text-center px-1">R</span>
+                                </div>
+                                <div className="w-0.5 h-16 md:h-24 bg-gray-400" />
+                                <div className="w-24 h-4 md:w-32 bg-gray-800 rounded-b-full shadow-xl" />
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    <div className="flex flex-col justify-center items-center w-full">
+                        <div className="w-full max-w-xl flex flex-wrap justify-center gap-4">
                             {shuffledOptions.map((opt, i) => (
-                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-6 md:p-8 rounded-[2rem] text-2xl md:text-3xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
+                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`px - 6 py - 4 md: px - 8 md: py - 6 rounded - [2rem] text - xl md: text - 2xl font - bold transition - all transform hover: scale - 105 active: scale - 95 shadow - lg border - 4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#4FB7B3] scale-105 shadow-xl' : 'border-gray-200 bg-gray-50 text-gray-500 hover:border-gray-300'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''} `}>
                                     {opt}
                                 </button>
                             ))}
                         </div>
                         {isSubmitted && (
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                {isCorrect ? feedbackMessage : "Check your estimation!"}
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt - 8 font - normal text - xl md: text - 2xl text - center px - 6 py - 3 rounded - 2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} `}>
+                                {isCorrect ? feedbackMessage : "The scale doesn't balance that way. Try again!"}
                             </motion.div>
+                        )}
+                        {!isSubmitted && (
+                            <div className="mt-6 text-gray-400 text-sm md:text-base font-normal italic">
+                                Select how the left side compares to the right side!
+                            </div>
                         )}
                     </div>
                 </div>

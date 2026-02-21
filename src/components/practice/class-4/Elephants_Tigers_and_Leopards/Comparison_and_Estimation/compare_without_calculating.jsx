@@ -162,12 +162,16 @@ const QuickCompare = () => {
         else if (valLeft < valRight) correctAnswer = "<";
         else correctAnswer = "=";
 
+        const questionText = "Compare without calculating:";
+
         return {
             id: index,
-            text: `Compare without calculating:<br/><br/>**${leftExpr}** &nbsp; <span class="px-4 py-2 border-2 border-dashed border-gray-400 rounded-lg">?</span> &nbsp; **${rightExpr}**`,
+            text: questionText,
             correctAnswer: correctAnswer,
             solution: explanation,
-            shuffledOptions: [">", "<", "="]
+            leftExpr: leftExpr,
+            rightExpr: rightExpr,
+            shuffledOptions: ["<", "=", ">"]
         };
     };
 
@@ -334,27 +338,72 @@ const QuickCompare = () => {
                 <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
-                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
+            <main className="practice-content-wrapper flex flex-col justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
+                <div className="w-full max-w-6xl mx-auto bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-4 md:p-6 lg:p-8 flex flex-col gap-6 items-stretch">
 
-                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
-                        <h2 className="text-2xl md:text-4xl font-normal text-[#31326F] text-center mb-4 leading-relaxed tracking-wider">
+                    <div className="w-full flex flex-col justify-center items-center border-b-2 border-dashed border-gray-200 pb-6 mb-2">
+                        <h2 className="text-2xl md:text-3xl font-normal text-[#31326F] text-center leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
                     </div>
 
-                    <div className="flex-1 flex flex-col justify-center items-center">
-                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
-                            {shuffledOptions.map((opt, i) => (
-                                <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-6 md:p-8 rounded-[2rem] text-4xl md:text-5xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
-                                    {opt}
-                                </button>
-                            ))}
+                    <div className="flex-1 flex flex-col justify-center items-center w-full relative">
+                        <div className="flex items-center justify-center gap-4 md:gap-8 w-full max-w-2xl mb-8">
+                            <div className="flex-1 flex justify-center items-center p-6 md:p-8 bg-blue-50 rounded-[2rem] border-4 border-blue-200 shadow-inner">
+                                <span className="text-3xl md:text-5xl font-bold text-[#31326F] whitespace-nowrap">
+                                    <LatexContent html={currentQuestion.leftExpr} />
+                                </span>
+                            </div>
+
+                            <div className="flex-shrink-0 flex justify-center items-center w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-dashed border-gray-300 bg-gray-50 z-10 relative shadow-inner">
+                                {selectedOption ? (
+                                    <span className={`text-5xl md:text-7xl font-black ${isSubmitted ? (isCorrect ? 'text-green-500' : 'text-red-500') : 'text-[#4FB7B3]'}`}>
+                                        {selectedOption}
+                                    </span>
+                                ) : (
+                                    <span className="text-4xl text-gray-300">?</span>
+                                )}
+                            </div>
+
+                            <div className="flex-1 flex justify-center items-center p-6 md:p-8 bg-blue-50 rounded-[2rem] border-4 border-blue-200 shadow-inner">
+                                <span className="text-3xl md:text-5xl font-bold text-[#31326F] whitespace-nowrap">
+                                    <LatexContent html={currentQuestion.rightExpr} />
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="w-full max-w-md grid grid-cols-3 gap-4">
+                            {shuffledOptions.map((opt, i) => {
+                                let btnStyle = 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 hover:border-gray-300';
+                                if (!isSubmitted && selectedOption === opt) {
+                                    btnStyle = 'border-gray-400 bg-gray-200 text-gray-800 scale-105 shadow-md';
+                                } else if (isSubmitted && opt === currentQuestion.correctAnswer) {
+                                    btnStyle = 'border-green-500 bg-green-50 text-green-600 shadow-green-200 scale-105';
+                                } else if (isSubmitted && selectedOption === opt && !isCorrect) {
+                                    btnStyle = 'border-red-500 bg-red-50 text-red-600 shadow-red-200 scale-105';
+                                }
+
+                                return (
+                                    <button
+                                        key={i}
+                                        disabled={isSubmitted}
+                                        onClick={() => handleAnswer(opt)}
+                                        className={`p-4 md:p-6 rounded-[2rem] text-4xl md:text-5xl font-bold transition-all transform active:scale-95 shadow-sm border-4 flex justify-center items-center ${btnStyle}`}
+                                    >
+                                        {opt}
+                                    </button>
+                                );
+                            })}
                         </div>
                         {isSubmitted && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                 {isCorrect ? feedbackMessage : "Look closely at the numbers!"}
                             </motion.div>
+                        )}
+                        {!isSubmitted && (
+                            <div className="mt-8 text-gray-400 text-lg md:text-xl font-normal italic">
+                                Select the correct sign to place in the middle!
+                            </div>
                         )}
                     </div>
 

@@ -329,35 +329,45 @@ const FourDigitSubtraction = () => {
                 <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <AnimatePresence mode="wait">
-                            <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
-                                <div className="question-card-modern" style={{ padding: '0 0 2rem 0' }}>
-                                    <div className="w-full bg-[#E0F7FA] p-8 mb-8 rounded-b-[3rem] border-b-4 border-cyan-200 flex flex-col items-center">
-                                        <div className="flex justify-center mb-6">
-                                            <div className="bg-white/50 p-4 rounded-full shadow-sm border-2 border-cyan-100"><Anchor size={48} className="text-cyan-600" /></div>
-                                        </div>
-                                        <h2 className="text-[#31326F] font-normal text-2xl md:text-3xl leading-snug text-center">
-                                            <LatexContent html={currentQuestion.text} />
-                                        </h2>
-                                    </div>
-                                    <div className="interaction-area-modern px-8">
-                                        <div className="options-grid-modern grid grid-cols-2 gap-4 max-w-2xl mx-auto">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button key={idx} className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`} style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: '700', fontSize: '1.5rem', padding: '1.5rem' }} onClick={() => handleAnswer(option)} disabled={isSubmitted}>
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>{feedbackMessage}</motion.div>
-                                        )}
-                                    </div>
-                                </div>
+            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
+                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
+
+                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
+                        <div className="bg-cyan-100 p-4 rounded-full mb-6 shadow-md border-4 border-cyan-200"><Anchor size={48} className="text-cyan-600" /></div>
+                        <h2 className="text-xl md:text-3xl font-normal text-[#31326F] text-center mb-2 leading-relaxed tracking-wider">
+                            <LatexContent html={currentQuestion.text} />
+                        </h2>
+                    </div>
+
+                    <div className="flex-1 flex flex-col justify-center items-center">
+                        <div className="w-full max-w-xl grid grid-cols-2 gap-4 md:gap-6">
+                            {shuffledOptions.map((opt, i) => {
+                                let btnStyle = 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 hover:border-gray-300';
+                                if (!isSubmitted && selectedOption === opt) {
+                                    btnStyle = 'border-gray-400 bg-gray-200 text-gray-800 scale-105 shadow-md';
+                                } else if (isSubmitted && opt === currentQuestion.correctAnswer) {
+                                    btnStyle = 'border-green-500 bg-green-50 text-green-600 shadow-green-200 scale-105';
+                                } else if (isSubmitted && selectedOption === opt && !isCorrect) {
+                                    btnStyle = 'border-red-500 bg-red-50 text-red-600 shadow-red-200 scale-105';
+                                }
+
+                                return (
+                                    <button
+                                        key={i}
+                                        disabled={isSubmitted}
+                                        onClick={() => handleAnswer(opt)}
+                                        className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform active:scale-95 shadow-sm border-4 ${btnStyle}`}
+                                    >
+                                        <LatexContent html={opt} />
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        {isSubmitted && (
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`mt-8 font-normal text-xl md:text-2xl text-center px-6 py-3 rounded-2xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {isCorrect ? feedbackMessage : "Don't give up! Try again."}
                             </motion.div>
-                        </AnimatePresence>
+                        )}
                     </div>
                 </div>
             </main>
