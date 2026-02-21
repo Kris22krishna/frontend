@@ -10,7 +10,7 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 // --- Configuration ---
 // Switch to odd columns so we have a center column for the axis
 const GRID_COLS = 11;
-const GRID_ROWS = 11;
+const GRID_ROWS = 10;
 const CELL_SIZE = 36;
 const DOT_RADIUS = 5;
 const TOUCH_RADIUS = 18;
@@ -134,9 +134,12 @@ const FairShareDraw = () => {
         const rect = svgRef.current.getBoundingClientRect();
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        // Convert screen coords to SVG viewBox coords (accounts for scaling)
+        const scaleX = CANVAS_WIDTH / rect.width;
+        const scaleY = CANVAS_HEIGHT / rect.height;
         return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY
         };
     };
 
@@ -145,7 +148,8 @@ const FairShareDraw = () => {
         const pos = getPointerPos(e);
         const gridPos = getGridIndex(pos.x, pos.y);
 
-        if (gridPos) {
+        // Only allow drawing on the RIGHT half (columns >= center) so we can connect to axis
+        if (gridPos && gridPos.col >= CENTER_COL) {
             setIsDragging(true);
             setDragStartPoint(gridPos);
             setCurrentPointer(pos); // Start rubberband
@@ -160,7 +164,8 @@ const FairShareDraw = () => {
 
         // Auto-connect check
         const gridPos = getGridIndex(pos.x, pos.y);
-        if (gridPos) {
+        // Only allow connecting to dots on the RIGHT half
+        if (gridPos && gridPos.col >= CENTER_COL) {
             // If moved to a DIFFERENT dot than dragStartPoint
             if (gridPos.col !== dragStartPoint.col || gridPos.row !== dragStartPoint.row) {
                 // Add Line
@@ -169,8 +174,6 @@ const FairShareDraw = () => {
                     c2: gridPos.col, r2: gridPos.row
                 };
 
-                // Add to userLines if not already existing?
-                // Allow drawing over same line? No harm.
                 setUserLines(prev => [...prev, newLine]);
 
                 // Move start point to this new point (continue drawing chain)
@@ -305,144 +308,205 @@ const FairShareDraw = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+
     return (
-        <div className="junior-practice-page fair-share-theme font-sans">
-            <header className="junior-practice-header flex justify-between items-center px-8">
-                <div className="header-left"></div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-xl shadow-lg">
+        <div className="junior-practice-page fair-share-theme font-sans lg:h-screen lg:overflow-hidden flex flex-col">
+            <style>{`
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+                
+                /* Landscape Specific Fixes */
+                @media (orientation: landscape) and (max-height: 500px) {
+                    .junior-practice-header {
+                        height: 48px !important;
+                    }
+                    .draw-halves-canvas-wrapper {
+                        max-width: 260px !important;
+                    }
+                    .fixed.bottom-6 {
+                        bottom: 0.75rem !important;
+                    }
+                    .fixed.left-6, .fixed.right-6 {
+                        transform: scale(0.8);
+                        transform-origin: bottom center;
+                    }
+                    .fixed.left-6 { left: 0.5rem !important; }
+                    .fixed.right-6 { right: 0.5rem !important; }
+                    
+                    .gap-4 { gap: 0.5rem !important; }
+                    .md\:gap-8 { gap: 1.5rem !important; }
+                    .pt-4, .pt-8 { padding-top: 0.5rem !important; }
+                    .pb-32 { padding-bottom: 4rem !important; }
+
+                    .text-sm.md\:text-lg {
+                        font-size: 0.75rem !important;
+                        margin-bottom: 0.2rem !important;
+                    }
+
+                    /* Smaller Undo/Clear buttons in landscape */
+                    .undo-clear-btn {
+                        padding: 0.4rem 0.8rem !important;
+                        font-size: 0.75rem !important;
+                        border-radius: 0.75rem !important;
+                    }
+                    .undo-clear-btn svg {
+                        width: 14px !important;
+                        height: 14px !important;
+                    }
+                }
+            `}</style>
+
+            <header className="junior-practice-header flex justify-between items-center px-4 md:px-8 flex-none relative">
+                <div className="header-left invisible md:visible"></div>
+
+                {/* Progress Indicator - Centered via flex-1 + text-center or absolute depending on space */}
+                <div className="flex-1 flex justify-center">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-1 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-base md:text-lg shadow-lg">
                         Symmetry {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-                <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md">
+
+                <div className="header-right ml-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm md:text-base shadow-md">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
-            <main className="practice-content-wrapper flex flex-col items-center justify-center p-4">
-                <div className="bg-white rounded-3xl shadow-xl p-6 border-4 border-[#E2E8F0] relative">
-                    <div className="text-center mb-4 text-[#475569] font-bold text-lg">
-                        Complete the picture! The red line is a mirror.
-                    </div>
+            <main className="flex-1 flex flex-col items-center justify-center p-4 min-h-0 overflow-hidden relative w-full">
+                <div className="w-full max-w-[500px] md:max-w-[800px] lg:max-w-[950px] flex flex-col h-full max-h-full relative mx-auto">
 
+                    {/* Scrollable Area containing Card AND Buttons */}
                     <div
-                        className="relative bg-slate-50 rounded-xl border-2 border-slate-200 overflow-hidden touch-none select-none"
-                        style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}
+                        className="flex-1 overflow-y-auto no-scrollbar min-h-0 flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-8 pt-4 md:pt-8 pb-32"
                     >
-                        <svg
-                            ref={svgRef}
-                            width={CANVAS_WIDTH} height={CANVAS_HEIGHT}
-                            onPointerDown={handlePointerDown}
-                            onPointerMove={handlePointerMove}
-                            onPointerUp={handlePointerUp}
-                            onPointerLeave={handlePointerUp}
-                            style={{ cursor: 'crosshair', touchAction: 'none' }}
-                        >
-                            {/* Mirror Axis */}
-                            <line
-                                x1={CANVAS_WIDTH / 2} y1={0}
-                                x2={CANVAS_WIDTH / 2} y2={CANVAS_HEIGHT}
-                                stroke="#EF4444"
-                                strokeWidth="2"
-                                strokeDasharray="6,4"
-                            />
+                        {/* Card */}
+                        <div className="bg-white rounded-3xl shadow-xl p-3 md:p-6 border-4 border-[#E2E8F0] relative w-full md:w-auto md:flex-none max-w-[500px] my-auto">
+                            <div className="text-center mb-2 md:mb-4 text-[#475569] font-bold text-sm md:text-lg">
+                                Complete the picture! The red line is a mirror.
+                            </div>
 
-                            {/* Given Left Side */}
-                            {leftLines.map((l, i) => renderLine(l, "#334155", 4, `left-${i}`))}
-
-                            {/* User Lines */}
-                            {userLines.map((l, i) => renderLine(l, isSubmitted ? (isCorrect ? "#10B981" : "#EF4444") : "#3B82F6", 4, `user-${i}`))}
-
-                            {/* Active Rubberband */}
-                            {isDragging && dragStartPoint && currentPointer && (
-                                <line
-                                    x1={getCoord(dragStartPoint.col, dragStartPoint.row).x}
-                                    y1={getCoord(dragStartPoint.col, dragStartPoint.row).y}
-                                    x2={currentPointer.x}
-                                    y2={currentPointer.y}
-                                    stroke="#60A5FA"
-                                    strokeWidth="2"
-                                    strokeDasharray="4,4"
-                                />
-                            )}
-
-                            {/* Grid - Rendered LAST to be on top */}
-                            {renderGrid()}
-                        </svg>
-                    </div>
-
-                    {/* Toolbar */}
-                    <div className="flex justify-center gap-4 mt-4">
-                        <button
-                            onClick={() => setUserLines(prev => prev.slice(0, -1))}
-                            disabled={userLines.length === 0 || isSubmitted}
-                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-bold flex items-center gap-2 disabled:opacity-50"
-                        >
-                            <RotateCcw size={18} /> Undo
-                        </button>
-                        <button
-                            onClick={() => setUserLines([])}
-                            disabled={userLines.length === 0 || isSubmitted}
-                            className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg font-bold flex items-center gap-2 disabled:opacity-50"
-                        >
-                            <Trash2 size={18} /> Clear
-                        </button>
-                    </div>
-
-                    {/* Feedback Overlay */}
-                    <AnimatePresence>
-                        {isSubmitted && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className={`absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm rounded-3xl pointer-events-none`}
+                            {/* Responsive canvas wrapper */}
+                            <div
+                                className="draw-halves-canvas-wrapper relative bg-slate-50 rounded-xl border-2 border-slate-200 overflow-hidden touch-none select-none mx-auto"
+                                style={{ width: '100%', maxWidth: CANVAS_WIDTH, aspectRatio: `${CANVAS_WIDTH} / ${CANVAS_HEIGHT}` }}
                             >
-                                <div className={`text-3xl font-black ${isCorrect ? 'text-green-600' : 'text-red-500'} bg-white p-6 rounded-2xl shadow-2xl border-4 ${isCorrect ? 'border-green-100' : 'border-red-100'}`}>
-                                    {feedbackMessage}
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                                <svg
+                                    ref={svgRef}
+                                    viewBox={`0 0 ${CANVAS_WIDTH} ${CANVAS_HEIGHT}`}
+                                    width="100%"
+                                    height="100%"
+                                    onPointerDown={handlePointerDown}
+                                    onPointerMove={handlePointerMove}
+                                    onPointerUp={handlePointerUp}
+                                    onPointerLeave={handlePointerUp}
+                                    style={{ cursor: 'crosshair', touchAction: 'none', display: 'block' }}
+                                >
+                                    {/* Mirror Axis */}
+                                    <line
+                                        x1={CANVAS_WIDTH / 2} y1={0}
+                                        x2={CANVAS_WIDTH / 2} y2={CANVAS_HEIGHT}
+                                        stroke="#EF4444"
+                                        strokeWidth="2"
+                                        strokeDasharray="6,4"
+                                    />
+
+                                    {/* Given Left Side */}
+                                    {leftLines.map((l, i) => renderLine(l, "#334155", 4, `left-${i}`))}
+
+                                    {/* User Lines */}
+                                    {userLines.map((l, i) => renderLine(l, isSubmitted ? (isCorrect ? "#10B981" : "#EF4444") : "#3B82F6", 4, `user-${i}`))}
+
+                                    {/* Active Rubberband */}
+                                    {isDragging && dragStartPoint && currentPointer && (
+                                        <line
+                                            x1={getCoord(dragStartPoint.col, dragStartPoint.row).x}
+                                            y1={getCoord(dragStartPoint.col, dragStartPoint.row).y}
+                                            x2={currentPointer.x}
+                                            y2={currentPointer.y}
+                                            stroke="#60A5FA"
+                                            strokeWidth="2"
+                                            strokeDasharray="4,4"
+                                        />
+                                    )}
+
+                                    {/* Grid - Rendered LAST to be on top */}
+                                    {renderGrid()}
+                                </svg>
+                            </div>
+
+                            {/* Feedback Overlay */}
+                            <AnimatePresence>
+                                {isSubmitted && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className={`absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm rounded-3xl pointer-events-none`}
+                                    >
+                                        <div className={`text-3xl font-black ${isCorrect ? 'text-green-600' : 'text-red-500'} bg-white p-6 rounded-2xl shadow-2xl border-4 ${isCorrect ? 'border-green-100' : 'border-red-100'}`}>
+                                            {feedbackMessage}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Toolbar - Right side on Desktop/Landscape, Bottom on Mobile Portrait */}
+                        <div className="flex justify-center md:flex-col md:justify-center gap-3 md:gap-4 pt-4 md:pt-0 pb-8 md:pb-0 flex-none w-full md:w-auto my-auto">
+                            <button
+                                onClick={() => setUserLines(prev => prev.slice(0, -1))}
+                                disabled={userLines.length === 0 || isSubmitted}
+                                className="undo-clear-btn bg-white border-2 border-gray-200 hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50 shadow-sm transition-all hover:scale-105"
+                            >
+                                <RotateCcw size={20} /> Undo
+                            </button>
+                            <button
+                                onClick={() => setUserLines([])}
+                                disabled={userLines.length === 0 || isSubmitted}
+                                className="undo-clear-btn bg-red-50 border-2 border-red-100 hover:bg-red-100 text-red-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50 shadow-sm transition-all hover:scale-105"
+                            >
+                                <Trash2 size={20} /> Clear
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </main>
 
-            <footer className="junior-bottom-bar">
-                <div className="desktop-footer-controls w-full flex justify-between px-8 py-4">
-                    <button
-                        className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                        onClick={async () => {
-                            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                            navigate(-1);
-                        }}
-                    >
-                        <StickerExit size={20} className="hidden" />
-                        Exit
-                    </button>
+            {/* Floating Sticky Navigation Controls - No Footer */}
+            <div className="fixed bottom-6 left-6 z-50 pointer-events-none">
+                <button
+                    className="pointer-events-auto bg-white/90 backdrop-blur-md text-red-500 px-6 py-3 rounded-2xl border-2 border-red-100 font-bold hover:bg-red-100 transition-all shadow-lg hover:scale-105 flex items-center gap-2 active:scale-95"
+                    onClick={async () => {
+                        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                        navigate(-1);
+                    }}
+                >
+                    <X size={20} strokeWidth={3} /> <span className="hidden md:inline">Exit</span>
+                </button>
+            </div>
 
-                    <div className="nav-buttons-group">
-                        {isSubmitted ? (
-                            <button className="nav-pill-next-btn bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full text-xl font-bold flex items-center gap-2 shadow-lg transition-all transform hover:scale-105" onClick={nextQuestion}>
-                                {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                    <>Next <ChevronRight size={28} strokeWidth={3} /></>
-                                ) : (
-                                    <>Done <Check size={28} strokeWidth={3} /></>
-                                )}
-                            </button>
+            <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
+                {isSubmitted ? (
+                    <button
+                        className="pointer-events-auto bg-[#FF6B6B] text-white px-8 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#EE5253] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#EE5253] active:translate-y-[2px] active:shadow-[0_2px_0_#EE5253] transition-all flex items-center gap-2"
+                        onClick={nextQuestion}
+                    >
+                        {qIndex < TOTAL_QUESTIONS - 1 ? (
+                            <>Next <ChevronRight size={28} strokeWidth={4} /></>
                         ) : (
-                            <button
-                                className="nav-pill-submit-btn bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-xl font-bold flex items-center gap-2 shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                                onClick={checkAnswer}
-                                disabled={userLines.length === 0}
-                            >
-                                Submit <Check size={28} strokeWidth={3} />
-                            </button>
+                            <>Done <Check size={28} strokeWidth={4} /></>
                         )}
-                    </div>
-                </div>
-                {/* Mobile version omitted for brevity but container exists */}
-            </footer>
+                    </button>
+                ) : (
+                    <button
+                        className="pointer-events-auto bg-[#4FB7B3] text-white px-8 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#3A8C89] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#3A8C89] active:translate-y-[2px] active:shadow-[0_2px_0_#3A8C89] transition-all flex items-center gap-2 disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none"
+                        onClick={checkAnswer}
+                        disabled={userLines.length === 0}
+                    >
+                        Submit <Check size={28} strokeWidth={4} />
+                    </button>
+                )}
+            </div>
 
             <ExplanationModal
                 isOpen={showExplanationModal}
