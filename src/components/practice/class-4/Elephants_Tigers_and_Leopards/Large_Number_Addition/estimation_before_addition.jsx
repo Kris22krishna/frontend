@@ -115,6 +115,13 @@ const EstimateFirstAddition = () => {
         let questionText = "";
         let explanation = "";
 
+        const animals = ["elephants", "tigers", "leopards", "rhinos"];
+        const states = ["Karnataka", "Kerala", "Assam", "Gujarat", "Madhya Pradesh", "Maharashtra"];
+
+        const a1 = animals[randomInt(0, animals.length - 1)];
+        const s1 = states[randomInt(0, Math.floor(states.length / 2) - 1)];
+        let s2 = states[randomInt(Math.floor(states.length / 2), states.length - 1)];
+
         if (difficulty === 'easy') {
             n1 = randomInt(11, 89);
             n2 = randomInt(11, 89);
@@ -123,7 +130,7 @@ const EstimateFirstAddition = () => {
             est1 = roundTo(n1, 10);
             est2 = roundTo(n2, 10);
             sumEst = est1 + est2;
-            questionText = `Estimate **${n1} + ${n2}** by rounding each number to the nearest **10**.`;
+            questionText = `A wildlife park has **${n1}** parrots and **${n2}** owls. Estimate the total number of these birds by rounding each to the nearest **10**.`;
             explanation = `${n1} rounds to ${est1}.<br/>${n2} rounds to ${est2}.<br/>Estimated Sum: ${est1} + ${est2} = ${sumEst}.`;
         } else if (difficulty === 'medium') {
             n1 = randomInt(120, 880);
@@ -133,16 +140,16 @@ const EstimateFirstAddition = () => {
             est1 = roundTo(n1, 100);
             est2 = roundTo(n2, 100);
             sumEst = est1 + est2;
-            questionText = `Estimate **${n1} + ${n2}** by rounding to the nearest **100**.`;
-            explanation = `${n1} → ${est1}.<br/>${n2} → ${est2}.<br/>${est1} + ${est2} = **${sumEst}**.`;
+            questionText = `There are **${n1}** ${a1} in ${s1} and **${n2}** in ${s2}. Estimate the total number of ${a1} in these two states by rounding each to the nearest **100**.`;
+            explanation = `${n1} rounds to ${est1}.<br/>${n2} rounds to ${est2}.<br/>Estimated Sum: ${est1} + ${est2} = **${sumEst}**.`;
         } else {
-            n1 = randomInt(1200, 4500);
-            n2 = randomInt(1200, 4500);
+            n1 = randomInt(1200, 8500);
+            n2 = randomInt(1200, 8500);
             est1 = roundTo(n1, 1000);
             est2 = roundTo(n2, 1000);
             sumEst = est1 + est2;
-            questionText = `Estimate the sum of **${n1}** and **${n2}** (Round to nearest 1000).`;
-            explanation = `${n1} → ${est1}, ${n2} → ${est2}.<br/>Sum ≈ ${sumEst}.`;
+            questionText = `The population of ${a1} in ${s1} is **${n1}** and in ${s2} is **${n2}**. Estimate the total population of ${a1} in both states by rounding each to the nearest **1000**.`;
+            explanation = `${n1} rounds to ${est1}.<br/>${n2} rounds to ${est2}.<br/>Sum ≈ ${sumEst}.`;
         }
 
         const correctVal = sumEst.toString();
@@ -326,18 +333,18 @@ const EstimateFirstAddition = () => {
                 <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
-                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
+            <main className="practice-content-wrapper flex items-start justify-center min-h-[calc(100vh-200px)] p-4 pt-8 md:pt-12 relative pb-24 md:pb-32 overflow-y-auto">
+                <div className="w-full max-w-5xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-col gap-8 items-stretch mb-20 md:mb-0">
 
-                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
-                        <div className="bg-blue-100 p-6 rounded-full mb-8 shadow-md border-4 border-blue-200"><Ruler size={64} className="text-blue-600" /></div>
-                        <h2 className="text-2xl md:text-3xl font-normal text-[#31326F] text-center mb-4 leading-relaxed tracking-wider">
+                    <div className="flex-1 flex flex-col justify-start items-center border-b-2 border-dashed border-gray-200 pb-8">
+                        <div className="bg-blue-100 p-6 rounded-full mb-6 shadow-md border-4 border-blue-200"><Ruler size={48} className="text-blue-600" /></div>
+                        <h2 className="text-xl md:text-3xl font-normal text-[#31326F] text-center mb-2 leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center items-center">
-                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
+                        <div className="w-full max-w-2xl grid grid-cols-2 gap-4 md:gap-6">
                             {shuffledOptions.map((opt, i) => (
                                 <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
                                     {opt}

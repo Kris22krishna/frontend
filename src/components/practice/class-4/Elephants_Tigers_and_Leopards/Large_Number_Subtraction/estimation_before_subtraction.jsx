@@ -115,6 +115,12 @@ const EstimateFirstSubtraction = () => {
         let questionText = "";
         let explanation = "";
 
+        const animals = ["elephants", "tigers", "leopards", "rhinos"];
+        const states = ["Karnataka", "Kerala", "Assam", "Gujarat", "Madhya Pradesh", "Maharashtra"];
+
+        const a1 = animals[randomInt(0, animals.length - 1)];
+        const s1 = states[randomInt(0, states.length - 1)];
+
         if (difficulty === 'easy') {
             n1 = randomInt(50, 95);
             n2 = randomInt(11, n1 - 10);
@@ -125,8 +131,8 @@ const EstimateFirstSubtraction = () => {
             est2 = roundTo(n2, 10);
             diffEst = est1 - est2;
 
-            questionText = `Estimate **${n1} - ${n2}** by rounding to the nearest **10**.`;
-            explanation = `${n1} → ${est1}.<br/>${n2} → ${est2}.<br/>Estimated Difference: ${est1} - ${est2} = ${diffEst}.`;
+            questionText = `A jungle section had **${n1}** deer, but **${n2}** migrated away. Estimate how many deer are left by rounding each number to the nearest **10**.`;
+            explanation = `${n1} → ${est1}.<br/>${n2} → ${est2}.<br/>Estimated Difference: ${est1} - ${est2} = **${diffEst}**.`;
         } else if (difficulty === 'medium') {
             n1 = randomInt(500, 900);
             n2 = randomInt(100, 400);
@@ -135,7 +141,7 @@ const EstimateFirstSubtraction = () => {
             est2 = roundTo(n2, 100);
             diffEst = est1 - est2;
 
-            questionText = `The population dropped from **${n1}** to **${n2}**. Estimate the decrease (Round to 100).`;
+            questionText = `The population of ${a1} dropped from **${n1}** to **${n2}** over a decade. Estimate the decrease by rounding to the nearest **100**.`;
             explanation = `${n1} ≈ ${est1}, ${n2} ≈ ${est2}.<br/>Decrease ≈ ${est1} - ${est2} = **${diffEst}**.`;
         } else {
             n1 = randomInt(5000, 9000);
@@ -145,8 +151,11 @@ const EstimateFirstSubtraction = () => {
             est2 = roundTo(n2, 1000);
             diffEst = est1 - est2;
 
-            questionText = `Start: **${n1}**, End: **${n2}**. About how much was removed? (Nearest 1000)`;
-            explanation = `${n1} → ${est1}, ${n2} → ${est2}.<br/>Result ≈ ${diffEst}.`;
+            let s2 = states[randomInt(0, states.length - 1)];
+            while (s1 === s2) s2 = states[randomInt(0, states.length - 1)];
+
+            questionText = `${s1} has **${n1}** ${a1}, and ${s2} has **${n2}**. Estimate how many more ${a1} are in ${s1} by rounding to the nearest **1000**.`;
+            explanation = `${n1} → ${est1}, ${n2} → ${est2}.<br/>Difference ≈ ${est1} - ${est2} = **${diffEst}**.`;
         }
 
         const correctVal = diffEst.toString();
@@ -336,18 +345,18 @@ const EstimateFirstSubtraction = () => {
                 <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper flex items-center justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
-                <div className="w-full max-w-6xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-row gap-8 items-stretch">
+            <main className="practice-content-wrapper flex items-start justify-center min-h-[calc(100vh-200px)] p-4 pt-8 md:pt-12 relative pb-24 md:pb-32 overflow-y-auto">
+                <div className="w-full max-w-5xl bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-6 lg:p-10 flex flex-col md:flex-col gap-8 items-stretch mb-20 md:mb-0">
 
-                    <div className="flex-1 flex flex-col justify-center items-center border-b-2 md:border-b-0 md:border-r-2 border-dashed border-gray-200 pb-6 md:pb-0 md:pr-8">
-                        <div className="bg-red-100 p-6 rounded-full mb-8 shadow-md border-4 border-red-200"><Scissors size={64} className="text-red-600" /></div>
-                        <h2 className="text-2xl md:text-3xl font-normal text-[#31326F] text-center mb-4 leading-relaxed tracking-wider">
+                    <div className="flex-1 flex flex-col justify-start items-center border-b-2 border-dashed border-gray-200 pb-8">
+                        <div className="bg-red-100 p-6 rounded-full mb-6 shadow-md border-4 border-red-200"><Scissors size={48} className="text-red-600" /></div>
+                        <h2 className="text-xl md:text-3xl font-normal text-[#31326F] text-center mb-2 leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center items-center">
-                        <div className="w-full max-w-md grid grid-cols-2 gap-4">
+                        <div className="w-full max-w-2xl grid grid-cols-2 gap-4 md:gap-6">
                             {shuffledOptions.map((opt, i) => (
                                 <button key={i} disabled={isSubmitted} onClick={() => handleAnswer(opt)} className={`p-4 md:p-6 rounded-[2rem] text-xl md:text-2xl font-normal transition-all transform hover:scale-105 active:scale-95 shadow-lg border-4 ${selectedOption === opt ? 'border-[#4FB7B3] bg-[#E0FBEF] text-[#31326F] scale-105 shadow-xl' : 'border-gray-100 bg-white text-gray-500 hover:border-[#4FB7B3]/50'} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'border-green-500 bg-green-50 text-green-600 shadow-green-200' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'border-red-500 bg-red-50 text-red-600 shadow-red-200' : ''}`}>
                                     {opt}
