@@ -69,8 +69,6 @@ const questions = [
     },
     {
         id: 7,
-        question: "Find the missing step: 880, ___, 920 (Hint: +20)", // Based on diagram +?? to get 905 is tricky. Diagram shows X layout.
-        // Simplified based on diagram components: 880 -> 905 (+25). 905 -> 930 (+25).
         question: "Jump by 25: 880, ___, 930",
         patternType: 'cross',
         sequence: [880, null, 930],

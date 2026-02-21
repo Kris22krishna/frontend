@@ -23,7 +23,11 @@ const SeniorGradeSyllabus = () => {
         const fetchSkills = async () => {
             setLoading(true);
             try {
-                if (grade === '10') {
+                if (grade === '12') {
+                    setSkills([
+                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' }
+                    ]);
+                } else if (grade === '10') {
                     setSkills([
                         { skill_id: 10031, skill_name: 'Form a pair of linear equations from word problems', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Forming Linear Equations from Real-Life Situations' },
 
@@ -427,7 +431,14 @@ const SeniorGradeSyllabus = () => {
                         <div
                             key={topic}
                             className="topic-card"
-                            onClick={() => setSelectedTopic(topic)}
+                            onClick={() => {
+                                const topicSkills = skillsByTopic[topic];
+                                if (topicSkills.length === 1 && topicSkills[0].path) {
+                                    navigate(topicSkills[0].path);
+                                } else {
+                                    setSelectedTopic(topic);
+                                }
+                            }}
                         >
                             <div className="topic-card-icon">
                                 <Layout size={32} />

@@ -274,6 +274,15 @@ import ProvingIrrationality from './components/practice/class-10/Real Numbers/Pr
 import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
 import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
 
+// Class 12 - Matrices Chapter
+import MatricesChapter from './components/practice/class-12/MatricesChapter';
+import WhoUsesMatrices from './components/practice/class-12/pages/WhoUsesMatrices';
+import WhatIsMatrix from './components/practice/class-12/pages/WhatIsMatrix';
+import WhenDoWeNeedMatrices from './components/practice/class-12/pages/WhenDoWeNeedMatrices';
+import HowOperationsWork from './components/practice/class-12/pages/HowOperationsWork';
+import WhyRulesWork from './components/practice/class-12/pages/WhyRulesWork';
+import WhereApplied from './components/practice/class-12/pages/WhereApplied';
+
 // Grade 3 - Fair Share
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
 import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
@@ -675,7 +684,7 @@ function App() {
         <Route path="/junior/grade/:grade/equal-groups/create-your-own-equal-groups" element={
           <ProtectedRoute redirectTo="/login">
             <CreateYourOwnEqualGroups />
-        </ProtectedRoute>
+          </ProtectedRoute>
         } />
         {/* Weigh It, Pour It Routes */}
         <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
@@ -1072,6 +1081,15 @@ function App() {
         <Route path="/high/practice/10207" element={<ProvingIrrationality />} />
         <Route path="/high/practice/10208" element={<IrrationalOperations />} />
         <Route path="/high/practice/10209" element={<RealNumbersTest />} />
+
+        {/* Class 12: Matrices Chapter Routes */}
+        <Route path="/senior/grade/12/matrices" element={<MatricesChapter />} />
+        <Route path="/senior/grade/12/matrices/who-uses" element={<WhoUsesMatrices />} />
+        <Route path="/senior/grade/12/matrices/what-is" element={<WhatIsMatrix />} />
+        <Route path="/senior/grade/12/matrices/when-need" element={<WhenDoWeNeedMatrices />} />
+        <Route path="/senior/grade/12/matrices/how-operations" element={<HowOperationsWork />} />
+        <Route path="/senior/grade/12/matrices/why-rules" element={<WhyRulesWork />} />
+        <Route path="/senior/grade/12/matrices/where-applied" element={<WhereApplied />} />
       </Routes>
     </Router>
   );
