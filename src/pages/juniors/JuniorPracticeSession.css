@@ -17,11 +17,12 @@
 /* Ensure global box-sizing for this component's children if not already set globally */
 .junior-practice-page * {
     box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
 }
 
 /* Header */
 .junior-practice-header {
-    height: 80px;
+    height: 64px;
     /* Reduced height */
     position: relative;
     z-index: 20;
@@ -205,9 +206,8 @@
     position: relative;
     z-index: 10;
     border: 4px solid #FFFFFF;
-    overflow-y: auto !important;
-    /* Force vertical scrolling */
-    overflow-x: hidden;
+    /* overflow-y: auto !important; REMOVED per user request */
+    /* overflow-x: hidden; */
     scrollbar-width: thin;
     /* Firefox */
     scrollbar-color: #B2DFDB transparent;
@@ -265,12 +265,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: none; /* Allow it to grow */
+    flex: none;
+    /* Allow it to grow */
     min-height: min-content;
     /* Crucial for nested flex scrolling */
     justify-content: flex-start;
     /* Start from top */
-    overflow-y: visible; /* DISABLE INTERNAL SCROLL */
+    overflow-y: visible;
+    /* DISABLE INTERNAL SCROLL */
     padding-top: 0.5rem;
     padding-bottom: 3rem;
     /* Extra padding at bottom */
@@ -315,7 +317,10 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 100%;
+
+    /* Flex sizing for 2-column look */
+    flex: 0 0 calc(50% - 0.5rem);
+    width: auto;
 }
 
 .option-btn-modern:hover {
@@ -1194,6 +1199,8 @@
 
     .option-btn-modern {
         width: 100%;
+        /* Reset flex basis for column layout */
+        flex: 0 0 auto;
         min-height: 56px;
         /* Touch target size */
         padding: 0.8rem 1.2rem;
@@ -1387,7 +1394,9 @@
     }
 
     .mobile-footer-left {
-        display: none !important;
+        display: flex;
+        align-items: center;
+        width: auto;
     }
 
     .mobile-footer-right {
