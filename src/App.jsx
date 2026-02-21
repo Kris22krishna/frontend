@@ -103,6 +103,18 @@ import DecimalOperations from './components/practice/class-5/TenthsandHundrendth
 import ConversionBetweenForms from './components/practice/class-5/TenthsandHundrendths/Decimals/conversion-between-forms';
 import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
 
+// Grade 5 Area and its Boundary Components
+import FindingArea from './components/practice/class-5/AreaAndItsBoundary/Area/FindingArea';
+import CompareShapesSameArea from './components/practice/class-5/AreaAndItsBoundary/Area/CompareShapesSameArea';
+import AreaRealLife from './components/practice/class-5/AreaAndItsBoundary/Area/AreaRealLife';
+import AppropriateAreaUnits from './components/practice/class-5/AreaAndItsBoundary/Area/AppropriateAreaUnits';
+import FindingPerimeter from './components/practice/class-5/AreaAndItsBoundary/Perimeter/FindingPerimeter';
+import PerimeterAsBoundary from './components/practice/class-5/AreaAndItsBoundary/Perimeter/PerimeterAsBoundary';
+import SamePerimeterDifferentShapes from './components/practice/class-5/AreaAndItsBoundary/Perimeter/SamePerimeterDifferentShapes';
+import PerimeterRealLife from './components/practice/class-5/AreaAndItsBoundary/Perimeter/PerimeterRealLife';
+import AreaPerimeterRelationship from './components/practice/class-5/AreaAndItsBoundary/AreaPerimeterRelationship/AreaPerimeterRelationship';
+import SkillApplicationProblemsArea from './components/practice/class-5/AreaAndItsBoundary/SkillApplicationProblems/SkillApplicationProblemsArea';
+
 // Grade 5 - How Big? How Heavy?
 import VolumeByDisplacement from './components/practice/class-5/Howbighowheavy/volume measurement/volume-by-displacement';
 import UnitsOfVolume from './components/practice/class-5/Howbighowheavy/volume measurement/units-of-volume';
@@ -533,6 +545,18 @@ function App() {
         <Route path="/middle/grade/5/tenths-hundredths/operations" element={<DecimalOperations />} />
         <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ConversionBetweenForms />} />
         <Route path="/middle/grade/5/tenths-hundredths/word-problems" element={<DecimalWordProblems />} />
+
+        {/* Grade 5 - Area and its Boundary */}
+        <Route path="/middle/grade/5/area-boundary/area/finding-area" element={<FindingArea />} />
+        <Route path="/middle/grade/5/area-boundary/area/compare-shapes" element={<CompareShapesSameArea />} />
+        <Route path="/middle/grade/5/area-boundary/area/real-life" element={<AreaRealLife />} />
+        <Route path="/middle/grade/5/area-boundary/area/units" element={<AppropriateAreaUnits />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/finding-perimeter" element={<FindingPerimeter />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/boundary-length" element={<PerimeterAsBoundary />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/different-shapes" element={<SamePerimeterDifferentShapes />} />
+        <Route path="/middle/grade/5/area-boundary/perimeter/real-life" element={<PerimeterRealLife />} />
+        <Route path="/middle/grade/5/area-boundary/relationship" element={<AreaPerimeterRelationship />} />
+        <Route path="/middle/grade/5/area-boundary/skill-application" element={<SkillApplicationProblemsArea />} />
 
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
