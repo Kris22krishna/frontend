@@ -61,11 +61,8 @@ const MiddleGradeSyllabus = () => {
         }));
     };
 
-    const handleSkillClick = (skill) => {
-        if (!isAuthenticated) {
-            setPendingSkill(skill);
-            setShowLoginModal(true);
-        } else if (skill.isLocal) {
+    const navigateToSkill = (skill) => {
+        if (skill.isLocal) {
             navigate(skill.path);
         } else {
             const lowerSkillName = skill.skill_name.toLowerCase();
@@ -152,9 +149,18 @@ const MiddleGradeSyllabus = () => {
         }
     };
 
+    const handleSkillClick = (skill) => {
+        if (!isAuthenticated) {
+            setPendingSkill(skill);
+            setShowLoginModal(true);
+        } else {
+            navigateToSkill(skill);
+        }
+    };
+
     const handleLoginSuccess = () => {
         if (pendingSkill) {
-            navigate(`/middle/practice/${pendingSkill.skill_id}`, { state: { grade: grade } });
+            navigateToSkill(pendingSkill);
             setPendingSkill(null);
         }
     };
