@@ -508,6 +508,7 @@ const MiddlePracticeSession = () => {
                             {currentQ && (
                                 <QuestionCard
                                     question={currentQ}
+                                    serialNumber={currentIndex + 1}
                                     selectedAnswer={userAnswers[currentQ.id]}
                                     onAnswer={handleAnswer}
                                     onViewExplanation={() => setShowExplanation(true)}

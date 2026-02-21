@@ -19,6 +19,7 @@
 /* Ensure global box-sizing for this component's children if not already set globally */
 .junior-practice-page * {
     box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
 }
 
 /* Header */
@@ -337,7 +338,10 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 100%;
+
+    /* Flex sizing for 2-column look */
+    flex: 0 0 calc(50% - 0.5rem);
+    width: auto;
 }
 
 .option-btn-modern:hover {
@@ -1214,6 +1218,8 @@
 
     .option-btn-modern {
         width: 100%;
+        /* Reset flex basis for column layout */
+        flex: 0 0 auto;
         min-height: 56px;
         /* Touch target size */
         padding: 0.8rem 1.2rem;
@@ -1407,7 +1413,9 @@
     }
 
     .mobile-footer-left {
-        display: none !important;
+        display: flex;
+        align-items: center;
+        width: auto;
     }
 
     .mobile-footer-right {

@@ -103,6 +103,20 @@ import DecimalOperations from './components/practice/class-5/TenthsandHundrendth
 import ConversionBetweenForms from './components/practice/class-5/TenthsandHundrendths/Decimals/conversion-between-forms';
 import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
 
+// Grade 5 - How Big? How Heavy?
+import VolumeByDisplacement from './components/practice/class-5/Howbighowheavy/volume measurement/volume-by-displacement';
+import UnitsOfVolume from './components/practice/class-5/Howbighowheavy/volume measurement/units-of-volume';
+import VolumeEstimation from './components/practice/class-5/Howbighowheavy/volume measurement/volume-estimation';
+import VolumeUsingUnitCubes from './components/practice/class-5/Howbighowheavy/volume measurement/volume-using-unit-cubes';
+import UnitsOfMass from './components/practice/class-5/Howbighowheavy/mass measurement/units-of-mass';
+import MassConversion from './components/practice/class-5/Howbighowheavy/mass measurement/mass-conversion';
+import MassCalculation from './components/practice/class-5/Howbighowheavy/mass measurement/mass-calculation';
+import WeightEstimationComparison from './components/practice/class-5/Howbighowheavy/mass measurement/weight-estimation-comparison';
+import ThreeDShapeConstruction from './components/practice/class-5/Howbighowheavy/measurement based reasoning/3d-shape-construction';
+import PackagingAndLayering from './components/practice/class-5/Howbighowheavy/measurement based reasoning/packaging-and-layering';
+import MeasurementInRealLife from './components/practice/class-5/Howbighowheavy/measurement based reasoning/measurement-in-real-life';
+import SkillApplicationProblems from './components/practice/class-5/Howbighowheavy/skill application problem/skill-application-problem';
+
 import RakshaBandhanIntro from './components/practice/class-3/Raksha-Bandhan/fill-in-the-blanks';
 import RakshaBandhanMultiplication from './components/practice/class-3/Raksha-Bandhan/multiplication';
 import RakshaBandhanDivision from './components/practice/class-3/Raksha-Bandhan/division';
@@ -170,7 +184,8 @@ import RuleApplications from './components/practice/class-5/CanyouseethePattern/
 import MultiStepOperations from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/multi-step-operations';
 import MissingNumberReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/missing-number-reasoning';
 import MentalCalculationReasoning from './components/practice/class-5/CanyouseethePattern/LogicalReasoning/mental-calculation-strategies';
-import SkillApplicationProblems from './components/practice/class-5/CanyouseethePattern/SkillApplicationProblems/skill-application-problems-patterns';
+import SkillApplicationProblemsPatterns from './components/practice/class-5/CanyouseethePattern/SkillApplicationProblems/skill-application-problems-patterns';
+import ChapterTestPatterns from './components/practice/class-5/CanyouseethePattern/ChapterTest/chapter-test';
 
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
@@ -278,6 +293,8 @@ import FairShareCutting from './components/practice/class-3/fair-share/cutting';
 import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
 import FairShareDraw from './components/practice/class-3/fair-share/draw-halves';
 import FairShareGuesswho from './components/practice/class-3/fair-share/guess-who-am-i';
+import LongerShorterStrings from './components/practice/class-3/Fun-at-class-party/Longer&Shorter-strings';
+import HeightsAndMeters from './components/practice/class-3/Fun-at-class-party/heights-and-meters';
 
 // Grade 4 - The Cleanest Village
 import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
@@ -295,6 +312,25 @@ import ChapterSceneMixedOperations from './components/practice/class-4/The_Clean
 import LetUsPlay from './components/practice/class-4/The_Cleanest_Village/Let_Us_Play/let_us_play';
 import ChapterTest from './components/practice/class-4/The_Cleanest_Village/Chapter_Test/chapter_test';
 
+// Grade 4 - Equal Groups
+import JumpBasedMultiples from './components/practice/class-4/Equal_Groups/Multiples_and_Skip_Counting/jump_based_multiples';
+import CommonMultiplesFromJumps from './components/practice/class-4/Equal_Groups/Multiples_and_Skip_Counting/common_multiples_from_jumps';
+import GroupSizeAndNumberOfGroups from './components/practice/class-4/Equal_Groups/Equal_Groups_to_Multiplication/group_size_and_number_of_groups';
+import ArraysRowsAndColumns from './components/practice/class-4/Equal_Groups/Equal_Groups_to_Multiplication/arrays_rows_and_columns';
+import DoublingNumbers from './components/practice/class-4/Equal_Groups/Doubling_and_Number_Patterns/doubling_numbers';
+import DoublingOnesDigitPatterns from './components/practice/class-4/Equal_Groups/Doubling_and_Number_Patterns/doubling_ones_digit_patterns';
+import MultiplyUsingTens from './components/practice/class-4/Equal_Groups/Multiplication_Strategies/multiply_using_tens';
+import MultiplyUsingHundreds from './components/practice/class-4/Equal_Groups/Multiplication_Strategies/multiply_using_hundreds';
+import BreakApartMultiplication from './components/practice/class-4/Equal_Groups/Multiplication_Strategies/break_apart_multiplication';
+import EqualGroupsStoryProblems from './components/practice/class-4/Equal_Groups/Multiplication_Word_Problems/equal_groups_story_problems';
+import DivisionByPartialGroups from './components/practice/class-4/Equal_Groups/Division_as_Grouping/division_by_partial_groups';
+import DivisionWithRemainders from './components/practice/class-4/Equal_Groups/Division_as_Grouping/division_with_remainders';
+import DivideUsingPatterns from './components/practice/class-4/Equal_Groups/Division_Patterns_and_Sharing/divide_using_patterns';
+import EqualSharingDivision from './components/practice/class-4/Equal_Groups/Division_Patterns_and_Sharing/equal_sharing_division';
+import EqualGroupsMixedWordProblems from './components/practice/class-4/Equal_Groups/Mixed_Multiplication_Division_Word_Problems/equal_groups_mixed_word_problems';
+import AlwaysSometimesNeverStatements from './components/practice/class-4/Equal_Groups/Mathematical_Reasoning/always_sometimes_never_statements';
+import FindTheMistakeEqualGroups from './components/practice/class-4/Equal_Groups/Mathematical_Reasoning/find_the_mistake_equal_groups';
+import CreateYourOwnEqualGroups from './components/practice/class-4/Equal_Groups/Mathematical_Reasoning/create_your_own_equal_groups';
 // Grade 4 - Weigh It, Pour It
 import GramToKilogramFractions from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/gram_to_kilogram_fractions';
 import MakeOneKilogramUsingPackets from './components/practice/class-4/Weigh_It_Pour_It/Weight_Unit_Conversion/make_one_kilogram_using_packets';
@@ -379,6 +415,16 @@ function App() {
         <Route path="/junior/grade/:grade/fair-share/guess-who" element={
           <ProtectedRoute redirectTo="/login">
             <FairShareGuesswho />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-at-class-party/longer-shorter" element={
+          <ProtectedRoute redirectTo="/login">
+            <LongerShorterStrings />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-at-class-party/heights-and-meters" element={
+          <ProtectedRoute redirectTo="/login">
+            <HeightsAndMeters />
           </ProtectedRoute>
         } />
 
@@ -566,6 +612,97 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Equal Groups Routes */}
+        <Route path="/junior/grade/:grade/equal-groups/jump-based-multiples" element={
+          <ProtectedRoute redirectTo="/login">
+            <JumpBasedMultiples />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/common-multiples-from-jumps" element={
+          <ProtectedRoute redirectTo="/login">
+            <CommonMultiplesFromJumps />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/group-size-and-number-of-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <GroupSizeAndNumberOfGroups />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/arrays-rows-and-columns" element={
+          <ProtectedRoute redirectTo="/login">
+            <ArraysRowsAndColumns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/doubling-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <DoublingNumbers />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/doubling-ones-digit-patterns" element={
+          <ProtectedRoute redirectTo="/login">
+            <DoublingOnesDigitPatterns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/multiply-using-tens" element={
+          <ProtectedRoute redirectTo="/login">
+            <MultiplyUsingTens />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/multiply-using-hundreds" element={
+          <ProtectedRoute redirectTo="/login">
+            <MultiplyUsingHundreds />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/break-apart-multiplication" element={
+          <ProtectedRoute redirectTo="/login">
+            <BreakApartMultiplication />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/equal-groups-story-problems" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualGroupsStoryProblems />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/division-by-partial-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionByPartialGroups />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/division-with-remainders" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisionWithRemainders />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/divide-using-patterns" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivideUsingPatterns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/equal-sharing-division" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualSharingDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/equal-groups-mixed-word-problems" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualGroupsMixedWordProblems />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/always-sometimes-never-statements" element={
+          <ProtectedRoute redirectTo="/login">
+            <AlwaysSometimesNeverStatements />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/find-the-mistake-equal-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <FindTheMistakeEqualGroups />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/equal-groups/create-your-own-equal-groups" element={
+          <ProtectedRoute redirectTo="/login">
+            <CreateYourOwnEqualGroups />
+          </ProtectedRoute>
+        } />
         {/* Weigh It, Pour It Routes */}
         <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
           <ProtectedRoute redirectTo="/login">
@@ -720,7 +857,7 @@ function App() {
         <Route path="/junior/grade/1/numbers-from-one-to-nine" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers1to9 /></ProtectedRoute>} />
         <Route path="/junior/grade/1/addition" element={<ProtectedRoute redirectTo="/login"><Grade1Addition /></ProtectedRoute>} />
         <Route path="/junior/grade/1/subtraction" element={<ProtectedRoute redirectTo="/login"><Grade1Subtraction /></ProtectedRoute>} />
-        <Route path="/junior/grade/1/numbers-from-ten-to-twenty" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers10to20 /></ProtectedRoute>} />
+        <Route path="/junior/grade/1/numbers-10-20" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers10to20 /></ProtectedRoute>} />
         <Route path="/junior/grade/1/time" element={<ProtectedRoute redirectTo="/login"><Grade1Time /></ProtectedRoute>} />
         <Route path="/junior/grade/1/measurement" element={<ProtectedRoute redirectTo="/login"><Grade1Measurement /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-from-twenty-one-to-fifty" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers21to50 /></ProtectedRoute>} />
@@ -903,6 +1040,19 @@ function App() {
         <Route path="/middle/practice/9011" element={<DivisionWordProblems />} />
         <Route path="/middle/practice/9012" element={<MultiDivWordProblems />} />
 
+        {/* Grade 5 - How Big? How Heavy? */}
+        <Route path="/middle/grade/5/how-big-how-heavy/volume-by-displacement" element={<VolumeByDisplacement />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/units-of-volume" element={<UnitsOfVolume />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/volume-estimation" element={<VolumeEstimation />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/volume-unit-cubes" element={<VolumeUsingUnitCubes />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/units-of-mass" element={<UnitsOfMass />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/mass-conversion" element={<MassConversion />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/mass-calculation" element={<MassCalculation />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/weight-estimation" element={<WeightEstimationComparison />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/3d-construction" element={<ThreeDShapeConstruction />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/packaging-layering" element={<PackagingAndLayering />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/measurement-real-life" element={<MeasurementInRealLife />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/skill-application" element={<SkillApplicationProblems />} />
         {/* Can you see the Pattern? - Grade 5 */}
         <Route path="/middle/grade/5/can-you-see-the-pattern/pattern-identification" element={<PatternIdentification />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/rule-pattern-creation" element={<RuleBasedPatternCreation />} />
@@ -916,7 +1066,8 @@ function App() {
         <Route path="/middle/grade/5/can-you-see-the-pattern/multi-step-operations" element={<MultiStepOperations />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/missing-numbers" element={<MissingNumberReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/mental-calculation" element={<MentalCalculationReasoning />} />
-        <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblems />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblemsPatterns />} />
+        <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
 
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         {/* Class 10: Pair of Linear Equations Routes */}

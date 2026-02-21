@@ -1,64 +1,74 @@
 export const TOPIC_CONFIGS = {
     '1': {
         'Shapes and Space': [
-            { id: "G1-CH1-01", name: "Identifying basic shapes (circle, square, triangle, rectangle)", route: "shapes-and-space" },
-            { id: "G1-CH1-02", name: "Understanding positions (top, bottom, inside, outside, near, far)", route: "shapes-and-space" },
-            { id: "G1-CH1-03", name: "Comparing sizes (big/small, long/short, tall/short)", route: "shapes-and-space" }
+            { id: "101", name: "Identifying basic shapes (circle, square, triangle, rectangle)", route: "shapes-and-space" },
+            { id: "102", name: "Understanding positions (top, bottom, inside, outside, near, far)", route: "shapes-and-space" },
+            { id: "103", name: "Comparing sizes (big/small, long/short, tall/short)", route: "shapes-and-space" },
+            { id: "104", name: "Chapter Test - Shapes and Space", route: "shapes-and-space" }
         ],
         'Numbers from One to Nine': [
-            { id: "G1-CH2-01", name: "Counting objects (1–9)", route: "numbers-from-one-to-nine" },
-            { id: "G1-CH2-02", name: "Number recognition", route: "numbers-from-one-to-nine" },
-            { id: "G1-CH2-03", name: "Writing numbers 1–9", route: "numbers-from-one-to-nine" },
-            { id: "G1-CH2-04", name: "Comparing numbers (more/less)", route: "numbers-from-one-to-nine" }
+            { id: "201", name: "Counting objects (1–9)", route: "numbers-from-one-to-nine" },
+            { id: "202", name: "Number recognition", route: "numbers-from-one-to-nine" },
+            { id: "203", name: "Writing numbers 1–9", route: "numbers-from-one-to-nine" },
+            { id: "204", name: "Comparing numbers (more/less)", route: "numbers-from-one-to-nine" },
+            { id: "205", name: "Chapter Test - Numbers from One to Nine", route: "numbers-from-one-to-nine" }
         ],
         'Addition': [
-            { id: "G1-CH3-01", name: "Concept of combining groups", route: "addition" },
-            { id: "G1-CH3-02", name: "Single-digit addition (using objects/pictures)", route: "addition" },
-            { id: "G1-CH3-03", name: "Number line introduction", route: "addition" }
+            { id: "301", name: "Concept of combining groups", route: "addition" },
+            { id: "302", name: "Single-digit addition (using objects/pictures)", route: "addition" },
+            { id: "303", name: "Number line introduction", route: "addition" },
+            { id: "304", name: "Chapter Test - Addition", route: "addition" }
         ],
         'Subtraction': [
-            { id: "G1-CH4-01", name: "Concept of taking away", route: "subtraction" },
-            { id: "G1-CH4-02", name: "Single-digit subtraction", route: "subtraction" },
-            { id: "G1-CH4-03", name: "Understanding zero", route: "subtraction" }
+            { id: "401", name: "Concept of taking away", route: "subtraction" },
+            { id: "402", name: "Single-digit subtraction", route: "subtraction" },
+            { id: "403", name: "Properties of zero in subtraction", route: "subtraction" },
+            { id: "404", name: "Chapter Test - Subtraction", route: "subtraction" }
         ],
         'Numbers from Ten to Twenty': [
-            { id: "G1-CH5-01", name: "Counting 10–20", route: "numbers-from-ten-to-twenty" },
-            { id: "G1-CH5-02", name: "Number names (10–20)", route: "numbers-from-ten-to-twenty" },
-            { id: "G1-CH5-03", name: "Writing numbers 10–20", route: "numbers-from-ten-to-twenty" },
-            { id: "G1-CH5-04", name: "Comparing numbers", route: "numbers-from-ten-to-twenty" }
+            { id: "501", name: "Counting and number names (10–20)", route: "numbers-10-20" },
+            { id: "502", name: "Tens and ones", route: "numbers-10-20" },
+            { id: "503", name: "Comparison and ordering", route: "numbers-10-20" },
+            { id: "504", name: "Chapter Test - Numbers 10-20", route: "numbers-10-20" }
         ],
         'Time': [
-            { id: "G1-CH6-01", name: "Day and night", route: "time" },
-            { id: "G1-CH6-02", name: "Days of the week", route: "time" },
-            { id: "G1-CH6-03", name: "Concepts of before/after", route: "time" },
-            { id: "G1-CH6-04", name: "Reading time (hour hand only – informal introduction)", route: "time" }
+            { id: "601", name: "Day and night", route: "time" },
+            { id: "602", name: "Days of the week", route: "time" },
+            { id: "603", name: "Concepts of before/after", route: "time" },
+            { id: "604", name: "Reading time (hour hand only – informal introduction)", route: "time" },
+            { id: "605", name: "Chapter Test - Time", route: "time" }
         ],
         'Measurement': [
-            { id: "G1-CH7-01", name: "Comparing lengths (longer/shorter)", route: "measurement" },
-            { id: "G1-CH7-02", name: "Comparing weights (heavier/lighter)", route: "measurement" },
-            { id: "G1-CH7-03", name: "Comparing capacities (more/less)", route: "measurement" }
+            { id: "701", name: "Comparing lengths (longer/shorter)", route: "measurement" },
+            { id: "702", name: "Comparing weights (heavier/lighter)", route: "measurement" },
+            { id: "703", name: "Comparing capacities (more/less)", route: "measurement" },
+            { id: "704", name: "Chapter Test - Measurement", route: "measurement" }
         ],
         'Numbers from Twenty-One to Fifty': [
-            { id: "G1-CH8-01", name: "Counting 21–50", route: "numbers-from-twenty-one-to-fifty" },
-            { id: "G1-CH8-02", name: "Number names 21–50", route: "numbers-from-twenty-one-to-fifty" },
-            { id: "G1-CH8-03", name: "Place value (tens and ones – basic introduction)", route: "numbers-from-twenty-one-to-fifty" },
-            { id: "G1-CH8-04", name: "Comparing numbers", route: "numbers-from-twenty-one-to-fifty" }
+            { id: "801", name: "Counting 21–50", route: "numbers-from-twenty-one-to-fifty" },
+            { id: "802", name: "Number names 21–50", route: "numbers-from-twenty-one-to-fifty" },
+            { id: "803", name: "Place value (tens and ones – basic introduction)", route: "numbers-from-twenty-one-to-fifty" },
+            { id: "804", name: "Comparing numbers", route: "numbers-from-twenty-one-to-fifty" },
+            { id: "805", name: "Chapter Test - Numbers 21-50", route: "numbers-from-twenty-one-to-fifty" }
         ],
         'Data Handling': [
-            { id: "G1-CH9-01", name: "Sorting objects", route: "data-handling" },
-            { id: "G1-CH9-02", name: "Simple pictographs (informal)", route: "data-handling" },
-            { id: "G1-CH9-03", name: "Counting and grouping", route: "data-handling" }
+            { id: "901", name: "Sorting objects", route: "data-handling" },
+            { id: "902", name: "Simple pictographs (informal)", route: "data-handling" },
+            { id: "903", name: "Counting and grouping", route: "data-handling" },
+            { id: "904", name: "Chapter Test - Data Handling", route: "data-handling" }
         ],
         'Patterns': [
-            { id: "G1-CH10-01", name: "Identifying patterns (shapes, numbers, objects)", route: "patterns" },
-            { id: "G1-CH10-02", name: "Creating simple repeating patterns", route: "patterns" }
+            { id: "1001", name: "Identifying patterns (shapes, numbers, objects)", route: "patterns" },
+            { id: "1002", name: "Creating simple repeating patterns", route: "patterns" },
+            { id: "1003", name: "Chapter Test - Patterns", route: "patterns" }
         ],
         'Numbers (51 to 100)': [
-            { id: "G1-CH11-01", name: "Counting 51–100", route: "numbers-51-to-100" },
-            { id: "G1-CH11-02", name: "Writing numbers 51–100", route: "numbers-51-to-100" },
-            { id: "G1-CH11-03", name: "Number names", route: "numbers-51-to-100" },
-            { id: "G1-CH11-04", name: "Comparing numbers", route: "numbers-51-to-100" },
-            { id: "G1-CH11-05", name: "Skip counting (by 2s, 5s, 10s – basic)", route: "numbers-51-to-100" }
+            { id: "1101", name: "Counting 51–100", route: "numbers-51-to-100" },
+            { id: "1102", name: "Writing numbers 51–100", route: "numbers-51-to-100" },
+            { id: "1103", name: "Number names", route: "numbers-51-to-100" },
+            { id: "1104", name: "Comparing numbers", route: "numbers-51-to-100" },
+            { id: "1105", name: "Skip counting (by 2s, 5s, 10s – basic)", route: "numbers-51-to-100" },
+            { id: "1106", name: "Chapter Test - Numbers 51-100", route: "numbers-51-to-100" }
         ]
     },
     '2': {
@@ -97,6 +107,10 @@ export const TOPIC_CONFIGS = {
             { id: "FS-03", name: "Drawing other half" },
             { id: "FS-04", name: "Guess Who Am I?" }
         ],
+        'Fun at Class Party': [
+            { id: "FCP-01", name: "Longer & Shorter Strings", route: "longer-shorter" },
+            { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" }
+        ],
         'House of Hundreds II': [
             { id: "HH2-01", name: "Draw tiles" },
             { id: "HH2-02", name: "Neighbouring numbers" },
@@ -122,6 +136,26 @@ export const TOPIC_CONFIGS = {
             { id: "CV-07", name: "Word Problems (Mixed Operations)", route: "chapter-scene-mixed-operations" },
             { id: "CV-09", name: "Let Us Play (Triangle Puzzle)", route: "let-us-play" },
             { id: "CV-10", name: "Chapter Test", route: "chapter-test" }
+        ],
+        'Equal Groups': [
+            { id: "1143", name: "Jump-Based Multiples", route: "jump-based-multiples" },
+            { id: "1144", name: "Common Multiples from Jumps", route: "common-multiples-from-jumps" },
+            { id: "1145", name: "Group Size and Number of Groups", route: "group-size-and-number-of-groups" },
+            { id: "1146", name: "Arrays: Rows and Columns", route: "arrays-rows-and-columns" },
+            { id: "1147", name: "Doubling Numbers", route: "doubling-numbers" },
+            { id: "1148", name: "Doubling Patterns (Ones Digit)", route: "doubling-ones-digit-patterns" },
+            { id: "1149", name: "Multiplying by Tens", route: "multiply-using-tens" },
+            { id: "1150", name: "Multiplying by Hundreds", route: "multiply-using-hundreds" },
+            { id: "1151", name: "Break Apart Multiplication", route: "break-apart-multiplication" },
+            { id: "1152", name: "Equal Groups Story Problems", route: "equal-groups-story-problems" },
+            { id: "1153", name: "Division by Partial Groups", route: "division-by-partial-groups" },
+            { id: "1154", name: "Division with Remainders", route: "division-with-remainders" },
+            { id: "1155", name: "Dividing Using Patterns", route: "divide-using-patterns" },
+            { id: "1156", name: "Equal Sharing Division", route: "equal-sharing-division" },
+            { id: "1157", name: "Mixed Word Problems", route: "equal-groups-mixed-word-problems" },
+            { id: "1158", name: "Always, Sometimes, Never", route: "always-sometimes-never-statements" },
+            { id: "1159", name: "Find the Mistake", route: "find-the-mistake-equal-groups" },
+            { id: "1160", name: "Create Your Own Groups", route: "create-your-own-equal-groups" }
         ],
         'Weigh It, Pour It': [
             { id: "1129", name: "Gram to Kilogram (Fractions)", route: "gram-to-kilogram-fractions" },
