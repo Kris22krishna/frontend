@@ -39,6 +39,31 @@ const DynamicVisual = ({ type, data }) => {
             </motion.div>
         );
     }
+    if (type === 'pictograph') {
+        const { chartData } = data;
+        return (
+            <div className="g1-pictograph-container" style={{ background: 'white', padding: '20px', borderRadius: '30px', border: '3px solid #E0FBEF', width: '100%' }}>
+                {chartData.map((row, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', borderBottom: '1px dashed #E2E8F0', paddingBottom: '10px' }}>
+                        <div style={{ width: '80px', fontWeight: 800, color: '#4A5568', fontSize: '1.2rem' }}>{row.label}</div>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            {Array.from({ length: row.count }).map((_, idx) => (
+                                <motion.span
+                                    key={idx}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    style={{ fontSize: '1.5rem' }}
+                                >
+                                    {row.icon}
+                                </motion.span>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
     if (type === 'grouping') {
         const { g1, g2, color1, color2 } = data;
         return (
@@ -48,19 +73,28 @@ const DynamicVisual = ({ type, data }) => {
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {Array.from({ length: g1 }).map((_, i) => (
                             <motion.div
-                                key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.1 }}
-                                style={{ width: '25px', height: '25px', backgroundColor: color1, borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+                                key={i}
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="g1-bubble"
+                                style={{ background: color1 }}
                             />
                         ))}
                     </div>
                 </motion.div>
+
                 <motion.div initial={{ x: 30 }} animate={{ x: 0 }} className="g1-data-group" style={{ background: color2 + '10', borderColor: color2 }}>
                     <div className="g1-group-label" style={{ color: color2 }}>Group B</div>
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         {Array.from({ length: g2 }).map((_, i) => (
                             <motion.div
-                                key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.1 }}
-                                style={{ width: '25px', height: '25px', backgroundColor: color2, borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+                                key={i}
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="g1-bubble"
+                                style={{ background: color2 }}
                             />
                         ))}
                     </div>
@@ -110,29 +144,54 @@ const DataHandling = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
+    const isTest = skillId === '904';
 
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
-        for (let i = 0; i < totalQuestions; i++) {
-            let question = {};
-            const types = ['sorting', 'counting', 'grouping'];
-            const type = types[i % types.length];
+        const questionsPoolCount = isTest ? 15 : totalQuestions;
 
-            // Mapping skills
-            if (selectedSkill === '901') { /* custom logic if needed */ }
+        for (let i = 0; i < questionsPoolCount; i++) {
+            let type;
+            if (isTest) {
+                const types = ['sorting', 'pictograph', 'counting', 'grouping'];
+                type = types[i % types.length];
+            } else {
+                if (selectedSkill === '901') type = 'sorting';
+                else if (selectedSkill === '902') type = 'pictograph';
+                else if (selectedSkill === '903') type = (i % 2 === 0) ? 'counting' : 'grouping';
+                else type = 'sorting'; // fallback
+            }
+
+            let question = {};
             if (type === 'sorting') {
                 const fruits = ['🍎', '🍌', '🍇'];
-                const items = Array.from({ length: 8 }).map(() => fruits[Math.floor(Math.random() * 3)]);
-                const target = fruits[Math.floor(Math.random() * 2)];
+                const items = Array.from({ length: 12 }).map(() => fruits[Math.floor(Math.random() * 3)]);
+                const target = fruits[Math.floor(Math.random() * 3)];
                 const count = items.filter(f => f === target).length;
                 question = {
-                    text: `Look closely! How many ${target} fruits can you find? 🧺`,
-                    options: [count, (count + 2) % 11, count + 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: `Look at this big collection! How many ${target} fruits are there in total? 🧺`,
+                    options: [count, count + 1, count + 2].filter(v => v >= 0),
                     correct: count,
                     type: 'sorting',
-                    visualData: { items, colorMap: { '🍎': '#FF6B6B', '🍌': '#FFE66D', '🍇': '#C9A9E9' } }
+                    visualData: { items, colorMap: { '🍎': '#FF6B6B', '🍌': '#FFE66D', '🍇': '#C9A9E9' } },
+                    explanation: `We sorted them and found exactly ${count} ${target}.`
+                };
+            } else if (type === 'pictograph') {
+                const items = [
+                    { label: 'Books', icon: '📚', count: Math.floor(Math.random() * 4) + 2 },
+                    { label: 'Pens', icon: '✏️', count: Math.floor(Math.random() * 4) + 2 },
+                    { label: 'Toys', icon: '🪀', count: Math.floor(Math.random() * 4) + 2 }
+                ];
+                const targetObj = items[Math.floor(Math.random() * 3)];
+                question = {
+                    text: `This chart shows our favorite things. How many ${targetObj.label} do we have? 📊`,
+                    options: [targetObj.count, targetObj.count + 1, targetObj.count + 2].sort(() => 0.5 - Math.random()),
+                    correct: targetObj.count,
+                    type: 'pictograph',
+                    visualData: { chartData: items },
+                    explanation: `If you count the ${targetObj.icon} icons in the row for ${targetObj.label}, you'll see there are ${targetObj.count}.`
                 };
             } else if (type === 'counting') {
                 const animals = ['🐶', '🐱', '🐰'];
@@ -141,12 +200,13 @@ const DataHandling = () => {
                 const count = items.filter(a => a === target).length;
                 question = {
                     text: `Count the ${target} pets! 🐾`,
-                    options: [count, count + 1, count > 0 ? count - 1 : 4].sort(() => 0.5 - Math.random()),
+                    options: [count, count + 1, count > 0 ? count - 1 : 10].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: count,
                     type: 'counting',
-                    visualData: { items, colorMap: { '🐶': '#4ECDC4', '🐱': '#FF6B6B', '🐰': '#FFE66D' } }
+                    visualData: { items, colorMap: { '🐶': '#4ECDC4', '🐱': '#FF6B6B', '🐰': '#FFE66D' } },
+                    explanation: `There are ${count} ${target} pets here.`
                 };
-            } else {
+            } else if (type === 'grouping') {
                 const g1 = Math.floor(Math.random() * 5) + 3;
                 let g2 = Math.floor(Math.random() * 5) + 3;
                 while (g1 === g2) g2 = Math.floor(Math.random() * 5) + 3;
@@ -154,13 +214,12 @@ const DataHandling = () => {
                 const correct = (isMore ? (g1 > g2 ? 'Group A' : 'Group B') : (g1 < g2 ? 'Group A' : 'Group B'));
 
                 question = {
-                    text: `Check the groups! Which one has ${isMore ? 'MORE' : 'FEWER'} bubbles? 🫧`,
+                    text: `Compare the groups! Which one has ${isMore ? 'more' : 'fewer'} bubbles? 🫧`,
                     options: ['Group A', 'Group B'],
                     correct: correct,
                     type: 'grouping',
                     visualData: { g1, g2, color1: colors[i % colors.length], color2: colors[(i + 1) % colors.length] },
-                    explanation: `${correct} has ${isMore ? 'more' : 'fewer'} bubbles (${isMore ? Math.max(g1, g2) : Math.min(g1, g2)} vs ${isMore ? Math.min(g1, g2) : Math.max(g1, g2)}).`,
-                    solution: isMore ? `${Math.max(g1, g2)} > ${Math.min(g1, g2)}` : `${Math.min(g1, g2)} < ${Math.max(g1, g2)}`
+                    explanation: `${correct} has ${isMore ? 'more' : 'fewer'} bubbles than the other group.`,
                 };
             }
             questions.push(question);
@@ -173,7 +232,7 @@ const DataHandling = () => {
             const qs = generateQuestions(skillId);
             setSessionQuestions(qs);
             try {
-                const session = await api.createPracticeSession(user?.id, 'data-handling-grade1');
+                const session = await api.createPracticeSession(user?.id, isTest ? 'data-handling-test' : 'data-handling-practice');
                 setSessionId(session?.session_id);
             } catch (e) { console.error(e); }
         };
@@ -188,6 +247,20 @@ const DataHandling = () => {
         return () => clearInterval(interval);
     }, [showResults, sessionQuestions]);
 
+    useEffect(() => {
+        setShowExplanationModal(false);
+    }, [qIndex]);
+
+    useEffect(() => {
+        if (answers[qIndex]) {
+            setSelectedOption(answers[qIndex].selectedOption);
+            setIsAnswered(true);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+        }
+    }, [qIndex, answers]);
+
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
@@ -195,7 +268,9 @@ const DataHandling = () => {
         const isCorrect = option === sessionQuestions[qIndex].correct;
         if (isCorrect) {
             setScore(s => s + 1);
-            setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
+            if (!isTest) {
+                setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
+            }
         } else {
             setMotivation(null);
         }
@@ -210,11 +285,14 @@ const DataHandling = () => {
                 explanation: sessionQuestions[qIndex].explanation || "Great job!"
             }
         }));
-        setShowExplanationModal(true);
+        if (!isTest) {
+            setShowExplanationModal(true);
+        }
     };
 
     const handleNext = async () => {
-        if (qIndex < totalQuestions - 1) {
+        const total = isTest ? 15 : totalQuestions;
+        if (qIndex < total - 1) {
             setQIndex(v => v + 1);
         } else {
             setShowResults(true);
@@ -225,13 +303,28 @@ const DataHandling = () => {
                         session_id: sessionId,
                         user_id: user?.id,
                         score: score,
-                        total_questions: totalQuestions,
+                        total_questions: total,
                         time_spent: timer,
-                        answers: answers
+                        answers: Object.values(answers)
                     });
                 }
             } catch (e) { console.error(e); }
         }
+    };
+
+    const handleSkip = () => {
+        if (isAnswered) return;
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                selectedOption: 'Skipped',
+                isCorrect: false,
+                questionText: sessionQuestions[qIndex].text,
+                correctAnswer: sessionQuestions[qIndex].correct,
+                explanation: "This question was skipped. " + (sessionQuestions[qIndex].explanation || "")
+            }
+        }));
+        handleNext();
     };
 
     const formatTime = (s) => {
@@ -243,7 +336,8 @@ const DataHandling = () => {
     if (sessionQuestions.length === 0) return <div className="grade1-practice-page"><div className="g1-loading-blob" /></div>;
 
     if (showResults) {
-        const percentage = Math.round((score / totalQuestions) * 100);
+        const total = isTest ? 15 : totalQuestions;
+        const percentage = Math.round((score / total) * 100);
         return (
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
@@ -286,7 +380,7 @@ const DataHandling = () => {
                         <div className="results-stats-grid">
                             <div className="stat-card">
                                 <span className="stat-label">Correct</span>
-                                <span className="stat-value-large">{score}/{totalQuestions}</span>
+                                <span className="stat-value-large">{score}/{total}</span>
                             </div>
                             <div className="stat-card">
                                 <span className="stat-label">Time</span>
@@ -303,10 +397,11 @@ const DataHandling = () => {
                         </div>
                     </div>
 
-                    <div className="detailed-breakdown">
-                        <h3 className="breakdown-title">Quest Log 📜</h3>
-                        <div className="quest-log-list">
-                            {sessionQuestions.map((q, idx) => {
+                    {isTest ? (
+                        <div className="detailed-breakdown">
+                            <h3 className="breakdown-title">Quest Log 📜</h3>
+                            <div className="quest-log-list">
+                                {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
@@ -351,8 +446,36 @@ const DataHandling = () => {
                                     </motion.div>
                                 );
                             })}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                                {Object.values(answers).map((ans, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        style={{
+                                            width: '50px', height: '50px', borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: '1.5rem',
+                                            background: ans.isCorrect ? '#C6F6D5' : '#FED7D7',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        {ans.isCorrect ? '✅' : '❌'}
+                                    </motion.div>
+                                ))}
+                            </div>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                                {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
+                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                 '🌱 Nice try! Practice makes perfect!'}
+                            </p>
+                        </div>
+                    )}
 
                     <div className="results-actions">
                         <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>
@@ -368,6 +491,7 @@ const DataHandling = () => {
     }
 
     const currentQ = sessionQuestions[qIndex];
+    const totalLines = isTest ? 15 : totalQuestions;
 
     return (
         <div className="grade1-practice-page">
@@ -389,8 +513,32 @@ const DataHandling = () => {
                     </div>
 
                     <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {totalQuestions}
+                        Question {qIndex + 1} of {totalLines}
                     </div>
+
+                    {isTest && (
+                        <button
+                            className="g1-skip-btn"
+                            onClick={handleSkip}
+                            disabled={isAnswered}
+                            style={{
+                                marginLeft: '10px',
+                                background: '#EDF2F7',
+                                color: '#4A5568',
+                                padding: '8px 15px',
+                                borderRadius: '15px',
+                                fontWeight: 700,
+                                fontSize: '0.9rem',
+                                border: 'none',
+                                cursor: isAnswered ? 'not-allowed' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            Skip Quest ⏭️
+                        </button>
+                    )}
 
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
                         <StickerExit onClick={() => navigate('/junior/grade/1')} />
@@ -398,16 +546,16 @@ const DataHandling = () => {
                 </div>
 
                 <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
-                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalQuestions) * 100}%` }}></div>
+                    <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalLines) * 100}%` }}></div>
                 </div>
 
                 <div className="g1-topic-skill-header">
                     <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name">{skillName}</h1>
+                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
                 </div>
 
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
-                    <h2 className="g1-question-text">{currentQ.text}</h2>
+                    <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
                     <div className="g1-content-split">
                         <div className="g1-visual-area">
@@ -420,13 +568,13 @@ const DataHandling = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
                                         disabled={isAnswered}
                                     >
-                                        {opt}
+                                        <LatexText text={opt.toString()} />
                                     </button>
                                 ))}
                             </div>
@@ -445,12 +593,13 @@ const DataHandling = () => {
                                         initial={{ scale: 0.8 }} animate={{ scale: 1 }}
                                         className="g1-motivation-container"
                                     >
+                                        <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
                                         <span className="g1-motivation-text">{motivation.text}</span>
                                         <span className="g1-motivation-sub">{motivation.sub}</span>
                                     </motion.div>
                                 )}
                                 <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                                    {qIndex === totalLines - 1 ? (isTest ? 'Submit Test 📝' : 'Finish Quest 🏆') : 'Next Challenge 🚀'} <ArrowRight />
                                 </button>
                             </motion.div>
                         )}

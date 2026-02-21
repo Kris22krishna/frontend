@@ -66,6 +66,7 @@ const Navbar = () => {
                 <div className="nav-center hidden-mobile">
                     <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>Home</Link>
                     <Link to="/rapid-math" className={`nav-link-item ${isActive('/rapid-math') ? 'active' : ''}`}>Rapid Math</Link>
+                    <Link to="/internship" className={`nav-link-item ${isActive('/internship') ? 'active' : ''}`}>Internship</Link>
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
                     )}
@@ -98,6 +99,9 @@ const Navbar = () => {
                         <Link to="/" className="mobile-dropdown-item">Home</Link>
                         <Link to="/rapid-math" className={`mobile-dropdown-item ${isActive('/rapid-math') ? 'active' : ''}`}>
                             Rapid Math
+                        </Link>
+                        <Link to="/internship" className={`mobile-dropdown-item ${isActive('/internship') ? 'active' : ''}`}>
+                            Internship
                         </Link>
                         {isAuthenticated ? (
                             <>
