@@ -792,4 +792,14 @@ export const api = {
         console.log('✅ finishSession response:', result);
         return result;
     },
+
+    // --- Internship ---
+    submitInternshipRegistration: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/internship/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        return handleResponse(response);
+    },
 };
