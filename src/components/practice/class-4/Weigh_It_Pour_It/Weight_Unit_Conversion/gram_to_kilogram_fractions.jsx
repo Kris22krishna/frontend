@@ -109,7 +109,10 @@ const GramToKilogramFractions = () => {
                 // Only use clean fractions or whole numbers for now as per Grade 4
                 if (totalG !== 1000 && totalG !== 500 && totalG !== 2500 && totalG !== 2000) continue;
 
-                const displayTotal = totalG >= 1000 ? (totalG / 1000) + " kg" : totalG + " g";
+                let displayTotal = totalG >= 1000 ? (totalG / 1000) + " kg" : totalG + " g";
+                if (totalG === 2500) displayTotal = "$2 +\\frac{1}{2}$ kg";
+                if (totalG === 1500) displayTotal = "$1 +\\frac{1}{2}$ kg";
+
                 const target = totalG >= 1000 ? "kg" : "g";
 
                 qText = `<div class="flex flex-col items-center gap-4">
@@ -131,7 +134,7 @@ const GramToKilogramFractions = () => {
                 options = [displayTotal];
                 options.push(totalG === 1000 ? "500 g" : "1 kg");
                 options.push(totalG === 1000 ? "2 kg" : "250 g");
-                options.push(totalG === 1000 ? "100 g" : "1.5 kg");
+                options.push(totalG === 1000 ? "100 g" : "$1+\\frac{1}{2}$ kg");
 
             } else { // Balance scale logic (Simple)
                 const leftWeight = 1000;
