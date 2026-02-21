@@ -104,16 +104,16 @@ import ConversionBetweenForms from './components/practice/class-5/TenthsandHundr
 import DecimalWordProblems from './components/practice/class-5/TenthsandHundrendths/SkillApplicationProb/skill_app_prob_decimal';
 
 // Grade 5 Area and its Boundary Components
-import FindingArea from './components/practice/class-5/AreaAndItsBoundary/Area/FindingArea';
-import CompareShapesSameArea from './components/practice/class-5/AreaAndItsBoundary/Area/CompareShapesSameArea';
-import AreaRealLife from './components/practice/class-5/AreaAndItsBoundary/Area/AreaRealLife';
-import AppropriateAreaUnits from './components/practice/class-5/AreaAndItsBoundary/Area/AppropriateAreaUnits';
-import FindingPerimeter from './components/practice/class-5/AreaAndItsBoundary/Perimeter/FindingPerimeter';
-import PerimeterAsBoundary from './components/practice/class-5/AreaAndItsBoundary/Perimeter/PerimeterAsBoundary';
-import SamePerimeterDifferentShapes from './components/practice/class-5/AreaAndItsBoundary/Perimeter/SamePerimeterDifferentShapes';
-import PerimeterRealLife from './components/practice/class-5/AreaAndItsBoundary/Perimeter/PerimeterRealLife';
-import AreaPerimeterRelationship from './components/practice/class-5/AreaAndItsBoundary/AreaPerimeterRelationship/AreaPerimeterRelationship';
-import SkillApplicationProblemsArea from './components/practice/class-5/AreaAndItsBoundary/SkillApplicationProblems/SkillApplicationProblemsArea';
+import FindingArea from './components/practice/class-5/AreaanditsBoundary/Area/FindingArea';
+import CompareShapesSameArea from './components/practice/class-5/AreaanditsBoundary/Area/CompareShapesSameArea';
+import AreaRealLife from './components/practice/class-5/AreaanditsBoundary/Area/AreaRealLife';
+import AppropriateAreaUnits from './components/practice/class-5/AreaanditsBoundary/Area/AppropriateAreaUnits';
+import FindingPerimeter from './components/practice/class-5/AreaanditsBoundary/Perimeter/FindingPerimeter';
+import PerimeterAsBoundary from './components/practice/class-5/AreaanditsBoundary/Perimeter/PerimeterAsBoundary';
+import SamePerimeterDifferentShapes from './components/practice/class-5/AreaanditsBoundary/Perimeter/SamePerimeterDifferentShapes';
+import PerimeterRealLife from './components/practice/class-5/AreaanditsBoundary/Perimeter/PerimeterRealLife';
+import AreaPerimeterRelationship from './components/practice/class-5/AreaanditsBoundary/AreaPerimeterRelationship/AreaPerimeterRelationship';
+import SkillApplicationProblemsArea from './components/practice/class-5/AreaanditsBoundary/Skillapplicationproblems/SkillApplicationProblemsArea';
 
 // Grade 5 - How Big? How Heavy?
 import VolumeByDisplacement from './components/practice/class-5/Howbighowheavy/volume measurement/volume-by-displacement';
