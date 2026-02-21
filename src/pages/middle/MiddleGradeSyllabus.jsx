@@ -148,6 +148,44 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('prime time')) {
+                if (lowerSkillName.includes('common multiples')) {
+                    navigate(`/middle/grade/6/prime-time/common-multiples-factors`);
+                    return;
+                }
+                if (lowerSkillName.includes('prime factorisation')) {
+                    navigate(`/middle/grade/6/prime-time/prime-factorisation`);
+                    return;
+                }
+                if (lowerSkillName.includes('divisibility')) {
+                    navigate(`/middle/grade/6/prime-time/divisibility-tests`);
+                    return;
+                }
+            }
+
+            if (lowerSkillName === "chapter test") {
+                if (lowerTopic.includes('perimeter') || lowerTopic.includes('area')) {
+                    navigate(`/middle/grade/6/perimeter-area/chapter-test`);
+                    return;
+                }
+                if (lowerTopic.includes('pattern')) {
+                    navigate(`/middle/grade/6/patterns-math/chapter-test`);
+                    return;
+                }
+                if (lowerTopic.includes('number play')) {
+                    navigate(`/middle/grade/6/number-play/chapter-test`);
+                    return;
+                }
+                if (lowerTopic.includes('prime time')) {
+                    navigate(`/middle/grade/6/prime-time/chapter-test`);
+                    return;
+                }
+                if (lowerTopic.includes('data handling')) {
+                    navigate(`/middle/grade/6/data-handling/chapter-test`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -522,17 +560,6 @@ const MiddleGradeSyllabus = () => {
 
     // Group skills by topic and sub-topic
     const skillsByTopic = skills.reduce((acc, skill) => {
-        const topicName = (skill.topic || 'General').toLowerCase();
-        const gradeNum = parseInt(grade.replace('grade', ''));
-
-        // Filter by grade
-        if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
-        if (gradeNum === 6 && !topicName.includes("fraction")) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
-
-
-
         const topic = skill.topic || 'General';
         const subTopic = skill.sub_topic || 'Main';
 
@@ -815,7 +842,7 @@ const MiddleGradeSyllabus = () => {
                     topic: 'Can you see the Pattern ?',
                     sub_topic: 'Logical Reasoning',
                     isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/mental-calculation'
+                    path: '/middle/grade/5/can-you-see-the-pattern/mental-calc'
                 }
             ],
             'Skill Application Problems': [
@@ -842,22 +869,16 @@ const MiddleGradeSyllabus = () => {
     }
 
 
-    // Manual Override for Grade 6 Perimeter and Area
-    if (parseInt(grade.replace('grade', '')) === 6) {
-        skillsByTopic['Perimeter and Area'] = {
-            'Main': [
-                { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
-                { skill_id: 'sq-6', skill_name: 'Square', topic: 'Perimeter and Area' },
-                { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
-                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' },
-                { skill_id: 'mixed-6', skill_name: 'Mixed Bag', topic: 'Perimeter and Area' }
-            ]
-        };
+    // Manual Override for Grade 6
+    if (gradeInt === 6) {
         skillsByTopic['Patterns in Mathematics'] = {
             'Main': [
                 { skill_id: 'patterns-6', skill_name: 'Intro to Patterns', topic: 'Patterns in Mathematics' },
                 { skill_id: 'shapes-6', skill_name: 'Patterns in Shapes', topic: 'Patterns in Mathematics' },
                 { skill_id: 'relations-6', skill_name: 'Relations among Number Sequences', topic: 'Patterns in Mathematics' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'patterns-test-6', skill_name: 'Chapter Test', topic: 'Patterns in Mathematics' }
             ]
         };
         skillsByTopic['Number Play'] = {
@@ -866,6 +887,31 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
                 { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
                 { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'np-test-6', skill_name: 'Chapter Test', topic: 'Number Play' }
+            ]
+        };
+        skillsByTopic['Prime Time'] = {
+            'Main': [
+                { skill_id: 'common-multiples-6', skill_name: 'Common Multiples and Common Factors', topic: 'Prime Time' },
+                { skill_id: 'prime-factors-6', skill_name: 'Prime Factorisation', topic: 'Prime Time' },
+                { skill_id: 'divisibility-6', skill_name: 'Divisibility Tests', topic: 'Prime Time' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'pt-test-6', skill_name: 'Chapter Test', topic: 'Prime Time' }
+            ]
+        };
+        skillsByTopic['Perimeter and Area'] = {
+            'Main': [
+                { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
+                { skill_id: 'sq-6', skill_name: 'Square', topic: 'Perimeter and Area' },
+                { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
+                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' },
+                { skill_id: 'mixed-6', skill_name: 'Mixed Bag', topic: 'Perimeter and Area' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'pa-test-6', skill_name: 'Chapter Test', topic: 'Perimeter and Area' }
             ]
         };
         skillsByTopic['Data Handling and Presentation'] = {
@@ -875,6 +921,9 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'drawing-bar-graph-6', skill_name: 'Drawing a Bar Graph', topic: 'Data Handling and Presentation' },
                 { skill_id: 'bar-graphs-6', skill_name: 'Bar Graphs', topic: 'Data Handling and Presentation' },
                 { skill_id: 'figure-it-out-6', skill_name: 'Figure It Out', topic: 'Data Handling and Presentation' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'dh-test-6', skill_name: 'Chapter Test', topic: 'Data Handling and Presentation' }
             ]
         };
     }

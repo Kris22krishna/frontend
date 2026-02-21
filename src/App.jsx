@@ -193,6 +193,10 @@ import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation
 import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
 import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
 
+import CommonMultiplesAndCommonFactors from './components/practice/grade-6/PrimeTime/CommonMultiplesAndCommonFactors';
+import PrimeFactorisationGrade6 from './components/practice/grade-6/PrimeTime/PrimeFactorisation';
+import DivisibilityTests from './components/practice/grade-6/PrimeTime/DivisibilityTests';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -225,6 +229,18 @@ import MirrorReflectionSymmetry from './components/practice/class-7/symmetry/Mir
 import RotationalSymmetry from './components/practice/class-7/symmetry/RotationalSymmetry';
 import LineRotationalRelationship from './components/practice/class-7/symmetry/LineRotationalRelationship';
 import SymmetryTest from './components/practice/class-7/symmetry/SymmetryTest';
+
+// Grade 6 Chapter Tests
+import PatternsInMathematicsChapterTest from './components/practice/grade-6/patterns-in-mathematics/ChapterTest';
+import NumberPlayChapterTest from './components/practice/grade-6/number-play/ChapterTest';
+import PrimeTimeChapterTest from './components/practice/grade-6/PrimeTime/ChapterTest';
+import PerimeterAreaChapterTest from './components/practice/grade-6/Perimeter and Area/ChapterTest';
+import DataHandlingChapterTest from './components/practice/grade-6/DataHandlingAndPresentation/ChapterTest';
+
+
+// Grade 5 Chapter Tests
+import TenthsAndHundredthsChapterTest from './components/practice/class-5/TenthsandHundrendths/ChapterTest';
+import WaysToMultiplyAndDivideChapterTest from './components/practice/class-5/WaystoMultiplyandDivide/ChapterTest';
 
 import Formation from './components/practice/class-7/algebraic expressions/Formation';
 import TermsFactors from './components/practice/class-7/algebraic expressions/TermsFactors';
@@ -266,7 +282,7 @@ import QuadraticEquationsTest from './components/practice/class-10/Quadratic Equ
 // Class 10: Real Numbers
 import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
 import EuclidsDivision from './components/practice/class-10/Real Numbers/EuclidsDivision';
-import PrimeFactorisation from './components/practice/class-10/Real Numbers/PrimeFactorisation';
+import PrimeFactorisationClass10 from './components/practice/class-10/Real Numbers/PrimeFactorisation';
 import FundamentalTheoremArithmetic from './components/practice/class-10/Real Numbers/FundamentalTheoremArithmetic';
 import HCFandLCM from './components/practice/class-10/Real Numbers/HCFandLCM';
 import HCFLCMApplications from './components/practice/class-10/Real Numbers/HCFLCMApplications';
@@ -518,6 +534,8 @@ function App() {
         <Route path="/middle/grade/5/tenths-hundredths/operations" element={<DecimalOperations />} />
         <Route path="/middle/grade/5/tenths-hundredths/conversion" element={<ConversionBetweenForms />} />
         <Route path="/middle/grade/5/tenths-hundredths/word-problems" element={<DecimalWordProblems />} />
+        <Route path="/middle/grade/5/tenths-hundredths/chapter-test" element={<TenthsAndHundredthsChapterTest />} />
+        <Route path="/middle/grade/5/ways-multiply-divide/chapter-test" element={<WaysToMultiplyAndDivideChapterTest />} />
 
         {/* Cleanest Village Routes */}
         <Route path="/junior/grade/:grade/the-cleanest-village/repeated-addition" element={
@@ -675,7 +693,7 @@ function App() {
         <Route path="/junior/grade/:grade/equal-groups/create-your-own-equal-groups" element={
           <ProtectedRoute redirectTo="/login">
             <CreateYourOwnEqualGroups />
-        </ProtectedRoute>
+          </ProtectedRoute>
         } />
         {/* Weigh It, Pour It Routes */}
         <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
@@ -718,6 +736,31 @@ function App() {
             <WeightAndCapacityWordProblems />
           </ProtectedRoute>
         } />
+
+        {/* Grade 6 Chapter Tests */}
+        <Route path="/middle/grade/6/patterns-math/chapter-test" element={<PatternsInMathematicsChapterTest />} />
+        <Route path="/middle/grade/6/number-play/chapter-test" element={<NumberPlayChapterTest />} />
+        <Route path="/middle/grade/6/prime-time/chapter-test" element={<PrimeTimeChapterTest />} />
+        <Route path="/middle/grade/6/perimeter-area/chapter-test" element={<PerimeterAreaChapterTest />} />
+        <Route path="/middle/grade/6/data-handling/chapter-test" element={<DataHandlingChapterTest />} />
+
+        {/* Prime Time Practice Components */}
+        <Route path="/middle/grade/6/prime-time/common-multiples-factors" element={
+          <ProtectedRoute redirectTo="/login">
+            <CommonMultiplesAndCommonFactors />
+          </ProtectedRoute>
+        } />
+        <Route path="/middle/grade/6/prime-time/prime-factorisation" element={
+          <ProtectedRoute redirectTo="/login">
+            <PrimeFactorisationGrade6 />
+          </ProtectedRoute>
+        } />
+        <Route path="/middle/grade/6/prime-time/divisibility-tests" element={
+          <ProtectedRoute redirectTo="/login">
+            <DivisibilityTests />
+          </ProtectedRoute>
+        } />
+
 
         {/* Grade 8 Rational Numbers - Commutativity */}
         <Route path="/senior/grade/8/rational-numbers/commutativity" element={
@@ -1065,7 +1108,7 @@ function App() {
         {/* Class 10: Real Numbers Routes */}
         <Route path="/high/practice/10201" element={<RealNumberFoundations />} />
         <Route path="/high/practice/10202" element={<EuclidsDivision />} />
-        <Route path="/high/practice/10203" element={<PrimeFactorisation />} />
+        <Route path="/high/practice/10203" element={<PrimeFactorisationClass10 />} />
         <Route path="/high/practice/10204" element={<FundamentalTheoremArithmetic />} />
         <Route path="/high/practice/10205" element={<HCFandLCM />} />
         <Route path="/high/practice/10206" element={<HCFLCMApplications />} />
