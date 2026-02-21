@@ -518,7 +518,7 @@ const HowOperationsWork = () => {
                     </p>
                     <QuizEngine
                         questions={QUIZ_QUESTIONS}
-                        skillId={12102}
+                        skillId={12103}
                         skillName="How Matrix Operations Work"
                         onComplete={handleQuizComplete}
                         mastery={0.8}

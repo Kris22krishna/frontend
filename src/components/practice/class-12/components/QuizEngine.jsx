@@ -122,11 +122,13 @@ const QuizEngine = ({
                 user_id: parseInt(userId),
                 session_id: sessionId,
                 skill_id: skillId,
+                template_id: currentQ.template_id || null,
+                difficulty_level: currentQ.difficulty || 'Medium',
                 question_text: currentQ.text,
                 correct_answer: currentQ.correctAnswer,
                 student_answer: selectedOption,
                 is_correct: isRight,
-                solution_text: currentQ.solution,
+                solution_text: currentQ.solution || 'No detailed explanation available.',
                 time_spent_seconds: sec,
             }).catch(console.error);
         }
@@ -170,9 +172,8 @@ const QuizEngine = ({
 
             if (onComplete) {
                 onComplete(totalCorrect, questions.length);
-            } else {
-                setShowResult(true);
             }
+            setShowResult(true);
         }
     };
 

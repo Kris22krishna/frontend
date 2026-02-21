@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Monitor, LineChart, Code, BrainCircuit, ShieldCheck, ChevronRight } from 'lucide-react';
-import QuizEngine from '../components/QuizEngine';
 
 const ROLES = [
     {
@@ -41,61 +40,12 @@ const ROLES = [
     }
 ];
 
-const QUIZ_QUESTIONS = [
-    {
-        id: 'who1',
-        text: 'Which field uses matrices to rotate and translate objects on a screen?',
-        options: ['3D Graphics & Gaming', 'Economics', 'Cryptography', 'Marine Biology'],
-        correctAnswer: '3D Graphics & Gaming',
-        solution: `1. Matrix transformations are the core of computer graphics.
-2. Translating (moving), scaling, and rotating coordinates is done by multiplying point matrices with transformation matrices.`,
-        hints: ['Think of what involves drawing pixels on a screen.']
-    },
-    {
-        id: 'who2',
-        text: 'How do AI and Machine Learning systems primarily utilize matrices?',
-        options: ['To draw charts', 'To process and store massive datasets and weights', 'To encrypt messages', 'To route internet traffic'],
-        correctAnswer: 'To process and store massive datasets and weights',
-        solution: `1. Neural networks map inputs to outputs using weights.
-2. These weights are stored as matrices, allowing the system to process many inputs simultaneously using matrix multiplication.`,
-    },
-    {
-        id: 'who3',
-        text: 'Which profession uses "Input-Output" matrix models to see how changes in one sector affect the entire system?',
-        options: ['Cryptographers', 'Game Developers', 'Economists', 'Marine Biologists'],
-        correctAnswer: 'Economists',
-        solution: `1. Input-Output models track how different industries interact (e.g., how much steel the auto industry needs).
-2. Economists use large matrices to predict how a shock to one industry ripples through the whole economy.`,
-        hints: ['Think about money, industries, and financial forecasting.']
-    },
-    {
-        id: 'who4',
-        text: 'If a cryptographer wants to decode a message that was encrypted using a Key Matrix $K$, what matrix must they use?',
-        options: ['The transpose, $K^T$', 'The identity matrix, $I$', 'The zero matrix, $O$', 'The inverse, $K^{-1}$'],
-        correctAnswer: 'The inverse, $K^{-1}$',
-        solution: `1. Encryption is like multiplying by $K$.
-2. To undo multiplication in matrix algebra, you multiply by the inverse $K^{-1}$.
-3. Therefore, the receiver must securely know $K^{-1}$ to decode the message.`,
-        hints: ['What operation "undoes" matrix multiplication?']
-    }
-];
-
 const WhoUsesMatrices = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
-    const handleQuizComplete = (score, total) => {
-        if (score / total >= 0.5) {
-            try {
-                const progress = JSON.parse(localStorage.getItem('matrices_progress') || '{}');
-                progress['who-uses'] = true;
-                localStorage.setItem('matrices_progress', JSON.stringify(progress));
-            } catch { }
-        }
-    };
 
     return (
         <div style={{
@@ -184,47 +134,23 @@ const WhoUsesMatrices = () => {
                     ))}
                 </div>
 
-                {/* Inline Test Section */}
-                <div style={{
-                    background: '#fff', borderRadius: 24, padding: 0, marginBottom: 40,
-                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
-                    overflow: 'hidden', border: '1px solid #E2E8F0',
-                    display: 'flex', flexDirection: 'column'
-                }}>
-                    <div style={{
-                        background: '#1E293B', color: '#fff', padding: '24px 32px',
-                        borderBottom: '4px solid #3B82F6'
-                    }}>
-                        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
-                            <BrainCircuit size={28} color="#60A5FA" />
-                            Test Your Knowledge
-                        </h2>
-                        <p style={{ color: '#94A3B8', margin: '8px 0 0 0', fontSize: '1.05rem' }}>
-                            Pass this 4-question check to complete the section!
-                        </p>
-                    </div>
-
-                    <div style={{ padding: '32px' }}>
-                        <QuizEngine
-                            questions={QUIZ_QUESTIONS}
-                            skillId={12100}
-                            skillName="Who Uses Matrices?"
-                            onComplete={handleQuizComplete}
-                            mastery={0.75}
-                        />
-                    </div>
-                </div>
-
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <button
-                        onClick={() => navigate('/senior/grade/12/matrices/what-is')}
+                        onClick={() => {
+                            try {
+                                const progress = JSON.parse(localStorage.getItem('matrices_progress') || '{}');
+                                progress['who-uses'] = true;
+                                localStorage.setItem('matrices_progress', JSON.stringify(progress));
+                            } catch { }
+                            navigate('/senior/grade/12/matrices/what-is');
+                        }}
                         style={{
                             background: '#4F46E5', color: '#fff', border: 'none', padding: '16px 32px',
                             borderRadius: 12, fontSize: '1.1rem', fontWeight: 700, cursor: 'pointer',
                             display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)'
                         }}
                     >
-                        Next: What is a Matrix? <ChevronRight size={20} />
+                        Mark Complete & Next <ChevronRight size={20} />
                     </button>
                 </div>
             </div>

@@ -219,7 +219,7 @@ const WhenDoWeNeedMatrices = () => {
                     <div style={{ padding: '32px' }}>
                         <QuizEngine
                             questions={QUIZ_QUESTIONS}
-                            skillId={12101}
+                            skillId={12102}
                             skillName="When Do We Need Matrices?"
                             onComplete={handleQuizComplete}
                             mastery={0.75}
