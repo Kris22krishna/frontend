@@ -339,14 +339,14 @@ const WhatIsMatrix = () => {
                         </p>
                     </div>
                     <p style={{ color: '#64748b', lineHeight: 1.6 }}>
-                        <LatexText text="A matrix with $m$ rows and $n$ columns is said to have <strong>order</strong> $m \\times n$ (read as 'm by n'). We refer to individual elements as $a_{ij}$, meaning the element at row $i$ and column $j$." />
+                        <LatexText text="A matrix with $m$ rows and $n$ columns is said to have <strong>order</strong> $m$ x $n$ (read as '$m$ by $n$'). We refer to individual elements as $a_{ij}$, meaning the element at row $i$ and column $j$." />
                     </p>
                 </Section>
 
                 {/* Section 2: Notation & Indexing */}
                 <Section title="🔢 Notation & Indexing">
                     <p style={{ color: '#475569', lineHeight: 1.6, marginBottom: 16 }}>
-                        <LatexText text="Here is a $2 \\times 3$ matrix $A$. Each element is labelled with its position $a_{ij}$:" />
+                        <LatexText text="Here is a $2$ x $3$ matrix $A$. Each element is labelled with its position $a_{ij}$:" />
                     </p>
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
                         <MatrixGrid
@@ -494,7 +494,7 @@ const WhatIsMatrix = () => {
                             <MatrixGrid rows={3} cols={3} values={[[1, 0, 0], [0, 1, 0], [0, 0, 1]]} showOrder={true} />
                         </div>
                         <p style={{ color: '#475569', lineHeight: 1.6 }}>
-                            <LatexText text="This is a $3 \\times 3$ matrix. It is the <strong>identity matrix</strong> $I_3$ because the diagonal entries are all 1 and the off-diagonal entries are all 0." />
+                            <LatexText text="This is a $3$ x $3$ matrix. It is the <strong>identity matrix</strong> $I_3$ because the diagonal entries are all 1 and the off-diagonal entries are all 0." />
                         </p>
                     </div>
 
@@ -507,7 +507,7 @@ const WhatIsMatrix = () => {
                             <MatrixGrid rows={2} cols={3} values={[[5, -2, 8], [3, 0, 1]]} showLabels={true} showOrder={true} />
                         </div>
                         <p style={{ color: '#475569', lineHeight: 1.6 }}>
-                            <LatexText text="$a_{11} = 5$, $a_{13} = 8$, $a_{21} = 3$, $a_{23} = 1$. The order is $2 \\times 3$ (row matrix is 1 × n, this has 2 rows so it's a general matrix)." />
+                            <LatexText text="$a_{11} = 5$, $a_{13} = 8$, $a_{21} = 3$, $a_{23} = 1$. The order is $2$ x $3$ (row matrix is 1 × n, this has 2 rows so it's a general matrix)." />
                         </p>
                     </div>
 
@@ -520,7 +520,7 @@ const WhatIsMatrix = () => {
                             <MatrixGrid rows={3} cols={1} values={[[7], [-3], [2]]} showOrder={true} />
                         </div>
                         <p style={{ color: '#475569', lineHeight: 1.6 }}>
-                            <LatexText text="Order: $3 \\times 1$. This is a <strong>column matrix</strong> because it has only one column." />
+                            <LatexText text="Order: $3$ x $1$. This is a <strong>column matrix</strong> because it has only one column." />
                         </p>
                     </div>
                 </Section>

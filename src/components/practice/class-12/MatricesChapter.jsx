@@ -117,7 +117,8 @@ const MatricesChapter = () => {
                 </button>
                 <div className="badge">CLASS 12 • MATHEMATICS</div>
                 <h1>Matrices</h1>
-                <p>An interactive journey through the world of matrices — from fundamentals to real-world applications.</p>
+                <p>An interactive journey through the world of matrices.</p>
+                <p>From fundamentals to real-world applications.</p>
                 <div className="chapter-progress-bar">
                     <div className="chapter-progress-bar-fill" style={{ width: `${progressPct}%` }} />
                 </div>
@@ -130,7 +131,7 @@ const MatricesChapter = () => {
             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '32px 0 20px', padding: '12px 20px', background: '#EEF2FF', borderRadius: 14, border: '2px solid #C7D2FE' }}>
                     <BookOpen size={24} color="#4F46E5" />
-                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', margin: 0 }}>📖 Learn</h2>
+                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', margin: 0 }}>Learn</h2>
                     <span style={{ fontSize: '0.8rem', color: '#64748B', marginLeft: 'auto', fontWeight: 600 }}>{completedLearnCount}/{PAGES.length} done</span>
                 </div>
             </div>
@@ -159,7 +160,7 @@ const MatricesChapter = () => {
             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '40px 0 20px', padding: '12px 20px', background: allLearnComplete ? '#ECFDF5' : '#F1F5F9', borderRadius: 14, border: `2px solid ${allLearnComplete ? '#A7F3D0' : '#E2E8F0'}` }}>
                     <PenTool size={24} color={allLearnComplete ? '#059669' : '#94A3B8'} />
-                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', margin: 0 }}>📝 Practice Tests</h2>
+                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', margin: 0 }}>Skills</h2>
                     {!allLearnComplete && <span style={{ fontSize: '0.75rem', color: '#94A3B8', marginLeft: 'auto', fontWeight: 600, background: '#F8FAFC', padding: '4px 12px', borderRadius: 20 }}>🔒 Complete all learn sections to unlock</span>}
                     {allLearnComplete && <span style={{ fontSize: '0.8rem', color: '#059669', marginLeft: 'auto', fontWeight: 600 }}>{completedTestCount}/{PRACTICE_TESTS.length} done</span>}
                 </div>
@@ -188,7 +189,7 @@ const MatricesChapter = () => {
             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '40px 0 20px', padding: '12px 20px', background: allTestsComplete ? '#FEF3C7' : '#F1F5F9', borderRadius: 14, border: `2px solid ${allTestsComplete ? '#FCD34D' : '#E2E8F0'}` }}>
                     <Trophy size={24} color={allTestsComplete ? '#D97706' : '#94A3B8'} />
-                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', margin: 0 }}>🏆 Chapter Assessment</h2>
+                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', margin: 0 }}>Chapter Assessment</h2>
                     {!allTestsComplete && <span style={{ fontSize: '0.75rem', color: '#94A3B8', marginLeft: 'auto', fontWeight: 600, background: '#F8FAFC', padding: '4px 12px', borderRadius: 20 }}>🔒 Complete all practice tests to unlock</span>}
                 </div>
             </div>
