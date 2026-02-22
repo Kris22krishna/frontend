@@ -1,0 +1,264 @@
+.matrices-chapter-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #F8FAFF 0%, #EEF2FF 50%, #F5F3FF 100%);
+    font-family: 'Inter', 'Open Sans', sans-serif;
+}
+
+/* Header */
+.matrices-chapter-header {
+    background: linear-gradient(135deg, #31326F 0%, #4F46E5 60%, #6366F1 100%);
+    padding: 40px 24px 48px;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.matrices-chapter-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 140%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.matrices-chapter-header .badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.matrices-chapter-header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.matrices-chapter-header p {
+    font-size: 1rem;
+    opacity: 0.85;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Progress bar in header */
+.chapter-progress-bar {
+    margin: 24px auto 0;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.chapter-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #34D399, #10B981);
+    border-radius: 8px;
+    transition: width 0.8s ease;
+}
+
+/* Back button */
+.matrices-back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+}
+
+.matrices-back-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+/* Cards grid */
+.matrices-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 32px 24px;
+    max-width: 1000px;
+    margin: -32px auto 0;
+    position: relative;
+    z-index: 1;
+}
+
+.matrix-topic-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    border: 2px solid #E2E8F0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.matrix-topic-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+}
+
+.matrix-topic-card:nth-child(1)::before {
+    background: linear-gradient(90deg, #F59E0B, #EAB308);
+}
+
+.matrix-topic-card:nth-child(2)::before {
+    background: linear-gradient(90deg, #6366F1, #818CF8);
+}
+
+.matrix-topic-card:nth-child(3)::before {
+    background: linear-gradient(90deg, #10B981, #34D399);
+}
+
+.matrix-topic-card:nth-child(4)::before {
+    background: linear-gradient(90deg, #EF4444, #F97316);
+}
+
+.matrix-topic-card:nth-child(5)::before {
+    background: linear-gradient(90deg, #8B5CF6, #A78BFA);
+}
+
+.matrix-topic-card:nth-child(6)::before {
+    background: linear-gradient(90deg, #3B82F6, #60A5FA);
+}
+
+.matrix-topic-card:hover {
+    border-color: #C7D2FE;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(79, 70, 229, 0.12);
+}
+
+.matrix-topic-card .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.matrix-topic-card:nth-child(1) .card-icon {
+    background: #FEF3C7;
+}
+
+.matrix-topic-card:nth-child(2) .card-icon {
+    background: #EEF2FF;
+}
+
+.matrix-topic-card:nth-child(3) .card-icon {
+    background: #D1FAE5;
+}
+
+.matrix-topic-card:nth-child(4) .card-icon {
+    background: #FEE2E2;
+}
+
+.matrix-topic-card:nth-child(5) .card-icon {
+    background: #EDE9FE;
+}
+
+.matrix-topic-card:nth-child(6) .card-icon {
+    background: #DBEAFE;
+}
+
+.matrix-topic-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 6px;
+}
+
+.matrix-topic-card .card-desc {
+    font-size: 0.85rem;
+    color: #64748B;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.matrix-topic-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.matrix-topic-card .card-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: #F1F5F9;
+    color: #64748b;
+}
+
+.matrix-topic-card .card-badge.complete {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.matrix-topic-card .card-badge.locked {
+    background: #F1F5F9;
+    color: #94A3B8;
+}
+
+.matrix-topic-card .card-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #EEF2FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4F46E5;
+    transition: all 0.2s;
+}
+
+.matrix-topic-card:hover .card-arrow {
+    background: #4F46E5;
+    color: #fff;
+}
+
+@media (max-width: 640px) {
+    .matrices-cards-grid {
+        grid-template-columns: 1fr;
+        padding: 20px 16px;
+    }
+
+    .matrices-chapter-header {
+        padding: 30px 16px 40px;
+    }
+
+    .matrix-topic-card {
+        padding: 22px;
+    }
+}
