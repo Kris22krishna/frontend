@@ -48,11 +48,11 @@ const DynamicVisual = ({ type, data }) => {
     if (type === 'numeric' || type === 'zero') {
         const { n1, n2, color1, color2 } = data;
         return (
-            <div className="g1-numeric-card" style={{ display: 'flex', gap: 'clamp(10px, 4vw, 20px)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="g1-numeric-card" style={{ display: 'flex', gap: 'clamp(15px, 5vw, 40px)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="g1-num-box" style={{ background: color1 + '20', color: color1 }}>{n1}</motion.div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#CBD5E0' }}>−</div>
+                <div style={{ fontSize: '4rem', fontWeight: 900, color: '#CBD5E0' }}>−</div>
                 <motion.div initial={{ y: 20 }} animate={{ y: 0, transition: { delay: 0.1 } }} className="g1-num-box" style={{ background: color2 + '20', color: color2 }}>{n2}</motion.div>
-                <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#CBD5E0' }}>=</div>
+                <div style={{ fontSize: '4rem', fontWeight: 900, color: '#CBD5E0' }}>=</div>
                 <div className="g1-num-box" style={{ background: '#f0f0f0', border: '3px dashed #cbd5e0', color: '#cbd5e0' }}>?</div>
             </div>
         );
@@ -75,7 +75,8 @@ const Subtraction = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
-    const totalQuestions = 5;
+    const isTest = skillId === '404';
+    const totalQuestions = isTest ? 10 : 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -109,10 +110,27 @@ const Subtraction = () => {
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
 
-            if (selectedSkill === '401' || !selectedSkill) {
+            let typeToGen = 'visual';
+            if (isTest) {
+                if (i < 5) typeToGen = 'visual';
+                else if (i < 9) typeToGen = 'numeric';
+                else typeToGen = 'zero';
+            } else {
+                if (selectedSkill === '401' || !selectedSkill) typeToGen = 'visual';
+                else if (selectedSkill === '402') typeToGen = 'numeric';
+                else if (selectedSkill === '403') typeToGen = 'zero';
+            }
+
+            if (typeToGen === 'visual') {
                 // Visual Subtraction
-                const n1 = Math.floor(Math.random() * 5) + 5;
-                const n2 = Math.floor(Math.random() * 4) + 1;
+                let n1, n2;
+                if (isTest) {
+                    const pairs = [[6, 2], [7, 3], [5, 4], [8, 2], [9, 5]];
+                    [n1, n2] = pairs[i % pairs.length];
+                } else {
+                    n1 = Math.floor(Math.random() * 5) + 5;
+                    n2 = Math.floor(Math.random() * 4) + 1;
+                }
                 question = {
                     text: `How many objects are left after taking away ${n2}? 🍎`,
                     options: [n1 - n2, (n1 - n2 + 1), Math.max(0, n1 - n2 - 2)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
@@ -122,10 +140,16 @@ const Subtraction = () => {
                     explanation: `We started with ${n1} objects and crossed out ${n2}. Counting what's left gives us ${n1 - n2}.`,
                     solution: `${n1} - ${n2} = ${n1 - n2}`
                 };
-            } else if (selectedSkill === '402') {
+            } else if (typeToGen === 'numeric') {
                 // Numeric
-                const n1 = Math.floor(Math.random() * 9) + 1;
-                const n2 = Math.floor(Math.random() * n1);
+                let n1, n2;
+                if (isTest) {
+                    const pairs = [[9, 4], [8, 3], [7, 5], [6, 1]];
+                    [n1, n2] = pairs[(i - 5) % pairs.length];
+                } else {
+                    n1 = Math.floor(Math.random() * 9) + 1;
+                    n2 = Math.floor(Math.random() * n1);
+                }
                 question = {
                     text: `What is ${n1} take away ${n2}? ➖`,
                     options: [n1 - n2, n1 - n2 + 1, Math.max(0, n1 - n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
@@ -135,10 +159,15 @@ const Subtraction = () => {
                     explanation: `Starting from ${n1}, counting back ${n2} steps leads us to ${n1 - n2}.`,
                     solution: `${n1} - ${n2} = ${n1 - n2}`
                 };
-            } else if (selectedSkill === '403') {
+            } else if (typeToGen === 'zero') {
                 // Zero
-                const n = Math.floor(Math.random() * 9) + 1;
-                const subtractSame = Math.random() > 0.5;
+                let n;
+                if (isTest) {
+                    n = 7;
+                } else {
+                    n = Math.floor(Math.random() * 9) + 1;
+                }
+                const subtractSame = isTest ? true : Math.random() > 0.5;
                 const n2 = subtractSame ? n : 0;
                 question = {
                     text: `Subtract ${n2} from ${n}! ✨`,
@@ -149,7 +178,8 @@ const Subtraction = () => {
                     explanation: n2 === 0 ? `Subtracting zero doesn't change the number. So ${n} stays ${n}.` : `Subtracting a number from itself always results in zero.`,
                     solution: `${n} - ${n2} = ${n - n2}`
                 };
-            } else {
+            }
+            else {
                 question = { text: "Solve this!", options: ["1"], correct: "1", type: "numeric", visualData: { n1: 2, n2: 1, color1, color2 }, explanation: "Simple subtraction!" };
             }
             questions.push(question);
@@ -198,7 +228,9 @@ const Subtraction = () => {
         const isCorrect = option === sessionQuestions[qIndex].correct;
         if (isCorrect) {
             setScore(s => s + 1);
-            setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
+            if (!isTest) {
+                setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
+            }
         } else {
             setMotivation(null);
         }
@@ -213,11 +245,28 @@ const Subtraction = () => {
                 explanation: sessionQuestions[qIndex].explanation
             }
         }));
-        setShowExplanationModal(true);
+        if (!isTest) {
+            setShowExplanationModal(true);
+        }
+    };
+
+    const handleSkip = () => {
+        if (isAnswered) return;
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                selectedOption: 'Skipped',
+                isCorrect: false,
+                questionText: sessionQuestions[qIndex].text,
+                correctAnswer: sessionQuestions[qIndex].correct,
+                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+            }
+        }));
+        handleNext();
     };
 
     const handleNext = async () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) {
+        if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
             setShowResults(true);
@@ -228,7 +277,7 @@ const Subtraction = () => {
                         session_id: sessionId,
                         user_id: user?.id,
                         score: score,
-                        total_questions: TOTAL_QUESTIONS,
+                        total_questions: totalQuestions,
                         time_spent: timer,
                         answers: Object.values(answers)
                     });
@@ -246,7 +295,7 @@ const Subtraction = () => {
     if (sessionQuestions.length === 0) return <div className="grade1-practice-page"><div className="g1-loading-blob" /></div>;
 
     if (showResults) {
-        const percentage = Math.round((score / TOTAL_QUESTIONS) * 100);
+        const percentage = Math.round((score / totalQuestions) * 100);
         return (
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
@@ -306,10 +355,11 @@ const Subtraction = () => {
                         </div>
                     </div>
 
-                    <div className="detailed-breakdown">
-                        <h3 className="breakdown-title">Quest Log 📜</h3>
-                        <div className="quest-log-list">
-                            {sessionQuestions.map((q, idx) => {
+                    {isTest ? (
+                        <div className="detailed-breakdown">
+                            <h3 className="breakdown-title">Quest Log 📜</h3>
+                            <div className="quest-log-list">
+                                {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
@@ -354,8 +404,36 @@ const Subtraction = () => {
                                     </motion.div>
                                 );
                             })}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                                {Object.values(answers).map((ans, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        style={{
+                                            width: '50px', height: '50px', borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: '1.5rem',
+                                            background: ans.isCorrect ? '#C6F6D5' : '#FED7D7',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        {ans.isCorrect ? '✅' : '❌'}
+                                    </motion.div>
+                                ))}
+                            </div>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                                {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
+                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                 '🌱 Nice try! Practice makes perfect!'}
+                            </p>
+                        </div>
+                    )}
 
                     <div className="results-actions">
                         <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>
@@ -395,6 +473,30 @@ const Subtraction = () => {
                         Question {qIndex + 1} of {totalQuestions}
                     </div>
 
+                    {isTest && (
+                        <button
+                            className="g1-skip-btn"
+                            onClick={handleSkip}
+                            disabled={isAnswered}
+                            style={{
+                                marginLeft: '10px',
+                                background: '#EDF2F7',
+                                color: '#4A5568',
+                                padding: '8px 15px',
+                                borderRadius: '15px',
+                                fontWeight: 700,
+                                fontSize: '0.9rem',
+                                border: 'none',
+                                cursor: isAnswered ? 'not-allowed' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            Skip Quest ⏭️
+                        </button>
+                    )}
+
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
                         <StickerExit onClick={() => navigate('/junior/grade/1')} />
                     </div>
@@ -422,8 +524,8 @@ const Subtraction = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
                                         disabled={isAnswered}

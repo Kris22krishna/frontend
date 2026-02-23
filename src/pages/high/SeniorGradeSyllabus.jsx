@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { api } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 
 import SEO from '../../components/common/SEO';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
@@ -11,19 +13,54 @@ import './SeniorGradeSyllabus.css';
 const SeniorGradeSyllabus = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingSkill, setPendingSkill] = useState(null);
 
     // Grid + Modal Logic
     const [selectedTopic, setSelectedTopic] = useState(null);
     const [expandedSubtopic, setExpandedSubtopic] = useState(null);
+
+    const navigateToSkill = (skill) => {
+        if (skill.isLocal) {
+            navigate(skill.path);
+        } else {
+            navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
+        }
+    };
+
+    const handleSkillClick = (skill) => {
+        if (!isAuthenticated) {
+            setPendingSkill(skill);
+            setShowLoginModal(true);
+        } else {
+            navigateToSkill(skill);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingSkill) {
+            navigateToSkill(pendingSkill);
+            setPendingSkill(null);
+        }
+    };
 
     // Fetch Skills or Set Hardcoded for Grade 10
     useEffect(() => {
         const fetchSkills = async () => {
             setLoading(true);
             try {
-                if (grade === '10') {
+                if (grade === '11') {
+                    // Grade 11 uses a special subject picker, no skills needed
+                    setSkills([]);
+                } else if (grade === '12') {
+                    setSkills([
+                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' }
+                    ]);
+                } else if (grade === '10') {
                     setSkills([
                         { skill_id: 10031, skill_name: 'Form a pair of linear equations from word problems', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Forming Linear Equations from Real-Life Situations' },
 
@@ -368,6 +405,50 @@ const SeniorGradeSyllabus = () => {
         );
     }
 
+    /* ─── Grade 11 Subject Picker ─── */
+    if (grade === '11') {
+        const subjects = [
+            { key: 'maths', label: 'Mathematics', icon: '📐', desc: 'Algebra, Trigonometry, Calculus & more', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', shadow: 'rgba(102,126,234,0.4)' },
+            { key: 'physics', label: 'Physics', icon: '⚛️', desc: 'Mechanics, Waves, Thermodynamics & more', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', shadow: 'rgba(245,87,108,0.4)' },
+            { key: 'chemistry', label: 'Chemistry', icon: '🧪', desc: 'Organic, Inorganic & Physical Chemistry', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', shadow: 'rgba(79,172,254,0.4)' },
+            { key: 'biology', label: 'Biology', icon: '🧬', desc: 'Botany, Zoology, Human Physiology & more', gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', shadow: 'rgba(67,233,123,0.4)' },
+        ];
+        return (
+            <div className="senior-syllabus-page">
+                <SEO title="Grade 11 — Choose Your Subject" description="Pick a subject to start practising Grade 11 topics." />
+                <header className="senior-header-container">
+                    <div className="header-inner">
+                        <nav className="breadcrumb">
+                            <Link to="/" className="home-link">Home</Link>
+                            <ChevronRight size={14} />
+                            <span>Grade 11</span>
+                        </nav>
+                        <div className="page-title">
+                            <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#4F46E5', background: '#EEF2FF', padding: '4px 12px', borderRadius: '20px', marginBottom: '10px', display: 'inline-block', letterSpacing: '0.05em' }}>GRADE 11</span>
+                            <h1>Choose Your Subject</h1>
+                        </div>
+                        <p style={{ color: '#64748b', fontSize: '1.05rem', marginTop: '0.5rem' }}>Select a subject to explore chapters, practice skills and take tests.</p>
+                    </div>
+                </header>
+                <main className="senior-content-grid">
+                    <div className="g11-subject-grid">
+                        {subjects.map(s => (
+                            <div key={s.key} className="g11-subject-card" style={{ '--card-gradient': s.gradient, '--card-shadow': s.shadow }} onClick={() => navigate(`/senior/grade/11/${s.key}`)}>
+                                <div className="g11-card-bg"></div>
+                                <div className="g11-card-content">
+                                    <span className="g11-icon">{s.icon}</span>
+                                    <h3>{s.label}</h3>
+                                    <p>{s.desc}</p>
+                                    <span className="g11-explore">Explore <ChevronRight size={16} /></span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
     if (!skills || skills.length === 0 || topics.length === 0) {
         return (
             <div className="senior-syllabus-page">
@@ -428,7 +509,14 @@ const SeniorGradeSyllabus = () => {
                         <div
                             key={topic}
                             className="topic-card"
-                            onClick={() => setSelectedTopic(topic)}
+                            onClick={() => {
+                                const topicSkills = skillsByTopic[topic];
+                                if (topicSkills.length === 1 && topicSkills[0].path) {
+                                    navigate(topicSkills[0].path);
+                                } else {
+                                    setSelectedTopic(topic);
+                                }
+                            }}
                         >
                             <div className="topic-card-icon">
                                 <Layout size={32} />
@@ -485,6 +573,7 @@ const SeniorGradeSyllabus = () => {
                                                 </div>
                                             </div>
 
+<<<<<<< feat/chapter-test-class10
                                             {expandedSubtopic === subtopic && (
                                                 <div className="modal-skills-grid">
                                                     {subtopics[subtopic].map(skill => (
@@ -554,6 +643,22 @@ const SeniorGradeSyllabus = () => {
                                                             <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', fontWeight: '500' }}>
                                                                 Take the final test to master this chapter
                                                             </p>
+=======
+                                        {expandedSubtopic === subtopic && (
+                                            <div className="modal-skills-grid">
+                                                {subtopics[subtopic].map(skill => (
+                                                    <div
+                                                        key={skill.skill_id}
+                                                        className="skill-card-modal"
+                                                        onClick={() => handleSkillClick(skill)}
+                                                    >
+                                                        <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
+                                                        <div className="skill-card-footer">
+                                                            <span className="skill-badge">ID: {skill.skill_id}</span>
+                                                            <span className="start-btn">
+                                                                Start <ChevronRight size={16} />
+                                                            </span>
+>>>>>>> dev
                                                         </div>
                                                     </div>
                                                     <div style={{
@@ -578,6 +683,12 @@ const SeniorGradeSyllabus = () => {
                     </div>
                 </div>
             )}
+
+            <LoginPromptModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };

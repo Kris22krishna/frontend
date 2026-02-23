@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from "framer-motion";
 
-const CTASection = () => {
+const CTASection = ({ onRegisterClick }) => {
     return (
         <section className="py-24 relative overflow-hidden bg-slate-950" id="register">
             {/* Background glow */}
@@ -29,12 +29,12 @@ const CTASection = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-                        <a
-                            href="tel:9632402004"
+                        <button
+                            onClick={onRegisterClick}
                             className="px-10 py-4 rounded-lg font-bold text-white bg-gradient-to-r from-orange-500 to-red-600 hover:brightness-110 transition-all shadow-lg shadow-orange-500/20 text-lg"
                         >
-                            Register Now — Call 9632402004
-                        </a>
+                            Register Now — ₹100 Only
+                        </button>
                     </div>
 
                     <p className="text-slate-500 text-sm">

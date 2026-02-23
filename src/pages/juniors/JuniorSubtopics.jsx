@@ -32,13 +32,7 @@ const JuniorSubtopics = () => {
     const [pendingSubtopic, setPendingSubtopic] = useState(null);
     const decodedTopic = decodeURIComponent(topic);
 
-    const handleSubtopicClick = (subtopic, index) => {
-        if (!isAuthenticated) {
-            setPendingSubtopic(subtopic);
-            setShowLoginModal(true);
-            return;
-        }
-
+    const navigateToSubtopic = (subtopic, index) => {
         if (subtopic.id === "RB-01") {
             navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
             return;
@@ -123,12 +117,9 @@ const JuniorSubtopics = () => {
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
                 const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
                 if (skill && skill.route) {
-                    let topicSlug = decodedTopic.toLowerCase()
-                        .replace(/\s+/g, '-')
-                        .replace(/[()]/g, '');
-
-                    if (decodedTopic === "The Cleanest Village") topicSlug = "the-cleanest-village";
-                    if (decodedTopic === "Equal Groups") topicSlug = "equal-groups";
+                    const topicSlug = decodedTopic.toLowerCase()
+                        .replace(/[(),]/g, '')
+                        .replace(/\s+/g, '-');
 
                     navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
                     return;
@@ -174,87 +165,19 @@ const JuniorSubtopics = () => {
         );
     };
 
+    const handleSubtopicClick = (subtopic, index) => {
+        if (!isAuthenticated) {
+            setPendingSubtopic(subtopic);
+            setShowLoginModal(true);
+            return;
+        }
+        navigateToSubtopic(subtopic, index);
+    };
+
     const handleLoginSuccess = () => {
         if (pendingSubtopic) {
-            const subtopic = pendingSubtopic;
-            const index = subtopics.findIndex(s => s.id === subtopic.id);
-
-            if (subtopic.id === "RB-01") {
-                navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
-            } else if (subtopic.id === "RB-02") {
-                navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
-            } else if (subtopic.id === "RB-03") {
-                navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
-            } else if (subtopic.id === "FS-01") {
-                navigate(`/junior/grade/${grade}/fair-share/cutting`);
-            } else if (subtopic.id === "FS-02") {
-                navigate(`/junior/grade/${grade}/fair-share/halves-doubles`);
-            } else if (subtopic.id === "FS-03") {
-                navigate(`/junior/grade/${grade}/fair-share/draw`);
-            } else if (subtopic.id === "FS-04") {
-                navigate(`/junior/grade/${grade}/fair-share/guess-who`);
-            } else if (subtopic.id === "FCP-01") {
-                navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
-            } else if (subtopic.id === "FCP-02") {
-                navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
-            } else if (subtopic.id === "HH2-01") {
-                navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
-            } else if (String(grade).replace(/\D/g, '') === '1') {
-                const gradeConfigs = TOPIC_CONFIGS['1'];
-                if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                    const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
-                    if (skill && skill.route) {
-                        navigate(`/junior/grade/1/${skill.route}?skillId=${subtopic.id}`);
-                        setPendingSubtopic(null);
-                        return;
-                    }
-                }
-                const topicSlug = decodedTopic.toLowerCase()
-                    .replace(/\s+/g, '-')
-                    .replace(/[()]/g, '');
-                navigate(`/junior/grade/1/${topicSlug}?skillId=${subtopic.id}`);
-            } else if (String(grade).replace(/\D/g, '') === '2') {
-                const gradeConfigs = TOPIC_CONFIGS['2'];
-                if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                    const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
-                    if (skill && skill.route) {
-                        const topicSlug = decodedTopic.toLowerCase()
-                            .replace(/\s+/g, '-')
-                            .replace(/[?,]/g, '');
-                        navigate(`/junior/grade/2/${topicSlug}/${skill.route}?skillId=${subtopic.id}`);
-                        setPendingSubtopic(null);
-                        return;
-                    }
-                }
-            } else {
-                // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
-                const gradeNum = grade.replace('grade', '');
-                if (parseInt(gradeNum) === 4) {
-                    const gradeConfigs = TOPIC_CONFIGS['4'];
-                    if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                        const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
-                        if (skill && skill.route) {
-                            // Construct slug from topic name
-                            let topicSlug = decodedTopic.toLowerCase()
-                                .replace(/\s+/g, '-')
-                                .replace(/[()]/g, '');
-
-                            // Special case for consistency if needed, though slugify usually works
-                            if (decodedTopic === "The Cleanest Village") topicSlug = "the-cleanest-village";
-                            if (decodedTopic === "Equal Groups") topicSlug = "equal-groups";
-
-                            navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
-                            setPendingSubtopic(null);
-                            return;
-                        }
-                    }
-                }
-
-                navigate(
-                    `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
-                    { state: { skills: subtopics, currentIndex: index } }
-                );
-            }
+            const index = subtopics.findIndex(s => s.id === pendingSubtopic.id);
+            navigateToSubtopic(pendingSubtopic, index);
             setPendingSubtopic(null);
         }
     };
@@ -361,10 +284,10 @@ const JuniorSubtopics = () => {
                                 return (
                                     <button
                                         key={subtopic.id}
-                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''}`}
+                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''} ${subtopic.name.toLowerCase().includes('chapter test') ? 'chapter-test-pill' : ''}`}
                                         style={{
-                                            '--pill-color': style.color,
-                                            '--pill-gradient': style.gradient,
+                                            '--pill-color': subtopic.name.toLowerCase().includes('chapter test') ? '#FFD700' : style.color,
+                                            '--pill-gradient': subtopic.name.toLowerCase().includes('chapter test') ? 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFD700 100%)' : style.gradient,
                                             '--animation-delay': `${index * 0.1}s`
                                         }}
                                         onMouseEnter={() => setHoveredSubtopic(subtopic.id)}
@@ -376,7 +299,11 @@ const JuniorSubtopics = () => {
 
                                         {/* Icon container */}
                                         <div className="pill-icon">
-                                            <span className="number-icon">{index + 1}</span>
+                                            {subtopic.name.toLowerCase().includes('chapter test') ? (
+                                                <span className="number-icon" style={{ fontSize: '1.2rem' }}>🏆</span>
+                                            ) : (
+                                                <span className="number-icon">{index + 1}</span>
+                                            )}
                                         </div>
 
                                         {/* Text */}
@@ -388,7 +315,7 @@ const JuniorSubtopics = () => {
                                         {/* Hover label */}
                                         {hoveredSubtopic === subtopic.id && !subtopic.completed && (
                                             <div className="hover-label">
-                                                Click to start! 🚀
+                                                {subtopic.name.toLowerCase().includes('chapter test') ? 'Take the test! 📝' : 'Click to start! 🚀'}
                                             </div>
                                         )}
                                     </button>

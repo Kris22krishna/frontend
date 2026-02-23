@@ -1,4 +1,4 @@
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, ''); // Adjust if backend runs elsewhere
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/$/, ''); // Adjust if backend runs elsewhere
 
 // Override fetch to always include credentials (cookies)
 const fetch = (url, options = {}) => {
@@ -791,5 +791,15 @@ export const api = {
         const result = await handleResponse(response);
         console.log('✅ finishSession response:', result);
         return result;
+    },
+
+    // --- Internship ---
+    submitInternshipRegistration: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/internship/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        return handleResponse(response);
     },
 };

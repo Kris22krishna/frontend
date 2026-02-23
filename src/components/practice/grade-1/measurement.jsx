@@ -22,60 +22,75 @@ const DynamicVisual = ({ type, data }) => {
                 <div style={{
                     display: 'flex',
                     flexDirection: isVertical ? 'row' : 'column',
-                    gap: 'clamp(15px, 5vw, 30px)',
+                    gap: '20px',
                     alignItems: isVertical ? 'flex-end' : 'flex-start',
                     justifyContent: 'center',
-                    padding: 'clamp(10px, 5vw, 20px)',
-                    background: 'rgba(255,255,255,0.4)',
+                    padding: '30px',
+                    background: 'white',
                     borderRadius: '30px',
-                    border: '2px dashed rgba(0,0,0,0.1)',
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
                     width: '100%'
                 }}>
                     <div style={{ display: 'flex', flexDirection: isVertical ? 'column-reverse' : 'row', alignItems: 'center', gap: '15px' }}>
                         <motion.div
-                            initial={{ width: 0, height: 0 }} animate={{ width: isVertical ? 25 : l1, height: isVertical ? l1 : 25 }}
-                            style={{ background: `linear-gradient(${isVertical ? '0' : '90'}deg, ${color1}, ${color1}dd)`, borderRadius: '15px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                            initial={{ width: 0, height: 0 }} animate={{ width: isVertical ? 35 : l1, height: isVertical ? l1 : 35 }}
+                            style={{ background: `linear-gradient(${isVertical ? '0' : '90'}deg, ${color1}, ${color1}dd)`, borderRadius: '10px' }}
                         />
-                        <span style={{ fontWeight: 800, color: '#555', fontSize: '0.9rem' }}>{label1}</span>
+                        <span style={{ fontWeight: 800, color: '#31326F' }}>{label1}</span>
                     </div>
                     <div style={{ display: 'flex', flexDirection: isVertical ? 'column-reverse' : 'row', alignItems: 'center', gap: '15px' }}>
                         <motion.div
-                            initial={{ width: 0, height: 0 }} animate={{ width: isVertical ? 25 : l2, height: isVertical ? l2 : 25 }}
-                            style={{ background: `linear-gradient(${isVertical ? '0' : '90'}deg, ${color2}, ${color2}dd)`, borderRadius: '15px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+                            initial={{ width: 0, height: 0 }} animate={{ width: isVertical ? 35 : l2, height: isVertical ? l2 : 35 }}
+                            style={{ background: `linear-gradient(${isVertical ? '0' : '90'}deg, ${color2}, ${color2}dd)`, borderRadius: '10px' }}
                         />
-                        <span style={{ fontWeight: 800, color: '#555', fontSize: '0.9rem' }}>{label2}</span>
+                        <span style={{ fontWeight: 800, color: '#31326F' }}>{label2}</span>
                     </div>
                 </div>
             </motion.div>
         );
     }
+
     if (type === 'weight') {
-        const { w1, w2, color1, color2, label1, label2 } = data;
-        const tilt = w1 > w2 ? -15 : 15;
+        const { label1, label2, objA, objB } = data;
         return (
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="g1-weight-visual">
-                <div style={{ position: 'relative', width: '100%', maxWidth: '240px', height: '150px', margin: '0 auto' }}>
-                    {/* Balance Beam */}
-                    <motion.div
-                        animate={{ rotate: tilt }}
-                        style={{ position: 'absolute', top: '60px', left: '20px', width: '200px', height: '8px', background: '#8B4513', borderRadius: '4px', transformOrigin: 'center' }}
-                    >
-                        {/* Left Bowl */}
-                        <div style={{ position: 'absolute', left: '-10px', top: '10px', width: '60px', height: '40px', background: color1 + 'dd', borderRadius: '0 0 30px 30px', border: '2px solid #555' }}>
-                            <div style={{ position: 'absolute', top: '-15px', width: '100%', textAlign: 'center', fontWeight: 'bold' }}>{label1}</div>
-                        </div>
-                        {/* Right Bowl */}
-                        <div style={{ position: 'absolute', right: '-10px', top: '10px', width: '60px', height: '40px', background: color2 + 'dd', borderRadius: '0 0 30px 30px', border: '2px solid #555' }}>
-                            <div style={{ position: 'absolute', top: '-15px', width: '100%', textAlign: 'center', fontWeight: 'bold' }}>{label2}</div>
-                        </div>
-                    </motion.div>
-                    {/* Stand */}
-                    <div style={{ position: 'absolute', top: '60px', left: '115px', width: '10px', height: '80px', background: '#555', borderRadius: '5px' }} />
-                    <div style={{ position: 'absolute', top: '130px', left: '90px', width: '60px', height: '10px', background: '#555', borderRadius: '5px' }} />
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', gap: '50px', justifyContent: 'center', background: 'white', padding: '30px', borderRadius: '30px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ fontSize: '60px', filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.1))' }}>
+                        {objA.emoji}
+                    </div>
+                    <span style={{ fontWeight: 900, color: '#31326F' }}>{label1}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', fontSize: '1.5rem', color: '#94a3b8', fontWeight: 900 }}>VS</div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ fontSize: '60px', filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.1))' }}>
+                        {objB.emoji}
+                    </div>
+                    <span style={{ fontWeight: 900, color: '#31326F' }}>{label2}</span>
                 </div>
             </motion.div>
         );
     }
+
+    if (type === 'capacity') {
+        const { f1, f2, color1, color2, label1, label2 } = data; // content fillers
+        return (
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', gap: '50px', justifyContent: 'center', background: 'white', padding: '30px', borderRadius: '30px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ position: 'relative', width: '60px', height: '100px', border: '3px solid #64748b', borderTop: 'none', borderRadius: '0 0 10px 10px', overflow: 'hidden' }}>
+                        <motion.div initial={{ height: 0 }} animate={{ height: `${f1}%` }} style={{ position: 'absolute', bottom: 0, width: '100%', background: color1, opacity: 0.7 }} />
+                    </div>
+                    <span style={{ fontWeight: 900, color: '#31326F' }}>{label1}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ position: 'relative', width: '60px', height: '100px', border: '3px solid #64748b', borderTop: 'none', borderRadius: '0 0 10px 10px', overflow: 'hidden' }}>
+                        <motion.div initial={{ height: 0 }} animate={{ height: `${f2}%` }} style={{ position: 'absolute', bottom: 0, width: '100%', background: color2, opacity: 0.7 }} />
+                    </div>
+                    <span style={{ fontWeight: 900, color: '#31326F' }}>{label2}</span>
+                </div>
+            </motion.div>
+        );
+    }
+
     return null;
 };
 
@@ -94,7 +109,8 @@ const Measurement = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
-    const totalQuestions = 5;
+    const isTest = skillId === '704';
+    const totalQuestions = isTest ? 10 : 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -121,56 +137,106 @@ const Measurement = () => {
 
     const generateQuestions = (selectedSkill) => {
         const questions = [];
-        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#A9D18E'];
 
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
 
-            // Map skillId to question type
+            // 701: Measuring Length/Height
+            // 702: Comparing Weights
+            // 703: Comparing Capacities
             let type = 'length';
-            if (selectedSkill === '701') type = 'length';
-            else if (selectedSkill === '702') type = 'height';
-            else if (selectedSkill === '703') type = 'weight';
-            else {
-                const randomTypes = ['length', 'height', 'weight'];
-                type = randomTypes[i % 3];
+            if (isTest) {
+                if (i < 4) type = Math.random() > 0.5 ? 'length' : 'height';
+                else if (i < 7) type = 'weight';
+                else type = 'capacity';
+            } else if (selectedSkill === '701') {
+                type = Math.random() > 0.5 ? 'length' : 'height';
+            } else if (selectedSkill === '702') {
+                type = 'weight';
+            } else if (selectedSkill === '703') {
+                type = 'capacity';
+            } else {
+                const randomTypes = ['length', 'height', 'weight', 'capacity'];
+                type = randomTypes[i % 4];
             }
 
             if (type === 'length' || type === 'height') {
                 const isLonger = Math.random() > 0.5;
                 const l1 = Math.floor(Math.random() * 80) + 60;
                 const l2 = l1 + (Math.random() > 0.5 ? 40 : -40);
-                const label1 = type === 'length' ? "Pencil A" : "Tree A";
-                const label2 = type === 'length' ? "Pencil B" : "Tree B";
-                const adj = type === 'length' ? (isLonger ? 'longer' : 'shorter') : (isLonger ? 'taller' : 'shorter');
+
+                let label1, label2, adjLong, adjShort, icon;
+                if (type === 'length') {
+                    label1 = "Ribbon A"; label2 = "Ribbon B";
+                    adjLong = "longer"; adjShort = "shorter";
+                    icon = "📏";
+                } else {
+                    label1 = "Building A"; label2 = "Building B";
+                    adjLong = "taller"; adjShort = "shorter";
+                    icon = "🏢";
+                }
+
+                const adj = isLonger ? adjLong : adjShort;
                 const correct = (isLonger ? (l1 > l2 ? label1 : label2) : (l1 < l2 ? label1 : label2));
 
                 question = {
-                    text: `Look at the two objects! Which one is ${adj}? 📏`,
+                    text: `Which one is ${adj}? ${icon}`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type,
                     visualData: { l1, l2, color1, color2, label1, label2, isVertical: type === 'height' },
-                    explanation: `Comparing ${label1} and ${label2}, we can see that ${correct} is definitely ${adj}.`
+                    explanation: `Compare the ends of the objects. ${correct} is clearly ${adj}.`
                 };
-            } else {
+            } else if (type === 'weight') {
+                const pairs = [
+                    { h: { name: 'Elephant', emoji: '🐘', w: 1000 }, l: { name: 'Mouse', emoji: '🐭', w: 1 } },
+                    { h: { name: 'Watermelon', emoji: '🍉', w: 50 }, l: { name: 'Apple', emoji: '🍎', w: 5 } },
+                    { h: { name: 'School Bus', emoji: '🚌', w: 5000 }, l: { name: 'Bicycle', emoji: '🚲', w: 50 } },
+                    { h: { name: 'Brick', emoji: '🧱', w: 30 }, l: { name: 'Feather', emoji: '🪶', w: 1 } },
+                    { h: { name: 'Pumpkin', emoji: '🎃', w: 40 }, l: { name: 'Leaf', emoji: '🍃', w: 1 } },
+                    { h: { name: 'Big Stone', emoji: '🪨', w: 60 }, l: { name: 'Balloon', emoji: '🎈', w: 2 } },
+                    { h: { name: 'Cake', emoji: '🎂', w: 10 }, l: { name: 'Cupcake', emoji: '🧁', w: 2 } },
+                    { h: { name: 'Tiger', emoji: '🐅', w: 200 }, l: { name: 'Cat', emoji: '🐈', w: 5 } },
+                    { h: { name: 'Bag', emoji: '🎒', w: 15 }, l: { name: 'Pencil Box', emoji: '✏️', w: 1 } },
+                    { h: { name: 'Tree', emoji: '🌳', w: 500 }, l: { name: 'Flower', emoji: '🌸', w: 1 } }
+                ];
+
                 const isHeavier = Math.random() > 0.5;
-                const w1 = Math.floor(Math.random() * 50) + 20;
-                const w2 = w1 + (Math.random() > 0.5 ? 20 : -20);
-                const label1 = "Fruit A";
-                const label2 = "Fruit B";
+                const pair = pairs[i % pairs.length];
+                const isReverse = Math.random() > 0.5;
+                const objA = isReverse ? pair.l : pair.h;
+                const objB = isReverse ? pair.h : pair.l;
+
                 const adj = isHeavier ? 'heavier' : 'lighter';
-                const correct = (isHeavier ? (w1 > w2 ? label1 : label2) : (w1 < w2 ? label1 : label2));
+                const correct = (isHeavier ? (objA.w > objB.w ? objA.name : objB.name) : (objA.w < objB.w ? objA.name : objB.name));
 
                 question = {
-                    text: `Check the balance scale! Which one is ${adj}? ⚖️`,
-                    options: [label1, label2].sort(() => 0.5 - Math.random()),
+                    text: `Look at the objects! Which one is ${adj}? ⚖️`,
+                    options: [objA.name, objB.name].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type: 'weight',
-                    visualData: { w1, w2, color1, color2, label1, label2 },
-                    explanation: `The balance scale tilts towards the heavier object. Here, ${correct} is the ${adj} one.`
+                    visualData: { objA, objB, label1: objA.name, label2: objB.name },
+                    explanation: `A ${pair.h.name} is heavier than a ${pair.l.name}. So, ${correct} is ${adj}.`
+                };
+            } else {
+                const isMore = Math.random() > 0.5;
+                const f1 = 30 + Math.floor(Math.random() * 20);
+                const f2 = f1 + (Math.random() > 0.5 ? 40 : -20);
+                const label1 = "Jug A";
+                const label2 = "Cup B";
+                const adj = isMore ? 'holds more' : 'holds less';
+                const correct = (isMore ? (f1 > f2 ? label1 : label2) : (f1 < f2 ? label1 : label2));
+
+                question = {
+                    text: `Which container ${adj}? 💧`,
+                    options: [label1, label2].sort(() => 0.5 - Math.random()),
+                    correct: correct,
+                    type: 'capacity',
+                    visualData: { f1, f2, color1: '#3b82f6', color2: '#3b82f6', label1, label2 },
+                    explanation: `Comparing the liquid levels, ${correct} ${adj}.`
                 };
             }
             questions.push(question);
@@ -219,7 +285,9 @@ const Measurement = () => {
         const isCorrect = option === sessionQuestions[qIndex].correct;
         if (isCorrect) {
             setScore(s => s + 1);
-            setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
+            if (!isTest) {
+                setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
+            }
         } else {
             setMotivation(null);
         }
@@ -234,7 +302,9 @@ const Measurement = () => {
                 explanation: sessionQuestions[qIndex].explanation
             }
         }));
-        setShowExplanationModal(true);
+        if (!isTest) {
+            setShowExplanationModal(true);
+        }
     };
 
     const handleNext = async () => {
@@ -256,6 +326,21 @@ const Measurement = () => {
                 }
             } catch (e) { console.error(e); }
         }
+    };
+
+    const handleSkip = () => {
+        if (isAnswered) return;
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                selectedOption: 'Skipped',
+                isCorrect: false,
+                questionText: sessionQuestions[qIndex].text,
+                correctAnswer: sessionQuestions[qIndex].correct,
+                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+            }
+        }));
+        handleNext();
     };
 
     const formatTime = (s) => {
@@ -287,7 +372,7 @@ const Measurement = () => {
                 <main className="results-content">
                     <div className="results-hero-section">
                         <img src={avatarImg} alt="Mascot" style={{ width: '120px', height: '120px', margin: '0 auto 20px' }} />
-                        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#31326F', fontFamily: 'Fredoka, cursive' }}>Adventure Complete! 🎉</h2>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#31326F', fontFamily: 'Fredoka, cursive' }}>Quest Complete! 🎉</h2>
 
                         <div className="stars-container">
                             {[1, 2, 3].map(i => (
@@ -327,10 +412,11 @@ const Measurement = () => {
                         </div>
                     </div>
 
-                    <div className="detailed-breakdown">
-                        <h3 className="breakdown-title">Quest Log 📜</h3>
-                        <div className="quest-log-list">
-                            {sessionQuestions.map((q, idx) => {
+                    {isTest ? (
+                        <div className="detailed-breakdown">
+                            <h3 className="breakdown-title">Quest Log 📜</h3>
+                            <div className="quest-log-list">
+                                {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
@@ -375,12 +461,40 @@ const Measurement = () => {
                                     </motion.div>
                                 );
                             })}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                                {Object.values(answers).map((ans, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        style={{
+                                            width: '50px', height: '50px', borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: '1.5rem',
+                                            background: ans.isCorrect ? '#C6F6D5' : '#FED7D7',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        {ans.isCorrect ? '✅' : '❌'}
+                                    </motion.div>
+                                ))}
+                            </div>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                                {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
+                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                 '🌱 Nice try! Practice makes perfect!'}
+                            </p>
+                        </div>
+                    )}
 
                     <div className="results-actions">
                         <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>
-                            <RefreshCw size={24} /> Start New Quest
+                            <RefreshCw size={24} /> New Quest
                         </button>
                         <button className="action-btn-large back-topics-btn" onClick={() => navigate('/junior/grade/1')}>
                             <FileText size={24} /> Back to Topics
@@ -416,6 +530,12 @@ const Measurement = () => {
                         Question {qIndex + 1} of {totalQuestions}
                     </div>
 
+                    {isTest && !isAnswered && (
+                        <button className="g1-skip-btn" onClick={handleSkip}>
+                            Skip Quest ⏭️
+                        </button>
+                    )}
+
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
                         <StickerExit onClick={() => navigate('/junior/grade/1')} />
                     </div>
@@ -444,8 +564,8 @@ const Measurement = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : ''}
-                                            ${isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
                                         disabled={isAnswered}
@@ -459,7 +579,7 @@ const Measurement = () => {
 
                     {isAnswered && (
                         <div className="flex flex-col items-center gap-4 mt-8">
-                            {motivation && (
+                            {motivation && !isTest && (
                                 <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
                                     <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
                                     <span className="g1-motivation-text">{motivation.text}</span>
@@ -467,7 +587,7 @@ const Measurement = () => {
                                 </motion.div>
                             )}
                             <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
+                                {qIndex === totalQuestions - 1 ? (isTest ? 'Submit Test 📝' : 'Finish Quest 🏆') : 'Next Challenge 🚀'} <ArrowRight />
                             </button>
                         </div>
                     )}

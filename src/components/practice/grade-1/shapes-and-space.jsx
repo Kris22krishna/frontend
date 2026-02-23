@@ -377,10 +377,11 @@ const ShapesAndSpace = () => {
                         </div>
                     </div>
 
-                    <div className="detailed-breakdown">
-                        <h3 className="breakdown-title">Quest Log 📜</h3>
-                        <div className="quest-log-list">
-                            {sessionQuestions.map((q, idx) => {
+                    {isTest ? (
+                        <div className="detailed-breakdown">
+                            <h3 className="breakdown-title">Quest Log 📜</h3>
+                            <div className="quest-log-list">
+                                {sessionQuestions.map((q, idx) => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
@@ -425,8 +426,36 @@ const ShapesAndSpace = () => {
                                     </motion.div>
                                 );
                             })}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                                {Object.values(answers).map((ans, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        style={{
+                                            width: '50px', height: '50px', borderRadius: '50%',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: '1.5rem',
+                                            background: ans.isCorrect ? '#C6F6D5' : '#FED7D7',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                        }}
+                                    >
+                                        {ans.isCorrect ? '✅' : '❌'}
+                                    </motion.div>
+                                ))}
+                            </div>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                                {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
+                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                 '🌱 Nice try! Practice makes perfect!'}
+                            </p>
+                        </div>
+                    )}
 
                     <div className="results-actions">
                         <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>

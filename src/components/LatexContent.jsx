@@ -33,6 +33,10 @@ const LatexContent = ({ html, className, block = false }) => {
                         { left: '\\(', right: '\\)', display: false },
                         { left: '$', right: '$', display: false },
                     ],
+                    strict: 'ignore',
+                    macros: {
+                        "₹": "\\text{₹}"
+                    },
                     throwOnError: false
                 });
             } catch (e) {
@@ -47,7 +51,7 @@ const LatexContent = ({ html, className, block = false }) => {
         <Tag
             ref={containerRef}
             className={className}
-            dangerouslySetInnerHTML={{ __html: html }}
+            dangerouslySetInnerHTML={{ __html: finalHtml }}
         />
     );
 };
