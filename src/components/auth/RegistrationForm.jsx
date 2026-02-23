@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/auth';
+import { trackSignUp, setUserId } from '@/lib/gtag';
 import '../../styles/AuthStyles.css'; // Use shared styles
 
 
@@ -121,6 +122,12 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
 
             const response = await authService.registerWithEmail(registrationData);
             console.log('Registration Success:', response);
+
+            // Track signup event
+            trackSignUp('email');
+            if (response.id) {
+                setUserId(response.id);
+            }
 
             // Auto-login using token from registration response
             if (!parentId) {

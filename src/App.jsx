@@ -384,6 +384,24 @@ const ComingSoon = () => (
 );
 
 function App() {
+  // Initialize GA4 tracking
+  React.useEffect(() => {
+    // Add Google Analytics script
+    const script1 = document.createElement('script');
+    script1.async = true;
+    script1.src = 'https://www.googletagmanager.com/gtag/js?id=G-DPVP197Z95';
+    document.head.appendChild(script1);
+
+    // Initialize gtag
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', 'G-DPVP197Z95');
+  }, []);
+
   return (
     <Router>
       <Routes>

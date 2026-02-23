@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import '../styles/PracticeSession.css';
 import { FullScreenScratchpad } from '../components/FullScreenScratchpad';
 import { capitalizeFirstLetter } from '../lib/stringUtils';
+import { trackPracticeStarted, trackPracticeCompleted, trackResultViewed, trackQuestionAnswered } from '../lib/gtag';
 
 
 const PracticeSession = () => {
@@ -77,6 +78,25 @@ const PracticeSession = () => {
         checkRedirect();
     }, [templateId]);
 
+
+    // Track practice started when first questions are loaded
+    useEffect(() => {
+        if (questions.length > 0 && skillMetadata) {
+            trackPracticeStarted(
+                templateId,
+                skillMetadata.skill_name || 'Practice',
+                skillMetadata.category || 'Practice'
+            );
+        }
+    }, [questions, skillMetadata, templateId]);
+
+    // Track result viewed when finished
+    useEffect(() => {
+        if (finished && stats.total > 0) {
+            const score = Math.round((stats.correct / (stats.total || 1)) * 100);
+            trackResultViewed(templateId, score);
+        }
+    }, [finished, stats]);
 
     useEffect(() => {
         fetchQuestions();
@@ -176,6 +196,7 @@ const PracticeSession = () => {
     // Performance Tracking
     const [stats, setStats] = useState({ correct: 0, total: 0 });
     const hasAnsweredRef = useRef(false);
+    const practiceStartTimeRef = useRef(Date.now());
 
     const handleCheckAnswer = () => {
         const currentQuestion = questions[currentIndex];
@@ -285,6 +306,16 @@ const PracticeSession = () => {
         try {
             const userId = localStorage.getItem('userId') || 'unknown';
             const score = Math.round((stats.correct / (stats.total || 1)) * 100);
+            const timeTaken = Math.round((Date.now() - practiceStartTimeRef.current) / 1000);
+
+            // Track practice completion
+            trackPracticeCompleted(
+                templateId,
+                skillMetadata?.skill_name || 'Practice',
+                skillMetadata?.category || 'Practice',
+                score,
+                timeTaken
+            );
 
             await api.createReport({
                 uid: userId,

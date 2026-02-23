@@ -3,6 +3,7 @@ import '../styles/AuthStyles.css';
 import { ArrowLeft, Sparkles, BarChart3, Atom } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth';
+import { trackLogin, setUserId } from '@/lib/gtag';
 
 const LoginPage = () => {
     const [identifier, setIdentifier] = useState('');
@@ -41,6 +42,12 @@ const LoginPage = () => {
     };
 
     const handleLoginSuccess = (response) => {
+        // Track login event
+        trackLogin('email');
+        if (response.id) {
+            setUserId(response.id);
+        }
+
         // Redirect based on role
         const userType = response.role || response.user_type || 'student'; // Fallback
         console.log("Detected User Type:", userType);
@@ -92,6 +99,9 @@ const LoginPage = () => {
                 setIsLoading(false);
                 return;
             }
+
+            // Track Google login
+            trackLogin('google');
 
             handleLoginSuccess(response);
         } catch (err) {
