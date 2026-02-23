@@ -39,9 +39,9 @@ const FoundationsQuadratic = () => {
         // Q1: Standard Form
         newQuestions.push(createQuestion(1,
             `The standard form of a quadratic equation is:`,
-            [`$ax^2 + bx + c = 0, a \\neq 0$`, `$ax^2 + bx + c = 0$`, `$ax + b = 0$`, `$ax^3 + bx^2 + cx + d = 0$`],
-            `$ax^2 + bx + c = 0, a \\neq 0$`,
-            `The standard form is $ax^2 + bx + c = 0$ where $a, b, c$ are real numbers and $a \\neq 0$.`
+            [`$ax^2 + bx + c = 0, a$ ≠ $0$`, `$ax^2 + bx + c = 0$`, `$ax + b = 0$`, `$ax^3 + bx^2 + cx + d = 0$`],
+            `$ax^2 + bx + c = 0, a$ ≠ $0$`,
+            `The standard form is $ax^2 + bx + c = 0$ where $a, b, c$ are real numbers and $a$ ≠ $0$.`
         ));
 
         // Q2: Coefficients 1
@@ -55,8 +55,8 @@ const FoundationsQuadratic = () => {
         // Q3: Identification
         newQuestions.push(createQuestion(3,
             `Which of the following conditions must hold true for $ax^2 + bx + c = 0$ to be a quadratic equation?`,
-            [`$a \\neq 0$`, `$b \\neq 0$`, `$c \\neq 0$`, `$a = 0$`],
-            `$a \\neq 0$`,
+            [`$a$ ≠ $0$`, `$b$ ≠ $0$`, `$c$ ≠ $0$`, `$a = 0$`],
+            `$a$ ≠ $0$`,
             `For a quadratic equation, the coefficient of $x^2$ ($a$) cannot be zero.`
         ));
 

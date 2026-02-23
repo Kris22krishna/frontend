@@ -171,7 +171,7 @@ const UnderstandingAP = () => {
                 `1. Analyze Option (A): 1, 4, 9, 16...
    - $4 - 1 = 3$
    - $9 - 4 = 5$
-   - The difference is NOT constant ($3 \\neq 5$).
+   - The difference is NOT constant ($3$ ≠ $5$).
 
 2. Analyze other options:
    - (B) $4-2=2$ (Constant) -> AP

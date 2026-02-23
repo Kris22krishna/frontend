@@ -79,7 +79,7 @@ So, no real roots.`
         // Q6: Condition for Equal Roots
         newQuestions.push(createQuestion(6,
             `The condition for equal roots is:`,
-            [`$D = 0$`, `$D > 0$`, `$D < 0$`, `$D \\neq 0$`],
+            [`$D = 0$`, `$D > 0$`, `$D < 0$`, `$D$ ≠ $0$`],
             `$D = 0$`,
             `If discriminant $D = b^2 - 4ac = 0$, roots are real and equal.`
         ));
