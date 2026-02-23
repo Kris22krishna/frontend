@@ -1150,6 +1150,15 @@ function App() {
         <Route path="/high/practice/1207" element={<QuadraticEquationsTest />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
+        {/* Class 11 Biology */}
+        <Route path="/senior/grade/11/biology" element={<BiologyChapters />} />
+        <Route path="/senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
+
+        {/* Placeholder routes for other Grade 11 subjects */}
+        <Route path="/senior/grade/11/chemistry" element={<ComingSoon />} />
+        <Route path="/senior/grade/11/physics" element={<ComingSoon />} />
+        <Route path="/senior/grade/11/maths" element={<ComingSoon />} />
+
         {/* Class 10: Real Numbers Routes */}
         <Route path="/high/practice/10201" element={<RealNumberFoundations />} />
         <Route path="/high/practice/10202" element={<EuclidsDivision />} />
