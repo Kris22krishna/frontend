@@ -466,7 +466,7 @@ const QuadraticEquationsTest = () => {
         const wrong = questions.length - correct - skipped;
 
         return (
-            <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem' }}>
+            <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem', overflowY: 'auto' }}>
                 <style>{BLUE_THEME_CSS}</style>
                 <div className="exam-report-container">
                     <div className="results-hero-section flex flex-col items-center mb-8 mt-4">
