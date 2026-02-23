@@ -4,6 +4,7 @@ import { Shield, Lock, User, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-reac
 import SEO from '../components/common/SEO';
 import Navbar from '../components/Navbar';
 import { api } from '../services/api';
+import { trackLogin, setUserId } from '../lib/gtag';
 import '../styles/AdminLogin.css';
 
 const AdminLogin = () => {
@@ -24,7 +25,11 @@ const AdminLogin = () => {
         setError('');
 
         try {
-            await api.adminLogin(credentials.username, credentials.password);
+            const response = await api.adminLogin(credentials.username, credentials.password);
+            trackLogin('admin_email');
+            if (response && response.id) {
+                setUserId(response.id);
+            }
             navigate('/admin');
         } catch (error) {
             console.error(error);

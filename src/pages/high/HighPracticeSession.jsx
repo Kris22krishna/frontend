@@ -10,6 +10,7 @@ import './HighPracticeSession.css';
 import LatexContent from '../../components/LatexContent';
 import Navbar from '../../components/Navbar';
 import mascotImg from '../../assets/mascot.png';
+import { trackPracticeStarted, trackPracticeCompleted, trackResultViewed } from '../../lib/gtag';
 
 const HighPracticeSession = () => {
     const { skillId } = useParams();
@@ -109,6 +110,21 @@ const HighPracticeSession = () => {
         startTimeRef.current = Date.now();
         setDisplayQuestionNum(1);
     }, [skillId]);
+
+    // Track practice started when questions load
+    useEffect(() => {
+        if (questions.length > 0 && skillName) {
+            trackPracticeStarted(skillId, skillName, 'Math');
+        }
+    }, [questions, skillName, skillId]);
+
+    // Track result viewed when completed
+    useEffect(() => {
+        if (completed && stats.total > 0) {
+            const score = Math.round((stats.correct / stats.total) * 100);
+            trackResultViewed(skillId, score);
+        }
+    }, [completed, stats, skillId]);
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -229,6 +245,12 @@ const HighPracticeSession = () => {
 
     const handleNextStep = async () => {
         if (stats.total >= QUESTIONS_PER_SESSION) {
+            // Track practice completion
+            const timeTakenMs = Date.now() - startTimeRef.current;
+            const timeTakenSeconds = Math.round(timeTakenMs / 1000);
+            const score = Math.round((stats.correct / stats.total) * 100);
+            trackPracticeCompleted(skillId, skillName, 'Math', score, timeTakenSeconds);
+
             setCompleted(true);
             if (sessionId) api.finishSession(sessionId).catch(console.error);
             return;
