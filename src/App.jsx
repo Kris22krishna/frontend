@@ -158,6 +158,12 @@ import DivisionMonomialByMonomial from './components/practice/class-8/factorisat
 import DivisionPolynomialByMonomial from './components/practice/class-8/factorisation/division_polynomial_by_monomial';
 import DivisionPolynomialByPolynomial from './components/practice/class-8/factorisation/division_polynomial_by_polynomial';
 
+// Grade 8 Chapter Tests
+import ExponentsAndPowersTest from './components/practice/class-8/exponents and powers/ExponentsAndPowersTest';
+import Grade8RationalNumbersTest from './components/practice/class-8/rational-numbers/RationalNumbersTest';
+import MensurationTest from './components/practice/class-8/mensuration/MensurationTest';
+import FactorisationTest from './components/practice/class-8/factorisation/FactorisationTest';
+
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
 import Grade1Numbers1to9 from './components/practice/grade-1/numbers-1-9';
@@ -898,6 +904,12 @@ function App() {
             <DivisionPolynomialByPolynomial />
           </ProtectedRoute>
         } />
+
+        {/* Grade 8 Chapter Tests */}
+        <Route path="/senior/grade/8/exponents-and-powers/chapter-test" element={<ProtectedRoute redirectTo="/login"><ExponentsAndPowersTest /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/rational-numbers/chapter-test" element={<ProtectedRoute redirectTo="/login"><Grade8RationalNumbersTest /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/mensuration/chapter-test" element={<ProtectedRoute redirectTo="/login"><MensurationTest /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/factorisation/chapter-test" element={<ProtectedRoute redirectTo="/login"><FactorisationTest /></ProtectedRoute>} />
 
         {/* Grade 1 Specialized Routes */}
         <Route path="/junior/grade/1/shapes-and-space" element={<ProtectedRoute redirectTo="/login"><Grade1ShapesAndSpace /></ProtectedRoute>} />

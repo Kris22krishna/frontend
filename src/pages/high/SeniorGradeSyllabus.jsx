@@ -133,7 +133,11 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-fact-form-xpla-xplb', skill_name: 'Factors of the form (x+a)(x+b)', topic: 'Factorisation' },
                         { skill_id: 'local-8-fact-div-mono-mono', skill_name: 'Division of Monomial by Monomial', topic: 'Factorisation' },
                         { skill_id: 'local-8-fact-div-poly-mono', skill_name: 'Division of Polynomial by Monomial', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' }
+                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-exp-test', skill_name: 'Exponents and Powers Chapter Assessment', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-rn-test', skill_name: 'Rational Numbers Chapter Assessment', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-mens-test', skill_name: 'Mensuration Chapter Assessment', topic: 'Mensuration' },
+                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -207,10 +211,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Understanding Exponents',
                 isLocal: true,
                 path: '/senior/grade/8/exponents-powers/comparing-numbers'
+            },
+            {
+                skill_id: 'local-8-exp-test',
+                skill_name: 'Exponents and Powers Chapter Assessment',
+                topic: 'Exponents and Powers',
+                subtopic: 'Exponents and Powers Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-and-powers/chapter-test'
             }
         ];
 
-        // Hardcode all Grade 8 skills for Rational Numbers (4 skills)
+        // Hardcode all Grade 8 skills for Rational Numbers (4 skills + 1 test)
         skillsByTopic['Rational Numbers'] = [
             {
                 skill_id: 'local-8-rn-commutativity',
@@ -243,10 +255,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Properties of Rational Numbers',
                 isLocal: true,
                 path: '/senior/grade/8/rational-numbers/distributivity'
+            },
+            {
+                skill_id: 'local-8-rn-test',
+                skill_name: 'Rational Numbers Chapter Assessment',
+                topic: 'Rational Numbers',
+                subtopic: 'Rational Numbers Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/rational-numbers/chapter-test'
             }
         ];
 
-        // Hardcode all Grade 8 skills for Mensuration (8 skills)
+        // Hardcode all Grade 8 skills for Mensuration (8 skills + 1 test)
         skillsByTopic['Mensuration'] = [
             {
                 skill_id: 'local-8-mens-polygon',
@@ -311,10 +331,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Volume',
                 isLocal: true,
                 path: '/senior/grade/8/mensuration/volume-and-capacity'
+            },
+            {
+                skill_id: 'local-8-mens-test',
+                skill_name: 'Mensuration Chapter Assessment',
+                topic: 'Mensuration',
+                subtopic: 'Mensuration Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/chapter-test'
             }
         ];
 
-        // Hardcode all Grade 8 skills for Factorisation (7 skills)
+        // Hardcode all Grade 8 skills for Factorisation (7 skills + 1 test)
         skillsByTopic['Factorisation'] = [
             {
                 skill_id: 'local-8-fact-common',
@@ -371,6 +399,14 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Division of Algebraic Expressions',
                 isLocal: true,
                 path: '/senior/grade/8/factorisation/division-polynomial-by-polynomial'
+            },
+            {
+                skill_id: 'local-8-fact-test',
+                skill_name: 'Factorisation Chapter Assessment',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/chapter-test'
             }
         ];
     }
