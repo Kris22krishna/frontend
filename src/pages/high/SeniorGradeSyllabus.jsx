@@ -573,7 +573,6 @@ const SeniorGradeSyllabus = () => {
                                                 </div>
                                             </div>
 
-<<<<<<< feat/chapter-test-class10
                                             {expandedSubtopic === subtopic && (
                                                 <div className="modal-skills-grid">
                                                     {subtopics[subtopic].map(skill => (
@@ -643,22 +642,6 @@ const SeniorGradeSyllabus = () => {
                                                             <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', fontWeight: '500' }}>
                                                                 Take the final test to master this chapter
                                                             </p>
-=======
-                                        {expandedSubtopic === subtopic && (
-                                            <div className="modal-skills-grid">
-                                                {subtopics[subtopic].map(skill => (
-                                                    <div
-                                                        key={skill.skill_id}
-                                                        className="skill-card-modal"
-                                                        onClick={() => handleSkillClick(skill)}
-                                                    >
-                                                        <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
-                                                        <div className="skill-card-footer">
-                                                            <span className="skill-badge">ID: {skill.skill_id}</span>
-                                                            <span className="start-btn">
-                                                                Start <ChevronRight size={16} />
-                                                            </span>
->>>>>>> dev
                                                         </div>
                                                     </div>
                                                     <div style={{
