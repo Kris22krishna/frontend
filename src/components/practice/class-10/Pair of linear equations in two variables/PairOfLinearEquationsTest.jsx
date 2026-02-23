@@ -139,7 +139,6 @@ const BLUE_THEME_CSS = `
         }
         .practice-content-wrapper {
             padding: 1rem 1rem 80px 1rem !important;
-            min-height: calc(100vh - 120px);
         }
         .question-card-modern {
             padding: 1.5rem !important;
@@ -150,200 +149,210 @@ const BLUE_THEME_CSS = `
     }
 `;
 
-const SKILL_ID = 1206;
-const SKILL_NAME = "Real Numbers - Chapter Test";
+const SKILL_ID = 1209;
+const SKILL_NAME = "Pair of Linear Equations in Two Variables - Chapter Test";
 
-const RealNumbersTest = () => {
+const PairOfLinearEquationsTest = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isTestOver, setIsTestOver] = useState(false);
-    const [responses, setResponses] = useState({});
+    const [responses, setResponses] = useState({}); // Stores { qIndex: { selected, isCorrect, timeTaken, isSkipped } }
 
+    // Timer refs
     const questionStartTime = useRef(Date.now());
     const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
 
     const generateQuestions = () => {
-        const pool = [
+        return [
             {
                 id: 1,
-                text: "Which of the following is an irrational number?",
-                options: ["$\\frac{22}{7}$", "$3.1415$", "$\\pi$", "$\\sqrt{4}$"],
-                correctAnswer: "$\\pi$",
-                solution: "$\\pi$ is a non-terminating, non-recurring decimal, and hence irrational."
+                text: "Which of the following values of $x$ and $y$ satisfy the equations $x + y = 5$ and $2x - 3y = 0$?",
+                options: ["$x = 3, y = 2$", "$x = 2, y = 3$", "$x = 4, y = 1$", "$x = 5, y = 0$"],
+                correctAnswer: "$x = 3, y = 2$",
+                solution: "Substitute $x=3, y=2$ into $x+y=5$: $3+2=5$ (True). Into $2x-3y=0$: $2(3)-3(2)=6-6=0$ (True)."
             },
             {
                 id: 2,
-                text: "The HCF of 135 and 225 is:",
-                options: ["$15$", "$45$", "$75$", "$25$"],
-                correctAnswer: "$45$",
-                solution: "$225 = 135 \\times 1 + 90 \\Rightarrow 135 = 90 \\times 1 + 45 \\Rightarrow 90 = 45 \\times 2 + 0. HCF = 45$."
+                text: "The pair of linear equations $a_1x + b_1y + c_1 = 0$ and $a_2x + b_2y + c_2 = 0$ is inconsistent if:",
+                options: ["$\\frac{a_1}{a_2}$ ≠ $\\frac{b_1}{b_2}$", "$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}$", "$\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$ ≠ $\\frac{c_1}{c_2}$", "$\\frac{a_1}{a_2}$ ≠ $\\frac{c_1}{c_2}$"],
+                correctAnswer: "$\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$ ≠ $\\frac{c_1}{c_2}$",
+                solution: "Inconsistent means no solution (parallel lines). This occurs when $\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$ ≠ $\\frac{c_1}{c_2}$."
             },
             {
                 id: 3,
-                text: "The exponent of 2 in the prime factorisation of 144 is:",
-                options: ["$4$", "$5$", "$6$", "$3$"],
-                correctAnswer: "$4$",
-                solution: "$144 = 16 \\times 9 = 2^4 \\times 3^2$. Exponent of 2 is 4."
+                text: "A boat goes 30 km upstream and 44 km downstream in 10 hours. In 13 hours, it can go 40 km upstream and 55 km downstream. Formulate the equations to find the speeds.",
+                options: [
+                    "$\\tfrac{30}{x-y} + \\tfrac{44}{x+y} = 10$, $\\tfrac{40}{x-y} + \\tfrac{55}{x+y} = 13$",
+                    "$30(x-y) + 44(x+y) = 10$, $40(x-y) + 55(x+y) = 13$",
+                    "$\\tfrac{x-y}{30} + \\tfrac{x+y}{44} = 10$, $\\tfrac{x-y}{40} + \\tfrac{x+y}{55} = 13$",
+                    "$x-y = 30$, $x+y = 44$"
+                ],
+                correctAnswer: "$\\tfrac{30}{x-y} + \\tfrac{44}{x+y} = 10$, $\\tfrac{40}{x-y} + \\tfrac{55}{x+y} = 13$",
+                solution: "Let speed of boat be $x$ and stream be $y$. Speed Upstream = $x-y$, Downstream = $x+y$. Time = Distance/Speed."
             },
             {
                 id: 4,
-                text: "If $HCF(a, b) = 1$, then $a$ and $b$ are called:",
-                options: ["Composite numbers", "Co-prime numbers", "Twin primes", "Perfect numbers"],
-                correctAnswer: "Co-prime numbers",
-                solution: "By definition, numbers whose HCF is 1 are co-prime."
+                text: "Find the value of $k$ for which the pair of equations $x + 2y = 3$ and $5x + ky + 7 = 0$ has no solution.",
+                options: ["$k = 10$", "$k = 5$", "$k = 2$", "$k = 15$"],
+                correctAnswer: "$k = 10$",
+                solution: "No solution: $\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$ ≠ $\\frac{c_1}{c_2}$. $\\frac{1}{5} = \\frac{2}{k} \\Rightarrow k=10$. Check: $\\frac{3}{-7}$ ≠ $\\frac{1}{5}$. Correct."
             },
             {
                 id: 5,
-                text: "The decimal expansion of $\\frac{23}{2^3 \\times 5^2}$ will terminate after how many places?",
-                options: ["2", "3", "4", "5"],
-                correctAnswer: "3",
-                solution: "The power of 2 and 5 determines this. $max(3, 2) = 3$."
+                text: "If the lines represented by $3x + 2ky = 2$ and $2x + 5y + 1 = 0$ are parallel, then the value of $k$ is:",
+                options: ["$k = \\frac{15}{4}$", "$k = \\frac{3}{2}$", "$k = \\frac{5}{6}$", "$k = \\frac{4}{15}$"],
+                correctAnswer: "$k = \\frac{15}{4}$",
+                solution: "Parallel lines: $\\frac{a_1}{a_2} = \\frac{b_1}{b_2} \\Rightarrow \\frac{3}{2} = \\frac{2k}{5} \\Rightarrow 15 = 4k \\Rightarrow k = \\frac{15}{4}$."
             },
             {
                 id: 6,
-                text: "If $p$ is a prime number and $p$ divides $a^2$, then $p$ divides:",
-                options: ["$2a$", "$a$", "$\\sqrt{a}$", "$a^3$"],
-                correctAnswer: "$a$",
-                solution: "Fundamental theorem of arithmetic property."
+                text: "The graphical representation of $x = -2$ is a line:",
+                options: ["parallel to y-axis", "parallel to x-axis", "passing through origin", "on the x-axis"],
+                correctAnswer: "parallel to y-axis",
+                solution: "$x=-2$ is a vertical line. All vertical lines are parallel to the y-axis."
             },
             {
                 id: 7,
-                text: "Which of the following numbers ending decimal expansion is non-terminating recurring?",
-                options: ["$\\frac{13}{3125}$", "$\\frac{17}{8}$", "$\\frac{64}{455}$", "$\\frac{15}{1600}$"],
-                correctAnswer: "$\\frac{64}{455}$",
-                solution: "$455 = 5 \\times 7 \\times 13$. Since it has factors other than 2 and 5, it is non-terminating recurring."
+                text: "A fraction becomes $\\frac{1}{3}$ when 1 is subtracted from the numerator and it becomes $\\frac{1}{4}$ when 8 is added to its denominator. Find the fraction.",
+                options: ["$\\frac{5}{12}$", "$\\frac{7}{15}$", "$\\frac{4}{11}$", "$\\frac{3}{10}$"],
+                correctAnswer: "$\\frac{5}{12}$",
+                solution: "Let fraction be $\\frac{x}{y}$. $\\frac{x-1}{y} = \\frac{1}{3} \\Rightarrow 3x-y=3$. $\\frac{x}{y+8}=\\frac{1}{4} \\Rightarrow 4x-y=8$. Subtract: $x=5$. Then $15-y=3 \\Rightarrow y=12$."
             },
             {
                 id: 8,
-                text: "The sum of a rational and an irrational number is always:",
-                options: ["Rational", "Irrational", "Zero", "Natural number"],
-                correctAnswer: "Irrational",
-                solution: "Example: $3 + \\sqrt{2}$ is irrational."
+                text: "The path of a train A is given by the equation $x + 2y - 4 = 0$ and the path of another train B is given by $2x + 4y - 12 = 0$. Represent this situation geometrically.",
+                options: ["Parallel lines", "Intersecting lines", "Coincident lines", "Perpendicular lines"],
+                correctAnswer: "Parallel lines",
+                solution: "Ratios: $\\frac{a_1}{a_2} = \\frac{1}{2}, \\frac{b_1}{b_2} = \\frac{2}{4} = \\frac{1}{2}, \\frac{c_1}{c_2} = \\frac{-4}{-12} = \\frac{1}{3}$. Since $\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$ ≠ $\\frac{c_1}{c_2}$, they are parallel lines."
             },
             {
                 id: 9,
-                text: "Prime factorisation of 156 is:",
-                options: ["$2^2 \\times 3 \\times 13$", "$2 \\times 3 \\times 13$", "$2^2 \\times 3^2 \\times 13$", "$2 \\times 3^2 \\times 13$"],
-                correctAnswer: "$2^2 \\times 3 \\times 13$",
-                solution: "$156 = 2 \\times 78 = 2 \\times 2 \\times 39 = 2^2 \\times 3 \\times 13$."
+                text: "Solve for $x$ and $y$: $0.2x + 0.3y = 1.3, 0.4x + 0.5y = 2.3$.",
+                options: ["$x=3, y=2$", "$x=2, y=3$", "$x=5, y=1$", "$x=1, y=4$"],
+                correctAnswer: "$x=3, y=2$",
+                solution: "Multiply both by 10: $2x+3y=13, 4x+5y=23$. Multiply 1st by 2: $4x+6y=26$. Subtract: $y=3$. Then $2x+9=13 \\Rightarrow 2x=4 \\Rightarrow x=2$. Wait, check $4(2)+5(3)=8+15=23$. Yes."
             },
             {
                 id: 10,
-                text: "For some integer $m$, every even integer is of the form:",
-                options: ["$m$", "$m+1$", "$2m$", "$2m+1$"],
-                correctAnswer: "$2m$",
-                solution: "Even numbers are multiples of 2."
+                text: "The cost of 5 oranges and 3 apples is ₹35 and the cost of 2 oranges and 4 apples is ₹28. Formulate the system.",
+                options: ["$5x + 3y = 35, 2x + 4y = 28$", "$5x - 3y = 35, 2x - 4y = 28$", "$3x + 5y = 35, 4x + 2y = 28$", "$x + y = 35, x + y = 28$"],
+                correctAnswer: "$5x + 3y = 35, 2x + 4y = 28$",
+                solution: "Let $x$ be cost of 1 orange, $y$ be cost of 1 apple. Equations are $5x+3y=35$ and $2x+4y=28$."
             },
             {
                 id: 11,
-                text: "For some integer $n$, every odd integer is of the form:",
-                options: ["$n$", "$n+1$", "$2n$", "$2n+1$"],
-                correctAnswer: "$2n+1$",
-                solution: "Odd numbers leave remainder 1 when divided by 2."
+                text: "The taxi charges in a city consist of a fixed charge together with the charge for the distance covered. For a distance of 10 km, the charge paid is ₹105 and for 15 km, ₹155. Find the fixed charge.",
+                options: ["₹5", "₹10", "₹15", "₹20"],
+                correctAnswer: "₹5",
+                solution: "$x + 10y = 105, x + 15y = 155$. Subtracting gives $5y = 50 \\Rightarrow y=10$. Then $x + 100 = 105 \\Rightarrow x=5$."
             },
             {
                 id: 12,
-                text: "($n^2 - 1$) is divisible by 8, if $n$ is:",
-                options: ["an integer", "a natural number", "an odd integer", "an even integer"],
-                correctAnswer: "an odd integer",
-                solution: "If $n$ is odd, $n=2k+1, (2k+1)^2-1 = 4k^2+4k = 4k(k+1)$, always divisible by 8 since $k(k+1)$ is even."
+                text: "For what value of $p$ does the system $4x + py + 8 = 0$ and $2x + 2y + 2 = 0$ have a unique solution?",
+                options: ["$p$ ≠ $4$", "$p = 4$", "$p$ ≠ $2$", "$p = 2$"],
+                correctAnswer: "$p$ ≠ $4$",
+                solution: "Unique solution: $\\frac{a_1}{a_2}$ ≠ $\\frac{b_1}{b_2} \\Rightarrow \\frac{4}{2}$ ≠ $\\frac{p}{2} \\Rightarrow 2$ ≠ $p/2 \\Rightarrow p$ ≠ $4$."
             },
             {
                 id: 13,
-                text: "The decimal expansion of the rational number $\\frac{14587}{1250}$ will terminate after:",
-                options: ["one decimal place", "two decimal places", "three decimal places", "four decimal places"],
-                correctAnswer: "four decimal places",
-                solution: "$1250 = 2 \\times 5^4$. Max exponent is 4."
+                text: "Find the dimensions of a rectangular garden whose perimeter is 36 m and length is 4 m more than its width.",
+                options: ["$20$ m, $16$ m", "$11$ m, $7$ m", "$15$ m, $11$ m", "$10$ m, $6$ m"],
+                correctAnswer: "$11$ m, $7$ m",
+                solution: "Let width be $x$, length be $x+4$. Perimeter $2(x + x+4) = 36 \\Rightarrow 2(2x+4) = 36 \\Rightarrow 2x+4 = 18 \\Rightarrow 2x = 14 \\Rightarrow x=7$. Thus length is 11m."
             },
             {
                 id: 14,
-                text: "The HCF and LCM of 12, 15, 21 are:",
-                options: ["3, 420", "3, 210", "1, 420", "12, 105"],
-                correctAnswer: "3, 420",
-                solution: "$HCF(12, 15, 21) = 3$. $LCM(12, 15, 21) = 420$."
+                text: "Solve: $\\frac{10}{x} + \\frac{2}{y} = 4$ and $\\frac{15}{x} - \\frac{5}{y} = -2$.",
+                options: ["$x=5, y=1$", "$x=2, y=3$", "$x=3, y=5$", "$x=1, y=5$"],
+                correctAnswer: "$x=5, y=1$",
+                solution: "Let $\\frac{1}{x}=u, \\frac{1}{y}=v$. $10u+2v=4, 15u-5v=-2$. Multiply 1st by 5, 2nd by 2: $50u+10v=20, 30u-10v=-4$. Add: $80u=16 \\Rightarrow u=\\frac{1}{5} \\Rightarrow x=5$. Then $2+2v=4 \\Rightarrow v=1 \\Rightarrow y=1$."
             },
             {
                 id: 15,
-                text: "The product of $(3+\\sqrt{3})(3-\\sqrt{3})$ is:",
-                options: ["Rational", "Irrational", "Zero", "Prime"],
-                correctAnswer: "Rational",
-                solution: "$3^2 - (\\sqrt{3})^2 = 9 - 3 = 6$. Rational."
+                text: "The larger of two supplementary angles exceeds the smaller by 18 degrees. Find the angles.",
+                options: ["$99^\\circ, 81^\\circ$", "$100^\\circ, 80^\\circ$", "$110^\\circ, 70^\\circ$", "$90^\\circ, 90^\\circ$"],
+                correctAnswer: "$99^\\circ, 81^\\circ$",
+                solution: "$x + y = 180, x - y = 18$. Add: $2x = 198 \\Rightarrow x = 99$. Then $y = 81$."
             },
             {
                 id: 16,
-                text: "Is $6^n$ able to end with the digit 0 for any natural number $n$?",
+                text: "Is the point (3, 4) a solution to $x + y = 7$ and $3x - 2y = 1$?",
                 options: ["Yes", "No"],
-                correctAnswer: "No",
-                solution: "$6^n = (2 \\times 3)^n$. To end in 0, it must have 5 as a prime factor."
+                correctAnswer: "Yes",
+                solution: "$3+4=7$ (True). $3(3)-2(4) = 9-8=1$ (True). Yes."
             },
             {
                 id: 17,
-                text: "If $LCM(91, 26) = 182$, then $HCF(91, 26)$ is:",
-                options: ["$13$", "$26$", "$7$", "$9$"],
-                correctAnswer: "$13$",
-                solution: "$HCF \\times LCM = a \\times b \\Rightarrow HCF = \\frac{91 \\times 26}{182} = 13$."
+                text: "Formulate: 5 pencils and 7 pens cost ₹50, whereas 7 pencils and 5 pens cost ₹46.",
+                options: [
+                    "$5x + 7y = 50$, $7x + 5y = 46$",
+                    "$5x - 7y = 50$, $7x - 5y = 46$",
+                    "$7x + 5y = 50$, $5x + 7y = 46$",
+                    "$x + y = 50$, $x + y = 46$"
+                ],
+                correctAnswer: "$5x + 7y = 50$, $7x + 5y = 46$",
+                solution: "Direct formulation: $5$ pencils and $7$ pens for ₹50 $\\Rightarrow 5x+7y=50$."
             },
             {
                 id: 18,
-                text: "The largest number which divides 70 and 125, leaving remainders 5 and 8, respectively, is:",
-                options: ["$13$", "$65$", "$875$", "$1750$"],
-                correctAnswer: "$13$",
-                solution: "$HCF(70-5, 125-8) = HCF(65, 117) = 13$."
+                text: "A system of two linear equations is called dependent consistent if it has:",
+                options: ["Infinitely many solutions", "No solution", "One unique solution", "Exactly two solutions"],
+                correctAnswer: "Infinitely many solutions",
+                solution: "Dependent consistent system means the lines overlap (coincident), thus having infinitely many solutions."
             },
             {
                 id: 19,
-                text: "If two positive integers $a$ and $b$ are written as $a = x^3 y^2$ and $b = xy^3$; $x, y$ are prime numbers, then $HCF(a, b)$ is:",
-                options: ["$xy$", "$xy^2$", "$x^3 y^3$", "$x^2 y^2$"],
-                correctAnswer: "$xy^2$",
-                solution: "HCF takes lowest powers: $x^1, y^2 = xy^2$."
+                text: "Find $k$ if $x=2, y=1$ is a solution of $2x + 3y = k$.",
+                options: ["$7$", "$5$", "$4$", "$6$"],
+                correctAnswer: "$7$",
+                solution: "$2(2) + 3(1) = 4 + 3 = 7$. Thus $k=7$."
             },
             {
                 id: 20,
-                text: "If two positive integers $p$ and $q$ can be expressed as $p = ab^2$ and $q = a^3b$; $a, b$ being prime numbers, then $LCM(p, q)$ is:",
-                options: ["$ab$", "$a^2b^2$", "$a^3b^2$", "$a^3b^3$"],
-                correctAnswer: "$a^3b^2$",
-                solution: "LCM takes highest powers: $a^3, b^2 = a^3b^2$."
+                text: "If $2x + y = 23$ and $4x - y = 19$, find the value of $5y - 2x$.",
+                options: ["$31$", "$37$", "$25$", "$0$"],
+                correctAnswer: "$31$",
+                solution: "Add: $6x = 42 \\Rightarrow x = 7$. Then $14 + y = 23 \\Rightarrow y = 9$. $5(9) - 2(7) = 45 - 14 = 31$."
             },
             {
                 id: 21,
-                text: "The product of a non-zero rational and an irrational number is:",
-                options: ["always irrational", "always rational", "rational or irrational", "one"],
-                correctAnswer: "always irrational",
-                solution: "Example: $2 \\times \\sqrt{3} = 2\\sqrt{3}$ is irrational."
+                text: "The sum of a two-digit number and the number obtained by reversing the digits is 66. If the digits of the number differ by 2, find the number.",
+                options: ["$42, 24$", "$53, 35$", "$64, 46$", "$20, 02$"],
+                correctAnswer: "$42, 24$",
+                solution: "$(10x+y) + (10y+x) = 66 \\Rightarrow 11x+11y=66 \\Rightarrow x+y=6$. $x-y=2$. Add: $2x=8 \\Rightarrow x=4, y=2$. Numbers are 42 and 24."
             },
             {
                 id: 22,
-                text: "The least number that is divisible by all the numbers from 1 to 10 (both inclusive) is:",
-                options: ["$10$", "$100$", "$504$", "$2520$"],
-                correctAnswer: "$2520$",
-                solution: "$LCM(1, 2, ..., 10) = 2520$."
+                text: "Solve by substitution: $x - y = 3, \\frac{x}{3} + \\frac{y}{2} = 6$.",
+                options: ["$x=9, y=6$", "$x=7, y=4$", "$x=6, y=3$", "$x=12, y=9$"],
+                correctAnswer: "$x=9, y=6$",
+                solution: "$x = y+3$. Substitute: $\\frac{y+3}{3} + \\frac{y}{2} = 6$. Multiply by 6: $2y+6 + 3y = 36 \\Rightarrow 5y = 30 \\Rightarrow y=6, x=9$."
             },
             {
                 id: 23,
-                text: "The decimal expansion of the rational number $\\frac{33}{2^2 \\cdot 5}$ will terminate after:",
-                options: ["one decimal place", "two decimal places", "three decimal places", "more than three decimal places"],
-                correctAnswer: "two decimal places",
-                solution: "Max exponent of 2 and 5 is 2."
+                text: "Two lines are coincident if:",
+                options: ["$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}$", "$\\frac{a_1}{a_2}$ ≠ $\\frac{b_1}{b_2}$", "$\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$ ≠ $\\frac{c_1}{c_2}$", "None of these"],
+                correctAnswer: "$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}$",
+                solution: "Coincident lines overlap everywhere, which happens when all coefficient and constant ratios are equal ($\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}$)."
             },
             {
                 id: 24,
-                text: "Prime factorisation of 3825 is:",
-                options: ["$3^2 \\times 5^2 \\times 17$", "$3 \\times 5^2 \\times 17$", "$3^2 \\times 5^2 \\times 19$", "$3 \\times 5 \\times 17$"],
-                correctAnswer: "$3^2 \\times 5^2 \\times 17$",
-                solution: "$3825 = 5 \\times 765 = 5 \\times 5 \\times 153 = 5^2 \\times 3 \\times 51 = 5^2 \\times 3^2 \\times 17$."
+                text: "Solve: $x + y = a-b$ and $ax - by = a^2+b^2$.",
+                options: ["$x=a, y=-b$", "$x=b, y=-a$", "$x=a+b, y=0$", "$x=a-b, y=a+b$"],
+                correctAnswer: "$x=a, y=-b$",
+                solution: "From 1st: $y = a-b-x$. Subst into 2nd: $ax - b(a-b-x) = a^2+b^2 \\Rightarrow ax - ab + b^2 + bx = a^2+b^2 \\Rightarrow x(a+b) = a^2+ab \\Rightarrow x(a+b) = a(a+b) \\Rightarrow x=a$. Then $y = a-b-a = -b$."
             },
             {
                 id: 25,
-                text: "Fundamental Theorem of Arithmetic states that every composite number can be expressed as a product of:",
-                options: ["Primes", "Composites", "Integers", "Natural numbers"],
-                correctAnswer: "Primes",
-                solution: "Every composite number can be uniquely factorised into primes."
+                text: "The area of a rectangle gets reduced by 9 square units if its length is reduced by 5 units and breadth is increased by 3 units. Formulate the equation.",
+                options: ["$(x-5)(y+3) = xy - 9$", "$(x+5)(y-3) = xy - 9$", "$(x-5)(y-3) = xy + 9$", "$xy - 5x + 3y = 9$"],
+                correctAnswer: "$(x-5)(y+3) = xy - 9$",
+                solution: "Initial area $xy$. New area $(x-5)(y+3)$. Condition: $(x-5)(y+3) = xy - 9$."
             }
         ];
-        return pool.sort(() => Math.random() - 0.5);
     };
 
     useEffect(() => {
@@ -363,16 +372,17 @@ const RealNumbersTest = () => {
         return () => clearInterval(timer);
     }, [isTestOver]);
 
-    const handleRecordResponse = (skipped = false) => {
+    const handleRecordResponse = () => {
         const currentQ = questions[qIndex];
-        const isCorrect = selectedOption === currentQ.correctAnswer;
+        const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
         const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const isSkipped = !selectedOption;
 
         const responseData = {
             selectedOption,
-            isCorrect: skipped ? null : isCorrect,
-            timeTaken: timeSpent,
-            isSkipped: skipped
+            isCorrect,
+            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent,
+            isSkipped
         };
 
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
@@ -386,47 +396,35 @@ const RealNumbersTest = () => {
                 skill_id: SKILL_ID,
                 question_text: currentQ.text,
                 correct_answer: currentQ.correctAnswer,
-                student_answer: skipped ? "SKIPPED" : selectedOption,
-                is_correct: skipped ? false : isCorrect,
+                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                is_correct: isSkipped ? false : isCorrect,
                 solution_text: currentQ.solution,
                 time_spent_seconds: timeSpent
             };
-
-            console.log('🔍 recordAttempt called with:', attemptData);
-            api.recordAttempt(attemptData).then(res => {
-                console.log('✅ recordAttempt response:', res);
-            }).catch(console.error);
+            api.recordAttempt(attemptData).catch(console.error);
         }
     };
 
+    const navigateToQuestion = (targetIndex) => {
+        handleRecordResponse();
+        setQIndex(targetIndex);
+        setSelectedOption(responses[targetIndex]?.selectedOption || null);
+        questionStartTime.current = Date.now();
+    };
+
     const handleNext = () => {
-        handleRecordResponse(!selectedOption);
         if (qIndex < questions.length - 1) {
-            setQIndex(prev => prev + 1);
-            const nextResp = responses[qIndex + 1];
-            setSelectedOption(nextResp ? nextResp.selectedOption : null);
-            questionStartTime.current = Date.now();
+            navigateToQuestion(qIndex + 1);
         } else {
+            handleRecordResponse();
             finalizeTest();
         }
     };
 
     const handlePrev = () => {
-        handleRecordResponse(!selectedOption);
         if (qIndex > 0) {
-            setQIndex(prev => prev - 1);
-            const prevResp = responses[qIndex - 1];
-            setSelectedOption(prevResp ? prevResp.selectedOption : null);
-            questionStartTime.current = Date.now();
+            navigateToQuestion(qIndex - 1);
         }
-    };
-
-    const navigateToQuestion = (index) => {
-        handleRecordResponse(!selectedOption);
-        setQIndex(index);
-        const nextResp = responses[index];
-        setSelectedOption(nextResp ? nextResp.selectedOption : null);
-        questionStartTime.current = Date.now();
     };
 
     const finalizeTest = async () => {
@@ -726,4 +724,4 @@ const RealNumbersTest = () => {
     );
 };
 
-export default RealNumbersTest;
+export default PairOfLinearEquationsTest;

@@ -52,7 +52,7 @@ const IrrationalOperations = () => {
                 [`Irrational`, `Rational`, `Prime`, `One`],
                 `Irrational`,
                 `1. Property:
-   - Rational ($r \\neq 0$) $\\times$ Irrational ($x$) = Irrational.
+   - Rational ($r$ ≠ $0$) $\\times$ Irrational ($x$) = Irrational.
    - If it were rational ($p$), then $x = p/r$ would be rational, contradiction.
 
 2. Conclusion:
