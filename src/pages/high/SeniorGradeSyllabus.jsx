@@ -53,7 +53,10 @@ const SeniorGradeSyllabus = () => {
         const fetchSkills = async () => {
             setLoading(true);
             try {
-                if (grade === '12') {
+                if (grade === '11') {
+                    // Grade 11 uses a special subject picker, no skills needed
+                    setSkills([]);
+                } else if (grade === '12') {
                     setSkills([
                         { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' }
                     ]);
@@ -397,6 +400,50 @@ const SeniorGradeSyllabus = () => {
         return (
             <div className="senior-loading">
                 <div className="animate-pulse">Loading curriculum...</div>
+            </div>
+        );
+    }
+
+    /* ─── Grade 11 Subject Picker ─── */
+    if (grade === '11') {
+        const subjects = [
+            { key: 'maths', label: 'Mathematics', icon: '📐', desc: 'Algebra, Trigonometry, Calculus & more', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', shadow: 'rgba(102,126,234,0.4)' },
+            { key: 'physics', label: 'Physics', icon: '⚛️', desc: 'Mechanics, Waves, Thermodynamics & more', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', shadow: 'rgba(245,87,108,0.4)' },
+            { key: 'chemistry', label: 'Chemistry', icon: '🧪', desc: 'Organic, Inorganic & Physical Chemistry', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', shadow: 'rgba(79,172,254,0.4)' },
+            { key: 'biology', label: 'Biology', icon: '🧬', desc: 'Botany, Zoology, Human Physiology & more', gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', shadow: 'rgba(67,233,123,0.4)' },
+        ];
+        return (
+            <div className="senior-syllabus-page">
+                <SEO title="Grade 11 — Choose Your Subject" description="Pick a subject to start practising Grade 11 topics." />
+                <header className="senior-header-container">
+                    <div className="header-inner">
+                        <nav className="breadcrumb">
+                            <Link to="/" className="home-link">Home</Link>
+                            <ChevronRight size={14} />
+                            <span>Grade 11</span>
+                        </nav>
+                        <div className="page-title">
+                            <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#4F46E5', background: '#EEF2FF', padding: '4px 12px', borderRadius: '20px', marginBottom: '10px', display: 'inline-block', letterSpacing: '0.05em' }}>GRADE 11</span>
+                            <h1>Choose Your Subject</h1>
+                        </div>
+                        <p style={{ color: '#64748b', fontSize: '1.05rem', marginTop: '0.5rem' }}>Select a subject to explore chapters, practice skills and take tests.</p>
+                    </div>
+                </header>
+                <main className="senior-content-grid">
+                    <div className="g11-subject-grid">
+                        {subjects.map(s => (
+                            <div key={s.key} className="g11-subject-card" style={{ '--card-gradient': s.gradient, '--card-shadow': s.shadow }} onClick={() => navigate(`/senior/grade/11/${s.key}`)}>
+                                <div className="g11-card-bg"></div>
+                                <div className="g11-card-content">
+                                    <span className="g11-icon">{s.icon}</span>
+                                    <h3>{s.label}</h3>
+                                    <p>{s.desc}</p>
+                                    <span className="g11-explore">Explore <ChevronRight size={16} /></span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </main>
             </div>
         );
     }

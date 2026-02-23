@@ -317,6 +317,10 @@ import MatrixTransposeTest from './components/practice/class-12/tests/MatrixTran
 import InvertibleMatricesTest from './components/practice/class-12/tests/InvertibleMatricesTest';
 import MatricesChapterTest from './components/practice/class-12/tests/MatricesChapterTest';
 
+// Class 11 - Biology
+import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
+import BiologyChapters from './components/practice/class-11/biology/BiologyChapters';
+
 // Grade 3 - Fair Share
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
 import FairShareHalvesDoubles from './components/practice/class-3/fair-share/halves&doubles';
@@ -1169,6 +1173,10 @@ function App() {
         <Route path="/senior/grade/12/matrices/test/matrix-operations" element={<ProtectedRoute redirectTo="/login"><MatrixOperationsTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><MatrixTransposeTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
+
+        {/* Grade 11 - Biology */}
+        <Route path="/senior/grade/11/biology" element={<ProtectedRoute redirectTo="/login"><BiologyChapters /></ProtectedRoute>} />
+        <Route path="/senior/grade/11/biology/cell-structure" element={<ProtectedRoute redirectTo="/login"><CellStructureTest /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
