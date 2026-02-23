@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Sparkles, Repeat } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
@@ -24,6 +25,8 @@ const generateQuestion = (difficulty, index) => {
     let questionText = "";
     let correctAnswer = "";
     let explanation = "";
+    let cardLeft = "?";
+    let cardRight = "?";
 
     if (difficulty === 'easy') {
         num = randomInt(12, 85);
@@ -32,6 +35,8 @@ const generateQuestion = (difficulty, index) => {
         questionText = `What do you get if you add **${num}** to its **reverse**?`;
         correctAnswer = sum.toString();
         explanation = `Number: ${num}<br/>Reverse: ${rev}<br/>Sum: $$${num} + ${rev} = ${correctAnswer}$$.`;
+        cardLeft = num.toString();
+        cardRight = rev.toString();
     } else if (difficulty === 'medium') {
         num = randomInt(12, 89);
         rev = reverseNumber(num);
@@ -47,20 +52,26 @@ const generateQuestion = (difficulty, index) => {
             num = a * 10 + b;
             rev = reverseNumber(num);
             sum = num + rev;
-            questionText = `Take **${num}**. Add its reverse **${rev}**. Is the answer a **special number** (reads same forwards and backwards)?`;
-            correctAnswer = "Yes, it is " + sum;
+            questionText = `Take **${num}**. Add its reverse. What is the special number that reads the same forwards and backwards?`;
+            correctAnswer = sum.toString();
             explanation = `$$${num} + ${rev} = ${sum}$$.<br/>${sum} reads the same backwards. It is a palindrome!`;
         }
+        cardLeft = num.toString();
+        cardRight = "?";
     } else {
         if (Math.random() > 0.5) {
             num = 67; rev = 76; sum = 143;
             questionText = `A number plus its reverse equals **${sum}**. If the number ends with **7**, what is the number?`;
             correctAnswer = "67";
             explanation = `If the number ends in 7, its reverse must start with 7.<br/>70 + 60 = 130, plus 7 + 6 = 13... total 143.<br/>The number is **67**.`;
+            cardLeft = "?7";
+            cardRight = " ";
         } else {
             questionText = `Complete the pattern: 12+21=33, 23+32=55, 45+54=99. All these sums are always divisible by which number?`;
             correctAnswer = "11";
             explanation = `The sum of any 2-digit number and its reverse is always a multiple of **11**.<br/>Try it: $$11 \\times (a + b)$$.`;
+            cardLeft = "?";
+            cardRight = "?";
         }
     }
 
@@ -86,6 +97,8 @@ const generateQuestion = (difficulty, index) => {
         solution: explanation,
         num: num || 0,
         rev: rev || 0,
+        cardLeft,
+        cardRight
     };
 };
 
@@ -264,7 +277,7 @@ const MagicMirrorAddition = () => {
                         <h2 className="text-4xl font-semibold text-[#31326F] mb-2">Mirror Master! 🪞</h2>
                         <div className="stars-container flex gap-4 my-6">
                             {[1, 2, 3].map(i => (
-                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star - wrapper ${percentage >= (i * 33) ? 'active' : ''} `}>
+                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
                                     <Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} />
                                 </motion.div>
                             ))}
@@ -295,15 +308,15 @@ const MagicMirrorAddition = () => {
                                 const ans = answers[idx];
                                 if (!ans) return null;
                                 return (
-                                    <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className={`p - 6 rounded - [2rem] border - 4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}>
+                                    <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}>
                                         <div className="flex items-start gap-4">
-                                            <div className={`w - 10 h - 10 rounded - full flex items - center justify - center font - semibold text - white shrink - 0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'} `}>{idx + 1}</div>
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
                                             <div className="flex-1">
                                                 <div className="text-lg font-normal text-[#31326F] mb-4 breakdown-question"><LatexContent html={q.text} /></div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
-                                                        <span className={`text - lg font - semibold ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'} `}>{ans.selected}</span>
+                                                        <span className={`text-lg font-semibold ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>{ans.selected}</span>
                                                     </div>
                                                     {!ans.isCorrect && (
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
@@ -353,8 +366,8 @@ const MagicMirrorAddition = () => {
                         <div className="flex items-center gap-6 mb-8">
                             <div className="relative group">
                                 <AnimatePresence mode="wait">
-                                    <motion.div key={currentQuestion.num} initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} className="w-24 h-32 bg-white border-4 border-[#31326F] rounded-2xl flex items-center justify-center shadow-xl mb-1">
-                                        <span className="text-4xl font-normal text-[#31326F]">{currentQuestion.num || "?"}</span>
+                                    <motion.div key={currentQuestion.id + '-L'} initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} className="w-24 h-32 bg-white border-4 border-[#31326F] rounded-2xl flex items-center justify-center shadow-xl mb-1">
+                                        <span className="text-4xl font-normal text-[#31326F]">{currentQuestion.cardLeft}</span>
                                     </motion.div>
                                 </AnimatePresence>
                                 <div className="text-center text-[10px] font-normal uppercase text-gray-400">Number</div>
@@ -365,8 +378,8 @@ const MagicMirrorAddition = () => {
                             </div>
                             <div className="relative">
                                 <AnimatePresence mode="wait">
-                                    <motion.div key={currentQuestion.rev} initial={{ rotateY: -90 }} animate={{ rotateY: 0 }} transition={{ delay: 0.2 }} className="w-24 h-32 bg-white border-4 border-[#4FB7B3] rounded-2xl flex items-center justify-center shadow-xl mb-1">
-                                        <span className="text-4xl font-normal text-[#4FB7B3]">{currentQuestion.rev || "?"}</span>
+                                    <motion.div key={currentQuestion.id + '-R'} initial={{ rotateY: -90 }} animate={{ rotateY: 0 }} transition={{ delay: 0.2 }} className="w-24 h-32 bg-white border-4 border-[#4FB7B3] rounded-2xl flex items-center justify-center shadow-xl mb-1">
+                                        <span className="text-4xl font-normal text-[#4FB7B3]">{currentQuestion.cardRight === " " ? "\u00A0" : currentQuestion.cardRight}</span>
                                     </motion.div>
                                 </AnimatePresence>
                                 <div className="text-center text-[10px] font-normal uppercase text-gray-400">Reverse</div>
