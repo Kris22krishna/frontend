@@ -362,16 +362,17 @@ const ArithmeticProgressionsTest = () => {
         return () => clearInterval(timer);
     }, [isTestOver]);
 
-    const handleRecordResponse = (skipped = false) => {
+    const handleRecordResponse = () => {
         const currentQ = questions[qIndex];
-        const isCorrect = selectedOption === currentQ.correctAnswer;
+        const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
         const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const isSkipped = !selectedOption;
 
         const responseData = {
             selectedOption,
-            isCorrect: skipped ? null : isCorrect,
-            timeTaken: timeSpent,
-            isSkipped: skipped
+            isCorrect,
+            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent,
+            isSkipped
         };
 
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
@@ -385,47 +386,35 @@ const ArithmeticProgressionsTest = () => {
                 skill_id: SKILL_ID,
                 question_text: currentQ.text,
                 correct_answer: currentQ.correctAnswer,
-                student_answer: skipped ? "SKIPPED" : selectedOption,
-                is_correct: skipped ? false : isCorrect,
+                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                is_correct: isSkipped ? false : isCorrect,
                 solution_text: currentQ.solution,
                 time_spent_seconds: timeSpent
             };
-
-            console.log('🔍 recordAttempt called with:', attemptData);
-            api.recordAttempt(attemptData).then(res => {
-                console.log('✅ recordAttempt response:', res);
-            }).catch(console.error);
+            api.recordAttempt(attemptData).catch(console.error);
         }
     };
 
+    const navigateToQuestion = (targetIndex) => {
+        handleRecordResponse();
+        setQIndex(targetIndex);
+        setSelectedOption(responses[targetIndex]?.selectedOption || null);
+        questionStartTime.current = Date.now();
+    };
+
     const handleNext = () => {
-        handleRecordResponse(!selectedOption);
         if (qIndex < questions.length - 1) {
-            setQIndex(prev => prev + 1);
-            const nextResp = responses[qIndex + 1];
-            setSelectedOption(nextResp ? nextResp.selectedOption : null);
-            questionStartTime.current = Date.now();
+            navigateToQuestion(qIndex + 1);
         } else {
+            handleRecordResponse();
             finalizeTest();
         }
     };
 
     const handlePrev = () => {
-        handleRecordResponse(!selectedOption);
         if (qIndex > 0) {
-            setQIndex(prev => prev - 1);
-            const prevResp = responses[qIndex - 1];
-            setSelectedOption(prevResp ? prevResp.selectedOption : null);
-            questionStartTime.current = Date.now();
+            navigateToQuestion(qIndex - 1);
         }
-    };
-
-    const navigateToQuestion = (index) => {
-        handleRecordResponse(!selectedOption);
-        setQIndex(index);
-        const nextResp = responses[index];
-        setSelectedOption(nextResp ? nextResp.selectedOption : null);
-        questionStartTime.current = Date.now();
     };
 
     const finalizeTest = async () => {
@@ -466,7 +455,8 @@ const ArithmeticProgressionsTest = () => {
         const wrong = questions.length - correct - skipped;
 
         return (
-            <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem' }}>
+            <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem', overflowY: 'auto' }}>
+                <style>{BLUE_THEME_CSS}</style>
                 <div className="exam-report-container">
                     <div className="results-hero-section flex flex-col items-center mb-8 mt-4">
                         <img src={mascotImg} alt="Happy Mascot" className="w-40 h-40 mb-2 drop-shadow-lg object-contain" />
