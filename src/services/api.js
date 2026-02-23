@@ -793,6 +793,16 @@ export const api = {
         return result;
     },
 
+    getAllPracticeSessions: async (skillId = null, limit = 200) => {
+        const params = new URLSearchParams();
+        if (skillId) params.append('skill_id', skillId);
+        if (limit) params.append('limit', limit);
+        const response = await fetch(`${BASE_URL}/api/v1/practice/all-sessions?${params.toString()}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     // --- Internship ---
     submitInternshipRegistration: async (data) => {
         const response = await fetch(`${BASE_URL}/api/v1/internship/register`, {

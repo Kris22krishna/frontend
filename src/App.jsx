@@ -69,6 +69,7 @@ import AdminAnalyticsPage from './pages/dashboards/admin/pages/AnalyticsPage';
 import AdminSystemHealthPage from './pages/dashboards/admin/pages/SystemHealthPage';
 import AdminActivityLogPage from './pages/dashboards/admin/pages/ActivityLogPage';
 import AdminSettingsPage from './pages/dashboards/admin/pages/SettingsPage';
+import AdminPracticeResultsPage from './pages/dashboards/admin/pages/PracticeResultsPage';
 
 import UploaderDashboard from './pages/uploader/UploaderDashboard';
 import AssessmentUploaderLogin from './pages/AssessmentUploaderLogin';
@@ -1051,6 +1052,7 @@ function App() {
           <Route path="templates" element={<AdminTemplatesPage />} />
           <Route path="generated-questions" element={<AdminGeneratedQuestionsPage />} />
           {/* Monitoring */}
+          <Route path="practice-results" element={<AdminPracticeResultsPage />} />
           <Route path="alerts" element={<AdminAlertsPage />} />
           <Route path="analytics" element={<AdminAnalyticsPage />} />
           <Route path="system-health" element={<AdminSystemHealthPage />} />

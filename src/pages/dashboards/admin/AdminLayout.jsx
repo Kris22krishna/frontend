@@ -5,7 +5,7 @@ import { api } from '../../../services/api';
 import {
     LayoutDashboard, Users, GraduationCap, UserCircle, Eye, Upload, School,
     FileText, HelpCircle, Brain, Settings, LogOut, Menu, X,
-    AlertTriangle, BarChart3, Activity, ScrollText, FileQuestion, ListChecks, Grid3X3, UploadCloud
+    AlertTriangle, BarChart3, Activity, ScrollText, FileQuestion, ListChecks, Grid3X3, UploadCloud, ClipboardList
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -51,6 +51,7 @@ const AdminLayout = () => {
         {
             section: 'MONITORING',
             items: [
+                { name: 'Practice Results', icon: ClipboardList, path: '/admin/practice-results' },
                 { name: 'Alerts', icon: AlertTriangle, path: '/admin/alerts' },
                 { name: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
                 { name: 'System Health', icon: Activity, path: '/admin/system-health' },
