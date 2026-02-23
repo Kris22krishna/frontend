@@ -279,6 +279,7 @@ import IdentifyingTerms from './components/practice/class-10/Arithmetic Progress
 import FindingSpecificTerms from './components/practice/class-10/Arithmetic Progressions/FindingSpecificTerms';
 import SumOfTerms from './components/practice/class-10/Arithmetic Progressions/SumOfTerms';
 import ArithmeticProgressionsTest from './components/practice/class-10/Arithmetic Progressions/ArithmeticProgressionsTest';
+import PairOfLinearEquationsTest from './components/practice/class-10/Pair of linear equations in two variables/PairOfLinearEquationsTest';
 import FoundationsQuadratic from './components/practice/class-10/Quadratic Equations/FoundationsQuadratic';
 import RepresentingSituations from './components/practice/class-10/Quadratic Equations/RepresentingSituations';
 import IdentifyingQuadratic from './components/practice/class-10/Quadratic Equations/IdentifyingQuadratic';
@@ -1127,13 +1128,14 @@ function App() {
         <Route path="/high/practice/10053" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
         <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
+        <Route path="/high/practice/1209" element={<PairOfLinearEquationsTest />} />
         {/* Class 10: Arithmetic Progressions Routes */}
         <Route path="/high/practice/10101" element={<RecognisingPatterns />} />
         <Route path="/high/practice/10102" element={<UnderstandingAP />} />
         <Route path="/high/practice/10103" element={<IdentifyingTerms />} />
         <Route path="/high/practice/10104" element={<FindingSpecificTerms />} />
         <Route path="/high/practice/10105" element={<SumOfTerms />} />
-        <Route path="/high/practice/10106" element={<ArithmeticProgressionsTest />} />
+        <Route path="/high/practice/1208" element={<ArithmeticProgressionsTest />} />
         {/* Class 10: Quadratic Equations Routes */}
         <Route path="/high/practice/10201" element={<FoundationsQuadratic />} />
         <Route path="/high/practice/10202" element={<RepresentingSituations />} />
@@ -1143,7 +1145,7 @@ function App() {
         <Route path="/high/practice/10206" element={<NatureOfRoots />} />
         <Route path="/high/practice/10207" element={<DiscriminantAnalysis />} />
         <Route path="/high/practice/10208" element={<RealLifeApplications />} />
-        <Route path="/high/practice/10209" element={<QuadraticEquationsTest />} />
+        <Route path="/high/practice/1207" element={<QuadraticEquationsTest />} />
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
         {/* Class 10: Real Numbers Routes */}
@@ -1155,28 +1157,7 @@ function App() {
         <Route path="/high/practice/10206" element={<HCFLCMApplications />} />
         <Route path="/high/practice/10207" element={<ProvingIrrationality />} />
         <Route path="/high/practice/10208" element={<IrrationalOperations />} />
-        <Route path="/high/practice/10209" element={<RealNumbersTest />} />
-
-        {/* Class 12: Matrices Chapter Routes (Auth Required) */}
-        <Route path="/senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesChapter /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/who-uses" element={<ProtectedRoute redirectTo="/login"><WhoUsesMatrices /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/what-is" element={<ProtectedRoute redirectTo="/login"><WhatIsMatrix /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/when-need" element={<ProtectedRoute redirectTo="/login"><WhenDoWeNeedMatrices /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/how-operations" element={<ProtectedRoute redirectTo="/login"><HowOperationsWork /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/why-rules" element={<ProtectedRoute redirectTo="/login"><WhyRulesWork /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/where-applied" element={<ProtectedRoute redirectTo="/login"><WhereApplied /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/invertible" element={<ProtectedRoute redirectTo="/login"><InvertibleMatrices /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test" element={<ProtectedRoute redirectTo="/login"><MatricesChapterTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-order" element={<ProtectedRoute redirectTo="/login"><MatrixOrderTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-types" element={<ProtectedRoute redirectTo="/login"><MatrixTypesTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-equality" element={<ProtectedRoute redirectTo="/login"><MatrixEqualityTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-operations" element={<ProtectedRoute redirectTo="/login"><MatrixOperationsTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><MatrixTransposeTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
-
-        {/* Grade 11 - Biology */}
-        <Route path="/senior/grade/11/biology" element={<ProtectedRoute redirectTo="/login"><BiologyChapters /></ProtectedRoute>} />
-        <Route path="/senior/grade/11/biology/cell-structure" element={<ProtectedRoute redirectTo="/login"><CellStructureTest /></ProtectedRoute>} />
+        <Route path="/high/practice/1206" element={<RealNumbersTest />} />
       </Routes>
     </Router>
   );

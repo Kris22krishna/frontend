@@ -68,3 +68,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Fix KaTeX missing glyphs (like \neq) by enforcing math fonts over UI fonts */
+.katex {
+  font-family: KaTeX_Main, 'Times New Roman', serif !important;
+}

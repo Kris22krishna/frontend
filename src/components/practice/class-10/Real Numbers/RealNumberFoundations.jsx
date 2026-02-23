@@ -133,7 +133,7 @@ const RealNumberFoundations = () => {
                 [`Rational`, `Irrational`, `Natural number`, `None of these`],
                 `Rational`,
                 `1. Definition:
-   - A number is rational if it can be written as $p/q$ where $q \\neq 0$.
+   - A number is rational if it can be written as $p/q$ where $q$ ≠ $0$.
    - $0 = \\frac{0}{1}$.
 
 2. Conclusion:
