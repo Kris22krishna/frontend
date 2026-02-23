@@ -39,6 +39,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10053, skill_name: 'Solve word problems using substitution', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10054, skill_name: 'Solve equations using elimination (no word problems)', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
+                        { skill_id: 1209, skill_name: 'Pair of Linear Equations Chapter Assessment', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Pair of Linear Equations Chapter Assessment' },
 
                         // Real Numbers
                         { skill_id: 10201, skill_name: 'Real Number Foundations', topic: 'Real Numbers', subtopic: 'Real Number Foundations' },
@@ -49,14 +50,14 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10206, skill_name: 'Applying HCF and LCM to Real-Life Situations', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
                         { skill_id: 10207, skill_name: 'Proving the Irrationality of Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
                         { skill_id: 10208, skill_name: 'Behaviour of Operations on Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
-                        { skill_id: 10209, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
+                        { skill_id: 1206, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
                         // Arithmetic Progressions
                         { skill_id: 10101, skill_name: 'Recognising and Describing Number Patterns', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
                         { skill_id: 10102, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
                         { skill_id: 10103, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
                         { skill_id: 10104, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
                         { skill_id: 10105, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
-                        { skill_id: 10106, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
+                        { skill_id: 1208, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
 
                         // Quadratic Equations
                         { skill_id: 10201, skill_name: 'Foundations and Meaning of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Foundations and Meaning of Quadratic Equations' },
@@ -67,7 +68,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10206, skill_name: 'Understanding Roots and Their Nature', topic: 'Quadratic Equations', subtopic: 'Understanding Roots and Their Nature' },
                         { skill_id: 10207, skill_name: 'Using the Discriminant to Analyse Roots', topic: 'Quadratic Equations', subtopic: 'Using the Discriminant to Analyse Roots' },
                         { skill_id: 10208, skill_name: 'Applying Quadratic Equations to Real-Life Situations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
-                        { skill_id: 10209, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' }
+                        { skill_id: 1207, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
@@ -462,53 +463,116 @@ const SeniorGradeSyllabus = () => {
                         <div className="modal-body">
                             {/* Render Subtopics as Sections */}
                             <div className="subtopics-list">
-                                {Object.keys(subtopics).map((subtopic) => (
-                                    <div key={subtopic} className="subtopic-section">
-                                        <div
-                                            className="subtopic-header"
-                                            onClick={() => setExpandedSubtopic(expandedSubtopic === subtopic ? null : subtopic)}
-                                        >
-                                            <div className="subtopic-title">
-                                                <LatexText text={subtopic} />
+                                {Object.keys(subtopics)
+                                    .filter(subtopic => !subtopic.toLowerCase().includes('assessment') && !subtopic.toLowerCase().includes('test'))
+                                    .map((subtopic) => (
+                                        <div key={subtopic} className="subtopic-section">
+                                            <div
+                                                className="subtopic-header"
+                                                onClick={() => setExpandedSubtopic(expandedSubtopic === subtopic ? null : subtopic)}
+                                            >
+                                                <div className="subtopic-title">
+                                                    <LatexText text={subtopic} />
+                                                </div>
+                                                <div className="subtopic-header-right">
+                                                    <span className="subtopic-skill-count">
+                                                        {subtopics[subtopic].length} {subtopics[subtopic].length === 1 ? 'Skill' : 'Skills'}
+                                                    </span>
+                                                    <ChevronRight
+                                                        size={20}
+                                                        className={`chevron-icon ${expandedSubtopic === subtopic ? 'expanded' : ''}`}
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="subtopic-header-right">
-                                                <span className="subtopic-skill-count">
-                                                    {subtopics[subtopic].length} {subtopics[subtopic].length === 1 ? 'Skill' : 'Skills'}
-                                                </span>
-                                                <ChevronRight
-                                                    size={20}
-                                                    className={`chevron-icon ${expandedSubtopic === subtopic ? 'expanded' : ''}`}
-                                                />
-                                            </div>
-                                        </div>
 
-                                        {expandedSubtopic === subtopic && (
-                                            <div className="modal-skills-grid">
-                                                {subtopics[subtopic].map(skill => (
-                                                    <div
-                                                        key={skill.skill_id}
-                                                        className="skill-card-modal"
-                                                        onClick={() => {
-                                                            if (skill.isLocal) {
-                                                                navigate(skill.path);
-                                                            } else {
-                                                                navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
-                                                            }
-                                                        }}
-                                                    >
-                                                        <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
-                                                        <div className="skill-card-footer">
-                                                            <span className="skill-badge">ID: {skill.skill_id}</span>
-                                                            <span className="start-btn">
-                                                                Start <ChevronRight size={16} />
-                                                            </span>
+                                            {expandedSubtopic === subtopic && (
+                                                <div className="modal-skills-grid">
+                                                    {subtopics[subtopic].map(skill => (
+                                                        <div
+                                                            key={skill.skill_id}
+                                                            className="skill-card-modal"
+                                                            onClick={() => {
+                                                                if (skill.isLocal) {
+                                                                    navigate(skill.path);
+                                                                } else {
+                                                                    navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
+                                                                }
+                                                            }}
+                                                        >
+                                                            <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
+                                                            <div className="skill-card-footer">
+                                                                <span className="skill-badge">ID: {skill.skill_id}</span>
+                                                                <span className="start-btn">
+                                                                    Start <ChevronRight size={16} />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+
+                                {/* Distinguished Chapter Assessment Section */}
+                                {Object.keys(subtopics)
+                                    .filter(subtopic => subtopic.toLowerCase().includes('assessment') || subtopic.toLowerCase().includes('test'))
+                                    .map((subtopic) => (
+                                        <div key={subtopic} style={{ marginTop: '2rem' }}>
+                                            {subtopics[subtopic].map(skill => (
+                                                <div
+                                                    key={skill.skill_id}
+                                                    className="chapter-assessment-card group"
+                                                    onClick={() => {
+                                                        if (skill.isLocal) {
+                                                            navigate(skill.path);
+                                                        } else {
+                                                            navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
+                                                        }
+                                                    }}
+                                                    style={{
+                                                        background: 'linear-gradient(135deg, #4F46E5 0%, #3B82F6 100%)',
+                                                        color: 'white',
+                                                        borderRadius: '16px',
+                                                        padding: '1.5rem',
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        cursor: 'pointer',
+                                                        boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)',
+                                                        transition: 'all 0.3s ease',
+                                                        border: '2px solid transparent'
+                                                    }}
+                                                >
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                                        <div style={{ background: 'rgba(255, 255, 255, 0.2)', padding: '0.75rem', borderRadius: '12px' }}>
+                                                            <Activity size={24} color="white" />
+                                                        </div>
+                                                        <div>
+                                                            <h4 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.25rem' }}>
+                                                                <LatexText text={capitalizeFirstLetter(skill.skill_name)} />
+                                                            </h4>
+                                                            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', fontWeight: '500' }}>
+                                                                Take the final test to master this chapter
+                                                            </p>
                                                         </div>
                                                     </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                                    <div style={{
+                                                        background: 'white',
+                                                        color: '#4F46E5',
+                                                        padding: '0.75rem 1.5rem',
+                                                        borderRadius: '12px',
+                                                        fontWeight: '700',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.5rem',
+                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                                                    }} className="group-hover:scale-105 transition-transform">
+                                                        Start Test <ChevronRight size={18} />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ))}
                             </div>
                         </div>
                     </div>

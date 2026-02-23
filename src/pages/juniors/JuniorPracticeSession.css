@@ -205,13 +205,9 @@
     flex-direction: column;
     position: relative;
     z-index: 10;
+    z-index: 10;
     border: 4px solid #FFFFFF;
-    overflow-y: auto !important;
-    /* Force vertical scrolling */
-    overflow-x: hidden;
-    scrollbar-width: thin;
-    /* Firefox */
-    scrollbar-color: #B2DFDB transparent;
+    overflow: hidden;
     flex: 1;
     /* Take available space */
     min-height: 0;
@@ -266,14 +262,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: none; /* Allow it to grow */
+    flex: none;
+    /* Allow it to grow */
     min-height: min-content;
     /* Crucial for nested flex scrolling */
     justify-content: flex-start;
     /* Start from top */
-    overflow-y: visible; /* DISABLE INTERNAL SCROLL */
+    overflow-y: visible;
+    /* DISABLE INTERNAL SCROLL */
     padding-top: 0.5rem;
-    padding-bottom: 3rem;
+    padding-bottom: 0.5rem;
     /* Extra padding at bottom */
     height: auto;
 }
@@ -298,17 +296,17 @@
     background: white;
     border: 3px solid #E2E8F0;
     border-radius: 1.2rem;
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1rem;
     /* Increased padding */
     /* Fluid font size for options */
-    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
     font-weight: 500;
     color: #4A5568;
     box-shadow: 0 4px 0 #CBD5E0;
     cursor: pointer;
     transition: all 0.1s;
     font-family: 'Fredoka', sans-serif;
-    min-height: 100px;
+    min-height: 60px;
     /* Fixed min-height for symmetry */
     height: 100%;
     /* Stretch to grid cell height */

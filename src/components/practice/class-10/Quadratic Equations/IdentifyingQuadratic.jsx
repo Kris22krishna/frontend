@@ -85,7 +85,7 @@ Eq: $x^2 - 11x + 8 = 0$. Degree 2, so Yes.`
 
         // Q6: Fractional
         newQuestions.push(createQuestion(6,
-            `Is $x + \\frac{1}{x} = x^2$ a quadratic equation? (Assume $x \\neq 0$)`,
+            `Is $x + \\frac{1}{x} = x^2$ a quadratic equation? (Assume $x$ ≠ $0$)`,
             [`No`, `Yes`],
             `No`,
             `Multiply by $x$: $x^2 + 1 = x^3 \\Rightarrow x^3 - x^2 - 1 = 0$. Degree 3, so No.`
