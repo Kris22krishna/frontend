@@ -34,18 +34,36 @@ const MatrixOrderTest = () => {
 
     useEffect(() => {
         const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-        const shuffle = arr => [...new Set(arr)].sort(() => Math.random() - 0.5);
+        const shuffleArr = arr => [...arr].sort(() => Math.random() - 0.5);
+        // Always returns exactly 4 unique options including the correct answer
+        const makeOptions = (correct, distractors) => {
+            const unique = [correct];
+            for (const d of distractors) {
+                if (!unique.includes(d)) unique.push(d);
+                if (unique.length === 4) break;
+            }
+            // If we still don't have 4, generate numeric fallbacks
+            let fallback = 1;
+            while (unique.length < 4) {
+                const candidate = typeof correct === 'number' ? `${correct + fallback * 10}` : `Option ${String.fromCharCode(64 + fallback)}`;
+                if (!unique.includes(candidate)) unique.push(candidate);
+                fallback++;
+            }
+            return shuffleArr(unique);
+        };
         const qs = [];
 
         // Q1: Order of a given matrix
         (() => {
             const r = rand(2, 4), c = rand(2, 5);
             const vals = Array.from({ length: r }, () => Array.from({ length: c }, () => rand(-9, 9)));
+            const correct1 = `$${r} \\times ${c}$`;
+            const distractors1 = [`$${c} \\times ${r}$`, `$${r} \\times ${r}$`, `$${c} \\times ${c}$`, `$${r + 1} \\times ${c}$`, `$${r} \\times ${c + 1}$`, `$${r + 1} \\times ${c + 1}$`];
             qs.push({
                 text: `What is the order of the following matrix?`,
                 matrix: vals,
-                options: shuffle([`$${r} \\times ${c}$`, `$${c} \\times ${r}$`, `$${r} \\times ${r}$`, `$${c} \\times ${c}$`]),
-                correctAnswer: `$${r} \\times ${c}$`,
+                options: makeOptions(correct1, distractors1),
+                correctAnswer: correct1,
                 solution: `The matrix has ${r} rows and ${c} columns, so its order is $${r} \\times ${c}$.`,
                 difficulty_level: 'Easy'
             });
@@ -55,10 +73,12 @@ const MatrixOrderTest = () => {
         (() => {
             const r = rand(2, 4), c = rand(2, 5);
             const n = r * c;
+            const correct2 = `${n}`;
+            const distractors2 = [`${n + r}`, `${r + c}`, `${n - 1}`, `${n + c}`, `${n + 2}`, `${n * 2}`];
             qs.push({
                 text: `A matrix of order $${r} \\times ${c}$ has how many elements?`,
-                options: shuffle([`${n}`, `${n + r}`, `${r + c}`, `${n - 1}`]),
-                correctAnswer: `${n}`,
+                options: makeOptions(correct2, distractors2),
+                correctAnswer: correct2,
                 solution: `Number of elements = rows × columns = $${r} \\times ${c} = ${n}$.`,
                 difficulty_level: 'Easy'
             });
@@ -69,12 +89,12 @@ const MatrixOrderTest = () => {
             const vals = Array.from({ length: 3 }, () => Array.from({ length: 4 }, () => rand(-9, 20)));
             const ri = rand(0, 2), ci = rand(0, 3);
             const el = vals[ri][ci];
+            const correct3 = `${el}`;
+            const distractors3 = [`${el + rand(1, 5)}`, `${vals[(ri + 1) % 3][ci]}`, `${vals[ri][(ci + 1) % 4]}`, `${el - rand(1, 5)}`, `${el + rand(6, 10)}`, `${vals[(ri + 2) % 3][(ci + 2) % 4]}`];
             qs.push({
                 text: `In the matrix shown, what is $a_{${ri + 1}${ci + 1}}$?`,
                 matrix: vals,
-                highlightCells: [[ri, ci]],
-                showIndices: true,
-                options: shuffle([`${el}`, `${el + rand(1, 5)}`, `${vals[(ri + 1) % 3][ci]}`, `${vals[ri][(ci + 1) % 4]}`]),
+                options: makeOptions(correct3, distractors3),
                 correctAnswer: `${el}`,
                 solution: `$a_{${ri + 1}${ci + 1}}$ is the element in row ${ri + 1}, column ${ci + 1}, which is $${el}$.`,
                 difficulty_level: 'Easy'
@@ -97,7 +117,7 @@ const MatrixOrderTest = () => {
             const wrong3 = `$\\begin{bmatrix} ${correct[1][0]} & ${correct[1][1]} \\\\ ${correct[0][0]} & ${correct[0][1]} \\end{bmatrix}$`;
             qs.push({
                 text: `Construct a $2 \\times 2$ matrix where ${f.label}.`,
-                options: shuffle([correctStr, wrong1, wrong2, wrong3]),
+                options: makeOptions(correctStr, [wrong1, wrong2, wrong3]),
                 correctAnswer: correctStr,
                 solution: `Substituting $i$ and $j$ from 1 to 2: the result is ${correctStr}.`,
                 difficulty_level: 'Medium'
@@ -112,7 +132,7 @@ const MatrixOrderTest = () => {
             const count = factors.length;
             qs.push({
                 text: `If a matrix has ${n} elements, how many different orders are possible?`,
-                options: shuffle([`${count}`, `${count + 1}`, `${count - 1}`, `${n}`]),
+                options: makeOptions(`${count}`, [`${count + 1}`, `${count - 1}`, `${n}`, `${count + 2}`, `${count - 2}`]),
                 correctAnswer: `${count}`,
                 solution: `The number of possible orders equals the number of factor pairs of ${n}. These are: ${factors.join(', ')}. Total = ${count}.`,
                 difficulty_level: 'Medium'
@@ -127,8 +147,7 @@ const MatrixOrderTest = () => {
             qs.push({
                 text: `In the matrix shown, the element ${target} at position row 2, column 3 is denoted as:`,
                 matrix: vals,
-                highlightCells: [[1, 2]],
-                options: shuffle([`$a_{23}$`, `$a_{32}$`, `$a_{22}$`, `$a_{33}$`]),
+                options: makeOptions(`$a_{23}$`, [`$a_{32}$`, `$a_{22}$`, `$a_{33}$`, `$a_{13}$`, `$a_{21}$`]),
                 correctAnswer: `$a_{23}$`,
                 solution: `An element in row $i$, column $j$ is denoted $a_{ij}$. Row 2, Column 3 → $a_{23}$.`,
                 difficulty_level: 'Easy'
@@ -142,7 +161,7 @@ const MatrixOrderTest = () => {
             const val = fn(ri, ci);
             qs.push({
                 text: `For a $3 \\times 4$ matrix where $a_{ij} = \\frac{1}{2}|3i + j|$, find $a_{${ri}${ci}}$.`,
-                options: shuffle([`$${val}$`, `$${val + 0.5}$`, `$${val + 1}$`, `$${Math.abs(val - 1)}$`]),
+                options: makeOptions(`$${val}$`, [`$${val + 0.5}$`, `$${val + 1}$`, `$${Math.abs(val - 1)}$`, `$${val + 1.5}$`, `$${val + 2}$`]),
                 correctAnswer: `$${val}$`,
                 solution: `$a_{${ri}${ci}} = \\frac{1}{2}|3(${ri}) + ${ci}| = \\frac{1}{2}|${3 * ri + ci}| = ${val}$.`,
                 difficulty_level: 'Medium'
@@ -159,7 +178,7 @@ const MatrixOrderTest = () => {
             qs.push({
                 text: `What type of matrix is the one shown below?`,
                 matrix: matrix,
-                options: shuffle(['Row matrix', 'Column matrix', 'Square matrix', 'Zero matrix']),
+                options: makeOptions(isRow ? 'Row matrix' : 'Column matrix', ['Row matrix', 'Column matrix', 'Square matrix', 'Zero matrix', 'Diagonal matrix']),
                 correctAnswer: isRow ? 'Row matrix' : 'Column matrix',
                 solution: `The matrix has order ${order}. A matrix with ${isRow ? 'one row' : 'one column'} is called a ${isRow ? 'row' : 'column'} matrix.`,
                 difficulty_level: 'Easy'
@@ -171,8 +190,7 @@ const MatrixOrderTest = () => {
             const n = 13;
             qs.push({
                 text: `If a matrix has 13 elements, what are the possible orders?`,
-                options: shuffle([
-                    '$1 \\times 13$ and $13 \\times 1$',
+                options: makeOptions('$1 \\times 13$ and $13 \\times 1$', [
                     '$1 \\times 13$, $13 \\times 1$, and $13 \\times 13$',
                     'No matrix is possible',
                     '$1 \\times 13$ only'
@@ -187,7 +205,7 @@ const MatrixOrderTest = () => {
         (() => {
             qs.push({
                 text: 'The number of all possible matrices of order $3 \\times 3$ with each entry 0 or 1 is:',
-                options: shuffle(['$512$', '$81$', '$27$', '$18$']),
+                options: makeOptions('$512$', ['$81$', '$27$', '$18$']),
                 correctAnswer: '$512$',
                 solution: `Each of the $3 \\times 3 = 9$ entries can be 0 or 1. Total = $2^9 = 512$.`,
                 difficulty_level: 'Hard'

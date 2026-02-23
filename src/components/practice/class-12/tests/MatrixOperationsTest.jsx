@@ -31,7 +31,7 @@ const MatrixOperationsTest = () => {
 
     useEffect(() => {
         const rand = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
-        const shuffle = arr => [...new Set(arr)].sort(() => Math.random() - 0.5);
+        const shuffle = arr => { const u = [...new Set(arr)]; let f = 1; while (u.length < 4) { const c = `Option ${String.fromCharCode(64 + f)}`; if (!u.includes(c)) u.push(c); f++; } return u.sort(() => Math.random() - 0.5); };
         const qs = [];
 
         // Q1: A + B (2×2)
