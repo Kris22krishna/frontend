@@ -191,7 +191,7 @@ const VolumeOfCubeComponent = () => {
             text: `<div class='question-container'><p>For a cube of side $${a}$ cm, find the sum of its volume (in cm³) and total surface area (in cm²).</p></div>`,
             correctAnswer,
             solution: `Volume $= ${a}^3 = ${vol}$ cm³<br/><br/>TSA $= 6 \\times ${a}^2 = ${tsa}$ cm²<br/><br/>Sum $= ${vol} + ${tsa} = ${sum}$`,
-            options: [`$${sum}$`, `$${vol}$`, `$${tsa}$`, `$${sum + a}$`]
+            options: [`$${sum}$`, `$${vol}$`, `$${tsa+6}$`, `$${sum + a}$`]
         };
     };
 
