@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
 import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
@@ -391,7 +392,7 @@ const ComingSoon = () => (
 
 function App() {
   // Initialize GA4 tracking
-  React.useEffect(() => {
+  useEffect(() => {
     // Add Google Analytics script
     const script1 = document.createElement('script');
     script1.async = true;
