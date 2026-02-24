@@ -330,9 +330,24 @@ const MentorDashboard = () => {
                                         </h3>
                                         <p className="text-sm text-slate-500 mb-4 truncate w-full">{student.email || 'No email provided'}</p>
 
-                                        <span className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full uppercase tracking-wider">
-                                            {student.grade || 'N/A'}
-                                        </span>
+                                        <div className="flex flex-col gap-1 mb-4">
+                                            <span className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full uppercase tracking-wider">
+                                                Grade {student.grade || 'N/A'}
+                                            </span>
+                                            {student.last_practice_date ? (
+                                                <div className="mt-2 text-[10px] text-teal-600 font-medium bg-teal-50 px-2 py-1 rounded border border-teal-100">
+                                                    <div className="flex items-center justify-center gap-1">
+                                                        <Clock className="h-3 w-3" />
+                                                        <span>Active {new Date(student.last_practice_date).toLocaleDateString()}</span>
+                                                    </div>
+                                                    <div className="truncate mt-0.5 opacity-80">{student.last_practice_subject}</div>
+                                                </div>
+                                            ) : (
+                                                <div className="mt-2 text-[10px] text-slate-400 italic bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                                                    No practice yet
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
