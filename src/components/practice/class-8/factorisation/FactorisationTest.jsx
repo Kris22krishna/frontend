@@ -234,6 +234,76 @@ const FactorisationTest = () => {
                 options: ["$(y-3)(y-4)$", "$(y+3)(y+4)$", "$(y-2)(y-6)$", "$(y-1)(y-12)$"],
                 correctAnswer: "$(y-3)(y-4)$",
                 solution: "We need two numbers whose sum is $-7$ and product is $12$. The numbers are $-3$ and $-4$. Thus, $(y-3)(y-4)$."
+            },
+            {
+                id: 11,
+                text: "The common factor of $14a^2b$ and $35ab^2$ is",
+                options: ["$7ab$", "$7a^2b^2$", "$14ab$", "$35ab$"],
+                correctAnswer: "$7ab$",
+                solution: "$14a^2b = 2 \\times 7 \\times a \\times a \\times b$. $35ab^2 = 5 \\times 7 \\times a \\times b \\times b$. Common is $7ab$."
+            },
+            {
+                id: 12,
+                text: "Factorise: $x^2 - 16$",
+                options: ["$(x-4)(x+4)$", "$(x-4)^2$", "$(x+4)^2$", "$(x-16)(x+16)$"],
+                correctAnswer: "$(x-4)(x+4)$",
+                solution: "Using $a^2 - b^2 = (a-b)(a+b)$. So $x^2 - 16 = x^2 - 4^2 = (x-4)(x+4)$."
+            },
+            {
+                id: 13,
+                text: "Factorise: $x^2 + 8x + 16$",
+                options: ["$(x+4)^2$", "$(x-4)^2$", "$(x+8)^2$", "$(x-8)^2$"],
+                correctAnswer: "$(x+4)^2$",
+                solution: "This is matching $(a+b)^2 = a^2 + 2ab + b^2$. So $x^2 + 2(x)(4) + 4^2 = (x+4)^2$."
+            },
+            {
+                id: 14,
+                text: "The factors of $m^2 - 256$ are",
+                options: ["$(m-16)(m+16)$", "$(m-16)^2$", "$(m+16)^2$", "$(m-14)(m+14)$"],
+                correctAnswer: "$(m-16)(m+16)$",
+                solution: "Since $256 = 16^2$, difference of squares gives $(m-16)(m+16)$."
+            },
+            {
+                id: 15,
+                text: "Factorise: $3x^2 + 6x$",
+                options: ["$3x(x+2)$", "$3(x^2+2x)$", "$x(3x+6)$", "All of the above"],
+                correctAnswer: "All of the above",
+                solution: "Although $3x(x+2)$ is completely factorised, the other two expressions are also factors of it mathematically. So all options are valid representations."
+            },
+            {
+                id: 16,
+                text: "The value of $99^2$ using identity is",
+                options: ["$9801$", "$9999$", "$9800$", "$10000$"],
+                correctAnswer: "$9801$",
+                solution: "$(100 - 1)^2 = 100^2 - 2(100)(1) + 1^2 = 10000 - 200 + 1 = 9801$."
+            },
+            {
+                id: 17,
+                text: "Divide $44(x^4 - 5x^3 - 24x^2)$ by $11x(x - 8)$.",
+                options: ["$4x(x+3)$", "$4(x+3)$", "$x(x+3)$", "$4x(x-3)$"],
+                correctAnswer: "$4x(x+3)$",
+                solution: "$44x^2(x^2 - 5x - 24) = 44x^2(x-8)(x+3)$. Dividing by $11x(x-8)$, we get $4x(x+3)$."
+            },
+            {
+                id: 18,
+                text: "Factorise: $x^2 - x - 42$",
+                options: ["$(x-7)(x+6)$", "$(x+7)(x-6)$", "$(x-7)(x-6)$", "$(x+7)(x+6)$"],
+                correctAnswer: "$(x-7)(x+6)$",
+                solution: "Sum is $-1$, product is $-42$. Numbers are $-7, 6$. So $(x-7)(x+6)$."
+            },
+            {
+                id: 19,
+                text: "Factorise: $a^4 - b^4$",
+                options: ["$(a^2+b^2)(a-b)(a+b)$", "$(a^2-b^2)^2$", "$(a-b)^4$", "$(a+b)^4$"],
+                correctAnswer: "$(a^2+b^2)(a-b)(a+b)$",
+                solution: "$(a^2)^2 - (b^2)^2 = (a^2-b^2)(a^2+b^2) = (a-b)(a+b)(a^2+b^2)$."
+            },
+            {
+                id: 20,
+                text: "Factorise by regrouping: $p^2 q - p r^2 - p q + r^2$",
+                options: ["$(pq - r^2)(p - 1)$", "$(pq + r^2)(p - 1)$", "$(pq - r^2)(p + 1)$", "$(pq + r^2)(p + 1)$"],
+                correctAnswer: "$(pq - r^2)(p - 1)$",
+                solution: "$p(pq - r^2) - 1(pq - r^2) = (pq - r^2)(p - 1)$."
             }
         ];
         return pool.sort(() => Math.random() - 0.5);
@@ -278,11 +348,13 @@ const FactorisationTest = () => {
                 user_id: uid,
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                correct_answer: currentQ.correctAnswer,
-                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                template_id: null,
+                difficulty_level: 'Medium',
+                question_text: String(currentQ.text || ''),
+                correct_answer: String(currentQ.correctAnswer || ''),
+                student_answer: String(isSkipped ? "SKIPPED" : (selectedOption || '')),
                 is_correct: isSkipped ? false : isCorrect,
-                solution_text: currentQ.solution,
+                solution_text: String(currentQ.solution || ''),
                 time_spent_seconds: timeSpent
             };
             api.recordAttempt(attemptData).catch(console.error);
@@ -501,7 +573,7 @@ const FactorisationTest = () => {
 
                     {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' }}>
                             <div className="question-header-modern">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />

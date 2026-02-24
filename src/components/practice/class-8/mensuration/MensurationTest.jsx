@@ -233,7 +233,77 @@ const MensurationTest = () => {
                 text: "If length, breadth and height of a cuboid are in the ratio $1:2:3$ and its total surface area is $88\\text{ cm}^2$, find its volume.",
                 options: ["$48\\text{ cm}^3$", "$64\\text{ cm}^3$", "$24\\text{ cm}^3$", "$16\\text{ cm}^3$"],
                 correctAnswer: "$48\\text{ cm}^3$",
-                solution: "Let dimensions be $x, 2x, 3x$. TSA $= 2(2x^2 + 6x^2 + 3x^2) = 2(11x^2) = 22x^2 = 88 \Rightarrow x^2 = 4 \Rightarrow x=2$. Volume $= x \\times 2x \\times 3x = 6x^3 = 6(8) = 48\\text{ cm}^3$."
+                solution: "Let dimensions be $x, 2x, 3x$. TSA $= 2(2x^2 + 6x^2 + 3x^2) = 2(11x^2) = 22x^2 = 88 \\Rightarrow x^2 = 4 \\Rightarrow x=2$. Volume $= x \\times 2x \\times 3x = 6x^3 = 6(8) = 48\\text{ cm}^3$."
+            },
+            {
+                id: 11,
+                text: "If the length of a diagonal of a square is $10\\sqrt{2}\\text{ cm}$, find its area.",
+                options: ["$100\\text{ cm}^2$", "$200\\text{ cm}^2$", "$50\\text{ cm}^2$", "$150\\text{ cm}^2$"],
+                correctAnswer: "$100\\text{ cm}^2$",
+                solution: "Side of square $a = \\frac{d}{\\sqrt{2}} = 10$. Area $= a^2 = 100\\text{ cm}^2$."
+            },
+            {
+                id: 12,
+                text: "The area of a rhombus is $120\\text{ cm}^2$ and one of the diagonals is $24\\text{ cm}$. Find the perimeter of the rhombus.",
+                options: ["$52\\text{ cm}$", "$40\\text{ cm}$", "$60\\text{ cm}$", "$48\\text{ cm}$"],
+                correctAnswer: "$52\\text{ cm}$",
+                solution: "Area $= \\frac{1}{2} d_1 d_2 \\Rightarrow 120 = \\frac{1}{2} \\times 24 \\times d_2 \\Rightarrow d_2 = 10\\text{ cm}$. The diagonals bisect at right angles. Half diagonals are $12$ and $5$. Side $= \\sqrt{12^2 + 5^2} = \\sqrt{169} = 13$, Perimeter $= 4 \\times 13 = 52\\text{ cm}$."
+            },
+            {
+                id: 13,
+                text: "Volume of a cylinder with radius $7\\text{ cm}$ and height $10\\text{ cm}$ is:",
+                options: ["$1540\\text{ cm}^3$", "$154\\text{ cm}^3$", "$770\\text{ cm}^3$", "$3080\\text{ cm}^3$"],
+                correctAnswer: "$1540\\text{ cm}^3$",
+                solution: "$V = \\pi r^2 h = \\frac{22}{7} \\times 7^2 \\times 10 = 22 \\times 7 \\times 10 = 1540\\text{ cm}^3$."
+            },
+            {
+                id: 14,
+                text: "How many litres of water can a cuboidal tank of dimensions $2\\text{ m} \\times 1.5\\text{ m} \\times 1\\text{ m}$ hold?",
+                options: ["$3000\\text{ L}$", "$300\\text{ L}$", "$30\\text{ L}$", "$30000\\text{ L}$"],
+                correctAnswer: "$3000\\text{ L}$",
+                solution: "Volume $= 2 \\times 1.5 \\times 1 = 3\\text{ m}^3$. Since $1\\text{ m}^3 = 1000\\text{ L}$, capacity $= 3000\\text{ L}$."
+            },
+            {
+                id: 15,
+                text: "The lateral surface area of a cube is $256\\text{ m}^2$. The volume of the cube is",
+                options: ["$512\\text{ m}^3$", "$64\\text{ m}^3$", "$216\\text{ m}^3$", "$256\\text{ m}^3$"],
+                correctAnswer: "$512\\text{ m}^3$",
+                solution: "LSA $= 4a^2 = 256 \\Rightarrow a^2 = 64 \\Rightarrow a = 8\\text{ m}$. Volume $= a^3 = 8^3 = 512\\text{ m}^3$."
+            },
+            {
+                id: 16,
+                text: "What is the area of a parallelogram with base $15\\text{ cm}$ and height $8\\text{ cm}$?",
+                options: ["$120\\text{ cm}^2$", "$60\\text{ cm}^2$", "$240\\text{ cm}^2$", "$30\\text{ cm}^2$"],
+                correctAnswer: "$120\\text{ cm}^2$",
+                solution: "Area $= \\text{base} \\times \\text{height} = 15 \\times 8 = 120\\text{ cm}^2$."
+            },
+            {
+                id: 17,
+                text: "Number of edges in a cube is",
+                options: ["$12$", "$8$", "$6$", "$4$"],
+                correctAnswer: "$12$",
+                solution: "A cube has $6$ faces, $8$ vertices, and $12$ edges."
+            },
+            {
+                id: 18,
+                text: "The surface area of a cuboid is $2(lb + bh + hl)$. What is its lateral surface area?",
+                options: ["$2h(l+b)$", "$2l(b+h)$", "$2b(l+h)$", "$lb$"],
+                correctAnswer: "$2h(l+b)$",
+                solution: "LSA excludes the top and bottom faces ($lb$), so LSA $= 2(bh + hl) = 2h(l+b)$."
+            },
+            {
+                id: 19,
+                text: "The ratio of the volumes of two cylinders with equal radii but heights in the ratio $1:2$ is",
+                options: ["$1:2$", "$1:4$", "$2:1$", "$4:1$"],
+                correctAnswer: "$1:2$",
+                solution: "$V_1 / V_2 = (\\pi r^2 h_1) / (\\pi r^2 h_2) = h_1 / h_2 = 1 / 2$."
+            },
+            {
+                id: 20,
+                text: "The curved surface area of a cylinder of height $14\\text{ cm}$ is $88\\text{ cm}^2$. Find the diameter of the base.",
+                options: ["$2\\text{ cm}$", "$1\\text{ cm}$", "$4\\text{ cm}$", "$7\\text{ cm}$"],
+                correctAnswer: "$2\\text{ cm}$",
+                solution: "CSA $= 2\\pi r h = 88 \\Rightarrow 2 \\times \\frac{22}{7} \\times r \\times 14 = 88 \\Rightarrow 88r = 88 \\Rightarrow r = 1\\text{ cm}$. Diameter $= 2r = 2\\text{ cm}$."
             }
         ];
         return pool.sort(() => Math.random() - 0.5);
@@ -278,11 +348,13 @@ const MensurationTest = () => {
                 user_id: uid,
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                correct_answer: currentQ.correctAnswer,
-                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                template_id: null,
+                difficulty_level: 'Medium',
+                question_text: String(currentQ.text || ''),
+                correct_answer: String(currentQ.correctAnswer || ''),
+                student_answer: String(isSkipped ? "SKIPPED" : (selectedOption || '')),
                 is_correct: isSkipped ? false : isCorrect,
-                solution_text: currentQ.solution,
+                solution_text: String(currentQ.solution || ''),
                 time_spent_seconds: timeSpent
             };
             api.recordAttempt(attemptData).catch(console.error);
@@ -502,7 +574,7 @@ const MensurationTest = () => {
 
                     {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' }}>
                             <div className="question-header-modern">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />

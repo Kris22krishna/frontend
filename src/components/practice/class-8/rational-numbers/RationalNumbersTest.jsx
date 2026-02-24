@@ -234,6 +234,76 @@ const RationalNumbersTest = () => {
                 options: ["Yes", "No", "Only for positive rational numbers", "Only for negative rational numbers"],
                 correctAnswer: "No",
                 solution: "Subtraction is not associative. For example, $(5-3)-2 \\neq 5-(3-2)$."
+            },
+            {
+                id: 11,
+                text: "Which of the following numbers are their own reciprocals?",
+                options: ["$1$ and $-1$", "$0$", "Only $1$", "Only $-1$"],
+                correctAnswer: "$1$ and $-1$",
+                solution: "The reciprocal of $1$ is $1$, and the reciprocal of $-1$ is $-1$."
+            },
+            {
+                id: 12,
+                text: "The product of a non-zero rational number and its reciprocal is",
+                options: ["$0$", "$1$", "$-1$", "Not defined"],
+                correctAnswer: "$1$",
+                solution: "For any non-zero rational number $a/b$, $(a/b) \\times (b/a) = 1$."
+            },
+            {
+                id: 13,
+                text: "What should be added to $\\frac{-5}{4}$ to get $-1$?",
+                options: ["$\\frac{1}{4}$", "$\\frac{-1}{4}$", "$\\frac{3}{4}$", "$\\frac{-3}{4}$"],
+                correctAnswer: "$\\frac{1}{4}$",
+                solution: "Let $x$ be the number. Then $\\frac{-5}{4} + x = -1 \\Rightarrow x = -1 - (\\frac{-5}{4}) = -1 + \\frac{5}{4} = \\frac{1}{4}$."
+            },
+            {
+                id: 14,
+                text: "What should be subtracted from $\\frac{-5}{3}$ to get $\\frac{5}{6}$?",
+                options: ["$\\frac{-15}{6}$", "$\\frac{-5}{6}$", "$\\frac{5}{6}$", "$\\frac{15}{6}$"],
+                correctAnswer: "$\\frac{-15}{6}$",
+                solution: "Let $x$ be subtracted. $\\frac{-5}{3} - x = \\frac{5}{6} \\Rightarrow x = \\frac{-5}{3} - \\frac{5}{6} = \\frac{-10}{6} - \\frac{5}{6} = \\frac{-15}{6}$."
+            },
+            {
+                id: 15,
+                text: "The rational number equivalent to $\\frac{-24}{36}$ is",
+                options: ["$\\frac{-2}{3}$", "$\\frac{-4}{6}$", "$\\frac{-6}{9}$", "All of the above"],
+                correctAnswer: "All of the above",
+                solution: "$\\frac{-24}{36}$ simplified is $\\frac{-2}{3}$. Multiplying by $2/2$ gives $\\frac{-4}{6}$, by $3/3$ gives $\\frac{-6}{9}$. So all are equivalent."
+            },
+            {
+                id: 16,
+                text: "The rational number $\\frac{-3}{-5}$ lies on which side of zero on the number line?",
+                options: ["Right", "Left", "Neither", "Depends on value"],
+                correctAnswer: "Right",
+                solution: "$\\frac{-3}{-5} = \\frac{3}{5}$, which is positive, so it lies on the right side of zero."
+            },
+            {
+                id: 17,
+                text: "Find the value of $\\frac{3}{7} \\times \\frac{-2}{5} \\times \\frac{15}{16} \\times \\frac{14}{9}$.",
+                options: ["$\\frac{-1}{4}$", "$\\frac{1}{4}$", "$\\frac{-1}{2}$", "$\\frac{1}{2}$"],
+                correctAnswer: "$\\frac{-1}{4}$",
+                solution: "$(\\frac{3}{7} \\times \\frac{14}{9}) \\times (\\frac{-2}{5} \\times \\frac{15}{16}) = (\\frac{2}{3}) \\times (\\frac{-3}{8}) = \\frac{-1}{4}$."
+            },
+            {
+                id: 18,
+                text: "Which of the following is the standard form of $\\frac{-45}{30}$?",
+                options: ["$\\frac{-3}{2}$", "$\\frac{-9}{6}$", "$\\frac{-15}{10}$", "$\\frac{3}{-2}$"],
+                correctAnswer: "$\\frac{-3}{2}$",
+                solution: "Dividing numerator and denominator by their HCF $15$: $\\frac{-45 \\div 15}{30 \\div 15} = \\frac{-3}{2}$."
+            },
+            {
+                id: 19,
+                text: "A rational number between $\\frac{1}{4}$ and $\\frac{1}{2}$ is",
+                options: ["$\\frac{3}{8}$", "$\\frac{5}{16}$", "$\\frac{7}{16}$", "All of the above"],
+                correctAnswer: "All of the above",
+                solution: "Average of $1/4$ and $1/2$ is $3/8$. $5/16$ ($0.3125$) and $7/16$ ($0.4375$) also lie between $0.25$ and $0.5$."
+            },
+            {
+                id: 20,
+                text: "The sum of a rational number and its additive inverse is",
+                options: ["$0$", "$1$", "$-1$", "Depends on the number"],
+                correctAnswer: "$0$",
+                solution: "For any rational number $x$, its additive inverse is $-x$. Their sum is $x + (-x) = 0$."
             }
         ];
         return pool.sort(() => Math.random() - 0.5);
@@ -278,11 +348,13 @@ const RationalNumbersTest = () => {
                 user_id: uid,
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                correct_answer: currentQ.correctAnswer,
-                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                template_id: null,
+                difficulty_level: 'Medium',
+                question_text: String(currentQ.text || ''),
+                correct_answer: String(currentQ.correctAnswer || ''),
+                student_answer: String(isSkipped ? "SKIPPED" : (selectedOption || '')),
                 is_correct: isSkipped ? false : isCorrect,
-                solution_text: currentQ.solution,
+                solution_text: String(currentQ.solution || ''),
                 time_spent_seconds: timeSpent
             };
             api.recordAttempt(attemptData).catch(console.error);
@@ -501,7 +573,7 @@ const RationalNumbersTest = () => {
 
                     {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' }}>
                             <div className="question-header-modern">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />

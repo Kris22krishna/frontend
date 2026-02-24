@@ -249,6 +249,86 @@ const ExponentsAndPowersTest = () => {
             solution: "$10^{3+4} = 10^7$"
         });
 
+        pool.push({
+            id: 11,
+            text: "The value of $3^{-2}$ is",
+            options: ["$-6$", "$\\frac{1}{9}$", "$\\frac{-1}{9}$", "$9$"],
+            correctAnswer: "$\\frac{1}{9}$",
+            solution: "$3^{-2} = \\frac{1}{3^2} = \\frac{1}{9}$."
+        });
+
+        pool.push({
+            id: 12,
+            text: "Multiplicative inverse of $5^{-4}$ is",
+            options: ["$5^4$", "$4^5$", "$\\frac{1}{5^4}$", "$-5$"],
+            correctAnswer: "$5^4$",
+            solution: "The multiplicative inverse of $a^{-m}$ is $a^m$. So inverse of $5^{-4}$ is $5^4$."
+        });
+
+        pool.push({
+            id: 13,
+            text: "Value of $(2^0 + 3^0) \\times 4^0$ is",
+            options: ["$1$", "$2$", "$5$", "$0$"],
+            correctAnswer: "$2$",
+            solution: "$(1 + 1) \\times 1 = 2 \\times 1 = 2$."
+        });
+
+        pool.push({
+            id: 14,
+            text: "$a^m \\times a^n$ is equal to",
+            options: ["$a^{m-n}$", "$a^{m+n}$", "$a^{mn}$", "$a^{m/n}$"],
+            correctAnswer: "$a^{m+n}$",
+            solution: "By laws of exponents, base remaining same, powers are added in multiplication: $a^{m+n}$."
+        });
+
+        pool.push({
+            id: 15,
+            text: "If $2^x = 32$, find $x$.",
+            options: ["$4$", "$3$", "$5$", "$6$"],
+            correctAnswer: "$5$",
+            solution: "$32 = 2 \\times 2 \\times 2 \\times 2 \\times 2 = 2^5$. So $2^x = 2^5 \\Rightarrow x = 5$."
+        });
+
+        pool.push({
+            id: 16,
+            text: "The value of $(\\frac{1}{3})^{-1} - (\\frac{1}{4})^{-1}$ is",
+            options: ["$-1$", "$1$", "$7$", "$-7$"],
+            correctAnswer: "$-1$",
+            solution: "$(\\frac{1}{3})^{-1} = 3$, and $(\\frac{1}{4})^{-1} = 4$. So $3 - 4 = -1$."
+        });
+
+        pool.push({
+            id: 17,
+            text: "Write $1.25 \\times 10^{-5}$ in usual form.",
+            options: ["$0.000125$", "$0.0000125$", "$0.00125$", "$125000$"],
+            correctAnswer: "$0.0000125$",
+            solution: "Moving decimal $5$ places left gives $0.0000125$."
+        });
+
+        pool.push({
+            id: 18,
+            text: "Any non-zero number raised to the power $0$ is equal to",
+            options: ["$0$", "$1$", "itself", "$-1$"],
+            correctAnswer: "$1$",
+            solution: "By definition, $a^0 = 1$ for any $a \\neq 0$."
+        });
+
+        pool.push({
+            id: 19,
+            text: "$a^m \\div a^n$ is equal to",
+            options: ["$a^{m+n}$", "$a^{m-n}$", "$a^{m/n}$", "$a^{mn}$"],
+            correctAnswer: "$a^{m-n}$",
+            solution: "By laws of exponents, bases being same, powers are subtracted in division: $a^{m-n}$."
+        });
+
+        pool.push({
+            id: 20,
+            text: "The standard form of $450000$ is",
+            options: ["$4.5 \\times 10^5$", "$45 \\times 10^4$", "$4.5 \\times 10^4$", "$4.5 \\times 10^6$"],
+            correctAnswer: "$4.5 \\times 10^5$",
+            solution: "To get a number between $1$ and $10$, we move the decimal $5$ places to the left: $4.5 \\times 10^5$."
+        });
+
         return pool.sort(() => Math.random() - 0.5);
     };
 
@@ -291,11 +371,13 @@ const ExponentsAndPowersTest = () => {
                 user_id: uid,
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                correct_answer: currentQ.correctAnswer,
-                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                template_id: null,
+                difficulty_level: 'Medium',
+                question_text: String(currentQ.text || ''),
+                correct_answer: String(currentQ.correctAnswer || ''),
+                student_answer: String(isSkipped ? "SKIPPED" : (selectedOption || '')),
                 is_correct: isSkipped ? false : isCorrect,
-                solution_text: currentQ.solution,
+                solution_text: String(currentQ.solution || ''),
                 time_spent_seconds: timeSpent
             };
             api.recordAttempt(attemptData).catch(console.error);
@@ -515,7 +597,7 @@ const ExponentsAndPowersTest = () => {
 
                     {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' }}>
                             <div className="question-header-modern">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />
