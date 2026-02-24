@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UploadCloud, CheckCircle, AlertTriangle, ArrowRight, BookOpen } from 'lucide-react';
 import { api } from '../services/api';
+import { trackLogin, setUserId } from '../lib/gtag';
 
 const AssessmentUploaderLogin = () => {
     const navigate = useNavigate();
@@ -16,7 +17,11 @@ const AssessmentUploaderLogin = () => {
         setError('');
 
         try {
-            await api.assessmentUploaderLogin(email, accessCode);
+            const response = await api.assessmentUploaderLogin(email, accessCode);
+            trackLogin('assessment_uploader_email');
+            if (response && response.id) {
+                setUserId(response.id);
+            }
             // Redirect to assessment uploader dashboard
             navigate('/assessment-uploader-dashboard');
         } catch (err) {
