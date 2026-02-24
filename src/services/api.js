@@ -730,6 +730,22 @@ export const api = {
         return handleResponse(response);
     },
 
+    getAdminMentorStudents: async (mentorId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/mentors/${mentorId}/students`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    assignStudents: async (mentorId, studentIds) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/mentors/${mentorId}/assign-students`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ student_ids: studentIds }),
+        });
+        return handleResponse(response);
+    },
+
     getAdminParents: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/admin/parents`, {
             headers: getHeaders()
