@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, MoreVertical, Download, Filter, Loader2, RefreshCw } from 'lucide-react';
+import { Search, Plus, MoreVertical, Download, Filter, Loader2, RefreshCw, UserPlus, X, Check, Eye } from 'lucide-react';
 import { api } from '../../../../services/api';
 
 const TeachersPage = () => {
@@ -7,6 +7,21 @@ const TeachersPage = () => {
     const [teachers, setTeachers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);
+
+    // Assignment Modal State
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [selectedTeacher, setSelectedTeacher] = useState(null);
+    const [allStudents, setAllStudents] = useState([]);
+    const [selectedStudents, setSelectedStudents] = useState([]);
+    const [assigning, setAssigning] = useState(false);
+    const [loadingStudents, setLoadingStudents] = useState(false);
+    const [studentSearch, setStudentSearch] = useState('');
+    const [assignmentGradeFilter, setAssignmentGradeFilter] = useState('All');
+
+    // View Assignments Modal State
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [assignedStudents, setAssignedStudents] = useState([]);
+    const [loadingAssignments, setLoadingAssignments] = useState(false);
 
     const fetchTeachers = async () => {
         setLoading(true);
@@ -25,6 +40,59 @@ const TeachersPage = () => {
     useEffect(() => {
         fetchTeachers();
     }, []);
+
+    const handleOpenAssignModal = async (teacher) => {
+        setSelectedTeacher(teacher);
+        setShowAssignModal(true);
+        setLoadingStudents(true);
+        try {
+            const studentsData = await api.getAdminStudents();
+            setAllStudents(studentsData || []);
+        } catch (err) {
+            console.error('Failed to fetch students:', err);
+        } finally {
+            setLoadingStudents(false);
+        }
+    };
+
+    const handleAssignStudents = async () => {
+        if (!selectedTeacher || selectedStudents.length === 0) return;
+
+        setAssigning(true);
+        try {
+            await api.assignStudents(selectedTeacher.id, selectedStudents);
+            setShowAssignModal(false);
+            setSelectedStudents([]);
+            fetchTeachers(); // Refresh list to see updated student count
+        } catch (err) {
+            alert('Failed to assign students: ' + err.message);
+        } finally {
+            setAssigning(false);
+        }
+    };
+
+    const toggleStudentSelection = (studentId) => {
+        setSelectedStudents(prev =>
+            prev.includes(studentId)
+                ? prev.filter(id => id !== studentId)
+                : [...prev, studentId]
+        );
+    };
+
+    const handleOpenViewModal = async (teacher) => {
+        setSelectedTeacher(teacher);
+        setShowViewModal(true);
+        setLoadingAssignments(true);
+        try {
+            const data = await api.getAdminMentorStudents(teacher.id);
+            setAssignedStudents(data || []);
+        } catch (err) {
+            console.error('Failed to fetch assigned students:', err);
+            alert('Failed to load assigned students');
+        } finally {
+            setLoadingAssignments(false);
+        }
+    };
 
     // Calculate stats from real data
     const stats = [
@@ -158,7 +226,27 @@ const TeachersPage = () => {
                                         {getStatusText(teacher.lastActive)}
                                     </span>
                                 </td>
-                                <td className="py-4 px-6">
+                                <td className="py-4 px-6 flex items-center gap-2">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleOpenViewModal(teacher);
+                                        }}
+                                        className="p-2 hover:bg-blue-50 text-gray-500 hover:text-blue-600 rounded-lg transition-colors border border-transparent hover:border-blue-100"
+                                        title="View Assigned Students"
+                                    >
+                                        <Eye className="h-4 w-4" />
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleOpenAssignModal(teacher);
+                                        }}
+                                        className="p-2 hover:bg-green-50 text-gray-500 hover:text-green-600 rounded-lg transition-colors border border-transparent hover:border-green-100"
+                                        title="Assign Students"
+                                    >
+                                        <UserPlus className="h-4 w-4" />
+                                    </button>
                                     <button className="p-2 hover:bg-gray-100 rounded-lg">
                                         <MoreVertical className="h-4 w-4 text-gray-500" />
                                     </button>
@@ -175,6 +263,210 @@ const TeachersPage = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Assign Students Modal */}
+            {showAssignModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => !assigning && setShowAssignModal(false)} />
+
+                    <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh]">
+                        {/* Modal Header */}
+                        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0">
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900">Assign Students</h3>
+                                <p className="text-sm text-gray-500 mt-1">Assign students to {selectedTeacher?.name}</p>
+                            </div>
+                            <button
+                                onClick={() => setShowAssignModal(false)}
+                                className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600"
+                                disabled={assigning}
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        {/* Student Search & Filter */}
+                        <div className="px-6 py-4 border-b border-gray-100 bg-slate-50/50 flex gap-2">
+                            <div className="relative flex-1">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Search students..."
+                                    value={studentSearch}
+                                    onChange={(e) => setStudentSearch(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                />
+                            </div>
+                            <select
+                                value={assignmentGradeFilter}
+                                onChange={(e) => setAssignmentGradeFilter(e.target.value)}
+                                className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white font-medium text-gray-600"
+                            >
+                                <option value="All">All Grades</option>
+                                {[...Array(12)].map((_, i) => (
+                                    <option key={i} value={String(i + 1)}>Grade {i + 1}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Students List */}
+                        <div className="flex-1 overflow-y-auto p-2 bg-white">
+                            {loadingStudents ? (
+                                <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                                    <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-2" />
+                                    <p className="text-sm">Loading students...</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-1 px-2">
+                                    {allStudents
+                                        .filter(s => {
+                                            const matchesSearch = s.name?.toLowerCase().includes(studentSearch.toLowerCase()) ||
+                                                s.email?.toLowerCase().includes(studentSearch.toLowerCase());
+                                            const matchesGrade = assignmentGradeFilter === 'All' || String(s.grade) === assignmentGradeFilter;
+                                            return matchesSearch && matchesGrade;
+                                        })
+                                        .map((student) => (
+                                            <div
+                                                key={student.id}
+                                                onClick={() => toggleStudentSelection(student.id)}
+                                                className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${selectedStudents.includes(student.id)
+                                                        ? 'bg-blue-50 border border-blue-200 shadow-sm'
+                                                        : 'hover:bg-slate-50 border border-transparent'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${selectedStudents.includes(student.id) ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'
+                                                        }`}>
+                                                        {student.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <div className="flex items-center gap-2">
+                                                            <p className="text-sm font-bold text-gray-900 truncate">{student.name}</p>
+                                                            <span className="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded font-mono text-slate-600">ID: {student.id}</span>
+                                                        </div>
+                                                        <p className="text-[11px] text-gray-500 truncate">{student.email || 'No email'}</p>
+                                                        <p className="text-[10px] text-blue-600 font-bold uppercase mt-0.5">Grade {student.grade || 'N/A'}</p>
+                                                    </div>
+                                                </div>
+                                                {selectedStudents.includes(student.id) && (
+                                                    <div className="h-6 w-6 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
+                                                        <Check className="h-4 w-4 text-white" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    {allStudents.length === 0 && !loadingStudents && (
+                                        <p className="text-center py-8 text-gray-500 text-sm italic">No students available for assignment.</p>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="p-6 border-t border-gray-100 bg-white sticky bottom-0">
+                            <div className="flex items-center justify-between gap-4">
+                                <p className="text-sm text-gray-600">
+                                    <span className="font-bold text-blue-600">{selectedStudents.length}</span> students selected
+                                </p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShowAssignModal(false)}
+                                        className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg text-sm font-medium transition-colors"
+                                        disabled={assigning}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleAssignStudents}
+                                        disabled={assigning || selectedStudents.length === 0}
+                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-200 transition-all flex items-center gap-2"
+                                    >
+                                        {assigning ? (
+                                            <>
+                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                                Assigning...
+                                            </>
+                                        ) : (
+                                            'Assign Selected'
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* View Assignments Modal */}
+            {showViewModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowViewModal(false)} />
+
+                    <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh]">
+                        {/* Modal Header */}
+                        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0">
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900">Assigned Students</h3>
+                                <p className="text-sm text-gray-500 mt-1">{selectedTeacher?.name}'s Current Students</p>
+                            </div>
+                            <button
+                                onClick={() => setShowViewModal(false)}
+                                className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-600"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        {/* Students List */}
+                        <div className="flex-1 overflow-y-auto p-4 bg-slate-50/50">
+                            {loadingAssignments ? (
+                                <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                                    <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-2" />
+                                    <p className="text-sm">Loading assignments...</p>
+                                </div>
+                            ) : assignedStudents.length > 0 ? (
+                                <div className="space-y-2">
+                                    {assignedStudents.map((student) => (
+                                        <div key={student.id} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                                                    {student.name?.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-bold text-gray-900">{student.name}</p>
+                                                    <p className="text-xs text-gray-500">{student.email}</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className="text-xs font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded-full uppercase tracking-wider underline-offset-2">
+                                                    Grade {student.grade}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-gray-200 mx-2">
+                                    <div className="p-4 bg-slate-50 rounded-full mb-3">
+                                        <Users className="h-8 w-8 text-slate-300" />
+                                    </div>
+                                    <p className="text-sm text-slate-500 font-medium">No students assigned yet.</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="p-6 border-t border-gray-100 bg-white flex justify-end">
+                            <button
+                                onClick={() => setShowViewModal(false)}
+                                className="px-6 py-2 bg-[#31326F] text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
