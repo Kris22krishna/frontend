@@ -41,6 +41,17 @@ export function SpeedTestGame() {
 
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [questionStartTime, setQuestionStartTime] = useState(0);
+    const [gameStartTime, setGameStartTime] = useState(0);
+    const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+    useEffect(() => {
+        if (gameState === "playing") {
+            const interval = setInterval(() => {
+                setElapsedSeconds(Math.floor((Date.now() - gameStartTime) / 1000));
+            }, 100);
+            return () => clearInterval(interval);
+        }
+    }, [gameState, gameStartTime]);
     const [stats, setStats] = useState({
         totalQuestions: 0,
         totalTime: 0,
@@ -116,7 +127,10 @@ export function SpeedTestGame() {
             results: []
         });
         setCurrentQuestion(generateQuestion());
-        setQuestionStartTime(Date.now());
+        const now = Date.now();
+        setQuestionStartTime(now);
+        setGameStartTime(now);
+        setElapsedSeconds(0);
         setGameState("playing");
     };
 
@@ -165,6 +179,35 @@ export function SpeedTestGame() {
         }
     }, [user, saveScore]);
 
+    const handleSkip = useCallback(() => {
+        const endTime = Date.now();
+        const timeTaken = (endTime - questionStartTime) / 1000;
+
+        const newStats = {
+            ...stats,
+            totalQuestions: stats.totalQuestions + 1,
+            totalTime: stats.totalTime + timeTaken,
+            avgTime: (stats.totalTime + timeTaken) / (stats.totalQuestions + 1),
+            skips: stats.skips + 1,
+            results: [...stats.results, {
+                ...currentQuestion,
+                userAnswer: "Skipped",
+                isCorrect: false,
+                timeTaken,
+                skipped: true
+            }]
+        };
+
+        setStats(newStats);
+
+        if (newStats.totalQuestions >= questionCount) {
+            finishGame();
+        } else {
+            setCurrentQuestion(generateQuestion());
+            setQuestionStartTime(Date.now());
+        }
+    }, [stats, currentQuestion, questionStartTime, questionCount, finishGame, generateQuestion]);
+
     const handleLoginAndSave = async () => {
         setRankFeedback("Login temporarily disabled during migration. Use the main login button.");
     };
@@ -204,12 +247,12 @@ export function SpeedTestGame() {
         };
 
         return (
-            <div className="flex-1 flex flex-col items-center justify-center p-4 py-8 bg-slate-50 dark:bg-slate-900">
-                <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="flex-1 flex flex-col items-center justify-center p-4 py-2 bg-slate-50 dark:bg-slate-900 overflow-hidden">
+                <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center">
                     {/* Left side: Info */}
-                    <div className="space-y-8">
-                        <div className="space-y-4">
-                            <h1 className="text-6xl font-black tracking-tight text-slate-900 dark:text-white">
+                    <div className="space-y-4 lg:space-y-6">
+                        <div className="space-y-2 lg:space-y-4">
+                            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
                                 Math <span className="text-blue-600">Mastery</span>
                             </h1>
                             <div className="flex gap-4">
@@ -221,12 +264,12 @@ export function SpeedTestGame() {
                                     <Home className="w-4 h-4" /> Back to Home
                                 </Button>
                             </div>
-                            <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+                            <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
                                 Sharpen your arithmetic skills with rapid-fire quizzes. Challenge yourself and track your progress.
                             </p>
                         </div>
 
-                        <div className="flex gap-6">
+                        <div className="flex gap-4 lg:gap-6">
                             <div className="flex items-center gap-2 text-slate-500">
                                 <Trophy className="w-5 h-5" />
                                 <span className="font-medium">Track Progress</span>
@@ -239,8 +282,8 @@ export function SpeedTestGame() {
                     </div>
 
                     {/* Right side: Selection Card */}
-                    <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] shadow-2xl shadow-blue-500/10 border border-slate-100 dark:border-slate-700 space-y-8">
-                        <div className="space-y-4">
+                    <div className="bg-white dark:bg-slate-800 p-5 sm:p-6 lg:p-8 rounded-[2rem] shadow-2xl shadow-blue-500/10 border border-slate-100 dark:border-slate-700 space-y-5 lg:space-y-6 w-full max-w-lg mx-auto lg:max-w-none">
+                        <div className="space-y-3 lg:space-y-4">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-xl font-bold text-slate-800 dark:text-white">Select Difficulty</h3>
                                 <span className={`text-xs font-bold px-2 py-1 rounded-md transition-colors ${activeDiff.theme === 'green' ? 'bg-green-100 text-green-600' :
@@ -252,12 +295,12 @@ export function SpeedTestGame() {
                                 </span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-3 lg:gap-4">
                                 {difficulties.map((diff) => (
                                     <button
                                         key={diff.id}
                                         onClick={() => setSelectedDifficulty(diff.id)}
-                                        className={`p-6 rounded-2xl border-2 transition-all text-left relative overflow-hidden group ${getThemeClasses(diff.theme, selectedDifficulty === diff.id)
+                                        className={`p-4 rounded-xl lg:rounded-2xl border-2 transition-all text-left relative overflow-hidden group ${getThemeClasses(diff.theme, selectedDifficulty === diff.id)
                                             }`}
                                     >
                                         {selectedDifficulty === diff.id && (
@@ -282,7 +325,7 @@ export function SpeedTestGame() {
                                 <h3 className="text-xl font-bold text-slate-800 dark:text-white">Questions</h3>
                                 <span className="text-3xl font-black text-blue-600">{questionCount}</span>
                             </div>
-                            <div className="relative pt-6 pb-2">
+                            <div className="relative pt-4 pb-1">
                                 <input
                                     type="range"
                                     min="5"
@@ -295,7 +338,7 @@ export function SpeedTestGame() {
                                         background: `linear-gradient(to right, #2563ea ${((sliderValue - 5) / 45) * 100}%, #e2e8f0 ${((sliderValue - 5) / 45) * 100}%)`
                                     }}
                                 />
-                                <div className="absolute top-0 w-full flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider select-none pointer-events-none">
+                                <div className="absolute top-0 w-full flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider select-none pointer-events-none mt-1">
                                     <span>5</span>
                                     {/* Position 25 approximately where it falls on the linear scale (20/45 ≈ 44.4%) */}
                                     <span style={{ position: 'absolute', left: '44.4%', transform: 'translateX(-50%)' }}>25</span>
@@ -304,10 +347,10 @@ export function SpeedTestGame() {
                             </div>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3 lg:space-y-4">
                             <Button
                                 onClick={startGame}
-                                className="w-full py-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-500/25 transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                                className="w-full py-4 lg:py-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg lg:text-xl shadow-lg shadow-blue-500/25 transition-transform hover:scale-[1.02] active:scale-[0.98]"
                             >
                                 Start Practice
                             </Button>
@@ -318,7 +361,7 @@ export function SpeedTestGame() {
                                     startGame();
                                 }}
                                 variant="outline"
-                                className="w-full py-8 rounded-2xl border-orange-200 text-orange-600 hover:bg-orange-50 font-bold text-lg flex items-center justify-center gap-2"
+                                className="w-full py-4 lg:py-6 rounded-xl border-orange-200 text-orange-600 hover:bg-orange-50 font-bold text-base lg:text-lg flex items-center justify-center gap-2"
                             >
                                 <Zap className="w-5 h-5" /> Speed Test Challenge
                             </Button>
@@ -479,41 +522,44 @@ export function SpeedTestGame() {
     }
 
     return (
-        <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-slate-900">
-            <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 sticky top-0 z-50">
-                <div className="max-w-4xl mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                        <div className="flex flex-col">
-                            <span className="text-xs text-slate-500 font-bold uppercase">Avg Time</span>
-                            <span className="text-2xl font-mono font-bold text-slate-800 dark:text-slate-200">
-                                {stats.avgTime.toFixed(1)}s
-                            </span>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-xs text-slate-500 font-bold uppercase">Solved</span>
-                            <span className="text-2xl font-mono font-bold text-blue-600">
-                                {stats.totalQuestions}
-                            </span>
-                        </div>
+        <div className="flex-1 flex flex-col h-[calc(100vh-80px)] overflow-hidden bg-slate-50 dark:bg-slate-900">
+            {gameState === "playing" && (
+                <div className="w-full max-w-5xl mx-auto flex items-center justify-between p-4 pb-0 md:p-6 md:pb-0 shrink-0">
+                    {/* Left side: Mode Indicator */}
+                    <div className="flex items-center gap-3 px-4 py-2 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Mode</span>
+                        <span className="font-bold text-slate-900 dark:text-white capitalize">
+                            {selectedDifficulty}
+                        </span>
                     </div>
 
-                    <Button
-                        onClick={finishGame}
-                        variant="ghost"
-                        className="text-red-500"
-                    >
-                        <StopCircle className="mr-2" size={20} /> Finish
-                    </Button>
+                    {/* Right side: Timer & Action */}
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono font-bold text-lg">
+                            <TimerIcon className="w-5 h-5 text-blue-500" />
+                            {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}
+                        </div>
+                        <Button
+                            onClick={finishGame}
+                            variant="ghost"
+                            className="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl"
+                        >
+                            <StopCircle className="mr-2" size={20} /> End
+                        </Button>
+                    </div>
                 </div>
-            </div>
+            )}
 
-            <div className="flex-1 flex items-center justify-center p-4">
+            <div className="flex-1 flex items-center justify-center p-4 min-h-0">
                 {currentQuestion && (
                     <SpeedTestQuestionCard
                         key={currentQuestion.id}
                         question={currentQuestion}
                         onSubmit={handleAnswerObject}
+                        onSkip={handleSkip}
+                        elapsedSeconds={Math.floor((Date.now() - questionStartTime) / 1000)}
                         questionNumber={stats.totalQuestions + 1}
+                        totalQuestions={questionCount}
                     />
                 )}
             </div>
