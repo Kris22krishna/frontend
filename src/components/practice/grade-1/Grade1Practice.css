@@ -1152,3 +1152,9 @@
         font-size: 1rem;
     }
 }
+
+/* Enforce Fredoka font consistency for the ExplanationModal in Grade 1 */
+.grade1-practice-page .fixed.inset-0,
+.grade1-practice-page .fixed {
+    font-family: 'Fredoka', cursive !important;
+}

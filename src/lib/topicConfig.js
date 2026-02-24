@@ -159,9 +159,9 @@ export const TOPIC_CONFIGS = {
         ],
         'Weigh It, Pour It': [
             { id: "1129", name: "Gram to Kilogram (Fractions)", route: "gram-to-kilogram-fractions" },
-            { id: "1135", name: "Make 1 Kilogram Using Packets", route: "make-one-kilogram-using-packets" },
+            { id: "1135", name: "Balancing Weights with Packets", route: "make-one-kilogram-using-packets" },
             { id: "1136", name: "Millilitre to Litre (Fractions)", route: "millilitre-to-litre-fractions" },
-            { id: "1137", name: "Make 1 Litre Using Bottles", route: "make-one-litre-using-bottles" },
+            { id: "1137", name: "Balancing Capacities with Bottles", route: "make-one-litre-using-bottles" },
             { id: "1138", name: "Count How Many Units Fit", route: "count-how-many-units-fit" },
             { id: "1139", name: "Repeated Addition to One Whole", route: "repeated-addition-to-one-whole" },
             { id: "1140", name: "Compare Weights and Capacities", route: "compare-weights-and-capacities" },

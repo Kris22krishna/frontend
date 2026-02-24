@@ -25,9 +25,9 @@ const DynamicVisual = ({ type, data }) => {
             >
                 <svg width="100%" height="auto" style={{ maxWidth: '300px', maxHeight: '300px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} viewBox="0 0 100 100">
                     {shape === 'circle' && <circle cx="50" cy="50" r="42" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" rx="15" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                     {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" rx="12" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                 </svg>
             </motion.div>
         );
@@ -382,50 +382,50 @@ const ShapesAndSpace = () => {
                             <h3 className="breakdown-title">Quest Log 📜</h3>
                             <div className="quest-log-list">
                                 {sessionQuestions.map((q, idx) => {
-                                const ans = answers[idx];
-                                if (!ans) return null;
-                                return (
-                                    <motion.div
-                                        key={idx}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        className="quest-log-item"
-                                    >
-                                        <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
-                                            {idx + 1}
-                                        </div>
-                                        <div className="log-content">
-                                            <div className="log-question">
-                                                <LatexText text={ans.questionText} />
+                                    const ans = answers[idx];
+                                    if (!ans) return null;
+                                    return (
+                                        <motion.div
+                                            key={idx}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            className="quest-log-item"
+                                        >
+                                            <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
+                                                {idx + 1}
                                             </div>
-                                            <div className="log-answers">
-                                                <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
-                                                    <span className="log-label">Your Answer</span>
-                                                    <span className="log-value">{ans.selectedOption}</span>
+                                            <div className="log-content">
+                                                <div className="log-question">
+                                                    <LatexText text={ans.questionText} />
                                                 </div>
-                                                {!ans.isCorrect && (
-                                                    <div className="log-answer-box correct-box">
-                                                        <span className="log-label">Correct Answer</span>
-                                                        <span className="log-value">{ans.correctAnswer}</span>
+                                                <div className="log-answers">
+                                                    <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
+                                                        <span className="log-label">Your Answer</span>
+                                                        <span className="log-value">{typeof ans.selectedOption === 'string' ? ans.selectedOption.charAt(0).toUpperCase() + ans.selectedOption.slice(1) : ans.selectedOption}</span>
                                                     </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="log-answer-box correct-box">
+                                                            <span className="log-label">Correct Answer</span>
+                                                            <span className="log-value">{typeof ans.correctAnswer === 'string' ? ans.correctAnswer.charAt(0).toUpperCase() + ans.correctAnswer.slice(1) : ans.correctAnswer}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="log-explanation">
+                                                    <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
+                                                    <LatexText text={ans.explanation} />
+                                                </div>
+                                            </div>
+                                            <div className="log-icon">
+                                                {ans.isCorrect ? (
+                                                    <Check size={32} color="#4FB7B3" strokeWidth={3} />
+                                                ) : (
+                                                    <X size={32} color="#FF6B6B" strokeWidth={3} />
                                                 )}
                                             </div>
-                                            <div className="log-explanation">
-                                                <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
-                                                <LatexText text={ans.explanation} />
-                                            </div>
-                                        </div>
-                                        <div className="log-icon">
-                                            {ans.isCorrect ? (
-                                                <Check size={32} color="#4FB7B3" strokeWidth={3} />
-                                            ) : (
-                                                <X size={32} color="#FF6B6B" strokeWidth={3} />
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         </div>
                     ) : (
@@ -451,8 +451,8 @@ const ShapesAndSpace = () => {
                             </div>
                             <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
                                 {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
-                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
-                                 '🌱 Nice try! Practice makes perfect!'}
+                                    percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                        '🌱 Nice try! Practice makes perfect!'}
                             </p>
                         </div>
                     )}
@@ -562,7 +562,7 @@ const ShapesAndSpace = () => {
             <ExplanationModal
                 isOpen={showExplanationModal}
                 isCorrect={answers[qIndex]?.isCorrect}
-                correctAnswer={currentQ.correct}
+                correctAnswer={typeof currentQ.correct === 'string' ? currentQ.correct.charAt(0).toUpperCase() + currentQ.correct.slice(1) : currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
                 onNext={handleNext}
