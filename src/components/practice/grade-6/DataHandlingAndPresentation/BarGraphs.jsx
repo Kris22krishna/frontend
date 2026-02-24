@@ -181,9 +181,9 @@ const BarGraphs = () => {
         }
 
         const chartHtml = `
-            <div style="padding: 20px 40px 60px 50px; background: white; border-radius: 12px; border: 2px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px; max-width: 600px; width: 100%; align-self: center;">
+            <div style="padding: 15px 25px 40px 35px; background: white; border-radius: 12px; border: 2px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 16px; max-width: 480px; width: 100%; align-self: center;">
                  <h4 style="text-align: center; margin-bottom: 10px; color: #374151;">Data Chart</h4>
-                 <div style="position: relative; height: 250px; display: flex; margin-left: 10px;">
+                 <div style="position: relative; height: 200px; display: flex; margin-left: 10px;">
                     ${gridLinesHtml}
                     <div style="display: flex; width: 100%; height: 100%; align-items: flex-end; padding-left: 5px; z-index: 10;">
                         ${barsHtml}
@@ -196,12 +196,7 @@ const BarGraphs = () => {
         if (type === "read_value") {
             const targetCat = selectedCategories[randomInt(0, selectedCategories.length - 1)];
             const answerVal = data[targetCat];
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                   ${chartHtml}
-                   <p style="text-align: center;">What is the value for <strong>${targetCat}</strong>?</p>
-                </div>
-            `;
+            qText = `What is the value for <strong>${targetCat}</strong>?`;
             correct = answerVal.toString();
             explanation = `Look at the bar for <strong>${targetCat}</strong>. Its height reaches the line for <strong>${answerVal}</strong>.`;
 
@@ -217,12 +212,7 @@ const BarGraphs = () => {
             const winners = selectedCategories.filter(c => data[c] === maxVal);
             const winner = winners[0];
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">Which category has the <strong>highest</strong> value?</p>
-                </div>
-            `;
+            qText = `Which category has the <strong>highest</strong> value?`;
             correct = winner;
             explanation = `Look for the tallest bar. <strong>${winner}</strong> is the tallest with ${maxVal}.`;
             options = [winner, ...selectedCategories.filter(c => c !== winner)].slice(0, 4);
@@ -232,12 +222,7 @@ const BarGraphs = () => {
             const winners = selectedCategories.filter(c => data[c] === min);
             const winner = winners[0];
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">Which category has the <strong>lowest</strong> value?</p>
-                </div>
-            `;
+            qText = `Which category has the <strong>lowest</strong> value?`;
             correct = winner;
             explanation = `Look for the shortest bar. <strong>${winner}</strong> is the shortest with ${min}.`;
             options = [winner, ...selectedCategories.filter(c => c !== winner)].slice(0, 4);
@@ -248,24 +233,14 @@ const BarGraphs = () => {
 
             if (mode === "all") {
                 const total = Object.values(data).reduce((a, b) => a + b, 0);
-                qText = `
-                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                        ${chartHtml}
-                        <p style="text-align: center;">What is the <strong>total</strong> value of all categories combined?</p>
-                    </div>
-                `;
+                qText = `What is the <strong>total</strong> value of all categories combined?`;
                 correct = total.toString();
                 explanation = `Add the values of all bars: ${Object.values(data).join(" + ")} = <strong>${total}</strong>.`;
                 options = [total.toString(), (total + scale).toString(), (total - scale).toString(), (total + 2 * scale).toString()];
             } else {
                 const subset = selectedCategories.sort(() => 0.5 - Math.random()).slice(0, 2);
                 const subTotal = data[subset[0]] + data[subset[1]];
-                qText = `
-                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                        ${chartHtml}
-                        <p style="text-align: center;">What is the total of <strong>${subset[0]}</strong> and <strong>${subset[1]}</strong>?</p>
-                    </div>
-                `;
+                qText = `What is the total of <strong>${subset[0]}</strong> and <strong>${subset[1]}</strong>?`;
                 correct = subTotal.toString();
                 explanation = `${subset[0]} = ${data[subset[0]]}, ${subset[1]} = ${data[subset[1]]}.<br/>Total = ${data[subset[0]]} + ${data[subset[1]]} = <strong>${subTotal}</strong>.`;
                 options = [
@@ -283,12 +258,7 @@ const BarGraphs = () => {
             const val2 = data[subset[1]];
             const diff = Math.abs(val1 - val2);
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">How much <strong>more</strong> (or less) is <strong>${subset[0]}</strong> compared to <strong>${subset[1]}</strong>?</p>
-                </div>
-            `;
+            qText = `How much <strong>more</strong> (or less) is <strong>${subset[0]}</strong> compared to <strong>${subset[1]}</strong>?`;
             correct = diff.toString();
             explanation = `${subset[0]} = ${val1}, ${subset[1]} = ${val2}.<br/>Difference = |${val1} - ${val2}| = <strong>${diff}</strong>.`;
             options = [
@@ -300,12 +270,6 @@ const BarGraphs = () => {
 
         } else if (type === "scale_reading") {
             // Implicitly ask 1 unit = ?
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">Based on the y-axis, <strong>1 major grid unit</strong> represents how much?</p>
-                </div>
-            `;
             // Calculate grid step from chart visualization logic
             // In our chart code: gridStep is roughly chartMax / 5.
             // But we rendered specific grid lines. Let's look at the labels.
@@ -314,12 +278,7 @@ const BarGraphs = () => {
             // Better: ask "What is the interval between two grid lines?"
             const interval = Math.round(gridStep);
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">What is the interval (gap) between two consecutive grid lines on the vertical axis?</p>
-                </div>
-            `;
+            qText = `What is the interval (gap) between two consecutive grid lines on the vertical axis?`;
             correct = interval.toString();
             explanation = `Look at the axis labels: 0, ${Math.round(gridStep)}, ${Math.round(2 * gridStep)}...<br/>The difference is <strong>${interval}</strong>.`;
 
@@ -345,6 +304,7 @@ const BarGraphs = () => {
 
         const newQuestion = {
             text: qText,
+            chart: chartHtml,
             correctAnswer: correct,
             solution: explanation,
             type: 'mcq',
@@ -510,7 +470,7 @@ const BarGraphs = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -519,49 +479,56 @@ const BarGraphs = () => {
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -50, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: '1.2rem', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', width: '100%', overflowX: 'auto', marginBottom: '1.5rem' }}>
+                                <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-bold text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
-                                                                : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                            : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                        }
-                                                    `}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
+                                    <div className="flex flex-col md:flex-row w-full items-start justify-center gap-6 lg:gap-10 mt-4">
+                                        {/* Chart Side */}
+                                        <div className="chart-container flex-1 w-full max-w-xl flex justify-center">
+                                            <LatexContent block={true} html={currentQuestion.chart} />
                                         </div>
 
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
+                                        {/* Options Side */}
+                                        <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center">
+                                            <div className="options-grid-modern flex flex-col gap-4 w-full">
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                        className={`p-3 rounded-xl border-2 text-base font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full 
+                                                            ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                        `}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct mt-6 w-full text-center p-3 rounded-lg font-bold bg-green-100 text-green-700"
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>

@@ -92,6 +92,7 @@ const FigureItOut = () => {
         const type = types[index % types.length];
 
         let qText = "";
+        let chartHtml = "";
         let correct = "";
         let explanation = "";
         let options = [];
@@ -117,10 +118,10 @@ const FigureItOut = () => {
                 `;
             }).join("");
 
-            qText = `
+            chartHtml = `
                 <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
-                    <p>The <strong>Total</strong> number of items is <strong>${total}</strong>.</p>
-                    <table style="width: 100%; max-width: 400px; border-collapse: collapse; margin-bottom: 15px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                    <p style="margin-bottom: 10px;">The <strong>Total</strong> number of items is <strong>${total}</strong>.</p>
+                    <table style="width: 100%; max-width: 400px; border-collapse: collapse; margin-bottom: 15px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; font-size: 0.9em;">
                         <thead>
                              <tr style="background: #e0f2fe;">
                                 <th style="text-align: left; padding: 10px;">Item</th>
@@ -131,9 +132,9 @@ const FigureItOut = () => {
                             ${tableRows}
                         </tbody>
                     </table>
-                    <p>Find the missing value (<strong>?</strong>).</p>
                 </div>
             `;
+            qText = `<p>Find the missing value (<strong>?</strong>).</p>`;
             correct = missingVal.toString();
             explanation = `Total = ${total}.<br/>Sum of known items = ${visibleTotal}.<br/>Missing value = Total - Sum = ${total} - ${visibleTotal} = <strong>${missingVal}</strong>.`;
 
@@ -187,12 +188,14 @@ const FigureItOut = () => {
                 tallyHtml += `<span style="font-size:1.5em; letter-spacing: 2px;">${'|'.repeat(remaining)}</span>`;
             }
 
-            qText = `
-                <div style="text-align: center;">
-                    <p>A student counted votes and recorded them as tally marks:</p>
+            chartHtml = `
                     <div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #e5e7eb; display: inline-block; margin: 10px 0;">
                         ${tallyHtml}
                     </div>
+            `;
+            qText = `
+                <div style="text-align: center;">
+                    <p>A student counted votes and recorded them as tally marks.</p>
                     <p>The student wrote the frequency as <strong>${shownCount}</strong>.</p>
                     <p>Is this correct? If not, what is the correct frequency?</p>
                 </div>
@@ -252,6 +255,7 @@ const FigureItOut = () => {
 
         const newQuestion = {
             text: qText,
+            chart: chartHtml,
             correctAnswer: correct,
             solution: explanation,
             type: 'mcq',
@@ -426,49 +430,56 @@ const FigureItOut = () => {
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -50, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: '1.2rem', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', width: '100%', overflowX: 'auto', marginBottom: '1.5rem' }}>
+                                <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-bold text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
-                                                                : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                            : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                        }
-                                                    `}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
-
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
+                                    <div className={`flex flex-col ${currentQuestion.chart ? 'md:flex-row' : ''} w-full items-start justify-center gap-6 lg:gap-10 mt-4`}>
+                                        {currentQuestion.chart && (
+                                            <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                                <LatexContent block={true} html={currentQuestion.chart} />
+                                            </div>
                                         )}
+                                        <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center mx-auto">
+                                            <div className="options-grid-modern flex flex-col gap-3 w-full">
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                        className={`p-3 rounded-xl border-2 text-base font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full
+                                                        ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                    `}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '20px' }}
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>

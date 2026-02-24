@@ -159,8 +159,8 @@ const Pictographs = () => {
         const symbol = emojiMap[iconData.name] || "🟦";
 
         const displayKey = `
-            <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px; background: white; margin-bottom: 16px;">
-                 <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Key:</div>
+            <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 10px; background: white; margin-bottom: 12px; font-size: 0.9em;">
+                 <div style="font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Key:</div>
                  <div style="display: flex; align-items: center; gap: 8px; font-size: 1.1em;">
                     ${symbol} = ${scale} ${iconData.name}s
                  </div>
@@ -184,17 +184,19 @@ const Pictographs = () => {
         };
 
         const chartHtml = `
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                <thead>
-                    <tr style="background-color: #f3f4f6;">
-                        <th style="text-align: left; padding: 8px; border-radius: 8px 0 0 8px;">Day</th>
-                        <th style="text-align: left; padding: 8px; border-radius: 0 8px 8px 0;">Number of ${iconData.name}s</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${renderTableRows()}
-                </tbody>
-            </table>
+            <div style="width: 100%; max-width: 450px; font-size: 0.9em; margin: 0 auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                    <thead>
+                        <tr style="background-color: #f3f4f6;">
+                            <th style="text-align: left; padding: 8px;">Day</th>
+                            <th style="text-align: left; padding: 8px;">Number of ${iconData.name}s</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${renderTableRows()}
+                    </tbody>
+                </table>
+            </div>
         `;
 
         const tableAndKey = displayKey + chartHtml;
@@ -204,12 +206,7 @@ const Pictographs = () => {
             const iconCount = data[targetDay];
             const actualValue = iconCount * scale;
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>How many ${iconData.name}s were collected on <strong>${targetDay}</strong>?</p>
-                </div>
-            `;
+            qText = `How many ${iconData.name}s were collected on <strong>${targetDay}</strong>?`;
             correct = actualValue.toString();
             explanation = `On ${targetDay}, there are <strong>${iconCount}</strong> symbols.<br/>Each symbol = ${scale} units.<br/>Total = ${iconCount} × ${scale} = <strong>${actualValue}</strong>.`;
 
@@ -225,12 +222,7 @@ const Pictographs = () => {
             const winners = categories.filter(c => data[c] === maxVal);
             const winner = winners[0]; // Simplified for single correct
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>On which day were the <strong>most</strong> ${iconData.name}s collected?</p>
-                </div>
-            `;
+            qText = `On which day were the <strong>most</strong> ${iconData.name}s collected?`;
             correct = winner;
             explanation = `Look for the row with the most symbols.<br/><strong>${winner}</strong> has the most (${maxVal} symbols = ${maxVal * scale}).`;
             options = [winner, ...categories.filter(c => c !== winner)].slice(0, 4);
@@ -240,12 +232,7 @@ const Pictographs = () => {
             const winners = categories.filter(c => data[c] === minVal);
             const winner = winners[0];
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>On which day were the <strong>least</strong> ${iconData.name}s collected?</p>
-                </div>
-            `;
+            qText = `On which day were the <strong>least</strong> ${iconData.name}s collected?`;
             correct = winner;
             explanation = `Look for the row with the fewest symbols.<br/><strong>${winner}</strong> has the fewest (${minVal} symbols = ${minVal * scale}).`;
             options = [winner, ...categories.filter(c => c !== winner)].slice(0, 4);
@@ -254,12 +241,7 @@ const Pictographs = () => {
             const totalSymbols = Object.values(data).reduce((a, b) => a + b, 0);
             const totalValue = totalSymbols * scale;
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>What is the <strong>total</strong> number of ${iconData.name}s collected over all 5 days?</p>
-                </div>
-            `;
+            qText = `What is the <strong>total</strong> number of ${iconData.name}s collected over all 5 days?`;
             correct = totalValue.toString();
             explanation = `Count all the symbols in the chart: <strong>${totalSymbols}</strong>.<br/>Multiply by the key value (${scale}): ${totalSymbols} × ${scale} = <strong>${totalValue}</strong>.`;
             options = [
@@ -274,12 +256,7 @@ const Pictographs = () => {
             const testVal = randomInt(2, 6) * scale;
             const symbolsNeeded = testVal / scale;
 
-            qText = `
-                <div class='question-container'>
-                    <div style="margin-bottom:15px; font-weight:bold;">${displayKey}</div>
-                    <p>If a student collected <strong>${testVal}</strong> ${iconData.name}s, how many symbols would be drawn?</p>
-                </div>
-            `;
+            qText = `If a student collected <strong>${testVal}</strong> ${iconData.name}s, how many symbols would be drawn?`;
             correct = symbolsNeeded.toString();
             explanation = `Total items = ${testVal}. Key = ${scale}.<br/>Symbols needed = ${testVal} ÷ ${scale} = <strong>${symbolsNeeded}</strong>.`;
             options = [
@@ -304,6 +281,7 @@ const Pictographs = () => {
 
         const newQuestion = {
             text: qText,
+            chart: type === "reverse_logic" ? displayKey : tableAndKey,
             correctAnswer: correct,
             solution: explanation,
             type: 'mcq',
@@ -478,49 +456,57 @@ const Pictographs = () => {
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -50, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: '1.2rem', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', width: '100%', overflowX: 'auto', marginBottom: '1.5rem' }}>
+                                <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-bold text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
-                                                                : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                            : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                        }
-                                                    `}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
+                                    <div className="flex flex-col md:flex-row w-full items-start justify-center gap-6 lg:gap-10 mt-4">
+                                        {/* Chart Side */}
+                                        <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                            <LatexContent block={true} html={currentQuestion.chart} />
                                         </div>
 
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
+                                        {/* Options Side */}
+                                        <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center">
+                                            <div className="options-grid-modern flex flex-col gap-3 w-full">
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                        className={`p-3 rounded-xl border-2 text-base font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full
+                                                        ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                    `}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '20px' }}
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
