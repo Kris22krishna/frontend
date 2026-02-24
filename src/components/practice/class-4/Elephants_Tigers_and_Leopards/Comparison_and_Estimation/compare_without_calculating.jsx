@@ -348,31 +348,31 @@ const QuickCompare = () => {
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center items-center w-full relative">
-                        <div className="flex items-center justify-center gap-4 md:gap-8 w-full max-w-2xl mb-8">
-                            <div className="flex-1 flex justify-center items-center p-6 md:p-8 bg-blue-50 rounded-[2rem] border-4 border-blue-200 shadow-inner">
-                                <span className="text-3xl md:text-5xl font-bold text-[#31326F] whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-8 w-full max-w-2xl mb-8">
+                            <div className="flex-1 flex justify-center items-center p-3 sm:p-6 md:p-8 bg-blue-50 rounded-2xl md:rounded-[2rem] border-4 border-blue-200 shadow-inner overflow-hidden">
+                                <span className="text-xl sm:text-3xl md:text-5xl font-bold text-[#31326F] whitespace-nowrap">
                                     <LatexContent html={currentQuestion.leftExpr} />
                                 </span>
                             </div>
 
-                            <div className="flex-shrink-0 flex justify-center items-center w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-dashed border-gray-300 bg-gray-50 z-10 relative shadow-inner">
+                            <div className="flex-shrink-0 flex justify-center items-center w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full border-4 border-dashed border-gray-300 bg-gray-50 z-10 relative shadow-inner">
                                 {selectedOption ? (
-                                    <span className={`text-5xl md:text-7xl font-black ${isSubmitted ? (isCorrect ? 'text-green-500' : 'text-red-500') : 'text-[#4FB7B3]'}`}>
+                                    <span className={`text-4xl sm:text-5xl md:text-7xl font-black ${isSubmitted ? (isCorrect ? 'text-green-500' : 'text-red-500') : 'text-[#4FB7B3]'}`}>
                                         {selectedOption}
                                     </span>
                                 ) : (
-                                    <span className="text-4xl text-gray-300">?</span>
+                                    <span className="text-3xl sm:text-4xl text-gray-300">?</span>
                                 )}
                             </div>
 
-                            <div className="flex-1 flex justify-center items-center p-6 md:p-8 bg-blue-50 rounded-[2rem] border-4 border-blue-200 shadow-inner">
-                                <span className="text-3xl md:text-5xl font-bold text-[#31326F] whitespace-nowrap">
+                            <div className="flex-1 flex justify-center items-center p-3 sm:p-6 md:p-8 bg-blue-50 rounded-2xl md:rounded-[2rem] border-4 border-blue-200 shadow-inner overflow-hidden">
+                                <span className="text-xl sm:text-3xl md:text-5xl font-bold text-[#31326F] whitespace-nowrap">
                                     <LatexContent html={currentQuestion.rightExpr} />
                                 </span>
                             </div>
                         </div>
 
-                        <div className="w-full max-w-md grid grid-cols-3 gap-4">
+                        <div className="w-full max-w-md grid grid-cols-3 gap-2 sm:gap-4">
                             {shuffledOptions.map((opt, i) => {
                                 let btnStyle = 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 hover:border-gray-300';
                                 if (!isSubmitted && selectedOption === opt) {
@@ -388,7 +388,7 @@ const QuickCompare = () => {
                                         key={i}
                                         disabled={isSubmitted}
                                         onClick={() => handleAnswer(opt)}
-                                        className={`p-4 md:p-6 rounded-[2rem] text-4xl md:text-5xl font-bold transition-all transform active:scale-95 shadow-sm border-4 flex justify-center items-center ${btnStyle}`}
+                                        className={`p-2 sm:p-4 md:p-6 rounded-2xl md:rounded-[2rem] text-3xl sm:text-4xl md:text-5xl font-bold transition-all transform active:scale-95 shadow-sm border-4 flex justify-center items-center ${btnStyle}`}
                                     >
                                         {opt}
                                     </button>
