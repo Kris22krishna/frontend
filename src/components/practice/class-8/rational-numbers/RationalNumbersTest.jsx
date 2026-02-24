@@ -29,8 +29,7 @@ const BLUE_THEME_CSS = `
     }
     .exam-report-container {
         max-width: 900px;
-        margin: 2rem auto;
-        padding: 2rem;
+        margin: 0 auto;
         background: white;
         border-radius: 24px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
@@ -148,7 +147,7 @@ const BLUE_THEME_CSS = `
     }
 `;
 
-const SKILL_ID = 8011; // Dummy specific ID for Grade 8
+const SKILL_ID = 1225;
 const SKILL_NAME = "Rational Numbers - Chapter Test";
 
 const RationalNumbersTest = () => {
@@ -421,34 +420,34 @@ const RationalNumbersTest = () => {
         const wrong = questions.length - correct - skipped;
 
         return (
-            <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem', overflowY: 'auto' }}>
+            <div className="junior-practice-page grey-selection-theme p-4 md:p-8" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
                 <style>{BLUE_THEME_CSS}</style>
-                <div className="exam-report-container">
-                    <div className="results-hero-section flex flex-col items-center mb-8 mt-4">
-                        <img src={mascotImg} alt="Happy Mascot" className="w-40 h-40 mb-2 drop-shadow-lg object-contain" />
-                        <h1 className="text-5xl font-black text-[#31326F] mb-2 tracking-tight">Test Report</h1>
-                        <p className="text-[#64748B] text-xl font-medium mb-8">How you performed in <span className="font-bold">{SKILL_NAME}</span></p>
+                <div className="exam-report-container mx-auto p-4 md:p-8 my-4 md:my-8">
+                    <div className="results-hero-section flex flex-col items-center mb-6 md:mb-8 mt-4 text-center">
+                        <img src={mascotImg} alt="Happy Mascot" className="w-32 h-32 md:w-40 md:h-40 mb-2 drop-shadow-lg object-contain" />
+                        <h1 className="text-3xl md:text-5xl font-black text-[#31326F] mb-2 tracking-tight">Test Report</h1>
+                        <p className="text-[#64748B] text-base md:text-xl font-medium mb-6 md:mb-8 px-2">How you performed in <span className="font-bold block md:inline">{SKILL_NAME}</span></p>
 
-                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-5xl">
-                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
-                                <span className="block text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
-                                <span className="text-4xl font-black text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-5xl">
+                            <div className="stat-card bg-[#EFF6FF] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
+                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
+                                <span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
                             </div>
-                            <div className="stat-card bg-[#F0FDF4] p-6 rounded-3xl shadow-sm border-2 border-[#DCFCE7] text-center flex flex-col items-center justify-center">
-                                <span className="block text-xs font-black uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
-                                <span className="text-4xl font-black text-[#14532D]">{correct}</span>
+                            <div className="stat-card bg-[#F0FDF4] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DCFCE7] text-center flex flex-col items-center justify-center">
+                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
+                                <span className="text-2xl md:text-4xl font-black text-[#14532D]">{correct}</span>
                             </div>
-                            <div className="stat-card bg-[#FEF2F2] p-6 rounded-3xl shadow-sm border-2 border-[#FEE2E2] text-center flex flex-col items-center justify-center">
-                                <span className="block text-xs font-black uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
-                                <span className="text-4xl font-black text-[#7F1D1D]">{wrong}</span>
+                            <div className="stat-card bg-[#FEF2F2] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#FEE2E2] text-center flex flex-col items-center justify-center col-span-1">
+                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
+                                <span className="text-2xl md:text-4xl font-black text-[#7F1D1D]">{wrong}</span>
                             </div>
-                            <div className="stat-card bg-[#F8FAFC] p-6 rounded-3xl shadow-sm border-2 border-[#E2E8F0] text-center flex flex-col items-center justify-center">
-                                <span className="block text-xs font-black uppercase tracking-widest text-[#64748B] mb-1">Skipped</span>
-                                <span className="text-4xl font-black text-[#334155]">{skipped}</span>
+                            <div className="stat-card bg-[#F8FAFC] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#E2E8F0] text-center flex flex-col items-center justify-center col-span-1">
+                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#64748B] mb-1">Skipped</span>
+                                <span className="text-2xl md:text-4xl font-black text-[#334155]">{skipped}</span>
                             </div>
-                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
-                                <span className="block text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Total Time</span>
-                                <span className="text-4xl font-black text-[#1E3A8A]">{formatTime(timeElapsed)}</span>
+                            <div className="stat-card bg-[#EFF6FF] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center col-span-2 md:col-span-1">
+                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Total Time</span>
+                                <span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{formatTime(timeElapsed)}</span>
                             </div>
                         </div>
                     </div>

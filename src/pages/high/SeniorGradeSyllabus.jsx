@@ -645,7 +645,7 @@ const SeniorGradeSyllabus = () => {
                                             {subtopics[subtopic].map(skill => (
                                                 <div
                                                     key={skill.skill_id}
-                                                    className="chapter-assessment-card group"
+                                                    className="chapter-assessment-card group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-2"
                                                     onClick={() => {
                                                         if (skill.isLocal) {
                                                             navigate(skill.path);
@@ -658,24 +658,21 @@ const SeniorGradeSyllabus = () => {
                                                         color: 'white',
                                                         borderRadius: '16px',
                                                         padding: '1.5rem',
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        alignItems: 'center',
                                                         cursor: 'pointer',
                                                         boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)',
                                                         transition: 'all 0.3s ease',
                                                         border: '2px solid transparent'
                                                     }}
                                                 >
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                                        <div style={{ background: 'rgba(255, 255, 255, 0.2)', padding: '0.75rem', borderRadius: '12px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                                        <div style={{ background: 'rgba(255, 255, 255, 0.2)', padding: '0.75rem', borderRadius: '12px', flexShrink: 0 }}>
                                                             <Activity size={24} color="white" />
                                                         </div>
                                                         <div>
-                                                            <h4 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.25rem' }}>
+                                                            <h4 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.25rem', lineHeight: '1.2' }}>
                                                                 <LatexText text={capitalizeFirstLetter(skill.skill_name)} />
                                                             </h4>
-                                                            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', fontWeight: '500' }}>
+                                                            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', fontWeight: '500', lineHeight: '1.3' }}>
                                                                 Take the final test to master this chapter
                                                             </p>
                                                         </div>
@@ -689,8 +686,10 @@ const SeniorGradeSyllabus = () => {
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         gap: '0.5rem',
-                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                                                    }} className="group-hover:scale-105 transition-transform">
+                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                        marginTop: '0.5rem',
+                                                        alignSelf: 'flex-end'
+                                                    }} className="group-hover:scale-105 transition-transform sm:mt-0 sm:self-auto shrink-0">
                                                         Start Test <ChevronRight size={18} />
                                                     </div>
                                                 </div>
