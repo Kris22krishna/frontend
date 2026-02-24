@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X } from 'lucide-react';
+import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
@@ -13,13 +13,12 @@ import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
 import './Grade1Practice.css';
 
-
 const DynamicVisual = ({ type, data }) => {
     if (type === 'sorting' || type === 'counting') {
         const { items, colorMap } = data;
         return (
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="g1-data-visual">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 1fr))', gap: 'clamp(8px, 3vw, 15px)', justifyContent: 'center', background: 'rgba(255,255,255,0.4)', padding: 'clamp(10px, 5vw, 20px)', borderRadius: '30px', border: '2px dashed rgba(0,0,0,0.1)', width: '100%' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 1fr))', gap: 'clamp(8px, 3vw, 15px)', justifyContent: 'center', background: 'rgba(255,255,255,0.4)', padding: 'clamp(10px, 5vw, 20px)', borderRadius: '30px', border: '2px solid rgba(0,0,0,0.1)', width: '100%' }}>
                     {items.map((item, i) => (
                         <motion.div
                             key={i}
@@ -44,8 +43,8 @@ const DynamicVisual = ({ type, data }) => {
         return (
             <div className="g1-pictograph-container" style={{ background: 'white', padding: '20px', borderRadius: '30px', border: '3px solid #E0FBEF', width: '100%' }}>
                 {chartData.map((row, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', borderBottom: '1px dashed #E2E8F0', paddingBottom: '10px' }}>
-                        <div style={{ width: '80px', fontWeight: 800, color: '#4A5568', fontSize: '1.2rem' }}>{row.label}</div>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #E2E8F0', paddingBottom: '10px' }}>
+                        <div style={{ width: '80px', fontWeight: 400, color: '#4A5568', fontSize: '1.2rem' }}>{row.label}</div>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                             {Array.from({ length: row.count }).map((_, idx) => (
                                 <motion.span
@@ -105,15 +104,6 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
-const MOTIVATIONS = [
-    { text: "Spectacular!", sub: "You're doing amazing!" },
-    { text: "You're a Star!", sub: "Keep up the great work!" },
-    { text: "Brilliant!", sub: "That's exactly right!" },
-    { text: "Amazing!", sub: "You're a math wizard!" },
-    { text: "Fantastic!", sub: "You've got this!" },
-    { text: "Great Job!", sub: "Everything looks perfect!" }
-];
-
 const DataHandling = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -131,7 +121,7 @@ const DataHandling = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    const [motivation, setMotivation] = useState(null);
+    
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -145,8 +135,7 @@ const DataHandling = () => {
 
     const { topicName, skillName } = getTopicInfo();
     const isTest = skillId === '904';
-
-    const generateQuestions = (selectedSkill) => {
+const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
@@ -229,10 +218,12 @@ const DataHandling = () => {
 
     useEffect(() => {
         const init = async () => {
+            const userId = user?.user_id || user?.id;
+            if (!userId) return;
             const qs = generateQuestions(skillId);
             setSessionQuestions(qs);
             try {
-                const session = await api.createPracticeSession(user?.id, isTest ? 'data-handling-test' : 'data-handling-practice');
+                const session = await api.createPracticeSession(userId, parseInt(skillId) || 901);
                 setSessionId(session?.session_id);
             } catch (e) { console.error(e); }
         };
@@ -264,15 +255,44 @@ const DataHandling = () => {
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
+    };
+
+    
+    const handleSubmit = () => {
+        if (isAnswered || selectedOption === null) return;
+        const option = selectedOption;
+
         setIsAnswered(true);
         const isCorrect = option === sessionQuestions[qIndex].correct;
+        // --- AUTO-INJECTED LOGGING ---
+        try {
+            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            const qData = sessionQuestions[qIndex] || {};
+            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
+            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+            
+            if (uid && sessionId) {
+                api.recordAttempt({
+                    user_id: parseInt(uid, 10),
+                    session_id: sessionId,
+                    skill_id: parseInt(skId, 10) || 0,
+                    template_id: null,
+                    difficulty_level: 'Medium',
+                    question_text: String(qData.text || ''),
+                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
+                    student_answer: String(option),
+                    is_correct: isCorrect,
+                    solution_text: String(qData.explanation || qData.solution || ''),
+                    time_spent_seconds: currentTimer
+                }).catch(err => console.error("Auto-log failed:", err));
+            }
+        } catch(err) {
+            console.error("Auto-log error:", err);
+        }
+        // -----------------------------
+
         if (isCorrect) {
             setScore(s => s + 1);
-            if (!isTest) {
-                setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
-            }
-        } else {
-            setMotivation(null);
         }
 
         setAnswers(prev => ({
@@ -282,15 +302,22 @@ const DataHandling = () => {
                 isCorrect,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Great job!"
+                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
             }
         }));
-        if (!isTest) {
+        
+        // Auto advance if correct, or show modal if incorrect
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
+        } else {
+            // Give a tiny delay so they see the option highlight green
+            setTimeout(() => {
+                handleNext();
+            }, 800);
         }
     };
 
-    const handleNext = async () => {
+const handleNext = async () => {
         const total = isTest ? 15 : totalQuestions;
         if (qIndex < total - 1) {
             setQIndex(v => v + 1);
@@ -357,7 +384,7 @@ const DataHandling = () => {
                 <main className="results-content">
                     <div className="results-hero-section">
                         <img src={avatarImg} alt="Mascot" style={{ width: '120px', height: '120px', margin: '0 auto 20px' }} />
-                        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#31326F', fontFamily: 'Fredoka, cursive' }}>Adventure Complete! 🎉</h2>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: 400, color: '#31326F', fontFamily: 'Nunito, sans-serif' }}>Adventure Complete! 🎉</h2>
 
                         <div className="stars-container">
                             {[1, 2, 3].map(i => (
@@ -402,50 +429,50 @@ const DataHandling = () => {
                             <h3 className="breakdown-title">Quest Log 📜</h3>
                             <div className="quest-log-list">
                                 {sessionQuestions.map((q, idx) => {
-                                const ans = answers[idx];
-                                if (!ans) return null;
-                                return (
-                                    <motion.div
-                                        key={idx}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        className="quest-log-item"
-                                    >
-                                        <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
-                                            {idx + 1}
-                                        </div>
-                                        <div className="log-content">
-                                            <div className="log-question">
-                                                <LatexText text={ans.questionText} />
+                                    const ans = answers[idx];
+                                    if (!ans) return null;
+                                    return (
+                                        <motion.div
+                                            key={idx}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            className="quest-log-item"
+                                        >
+                                            <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
+                                                {idx + 1}
                                             </div>
-                                            <div className="log-answers">
-                                                <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
-                                                    <span className="log-label">Your Answer</span>
-                                                    <span className="log-value">{ans.selectedOption}</span>
+                                            <div className="log-content">
+                                                <div className="log-question">
+                                                    <LatexText text={ans.questionText} />
                                                 </div>
-                                                {!ans.isCorrect && (
-                                                    <div className="log-answer-box correct-box">
-                                                        <span className="log-label">Correct Answer</span>
-                                                        <span className="log-value">{ans.correctAnswer}</span>
+                                                <div className="log-answers">
+                                                    <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
+                                                        <span className="log-label">Your Answer</span>
+                                                        <span className="log-value">{ans.selectedOption}</span>
                                                     </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="log-answer-box correct-box">
+                                                            <span className="log-label">Correct Answer</span>
+                                                            <span className="log-value">{ans.correctAnswer}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="log-explanation">
+                                                    <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
+                                                    <LatexText text={ans.explanation} />
+                                                </div>
+                                            </div>
+                                            <div className="log-icon">
+                                                {ans.isCorrect ? (
+                                                    <Check size={32} color="#4FB7B3" strokeWidth={3} />
+                                                ) : (
+                                                    <X size={32} color="#FF6B6B" strokeWidth={3} />
                                                 )}
                                             </div>
-                                            <div className="log-explanation">
-                                                <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
-                                                <LatexText text={ans.explanation} />
-                                            </div>
-                                        </div>
-                                        <div className="log-icon">
-                                            {ans.isCorrect ? (
-                                                <Check size={32} color="#4FB7B3" strokeWidth={3} />
-                                            ) : (
-                                                <X size={32} color="#FF6B6B" strokeWidth={3} />
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         </div>
                     ) : (
@@ -469,10 +496,10 @@ const DataHandling = () => {
                                     </motion.div>
                                 ))}
                             </div>
-                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 400, color: '#4A5568', marginBottom: '10px' }}>
                                 {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
-                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
-                                 '🌱 Nice try! Practice makes perfect!'}
+                                    percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                        '🌱 Nice try! Practice makes perfect!'}
                             </p>
                         </div>
                     )}
@@ -503,16 +530,12 @@ const DataHandling = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
-                        <ChevronLeft size={20} /> Back
-                    </button>
-
-                    <div className="g1-timer-badge">
+<div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
                     </div>
 
-                    <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+                    <div style={{ fontWeight: 400, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
                         Question {qIndex + 1} of {totalLines}
                     </div>
 
@@ -527,7 +550,7 @@ const DataHandling = () => {
                                 color: '#4A5568',
                                 padding: '8px 15px',
                                 borderRadius: '15px',
-                                fontWeight: 700,
+                                fontWeight: 400,
                                 fontSize: '0.9rem',
                                 border: 'none',
                                 cursor: isAnswered ? 'not-allowed' : 'pointer',
@@ -545,15 +568,10 @@ const DataHandling = () => {
                     </div>
                 </div>
 
-                <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
+                <div className="g1-progress-container" style={{ margin: '0 0 10px 0' }}>
                     <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalLines) * 100}%` }}></div>
                 </div>
-
-                <div className="g1-topic-skill-header">
-                    <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
-                </div>
-
+                <div className="g1-topic-header-compact" style={{ textAlign: 'center', margin: '5px 0', fontSize: '0.8rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 400 }}>{topicName}</div>
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
                     <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
@@ -613,7 +631,7 @@ const DataHandling = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={handleNext}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );

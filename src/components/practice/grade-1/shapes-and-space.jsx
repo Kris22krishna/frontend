@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X } from 'lucide-react';
+import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
@@ -13,7 +13,6 @@ import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
 import './Grade1Practice.css';
 
-
 const DynamicVisual = ({ type, data }) => {
     if (type === 'shape') {
         const { shape, color } = data;
@@ -24,10 +23,10 @@ const DynamicVisual = ({ type, data }) => {
                 className="g1-visual-item"
             >
                 <svg width="100%" height="auto" style={{ maxWidth: '300px', maxHeight: '300px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} viewBox="0 0 100 100">
-                    {shape === 'circle' && <circle cx="50" cy="50" r="42" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'circle' && <circle cx="50" cy="50" r="42" fill={color} />}
+                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" fill={color} />}
+                    {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} />}
+                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" fill={color} />}
                 </svg>
             </motion.div>
         );
@@ -35,10 +34,10 @@ const DynamicVisual = ({ type, data }) => {
     if (type === 'position') {
         const { pos } = data;
         return (
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual">
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{border: "none"}}>
                 <svg width="100%" height="auto" style={{ maxWidth: '280px' }} viewBox="0 0 200 120">
                     <rect x="50" y="40" width="100" height="70" rx="10" fill="white" stroke="#CBD5E0" strokeWidth="4" />
-                    <text x="100" y="85" textAnchor="middle" fill="#A0AEC0" fontSize="14" fontWeight="600">BOX</text>
+                    <text x="100" y="85" textAnchor="middle" fill="#A0AEC0" fontSize="14" fontWeight="400">BOX</text>
                     {pos === 'top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
                     {pos === 'bottom' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="95" r="18" fill="url(#ballGradient)" />}
                     {pos === 'inside' && <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx="100" cy="75" r="18" fill="url(#ballGradient)" />}
@@ -64,29 +63,20 @@ const DynamicVisual = ({ type, data }) => {
                         initial={{ height: 0 }} animate={{ height: aSize }}
                         style={{ width: 'clamp(40px, 15vw, 80px)', background: 'linear-gradient(to top, #4ECDC4, #A5F3EB)', borderRadius: '15px 15px 0 0', border: '5px solid white', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
                     />
-                    <div style={{ marginTop: '15px', fontWeight: '900', color: '#4ECDC4', fontSize: '1.5rem' }}>A</div>
+                    <div style={{ marginTop: '15px', fontWeight: '400', color: '#4ECDC4', fontSize: '1.5rem' }}>A</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
                     <motion.div
                         initial={{ height: 0 }} animate={{ height: bSize }}
                         style={{ width: 'clamp(40px, 15vw, 80px)', background: 'linear-gradient(to top, #FF6B6B, #FFADAD)', borderRadius: '15px 15px 0 0', border: '5px solid white', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
                     />
-                    <div style={{ marginTop: '15px', fontWeight: '900', color: '#FF6B6B', fontSize: '1.5rem' }}>B</div>
+                    <div style={{ marginTop: '15px', fontWeight: '400', color: '#FF6B6B', fontSize: '1.5rem' }}>B</div>
                 </div>
             </div>
         );
     }
     return null;
 };
-
-const MOTIVATIONS = [
-    { text: "Spectacular!", sub: "You're doing amazing!" },
-    { text: "You're a Star!", sub: "Keep up the great work!" },
-    { text: "Brilliant!", sub: "That's exactly right!" },
-    { text: "Amazing!", sub: "You're a math wizard!" },
-    { text: "Fantastic!", sub: "You've got this!" },
-    { text: "Great Job!", sub: "Everything looks perfect!" }
-];
 
 const ShapesAndSpace = () => {
     const { user } = useAuth();
@@ -105,7 +95,7 @@ const ShapesAndSpace = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    const [motivation, setMotivation] = useState(null);
+    
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -118,8 +108,7 @@ const ShapesAndSpace = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
-
-    const generateQuestions = (selectedSkill) => {
+const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
@@ -183,10 +172,10 @@ const ShapesAndSpace = () => {
             } else if (typeToGen === 'size') {
                 // Comparing sizes
                 const sizeQuestions = [
-                    { q: 'Which bar is HIGHER? 🏢', a: 'A', aSize: 180, bSize: 80, exp: 'Bar A is taller than Bar B.' },
-                    { q: 'Which one is SMALLER? 🐜', a: 'B', aSize: 160, bSize: 40, exp: 'Bar B has a smaller height than Bar A.' },
-                    { q: 'Which bar is SHORTER? 📏', a: 'B', aSize: 140, bSize: 70, exp: 'Bar B is not as long/tall as Bar A.' },
-                    { q: 'Pick the LONGER one! 🚀', a: 'A', aSize: 170, bSize: 90, exp: 'Bar A extends further than Bar B.' }
+                    { q: 'Which bar is HIGHER?', a: 'A', aSize: 180, bSize: 80, exp: 'Bar A is taller than Bar B.' },
+                    { q: 'Which one is SMALLER?', a: 'B', aSize: 160, bSize: 40, exp: 'Bar B has a smaller height than Bar A.' },
+                    { q: 'Which bar is SHORTER?', a: 'B', aSize: 140, bSize: 70, exp: 'Bar B is not as long/tall as Bar A.' },
+                    { q: 'Pick the LONGER one!', a: 'A', aSize: 170, bSize: 90, exp: 'Bar A extends further than Bar B.' }
                 ];
                 let item;
                 if (isTest) {
@@ -213,10 +202,12 @@ const ShapesAndSpace = () => {
 
     useEffect(() => {
         const init = async () => {
+            const userId = user?.user_id || user?.id;
+            if (!userId) return;
             const qs = generateQuestions(skillId);
             setSessionQuestions(qs);
             try {
-                const session = await api.createPracticeSession(user?.id, 'shapes-and-space');
+                const session = await api.createPracticeSession(userId, parseInt(skillId) || 101);
                 setSessionId(session?.session_id);
             } catch (e) { console.error(e); }
         };
@@ -248,13 +239,44 @@ const ShapesAndSpace = () => {
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
+    };
+
+    
+    const handleSubmit = () => {
+        if (isAnswered || selectedOption === null) return;
+        const option = selectedOption;
+
         setIsAnswered(true);
         const isCorrect = option === sessionQuestions[qIndex].correct;
+        // --- AUTO-INJECTED LOGGING ---
+        try {
+            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            const qData = sessionQuestions[qIndex] || {};
+            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
+            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+            
+            if (uid && sessionId) {
+                api.recordAttempt({
+                    user_id: parseInt(uid, 10),
+                    session_id: sessionId,
+                    skill_id: parseInt(skId, 10) || 0,
+                    template_id: null,
+                    difficulty_level: 'Medium',
+                    question_text: String(qData.text || ''),
+                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
+                    student_answer: String(option),
+                    is_correct: isCorrect,
+                    solution_text: String(qData.explanation || qData.solution || ''),
+                    time_spent_seconds: currentTimer
+                }).catch(err => console.error("Auto-log failed:", err));
+            }
+        } catch(err) {
+            console.error("Auto-log error:", err);
+        }
+        // -----------------------------
+
         if (isCorrect) {
             setScore(s => s + 1);
-            setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
-        } else {
-            setMotivation(null);
         }
 
         setAnswers(prev => ({
@@ -264,15 +286,22 @@ const ShapesAndSpace = () => {
                 isCorrect,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation
+                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
             }
         }));
-        if (!isTest) {
+        
+        // Auto advance if correct, or show modal if incorrect
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
+        } else {
+            // Give a tiny delay so they see the option highlight green
+            setTimeout(() => {
+                handleNext();
+            }, 800);
         }
     };
 
-    const handleNext = async () => {
+const handleNext = async () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
@@ -482,11 +511,7 @@ const ShapesAndSpace = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
-                        <ChevronLeft size={20} /> Back
-                    </button>
-
-                    <div className="g1-timer-badge">
+<div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
                     </div>
@@ -506,20 +531,15 @@ const ShapesAndSpace = () => {
                     </div>
                 </div>
 
-                <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
+                <div className="g1-progress-container" style={{ margin: '0 0 10px 0' }}>
                     <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalQuestions) * 100}%` }}></div>
                 </div>
-
-                <div className="g1-topic-skill-header">
-                    <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
-                </div>
-
+                <div className="g1-topic-header-compact" style={{ textAlign: 'center', margin: '5px 0', fontSize: '0.8rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 400 }}>{topicName}</div>
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
                     <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
                     <div className="g1-content-split">
-                        <div className="g1-visual-area">
+                        <div className="g1-visual-area" style={{border: "none", background: "transparent"}}>
                             <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
                         </div>
 
@@ -542,20 +562,30 @@ const ShapesAndSpace = () => {
                         </div>
                     </div>
 
-                    {isAnswered && (
-                        <div className="flex flex-col items-center gap-4 mt-8">
-                            {motivation && !isTest && (
-                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
-                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
-                                    <span className="g1-motivation-text">{motivation.text}</span>
-                                    <span className="g1-motivation-sub">{motivation.sub}</span>
-                                </motion.div>
+                    {/* --- INJECTED FOOTER V2 --- */}
+                    <div className="g1-navigation-footer">
+                        <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>
+                            <ChevronLeft size={24} /> Prev
+                        </button>
+
+                        <div>
+                            {isAnswered && !isTest && !answers[qIndex]?.isCorrect && (
+                                <button className="g1-nav-btn steps-btn" onClick={() => setShowExplanationModal(true)}>
+                                    <Eye size={24} /> Steps
+                                </button>
                             )}
-                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                {qIndex === totalQuestions - 1 ? (isTest ? 'Submit Test 📝' : 'Finish Quest 🏆') : 'Next Challenge 🚀'} <ArrowRight />
-                            </button>
+
+                            {!isAnswered ? (
+                                <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
+                                    Next <ChevronRight size={24} />
+                                </button>
+                            ) : (
+                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                    {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
+                                </button>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </motion.div>
             </div>
 
@@ -565,7 +595,7 @@ const ShapesAndSpace = () => {
                 correctAnswer={typeof currentQ.correct === 'string' ? currentQ.correct.charAt(0).toUpperCase() + currentQ.correct.slice(1) : currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={handleNext}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );

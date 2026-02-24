@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X } from 'lucide-react';
+import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
@@ -13,7 +13,6 @@ import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
 import './Grade1Practice.css';
 
-
 const DynamicVisual = ({ type, data, isAnswered }) => {
     const { num, color } = data;
     const tens = Math.floor(num / 10);
@@ -24,7 +23,7 @@ const DynamicVisual = ({ type, data, isAnswered }) => {
         return (
             <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 40px)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item">
-                    <div style={{ fontSize: '2rem', fontWeight: 900, color: color1, marginBottom: '8px' }}>{n1}</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 400, color: color1, marginBottom: '8px' }}>{n1}</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 15px)', gap: '4px' }}>
                         {Array.from({ length: Math.floor(n1 / 10) }).map((_, i) => (
                             <div key={i} style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px', background: color1 + '20', padding: '2px', borderRadius: '4px' }}>
@@ -35,9 +34,9 @@ const DynamicVisual = ({ type, data, isAnswered }) => {
                         ))}
                     </div>
                 </motion.div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#666' }}>VS</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 400, color: '#666' }}>VS</div>
                 <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item">
-                    <div style={{ fontSize: '2rem', fontWeight: 900, color: color2, marginBottom: '8px' }}>{n2}</div>
+                    <div style={{ fontSize: '2rem', fontWeight: 400, color: color2, marginBottom: '8px' }}>{n2}</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 15px)', gap: '4px' }}>
                         {Array.from({ length: Math.floor(n2 / 10) }).map((_, i) => (
                             <div key={i} style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px', background: color2 + '20', padding: '2px', borderRadius: '4px' }}>
@@ -83,22 +82,13 @@ const DynamicVisual = ({ type, data, isAnswered }) => {
                 )}
             </div>
             {isAnswered && (
-                <div style={{ marginTop: '15px', fontSize: '1.2rem', fontWeight: 800, color: '#4A5568' }}>
+                <div style={{ marginTop: '15px', fontSize: '1.2rem', fontWeight: 400, color: '#4A5568' }}>
                     {tens} Tens and {ones} Ones
                 </div>
             )}
         </motion.div>
     );
 };
-
-const MOTIVATIONS = [
-    { text: "Spectacular!", sub: "You're doing amazing!" },
-    { text: "You're a Star!", sub: "Keep up the great work!" },
-    { text: "Brilliant!", sub: "That's exactly right!" },
-    { text: "Amazing!", sub: "You're a math wizard!" },
-    { text: "Fantastic!", sub: "You've got this!" },
-    { text: "Great Job!", sub: "Everything looks perfect!" }
-];
 
 const Numbers21to50 = () => {
     const { user } = useAuth();
@@ -118,7 +108,7 @@ const Numbers21to50 = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    const [motivation, setMotivation] = useState(null);
+    
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -131,8 +121,7 @@ const Numbers21to50 = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
-
-    const generateQuestions = (selectedSkill) => {
+const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
@@ -208,10 +197,12 @@ const Numbers21to50 = () => {
 
     useEffect(() => {
         const init = async () => {
+            const userId = user?.user_id || user?.id;
+            if (!userId) return;
             const qs = generateQuestions(skillId);
             setSessionQuestions(qs);
             try {
-                const session = await api.createPracticeSession(user?.id, 'numbers-21-50');
+                const session = await api.createPracticeSession(userId, parseInt(skillId) || 801);
                 setSessionId(session?.session_id);
             } catch (e) { console.error(e); }
         };
@@ -235,15 +226,44 @@ const Numbers21to50 = () => {
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
+    };
+
+    
+    const handleSubmit = () => {
+        if (isAnswered || selectedOption === null) return;
+        const option = selectedOption;
+
         setIsAnswered(true);
         const isCorrect = option === sessionQuestions[qIndex].correct;
+        // --- AUTO-INJECTED LOGGING ---
+        try {
+            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            const qData = sessionQuestions[qIndex] || {};
+            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
+            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+            
+            if (uid && sessionId) {
+                api.recordAttempt({
+                    user_id: parseInt(uid, 10),
+                    session_id: sessionId,
+                    skill_id: parseInt(skId, 10) || 0,
+                    template_id: null,
+                    difficulty_level: 'Medium',
+                    question_text: String(qData.text || ''),
+                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
+                    student_answer: String(option),
+                    is_correct: isCorrect,
+                    solution_text: String(qData.explanation || qData.solution || ''),
+                    time_spent_seconds: currentTimer
+                }).catch(err => console.error("Auto-log failed:", err));
+            }
+        } catch(err) {
+            console.error("Auto-log error:", err);
+        }
+        // -----------------------------
+
         if (isCorrect) {
             setScore(s => s + 1);
-            if (!isTest) {
-                setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
-            }
-        } else {
-            setMotivation(null);
         }
 
         setAnswers(prev => ({
@@ -253,15 +273,22 @@ const Numbers21to50 = () => {
                 isCorrect,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation
+                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
             }
         }));
-        if (!isTest) {
+        
+        // Auto advance if correct, or show modal if incorrect
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
+        } else {
+            // Give a tiny delay so they see the option highlight green
+            setTimeout(() => {
+                handleNext();
+            }, 800);
         }
     };
 
-    const handleNext = async () => {
+const handleNext = async () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
@@ -334,7 +361,7 @@ const Numbers21to50 = () => {
                 <main className="results-content">
                     <div className="results-hero-section">
                         <img src={avatarImg} alt="Mascot" style={{ width: '120px', height: '120px', margin: '0 auto 20px' }} />
-                        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#31326F', fontFamily: 'Fredoka, cursive' }}>Adventure Complete! 🎉</h2>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: 400, color: '#31326F', fontFamily: 'Nunito, sans-serif' }}>Adventure Complete! 🎉</h2>
 
                         <div className="stars-container">
                             {[1, 2, 3].map(i => (
@@ -379,50 +406,50 @@ const Numbers21to50 = () => {
                             <h3 className="breakdown-title">Quest Log 📜</h3>
                             <div className="quest-log-list">
                                 {sessionQuestions.map((q, idx) => {
-                                const ans = answers[idx];
-                                if (!ans) return null;
-                                return (
-                                    <motion.div
-                                        key={idx}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        className="quest-log-item"
-                                    >
-                                        <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
-                                            {idx + 1}
-                                        </div>
-                                        <div className="log-content">
-                                            <div className="log-question">
-                                                <LatexText text={ans.questionText} />
+                                    const ans = answers[idx];
+                                    if (!ans) return null;
+                                    return (
+                                        <motion.div
+                                            key={idx}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            className="quest-log-item"
+                                        >
+                                            <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
+                                                {idx + 1}
                                             </div>
-                                            <div className="log-answers">
-                                                <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
-                                                    <span className="log-label">Your Answer</span>
-                                                    <span className="log-value">{ans.selectedOption}</span>
+                                            <div className="log-content">
+                                                <div className="log-question">
+                                                    <LatexText text={ans.questionText} />
                                                 </div>
-                                                {!ans.isCorrect && (
-                                                    <div className="log-answer-box correct-box">
-                                                        <span className="log-label">Correct Answer</span>
-                                                        <span className="log-value">{ans.correctAnswer}</span>
+                                                <div className="log-answers">
+                                                    <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
+                                                        <span className="log-label">Your Answer</span>
+                                                        <span className="log-value">{ans.selectedOption}</span>
                                                     </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="log-answer-box correct-box">
+                                                            <span className="log-label">Correct Answer</span>
+                                                            <span className="log-value">{ans.correctAnswer}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="log-explanation">
+                                                    <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
+                                                    <LatexText text={ans.explanation} />
+                                                </div>
+                                            </div>
+                                            <div className="log-icon">
+                                                {ans.isCorrect ? (
+                                                    <Check size={32} color="#4FB7B3" strokeWidth={3} />
+                                                ) : (
+                                                    <X size={32} color="#FF6B6B" strokeWidth={3} />
                                                 )}
                                             </div>
-                                            <div className="log-explanation">
-                                                <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
-                                                <LatexText text={ans.explanation} />
-                                            </div>
-                                        </div>
-                                        <div className="log-icon">
-                                            {ans.isCorrect ? (
-                                                <Check size={32} color="#4FB7B3" strokeWidth={3} />
-                                            ) : (
-                                                <X size={32} color="#FF6B6B" strokeWidth={3} />
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         </div>
                     ) : (
@@ -446,10 +473,10 @@ const Numbers21to50 = () => {
                                     </motion.div>
                                 ))}
                             </div>
-                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 400, color: '#4A5568', marginBottom: '10px' }}>
                                 {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
-                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
-                                 '🌱 Nice try! Practice makes perfect!'}
+                                    percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                        '🌱 Nice try! Practice makes perfect!'}
                             </p>
                         </div>
                     )}
@@ -479,17 +506,18 @@ const Numbers21to50 = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate('/junior/grade/1')}>
-                        <ChevronLeft size={20} /> Back
-                    </button>
-
-                    <div className="g1-timer-badge">
+<div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
                     </div>
 
-                    <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {totalQuestions}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1, minWidth: 0 }}>
+                        <span style={{ fontWeight: 400, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', whiteSpace: 'nowrap' }}>
+                            Q {qIndex + 1}/{totalQuestions}
+                        </span>
+                        <span style={{ fontWeight: 400, color: '#2D3436', fontSize: '1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <LatexText text={skillName} />
+                        </span>
                     </div>
 
                     {isTest && !isAnswered && (
@@ -502,12 +530,7 @@ const Numbers21to50 = () => {
                         <StickerExit onClick={() => navigate('/junior/grade/1')} />
                     </div>
                 </div>
-
-                <div className="g1-topic-skill-header">
-                    <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name">{skillName}</h1>
-                </div>
-
+                <div className="g1-topic-header-compact" style={{ textAlign: 'center', margin: '5px 0', fontSize: '0.8rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 400 }}>{topicName}</div>
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
                     <h2 className="g1-question-text">{currentQ.text}</h2>
                     <div className="g1-content-split">
@@ -534,20 +557,31 @@ const Numbers21to50 = () => {
                         </div>
                     </div>
 
-                    {isAnswered && (
-                        <div className="flex flex-col items-center gap-4 mt-8">
-                            {motivation && !isTest && (
-                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
-                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
-                                    <span className="g1-motivation-text">{motivation.text}</span>
-                                    <span className="g1-motivation-sub">{motivation.sub}</span>
-                                </motion.div>
+                    
+                    {/* --- INJECTED FOOTER V2 --- */}
+                    <div className="g1-navigation-footer">
+                        <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>
+                            <ChevronLeft size={24} /> Prev
+                        </button>
+
+                        <div>
+                            {isAnswered && !isTest && !answers[qIndex]?.isCorrect && (
+                                <button className="g1-nav-btn steps-btn" onClick={() => setShowExplanationModal(true)}>
+                                    <Eye size={24} /> Steps
+                                </button>
                             )}
-                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                {qIndex === totalQuestions - 1 ? (isTest ? 'Submit Test 📝' : 'Finish Quest 🏆') : 'Next Challenge 🚀'} <ArrowRight />
-                            </button>
+
+                            {!isAnswered ? (
+                                <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
+                                    Next <ChevronRight size={24} />
+                                </button>
+                            ) : (
+                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                    {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
+                                </button>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </motion.div>
             </div>
 
@@ -557,7 +591,7 @@ const Numbers21to50 = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={handleNext}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );
