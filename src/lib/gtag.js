@@ -1,7 +1,6 @@
 // lib/gtag.js - GA4 Event Tracking for Learners Platform
-// Measurement ID: G-DPVP197Z95
 
-export const GA_MEASUREMENT_ID = 'G-DPVP197Z95'
+export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID
 
 // Base event helper — safe for React/client-side rendering
 const event = (eventName, params = {}) => {
