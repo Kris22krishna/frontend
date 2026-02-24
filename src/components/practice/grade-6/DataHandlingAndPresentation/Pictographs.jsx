@@ -128,7 +128,7 @@ const Pictographs = () => {
         // Render Scale Key
         const keyHtml = `
             <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #fef3c7; border-radius: 8px; margin-bottom: 15px; width: fit-content;">
-                <span style="font-weight: bold; color: #d97706;">Key:</span>
+                <span style="font-weight: normal; color: #d97706;">Key:</span>
                 <span style="display: flex; align-items: center;">
                     1 <span class="w-6 h-6 inline-block mx-1" style="color: ${iconData.color};">📍</span> = ${scale} items
                 </span>
@@ -160,7 +160,7 @@ const Pictographs = () => {
 
         const displayKey = `
             <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 10px; background: white; margin-bottom: 12px; font-size: 0.9em;">
-                 <div style="font-weight: bold; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Key:</div>
+                 <div style="font-weight: normal; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Key:</div>
                  <div style="display: flex; align-items: center; gap: 8px; font-size: 1.1em;">
                     ${symbol} = ${scale} ${iconData.name}s
                  </div>
@@ -206,9 +206,9 @@ const Pictographs = () => {
             const iconCount = data[targetDay];
             const actualValue = iconCount * scale;
 
-            qText = `How many ${iconData.name}s were collected on <strong>${targetDay}</strong>?`;
+            qText = `How many ${iconData.name}s were collected on ${targetDay}?`;
             correct = actualValue.toString();
-            explanation = `On ${targetDay}, there are <strong>${iconCount}</strong> symbols.<br/>Each symbol = ${scale} units.<br/>Total = ${iconCount} × ${scale} = <strong>${actualValue}</strong>.`;
+            explanation = `On ${targetDay}, there are ${iconCount} symbols.<br/>Each symbol = ${scale} units.<br/>Total = ${iconCount} × ${scale} = ${actualValue}.`;
 
             options = [
                 actualValue.toString(),
@@ -222,9 +222,9 @@ const Pictographs = () => {
             const winners = categories.filter(c => data[c] === maxVal);
             const winner = winners[0]; // Simplified for single correct
 
-            qText = `On which day were the <strong>most</strong> ${iconData.name}s collected?`;
+            qText = `On which day were the most ${iconData.name}s collected?`;
             correct = winner;
-            explanation = `Look for the row with the most symbols.<br/><strong>${winner}</strong> has the most (${maxVal} symbols = ${maxVal * scale}).`;
+            explanation = `Look for the row with the most symbols.<br/>${winner} has the most (${maxVal} symbols = ${maxVal * scale}).`;
             options = [winner, ...categories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "compare_least") {
@@ -232,18 +232,18 @@ const Pictographs = () => {
             const winners = categories.filter(c => data[c] === minVal);
             const winner = winners[0];
 
-            qText = `On which day were the <strong>least</strong> ${iconData.name}s collected?`;
+            qText = `On which day were the least ${iconData.name}s collected?`;
             correct = winner;
-            explanation = `Look for the row with the fewest symbols.<br/><strong>${winner}</strong> has the fewest (${minVal} symbols = ${minVal * scale}).`;
+            explanation = `Look for the row with the fewest symbols.<br/>${winner} has the fewest (${minVal} symbols = ${minVal * scale}).`;
             options = [winner, ...categories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "calculate_total") {
             const totalSymbols = Object.values(data).reduce((a, b) => a + b, 0);
             const totalValue = totalSymbols * scale;
 
-            qText = `What is the <strong>total</strong> number of ${iconData.name}s collected over all 5 days?`;
+            qText = `What is the total number of ${iconData.name}s collected over all 5 days?`;
             correct = totalValue.toString();
-            explanation = `Count all the symbols in the chart: <strong>${totalSymbols}</strong>.<br/>Multiply by the key value (${scale}): ${totalSymbols} × ${scale} = <strong>${totalValue}</strong>.`;
+            explanation = `Count all the symbols in the chart: ${totalSymbols}.<br/>Multiply by the key value (${scale}): ${totalSymbols} × ${scale} = ${totalValue}.`;
             options = [
                 totalValue.toString(),
                 (totalValue + scale).toString(),
@@ -256,9 +256,9 @@ const Pictographs = () => {
             const testVal = randomInt(2, 6) * scale;
             const symbolsNeeded = testVal / scale;
 
-            qText = `If a student collected <strong>${testVal}</strong> ${iconData.name}s, how many symbols would be drawn?`;
+            qText = `If a student collected ${testVal} ${iconData.name}s, how many symbols would be drawn?`;
             correct = symbolsNeeded.toString();
-            explanation = `Total items = ${testVal}. Key = ${scale}.<br/>Symbols needed = ${testVal} ÷ ${scale} = <strong>${symbolsNeeded}</strong>.`;
+            explanation = `Total items = ${testVal}. Key = ${scale}.<br/>Symbols needed = ${testVal} ÷ ${scale} = ${symbolsNeeded}.`;
             options = [
                 symbolsNeeded.toString(),
                 (symbolsNeeded + 1).toString(),
@@ -432,15 +432,15 @@ const Pictographs = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Data Handling: Pictographs</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling: Pictographs</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -460,7 +460,7 @@ const Pictographs = () => {
                             >
                                 <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
                                     <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
-                                        <h2 className="text-xl sm:text-2xl font-bold text-[#31326F] text-center w-full break-words">
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
@@ -478,7 +478,7 @@ const Pictographs = () => {
                                                         key={idx}
                                                         onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                         disabled={isSubmitted}
-                                                        className={`p-3 rounded-xl border-2 text-base font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full
+                                                        className={`p-3 rounded-xl border-2 text-base font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full
                                                         ${isSubmitted
                                                                 ? option === currentQuestion.correctAnswer
                                                                     ? 'bg-green-100 border-green-500 text-green-700'
@@ -528,7 +528,7 @@ const Pictographs = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 navigate(-1);

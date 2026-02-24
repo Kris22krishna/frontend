@@ -111,7 +111,7 @@ const DrawingABarGraph = () => {
 
             qText = `
                 <div style="text-align: center;">
-                    <p>You need to draw a bar graph for data where the values range from <strong>0 to ${maxVal}</strong>.</p>
+                    <p>You need to draw a bar graph for data where the values range from 0 to ${maxVal}.</p>
                     <p>Which scale would be most appropriate for the vertical axis so the graph fits on a standard page (approx 10-15 divisions)?</p>
                 </div>
             `;
@@ -129,12 +129,12 @@ const DrawingABarGraph = () => {
 
             qText = `
                 <div style="text-align: center;">
-                    <p>The scale of a bar graph is <strong>1 unit length = ${scale} students</strong>.</p>
-                    <p>If the number of students in Class 6 is <strong>${value}</strong>, what will be the height of the bar?</p>
+                    <p>The scale of a bar graph is 1 unit length = ${scale} students.</p>
+                    <p>If the number of students in Class 6 is ${value}, what will be the height of the bar?</p>
                 </div>
             `;
             correct = `${value / scale} units`;
-            explanation = `Scale is ${scale}. Value is ${value}.<br/>Height = Value ÷ Scale = ${value} ÷ ${scale} = <strong>${value / scale} units</strong>.`;
+            explanation = `Scale is ${scale}. Value is ${value}.<br/>Height = Value ÷ Scale = ${value} ÷ ${scale} = ${value / scale} units.`;
 
             const ansNum = value / scale;
             options = [
@@ -169,11 +169,11 @@ const DrawingABarGraph = () => {
             // Let's make it a question: "Which of these is a rule for drawing a correct bar graph?"
             qText = `
                 <div style="text-align: center;">
-                    <p>Which of the following is a <strong>correct rule</strong> for drawing a bar graph?</p>
+                    <p>Which of the following is a correct rule for drawing a bar graph?</p>
                 </div>
             `;
             correct = "All bars must have equal width.";
-            explanation = "In a bar graph, all bars must have the <strong>same width</strong>. The spacing between them must also be equal.";
+            explanation = "In a bar graph, all bars must have the same width. The spacing between them must also be equal.";
             options = [
                 "All bars must have equal width.",
                 "Bars can be different widths based on value.",
@@ -190,13 +190,13 @@ const DrawingABarGraph = () => {
 
             qText = `
                 <div style="text-align: center;">
-                    <p>Data: <strong>${val}</strong> items.</p>
-                    <p>Scale: <strong>1 unit = ${scale} items</strong>.</p>
+                    <p>Data: ${val} items.</p>
+                    <p>Scale: 1 unit = ${scale} items.</p>
                     <p>How many units tall should the bar be?</p>
                 </div>
             `;
             correct = `${correctHeight}`;
-            explanation = `Value ÷ Scale = ${val} ÷ ${scale} = <strong>${correctHeight}</strong>.`;
+            explanation = `Value ÷ Scale = ${val} ÷ ${scale} = ${correctHeight}.`;
             options = [
                 correctHeight.toString(),
                 (correctHeight + 1).toString(),
@@ -371,15 +371,15 @@ const DrawingABarGraph = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Data Handling: Drawing Graphs</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling: Drawing Graphs</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -403,14 +403,14 @@ const DrawingABarGraph = () => {
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+                                    <div className="interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto max-w-3xl mt-6">
+                                        <div className="options-grid-modern w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
                                                     onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                     disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
+                                                    className={`p-4 rounded-xl border-2 text-lg font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[60px] w-full
                                                         ${isSubmitted
                                                             ? option === currentQuestion.correctAnswer
                                                                 ? 'bg-green-100 border-green-500 text-green-700'
@@ -459,7 +459,7 @@ const DrawingABarGraph = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 navigate(-1);

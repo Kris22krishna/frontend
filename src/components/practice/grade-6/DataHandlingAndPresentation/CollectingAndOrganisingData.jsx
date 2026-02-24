@@ -99,7 +99,7 @@ const CollectingAndOrganisingData = () => {
         let options = [];
         let uniqueId = "";
 
-        const dataDefinition = "<strong>Data</strong> is a collection of numbers gathered to give some information.";
+        const dataDefinition = "Data is a collection of numbers gathered to give some information.";
 
         let attempts = 0;
         do {
@@ -112,7 +112,7 @@ const CollectingAndOrganisingData = () => {
                     qText = `
                         <div class='question-container'>
                             <p>${dataDefinition}</p>
-                            <p>Which of the following is an example of <strong>Data</strong>?</p>
+                            <p>Which of the following is an example of Data?</p>
                         </div>
                     `;
                     const correctExamples = [
@@ -129,17 +129,18 @@ const CollectingAndOrganisingData = () => {
                     ];
 
                     correct = correctExamples[randomInt(0, correctExamples.length - 1)];
+                    const shuffledIncorrect = [...incorrectExamples].sort(() => Math.random() - 0.5);
                     options = [
                         correct,
-                        incorrectExamples[randomInt(0, incorrectExamples.length - 1)],
-                        incorrectExamples[randomInt(0, incorrectExamples.length - 1)],
-                        incorrectExamples[randomInt(0, incorrectExamples.length - 1)]
+                        shuffledIncorrect[0],
+                        shuffledIncorrect[1],
+                        shuffledIncorrect[2]
                     ];
-                    explanation = `<strong>${correct}</strong> contains numerical information collected for a purpose, so it is Data.`;
+                    explanation = `${correct} contains numerical information collected for a purpose, so it is Data.`;
                 } else {
                     qText = `
                         <div class='question-container'>
-                            <p>Which of the following is <strong>NOT</strong> an example of numerical data?</p>
+                            <p>Which of the following is NOT an example of numerical data?</p>
                         </div>
                     `;
                     const dataExamples = [
@@ -156,13 +157,14 @@ const CollectingAndOrganisingData = () => {
                     ];
 
                     correct = nonDataExamples[randomInt(0, nonDataExamples.length - 1)];
+                    const shuffledData = [...dataExamples].sort(() => Math.random() - 0.5);
                     options = [
                         correct,
-                        dataExamples[randomInt(0, dataExamples.length - 1)],
-                        dataExamples[randomInt(0, dataExamples.length - 1)],
-                        dataExamples[randomInt(0, dataExamples.length - 1)]
+                        shuffledData[0],
+                        shuffledData[1],
+                        shuffledData[2]
                     ];
-                    explanation = `<strong>${correct}</strong> is a qualitative feeling or abstract concept, not numerical information collected for analysis.`;
+                    explanation = `${correct} is a qualitative feeling or abstract concept, not numerical information collected for analysis.`;
                 }
                 uniqueId = `identify_${Date.now()}_${index}`;
 
@@ -180,7 +182,7 @@ const CollectingAndOrganisingData = () => {
                     "Ask only one student",
                     "Count the number of chairs in the class"
                 ];
-                explanation = `To get accurate data about preferences, we must <strong>survey</strong> each student and record their answer systematically (e.g., using tally marks).`;
+                explanation = `To get accurate data about preferences, we must survey each student and record their answer systematically (e.g., using tally marks).`;
                 uniqueId = `method_${Date.now()}_${index}`;
 
             } else if (type === "tally_marks") {
@@ -224,14 +226,14 @@ const CollectingAndOrganisingData = () => {
                 qText = `
                     <div class='question-container'>
                         <p>Look at this list of fruits collected from a group:</p>
-                        <div style="background:#f0f9ff; padding:15px; border-radius:10px; margin:10px 0; font-weight:bold; color:#0369a1; line-height: 1.6;">
+                        <div style="background:#f0f9ff; padding:15px; border-radius:10px; margin:10px 0; font-weight: normal; color:#0369a1; line-height: 1.6;">
                             ${list.join(", ")}
                         </div>
-                        <p>What is the <strong>frequency</strong> (count) of <strong>${targetItem}</strong>?</p>
+                        <p>What is the frequency (count) of ${targetItem}?</p>
                     </div>
                 `;
                 correct = freqs[targetItem].toString();
-                explanation = `Count how many times '${targetItem}' appears in the list.<br/>It appears <strong>${freqs[targetItem]}</strong> times.`;
+                explanation = `Count how many times '${targetItem}' appears in the list.<br/>It appears ${freqs[targetItem]} times.`;
                 uniqueId = `tally_${listSize}_${index}`;
 
                 options = [
@@ -278,11 +280,11 @@ const CollectingAndOrganisingData = () => {
                         <div class='question-container'>
                             <p>The table below shows favourite subjects of students:</p>
                             ${tableHtml}
-                            <p>Which subject is liked by the <strong>most</strong> students?</p>
+                            <p>Which subject is liked by the most students?</p>
                         </div>
                     `;
                     correct = correctSubj;
-                    explanation = `Look for the highest number in the 'No. of Students' column.<br/><strong>${maxScore}</strong> is the highest, which corresponds to <strong>${correctSubj}</strong>.`;
+                    explanation = `Look for the highest number in the 'No. of Students' column.<br/>${maxScore} is the highest, which corresponds to ${correctSubj}.`;
                     options = [correct, ...subjects.filter(s => s !== correct)].slice(0, 4);
 
                 } else if (qType === 1) { // Total students
@@ -295,7 +297,7 @@ const CollectingAndOrganisingData = () => {
                         </div>
                     `;
                     correct = total.toString();
-                    explanation = `Add all the values in the 'No. of Students' column: ${scores.join(" + ")} = <strong>${total}</strong>.`;
+                    explanation = `Add all the values in the 'No. of Students' column: ${scores.join(" + ")} = ${total}.`;
                     options = [
                         total.toString(),
                         (total - 2).toString(),
@@ -315,7 +317,7 @@ const CollectingAndOrganisingData = () => {
                         </div>
                     `;
                     correct = diff.toString();
-                    explanation = `Most liked: ${max}. Least liked: ${min}.<br/>Difference: ${max} - ${min} = <strong>${diff}</strong>.`;
+                    explanation = `Most liked: ${max}. Least liked: ${min}.<br/>Difference: ${max} - ${min} = ${diff}.`;
                     options = [
                         diff.toString(),
                         (diff + 1).toString(),
@@ -339,14 +341,14 @@ const CollectingAndOrganisingData = () => {
 
                 qText = `
                     <div class='question-container'>
-                        <p>Organise the following data in <strong>ascending order</strong>:</p>
-                        <div style="font-size:1.2em; font-weight:bold; color:#555; margin:10px 0;">
+                        <p>Organise the following data in ascending order:</p>
+                        <div style="font-size:1.2em; font-weight: normal; color:#555; margin:10px 0;">
                             ${originalStr}
                         </div>
                     </div>
                 `;
                 correct = correctStr;
-                explanation = `Ascending order means arranging numbers from <strong>smallest to largest</strong>.<br/>Correct order: <strong>${correctStr}</strong>.`;
+                explanation = `Ascending order means arranging numbers from smallest to largest.<br/>Correct order: ${correctStr}.`;
 
                 // Generate distractors
                 const d1 = [...numbers].sort((a, b) => b - a).join(", "); // Descending
@@ -532,15 +534,15 @@ const CollectingAndOrganisingData = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Data Handling</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -564,14 +566,14 @@ const CollectingAndOrganisingData = () => {
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+                                    <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${(currentQuestion.text && (currentQuestion.text.includes('<table') || currentQuestion.text.includes('background:#f0f9ff'))) ? 'max-w-sm' : 'max-w-3xl mt-6'}`}>
+                                        <div className={`options-grid-modern w-full ${(currentQuestion.text && (currentQuestion.text.includes('<table') || currentQuestion.text.includes('background:#f0f9ff'))) ? 'flex flex-col gap-3' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
                                                     onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                     disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
+                                                    className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full ${(currentQuestion.text && (currentQuestion.text.includes('<table') || currentQuestion.text.includes('background:#f0f9ff'))) ? 'p-3 text-base min-h-[48px]' : 'p-4 text-lg min-h-[60px]'}
                                                         ${isSubmitted
                                                             ? option === currentQuestion.correctAnswer
                                                                 ? 'bg-green-100 border-green-500 text-green-700'
@@ -620,7 +622,7 @@ const CollectingAndOrganisingData = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 navigate(-1);

@@ -158,7 +158,7 @@ const BarGraphs = () => {
                 <div style="display: flex; flex-direction: column; align-items: center; height: 100%; flex: 1; margin: 0 4px;">
                     <div style="width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative;">
                         <div style="width: 80%; height: ${heightPercent}%; background-color: ${barColor}; border-radius: 4px 4px 0 0; transition: height 0.5s ease; position: relative; min-height: 2px;">
-                             ${difficulty === 'easy' ? `<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.8em; font-weight: bold; color: #374151;">${val}</span>` : ''} 
+                             ${difficulty === 'easy' ? `<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.8em; font-weight: normal; color: #374151;">${val}</span>` : ''} 
                         </div>
                     </div>
                     <div style="margin-top: 8px; font-weight: 600; font-size: 0.9em; transform: rotate(-45deg); transform-origin: top left; white-space: nowrap; text-align: right; width: 100%; padding-right: 5px;">${cat}</div>
@@ -189,16 +189,16 @@ const BarGraphs = () => {
                         ${barsHtml}
                     </div>
                  </div>
-                 <div style="text-align: center; margin-top: 20px; font-weight: bold;">Categories</div>
+                 <div style="text-align: center; margin-top: 20px; font-weight: normal;">Categories</div>
             </div>
         `;
 
         if (type === "read_value") {
             const targetCat = selectedCategories[randomInt(0, selectedCategories.length - 1)];
             const answerVal = data[targetCat];
-            qText = `What is the value for <strong>${targetCat}</strong>?`;
+            qText = `What is the value for ${targetCat}?`;
             correct = answerVal.toString();
-            explanation = `Look at the bar for <strong>${targetCat}</strong>. Its height reaches the line for <strong>${answerVal}</strong>.`;
+            explanation = `Look at the bar for ${targetCat}. Its height reaches the line for ${answerVal}.`;
 
             options = [
                 answerVal.toString(),
@@ -212,9 +212,9 @@ const BarGraphs = () => {
             const winners = selectedCategories.filter(c => data[c] === maxVal);
             const winner = winners[0];
 
-            qText = `Which category has the <strong>highest</strong> value?`;
+            qText = `Which category has the highest value?`;
             correct = winner;
-            explanation = `Look for the tallest bar. <strong>${winner}</strong> is the tallest with ${maxVal}.`;
+            explanation = `Look for the tallest bar. ${winner} is the tallest with ${maxVal}.`;
             options = [winner, ...selectedCategories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "compare_least") {
@@ -222,9 +222,9 @@ const BarGraphs = () => {
             const winners = selectedCategories.filter(c => data[c] === min);
             const winner = winners[0];
 
-            qText = `Which category has the <strong>lowest</strong> value?`;
+            qText = `Which category has the lowest value?`;
             correct = winner;
-            explanation = `Look for the shortest bar. <strong>${winner}</strong> is the shortest with ${min}.`;
+            explanation = `Look for the shortest bar. ${winner} is the shortest with ${min}.`;
             options = [winner, ...selectedCategories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "calculate_total") {
@@ -233,16 +233,16 @@ const BarGraphs = () => {
 
             if (mode === "all") {
                 const total = Object.values(data).reduce((a, b) => a + b, 0);
-                qText = `What is the <strong>total</strong> value of all categories combined?`;
+                qText = `What is the total value of all categories combined?`;
                 correct = total.toString();
-                explanation = `Add the values of all bars: ${Object.values(data).join(" + ")} = <strong>${total}</strong>.`;
+                explanation = `Add the values of all bars: ${Object.values(data).join(" + ")} = ${total}.`;
                 options = [total.toString(), (total + scale).toString(), (total - scale).toString(), (total + 2 * scale).toString()];
             } else {
                 const subset = selectedCategories.sort(() => 0.5 - Math.random()).slice(0, 2);
                 const subTotal = data[subset[0]] + data[subset[1]];
-                qText = `What is the total of <strong>${subset[0]}</strong> and <strong>${subset[1]}</strong>?`;
+                qText = `What is the total of ${subset[0]} and ${subset[1]}?`;
                 correct = subTotal.toString();
-                explanation = `${subset[0]} = ${data[subset[0]]}, ${subset[1]} = ${data[subset[1]]}.<br/>Total = ${data[subset[0]]} + ${data[subset[1]]} = <strong>${subTotal}</strong>.`;
+                explanation = `${subset[0]} = ${data[subset[0]]}, ${subset[1]} = ${data[subset[1]]}.<br/>Total = ${data[subset[0]]} + ${data[subset[1]]} = ${subTotal}.`;
                 options = [
                     subTotal.toString(),
                     (subTotal + scale).toString(),
@@ -258,9 +258,9 @@ const BarGraphs = () => {
             const val2 = data[subset[1]];
             const diff = Math.abs(val1 - val2);
 
-            qText = `How much <strong>more</strong> (or less) is <strong>${subset[0]}</strong> compared to <strong>${subset[1]}</strong>?`;
+            qText = `How much more (or less) is ${subset[0]} compared to ${subset[1]}?`;
             correct = diff.toString();
-            explanation = `${subset[0]} = ${val1}, ${subset[1]} = ${val2}.<br/>Difference = |${val1} - ${val2}| = <strong>${diff}</strong>.`;
+            explanation = `${subset[0]} = ${val1}, ${subset[1]} = ${val2}.<br/>Difference = |${val1} - ${val2}| = ${diff}.`;
             options = [
                 diff.toString(),
                 (val1 + val2).toString(), // Sum Trap
@@ -280,7 +280,7 @@ const BarGraphs = () => {
 
             qText = `What is the interval (gap) between two consecutive grid lines on the vertical axis?`;
             correct = interval.toString();
-            explanation = `Look at the axis labels: 0, ${Math.round(gridStep)}, ${Math.round(2 * gridStep)}...<br/>The difference is <strong>${interval}</strong>.`;
+            explanation = `Look at the axis labels: 0, ${Math.round(gridStep)}, ${Math.round(2 * gridStep)}...<br/>The difference is ${interval}.`;
 
             options = [
                 interval.toString(),
@@ -455,15 +455,15 @@ const BarGraphs = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Data Handling: Bar Graphs</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling: Bar Graphs</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-x l shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-x l shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -483,7 +483,7 @@ const BarGraphs = () => {
                             >
                                 <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
                                     <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
-                                        <h2 className="text-xl sm:text-2xl font-bold text-[#31326F] text-center w-full break-words">
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
@@ -495,13 +495,13 @@ const BarGraphs = () => {
 
                                         {/* Options Side */}
                                         <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center">
-                                            <div className="options-grid-modern flex flex-col gap-4 w-full">
+                                            <div className="options-grid-modern flex flex-col gap-3 w-full">
                                                 {shuffledOptions.map((option, idx) => (
                                                     <button
                                                         key={idx}
                                                         onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                         disabled={isSubmitted}
-                                                        className={`p-3 rounded-xl border-2 text-base font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full 
+                                                        className={`p-3 rounded-xl border-2 text-base font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full 
                                                             ${isSubmitted
                                                                 ? option === currentQuestion.correctAnswer
                                                                     ? 'bg-green-100 border-green-500 text-green-700'
@@ -523,7 +523,7 @@ const BarGraphs = () => {
                                                 <motion.div
                                                     initial={{ scale: 0.5, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
-                                                    className="feedback-mini correct mt-6 w-full text-center p-3 rounded-lg font-bold bg-green-100 text-green-700"
+                                                    className="feedback-mini correct mt-6 w-full text-center p-3 rounded-lg font-normal bg-green-100 text-green-700"
                                                 >
                                                     {feedbackMessage}
                                                 </motion.div>
@@ -550,7 +550,7 @@ const BarGraphs = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 navigate(-1);

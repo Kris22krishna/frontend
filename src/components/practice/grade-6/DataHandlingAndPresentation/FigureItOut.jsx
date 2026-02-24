@@ -109,18 +109,18 @@ const FigureItOut = () => {
             const visibleTotal = total - missingVal;
 
             let tableRows = items.map((item, i) => {
-                const val = i === missingIdx ? "<strong style='color:#e11d48; font-size:1.2em;'>?</strong>" : data[i];
+                const val = i === missingIdx ? "<strong style='color:#e11d48; font-size:1.2em;'>?" : data[i];
                 return `
                     <tr style="background: ${i % 2 === 0 ? '#f9fafb' : 'white'};">
                         <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">${item}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight:bold;">${val}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; font-weight: normal;">${val}</td>
                     </tr>
                 `;
             }).join("");
 
             chartHtml = `
                 <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
-                    <p style="margin-bottom: 10px;">The <strong>Total</strong> number of items is <strong>${total}</strong>.</p>
+                    <p style="margin-bottom: 10px;">The Total number of items is ${total}.</p>
                     <table style="width: 100%; max-width: 400px; border-collapse: collapse; margin-bottom: 15px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; font-size: 0.9em;">
                         <thead>
                              <tr style="background: #e0f2fe;">
@@ -134,9 +134,9 @@ const FigureItOut = () => {
                     </table>
                 </div>
             `;
-            qText = `<p>Find the missing value (<strong>?</strong>).</p>`;
+            qText = `<p>Find the missing value (?).</p>`;
             correct = missingVal.toString();
-            explanation = `Total = ${total}.<br/>Sum of known items = ${visibleTotal}.<br/>Missing value = Total - Sum = ${total} - ${visibleTotal} = <strong>${missingVal}</strong>.`;
+            explanation = `Total = ${total}.<br/>Sum of known items = ${visibleTotal}.<br/>Missing value = Total - Sum = ${total} - ${visibleTotal} = ${missingVal}.`;
 
             options = [
                 missingVal.toString(),
@@ -155,16 +155,16 @@ const FigureItOut = () => {
             const item2 = "Red Cars";
 
             qText = `
-                <div style="text-align: center;">
-                    <div style="margin-bottom: 20px; font-size: 3rem;">🚗</div>
-                    <p>In a parking lot, the number of <strong>${item2}</strong> is <strong>${factor} times</strong> the number of <strong>${item1}</strong>.</p>
-                    <p>The <strong>total</strong> number of cars is <strong>${total}</strong>.</p>
-                    <p>How many <strong>${item2}</strong> are there?</p>
+                <div style="text-align: left;">
+                    <div style="margin-bottom: 20px; font-size: 3rem;"></div>
+                    In a parking lot, the number of ${item2} is ${factor} times the number of ${item1}.
+                    The total number of cars is ${total}.
+                How many ${item2} are there?
                 </div>
             `;
 
             correct = larger.toString();
-            explanation = `Let ${item1} = x.<br/>Then ${item2} = ${factor}x.<br/>Total = x + ${factor}x = ${(factor + 1)}x = ${total}.<br/>So, x = ${base}.<br/>${item2} = ${factor} × ${base} = <strong>${larger}</strong>.`;
+            explanation = `Let ${item1} = x.<br/>Then ${item2} = ${factor}x.<br/>Total = x + ${factor}x = ${(factor + 1)}x = ${total}.<br/>So, x = ${base}.<br/>${item2} = ${factor} × ${base} = ${larger}.`;
 
             options = [
                 larger.toString(),
@@ -196,12 +196,12 @@ const FigureItOut = () => {
             qText = `
                 <div style="text-align: center;">
                     <p>A student counted votes and recorded them as tally marks.</p>
-                    <p>The student wrote the frequency as <strong>${shownCount}</strong>.</p>
+                    <p>The student wrote the frequency as ${shownCount}.</p>
                     <p>Is this correct? If not, what is the correct frequency?</p>
                 </div>
             `;
             correct = `No, it should be ${trueCount}`;
-            explanation = `Count the tally marks carefully.<br/>Groups of 5 + Remaining.<br/>The correct count is <strong>${trueCount}</strong>, not ${shownCount}.`;
+            explanation = `Count the tally marks carefully.<br/>Groups of 5 + Remaining.<br/>The correct count is ${trueCount}, not ${shownCount}.`;
 
             options = [
                 `No, it should be ${trueCount}`,
@@ -221,12 +221,12 @@ const FigureItOut = () => {
             qText = `
                 <div style="text-align: center;">
                     <div style="font-size: 2.5rem; margin-bottom: 10px;">📏</div>
-                    <p>A bar representing the value <strong>${val}</strong> is <strong>${oldHeight} units</strong> tall when the scale is <strong>1 unit = ${oldScale}</strong>.</p>
-                    <p>If we change the scale to <strong>1 unit = ${newScale}</strong>, what will be the new height of the bar?</p>
+                    <p>A bar representing the value ${val} is ${oldHeight} units tall when the scale is 1 unit = ${oldScale}.</p>
+                    <p>If we change the scale to 1 unit = ${newScale}, what will be the new height of the bar?</p>
                 </div>
             `;
             correct = `${newHeight} units`;
-            explanation = `Value = ${val}. New Scale = ${newScale}.<br/>New Height = ${val} ÷ ${newScale} = <strong>${newHeight} units</strong>.<br/>(The bar gets shorter because each unit represents more).`;
+            explanation = `Value = ${val}. New Scale = ${newScale}.<br/>New Height = ${val} ÷ ${newScale} = ${newHeight} units.<br/>(The bar gets shorter because each unit represents more).`;
 
             options = [
                 `${newHeight} units`,
@@ -406,15 +406,15 @@ const FigureItOut = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Data Handling: Figure It Out</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling: Figure It Out</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-x l shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-x l shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -434,7 +434,7 @@ const FigureItOut = () => {
                             >
                                 <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
                                     <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
-                                        <h2 className="text-xl sm:text-2xl font-bold text-[#31326F] text-center w-full break-words">
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
@@ -444,14 +444,14 @@ const FigureItOut = () => {
                                                 <LatexContent block={true} html={currentQuestion.chart} />
                                             </div>
                                         )}
-                                        <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center mx-auto">
-                                            <div className="options-grid-modern flex flex-col gap-3 w-full">
+                                        <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${currentQuestion.chart ? 'max-w-sm' : 'max-w-3xl mt-6'}`}>
+                                            <div className={`options-grid-modern w-full ${currentQuestion.chart ? 'flex flex-col gap-3' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
                                                 {shuffledOptions.map((option, idx) => (
                                                     <button
                                                         key={idx}
                                                         onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                         disabled={isSubmitted}
-                                                        className={`p-3 rounded-xl border-2 text-base font-bold transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full
+                                                        className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full ${currentQuestion.chart ? 'p-3 text-base min-h-[48px]' : 'p-4 text-lg min-h-[60px]'}
                                                         ${isSubmitted
                                                                 ? option === currentQuestion.correctAnswer
                                                                     ? 'bg-green-100 border-green-500 text-green-700'
@@ -501,7 +501,7 @@ const FigureItOut = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 navigate(-1);
