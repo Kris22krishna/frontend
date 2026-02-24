@@ -133,7 +133,11 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-fact-form-xpla-xplb', skill_name: 'Factors of the form (x+a)(x+b)', topic: 'Factorisation' },
                         { skill_id: 'local-8-fact-div-mono-mono', skill_name: 'Division of Monomial by Monomial', topic: 'Factorisation' },
                         { skill_id: 'local-8-fact-div-poly-mono', skill_name: 'Division of Polynomial by Monomial', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' }
+                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-exp-test', skill_name: 'Exponents and Powers Chapter Assessment', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-rn-test', skill_name: 'Rational Numbers Chapter Assessment', topic: 'Rational Numbers' },
+                        { skill_id: 'local-8-mens-test', skill_name: 'Mensuration Chapter Assessment', topic: 'Mensuration' },
+                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -207,10 +211,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Understanding Exponents',
                 isLocal: true,
                 path: '/senior/grade/8/exponents-powers/comparing-numbers'
+            },
+            {
+                skill_id: 'local-8-exp-test',
+                skill_name: 'Exponents and Powers Chapter Assessment',
+                topic: 'Exponents and Powers',
+                subtopic: 'Exponents and Powers Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/exponents-and-powers/chapter-test'
             }
         ];
 
-        // Hardcode all Grade 8 skills for Rational Numbers (4 skills)
+        // Hardcode all Grade 8 skills for Rational Numbers (4 skills + 1 test)
         skillsByTopic['Rational Numbers'] = [
             {
                 skill_id: 'local-8-rn-commutativity',
@@ -243,10 +255,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Properties of Rational Numbers',
                 isLocal: true,
                 path: '/senior/grade/8/rational-numbers/distributivity'
+            },
+            {
+                skill_id: 'local-8-rn-test',
+                skill_name: 'Rational Numbers Chapter Assessment',
+                topic: 'Rational Numbers',
+                subtopic: 'Rational Numbers Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/rational-numbers/chapter-test'
             }
         ];
 
-        // Hardcode all Grade 8 skills for Mensuration (8 skills)
+        // Hardcode all Grade 8 skills for Mensuration (8 skills + 1 test)
         skillsByTopic['Mensuration'] = [
             {
                 skill_id: 'local-8-mens-polygon',
@@ -311,10 +331,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Volume',
                 isLocal: true,
                 path: '/senior/grade/8/mensuration/volume-and-capacity'
+            },
+            {
+                skill_id: 'local-8-mens-test',
+                skill_name: 'Mensuration Chapter Assessment',
+                topic: 'Mensuration',
+                subtopic: 'Mensuration Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/mensuration/chapter-test'
             }
         ];
 
-        // Hardcode all Grade 8 skills for Factorisation (7 skills)
+        // Hardcode all Grade 8 skills for Factorisation (7 skills + 1 test)
         skillsByTopic['Factorisation'] = [
             {
                 skill_id: 'local-8-fact-common',
@@ -371,6 +399,14 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Division of Algebraic Expressions',
                 isLocal: true,
                 path: '/senior/grade/8/factorisation/division-polynomial-by-polynomial'
+            },
+            {
+                skill_id: 'local-8-fact-test',
+                skill_name: 'Factorisation Chapter Assessment',
+                topic: 'Factorisation',
+                subtopic: 'Factorisation Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/factorisation/chapter-test'
             }
         ];
     }
@@ -609,7 +645,7 @@ const SeniorGradeSyllabus = () => {
                                             {subtopics[subtopic].map(skill => (
                                                 <div
                                                     key={skill.skill_id}
-                                                    className="chapter-assessment-card group"
+                                                    className="chapter-assessment-card group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-2"
                                                     onClick={() => {
                                                         if (skill.isLocal) {
                                                             navigate(skill.path);
@@ -622,24 +658,21 @@ const SeniorGradeSyllabus = () => {
                                                         color: 'white',
                                                         borderRadius: '16px',
                                                         padding: '1.5rem',
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        alignItems: 'center',
                                                         cursor: 'pointer',
                                                         boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.4)',
                                                         transition: 'all 0.3s ease',
                                                         border: '2px solid transparent'
                                                     }}
                                                 >
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                                        <div style={{ background: 'rgba(255, 255, 255, 0.2)', padding: '0.75rem', borderRadius: '12px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+                                                        <div style={{ background: 'rgba(255, 255, 255, 0.2)', padding: '0.75rem', borderRadius: '12px', flexShrink: 0 }}>
                                                             <Activity size={24} color="white" />
                                                         </div>
                                                         <div>
-                                                            <h4 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.25rem' }}>
+                                                            <h4 style={{ fontSize: '1.25rem', fontWeight: '800', marginBottom: '0.25rem', lineHeight: '1.2' }}>
                                                                 <LatexText text={capitalizeFirstLetter(skill.skill_name)} />
                                                             </h4>
-                                                            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', fontWeight: '500' }}>
+                                                            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem', fontWeight: '500', lineHeight: '1.3' }}>
                                                                 Take the final test to master this chapter
                                                             </p>
                                                         </div>
@@ -653,8 +686,10 @@ const SeniorGradeSyllabus = () => {
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         gap: '0.5rem',
-                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                                                    }} className="group-hover:scale-105 transition-transform">
+                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                        marginTop: '0.5rem',
+                                                        alignSelf: 'flex-end'
+                                                    }} className="group-hover:scale-105 transition-transform sm:mt-0 sm:self-auto shrink-0">
                                                         Start Test <ChevronRight size={18} />
                                                     </div>
                                                 </div>

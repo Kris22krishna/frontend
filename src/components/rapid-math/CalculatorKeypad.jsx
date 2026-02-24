@@ -27,13 +27,13 @@ export function CalculatorKeypad({ value, onChange, disabled }) {
         }
     };
 
-    const buttonClass = "h-14 sm:h-16 text-xl sm:text-2xl font-semibold rounded-2xl transition-all active:scale-95 shadow-sm hover:shadow-md";
+    const buttonClass = "h-12 sm:h-14 lg:h-16 text-xl sm:text-2xl font-semibold rounded-2xl transition-all active:scale-95 shadow-sm hover:shadow-md";
     const numberClass = `${buttonClass} bg-slate-50 hover:bg-white text-slate-900 border-2 border-slate-200 hover:border-blue-400`;
     const actionClass = `${buttonClass} bg-blue-50 hover:bg-blue-100 text-blue-600 border-2 border-blue-100 hover:border-blue-300`;
     const operatorClass = `${buttonClass} bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border-2 border-indigo-100 hover:border-indigo-300`;
 
     return (
-        <div className="w-full grid grid-cols-4 gap-3 p-2">
+        <div className="w-full grid grid-cols-4 gap-2 sm:gap-3 p-0 sm:p-2">
             {/* Row 1 */}
             <Button onClick={handleClear} disabled={disabled} className={`${actionClass} col-span-1 border-red-100 bg-red-50 text-red-500 hover:bg-red-100 hover:border-red-300`}>
                 <Eraser size={24} />

@@ -11,7 +11,7 @@ const RapidMathPage = () => {
                 description="Test your mathematical speed and accuracy in the Rapid Math challenge."
             />
             <Navbar />
-            <main className="flex-1 flex flex-col">
+            <main className="flex-1 flex flex-col pt-[80px]">
                 <SpeedTestGame />
             </main>
         </div>
