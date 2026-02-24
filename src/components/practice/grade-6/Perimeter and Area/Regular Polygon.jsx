@@ -10,7 +10,14 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const RegularPolygonPractice = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
     const [numSides, setNumSides] = useState(5); // Default Pentagon
     const [sideLength, setSideLength] = useState(0);
     const [userAnswer, setUserAnswer] = useState('');
@@ -18,12 +25,12 @@ const RegularPolygonPractice = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [history, setHistory] = useState([]);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, []));
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
-    const answers = useRef({});
+    const answers = useRef(getSessionData(`${storageKey}_answers`, {}));
 
     const TOTAL_QUESTIONS = 10;
     const SKILL_ID = 6003; // Assign a unique skill ID for this topic
@@ -147,7 +154,7 @@ const RegularPolygonPractice = () => {
             if (sessionId.current) {
                 await api.finishSession(sessionId.current);
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -317,7 +324,7 @@ const RegularPolygonPractice = () => {
                             className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             Exit Practice
@@ -372,7 +379,7 @@ const RegularPolygonPractice = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />

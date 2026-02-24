@@ -8,7 +8,14 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const TrianglePractice = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
     const [sides, setSides] = useState([0, 0, 0]);
     const [base, setBase] = useState(0);
     const [height, setHeight] = useState(0);
@@ -18,12 +25,12 @@ const TrianglePractice = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [history, setHistory] = useState([]);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, []));
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
-    const answers = useRef({});
+    const answers = useRef(getSessionData(`${storageKey}_answers`, {}));
 
     const TOTAL_QUESTIONS = 10;
     const SKILL_ID = 6003;
@@ -32,6 +39,25 @@ const TrianglePractice = () => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    useEffect(() => {
+        if (qIndex !== undefined && history) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers.current || {}));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            // sessionId is a ref here
+            if (sessionId.current) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId.current));
+        }
+    }, [qIndex, history, timeElapsed]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_history`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
     };
 
     useEffect(() => {
@@ -157,7 +183,7 @@ const TrianglePractice = () => {
             if (sessionId.current) {
                 await api.finishSession(sessionId.current);
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 

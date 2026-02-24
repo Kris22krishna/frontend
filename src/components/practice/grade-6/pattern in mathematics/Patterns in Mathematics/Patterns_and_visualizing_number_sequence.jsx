@@ -12,10 +12,17 @@ const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const PatternsPractice = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
 
     // Persistence State
-    const [answers, setAnswers] = useState({});
+    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
 
     // Current Question State
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -24,9 +31,9 @@ const PatternsPractice = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState("");
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const TOTAL_QUESTIONS = 10;
     const SKILL_ID = 6100; // Assigning a temporary ID for Patterns
@@ -46,6 +53,22 @@ const PatternsPractice = () => {
     };
 
     // Initialize Session
+    useEffect(() => {
+        if (qIndex !== undefined && answers) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            if (sessionId.current) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId.current));
+        }
+    }, [qIndex, answers, timeElapsed]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
+
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId) {
@@ -265,7 +288,7 @@ const PatternsPractice = () => {
             setQIndex(prev => prev + 1);
         } else {
             if (sessionId.current) api.finishSession(sessionId.current);
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -348,7 +371,7 @@ const PatternsPractice = () => {
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-20">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <button
-                        onClick={() => navigate(-1)}
+                        onClick={() => { clearProgress(); navigate(-1); }}
                         className="px-6 py-2 rounded-full bg-red-50 text-red-500 font-bold hover:bg-red-100 transition-colors text-sm"
                     >
                         Exit Practice

@@ -23,19 +23,26 @@ const CORRECT_MESSAGES = [
 const RelationsAmongNumberSequences = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
-    const [history, setHistory] = useState({});
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
@@ -43,7 +50,7 @@ const RelationsAmongNumberSequences = () => {
     const SKILL_NAME = "Pattern in Mathematics - Relations Among Sequences";
 
     const TOTAL_QUESTIONS = 10;
-    const [answers, setAnswers] = useState({});
+    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
 
     useEffect(() => {
         // Create Session
@@ -351,7 +358,7 @@ const RelationsAmongNumberSequences = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -456,7 +463,7 @@ const RelationsAmongNumberSequences = () => {
                             className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             Exit Practice
@@ -502,7 +509,7 @@ const RelationsAmongNumberSequences = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />

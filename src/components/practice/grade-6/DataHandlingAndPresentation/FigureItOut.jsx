@@ -22,19 +22,26 @@ const CORRECT_MESSAGES = [
 
 const FigureItOut = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
-    const [history, setHistory] = useState({});
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
@@ -42,7 +49,25 @@ const FigureItOut = () => {
     const SKILL_NAME = "Figure It Out";
 
     const TOTAL_QUESTIONS = 10;
-    const [answers, setAnswers] = useState({});
+    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
+
+    useEffect(() => {
+        if (qIndex !== undefined && history && answers) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
+        }
+    }, [qIndex, history, answers, sessionId]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_history`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -391,7 +416,7 @@ const FigureItOut = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -504,7 +529,7 @@ const FigureItOut = () => {
                             className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             Exit Practice
@@ -554,7 +579,7 @@ const FigureItOut = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />

@@ -8,7 +8,14 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const RectanglePractice = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
     const [rectLength, setRectLength] = useState(0);
     const [rectWidth, setRectWidth] = useState(0);
     const [mode, setMode] = useState('perimeter');
@@ -17,12 +24,12 @@ const RectanglePractice = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [history, setHistory] = useState([]);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, []));
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
-    const answers = useRef({});
+    const answers = useRef(getSessionData(`${storageKey}_answers`, {}));
 
     const TOTAL_QUESTIONS = 10;
     const SKILL_ID = 6001;
@@ -31,6 +38,25 @@ const RectanglePractice = () => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    useEffect(() => {
+        if (qIndex !== undefined && history) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers.current || {}));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            // sessionId is a ref here
+            if (sessionId.current) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId.current));
+        }
+    }, [qIndex, history, timeElapsed]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_history`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
     };
 
     useEffect(() => {
@@ -134,7 +160,7 @@ const RectanglePractice = () => {
             if (sessionId.current) {
                 await api.finishSession(sessionId.current);
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -268,7 +294,7 @@ const RectanglePractice = () => {
                             className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             Exit Practice
@@ -313,7 +339,7 @@ const RectanglePractice = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />
