@@ -10,7 +10,14 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const RegularPolygonPractice = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
     const [numSides, setNumSides] = useState(5); // Default Pentagon
     const [sideLength, setSideLength] = useState(0);
     const [userAnswer, setUserAnswer] = useState('');
@@ -18,12 +25,12 @@ const RegularPolygonPractice = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [history, setHistory] = useState([]);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, []));
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
-    const answers = useRef({});
+    const answers = useRef(getSessionData(`${storageKey}_answers`, {}));
 
     const TOTAL_QUESTIONS = 10;
     const SKILL_ID = 6003; // Assign a unique skill ID for this topic
@@ -34,6 +41,15 @@ const RegularPolygonPractice = () => {
         "🎉 Perfect calculation! 🎉",
         "🚀 You're a polygon pro! 🚀"
     ];
+
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_history`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
 
     useEffect(() => {
         // Start session
@@ -147,7 +163,7 @@ const RegularPolygonPractice = () => {
             if (sessionId.current) {
                 await api.finishSession(sessionId.current);
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -168,15 +184,15 @@ const RegularPolygonPractice = () => {
             {/* Header */}
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Regular Polygon</span>
+                    <span className="text-[#31326F] text-lg sm:text-xl">Regular Polygon</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -189,8 +205,8 @@ const RegularPolygonPractice = () => {
                         <div className="question-card-modern" style={{ padding: '2rem' }}>
                             <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
                                 <div className="text-center space-y-2 w-full">
-                                    <h2 className="text-2xl font-medium text-[#31326F]">
-                                        Find the <span className="font-bold">Perimeter</span> of this shape.
+                                    <h2 className="text-2xl text-[#31326F]">
+                                        Find the <span className="font-normal">Perimeter</span> of this shape.
                                     </h2>
                                     <p className="text-gray-400 text-lg">
                                         {getPolygonName(numSides)}
@@ -199,8 +215,8 @@ const RegularPolygonPractice = () => {
                             </div>
 
                             {/* Visualization */}
-                            <div className="flex-1 flex items-center justify-center w-full py-4 mb-8">
-                                <div className="relative w-64 h-64 flex items-center justify-center">
+                            <div className="flex-1 flex items-center justify-center w-full py-2 mb-4 min-h-0">
+                                <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
                                     <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-xl filter">
                                         {(() => {
                                             const cx = 100, cy = 100, r = 80;
@@ -244,7 +260,7 @@ const RegularPolygonPractice = () => {
                                                             y={my}
                                                             textAnchor="middle"
                                                             dominantBaseline="middle"
-                                                            className="text-lg font-bold fill-[#31326F]"
+                                                            className="text-lg fill-[#31326F]"
                                                         >
                                                             {sideLength}
                                                         </text>
@@ -267,11 +283,11 @@ const RegularPolygonPractice = () => {
                                                     value={userAnswer}
                                                     onChange={(e) => setUserAnswer(e.target.value)}
                                                     placeholder="Enter perimeter"
-                                                    className="w-full bg-indigo-50/50 text-center text-3xl font-bold py-6 rounded-2xl border-2 border-transparent focus:border-[#3B82F6] focus:bg-white focus:outline-none transition-all placeholder:text-gray-300 text-[#31326F]"
+                                                    className={`w-full text-center text-3xl py-6 rounded-2xl border-2 transition-all placeholder:text-gray-300 ${!isSubmitted ? "bg-indigo-50/50 border-transparent focus:border-[#3B82F6] focus:bg-white text-[#31326F]" : isCorrect ? "bg-green-100 border-green-500 text-green-700" : "bg-red-100 border-red-500 text-red-700"}`}
                                                     autoFocus
                                                     onKeyDown={(e) => e.key === 'Enter' && userAnswer && handleCheck()}
                                                 />
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xl">
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                                                     cm
                                                 </div>
                                             </div>
@@ -281,7 +297,7 @@ const RegularPolygonPractice = () => {
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             className={`w-full p-4 rounded-xl text-center border-2 mt-4 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
-                                            <p className={`text-xl font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
+                                            <p className={`text-xl ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
                                                 {isCorrect ? "Correct! 🎉" : "Not quite right"}
                                             </p>
                                             {isCorrect && (
@@ -294,7 +310,7 @@ const RegularPolygonPractice = () => {
                                                     </p>
                                                     <button
                                                         onClick={() => setShowExplanation(true)}
-                                                        className="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm font-bold hover:bg-red-200 transition-colors flex items-center gap-2"
+                                                        className="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 transition-colors flex items-center gap-2"
                                                     >
                                                         <Eye size={16} /> View Solution
                                                     </button>
@@ -310,17 +326,17 @@ const RegularPolygonPractice = () => {
             </main>
 
             {/* Bottom Navigation Bar */}
-            <footer className="junior-bottom-bar">
+            <footer className="junior-bottom-bar relative z-50">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -338,9 +354,9 @@ const RegularPolygonPractice = () => {
                             <button
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                className={`px-4 py-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border-2 border-gray-100 text-gray-500 hover:bg-gray-50'}`}
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                                <ChevronLeft size={20} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {!isSubmitted ? (
                                 <button
@@ -348,7 +364,7 @@ const RegularPolygonPractice = () => {
                                     disabled={!userAnswer}
                                     className="nav-pill-submit-btn"
                                 >
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             ) : (
                                 <button
@@ -356,9 +372,9 @@ const RegularPolygonPractice = () => {
                                     className="nav-pill-next-btn"
                                 >
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             )}
@@ -372,7 +388,7 @@ const RegularPolygonPractice = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />
@@ -391,24 +407,22 @@ const RegularPolygonPractice = () => {
                             <button
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                className={`p-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border border-gray-100 text-gray-500'}`}
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                                <ChevronLeft size={20} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {!isSubmitted ? (
                                 <button
                                     onClick={handleCheck}
                                     disabled={!userAnswer}
                                     className="nav-pill-submit-btn"
-                                >
-                                    Submit
-                                </button>
+                                >SUBMIT</button>
                             ) : (
                                 <button
                                     onClick={handleNext}
                                     className="nav-pill-next-btn"
                                 >
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             )}
                         </div>
@@ -421,7 +435,7 @@ const RegularPolygonPractice = () => {
                 onClose={() => setShowExplanation(false)}
                 isCorrect={isCorrect}
                 correctAnswer={`${numSides * sideLength} cm`}
-                explanation={`To find the perimeter of a regular polygon, multiply the number of sides (${numSides}) by the length of one side (${sideLength}).<br/><strong>Perimeter = ${numSides} × ${sideLength} = ${numSides * sideLength}</strong>`}
+                explanation={`To find the perimeter of a regular polygon, multiply the number of sides (${numSides}) by the length of one side (${sideLength}).<br/><strong>Perimeter = ${numSides} × ${sideLength} = ${numSides * sideLength} cm</strong>`}
             />
         </div>
     );

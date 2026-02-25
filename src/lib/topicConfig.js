@@ -159,13 +159,33 @@ export const TOPIC_CONFIGS = {
         ],
         'Weigh It, Pour It': [
             { id: "1129", name: "Gram to Kilogram (Fractions)", route: "gram-to-kilogram-fractions" },
-            { id: "1135", name: "Make 1 Kilogram Using Packets", route: "make-one-kilogram-using-packets" },
+            { id: "1135", name: "Balancing Weights with Packets", route: "make-one-kilogram-using-packets" },
             { id: "1136", name: "Millilitre to Litre (Fractions)", route: "millilitre-to-litre-fractions" },
-            { id: "1137", name: "Make 1 Litre Using Bottles", route: "make-one-litre-using-bottles" },
+            { id: "1137", name: "Balancing Capacities with Bottles", route: "make-one-litre-using-bottles" },
             { id: "1138", name: "Count How Many Units Fit", route: "count-how-many-units-fit" },
             { id: "1139", name: "Repeated Addition to One Whole", route: "repeated-addition-to-one-whole" },
             { id: "1140", name: "Compare Weights and Capacities", route: "compare-weights-and-capacities" },
             { id: "1141", name: "Weight and Capacity Word Problems", route: "weight-and-capacity-word-problems" }
+        ],
+        'Elephants, Tigers, and Leopards': [
+            // Number Games & Patterns
+            { id: "1188", name: "Nim Game Strategy", route: "nim-game-strategy" },
+            { id: "1189", name: "Number Grid Patterns", route: "number-grid-patterns" },
+            { id: "1190", name: "Magic Mirror Numbers", route: "magic-mirror-numbers" },
+            // Large Number Addition
+            { id: "1191", name: "Forest Restoration Addition", route: "forest-restoration-addition" },
+            { id: "1192", name: "Journey Sums", route: "journey-sums" },
+            { id: "1193", name: "Estimation Before Addition", route: "estimation-before-addition" },
+            // Large Number Subtraction
+            { id: "1194", name: "River Crossing Subtraction", route: "river-crossing-subtraction" },
+            { id: "1195", name: "Hidden Path Difference", route: "hidden-path-difference" },
+            { id: "1196", name: "Estimation Before Subtraction", route: "estimation-before-subtraction" },
+            // Comparison & Estimation
+            { id: "1197", name: "Balance Scale Estimation", route: "balance-scale-estimation" },
+            { id: "1198", name: "Quick Compare", route: "quick-compare" },
+            // Strategies
+            { id: "1199", name: "Smart Shortcuts", route: "smart-shortcuts" },
+            { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" }
         ]
     }
 };

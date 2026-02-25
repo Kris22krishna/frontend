@@ -79,16 +79,18 @@ const BLUE_THEME_CSS = `
     .status-skipped { background: #F1F5F9; color: #475569; }
 
     .nav-pastel-btn {
-        background: linear-gradient(135deg, #8BA4F9, #A3B8FA) !important;
+        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
         color: white !important;
         border: none !important;
-        box-shadow: 0 4px 15px rgba(139, 164, 249, 0.4) !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
         transition: all 0.3s ease !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.5px !important;
     }
     .nav-pastel-btn:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(139, 164, 249, 0.5) !important;
-        background: linear-gradient(135deg, #7C98F8, #92ABF9) !important;
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+        background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
     }
     .nav-pastel-btn:disabled {
         background: #E2E8F0 !important;
@@ -350,7 +352,7 @@ const ArithmeticProgressionsTest = () => {
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
-            api.createPracticeSession(uid, SKILL_ID).then(sess => {
+            api.createPracticeSession(String(uid).includes("-") ? 1 : parseInt(uid, 10), SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
@@ -381,7 +383,8 @@ const ArithmeticProgressionsTest = () => {
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
             const attemptData = {
-                user_id: uid,
+                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
+                user_id: String(uid).includes("-") ? 1 : parseInt(uid, 10),
                 session_id: sessionId,
                 skill_id: SKILL_ID,
                 question_text: currentQ.text,
@@ -425,6 +428,8 @@ const ArithmeticProgressionsTest = () => {
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
             const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
+            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+            const skippedCount = questions.length - correctCount - wrongCount;
             await api.createReport({
                 title: SKILL_NAME,
                 type: 'practice',
@@ -433,7 +438,7 @@ const ArithmeticProgressionsTest = () => {
                     skill_id: SKILL_ID,
                     total_questions: questions.length,
                     correct_answers: correctCount,
-                    skipped_questions: Object.values(responses).filter(r => r.isSkipped).length,
+                    skipped_questions: skippedCount,
                     time_taken_seconds: timeElapsed
                 },
                 user_id: uid
@@ -451,8 +456,8 @@ const ArithmeticProgressionsTest = () => {
 
     if (isTestOver) {
         const correct = Object.values(responses).filter(r => r.isCorrect === true).length;
-        const skipped = Object.values(responses).filter(r => r.isSkipped).length;
-        const wrong = questions.length - correct - skipped;
+        const wrong = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+        const skipped = questions.length - correct - wrong;
 
         return (
             <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem', overflowY: 'auto' }}>
@@ -606,14 +611,14 @@ const ArithmeticProgressionsTest = () => {
                 <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: '60px' }}>
 
                     {/* Left Column: Question Card */}
-                    <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                            <div className="question-header-modern">
+                    <div className="practice-left-col" style={{ width: "100%", minWidth: 0, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                        <div className="question-card-modern" style={{ padding: "2rem", flex: "none", minHeight: "auto", height: "fit-content", display: "flex", flexDirection: "column", justifyContent: "flex-start", margin: "0" }}>
+                            <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "0.5rem" }}>
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <div className="interaction-area-modern" style={{ marginTop: "1.5rem", flex: "none" }}>
                                 <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                                     {questions[qIndex].options.map((option, idx) => (
                                         <button
@@ -700,13 +705,30 @@ const ArithmeticProgressionsTest = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mobile-footer-controls">
-                    <button className="nav-pill-next-btn nav-pastel-btn" style={{ padding: '0.5rem 1rem' }} onClick={handlePrev} disabled={qIndex === 0}>
-                        <ChevronLeft size={24} />
-                    </button>
-                    <button className="nav-pill-next-btn nav-pastel-btn" onClick={handleNext} style={{ flex: 1 }}>
-                        {qIndex === questions.length - 1 ? "Finish" : "Next"} <ChevronRight size={24} />
-                    </button>
+                <div className="mobile-footer-controls" style={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                    <div className="mobile-footer-left">
+                        <button className="bg-red-50 text-red-500 px-3 py-2 rounded-xl border-2 border-red-100 font-bold" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center' }} onClick={() => navigate(-1)}>
+                            Exit
+                        </button>
+                    </div>
+                    <div className="mobile-footer-center" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                        {isSubmitted && <button className="view-explanation-btn" style={{ fontSize: '0.7rem', padding: '0.3rem 0.5rem' }} onClick={() => setShowExplanationModal(true)}><Eye size={14} /> VIEW EXPLANATION</button>}
+                    </div>
+                    <div className="mobile-footer-right" style={{ display: 'flex', gap: '5px' }}>
+                        <button
+                            className="nav-pill-next-btn bg-gray-200 text-gray-600"
+                            onClick={handlePrevious}
+                            disabled={qIndex === 0}
+                            style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }}
+                        >
+                            <ChevronLeft size={16} strokeWidth={3} /> Prev
+                        </button>
+                        {isSubmitted ? (
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                        ) : (
+                            <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
+                        )}
+                    </div>
                 </div>
             </footer>
         </div>

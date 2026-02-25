@@ -8,7 +8,14 @@ import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const MixedBagPractice = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
 
     // Initial valid state to prevent render crash on mount
     const [questionType, setQuestionType] = useState('rectangle');
@@ -23,12 +30,12 @@ const MixedBagPractice = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [history, setHistory] = useState([]);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, []));
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
-    const answers = useRef({});
+    const answers = useRef(getSessionData(`${storageKey}_answers`, {}));
 
     const TOTAL_QUESTIONS = 15;
     const SKILL_ID = 6099;
@@ -37,6 +44,25 @@ const MixedBagPractice = () => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    useEffect(() => {
+        if (qIndex !== undefined && history) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers.current || {}));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            // sessionId is a ref here
+            if (sessionId.current) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId.current));
+        }
+    }, [qIndex, history, timeElapsed]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_history`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
     };
 
     useEffect(() => {
@@ -202,7 +228,7 @@ const MixedBagPractice = () => {
             if (sessionId.current) {
                 await api.finishSession(sessionId.current);
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -231,11 +257,11 @@ const MixedBagPractice = () => {
                 />
                 <g transform={`translate(${x - 25}, ${y + scaledW / 2})`}>
                     <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{w} cm</text>
+                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{w} cm</text>
                 </g>
                 <g transform={`translate(${x + scaledL / 2}, ${y + scaledW + 25})`}>
                     <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{l} cm</text>
+                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{l} cm</text>
                 </g>
                 {mode === 'perimeter' && (
                     <rect
@@ -264,11 +290,11 @@ const MixedBagPractice = () => {
                 />
                 <g transform={`translate(${x - 25}, ${y + rectSize / 2})`}>
                     <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{s} cm</text>
+                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{s} cm</text>
                 </g>
                 <g transform={`translate(${x + rectSize / 2}, ${y + rectSize + 25})`}>
                     <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{s} cm</text>
+                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{s} cm</text>
                 </g>
                 {mode === 'perimeter' && (
                     <rect
@@ -303,11 +329,11 @@ const MixedBagPractice = () => {
                         <path d={`M${p1.x},${p3.y} L${p1.x + 10},${p3.y} L${p1.x + 10},${p3.y - 10} L${p1.x},${p3.y - 10}`} fill="none" stroke="#31326F" strokeWidth="2" />
                         <g>
                             <rect x={p1.x + 2} y={(p1.y + p3.y) / 2 - 10} width="80" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                            <text x={p1.x + 10} y={(p1.y + p3.y) / 2} dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">h = {height}</text>
+                            <text x={p1.x + 10} y={(p1.y + p3.y) / 2} dominantBaseline="middle" className="text-lg fill-[#31326F]">h = {height}</text>
                         </g>
                         <g>
                             <rect x={(p2.x + p3.x) / 2 - 40} y={p3.y + 15} width="80" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                            <text x={(p2.x + p3.x) / 2} y={p3.y + 25} textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">b = {base}</text>
+                            <text x={(p2.x + p3.x) / 2} y={p3.y + 25} textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">b = {base}</text>
                         </g>
                     </>
                 )}
@@ -315,15 +341,15 @@ const MixedBagPractice = () => {
                     <>
                         <g>
                             <rect x={(p1.x + p2.x) / 2 - 40} y={(p1.y + p2.y) / 2 - 12} width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                            <text x={(p1.x + p2.x) / 2 - 20} y={(p1.y + p2.y) / 2} textAnchor="end" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{sides[0]}</text>
+                            <text x={(p1.x + p2.x) / 2 - 20} y={(p1.y + p2.y) / 2} textAnchor="end" dominantBaseline="middle" className="text-lg fill-[#31326F]">{sides[0]}</text>
                         </g>
                         <g>
                             <rect x={(p2.x + p3.x) / 2 - 30} y={p3.y + 15} width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                            <text x={(p2.x + p3.x) / 2} y={p3.y + 25} textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{sides[1]}</text>
+                            <text x={(p2.x + p3.x) / 2} y={p3.y + 25} textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{sides[1]}</text>
                         </g>
                         <g>
                             <rect x={(p1.x + p3.x) / 2 + 5} y={(p1.y + p3.y) / 2 - 12} width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                            <text x={(p1.x + p3.x) / 2 + 20} y={(p1.y + p3.y) / 2} textAnchor="start" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{sides[2]}</text>
+                            <text x={(p1.x + p3.x) / 2 + 20} y={(p1.y + p3.y) / 2} textAnchor="start" dominantBaseline="middle" className="text-lg fill-[#31326F]">{sides[2]}</text>
                         </g>
                         <polygon
                             points={`${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`}
@@ -366,7 +392,7 @@ const MixedBagPractice = () => {
                     />
                     <g>
                         <rect x={mx - 24} y={my - 14} width="48" height="28" rx="6" fill="white" className="drop-shadow-sm" />
-                        <text x={mx} y={my} textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">
+                        <text x={mx} y={my} textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">
                             {sideLength}
                         </text>
                     </g>
@@ -383,14 +409,14 @@ const MixedBagPractice = () => {
         if (questionType === 'polygon') {
             return (
                 <>
-                    Find the <span className="font-bold">Perimeter</span> of this {typeDisplay}.
+                    Find the <span className="font-normal">Perimeter</span> of this {typeDisplay}.
                 </>
             );
         }
 
         return (
             <>
-                Find the <span className="font-bold">{modeDisplay}</span> of this {typeDisplay}.
+                Find the <span className="font-normal">{modeDisplay}</span> of this {typeDisplay}.
             </>
         );
     };
@@ -408,15 +434,15 @@ const MixedBagPractice = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Mixed Bag</span>
+                    <span className="text-[#31326F] text-lg sm:text-xl">Mixed Bag</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -428,14 +454,14 @@ const MixedBagPractice = () => {
                         <div className="question-card-modern" style={{ padding: '2rem' }}>
                             <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
                                 <div className="text-center space-y-2 w-full">
-                                    <h2 className="text-2xl font-medium text-[#31326F] capitalize">
+                                    <h2 className="text-2xl text-[#31326F] capitalize">
                                         {getTitle()}
                                     </h2>
                                 </div>
                             </div>
 
-                            <div className="flex-1 flex items-center justify-center w-full py-4 mb-8">
-                                <div className="max-w-[340px] max-h-[340px] flex items-center justify-center">
+                            <div className="flex-1 flex items-center justify-center w-full py-2 mb-4 min-h-0">
+                                <div className="w-full h-full max-h-[180px] max-w-[340px] flex items-center justify-center drop-shadow-lg" style={{ objectFit: 'contain' }}>
                                     {questionType === 'rectangle' && renderRectangle()}
                                     {questionType === 'square' && renderSquare()}
                                     {questionType === 'triangle' && renderTriangle()}
@@ -453,27 +479,16 @@ const MixedBagPractice = () => {
                                                 if (!isSubmitted) setUserAnswer(e.target.value);
                                             }}
                                             disabled={isSubmitted}
-                                            className="w-full bg-indigo-50/50 text-center text-3xl font-bold py-6 rounded-2xl border-2 border-transparent focus:border-[#3B82F6] focus:bg-white focus:outline-none transition-all placeholder:text-gray-300 text-[#31326F]"
+                                            className={`w-full text-center text-3xl py-6 rounded-2xl border-2 transition-all placeholder:text-gray-300 ${!isSubmitted ? "bg-indigo-50/50 border-transparent focus:border-[#3B82F6] focus:bg-white text-[#31326F]" : isCorrect ? "bg-green-100 border-green-500 text-green-700" : "bg-red-100 border-red-500 text-red-700"}`}
                                             placeholder="?"
                                             onKeyDown={(e) => e.key === 'Enter' && userAnswer && !isSubmitted && handleCheck()}
                                         />
-                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xl">
+                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                                             {questionData.mode === 'area' ? 'cm²' : 'cm'}
                                         </div>
                                     </div>
 
-                                    {isSubmitted && (
-                                        <motion.div
-                                            initial={{ scale: 0.5, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            className={`w-full p-4 rounded-xl text-center border-2 mt-4 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}
-                                        >
-                                            <p className={`text-xl font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
-                                                {isCorrect ? "Correct! 🎉" : "Not quite right"}
-                                            </p>
-                                            {isCorrect && <p className="text-green-600 mt-1">{feedbackMessage}</p>}
-                                        </motion.div>
-                                    )}
+                                    
                                 </div>
                             </div>
                         </div>
@@ -481,17 +496,17 @@ const MixedBagPractice = () => {
                 </div>
             </main>
 
-            <footer className="junior-bottom-bar">
+            <footer className="junior-bottom-bar relative z-50">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -506,21 +521,21 @@ const MixedBagPractice = () => {
                             <button
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                className={`px-4 py-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border-2 border-gray-100 text-gray-500 hover:bg-gray-50'}`}
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                                <ChevronLeft size={20} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!userAnswer}>
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -533,7 +548,7 @@ const MixedBagPractice = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />
@@ -549,18 +564,16 @@ const MixedBagPractice = () => {
                             <button
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                className={`p-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border border-gray-100 text-gray-500'}`}
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                                <ChevronLeft size={20} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!userAnswer}>
-                                    Submit
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!userAnswer}>SUBMIT</button>
                             )}
                         </div>
                     </div>
@@ -576,18 +589,18 @@ const MixedBagPractice = () => {
                 explanation={
                     questionType === 'rectangle' ? (
                         questionData.mode === 'area'
-                            ? `Area = Length × Width = ${questionData.l} × ${questionData.w} = ${calculateAnswer()}`
-                            : `Perimeter = 2 × (Length + Width) = 2 × (${questionData.l} + ${questionData.w}) = ${calculateAnswer()}`
+                            ? `Area = Length × Width = ${questionData.l} × ${questionData.w} = ${calculateAnswer()} ${questionData.mode === 'area' ? 'cm²' : 'cm'}`
+                            : `Perimeter = 2 × (Length + Width) = 2 × (${questionData.l} + ${questionData.w}) = ${calculateAnswer()} ${questionData.mode === 'area' ? 'cm²' : 'cm'}`
                     ) : questionType === 'square' ? (
                         questionData.mode === 'area'
-                            ? `Area = Side × Side = ${questionData.s} × ${questionData.s} = ${calculateAnswer()}`
-                            : `Perimeter = 4 × Side = 4 × ${questionData.s} = ${calculateAnswer()}`
+                            ? `Area = Side × Side = ${questionData.s} × ${questionData.s} = ${calculateAnswer()} ${questionData.mode === 'area' ? 'cm²' : 'cm'}`
+                            : `Perimeter = 4 × Side = 4 × ${questionData.s} = ${calculateAnswer()} ${questionData.mode === 'area' ? 'cm²' : 'cm'}`
                     ) : questionType === 'triangle' ? (
                         questionData.mode === 'area'
-                            ? `Area = ½ × Base × Height = ½ × ${questionData.base} × ${questionData.height} = ${calculateAnswer()}`
-                            : `Perimeter = Sum of all sides = ${questionData.sides?.[0] || 0} + ${questionData.sides?.[1] || 0} + ${questionData.sides?.[2] || 0} = ${calculateAnswer()}`
+                            ? `Area = ½ × Base × Height = ½ × ${questionData.base} × ${questionData.height} = ${calculateAnswer()} ${questionData.mode === 'area' ? 'cm²' : 'cm'}`
+                            : `Perimeter = Sum of all sides = ${questionData.sides?.[0] || 0} + ${questionData.sides?.[1] || 0} + ${questionData.sides?.[2] || 0} = ${calculateAnswer()} ${questionData.mode === 'area' ? 'cm²' : 'cm'}`
                     ) : (
-                        `Perimeter = Number of Sides × Length = ${questionData.sides} × ${questionData.length} = ${calculateAnswer()}`
+                        `Perimeter = Number of Sides × Length = ${questionData.sides} × ${questionData.length} = ${calculateAnswer()} ${questionData.mode === 'area' ? 'cm²' : 'cm'}`
                     )
                 }
             />

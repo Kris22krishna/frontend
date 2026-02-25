@@ -115,14 +115,18 @@ const JuniorSubtopics = () => {
         if (parseInt(gradeNum) === 4) {
             const gradeConfigs = TOPIC_CONFIGS['4'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                 if (skill && skill.route) {
-                    const topicSlug = decodedTopic.toLowerCase()
-                        .replace(/[(),]/g, '')
-                        .replace(/\s+/g, '-');
-
-                    navigate(`/junior/grade/${grade}/${topicSlug}/${skill.route}`);
-                    return;
+                    if (decodedTopic === "The Cleanest Village") {
+                        navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
+                        return;
+                    } else if (decodedTopic === "Weigh It, Pour It") {
+                        navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
+                        return;
+                    } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
+                        navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
+                        return;
+                    }
                 }
             }
         }
@@ -131,7 +135,7 @@ const JuniorSubtopics = () => {
         if (gradeNumStr === '1') {
             const gradeConfigs = TOPIC_CONFIGS['1'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                 if (skill && skill.route) {
                     navigate(`/junior/grade/1/${skill.route}?skillId=${subtopic.id}`);
                     return;
@@ -148,7 +152,7 @@ const JuniorSubtopics = () => {
         if (gradeNumStr === '2') {
             const gradeConfigs = TOPIC_CONFIGS['2'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
-                const skill = gradeConfigs[decodedTopic].find(s => s.id === subtopic.id);
+                const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
                 if (skill && skill.route) {
                     const topicSlug = decodedTopic.toLowerCase()
                         .replace(/\s+/g, '-')
@@ -176,8 +180,76 @@ const JuniorSubtopics = () => {
 
     const handleLoginSuccess = () => {
         if (pendingSubtopic) {
-            const index = subtopics.findIndex(s => s.id === pendingSubtopic.id);
-            navigateToSubtopic(pendingSubtopic, index);
+            const subtopic = pendingSubtopic;
+            const index = subtopics.findIndex(s => s.id === subtopic.id);
+
+            if (subtopic.id === "RB-01") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
+            } else if (subtopic.id === "RB-02") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/multiplication`);
+            } else if (subtopic.id === "RB-03") {
+                navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
+            } else if (subtopic.id === "FS-01") {
+                navigate(`/junior/grade/${grade}/fair-share/cutting`);
+            } else if (subtopic.id === "FS-02") {
+                navigate(`/junior/grade/${grade}/fair-share/halves-doubles`);
+            } else if (subtopic.id === "FS-03") {
+                navigate(`/junior/grade/${grade}/fair-share/draw`);
+            } else if (subtopic.id === "FS-04") {
+                navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            } else if (String(grade).replace(/\D/g, '') === '1') {
+                const gradeConfigs = TOPIC_CONFIGS['1'];
+                if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                    const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
+                    if (skill && skill.route) {
+                        navigate(`/junior/grade/1/${skill.route}?skillId=${subtopic.id}`);
+                        setPendingSubtopic(null);
+                        return;
+                    }
+                }
+                const topicSlug = decodedTopic.toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[()]/g, '');
+                navigate(`/junior/grade/1/${topicSlug}?skillId=${subtopic.id}`);
+            } else if (String(grade).replace(/\D/g, '') === '2') {
+                const gradeConfigs = TOPIC_CONFIGS['2'];
+                if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                    const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
+                    if (skill && skill.route) {
+                        const topicSlug = decodedTopic.toLowerCase()
+                            .replace(/\s+/g, '-')
+                            .replace(/[?,]/g, '');
+                        navigate(`/junior/grade/2/${topicSlug}/${skill.route}?skillId=${subtopic.id}`);
+                        setPendingSubtopic(null);
+                        return;
+                    }
+                }
+            } else {
+                // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
+                const gradeNum = grade.replace('grade', '');
+                if (parseInt(gradeNum) === 4) {
+                    const gradeConfigs = TOPIC_CONFIGS['4'];
+                    if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                        const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
+                        if (skill && skill.route) {
+                            if (decodedTopic === "The Cleanest Village") {
+                                navigate(`/junior/grade/${grade}/the-cleanest-village/${skill.route}`);
+                            } else if (decodedTopic === "Weigh It, Pour It") {
+                                navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
+                            } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
+                                navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
+                            }
+                            setPendingSubtopic(null);
+                            return;
+                        }
+                    }
+                }
+
+                navigate(
+                    `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
+                    { state: { skills: subtopics, currentIndex: index } }
+                );
+            }
             setPendingSubtopic(null);
         }
     };
@@ -218,7 +290,7 @@ const JuniorSubtopics = () => {
                 const gradeConfigs = TOPIC_CONFIGS[gradeNumStr];
                 if (gradeConfigs && gradeConfigs[decodedTopic]) {
                     gradeConfigs[decodedTopic].forEach((skill, index) => {
-                        if (!subtopicList.some(s => s.id === skill.id)) {
+                        if (!subtopicList.some(s => String(s.id) === String(skill.id))) {
                             subtopicList.push({
                                 id: skill.id,
                                 name: skill.name,
