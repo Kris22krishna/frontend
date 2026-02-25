@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, isSubmitted } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -424,6 +424,23 @@ const RealNumbersTest = () => {
         }
     };
 
+    const handleCheck = () => {
+        if (!selectedOption) return;
+        const currentQ = questions[qIndex];
+        const isRight = selectedOption === currentQ.correctAnswer;
+        setIsCorrect(isRight);
+        setIsSubmitted(true);
+        if (isRight) setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
+        else setShowExplanationModal(true);
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                selectedOption: selectedOption,
+                isCorrect: isRight
+            }
+        }));
+    };
+
     const navigateToQuestion = (index) => {
         handleRecordResponse(!selectedOption);
         setQIndex(index);
@@ -730,7 +747,7 @@ const RealNumbersTest = () => {
                     <div className="mobile-footer-right" style={{ display: 'flex', gap: '5px' }}>
                         <button
                             className="nav-pill-next-btn bg-gray-200 text-gray-600"
-                            onClick={handlePrevious}
+                            onClick={handlePrev}
                             disabled={qIndex === 0}
                             style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }}
                         >
