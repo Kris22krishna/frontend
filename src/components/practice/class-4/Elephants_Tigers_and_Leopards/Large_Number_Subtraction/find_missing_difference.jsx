@@ -32,7 +32,7 @@ const FindMissingDifference = () => {
 
     // Logging
     const [sessionId, setSessionId] = useState(null);
-    const questionStartTime = useRef(null);
+    const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1195;
@@ -214,6 +214,11 @@ const FindMissingDifference = () => {
         if (!userId) return;
         let timeSpent = accumulatedTime.current;
         if (isTabActive.current) timeSpent += Date.now() - questionStartTime.current;
+
+        // Pause timer on submit
+        accumulatedTime.current = timeSpent;
+        questionStartTime.current = Date.now();
+
         api.recordAttempt({
             user_id: parseInt(userId, 10),
             session_id: sessionId,
