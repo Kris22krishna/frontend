@@ -77,16 +77,18 @@ const BLUE_THEME_CSS = `
     .status-skipped { background: #F1F5F9; color: #475569; }
 
     .nav-pastel-btn {
-        background: linear-gradient(135deg, #8BA4F9, #A3B8FA) !important;
+        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
         color: white !important;
         border: none !important;
-        box-shadow: 0 4px 15px rgba(139, 164, 249, 0.4) !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
         transition: all 0.3s ease !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.5px !important;
     }
     .nav-pastel-btn:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(139, 164, 249, 0.5) !important;
-        background: linear-gradient(135deg, #7C98F8, #92ABF9) !important;
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+        background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
     }
     .nav-pastel-btn:disabled {
         background: #E2E8F0 !important;
@@ -391,6 +393,8 @@ const MensurationTest = () => {
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
             const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
+            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+            const skippedCount = questions.length - correctCount - wrongCount;
             await api.createReport({
                 title: SKILL_NAME,
                 type: 'practice',
@@ -399,7 +403,7 @@ const MensurationTest = () => {
                     skill_id: SKILL_ID,
                     total_questions: questions.length,
                     correct_answers: correctCount,
-                    skipped_questions: Object.values(responses).filter(r => r.isSkipped).length,
+                    skipped_questions: skippedCount,
                     time_taken_seconds: timeElapsed
                 },
                 user_id: uid
@@ -417,8 +421,8 @@ const MensurationTest = () => {
 
     if (isTestOver) {
         const correct = Object.values(responses).filter(r => r.isCorrect === true).length;
-        const skipped = Object.values(responses).filter(r => r.isSkipped).length;
-        const wrong = questions.length - correct - skipped;
+        const wrong = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+        const skipped = questions.length - correct - wrong;
 
         return (
             <div className="junior-practice-page grey-selection-theme p-4 md:p-8" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
