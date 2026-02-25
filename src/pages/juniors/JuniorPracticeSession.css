@@ -1381,7 +1381,11 @@
     }
 }
 
-/* Mobile Footer Toggle */
+/* Mobile Footer Toggle - Hide on desktop by default */
+.mobile-footer-controls {
+    display: none !important;
+}
+
 @media (max-width: 900px) {
     .desktop-footer-controls {
         display: none !important;
