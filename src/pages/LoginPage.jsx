@@ -48,6 +48,16 @@ const LoginPage = () => {
             setUserId(response.id);
         }
 
+        // If multiple roles are available, show role selection modal
+        if (response.roles && response.roles.length > 1) {
+            console.log("Multiple roles detected:", response.roles);
+            setResultNeededRole({
+                ...response,
+                availableRoles: response.roles
+            });
+            return;
+        }
+
         // Redirect based on role
         const userType = response.role || response.user_type || 'student'; // Fallback
         console.log("Detected User Type:", userType);
@@ -112,6 +122,21 @@ const LoginPage = () => {
     };
 
     const handleRoleSelection = async (selectedRole) => {
+        // Handle multi-role selection for existing users
+        if (resultNeededRole && resultNeededRole.availableRoles) {
+            console.log("Role selected for multi-role user:", selectedRole);
+            const updatedResponse = {
+                ...resultNeededRole,
+                role: selectedRole,
+                roles: null, // Clear roles to avoid loop
+                availableRoles: null
+            };
+            setResultNeededRole(null);
+            handleLoginSuccess(updatedResponse);
+            return;
+        }
+
+        // Handle Google registration role selection
         if (!resultNeededRole || !resultNeededRole.googleUser) {
             setError("Session invalid. Please try logging in again.");
             setResultNeededRole(null);
@@ -220,7 +245,11 @@ const LoginPage = () => {
                                 <Sparkles className="text-blue-600" size={32} />
                             </div>
                             <h3 className="text-2xl font-bold text-gray-900 mb-2">Choose your Role</h3>
-                            <p className="text-gray-500">How will you be using skill100.ai?</p>
+                            <p className="text-gray-500">
+                                {resultNeededRole.availableRoles
+                                    ? "Multiple profiles found. Select a role to log in as:"
+                                    : "How will you be using skill100.ai?"}
+                            </p>
                         </div>
 
                         <div className="grid grid-cols-1 gap-3 mb-6">
@@ -229,23 +258,25 @@ const LoginPage = () => {
                                 { id: 'parent', label: 'Parent', desc: 'I want to track my child\'s progress', icon: '👨‍👩‍👧‍👦' },
                                 { id: 'mentor', label: 'Mentor', desc: 'I want to guide students', icon: '👨‍🏫' },
                                 { id: 'guest', label: 'Guest', desc: 'I\'m just exploring', icon: '👀' }
-                            ].map((role) => (
-                                <button
-                                    key={role.id}
-                                    onClick={() => handleRoleSelection(role.id)}
-                                    className="flex items-center p-4 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 group text-left w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    disabled={isLoading}
-                                >
-                                    <span className="text-2xl mr-4 group-hover:scale-110 transition-transform">{role.icon}</span>
-                                    <div>
-                                        <div className="font-semibold text-gray-900 group-hover:text-blue-700">{role.label}</div>
-                                        <div className="text-sm text-gray-500">{role.desc}</div>
-                                    </div>
-                                    <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-blue-600">
-                                        →
-                                    </div>
-                                </button>
-                            ))}
+                            ]
+                                .filter(role => !resultNeededRole.availableRoles || resultNeededRole.availableRoles.includes(role.id))
+                                .map((role) => (
+                                    <button
+                                        key={role.id}
+                                        onClick={() => handleRoleSelection(role.id)}
+                                        className="flex items-center p-4 rounded-xl border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 group text-left w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        disabled={isLoading}
+                                    >
+                                        <span className="text-2xl mr-4 group-hover:scale-110 transition-transform">{role.icon}</span>
+                                        <div>
+                                            <div className="font-semibold text-gray-900 group-hover:text-blue-700">{role.label}</div>
+                                            <div className="text-sm text-gray-500">{role.desc}</div>
+                                        </div>
+                                        <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-blue-600">
+                                            →
+                                        </div>
+                                    </button>
+                                ))}
                         </div>
 
                         <div className="text-center">
