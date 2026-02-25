@@ -22,19 +22,26 @@ const CORRECT_MESSAGES = [
 
 const BarGraphs = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
-    const [history, setHistory] = useState({});
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
@@ -42,7 +49,25 @@ const BarGraphs = () => {
     const SKILL_NAME = "Bar Graphs";
 
     const TOTAL_QUESTIONS = 10;
-    const [answers, setAnswers] = useState({});
+    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
+
+    useEffect(() => {
+        if (qIndex !== undefined && history && answers) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
+        }
+    }, [qIndex, history, answers, sessionId]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_history`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -158,7 +183,7 @@ const BarGraphs = () => {
                 <div style="display: flex; flex-direction: column; align-items: center; height: 100%; flex: 1; margin: 0 4px;">
                     <div style="width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative;">
                         <div style="width: 80%; height: ${heightPercent}%; background-color: ${barColor}; border-radius: 4px 4px 0 0; transition: height 0.5s ease; position: relative; min-height: 2px;">
-                             ${difficulty === 'easy' ? `<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.8em; font-weight: bold; color: #374151;">${val}</span>` : ''} 
+                             ${difficulty === 'easy' ? `<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.8em; font-weight: normal; color: #374151;">${val}</span>` : ''} 
                         </div>
                     </div>
                     <div style="margin-top: 8px; font-weight: 600; font-size: 0.9em; transform: rotate(-45deg); transform-origin: top left; white-space: nowrap; text-align: right; width: 100%; padding-right: 5px;">${cat}</div>
@@ -181,29 +206,24 @@ const BarGraphs = () => {
         }
 
         const chartHtml = `
-            <div style="padding: 20px 40px 60px 50px; background: white; border-radius: 12px; border: 2px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 24px; max-width: 600px; width: 100%; align-self: center;">
+            <div style="padding: 15px 25px 40px 35px; background: white; border-radius: 12px; border: 2px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin-bottom: 16px; max-width: 480px; width: 100%; align-self: center;">
                  <h4 style="text-align: center; margin-bottom: 10px; color: #374151;">Data Chart</h4>
-                 <div style="position: relative; height: 250px; display: flex; margin-left: 10px;">
+                 <div style="position: relative; height: 200px; display: flex; margin-left: 10px;">
                     ${gridLinesHtml}
                     <div style="display: flex; width: 100%; height: 100%; align-items: flex-end; padding-left: 5px; z-index: 10;">
                         ${barsHtml}
                     </div>
                  </div>
-                 <div style="text-align: center; margin-top: 20px; font-weight: bold;">Categories</div>
+                 <div style="text-align: center; margin-top: 20px; font-weight: normal;">Categories</div>
             </div>
         `;
 
         if (type === "read_value") {
             const targetCat = selectedCategories[randomInt(0, selectedCategories.length - 1)];
             const answerVal = data[targetCat];
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                   ${chartHtml}
-                   <p style="text-align: center;">What is the value for <strong>${targetCat}</strong>?</p>
-                </div>
-            `;
+            qText = `What is the value for ${targetCat}?`;
             correct = answerVal.toString();
-            explanation = `Look at the bar for <strong>${targetCat}</strong>. Its height reaches the line for <strong>${answerVal}</strong>.`;
+            explanation = `Look at the bar for ${targetCat}. Its height reaches the line for ${answerVal}.`;
 
             options = [
                 answerVal.toString(),
@@ -217,14 +237,9 @@ const BarGraphs = () => {
             const winners = selectedCategories.filter(c => data[c] === maxVal);
             const winner = winners[0];
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">Which category has the <strong>highest</strong> value?</p>
-                </div>
-            `;
+            qText = `Which category has the highest value?`;
             correct = winner;
-            explanation = `Look for the tallest bar. <strong>${winner}</strong> is the tallest with ${maxVal}.`;
+            explanation = `Look for the tallest bar. ${winner} is the tallest with ${maxVal}.`;
             options = [winner, ...selectedCategories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "compare_least") {
@@ -232,14 +247,9 @@ const BarGraphs = () => {
             const winners = selectedCategories.filter(c => data[c] === min);
             const winner = winners[0];
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">Which category has the <strong>lowest</strong> value?</p>
-                </div>
-            `;
+            qText = `Which category has the lowest value?`;
             correct = winner;
-            explanation = `Look for the shortest bar. <strong>${winner}</strong> is the shortest with ${min}.`;
+            explanation = `Look for the shortest bar. ${winner} is the shortest with ${min}.`;
             options = [winner, ...selectedCategories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "calculate_total") {
@@ -248,26 +258,16 @@ const BarGraphs = () => {
 
             if (mode === "all") {
                 const total = Object.values(data).reduce((a, b) => a + b, 0);
-                qText = `
-                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                        ${chartHtml}
-                        <p style="text-align: center;">What is the <strong>total</strong> value of all categories combined?</p>
-                    </div>
-                `;
+                qText = `What is the total value of all categories combined?`;
                 correct = total.toString();
-                explanation = `Add the values of all bars: ${Object.values(data).join(" + ")} = <strong>${total}</strong>.`;
+                explanation = `Add the values of all bars: ${Object.values(data).join(" + ")} = ${total}.`;
                 options = [total.toString(), (total + scale).toString(), (total - scale).toString(), (total + 2 * scale).toString()];
             } else {
                 const subset = selectedCategories.sort(() => 0.5 - Math.random()).slice(0, 2);
                 const subTotal = data[subset[0]] + data[subset[1]];
-                qText = `
-                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                        ${chartHtml}
-                        <p style="text-align: center;">What is the total of <strong>${subset[0]}</strong> and <strong>${subset[1]}</strong>?</p>
-                    </div>
-                `;
+                qText = `What is the total of ${subset[0]} and ${subset[1]}?`;
                 correct = subTotal.toString();
-                explanation = `${subset[0]} = ${data[subset[0]]}, ${subset[1]} = ${data[subset[1]]}.<br/>Total = ${data[subset[0]]} + ${data[subset[1]]} = <strong>${subTotal}</strong>.`;
+                explanation = `${subset[0]} = ${data[subset[0]]}, ${subset[1]} = ${data[subset[1]]}.<br/>Total = ${data[subset[0]]} + ${data[subset[1]]} = ${subTotal}.`;
                 options = [
                     subTotal.toString(),
                     (subTotal + scale).toString(),
@@ -283,14 +283,9 @@ const BarGraphs = () => {
             const val2 = data[subset[1]];
             const diff = Math.abs(val1 - val2);
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">How much <strong>more</strong> (or less) is <strong>${subset[0]}</strong> compared to <strong>${subset[1]}</strong>?</p>
-                </div>
-            `;
+            qText = `How much more (or less) is ${subset[0]} compared to ${subset[1]}?`;
             correct = diff.toString();
-            explanation = `${subset[0]} = ${val1}, ${subset[1]} = ${val2}.<br/>Difference = |${val1} - ${val2}| = <strong>${diff}</strong>.`;
+            explanation = `${subset[0]} = ${val1}, ${subset[1]} = ${val2}.<br/>Difference = |${val1} - ${val2}| = ${diff}.`;
             options = [
                 diff.toString(),
                 (val1 + val2).toString(), // Sum Trap
@@ -300,12 +295,6 @@ const BarGraphs = () => {
 
         } else if (type === "scale_reading") {
             // Implicitly ask 1 unit = ?
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">Based on the y-axis, <strong>1 major grid unit</strong> represents how much?</p>
-                </div>
-            `;
             // Calculate grid step from chart visualization logic
             // In our chart code: gridStep is roughly chartMax / 5.
             // But we rendered specific grid lines. Let's look at the labels.
@@ -314,14 +303,9 @@ const BarGraphs = () => {
             // Better: ask "What is the interval between two grid lines?"
             const interval = Math.round(gridStep);
 
-            qText = `
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                    ${chartHtml}
-                    <p style="text-align: center;">What is the interval (gap) between two consecutive grid lines on the vertical axis?</p>
-                </div>
-            `;
+            qText = `What is the interval (gap) between two consecutive grid lines on the vertical axis?`;
             correct = interval.toString();
-            explanation = `Look at the axis labels: 0, ${Math.round(gridStep)}, ${Math.round(2 * gridStep)}...<br/>The difference is <strong>${interval}</strong>.`;
+            explanation = `Look at the axis labels: 0, ${Math.round(gridStep)}, ${Math.round(2 * gridStep)}...<br/>The difference is ${interval}.`;
 
             options = [
                 interval.toString(),
@@ -345,6 +329,7 @@ const BarGraphs = () => {
 
         const newQuestion = {
             text: qText,
+            chart: chartHtml,
             correctAnswer: correct,
             solution: explanation,
             type: 'mcq',
@@ -480,7 +465,7 @@ const BarGraphs = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -495,22 +480,22 @@ const BarGraphs = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Data Handling: Bar Graphs</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling: Bar Graphs</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-x l shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-x l shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -519,49 +504,56 @@ const BarGraphs = () => {
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -50, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: '1.2rem', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', width: '100%', overflowX: 'auto', marginBottom: '1.5rem' }}>
+                                <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
-                                                                : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                            : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                        }
-                                                    `}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
+                                    <div className="flex flex-col md:flex-row w-full items-start justify-center gap-6 lg:gap-10 mt-4">
+                                        {/* Chart Side */}
+                                        <div className="chart-container flex-1 w-full max-w-xl flex justify-center">
+                                            <LatexContent block={true} html={currentQuestion.chart} />
                                         </div>
 
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
+                                        {/* Options Side */}
+                                        <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center">
+                                            <div className="options-grid-modern flex flex-col gap-3 w-full">
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                        className={`p-3 rounded-xl border-2 text-base font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full 
+                                                            ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                        `}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct mt-6 w-full text-center p-3 rounded-lg font-normal bg-green-100 text-green-700"
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -583,13 +575,13 @@ const BarGraphs = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -602,19 +594,19 @@ const BarGraphs = () => {
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
                             >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
@@ -623,7 +615,7 @@ const BarGraphs = () => {
                                     onClick={handleCheck}
                                     disabled={!selectedOption}
                                 >
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -636,7 +628,7 @@ const BarGraphs = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />
@@ -650,7 +642,7 @@ const BarGraphs = () => {
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
                                 style={{
@@ -662,20 +654,18 @@ const BarGraphs = () => {
                                     minWidth: 'auto'
                                 }}
                             >
-                                <ChevronLeft size={20} strokeWidth={3} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheck}
                                     disabled={!selectedOption}
-                                >
-                                    Submit
-                                </button>
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>

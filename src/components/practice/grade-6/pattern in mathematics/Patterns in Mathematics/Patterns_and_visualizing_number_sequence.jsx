@@ -12,10 +12,17 @@ const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const PatternsPractice = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
 
     // Persistence State
-    const [answers, setAnswers] = useState({});
+    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
 
     // Current Question State
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -24,9 +31,9 @@ const PatternsPractice = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState("");
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
 
-    const sessionId = useRef(null);
+    const sessionId = useRef(getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const TOTAL_QUESTIONS = 10;
     const SKILL_ID = 6100; // Assigning a temporary ID for Patterns
@@ -46,6 +53,22 @@ const PatternsPractice = () => {
     };
 
     // Initialize Session
+    useEffect(() => {
+        if (qIndex !== undefined && answers) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            if (sessionId.current) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId.current));
+        }
+    }, [qIndex, answers, timeElapsed]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
+
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId) {
@@ -265,7 +288,7 @@ const PatternsPractice = () => {
             setQIndex(prev => prev + 1);
         } else {
             if (sessionId.current) api.finishSession(sessionId.current);
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -279,10 +302,10 @@ const PatternsPractice = () => {
         <div className="min-h-screen bg-[#E0F2FE] flex flex-col font-sans text-[#31326F]">
             {/* Header */}
             <header className="px-6 py-4 flex justify-between items-center w-full relative">
-                <div className="absolute left-1/2 -translate-x-1/2 bg-white px-6 py-2 rounded-full shadow-sm text-[#31326F] font-bold border border-indigo-50 z-10">
+                <div className="absolute left-1/2 -translate-x-1/2 bg-white px-6 py-2 rounded-full shadow-sm text-[#31326F] border border-indigo-50 z-10">
                     Question {qIndex + 1} / {TOTAL_QUESTIONS}
                 </div>
-                <div className="ml-auto bg-white px-4 py-2 rounded-lg shadow-sm font-bold text-[#31326F] min-w-[60px] text-center">
+                <div className="ml-auto bg-white px-4 py-2 rounded-lg shadow-sm text-[#31326F] min-w-[60px] text-center">
                     {formatTime(timeElapsed)}
                 </div>
             </header>
@@ -292,7 +315,7 @@ const PatternsPractice = () => {
                 <div className="bg-white rounded-[32px] shadow-sm w-full max-w-4xl p-12 flex flex-col items-center gap-12 min-h-[500px]">
 
                     <div className="w-full text-center">
-                        <div className="text-2xl font-medium text-[#31326F] leading-relaxed">
+                        <div className="text-2xl text-[#31326F] leading-relaxed">
                             <LatexContent html={currentQuestion.text} />
                         </div>
                     </div>
@@ -304,7 +327,7 @@ const PatternsPractice = () => {
                                 onClick={() => !isSubmitted && setSelectedOption(option)}
                                 disabled={isSubmitted}
                                 className={`
-                                    w-full py-4 px-6 rounded-full text-xl font-medium transition-all border-2
+                                    w-full py-4 px-6 rounded-full text-xl transition-all border-2
                                     ${selectedOption === option
                                         ? 'bg-white border-[#3B82F6] text-[#31326F] shadow-md ring-1 ring-[#3B82F6]'
                                         : 'bg-white border-gray-200 text-[#31326F] hover:border-gray-300'
@@ -326,13 +349,13 @@ const PatternsPractice = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 className={`w-full p-6 rounded-2xl text-center border-2 mt-6 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}
                             >
-                                <p className={`text-2xl font-bold mb-4 ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
+                                <p className={`text-2xl mb-4 ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
                                     {isCorrect ? "Correct! 🎉" : "Not quite right"}
                                 </p>
                                 <div className="flex justify-center gap-4">
                                     <button
                                         onClick={() => setShowExplanationModal(true)}
-                                        className={`px-6 py-2 rounded-full text-sm font-bold transition-colors flex items-center gap-2 ${isCorrect ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'}`}
+                                        className={`px-6 py-2 rounded-full text-sm transition-colors flex items-center gap-2 ${isCorrect ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'}`}
                                     >
                                         <Check size={16} /> View Explanation
                                     </button>
@@ -348,33 +371,33 @@ const PatternsPractice = () => {
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-20">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <button
-                        onClick={() => navigate(-1)}
-                        className="px-6 py-2 rounded-full bg-red-50 text-red-500 font-bold hover:bg-red-100 transition-colors text-sm"
+                        onClick={() => { clearProgress(); navigate(-1); }}
+                        className="px-6 py-2 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors text-sm"
                     >
-                        Exit Practice
+                        Exit
                     </button>
 
                     <div className="flex items-center gap-3">
                         <button
                             onClick={handlePrevious}
                             disabled={qIndex === 0}
-                            className={`px-8 py-3 rounded-full font-bold flex items-center gap-2 transition-all ${qIndex === 0 ? 'bg-gray-100 text-gray-300 cursor-not-allowed' : 'bg-[#3B82F6] text-white hover:bg-blue-600 shadow-md'}`}
+                            className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                         >
-                            <ChevronLeft size={20} /> PREV
+                            <ChevronLeft size={24} strokeWidth={3} /> PREV
                         </button>
 
                         {!isSubmitted ? (
                             <button
                                 onClick={handleCheck}
                                 disabled={!selectedOption}
-                                className="px-8 py-3 rounded-full bg-gray-200 text-gray-500 font-bold hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
+                                className="px-8 py-3 rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all"
                             >
                                 SUBMIT <Check size={20} />
                             </button>
                         ) : (
                             <button
                                 onClick={handleNext}
-                                className="px-8 py-3 rounded-full bg-gray-200 text-gray-700 font-bold hover:bg-gray-300 flex items-center gap-2 transition-all"
+                                className="px-8 py-3 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 flex items-center gap-2 transition-all"
                             >
                                 {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "FINISH"} <ChevronRight size={20} />
                             </button>
