@@ -68,6 +68,7 @@ const DraggableTile = ({ type, onDrop, constraintsRef }) => {
 const DrawTiles = () => {
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [score, setScore] = useState(0);
     const [showResult, setShowResult] = useState(false);
     const [feedback, setFeedback] = useState(null); // 'correct' | 'wrong' | null
@@ -148,25 +149,32 @@ const DrawTiles = () => {
         }
     };
 
-    const handlePrevious = () => {
-        if (currentQIndex > 0) {
-            setCurrentQIndex(prev => prev - 1);
+    useEffect(() => {
+        if (history[currentQIndex]) {
+            setFeedback(history[currentQIndex].feedback);
+            setIsSubmitted(history[currentQIndex].isSubmitted);
+            setIsCorrect(history[currentQIndex].isCorrect);
+            setDroppedTiles(history[currentQIndex].droppedTiles);
+            setSelectedMcqOption(history[currentQIndex].selectedMcqOption);
+        } else {
             setFeedback(null);
             setIsSubmitted(false);
             setIsCorrect(false);
             setDroppedTiles({ 100: 0, 10: 0, 1: 0 });
             setSelectedMcqOption(null);
-            setShowExplanationModal(false);
+        }
+        setShowExplanationModal(false);
+    }, [currentQIndex]);
+
+    const handlePrevious = () => {
+        if (currentQIndex > 0) {
+            setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, droppedTiles, selectedMcqOption } }));
+            setCurrentQIndex(prev => prev - 1);
         }
     };
 
     const handleNext = () => {
-        setFeedback(null);
-        setIsSubmitted(false);
-        setIsCorrect(false);
-        setDroppedTiles({ 100: 0, 10: 0, 1: 0 }); // Reset tiles
-        setSelectedMcqOption(null);
-        setShowExplanationModal(false);
+        setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, droppedTiles, selectedMcqOption } }));
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
         } else {
@@ -374,7 +382,7 @@ const DrawTiles = () => {
                                     <button
                                         key={i}
                                         onClick={() => handleMcqSelect(opt)}
-                                        className={`py-6 rounded-2xl border-b-4 text-3xl font-black transition-all shadow-lg text-center relative
+                                        className={`py-3 rounded-2xl border-b-4 text-3xl font-black transition-all shadow-lg text-center relative
                                             ${selectedMcqOption === opt
                                                 ? 'bg-[#31326F] border-[#1e1f48] text-white scale-[1.02] shadow-xl z-10 ring-4 ring-blue-100'
                                                 : 'bg-white border-slate-200 text-[#31326F] hover:bg-blue-50 hover:border-blue-300 hover:text-[#2979FF] hover:-translate-y-1'}
@@ -400,7 +408,7 @@ const DrawTiles = () => {
                         ? currentQ.correct
                         : (
                             <div className="flex flex-wrap gap-2 items-center">
-                                <span className="mr-2 text-xl font-black text-[#31326F]">{currentQ.target} =</span>
+                                <span className="mr-2 text-2xl font-black text-[#31326F]">{currentQ.target} =</span>
                                 {[...Array(Math.floor(currentQ.target / 100))].map((_, i) =>
                                     <Tile100 key={`h-${i}`} style={{ width: '40px', height: '40px', borderColor: '#FFCA28', borderWidth: '1px' }} />
                                 )}

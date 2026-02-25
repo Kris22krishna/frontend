@@ -143,6 +143,7 @@ const questions = [
 const PaperSlips = () => {
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [score, setScore] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -175,10 +176,6 @@ const PaperSlips = () => {
         return () => clearInterval(timerRef.current);
     }, []);
 
-    useEffect(() => {
-        resetQuestionState();
-    }, [currentQIndex, currentQ]);
-
     const resetQuestionState = () => {
         setSelectedOption(null);
         setIsSubmitted(false);
@@ -200,7 +197,27 @@ const PaperSlips = () => {
         }
     };
 
+    useEffect(() => {
+        if (history[currentQIndex]) {
+            setIsSubmitted(history[currentQIndex].isSubmitted);
+            setIsCorrect(history[currentQIndex].isCorrect);
+            setSelectedOption(history[currentQIndex].selectedOption);
+            setShowExplanation(history[currentQIndex].showExplanation);
+            // Still reset interactive elements
+            if (currentQ.type === 'drag-sort') {
+                setDragItems([...currentQ.items].sort(() => Math.random() - 0.5));
+            } else if (currentQ.type === 'drag-match') {
+                if (currentQ.targets) setShuffledTargets([...currentQ.targets].sort(() => Math.random() - 0.5));
+            } else if (currentQ.type === 'mcq') {
+                setCurrentOptions([...currentQ.options].sort(() => Math.random() - 0.5));
+            }
+        } else {
+            resetQuestionState();
+        }
+    }, [currentQIndex, currentQ]);
+
     const handleNext = () => {
+        setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, showExplanation } }));
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
         } else {
@@ -211,6 +228,7 @@ const PaperSlips = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
+            setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, showExplanation } }));
             setCurrentQIndex(prev => prev - 1);
         }
     };
@@ -344,7 +362,7 @@ const PaperSlips = () => {
                         animate={{ scale: 1 }}
                         transition={{ delay: idx * 0.1 }}
                         className={`
-                            w-20 h-12 md:w-24 md:h-16 rounded-lg shadow-md border-2 font-bold flex items-center justify-center text-xl md:text-2xl
+                            w-20 h-12 md:w-24 md:h-16 rounded-lg shadow-md border-2 font-bold flex items-center justify-center text-2xl md:text-2xl
                             ${val === 100 ? 'bg-indigo-100 border-indigo-300 text-indigo-700' :
                                 val === 10 ? 'bg-orange-100 border-orange-300 text-orange-700' :
                                     'bg-green-100 border-green-300 text-green-700'}
@@ -398,7 +416,7 @@ const PaperSlips = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="question-card-modern h-full flex flex-col justify-start items-center max-w-4xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg border border-white/50">
+                    <div className="question-card-modern h-full flex flex-col justify-start items-center max-w-4xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl sm: sm: sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg border border-white/50">
                         <div className="text-center mb-6">
                             <div className="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">Paper Slips</div>
                             <h2 className="text-2xl md:text-3xl font-bold text-[#31326F]">{currentQ.question}</h2>
@@ -442,7 +460,7 @@ const PaperSlips = () => {
                                                         ))}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-xl font-bold">{opt}</span>
+                                                    <span className="text-2xl font-bold">{opt}</span>
                                                 )}
                                             </button>
                                         );
@@ -463,7 +481,7 @@ const PaperSlips = () => {
                                                         ${isSubmitted && isCorrect ? 'border-green-400 bg-green-50' : 'border-slate-200 hover:border-slate-300'}
                                                     `}
                                                 >
-                                                    <span className="text-xl font-bold text-[#31326F]">{item}</span>
+                                                    <span className="text-2xl font-bold text-[#31326F]">{item}</span>
                                                 </div>
                                             </Reorder.Item>
                                         ))}

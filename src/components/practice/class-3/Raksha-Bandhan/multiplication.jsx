@@ -194,9 +194,17 @@ const RakshaBandhanMultiplication = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            if (history[qIndex]) {
+                setSelectedOption(history[qIndex].selectedOption);
+                setIsSubmitted(history[qIndex].isSubmitted);
+                setIsCorrect(history[qIndex].isCorrect);
+                setFeedbackMessage(history[qIndex].feedbackMessage);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+                setFeedbackMessage("");
+            }
         }
     }, [qIndex, sessionQuestions]);
     const formatTime = (seconds) => {
@@ -274,10 +282,6 @@ const RakshaBandhanMultiplication = () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
             setShowExplanationModal(false);
-            // Reset states for next question
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
 
             // Reset question timer
             accumulatedTime.current = 0;
@@ -339,7 +343,7 @@ const RakshaBandhanMultiplication = () => {
                 <header className="junior-practice-header results-header relative">
                     <button
                         onClick={() => navigate(-1)}
-                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-2xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
                     >
                         Back to Topics
                     </button>
@@ -454,10 +458,10 @@ const RakshaBandhanMultiplication = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-2xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
                             <RefreshCw size={24} /> Start New Quest
                         </button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-2xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
                             Back to Topics
                         </button>
                     </div>
@@ -474,7 +478,7 @@ const RakshaBandhanMultiplication = () => {
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
@@ -512,7 +516,7 @@ const RakshaBandhanMultiplication = () => {
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontWeight: '500' }}
+                                                    style={{ fontWeight: '500', fontSize: '1.1rem', padding: '0.25rem 0.5rem', minHeight: '2.5rem' }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >

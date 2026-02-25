@@ -118,6 +118,7 @@ const questions = [
 const NumberPuzzles = () => {
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [score, setScore] = useState(0);
     const [showResult, setShowResult] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -150,7 +151,18 @@ const NumberPuzzles = () => {
 
     useEffect(() => {
         try {
-            // Reset state on question change
+            if (history[currentQIndex]) {
+                setIsSubmitted(history[currentQIndex].isSubmitted);
+                setIsCorrect(history[currentQIndex].isCorrect);
+                setSelectedOption(history[currentQIndex].selectedOption);
+                setFeedback(history[currentQIndex].feedback);
+            } else {
+                setIsSubmitted(false);
+                setIsCorrect(false);
+                setSelectedOption(null);
+                setFeedback(null);
+            }
+            // Always reset interactive elements
             if (currentQ.type === 'drag-sort') {
                 if (currentQ.items) {
                     setDragItems([...currentQ.items].sort(() => Math.random() - 0.5));
@@ -165,10 +177,6 @@ const NumberPuzzles = () => {
             } else {
                 setShuffledTargets([]);
             }
-            setIsSubmitted(false);
-            setIsCorrect(false);
-            setSelectedOption(null);
-            setFeedback(null);
         } catch (e) {
             console.error(e);
         }
@@ -297,8 +305,8 @@ const NumberPuzzles = () => {
         }
     };
 
-    // --- Navigation Handlers ---
     const handleNext = () => {
+        setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, feedback } }));
         // Reset happens in useEffect
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
@@ -308,7 +316,10 @@ const NumberPuzzles = () => {
     };
 
     const handlePrevious = () => {
-        if (currentQIndex > 0) setCurrentQIndex(prev => prev - 1);
+        if (currentQIndex > 0) {
+            setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, feedback } }));
+            setCurrentQIndex(prev => prev - 1);
+        }
     };
 
     const handleRestart = () => {
@@ -404,7 +415,7 @@ const NumberPuzzles = () => {
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
                         Question {currentQIndex + 1} / {questions.length}
                     </div>
                 </div>
@@ -465,7 +476,7 @@ const NumberPuzzles = () => {
                                     </div>
                                     {isSubmitted && isCorrect && (
                                         <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm mb-1">
-                                            <span className="text-xl">🌟</span> Awesome! Correct!
+                                            <span className="text-2xl">🌟</span> Awesome! Correct!
                                         </div>
                                     )}
                                 </div>
@@ -496,7 +507,7 @@ const NumberPuzzles = () => {
                                     </div>
                                     {isSubmitted && isCorrect && (
                                         <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm">
-                                            <span className="text-xl">🎉</span> Correct Sequence!
+                                            <span className="text-2xl">🎉</span> Correct Sequence!
                                         </div>
                                     )}
                                 </div>
@@ -568,7 +579,7 @@ const NumberPuzzles = () => {
                                     </div>
                                     {isSubmitted && isCorrect ? (
                                         <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm">
-                                            <span className="text-xl">✨</span> Perfect Match!
+                                            <span className="text-2xl">✨</span> Perfect Match!
                                         </div>
                                     ) : (
                                         <div className="text-center pt-2 pb-1 text-[10px] text-gray-400 uppercase tracking-widest font-bold">Draw lines to connect</div>

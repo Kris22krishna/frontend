@@ -129,6 +129,7 @@ const questions = [
 const GuessTheNumber = () => {
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [questionResults, setQuestionResults] = useState({}); // Stores { [questionIndex]: isCorrect }
     const score = Object.values(questionResults).filter(Boolean).length;
     const [selectedOption, setSelectedOption] = useState(null);
@@ -149,13 +150,21 @@ const GuessTheNumber = () => {
     }, []);
 
     useEffect(() => {
-        setSelectedOption(null);
-        setIsSubmitted(false);
-        setIsCorrect(false);
-        setShowExplanation(false);
+        if (history[currentQIndex]) {
+            setSelectedOption(history[currentQIndex].selectedOption);
+            setIsSubmitted(history[currentQIndex].isSubmitted);
+            setIsCorrect(history[currentQIndex].isCorrect);
+            setShowExplanation(history[currentQIndex].showExplanation);
+        } else {
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            setShowExplanation(false);
+        }
     }, [currentQIndex]);
 
     const handleNext = () => {
+        setHistory(prev => ({ ...prev, [currentQIndex]: { selectedOption, isSubmitted, isCorrect, showExplanation } }));
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
         } else {
@@ -166,6 +175,7 @@ const GuessTheNumber = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
+            setHistory(prev => ({ ...prev, [currentQIndex]: { selectedOption, isSubmitted, isCorrect, showExplanation } }));
             setCurrentQIndex(prev => prev - 1);
         }
     };
@@ -217,7 +227,7 @@ const GuessTheNumber = () => {
                 <div className="text-sm font-bold text-blue-400 uppercase tracking-wide">Word Numeral</div>
                 <div className="text-6xl filter drop-shadow-md">{data.icon}</div>
                 <div className="text-center">
-                    <div className="text-xl font-black text-slate-700">{data.label}</div>
+                    <div className="text-2xl font-black text-slate-700">{data.label}</div>
                 </div>
             </motion.div>
         );
@@ -257,7 +267,7 @@ const GuessTheNumber = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="question-card-modern h-full flex flex-col justify-start items-center max-w-5xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg border border-white/50">
+                    <div className="question-card-modern h-full flex flex-col justify-start items-center max-w-5xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl sm: sm: sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg border border-white/50">
                         <div className="text-center mb-6">
                             <div className="inline-block bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">Guess the Number</div>
                             <h2 className="text-2xl md:text-3xl font-bold text-[#31326F]">{currentQ.question}</h2>

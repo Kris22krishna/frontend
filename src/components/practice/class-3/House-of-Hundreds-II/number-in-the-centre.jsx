@@ -103,6 +103,7 @@ const questions = [
 const NumberInTheCentre = () => {
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [score, setScore] = useState(0);
     const [showResult, setShowResult] = useState(false);
     const [feedback, setFeedback] = useState(null);
@@ -148,10 +149,7 @@ const NumberInTheCentre = () => {
     };
 
     const handleNext = () => {
-        setFeedback(null);
-        setIsSubmitted(false);
-        setIsCorrect(false);
-        setSelectedOption(null);
+        setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
         setShowExplanationModal(false);
 
         if (currentQIndex < questions.length - 1) {
@@ -161,13 +159,26 @@ const NumberInTheCentre = () => {
         }
     };
 
-    const handlePrevious = () => {
-        if (currentQIndex > 0) {
-            setCurrentQIndex(prev => prev - 1);
+    
+    useEffect(() => {
+        if (history[currentQIndex]) {
+            setFeedback(history[currentQIndex].feedback);
+            setIsSubmitted(history[currentQIndex].isSubmitted);
+            setIsCorrect(history[currentQIndex].isCorrect);
+            setSelectedOption(history[currentQIndex].selectedOption);
+        } else {
             setFeedback(null);
             setIsSubmitted(false);
             setIsCorrect(false);
             setSelectedOption(null);
+        }
+        setShowExplanationModal(false);
+    }, [currentQIndex]);
+
+    const handlePrevious = () => {
+        if (currentQIndex > 0) {
+            setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
+            setCurrentQIndex(prev => prev - 1);
             setShowExplanationModal(false);
         }
     };
@@ -205,7 +216,7 @@ const NumberInTheCentre = () => {
             return (
                 <div className="flex items-center justify-center gap-8 relative my-8">
                     {/* Left Box (Placeholder or Value) */}
-                    <div className="w-24 h-16 bg-blue-100 rounded-xl border-2 border-blue-300 flex items-center justify-center font-bold text-xl text-blue-800 shadow-sm relative">
+                    <div className="w-24 h-16 bg-blue-100 rounded-xl border-2 border-blue-300 flex items-center justify-center font-bold text-2xl text-blue-800 shadow-sm relative">
                         {currentQ.type === 'comparison_less' ? '?' : '...'}
                         {currentQ.type === 'comparison_less' && crocodileMouth('right')}
                         {/* If looking for smaller than center, Center > Option. Crocodile eats Center. */}
@@ -222,7 +233,7 @@ const NumberInTheCentre = () => {
                     </motion.div>
 
                     {/* Right Box (Placeholder or Value) */}
-                    <div className="w-24 h-16 bg-blue-100 rounded-xl border-2 border-blue-300 flex items-center justify-center font-bold text-xl text-blue-800 shadow-sm relative">
+                    <div className="w-24 h-16 bg-blue-100 rounded-xl border-2 border-blue-300 flex items-center justify-center font-bold text-2xl text-blue-800 shadow-sm relative">
                         {currentQ.type === 'comparison_greater' ? '?' : '...'}
                         {currentQ.type === 'comparison_greater' && crocodileMouth('left')}
                         {/* If looking for bigger than 400. 425 > 400. Crocodile eats 425. Mouth opens to right (towards box). */}
@@ -292,7 +303,7 @@ const NumberInTheCentre = () => {
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
                         Question {currentQIndex + 1} / {questions.length}
                     </div>
                 </div>

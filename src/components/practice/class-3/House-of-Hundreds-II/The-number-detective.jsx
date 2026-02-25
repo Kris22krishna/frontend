@@ -136,6 +136,7 @@ const questions = [
 const NumberDetective = () => {
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [score, setScore] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -163,10 +164,6 @@ const NumberDetective = () => {
         return () => clearInterval(timerRef.current);
     }, []);
 
-    useEffect(() => {
-        resetQuestionState();
-    }, [currentQIndex, currentQ]);
-
     const resetQuestionState = () => {
         setSelectedOption(null);
         setIsSubmitted(false);
@@ -186,7 +183,27 @@ const NumberDetective = () => {
         }
     };
 
+    useEffect(() => {
+        if (history[currentQIndex]) {
+            setIsSubmitted(history[currentQIndex].isSubmitted);
+            setIsCorrect(history[currentQIndex].isCorrect);
+            setSelectedOption(history[currentQIndex].selectedOption);
+            setShowExplanation(history[currentQIndex].showExplanation);
+            // Still need to reset the interactive elements
+            if (currentQ.type === 'drag-sort') {
+                setDragItems([...currentQ.items].sort(() => Math.random() - 0.5));
+            } else if (currentQ.type === 'drag-match') {
+                if (currentQ.targets) setShuffledTargets([...currentQ.targets].sort(() => Math.random() - 0.5));
+            } else if (currentQ.type === 'mcq') {
+                setCurrentOptions([...currentQ.options].sort(() => Math.random() - 0.5));
+            }
+        } else {
+            resetQuestionState();
+        }
+    }, [currentQIndex, currentQ]);
+
     const handleNext = () => {
+        setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, showExplanation } }));
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
         } else {
@@ -197,6 +214,7 @@ const NumberDetective = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
+            setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, showExplanation } }));
             setCurrentQIndex(prev => prev - 1);
         }
     };
@@ -366,7 +384,7 @@ const NumberDetective = () => {
             content = (
                 <div className="flex justify-center gap-4 mb-2">
                     {currentQ.items.map((val, i) => (
-                        <div key={i} className={`w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold border-4 shadow-md ${val === '?' ? 'border-orange-400 bg-orange-50 text-orange-500 animate-pulse' : 'border-blue-200 bg-white text-[#31326F]'}`}>
+                        <div key={i} className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold border-4 shadow-md ${val === '?' ? 'border-orange-400 bg-orange-50 text-orange-500 animate-pulse' : 'border-blue-200 bg-white text-[#31326F]'}`}>
                             {val}
                         </div>
                     ))}
@@ -412,7 +430,7 @@ const NumberDetective = () => {
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-2xl shadow-lg whitespace-nowrap flex items-center gap-2">
                         <Search size={18} className="text-[#31326F]" />
                         Case {currentQIndex + 1} / {questions.length}
                     </div>
@@ -473,7 +491,7 @@ const NumberDetective = () => {
                                         </div>
                                         {isSubmitted && isCorrect && (
                                             <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm mb-1">
-                                                <span className="text-xl">🌟</span> Good Eye, Detective!
+                                                <span className="text-2xl">🌟</span> Good Eye, Detective!
                                             </div>
                                         )}
                                     </div>
@@ -504,7 +522,7 @@ const NumberDetective = () => {
                                     </div>
                                     {isSubmitted && isCorrect && (
                                         <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm">
-                                            <span className="text-xl">🎉</span> Order Restored!
+                                            <span className="text-2xl">🎉</span> Order Restored!
                                         </div>
                                     )}
                                 </div>
@@ -573,7 +591,7 @@ const NumberDetective = () => {
                                     </div>
                                     {isSubmitted && isCorrect ? (
                                         <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm">
-                                            <span className="text-xl">✨</span> Clues Matched!
+                                            <span className="text-2xl">✨</span> Clues Matched!
                                         </div>
                                     ) : (
                                         <div className="text-center pt-2 pb-1 text-[10px] text-gray-400 uppercase tracking-widest font-bold">Connect the clues</div>
