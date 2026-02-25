@@ -37,7 +37,7 @@ const MakeOneLitreUsingBottles = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1137;
-    const SKILL_NAME = "Weigh It, Pour It - Make 1 Litre Using Bottles";
+    const SKILL_NAME = "Weigh It - Balancing Capacities with Bottles";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -62,67 +62,86 @@ const MakeOneLitreUsingBottles = () => {
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
-        // Logic based on PDF: Combinations making 1L
+        // Generate Questions
         const questions = [];
-        let attempts = 0;
+        const targets = [
+            { ml: 500, label: "500 ml" },
+            { ml: 1000, label: "1 Litre" },
+            { ml: 1500, label: "1.5 Litres" },
+            { ml: 2000, label: "2 Litres" }
+        ];
 
-        while (questions.length < TOTAL_QUESTIONS && attempts < 100) {
-            attempts++;
+        while (questions.length < TOTAL_QUESTIONS) {
+            const target = targets[randomInt(0, targets.length - 1)];
+            const targetML = target.ml;
 
-            const combinations = [
-                { parts: [500, 500], label: "500ml + 500ml" },
-                { parts: [500, 250, 250], label: "500ml + 250ml + 250ml" },
-                { parts: [250, 250, 250, 250], label: "4 × 250ml" },
-                { parts: [200, 200, 200, 200, 200], label: "5 × 200ml" },
-                { parts: [500, 200, 200, 100], label: "500ml + 200ml + 200ml + 100ml" },
-                { parts: [500, 100, 100, 100, 100, 100], label: "500ml + 5 × 100ml" }
+            // Basic base combinations for 1000ml to adapt from
+            const baseCombinations = [
+                [500, 500],
+                [500, 250, 250],
+                [250, 250, 250, 250],
+                [200, 200, 200, 200, 200],
+                [500, 200, 200, 100],
+                [500, 100, 100, 100, 100, 100]
             ];
 
-            const correctCombo = combinations[randomInt(0, combinations.length - 1)];
+            // Pick a base and scale it if possible, or just build a random valid combo
+            let correctParts = [];
+            let tempML = targetML;
+            const bottleSizes = [500, 250, 200, 100];
+
+            while (tempML > 0) {
+                const possible = bottleSizes.filter(s => s <= tempML);
+                if (possible.length === 0) break;
+                const pick = possible[randomInt(0, possible.length - 1)];
+                correctParts.push(pick);
+                tempML -= pick;
+            }
+
+            const correctLabel = correctParts.map(p => `${p}ml`).join(' + ');
 
             // Create distracting wrong options
             const wrongOptions = [];
             while (wrongOptions.length < 3) {
-                const parts = [];
-                const template = combinations[randomInt(0, combinations.length - 1)];
-                const mod = template.label.replace('500', '250').replace('100', '200'); // chaotic swap
-                if (mod !== correctCombo.label && !wrongOptions.includes(mod) && mod.length < 30) {
-                    wrongOptions.push(mod);
-                } else {
-                    const fallbacks = ["500ml + 200ml", "250ml + 200ml + 100ml", "100ml + 100ml + 100ml", "500ml + 250ml + 100ml"];
-                    const f = fallbacks[randomInt(0, fallbacks.length - 1)];
-                    if (f !== correctCombo.label && !wrongOptions.includes(f)) wrongOptions.push(f);
+                let wrongParts = [];
+                let wrongML = 0;
+                // Generate a random combo that is NOT the target
+                for (let i = 0; i < correctParts.length + randomInt(-1, 1); i++) {
+                    const pick = bottleSizes[randomInt(0, bottleSizes.length - 1)];
+                    wrongParts.push(pick);
+                    wrongML += pick;
+                }
+
+                const label = wrongParts.map(p => `${p}ml`).join(' + ');
+                if (wrongML !== targetML && !wrongOptions.includes(label) && label.length < 50) {
+                    wrongOptions.push(label);
                 }
             }
 
             const qText = `<div class="flex flex-col items-center gap-6">
-                            <span class="text-3xl font-medium">Which set of bottles fills exactly <strong>1 Litre</strong>?</span>
+                            <span class="text-3xl font-medium">Which set of bottles fills exactly <strong>${target.label}</strong>?</span>
                             
                              <div class="flex items-end gap-4 mt-2 justify-center">
-                                ${Array(3).fill(0).map(() => `
-                                    <div style="width: 30px; height: 60px; background: #bee3f8; border: 2px solid #3182ce; border-radius: 5px 5px 15px 15px;"></div>
-                                `).join('')}
+                                 <div style="width: 30px; height: 60px; background: #bee3f8; border: 2px solid #3182ce; border-radius: 5px 5px 15px 15px;"></div>
+                                 <div style="width: 25px; height: 50px; background: #bee3f8; border: 2px solid #3182ce; border-radius: 5px 5px 15px 15px;"></div>
                                 <span class="text-3xl mx-2">➡️</span>
                                 <div style="width: 80px; height: 140px; background: #e2e8f0; border: 3px solid #718096; border-radius: 10px 10px 30px 30px; display: flex; align-items: center; justify-content: center; color: #4a5568; font-weight: bold; position: relative;">
-                                    <div style="position: absolute; bottom: 0; width: 100%; height: 100%; background: #bee3f8; border-radius: 7px 7px 27px 27px; opacity: 0.5;"></div>
-                                    <span style="z-index: 10;">1 L</span>
+                                    <div style="position: absolute; bottom: 0; width: 100%; height: ${Math.min(100, (targetML / 2000) * 100)}%; background: #bee3f8; border-radius: 7px 7px 27px 27px; opacity: 0.5;"></div>
+                                    <span style="z-index: 10;">${target.label}</span>
                                 </div>
                             </div>
                             
-                            <p class="text-lg text-gray-600 italic">Select the combination that sums to 1000 ml.</p>
+                            <p class="text-lg text-gray-600 italic">Select the combination that sums to ${targetML} ml.</p>
                           </div>`;
-
-            const duplicate = questions.find(q => q.correctAnswer === correctCombo.label);
-            if (duplicate) continue;
 
             questions.push({
                 text: qText,
-                correctAnswer: correctCombo.label,
-                solution: `We need total volume = 1 L = 1000 ml.<br/>
-                           Option "${correctCombo.label}" adds up to:<br/>
-                           ${correctCombo.parts.join(' + ')} = 1000.<br/>
+                correctAnswer: correctLabel,
+                solution: `We need total volume = ${target.label} = ${targetML} ml.<br/>
+                           Option "${correctLabel}" adds up to:<br/>
+                           ${correctParts.join(' + ')} = ${targetML}.<br/>
                            So, this is the correct set.`,
-                shuffledOptions: [correctCombo.label, ...wrongOptions].sort(() => Math.random() - 0.5)
+                shuffledOptions: [correctLabel, ...wrongOptions].sort(() => Math.random() - 0.5)
             });
         }
 
@@ -434,7 +453,7 @@ const MakeOneLitreUsingBottles = () => {
 
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
+                    <div className="w-full">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={qIndex}

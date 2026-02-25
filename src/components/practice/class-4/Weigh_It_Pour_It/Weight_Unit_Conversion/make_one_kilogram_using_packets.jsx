@@ -40,7 +40,7 @@ const MakeOneKilogramUsingPackets = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1135;
-    const SKILL_NAME = "Weigh It, Pour It - Make 1 Kilogram Using Packets";
+    const SKILL_NAME = "Weigh It - Balancing Weights with Packets";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -67,35 +67,37 @@ const MakeOneKilogramUsingPackets = () => {
 
         // Generate Questions
         const questions = [];
+        const targetWeights = [500, 1000, 1500, 2000];
+        const types = [500, 250, 200, 100];
+
         for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-            // Target is always 1000g
-            // Generate a set of packets that CAN make 1000g, plus distractors
-            const types = [500, 250, 200, 100];
+            const targetWeight = targetWeights[randomInt(0, targetWeights.length - 1)];
 
             // Create a valid combination first
-            let target = 1000;
+            let remaining = targetWeight;
             let validCombo = [];
-            // Simple greedy generation for valid combo
-            while (target > 0) {
-                const possible = types.filter(t => t <= target);
-                if (possible.length === 0) break; // Should not happen with 100 available
+            while (remaining > 0) {
+                const possible = types.filter(t => t <= remaining);
+                if (possible.length === 0) break;
                 const pick = possible[randomInt(0, possible.length - 1)];
                 validCombo.push({ id: `valid-${i}-${validCombo.length}`, weight: pick });
-                target -= pick;
+                remaining -= pick;
             }
 
             // Distractors
             let distractors = [];
-            for (let j = 0; j < 4; j++) {
+            const distractorCount = randomInt(2, 4);
+            for (let j = 0; j < distractorCount; j++) {
                 distractors.push({ id: `dist-${i}-${j}`, weight: types[randomInt(0, types.length - 1)] });
             }
 
             const allPackets = [...validCombo, ...distractors].sort(() => Math.random() - 0.5);
 
             questions.push({
-                text: "Drag packets to the scale to make exactly <strong>1 kg</strong>.",
+                targetWeight: targetWeight,
+                text: `Drag packets to the scale to make exactly <strong>${targetWeight >= 1000 ? `${targetWeight / 1000} kg` : `${targetWeight} g`}</strong>.`,
                 packets: allPackets,
-                solution: `1 kg = 1000 g.<br/>You need to place packets that add up to 1000 g on the scale.`
+                solution: `${targetWeight >= 1000 ? `${targetWeight / 1000} kg` : `${targetWeight} g`} = ${targetWeight} g.<br/>You need to place packets that add up to ${targetWeight} g on the scale.`
             });
         }
         setSessionQuestions(questions);
@@ -174,7 +176,8 @@ const MakeOneKilogramUsingPackets = () => {
 
     const handleCheck = () => {
         const currentWeight = scalePackets.reduce((sum, p) => sum + p.weight, 0);
-        const isRight = currentWeight === 1000;
+        const targetWeight = currentQuestion.targetWeight;
+        const isRight = currentWeight === targetWeight;
 
         setIsCorrect(isRight);
         if (isRight) {
@@ -182,10 +185,8 @@ const MakeOneKilogramUsingPackets = () => {
             setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
         } else {
             setIsSubmitted(false); // Allow retry
-            setFeedbackMessage(currentWeight < 1000 ? "Too light! Add more." : "Too heavy! Remove some.");
-            // Don't show full explanation modal immediately for drag-drop, just hint? 
-            // Actually, existing logic shows modal on wrong. Let's stick to that but maybe customize text.
-            // setShowExplanationModal(true); // Let them try again first
+            setFeedbackMessage(currentWeight < targetWeight ? "Too light! Add more." : "Too heavy! Remove some.");
+            setShowExplanationModal(true);
         }
 
         setAnswers(prev => ({
@@ -196,15 +197,6 @@ const MakeOneKilogramUsingPackets = () => {
                 poolPackets: poolPackets
             }
         }));
-
-        if (isRight) {
-            setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        } else {
-            setFeedbackMessage(currentWeight < 1000 ? "Too light! Add more." : "Too heavy! Remove some.");
-            // Don't show full explanation modal immediately for drag-drop, just hint? 
-            // Actually, existing logic shows modal on wrong. Let's stick to that but maybe customize text.
-            setShowExplanationModal(true);
-        }
 
         recordQuestionAttempt(isRight);
     };
@@ -241,20 +233,21 @@ const MakeOneKilogramUsingPackets = () => {
         }
     };
 
-    // Helper to return packet element
-    const PacketItem = ({ packet, origin }) => (
+    const renderPacket = (packet, origin) => (
         <motion.div
+            layout
+            layoutId={packet.id}
             key={packet.id}
             drag
-            dragSnapToOrigin={true} // Snaps back if not "dropped" by state change
+            dragSnapToOrigin={true}
             onDragEnd={(e, i) => handleDragEnd(e, i, packet, origin)}
             whileDrag={{ scale: 1.1, zIndex: 100 }}
             className={`
-                w-16 h-16 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center font-black text-base sm:text-xl shadow-lg cursor-grab active:cursor-grabbing border-b-4 select-none
+                w-12 h-12 sm:w-24 sm:h-24 rounded-xl flex items-center justify-center font-black text-xs sm:text-lg shadow-lg cursor-grab active:cursor-grabbing border-b-4 select-none
                 ${packet.weight === 500 ? 'bg-red-100 text-red-600 border-red-300' : ''}
-                ${packet.weight === 250 ? 'bg-blue-100 text-blue-600 border-blue-300 w-16 h-16 sm:w-20 sm:h-20 text-sm sm:text-lg' : ''}
-                ${packet.weight === 200 ? 'bg-green-100 text-green-600 border-green-300 w-14 h-14 sm:w-20 sm:h-20 text-sm sm:text-lg' : ''}
-                ${packet.weight === 100 ? 'bg-yellow-100 text-yellow-600 border-yellow-300 w-12 h-12 sm:w-16 sm:h-16 text-xs sm:text-base' : ''}
+                ${packet.weight === 250 ? 'bg-blue-100 text-blue-600 border-blue-300 w-11 h-11 sm:w-20 sm:h-20 text-[10px] sm:text-lg' : ''}
+                ${packet.weight === 200 ? 'bg-green-100 text-green-600 border-green-300 w-11 h-11 sm:w-20 sm:h-20 text-[10px] sm:text-lg' : ''}
+                ${packet.weight === 100 ? 'bg-yellow-100 text-yellow-600 border-yellow-300 w-10 h-10 sm:w-16 sm:h-16 text-[9px] sm:text-base' : ''}
             `}
         >
             {packet.weight}g
@@ -350,71 +343,83 @@ const MakeOneKilogramUsingPackets = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '1000px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern flex flex-col items-center" style={{ overflowY: 'visible' /* Let drag elements overflow if needed */ }}>
-                            <div className="question-header-modern mb-8">
-                                <h2 className="text-3xl font-black text-[#31326F] text-center">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '1000px', margin: '0 auto', height: '100%' }}>
+                    <div className="w-full h-full">
+                        <div className="question-card-modern flex flex-col items-center" style={{ overflowY: 'auto', minHeight: 'unset', padding: '1rem 1.5rem', height: '100%' }}>
+                            <div className="question-header-modern mb-4 w-full">
+                                <h2 className="text-2xl font-black text-[#31326F] text-center w-full">
                                     <LatexContent html={currentQuestion.text} />
                                 </h2>
                             </div>
-
                             {/* Interaction Area */}
-                            <div className="flex-1 w-full flex flex-col items-center gap-8">
+                            <div className="w-full flex flex-col items-center gap-2 sm:gap-4 pb-12 sm:pb-24">
+                                {/* Packets Header (Stats) */}
+                                <div className="w-full max-w-md flex justify-between items-center bg-white/50 backdrop-blur-sm px-6 py-3 rounded-2xl border-2 border-[#31326F]/5 shadow-sm">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] sm:text-xs font-black text-[#31326F] uppercase tracking-wider opacity-60">Target Weight</span>
+                                        <span className="text-xl sm:text-2xl font-black text-[#31326F]">
+                                            {currentQuestion?.targetWeight >= 1000 ? `${currentQuestion.targetWeight / 1000} kg` : `${currentQuestion.targetWeight} g`}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Current Weight</span>
+                                        <motion.span
+                                            key={currentWeight}
+                                            initial={{ scale: 0.8 }}
+                                            animate={{ scale: 1 }}
+                                            className={`text-xl font-black ${currentWeight === (currentQuestion?.targetWeight || 1000) ? 'text-green-500' : currentWeight > (currentQuestion?.targetWeight || 1000) ? 'text-red-500' : 'text-[#31326F]'}`}
+                                        >
+                                            {currentWeight} g
+                                        </motion.span>
+                                    </div>
+                                </div>
 
-                                {/* Scale / Drop Zone */}
+                                {/* Scale / Drop Zone - Expandable Sideways */}
                                 <div
                                     ref={scaleRef}
                                     className={`
-                                        w-full max-w-md h-64 bg-blue-50 rounded-3xl border-4 border-dashed transition-colors flex flex-col items-center justify-end relative
+                                        w-full max-w-[800px] min-h-[8rem] sm:min-h-[12rem] bg-blue-50/50 rounded-3xl border-4 border-dashed transition-colors flex flex-col items-center relative
                                         ${isSubmitted && isCorrect ? 'border-green-400 bg-green-50' : 'border-blue-200'}
                                         ${isSubmitted && !isCorrect ? 'border-red-300 bg-red-50' : ''}
                                     `}
                                 >
-                                    <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-xl font-bold text-gray-500 shadow-sm">
-                                        Max: 1000g
+                                    {/* Packets on Scale - Flex wrap for horizontal expansion */}
+                                    <div className="w-full flex flex-wrap content-end justify-center gap-2 sm:gap-3 p-3 sm:p-6 pb-16 sm:pb-20 min-h-full">
+                                        <AnimatePresence>
+                                            {scalePackets.map(p => (
+                                                <div key={p.id} className="relative z-10 transition-transform hover:scale-105">
+                                                    {renderPacket(p, 'scale')}
+                                                </div>
+                                            ))}
+                                        </AnimatePresence>
                                     </div>
 
-                                    {/* Weight Display */}
-                                    <div className="mb-4 text-4xl font-black text-[#31326F]">
-                                        {currentWeight} g
-                                    </div>
-
-                                    {/* Scale Plate Visual */}
-                                    <div className="w-4/5 h-4 bg-gray-300 rounded-full mb-8"></div>
-                                    <Scale className="text-gray-300 absolute bottom-2 opacity-20" size={120} />
-
-                                    {/* Packets on Scale */}
-                                    <div className="absolute inset-0 flex flex-wrap content-end justify-center gap-2 p-8 pb-16 pointer-events-none overflow-hidden">
-                                        {scalePackets.map(p => (
-                                            <div key={p.id} className="pointer-events-auto relative z-10 transition-transform hover:scale-105">
-                                                <PacketItem packet={p} origin="scale" />
-                                            </div>
-                                        ))}
+                                    {/* Scale Plate Visual - Centered at Bottom */}
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-4/5 flex flex-col items-center pointer-events-none">
+                                        <Scale className="text-gray-300 opacity-10 mt-1" size={80} />
                                     </div>
                                 </div>
 
                                 {/* Feedback */}
-                                {isSubmitted && (
+                                {isSubmitted && feedbackMessage && (
                                     <motion.div
-                                        initial={{ scale: 0.5, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        className={`px-6 py-2 rounded-xl font-bold text-xl ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
+                                        initial={{ y: 10, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        className={`px-6 py-3 rounded-xl font-bold text-center w-full max-w-md text-base sm:text-lg ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}
                                     >
                                         {feedbackMessage}
                                     </motion.div>
                                 )}
 
                                 {/* Packet Pool */}
-                                <div className="w-full bg-gray-50 rounded-3xl p-6 min-h-[200px]">
-                                    <p className="text-center text-gray-400 font-bold mb-4 uppercase tracking-wider text-sm">Review Available Packets</p>
-                                    <div className="flex flex-wrap justify-center gap-4">
-                                        {poolPackets.map(p => (
-                                            <PacketItem key={p.id} packet={p} origin="pool" />
-                                        ))}
+                                <div className="w-full bg-gray-50 rounded-3xl p-3 sm:p-4 min-h-[80px] sm:min-h-[120px]">
+                                    <p className="text-center text-gray-400 font-bold mb-1 sm:mb-2 uppercase tracking-wider text-[8px] sm:text-[10px]">Available Packets</p>
+                                    <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+                                        <AnimatePresence>
+                                            {poolPackets.map(p => renderPacket(p, 'pool'))}
+                                        </AnimatePresence>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -431,6 +436,7 @@ const MakeOneKilogramUsingPackets = () => {
             />
 
             <footer className="junior-bottom-bar">
+                {/* Desktop Controls */}
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
@@ -458,8 +464,26 @@ const MakeOneKilogramUsingPackets = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Mobile Controls */}
+                <div className="mobile-footer-controls">
+                    <button className="footer-icon-btn exit-btn" onClick={() => navigate(-1)}>
+                        <X size={24} />
+                    </button>
+                    <div className="nav-buttons-group">
+                        {isSubmitted ? (
+                            <button className="footer-pill-btn next-btn" onClick={handleNext}>
+                                {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"} <ChevronRight size={20} strokeWidth={3} />
+                            </button>
+                        ) : (
+                            <button className="footer-pill-btn submit-btn" onClick={handleCheck}>
+                                Check <Check size={20} strokeWidth={3} />
+                            </button>
+                        )}
+                    </div>
+                </div>
             </footer>
-        </div>
+        </div >
     );
 };
 

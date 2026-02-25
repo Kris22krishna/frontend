@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X } from 'lucide-react';
+import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../../contexts/AuthContext';
 import { api } from '../../../services/api';
@@ -11,8 +11,7 @@ import ExplanationModal from '../../ExplanationModal';
 import StickerExit from '../../StickerExit';
 import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
-import './Grade1Practice.css';
-
+import '../../../pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'day-night') {
@@ -49,7 +48,7 @@ const DynamicVisual = ({ type, data }) => {
         const hourAngle = (hour % 12) * 30;
         return (
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="g1-clock-visual">
-                <svg width="100%" height="auto" style={{ maxWidth: '220px', filter: 'drop-shadow(0 12px 20px rgba(0,0,0,0.15))' }} viewBox="0 0 120 120">
+                <svg width="100%" height="100%" style={{ maxWidth: '220px', filter: 'drop-shadow(0 12px 20px rgba(0,0,0,0.15))' }} viewBox="0 0 120 120">
                     <defs>
                         <radialGradient id="clockFace" cx="50%" cy="50%" r="50%">
                             <stop offset="85%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
@@ -82,8 +81,8 @@ const DynamicVisual = ({ type, data }) => {
                         return (
                             <text
                                 key={i} x={60 + 38 * Math.sin(angle)} y={60 - 38 * Math.cos(angle)}
-                                textAnchor="middle" fontSize="10" fontWeight="900" fill="#2D3436" dominantBaseline="middle"
-                                style={{ fontFamily: 'Fredoka, sans-serif' }}
+                                textAnchor="middle" fontSize="10" fontWeight="400" fill="#2D3436" dominantBaseline="middle"
+                                style={{ fontFamily: 'Nunito, sans-serif' }}
                             >
                                 {i + 1}
                             </text>
@@ -118,10 +117,10 @@ const DynamicVisual = ({ type, data }) => {
                     maxWidth: '650px'
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                        <h3 style={{ margin: 0, color: '#31326F', fontWeight: 900, fontSize: '1.2rem', fontFamily: 'Fredoka' }}>
+                        <h3 style={{ margin: 0, color: '#31326F', fontWeight: 400, fontSize: '1.2rem', fontFamily: 'Nunito, sans-serif' }}>
                             {label === 'ORDER' ? 'WEEKLY ORDER 🔢' : 'WEEKLY CALENDAR 📅'}
                         </h3>
-                        <div style={{ background: '#F0F4F8', padding: '5px 15px', borderRadius: '15px', fontSize: '0.8rem', color: '#64748B', fontWeight: 800 }}>
+                        <div style={{ background: '#F0F4F8', padding: '5px 15px', borderRadius: '15px', fontSize: '0.8rem', color: '#64748B', fontWeight: 400 }}>
                             7 DAYS
                         </div>
                     </div>
@@ -136,7 +135,7 @@ const DynamicVisual = ({ type, data }) => {
                             <div key={d} style={{ textAlign: 'center' }}>
                                 <div style={{
                                     fontSize: '0.7rem',
-                                    fontWeight: 900,
+                                    fontWeight: 400,
                                     color: '#94A3B8',
                                     marginBottom: '5px'
                                 }}>
@@ -150,7 +149,7 @@ const DynamicVisual = ({ type, data }) => {
                                         padding: '12px 5px',
                                         borderRadius: '12px',
                                         fontSize: '0.75rem',
-                                        fontWeight: 800,
+                                        fontWeight: 400,
                                         border: d === day ? 'none' : '2px solid #E2E8F0',
                                         display: 'flex',
                                         flexDirection: 'column',
@@ -171,14 +170,14 @@ const DynamicVisual = ({ type, data }) => {
                     </div>
 
                     {label === 'ORDER' ? (
-                        <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '20px', textAlign: 'center', border: '2px dashed #C3DAFE' }}>
-                            <span style={{ color: '#4C51BF', fontWeight: 800, fontSize: '0.95rem' }}>
+                        <div style={{ background: '#EEF2FF', padding: '15px', borderRadius: '20px', textAlign: 'center', border: '2px solid #C3DAFE' }}>
+                            <span style={{ color: '#4C51BF', fontWeight: 400, fontSize: '0.95rem' }}>
                                 Can you count to the correct day? 🧐
                             </span>
                         </div>
                     ) : (
-                        <div style={{ background: '#FFF5F5', padding: '15px', borderRadius: '20px', textAlign: 'center', border: '2px dashed #FED7D7' }}>
-                            <span style={{ color: '#E53E3E', fontWeight: 800, fontSize: '0.95rem' }}>
+                        <div style={{ background: '#FFF5F5', padding: '15px', borderRadius: '20px', textAlign: 'center', border: '2px solid #FED7D7' }}>
+                            <span style={{ color: '#E53E3E', fontWeight: 400, fontSize: '0.95rem' }}>
                                 {isAfter ? `Looking for the day AFTER ${day} ➡️` : `Looking for the day BEFORE ${day} ⬅️`}
                             </span>
                         </div>
@@ -189,15 +188,6 @@ const DynamicVisual = ({ type, data }) => {
     }
     return null;
 };
-
-const MOTIVATIONS = [
-    { text: "Spectacular!", sub: "You're doing amazing!" },
-    { text: "You're a Star!", sub: "Keep up the great work!" },
-    { text: "Brilliant!", sub: "That's exactly right!" },
-    { text: "Amazing!", sub: "You're a math wizard!" },
-    { text: "Fantastic!", sub: "You've got this!" },
-    { text: "Great Job!", sub: "Everything looks perfect!" }
-];
 
 const Time = () => {
     const { user } = useAuth();
@@ -217,7 +207,7 @@ const Time = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    const [motivation, setMotivation] = useState(null);
+
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -230,7 +220,6 @@ const Time = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
-
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const types = ['day-night', 'days-week', 'clock'];
@@ -322,10 +311,12 @@ const Time = () => {
 
     useEffect(() => {
         const init = async () => {
+            const userId = user?.user_id || user?.id;
+            if (!userId) return;
             const qs = generateQuestions(skillId);
             setSessionQuestions(qs);
             try {
-                const session = await api.createPracticeSession(user?.id, 'time-grade1');
+                const session = await api.createPracticeSession(userId, parseInt(skillId) || 601);
                 setSessionId(session?.session_id);
             } catch (e) { console.error(e); }
         };
@@ -346,6 +337,17 @@ const Time = () => {
         }
     }, [qIndex, answers]);
 
+    const handleExit = async () => {
+        try {
+            if (sessionId) {
+                await api.finishSession(sessionId);
+            }
+        } catch (e) {
+            console.error("Error finishing session:", e);
+        }
+        navigate('/junior/grade/1');
+    };
+
     const handleSkip = () => {
         if (isAnswered) return;
         handleNext();
@@ -362,25 +364,68 @@ const Time = () => {
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
+    };
+
+
+    const handleSubmit = () => {
+        if (isAnswered || selectedOption === null) return;
+        const option = selectedOption;
+
         setIsAnswered(true);
         const isCorrect = option === sessionQuestions[qIndex].correct;
+        // --- AUTO-INJECTED LOGGING ---
+        try {
+            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            const qData = sessionQuestions[qIndex] || {};
+            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
+            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+
+            if (uid && sessionId) {
+                api.recordAttempt({
+                    user_id: parseInt(uid, 10),
+                    session_id: sessionId,
+                    skill_id: parseInt(skId, 10) || 0,
+                    template_id: null,
+                    difficulty_level: 'Medium',
+                    question_text: String(qData.text || ''),
+                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
+                    student_answer: String(option),
+                    is_correct: isCorrect,
+                    solution_text: String(qData.explanation || qData.solution || ''),
+                    time_spent_seconds: currentTimer
+                }).catch(err => console.error("Auto-log failed:", err));
+            }
+        } catch (err) {
+            console.error("Auto-log error:", err);
+        }
+        // -----------------------------
+
         if (isCorrect) {
             setScore(s => s + 1);
-            if (!isTest) {
-                setMotivation(MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)]);
-            }
         }
 
-        setAnswers({
-            ...answers,
+        setAnswers(prev => ({
+            ...prev,
             [qIndex]: {
-                questionText: sessionQuestions[qIndex].text,
                 selectedOption: option,
-                correctAnswer: sessionQuestions[qIndex].correct,
                 isCorrect,
-                explanation: sessionQuestions[qIndex].explanation || "Time concepts help us understand our day!"
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
+                questionText: sessionQuestions[qIndex].text,
+                correctAnswer: sessionQuestions[qIndex].correct,
+                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
             }
-        });
+        }));
+
+        // Auto advance if correct, or show modal if incorrect
+        if (!isTest && !isCorrect) {
+            setShowExplanationModal(true);
+        } else {
+            // Give a tiny delay so they see the option highlight green
+            setTimeout(() => {
+                handleNext();
+            }, 800);
+        }
     };
 
     const handleNext = async () => {
@@ -392,12 +437,18 @@ const Time = () => {
                 if (sessionId) {
                     await api.finishSession(sessionId);
                     await api.createReport({
-                        session_id: sessionId,
-                        user_id: user?.id,
-                        score: score,
-                        total_questions: totalQuestions,
-                        time_spent: timer,
-                        answers: Object.values(answers).filter(a => a !== undefined)
+                        uid: user?.id || 'unknown',
+                        category: 'Practice',
+                        reportData: {
+                            skill_id: skillId,
+                            skill_name: skillName,
+                            score: Math.round((score / totalQuestions) * 100),
+                            total_questions: totalQuestions,
+                            correct_answers: score,
+                            time_spent: timer,
+                            timestamp: new Date().toISOString(),
+                            answers: Object.values(answers).filter(a => a !== undefined)
+                        }
                     });
                 }
             } catch (e) { console.error(e); }
@@ -426,14 +477,14 @@ const Time = () => {
                     </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </header>
 
                 <main className="results-content">
                     <div className="results-hero-section">
                         <img src={avatarImg} alt="Mascot" style={{ width: '120px', height: '120px', margin: '0 auto 20px' }} />
-                        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#31326F', fontFamily: 'Fredoka, cursive' }}>Quest Complete! 🎉</h2>
+                        <h2 style={{ fontSize: '2.5rem', fontWeight: 400, color: '#31326F', fontFamily: 'Nunito, sans-serif' }}>Quest Complete! 🎉</h2>
 
                         <div className="stars-container">
                             {[1, 2, 3].map(i => (
@@ -478,55 +529,60 @@ const Time = () => {
                             <h3 className="breakdown-title">Quest Log 📜</h3>
                             <div className="quest-log-list">
                                 {sessionQuestions.map((q, idx) => {
-                                const ans = answers[idx];
-                                if (!ans) return null;
-                                return (
-                                    <motion.div
-                                        key={idx}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        className="quest-log-item"
-                                    >
-                                        <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
-                                            {idx + 1}
-                                        </div>
-                                        <div className="log-content">
-                                            <div className="log-question">
-                                                <LatexText text={ans.questionText} />
+                                    const ans = answers[idx];
+                                    if (!ans) return null;
+                                    return (
+                                        <motion.div
+                                            key={idx}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            className="quest-log-item"
+                                        >
+                                            <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>
+                                                {idx + 1}
                                             </div>
-                                            <div className="log-answers">
-                                                <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
-                                                    <span className="log-label">Your Answer</span>
-                                                    <span className="log-value">{ans.selectedOption}</span>
+                                            <div className="log-content">
+                                                <div className="log-question">
+                                                    <LatexText text={ans.questionText} />
+                                                    {ans.visualData && (
+                                                        <div className="log-visual-area" style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                                                            <DynamicVisual type={ans.type} data={ans.visualData} />
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                {!ans.isCorrect && (
-                                                    <div className="log-answer-box correct-box">
-                                                        <span className="log-label">Correct Answer</span>
-                                                        <span className="log-value">{ans.correctAnswer}</span>
+                                                <div className="log-answers">
+                                                    <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
+                                                        <span className="log-label">Your Answer</span>
+                                                        <span className="log-value">{ans.selectedOption}</span>
                                                     </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="log-answer-box correct-box">
+                                                            <span className="log-label">Correct Answer</span>
+                                                            <span className="log-value">{ans.correctAnswer}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="log-explanation">
+                                                    <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
+                                                    <LatexText text={ans.explanation} />
+                                                </div>
+                                            </div>
+                                            <div className="log-icon">
+                                                {ans.isCorrect ? (
+                                                    <Check size={32} color="#4FB7B3" strokeWidth={3} />
+                                                ) : (
+                                                    <X size={32} color="#FF6B6B" strokeWidth={3} />
                                                 )}
                                             </div>
-                                            <div className="log-explanation">
-                                                <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
-                                                <LatexText text={ans.explanation} />
-                                            </div>
-                                        </div>
-                                        <div className="log-icon">
-                                            {ans.isCorrect ? (
-                                                <Check size={32} color="#4FB7B3" strokeWidth={3} />
-                                            ) : (
-                                                <X size={32} color="#FF6B6B" strokeWidth={3} />
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         </div>
                     ) : (
                         <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
                                 {Object.values(answers).map((ans, idx) => (
                                     <motion.div
                                         key={idx}
@@ -545,10 +601,10 @@ const Time = () => {
                                     </motion.div>
                                 ))}
                             </div>
-                            <p style={{ fontSize: '1.3rem', fontWeight: 700, color: '#4A5568', marginBottom: '10px' }}>
+                            <p style={{ fontSize: '1.3rem', fontWeight: 400, color: '#4A5568', marginBottom: '10px' }}>
                                 {percentage >= 80 ? '🌟 Amazing work! Keep it up!' :
-                                 percentage >= 60 ? '💪 Good effort! Keep practicing!' :
-                                 '🌱 Nice try! Practice makes perfect!'}
+                                    percentage >= 60 ? '💪 Good effort! Keep practicing!' :
+                                        '🌱 Nice try! Practice makes perfect!'}
                             </p>
                         </div>
                     )}
@@ -578,17 +634,18 @@ const Time = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-                    <button className="g1-back-btn" onClick={() => navigate(-1)} disabled={qIndex === 0 && !isAnswered}>
-                        <ChevronLeft size={20} /> Back
-                    </button>
-
                     <div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
                     </div>
 
-                    <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {totalQuestions}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1, minWidth: 0 }}>
+                        <span style={{ fontWeight: 400, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', whiteSpace: 'nowrap' }}>
+                            Q {qIndex + 1}/{totalQuestions}
+                        </span>
+                        <span style={{ fontWeight: 400, color: '#2D3436', fontSize: '1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <LatexText text={skillName} />
+                        </span>
                     </div>
 
                     {isTest && (
@@ -602,7 +659,7 @@ const Time = () => {
                                 color: '#4A5568',
                                 padding: '8px 15px',
                                 borderRadius: '15px',
-                                fontWeight: 700,
+                                fontWeight: 400,
                                 fontSize: '0.9rem',
                                 border: 'none',
                                 cursor: isAnswered ? 'not-allowed' : 'pointer',
@@ -616,19 +673,14 @@ const Time = () => {
                     )}
 
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </div>
 
-                <div className="g1-progress-container" style={{ margin: '0 0 30px 0' }}>
+                <div className="g1-progress-container" style={{ margin: '0 0 10px 0' }}>
                     <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / totalQuestions) * 100}%` }}></div>
                 </div>
-
-                <div className="g1-topic-skill-header">
-                    <span className="g1-topic-name">{topicName}</span>
-                    <h1 className="g1-skill-name"><LatexText text={skillName} /></h1>
-                </div>
-
+                <div className="g1-topic-header-compact" style={{ textAlign: 'center', margin: '5px 0', fontSize: '0.8rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 400 }}>{topicName}</div>
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
                     <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
                     <div className="g1-content-split">
@@ -642,7 +694,7 @@ const Time = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
                                             ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
@@ -655,20 +707,31 @@ const Time = () => {
                         </div>
                     </div>
 
-                    {isAnswered && (
-                        <div className="flex flex-col items-center gap-4 mt-8">
-                            {motivation && (
-                                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="flex flex-col items-center">
-                                    <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
-                                    <span className="g1-motivation-text">{motivation.text}</span>
-                                    <span className="g1-motivation-sub">{motivation.sub}</span>
-                                </motion.div>
+
+                    {/* --- INJECTED FOOTER V2 --- */}
+                    <div className="g1-navigation-footer">
+                        <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>
+                            <ChevronLeft size={24} /> Prev
+                        </button>
+
+                        <div>
+                            {isAnswered && !isTest && !answers[qIndex]?.isCorrect && (
+                                <button className="g1-nav-btn steps-btn" onClick={() => setShowExplanationModal(true)}>
+                                    <Eye size={24} /> Steps
+                                </button>
                             )}
-                            <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                {qIndex === totalQuestions - 1 ? 'Finish Quest 🏆' : 'Next Challenge 🚀'} <ArrowRight />
-                            </button>
+
+                            {!isAnswered ? (
+                                <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
+                                    Next <ChevronRight size={24} />
+                                </button>
+                            ) : (
+                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                    {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
+                                </button>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </motion.div>
             </div>
 
@@ -678,7 +741,7 @@ const Time = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={handleNext}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );
