@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, X, ChevronRight, ChevronLeft, Eye, Search } from 'lucide-react';
+import { Check, X, ChevronRight, ChevronLeft, Eye, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ExplanationModal from '../../../../components/ExplanationModal'; // Import ExplanationModal
 import '../../../../pages/juniors/JuniorPracticeSession.css';
@@ -421,12 +421,7 @@ const NumberDetective = () => {
             {/* --- HEADER --- */}
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <button
-                        className="bg-white/50 text-[#31326F] p-2 rounded-full hover:bg-white transition-colors"
-                        onClick={() => navigate(-1)}
-                    >
-                        <ArrowLeft size={24} />
-                    </button>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">The Number Detective</span>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">

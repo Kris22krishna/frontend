@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useDragControls } from 'framer-motion';
-import { ArrowLeft, RefreshCw, Check, X, Star, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { RefreshCw, Check, X, Star, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ExplanationModal from '../../../ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
@@ -236,7 +236,7 @@ const DrawTiles = () => {
             {/* Header */}
             <header className="junior-practice-header flex items-center justify-between px-6 pt-4 relative">
                 <div className="header-left absolute left-6">
-                    <div className="skill-name-label" style={{ fontWeight: 'bold', color: '#31326F', fontSize: '0.95rem' }}>House of Hundreds II - Draw Tiles</div>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Draw Tiles</span>
                 </div>
                 <div className="flex-1 text-center">
                     <h2 className="text-2xl font-black text-[#31326F] bg-white/50 inline-block px-6 py-2 rounded-full backdrop-blur-sm">

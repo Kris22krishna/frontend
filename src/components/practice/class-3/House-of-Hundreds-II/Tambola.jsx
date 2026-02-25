@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, X, ChevronLeft, ChevronRight, Eye, Search } from 'lucide-react';
+import { Check, X, ChevronLeft, ChevronRight, Eye, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ExplanationModal from '../../../ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
@@ -149,7 +149,7 @@ const Tambola = () => {
         }
     };
 
-    
+
     useEffect(() => {
         if (history[currentQIndex]) {
             setFeedback(history[currentQIndex].feedback);
@@ -209,12 +209,7 @@ const Tambola = () => {
         <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <button
-                        className="bg-white/50 text-[#31326F] p-2 rounded-full hover:bg-white transition-colors"
-                        onClick={() => navigate(-1)}
-                    >
-                        <ArrowLeft size={24} />
-                    </button>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Number Detective</span>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">

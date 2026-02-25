@@ -474,7 +474,7 @@ const RakshaBandhanMultiplication = () => {
         <div className="junior-practice-page raksha-theme raksha-bandhan-practice-page">
             <header className="junior-practice-header raksha-bandhan-header">
                 <div className="header-left">
-                    <div className="skill-name-label">{SKILL_NAME}</div>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, X, ChevronRight, ChevronLeft, Eye, RotateCcw } from 'lucide-react';
+import { Check, X, ChevronRight, ChevronLeft, Eye, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import ExplanationModal from '../../../../components/ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
@@ -386,9 +386,7 @@ const PaperSlips = () => {
         <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <button className="bg-white/50 text-[#31326F] p-2 rounded-full hover:bg-white transition-colors" onClick={() => navigate(-1)}>
-                        <ArrowLeft size={24} />
-                    </button>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Paper Slips</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black shadow-md flex items-center gap-2">

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { RefreshCw, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
@@ -260,7 +260,7 @@ const RakshaBandhanFillInTheBlanks = () => {
         <div className="junior-practice-page raksha-theme raksha-bandhan-practice-page">
             <header className="junior-practice-header raksha-bandhan-header">
                 <div className="header-left">
-                    {/* Empty or Logo if needed */}
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
@@ -280,7 +280,7 @@ const RakshaBandhanFillInTheBlanks = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container raksha-bandhan-board-container">
                     <div className="practice-left-col raksha-bandhan-left-col">
-                        <div className="question-card-modern" style={{  }}>
+                        <div className="question-card-modern" style={{}}>
                             <div className="question-header-modern">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                     <LatexContent html={currentQuestion.text} />
