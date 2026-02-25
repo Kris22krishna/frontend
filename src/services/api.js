@@ -765,7 +765,7 @@ export const api = {
         const response = await fetch(`${BASE_URL}/api/v1/practice/sessions`, {
             method: 'POST',
             headers: getHeaders(),
-            body: JSON.stringify({ user_id: userId, skill_id: skillId }),
+            body: JSON.stringify({ user_id: parseInt(userId, 10), skill_id: parseInt(skillId, 10) }),
         });
         return handleResponse(response);
     },
