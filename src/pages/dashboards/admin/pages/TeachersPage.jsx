@@ -5,6 +5,9 @@ import { api } from '../../../../services/api';
 const TeachersPage = () => {
     const [loading, setLoading] = useState(true);
     const [teachers, setTeachers] = useState([]);
+    const [totalTeachers, setTotalTeachers] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [limit] = useState(50);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);
 
@@ -27,8 +30,9 @@ const TeachersPage = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await api.getAdminTeachers();
-            setTeachers(data || []);
+            const response = await api.getAdminTeachers(currentPage, limit);
+            setTeachers(response.teachers || []);
+            setTotalTeachers(response.total || 0);
         } catch (err) {
             console.error('Failed to fetch teachers:', err);
             setError('Failed to load teachers');
@@ -39,17 +43,24 @@ const TeachersPage = () => {
 
     useEffect(() => {
         fetchTeachers();
-    }, []);
+    }, [currentPage]);
 
     const handleOpenAssignModal = async (teacher) => {
         setSelectedTeacher(teacher);
         setShowAssignModal(true);
         setLoadingStudents(true);
         try {
-            const studentsData = await api.getAdminStudents();
-            setAllStudents(studentsData || []);
+            // Parallel fetch all students (using large limit for "show all") and this teacher's current students
+            const [studentsResponse, assignedData] = await Promise.all([
+                api.getAdminStudents(1, 1000), // Fetch up to 1000 students for assignment
+                api.getAdminMentorStudents(teacher.id)
+            ]);
+
+            setAllStudents(studentsResponse.students || []);
+            // Pre-populate selected students with IDs of those already assigned
+            setSelectedStudents(assignedData ? assignedData.map(s => s.id) : []);
         } catch (err) {
-            console.error('Failed to fetch students:', err);
+            console.error('Failed to fetch assignment data:', err);
         } finally {
             setLoadingStudents(false);
         }
@@ -94,9 +105,26 @@ const TeachersPage = () => {
         }
     };
 
+    const handleUnassignStudent = async (studentId) => {
+        if (!selectedTeacher) return;
+
+        if (!confirm('Are you sure you want to unassign this student?')) return;
+
+        try {
+            await api.unassignStudent(selectedTeacher.id, studentId);
+            // Refresh the assigned students list
+            const data = await api.getAdminMentorStudents(selectedTeacher.id);
+            setAssignedStudents(data || []);
+            fetchTeachers(); // Refresh main list for counts
+        } catch (err) {
+            console.error('Failed to unassign student:', err);
+            alert('Failed to unassign student');
+        }
+    };
+
     // Calculate stats from real data
     const stats = [
-        { label: 'Total Teachers', value: teachers.length },
+        { label: 'Total Teachers', value: totalTeachers },
         { label: 'Active (Last 7d)', value: teachers.filter(t => t.lastActive !== 'Never' && !t.lastActive?.includes('w ago')).length },
         { label: 'Inactive', value: teachers.filter(t => t.lastActive === 'Never' || t.lastActive?.includes('w ago')).length },
     ];
@@ -262,6 +290,48 @@ const TeachersPage = () => {
                         )}
                     </tbody>
                 </table>
+
+                {/* Pagination Controls */}
+                <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-100">
+                    <div className="text-sm text-gray-600 font-medium">
+                        Showing <span className="text-gray-900">{(currentPage - 1) * limit + 1}</span> to <span className="text-gray-900">{Math.min(currentPage * limit, totalTeachers)}</span> of <span className="text-gray-900">{totalTeachers}</span> teachers
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors shadow-sm"
+                        >
+                            Previous
+                        </button>
+                        <div className="flex items-center gap-1">
+                            {[...Array(Math.ceil(totalTeachers / limit))].map((_, i) => {
+                                const pageNum = i + 1;
+                                if (pageNum === 1 || pageNum === Math.ceil(totalTeachers / limit) || (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)) {
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => setCurrentPage(pageNum)}
+                                            className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${currentPage === pageNum ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                } else if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                                    return <span key={pageNum} className="px-1 text-gray-400">...</span>;
+                                }
+                                return null;
+                            })}
+                        </div>
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(totalTeachers / limit), prev + 1))}
+                            disabled={currentPage === Math.ceil(totalTeachers / limit)}
+                            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors shadow-sm"
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {/* Assign Students Modal */}
@@ -325,13 +395,22 @@ const TeachersPage = () => {
                                             const matchesGrade = assignmentGradeFilter === 'All' || String(s.grade) === assignmentGradeFilter;
                                             return matchesSearch && matchesGrade;
                                         })
+                                        .sort((a, b) => {
+                                            // Handle Grade Sorting specifically
+                                            const aGrade = parseInt(String(a.grade).replace(/\D/g, '')) || 0;
+                                            const bGrade = parseInt(String(b.grade).replace(/\D/g, '')) || 0;
+
+                                            if (aGrade !== bGrade) return aGrade - bGrade;
+                                            // If grades are same, sort by name
+                                            return (a.name || "").localeCompare(b.name || "");
+                                        })
                                         .map((student) => (
                                             <div
                                                 key={student.id}
                                                 onClick={() => toggleStudentSelection(student.id)}
                                                 className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${selectedStudents.includes(student.id)
-                                                        ? 'bg-blue-50 border border-blue-200 shadow-sm'
-                                                        : 'hover:bg-slate-50 border border-transparent'
+                                                    ? 'bg-blue-50 border border-blue-200 shadow-sm'
+                                                    : 'hover:bg-slate-50 border border-transparent'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">
@@ -345,7 +424,11 @@ const TeachersPage = () => {
                                                             <span className="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded font-mono text-slate-600">ID: {student.id}</span>
                                                         </div>
                                                         <p className="text-[11px] text-gray-500 truncate">{student.email || 'No email'}</p>
-                                                        <p className="text-[10px] text-blue-600 font-bold uppercase mt-0.5">Grade {student.grade || 'N/A'}</p>
+                                                        <div className="flex items-center gap-2 mt-0.5">
+                                                            <p className="text-[10px] text-blue-600 font-bold uppercase">Grade {student.grade || 'N/A'}</p>
+                                                            <div className="h-1 w-1 rounded-full bg-slate-300" />
+                                                            <span className="text-[10px] text-slate-400">Joined {new Date(student.joinedDate).toLocaleDateString()}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 {selectedStudents.includes(student.id) && (
@@ -437,10 +520,20 @@ const TeachersPage = () => {
                                                     <p className="text-xs text-gray-500">{student.email}</p>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <span className="text-xs font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded-full uppercase tracking-wider underline-offset-2">
-                                                    Grade {student.grade}
-                                                </span>
+                                            <div className="flex items-center gap-2">
+                                                <div className="text-right mr-2">
+                                                    <span className="text-xs font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded-full uppercase tracking-wider underline-offset-2">
+                                                        Grade {student.grade}
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    onClick={() => handleUnassignStudent(student.id)}
+                                                    className="flex items-center gap-1 px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors text-xs font-bold border border-red-100"
+                                                    title="Unassign Student"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                    Unassign
+                                                </button>
                                             </div>
                                         </div>
                                     ))}

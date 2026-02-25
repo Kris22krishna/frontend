@@ -7,7 +7,7 @@ import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart
 } from 'recharts';
 import {
-    Users, Search, Loader2, UserCircle, Clock, Activity, BookOpen, Sparkles
+    Users, Search, Loader2, UserCircle, Clock, Activity, BookOpen, Sparkles, Timer
 } from 'lucide-react';
 
 const MentorDashboard = () => {
@@ -21,6 +21,8 @@ const MentorDashboard = () => {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedGrade, setSelectedGrade] = useState('All');
     const [selectedStatsDate, setSelectedStatsDate] = useState(new Date());
+    const [studentTimeData, setStudentTimeData] = useState([]);
+    const [studentTimeLoading, setStudentTimeLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,6 +56,24 @@ const MentorDashboard = () => {
 
         fetchData();
     }, []);
+
+    // Fetch per-student time whenever date changes
+    useEffect(() => {
+        const fetchStudentTime = async () => {
+            try {
+                setStudentTimeLoading(true);
+                const dateStr = selectedStatsDate.toISOString().split('T')[0];
+                const data = await api.getMentorStudentTime(dateStr);
+                setStudentTimeData(data?.students || []);
+            } catch (e) {
+                console.warn('Failed to fetch student time data', e);
+                setStudentTimeData([]);
+            } finally {
+                setStudentTimeLoading(false);
+            }
+        };
+        fetchStudentTime();
+    }, [selectedStatsDate]);
 
     // Helper to format time
     const formatTime = (seconds) => {
@@ -275,6 +295,103 @@ const MentorDashboard = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Student Time Table */}
+                <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="flex items-center justify-between p-6 border-b border-slate-100">
+                        <h3 className="text-xl font-bold text-[#31326F] flex items-center gap-2">
+                            <Timer className="h-5 w-5 text-teal-500" />
+                            Student Time Tracker
+                        </h3>
+                        <span className="text-sm text-slate-400">
+                            {new Date().toDateString() === selectedStatsDate.toDateString()
+                                ? 'Today'
+                                : selectedStatsDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </span>
+                    </div>
+
+                    {studentTimeLoading ? (
+                        <div className="flex items-center justify-center py-12">
+                            <Loader2 className="h-8 w-8 animate-spin text-teal-500" />
+                        </div>
+                    ) : studentTimeData.length > 0 ? (
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="bg-slate-50 text-left">
+                                        <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">#</th>
+                                        <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Student</th>
+                                        <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Grade</th>
+                                        <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Total Time</th>
+                                        <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Sessions</th>
+                                        <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Questions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {studentTimeData.map((s, idx) => (
+                                        <tr
+                                            key={s.user_id}
+                                            className={`border-b border-slate-50 hover:bg-teal-50/30 transition-colors cursor-pointer ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'
+                                                }`}
+                                            onClick={() => {
+                                                const student = students.find(st => st.user_id === s.user_id || st.student_id === s.user_id);
+                                                if (student) setSelectedStudent(student);
+                                            }}
+                                        >
+                                            <td className="px-6 py-4 text-sm text-slate-400 font-medium">{idx + 1}</td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-50 to-indigo-100 text-[#31326F] flex items-center justify-center font-bold text-sm shadow-inner">
+                                                        {s.name?.charAt(0) || '?'}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-semibold text-[#31326F] text-sm">{s.name}</p>
+                                                        <p className="text-xs text-slate-400">{s.email || '—'}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">
+                                                    {s.grade || 'N/A'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={`text-sm font-bold ${s.total_time_seconds > 0 ? 'text-teal-600' : 'text-slate-300'
+                                                    }`}>
+                                                    {formatTime(s.total_time_seconds)}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-slate-600 font-medium">{s.total_sessions}</td>
+                                            <td className="px-6 py-4 text-sm text-slate-600 font-medium">{s.total_questions}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr className="bg-gradient-to-r from-teal-50 to-blue-50 font-bold">
+                                        <td className="px-6 py-3" colSpan={2}>
+                                            <span className="text-sm text-[#31326F]">Total ({studentTimeData.length} students)</span>
+                                        </td>
+                                        <td className="px-6 py-3"></td>
+                                        <td className="px-6 py-3 text-sm text-teal-700">
+                                            {formatTime(studentTimeData.reduce((sum, s) => sum + s.total_time_seconds, 0))}
+                                        </td>
+                                        <td className="px-6 py-3 text-sm text-slate-700">
+                                            {studentTimeData.reduce((sum, s) => sum + s.total_sessions, 0)}
+                                        </td>
+                                        <td className="px-6 py-3 text-sm text-slate-700">
+                                            {studentTimeData.reduce((sum, s) => sum + s.total_questions, 0)}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-12">
+                            <Clock className="h-10 w-10 text-slate-200 mb-3" />
+                            <p className="text-sm text-slate-400">No activity recorded for this day</p>
+                        </div>
+                    )}
+                </div>
 
                 {/* Main Content - Student List */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 min-h-[500px] flex flex-col overflow-hidden">

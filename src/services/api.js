@@ -708,6 +708,15 @@ export const api = {
         return handleResponse(response);
     },
 
+    getMentorStudentTime: async (date = null) => {
+        const params = new URLSearchParams();
+        if (date) params.append('date', date);
+        const response = await fetch(`${BASE_URL}/api/v1/mentor/students/time?${params.toString()}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
     // --- Admin ---
     getAdminDashboardOverview: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/admin/overview`, {
@@ -716,15 +725,21 @@ export const api = {
         return handleResponse(response);
     },
 
-    getAdminStudents: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/students`, {
+    getAdminStudents: async (page = 1, limit = 50, grade = 'All', search = '') => {
+        const skip = (page - 1) * limit;
+        let url = `${BASE_URL}/api/v1/admin/students?skip=${skip}&limit=${limit}`;
+        if (grade && grade !== 'All') url += `&grade=${encodeURIComponent(grade)}`;
+        if (search) url += `&search=${encodeURIComponent(search)}`;
+
+        const response = await fetch(url, {
             headers: getHeaders()
         });
         return handleResponse(response);
     },
 
-    getAdminTeachers: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/teachers`, {
+    getAdminTeachers: async (page = 1, limit = 50) => {
+        const skip = (page - 1) * limit;
+        const response = await fetch(`${BASE_URL}/api/v1/admin/teachers?skip=${skip}&limit=${limit}`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -746,8 +761,32 @@ export const api = {
         return handleResponse(response);
     },
 
-    getAdminParents: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/parents`, {
+    unassignStudent: async (mentorId, studentId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/mentors/${mentorId}/unassign-student/${student_id}`, {
+            method: 'POST',
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
+    getAdminStudentMentors: async (studentId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/students/${studentId}/mentors`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    unassignMentor: async (studentId, mentorId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/students/${studentId}/unassign-mentor/${mentorId}`, {
+            method: 'POST',
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
+    getAdminParents: async (page = 1, limit = 50) => {
+        const skip = (page - 1) * limit;
+        const response = await fetch(`${BASE_URL}/api/v1/admin/parents?skip=${skip}&limit=${limit}`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -807,6 +846,13 @@ export const api = {
         const result = await handleResponse(response);
         console.log('✅ finishSession response:', result);
         return result;
+    },
+
+    getSessionAttempts: async (sessionId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/sessions/${sessionId}/attempts`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
     },
 
     getAllPracticeSessions: async (skillId = null, limit = 200) => {

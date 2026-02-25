@@ -5,6 +5,9 @@ import { api } from '../../../../services/api';
 const ParentsPage = () => {
     const [loading, setLoading] = useState(true);
     const [parents, setParents] = useState([]);
+    const [totalParents, setTotalParents] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [limit] = useState(50);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);
 
@@ -12,8 +15,9 @@ const ParentsPage = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await api.getAdminParents();
-            setParents(data || []);
+            const response = await api.getAdminParents(currentPage, limit);
+            setParents(response.parents || []);
+            setTotalParents(response.total || 0);
         } catch (err) {
             console.error('Failed to fetch parents:', err);
             setError('Failed to load parents');
@@ -24,11 +28,11 @@ const ParentsPage = () => {
 
     useEffect(() => {
         fetchParents();
-    }, []);
+    }, [currentPage]);
 
     // Calculate stats from real data
     const stats = [
-        { label: 'Total Parents', value: parents.length },
+        { label: 'Total Parents', value: totalParents },
         { label: 'Active (Last 7d)', value: parents.filter(p => p.lastActive !== 'Never' && !p.lastActive?.includes('w ago')).length },
         { label: 'With Children', value: parents.filter(p => p.childrenCount > 0).length },
     ];
@@ -170,6 +174,48 @@ const ParentsPage = () => {
                         )}
                     </tbody>
                 </table>
+
+                {/* Pagination Controls */}
+                <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-100">
+                    <div className="text-sm text-gray-600 font-medium">
+                        Showing <span className="text-gray-900">{(currentPage - 1) * limit + 1}</span> to <span className="text-gray-900">{Math.min(currentPage * limit, totalParents)}</span> of <span className="text-gray-900">{totalParents}</span> parents
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors shadow-sm"
+                        >
+                            Previous
+                        </button>
+                        <div className="flex items-center gap-1">
+                            {[...Array(Math.ceil(totalParents / limit))].map((_, i) => {
+                                const pageNum = i + 1;
+                                if (pageNum === 1 || pageNum === Math.ceil(totalParents / limit) || (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)) {
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => setCurrentPage(pageNum)}
+                                            className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${currentPage === pageNum ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                } else if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                                    return <span key={pageNum} className="px-1 text-gray-400">...</span>;
+                                }
+                                return null;
+                            })}
+                        </div>
+                        <button
+                            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(totalParents / limit), prev + 1))}
+                            disabled={currentPage === Math.ceil(totalParents / limit)}
+                            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors shadow-sm"
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
