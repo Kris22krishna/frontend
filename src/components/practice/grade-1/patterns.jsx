@@ -225,6 +225,8 @@ const generateQuestions = (selectedSkill) => {
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
@@ -249,6 +251,8 @@ const handleSkip = () => {
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: `This pattern was skipped. The correct item was ${sessionQuestions[qIndex].correct}.`
@@ -266,12 +270,18 @@ const handleSkip = () => {
                 if (sessionId) {
                     await api.finishSession(sessionId);
                     await api.createReport({
-                        session_id: sessionId,
-                        user_id: user?.id,
-                        score: score,
-                        total_questions: totalQuestions,
-                        time_spent: timer,
-                        answers: Object.values(answers)
+                        uid: user?.id || 'unknown',
+                        category: 'Practice',
+                        reportData: {
+                            skill_id: skillId,
+                            skill_name: skillName,
+                            score: Math.round((score / totalQuestions) * 100),
+                            total_questions: totalQuestions,
+                            correct_answers: score,
+                            time_spent: timer,
+                            timestamp: new Date().toISOString(),
+                            answers: Object.values(answers).filter(a => a !== undefined)
+                        }
                     });
                 }
             } catch (e) { console.error(e); }
@@ -392,7 +402,7 @@ const handleSkip = () => {
                         </div>
                     ) : (
                         <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
                                 {Object.values(answers).map((ans, idx) => (
                                     <motion.div
                                         key={idx}
@@ -505,7 +515,7 @@ const handleSkip = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
                                             ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}

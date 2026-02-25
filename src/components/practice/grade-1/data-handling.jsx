@@ -45,7 +45,7 @@ const DynamicVisual = ({ type, data }) => {
                 {chartData.map((row, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #E2E8F0', paddingBottom: '10px' }}>
                         <div style={{ width: '80px', fontWeight: 400, color: '#4A5568', fontSize: '1.2rem' }}>{row.label}</div>
-                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', gap: '8px' }}>
                             {Array.from({ length: row.count }).map((_, idx) => (
                                 <motion.span
                                     key={idx}
@@ -66,10 +66,10 @@ const DynamicVisual = ({ type, data }) => {
     if (type === 'grouping') {
         const { g1, g2, color1, color2 } = data;
         return (
-            <div className="g1-grouping-areas" style={{ display: 'flex', gap: 'clamp(20px, 8vw, 40px)', justifyContent: 'center', flexWrap: 'wrap', width: '100%' }}>
+            <div className="g1-grouping-areas" style={{ display: 'flex', gap: 'clamp(20px, 8vw, 40px)', justifyContent: 'center', width: '100%' }}>
                 <motion.div initial={{ x: -30 }} animate={{ x: 0 }} className="g1-data-group" style={{ background: color1 + '10', borderColor: color1 }}>
                     <div className="g1-group-label" style={{ color: color1 }}>Group A</div>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                         {Array.from({ length: g1 }).map((_, i) => (
                             <motion.div
                                 key={i}
@@ -85,7 +85,7 @@ const DynamicVisual = ({ type, data }) => {
 
                 <motion.div initial={{ x: 30 }} animate={{ x: 0 }} className="g1-data-group" style={{ background: color2 + '10', borderColor: color2 }}>
                     <div className="g1-group-label" style={{ color: color2 }}>Group B</div>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                         {Array.from({ length: g2 }).map((_, i) => (
                             <motion.div
                                 key={i}
@@ -300,6 +300,8 @@ const generateQuestions = (selectedSkill) => {
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
@@ -327,12 +329,18 @@ const handleNext = async () => {
                 if (sessionId) {
                     await api.finishSession(sessionId);
                     await api.createReport({
-                        session_id: sessionId,
-                        user_id: user?.id,
-                        score: score,
-                        total_questions: total,
-                        time_spent: timer,
-                        answers: Object.values(answers)
+                        uid: user?.id || 'unknown',
+                        category: 'Practice',
+                        reportData: {
+                            skill_id: skillId,
+                            skill_name: skillName,
+                            score: Math.round((score / totalQuestions) * 100),
+                            total_questions: totalQuestions,
+                            correct_answers: score,
+                            time_spent: timer,
+                            timestamp: new Date().toISOString(),
+                            answers: Object.values(answers).filter(a => a !== undefined)
+                        }
                     });
                 }
             } catch (e) { console.error(e); }
@@ -346,6 +354,8 @@ const handleNext = async () => {
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: "This question was skipped. " + (sessionQuestions[qIndex].explanation || "")
@@ -445,6 +455,11 @@ const handleNext = async () => {
                                             <div className="log-content">
                                                 <div className="log-question">
                                                     <LatexText text={ans.questionText} />
+                                                    {ans.visualData && (
+                                                        <div className="log-visual-area" style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                                                            <DynamicVisual type={ans.type} data={ans.visualData} />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div className="log-answers">
                                                     <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
@@ -477,7 +492,7 @@ const handleNext = async () => {
                         </div>
                     ) : (
                         <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
                                 {Object.values(answers).map((ans, idx) => (
                                     <motion.div
                                         key={idx}
@@ -586,7 +601,7 @@ const handleNext = async () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
                                             ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}

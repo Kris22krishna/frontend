@@ -20,7 +20,7 @@ const DynamicVisual = ({ type, data }) => {
         const ones = num % 10;
         return (
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="g1-tens-visual">
-                <div style={{ display: 'flex', gap: 'clamp(15px, 5vw, 30px)', alignItems: 'flex-end', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 'clamp(5px, 3vw, 20px)', alignItems: 'flex-end', justifyContent: 'center' }}>
                     {/* Ten Bars */}
                     {Array.from({ length: tens }).map((_, bIdx) => (
                         <motion.div
@@ -53,7 +53,7 @@ const DynamicVisual = ({ type, data }) => {
     if (type === 'comparison') {
         const { n1, n2, color1, color2 } = data;
         return (
-            <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 50px)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 50px)', alignItems: 'center', justifyContent: 'center' }}>
                 <div className="g1-compare-box" style={{ background: color1 + '15', padding: '25px', borderRadius: '30px' }}>
                     <div style={{ fontSize: '3.5rem', fontWeight: 400, color: color1, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>{n1}</div>
                     <div style={{ display: 'flex', gap: '4px' }}>
@@ -278,6 +278,8 @@ const generateQuestions = (selectedSkill) => {
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
@@ -302,6 +304,8 @@ const handleSkip = () => {
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
@@ -319,12 +323,18 @@ const handleSkip = () => {
                 if (sessionId) {
                     await api.finishSession(sessionId);
                     await api.createReport({
-                        session_id: sessionId,
-                        user_id: user?.id,
-                        score: score,
-                        total_questions: totalQuestions,
-                        time_spent: timer,
-                        answers: Object.values(answers).filter(a => a !== undefined)
+                        uid: user?.id || 'unknown',
+                        category: 'Practice',
+                        reportData: {
+                            skill_id: skillId,
+                            skill_name: skillName,
+                            score: Math.round((score / totalQuestions) * 100),
+                            total_questions: totalQuestions,
+                            correct_answers: score,
+                            time_spent: timer,
+                            timestamp: new Date().toISOString(),
+                            answers: Object.values(answers).filter(a => a !== undefined)
+                        }
                     });
                 }
             } catch (e) { console.error(e); }
@@ -421,6 +431,11 @@ const handleSkip = () => {
                                             <div className="log-content">
                                                 <div className="log-question">
                                                     <LatexText text={ans.questionText} />
+                                                    {ans.visualData && (
+                                                        <div className="log-visual-area" style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                                                            <DynamicVisual type={ans.type} data={ans.visualData} />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div className="log-answers">
                                                     <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
@@ -453,7 +468,7 @@ const handleSkip = () => {
                         </div>
                     ) : (
                         <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
                                 {Object.values(answers).map((ans, idx) => (
                                     <motion.div
                                         key={idx}
@@ -565,7 +580,7 @@ const handleSkip = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
                                             ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}

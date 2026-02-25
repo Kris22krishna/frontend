@@ -18,17 +18,17 @@ const DynamicVisual = ({ type, data }) => {
         const { n1, n2, color1, color2 } = data;
         return (
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="g1-addition-visual">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(15px, 5vw, 30px)', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(5px, 3vw, 20px)', justifyContent: 'center' }}>
                     <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '15px', borderRadius: '25px' }}>
-                        <svg width="100%" height="auto" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
+                        <svg width="100%" height="100%" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
                             {Array.from({ length: n1 }).map((_, i) => (
                                 <circle key={i} cx={(i % 3) * 30 + 20} cy={Math.floor(i / 3) * 30 + 20} r="12" fill={color1} />
                             ))}
                         </svg>
                     </div>
-                    <div style={{ fontSize: '3rem', fontWeight: 400, color: '#CBD5E0' }}>+</div>
+                    <div style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', fontWeight: 400, color: '#CBD5E0' }}>+</div>
                     <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '15px', borderRadius: '25px' }}>
-                        <svg width="100%" height="auto" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
+                        <svg width="100%" height="100%" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
                             {Array.from({ length: n2 }).map((_, i) => (
                                 <circle key={i} cx={(i % 3) * 30 + 20} cy={Math.floor(i / 3) * 30 + 20} r="12" fill={color2} />
                             ))}
@@ -41,11 +41,11 @@ const DynamicVisual = ({ type, data }) => {
     if (type === 'numeric' || type === 'word') {
         const { n1, n2, color1, color2 } = data;
         return (
-            <div className="g1-numeric-card" style={{ display: 'flex', gap: 'clamp(15px, 5vw, 40px)', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="g1-numeric-card" style={{ display: 'flex', gap: 'clamp(5px, 3vw, 20px)', alignItems: 'center', justifyContent: 'center' }}>
                 <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="g1-num-box" style={{ background: color1 + '20', color: color1 }}>{n1}</motion.div>
-                <div style={{ fontSize: '4rem', fontWeight: 400, color: '#CBD5E0' }}>+</div>
+                <div style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 400, color: '#CBD5E0' }}>+</div>
                 <motion.div initial={{ y: 20 }} animate={{ y: 0, transition: { delay: 0.1 } }} className="g1-num-box" style={{ background: color2 + '20', color: color2 }}>{n2}</motion.div>
-                <div style={{ fontSize: '4rem', fontWeight: 400, color: '#CBD5E0' }}>=</div>
+                <div style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 400, color: '#CBD5E0' }}>=</div>
                 <div className="g1-num-box" style={{ background: '#f0f0f0', border: '3px solid #cbd5e0', color: '#cbd5e0' }}>?</div>
             </div>
         );
@@ -254,6 +254,8 @@ const generateQuestions = (selectedSkill) => {
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
@@ -278,6 +280,8 @@ const handleSkip = () => {
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
@@ -295,12 +299,18 @@ const handleSkip = () => {
                 if (sessionId) {
                     await api.finishSession(sessionId);
                     await api.createReport({
-                        session_id: sessionId,
-                        user_id: user?.id,
-                        score: score,
-                        total_questions: totalQuestions,
-                        time_spent: timer,
-                        answers: Object.values(answers).filter(a => a !== undefined)
+                        uid: user?.id || 'unknown',
+                        category: 'Practice',
+                        reportData: {
+                            skill_id: skillId,
+                            skill_name: skillName,
+                            score: Math.round((score / totalQuestions) * 100),
+                            total_questions: totalQuestions,
+                            correct_answers: score,
+                            time_spent: timer,
+                            timestamp: new Date().toISOString(),
+                            answers: Object.values(answers).filter(a => a !== undefined)
+                        }
                     });
                 }
             } catch (e) { console.error(e); }
@@ -397,6 +407,11 @@ const handleSkip = () => {
                                             <div className="log-content">
                                                 <div className="log-question">
                                                     <LatexText text={ans.questionText} />
+                                                    {ans.visualData && (
+                                                        <div className="log-visual-area" style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                                                            <DynamicVisual type={ans.type} data={ans.visualData} />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div className="log-answers">
                                                     <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
@@ -429,7 +444,7 @@ const handleSkip = () => {
                         </div>
                     ) : (
                         <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
                                 {Object.values(answers).map((ans, idx) => (
                                     <motion.div
                                         key={idx}
@@ -542,7 +557,7 @@ const handleSkip = () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
                                             ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}

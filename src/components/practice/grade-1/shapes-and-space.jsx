@@ -22,7 +22,7 @@ const DynamicVisual = ({ type, data }) => {
                 animate={{ scale: 1, rotate: 0 }}
                 className="g1-visual-item"
             >
-                <svg width="100%" height="auto" style={{ maxWidth: '300px', maxHeight: '300px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} viewBox="0 0 100 100">
+                <svg width="100%" height="100%" style={{ maxWidth: '300px', maxHeight: '300px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} viewBox="0 0 100 100">
                     {shape === 'circle' && <circle cx="50" cy="50" r="42" fill={color} />}
                     {shape === 'square' && <rect x="8" y="8" width="84" height="84" fill={color} />}
                     {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} />}
@@ -35,8 +35,8 @@ const DynamicVisual = ({ type, data }) => {
         const { pos } = data;
         return (
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{border: "none"}}>
-                <svg width="100%" height="auto" style={{ maxWidth: '280px' }} viewBox="0 0 200 120">
-                    <rect x="50" y="40" width="100" height="70" rx="10" fill="white" stroke="#CBD5E0" strokeWidth="4" />
+                <svg width="100%" height="100%" style={{ maxWidth: '280px' }} viewBox="0 0 200 120">
+                    <rect x="50" y="40" width="100" height="70" rx="10" fill="white" stroke="none"  />
                     <text x="100" y="85" textAnchor="middle" fill="#A0AEC0" fontSize="14" fontWeight="400">BOX</text>
                     {pos === 'top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
                     {pos === 'bottom' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="95" r="18" fill="url(#ballGradient)" />}
@@ -284,6 +284,8 @@ const generateQuestions = (selectedSkill) => {
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
@@ -310,12 +312,18 @@ const handleNext = async () => {
                 if (sessionId) {
                     await api.finishSession(sessionId);
                     await api.createReport({
-                        session_id: sessionId,
-                        user_id: user?.id,
-                        score: score,
-                        total_questions: totalQuestions,
-                        time_spent: timer,
-                        answers: Object.values(answers).filter(a => a !== undefined)
+                        uid: user?.id || 'unknown',
+                        category: 'Practice',
+                        reportData: {
+                            skill_id: skillId,
+                            skill_name: skillName,
+                            score: Math.round((score / totalQuestions) * 100),
+                            total_questions: totalQuestions,
+                            correct_answers: score,
+                            time_spent: timer,
+                            timestamp: new Date().toISOString(),
+                            answers: Object.values(answers).filter(a => a !== undefined)
+                        }
                     });
                 }
             } catch (e) { console.error(e); }
@@ -329,6 +337,8 @@ const handleNext = async () => {
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
+                type: sessionQuestions[qIndex].type,
+                visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
                 explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
@@ -427,6 +437,11 @@ const handleNext = async () => {
                                             <div className="log-content">
                                                 <div className="log-question">
                                                     <LatexText text={ans.questionText} />
+                                                    {ans.visualData && (
+                                                        <div className="log-visual-area" style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+                                                            <DynamicVisual type={ans.type} data={ans.visualData} />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div className="log-answers">
                                                     <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
@@ -459,7 +474,7 @@ const handleNext = async () => {
                         </div>
                     ) : (
                         <div className="practice-summary" style={{ textAlign: 'center', padding: '20px 0' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
                                 {Object.values(answers).map((ans, idx) => (
                                     <motion.div
                                         key={idx}
@@ -549,7 +564,7 @@ const handleNext = async () => {
                                     <button
                                         key={i}
                                         className={`g1-option-btn 
-                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong')) : ''}
+                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
                                             ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
