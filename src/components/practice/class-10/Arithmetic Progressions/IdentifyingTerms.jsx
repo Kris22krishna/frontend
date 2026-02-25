@@ -234,7 +234,7 @@ const IdentifyingTerms = () => {
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
@@ -270,7 +270,8 @@ const IdentifyingTerms = () => {
             if (isTabActive.current) t += Date.now() - questionStartTime.current;
             const sec = Math.max(0, Math.round(t / 1000));
             api.recordAttempt({
-                user_id: parseInt(userId), session_id: sessionId, skill_id: SKILL_ID,
+                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
+                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
                 question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
                 student_answer: selectedOption, is_correct: isRight, solution_text: currentQ.solution,
                 time_spent_seconds: sec
@@ -308,7 +309,7 @@ const IdentifyingTerms = () => {
                         timestamp: new Date().toISOString(),
                         time_taken_seconds: timeElapsed
                     },
-                    user_id: parseInt(userId, 10)
+                    user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
                 }).catch(console.error);
             }
             navigate(-1);
@@ -336,16 +337,16 @@ const IdentifyingTerms = () => {
                 </div>
             </header>
 
-            <main className="practice-content-wrapper">
+            <main className="practice-content-wrapper" style={{ alignItems: "flex-start", paddingTop: "1rem" }}>
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                            <div className="question-header-modern">
+                    <div className="practice-left-col" style={{ width: "100%", minWidth: 0, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+                        <div className="question-card-modern" style={{ padding: "2rem", flex: "none", minHeight: "auto", height: "fit-content", display: "flex", flexDirection: "column", justifyContent: "flex-start", margin: "0" }}>
+                            <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "0.5rem" }}>
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', color: '#2D3748' }}>
                                     <LatexText text={currentQuestion.text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern">
+                            <div className="interaction-area-modern" style={{ marginTop: "1.5rem", flex: "none" }}>
                                 <div className="options-grid-modern">
                                     {currentQuestion.options.map((option, idx) => (
                                         <button
@@ -359,7 +360,7 @@ const IdentifyingTerms = () => {
                                         </button>
                                     ))}
                                     {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>
+                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
                                             {feedbackMessage}
                                         </motion.div>
                                     )}
@@ -378,7 +379,7 @@ const IdentifyingTerms = () => {
                         <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate(-1)}>Exit</button>
                     </div>
                     <div className="bottom-center">
-                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> Explain</button>}
+                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> VIEW EXPLANATION</button>}
                     </div>
                     <div className="bottom-right">
                         <div style={{ display: 'flex', gap: '10px' }}>
@@ -398,21 +399,29 @@ const IdentifyingTerms = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mobile-footer-controls">
-                    <div className="mobile-footer-right">
+                <div className="mobile-footer-controls" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                    <div className="mobile-footer-left">
+                        <button className="bg-red-50 text-red-500 px-3 py-2 rounded-xl border-2 border-red-100 font-bold" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center' }} onClick={() => navigate(-1)}>
+                            Exit
+                        </button>
+                    </div>
+                    <div className="mobile-footer-center" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                        {isSubmitted && <button className="view-explanation-btn" style={{ fontSize: '0.7rem', padding: '0.3rem 0.5rem' }} onClick={() => setShowExplanationModal(true)}><Eye size={14} /> VIEW EXPLANATION</button>}
+                    </div>
+                    <div className="mobile-footer-right" style={{ display: 'flex', gap: '5px' }}>
                         <button
-                            className="nav-pill-next-btn bg-gray-200 text-gray-600 p-2"
+                            className="nav-pill-next-btn bg-gray-200 text-gray-600"
                             onClick={handlePrevious}
                             disabled={qIndex === 0}
-                            style={{ minWidth: 'auto' }}
+                            style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }}
                         >
-                            <ChevronLeft size={20} />
+                            <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
-                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={18} /> Explain</button>}
-                        {isSubmitted ?
-                            <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight size={20} /></button> :
-                            <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={20} /></button>
-                        }
+                        {isSubmitted ? (
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                        ) : (
+                            <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
+                        )}
                     </div>
                 </div>
             </footer>

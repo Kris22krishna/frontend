@@ -577,13 +577,13 @@ const MensurationTest = () => {
 
                     {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' }}>
-                            <div className="question-header-modern">
+                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' , justifyContent: 'flex-start' }}>
+                            <div className="question-header-modern"  style={{  flexShrink: 0, marginBottom: "1rem" }}>
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <div className="interaction-area-modern" style={{  display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
                                 <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                                     {questions[qIndex].options.map((option, idx) => (
                                         <button
