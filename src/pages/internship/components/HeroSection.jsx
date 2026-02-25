@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
-const HeroSection = () => {
+const HeroSection = ({ onRegisterClick }) => {
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-900">
             {/* Background with overlay */}
@@ -64,12 +64,12 @@ const HeroSection = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.45 }}
                 >
-                    <a
-                        href="#register"
+                    <button
+                        onClick={onRegisterClick}
                         className="px-8 py-4 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 text-lg"
                     >
                         Register Now — ₹100 Only
-                    </a>
+                    </button>
                     <a
                         href="#domains"
                         className="px-8 py-4 rounded-lg font-semibold text-blue-400 border border-blue-500/30 hover:bg-blue-500/10 transition-all text-lg"

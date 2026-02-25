@@ -244,10 +244,10 @@ const GraphicalMethod = () => {
 
             // Type 4: Visual - Parallel
             newQuestions.push(createQuestion(4,
-                "Two lines satisfy the condition $a_1/a_2 = b_1/b_2 \\neq c_1/c_2$. Geometrically, these lines are:",
+                "Two lines satisfy the condition $a_1/a_2 = b_1/b_2$ ≠ $c_1/c_2$. Geometrically, these lines are:",
                 ["Intersecting", "Parallel", "Coincident", "Perpendicular"],
                 "Parallel",
-                "The condition $a_1/a_2 = b_1/b_2 \\neq c_1/c_2$ corresponds to **parallel lines** (same slope, different intercept)."
+                "The condition $a_1/a_2 = b_1/b_2$ ≠ $c_1/c_2$ corresponds to **parallel lines** (same slope, different intercept)."
             ));
 
             // Type 5: Visual - Coincident

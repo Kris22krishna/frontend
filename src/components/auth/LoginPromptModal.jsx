@@ -7,11 +7,12 @@ import '../../styles/AuthStyles.css';
 
 const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const navigate = useNavigate();
-    const [mode, setMode] = useState('PROMPT'); // PROMPT, LOGIN, SIGNUP
+    const [mode, setMode] = useState('PROMPT'); // PROMPT, LOGIN, SIGNUP, ROLE_SELECT
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [pendingGoogleUser, setPendingGoogleUser] = useState(null); // Holds Google user object when needs_role
 
     useEffect(() => {
         if (isOpen) {
@@ -19,6 +20,7 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
             setError('');
             setIdentifier('');
             setPassword('');
+            setPendingGoogleUser(null);
         }
     }, [isOpen]);
 
@@ -28,12 +30,8 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
         setError('');
         try {
             const response = await authService.loginWithEmail(identifier, password);
-            // api.js usually sets token, but let's ensure auth-change is dispatched
             window.dispatchEvent(new Event('auth-change'));
-
-            if (onLoginSuccess) {
-                onLoginSuccess(response);
-            }
+            if (onLoginSuccess) onLoginSuccess(response);
             onClose();
         } catch (err) {
             console.error('Login Error:', err);
@@ -48,17 +46,46 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
         setError('');
         try {
             const response = await authService.loginWithGoogle();
-            window.dispatchEvent(new Event('auth-change'));
 
-            if (onLoginSuccess) {
-                onLoginSuccess(response);
+            // New user: backend says we need to pick a role first
+            if (response.needs_role) {
+                setPendingGoogleUser(response.googleUser); // store Firebase user
+                setMode('ROLE_SELECT');
+                setIsLoading(false);
+                return;
             }
+
+            // Existing user: logged in directly
+            window.dispatchEvent(new Event('auth-change'));
+            if (onLoginSuccess) onLoginSuccess(response);
             onClose();
         } catch (err) {
             console.error('Google Login Error:', err);
-            setError('Google login failed.');
+            setError('Google login failed. Please try again.');
+            setIsLoading(false);
+        }
+    };
+
+    const handleRoleSelection = async (selectedRole) => {
+        if (!pendingGoogleUser) {
+            setError('Session expired. Please try again.');
+            setMode('LOGIN');
+            return;
+        }
+        setIsLoading(true);
+        setError('');
+        try {
+            // Second call: pass role + cached Google user to complete registration
+            const response = await authService.loginWithGoogle(selectedRole, pendingGoogleUser);
+            window.dispatchEvent(new Event('auth-change'));
+            if (onLoginSuccess) onLoginSuccess(response);
+            onClose();
+        } catch (err) {
+            console.error('Role selection registration failed:', err);
+            setError('Failed to create account. Please try again.');
         } finally {
             setIsLoading(false);
+            setPendingGoogleUser(null);
         }
     };
 
@@ -238,6 +265,74 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
                             onBack={() => setMode('LOGIN')}
                             onSuccess={handleRegistrationSuccess}
                         />
+                    </div>
+                )}
+
+                {mode === 'ROLE_SELECT' && (
+                    <div style={{ textAlign: 'left' }}>
+                        <div style={{
+                            backgroundColor: '#eff6ff',
+                            width: '56px', height: '56px',
+                            borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            margin: '0 auto 1.25rem',
+                            color: '#3b82f6'
+                        }}>
+                            <Sparkles size={28} />
+                        </div>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#1e293b', marginBottom: '0.4rem', textAlign: 'center' }}>
+                            One last step!
+                        </h3>
+                        <p style={{ color: '#64748b', marginBottom: '1.5rem', textAlign: 'center', lineHeight: '1.5' }}>
+                            How will you be using skill100.ai?
+                        </p>
+
+                        {error && <p style={{ color: '#ef4444', fontSize: '0.9rem', marginBottom: '1rem', textAlign: 'center' }}>{error}</p>}
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            {[
+                                { id: 'student', label: 'Student', desc: 'I want to learn and practice', icon: '🎓' },
+                                { id: 'parent', label: 'Parent', desc: 'I want to track my child\'s progress', icon: '👨‍👩‍👧‍👦' },
+                                { id: 'mentor', label: 'Mentor', desc: 'I want to guide students', icon: '👨‍🏫' },
+                                { id: 'guest', label: 'Guest', desc: 'I\'m just exploring', icon: '👀' }
+                            ].map((role) => (
+                                <button
+                                    key={role.id}
+                                    onClick={() => handleRoleSelection(role.id)}
+                                    disabled={isLoading}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '0.875rem 1rem',
+                                        borderRadius: '10px',
+                                        border: '1.5px solid #e2e8f0',
+                                        backgroundColor: 'white',
+                                        cursor: isLoading ? 'not-allowed' : 'pointer',
+                                        textAlign: 'left',
+                                        width: '100%',
+                                        transition: 'all 0.15s ease',
+                                        opacity: isLoading ? 0.6 : 1
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.backgroundColor = '#eff6ff'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.backgroundColor = 'white'; }}
+                                >
+                                    <span style={{ fontSize: '1.5rem', marginRight: '0.875rem' }}>{role.icon}</span>
+                                    <div>
+                                        <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '0.95rem' }}>{role.label}</div>
+                                        <div style={{ color: '#64748b', fontSize: '0.82rem' }}>{role.desc}</div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+
+                        <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+                            <button
+                                onClick={() => { setPendingGoogleUser(null); setMode('LOGIN'); }}
+                                style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline' }}
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

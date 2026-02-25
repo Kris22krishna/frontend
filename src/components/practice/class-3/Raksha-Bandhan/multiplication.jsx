@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X, Star } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, Pencil, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
@@ -19,7 +19,7 @@ const ITEMS = [
     { plural: "Rakhis", singular: "Rakhi", unit: "threads" },
     { plural: "Boxes", singular: "Box", unit: "sweets" },
     { plural: "Gift packs", singular: "Gift pack", unit: "chocolates" },
-    { plural: "Sisters", singular: "Sister", unit: "envelopes" },
+    { plural: "Envelope", singular: "Sister", unit: "envelopes" },
     { plural: "Plates", singular: "Plate", unit: "laddoos" },
     { plural: "Rakhi cards", singular: "Rakhi card", unit: "stickers" },
     { plural: "Thalis", singular: "Thali", unit: "diyas" },
@@ -557,7 +557,6 @@ const RakshaBandhanMultiplication = () => {
                                 navigate(-1);
                             }}
                         >
-                            <StickerExit size={20} className="hidden" />
                             Exit Practice
                         </button>
                     </div>

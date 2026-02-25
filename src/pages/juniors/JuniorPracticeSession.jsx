@@ -11,6 +11,7 @@ import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import ExplanationModal from '../../components/ExplanationModal';
 import LatexContent from '../../components/LatexContent';
 import './JuniorPracticeSession.css';
+import { trackPracticeStarted, trackPracticeCompleted, trackResultViewed } from '../../lib/gtag';
 
 
 const JuniorPracticeSession = () => {
@@ -77,6 +78,7 @@ const JuniorPracticeSession = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
+    const practiceStartTimeRef = useRef(Date.now());
 
     // Initial Session Creation
     const sessionCreatedForSkill = useRef(null);
@@ -182,6 +184,21 @@ const JuniorPracticeSession = () => {
 
         fetchQuestions(null, true);
     }, [skillId]);
+
+    // Track practice started when questions are loaded
+    useEffect(() => {
+        if (questions.length > 0 && skillName) {
+            trackPracticeStarted(skillId, skillName, 'Math');
+        }
+    }, [questions.length, skillName, skillId]);
+
+    // Track result viewed when results are displayed
+    useEffect(() => {
+        if (showResults && stats.total > 0) {
+            const percentage = Math.round((stats.correct / stats.total) * 100);
+            trackResultViewed(skillId, percentage);
+        }
+    }, [showResults, stats, skillId]);
 
     // Reset modal and other per-question states ONLY when question changes
     useEffect(() => {
@@ -399,6 +416,11 @@ const JuniorPracticeSession = () => {
 
     const handleSubmitSession = async () => {
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
+
+        // Track practice completion with GA4
+        const timeTaken = Math.round((Date.now() - practiceStartTimeRef.current) / 1000);
+        const score = Math.round((stats.correct / stats.total) * 100);
+        trackPracticeCompleted(skillId, skillName, 'Math', score, timeTaken);
 
         // Submit report
         try {

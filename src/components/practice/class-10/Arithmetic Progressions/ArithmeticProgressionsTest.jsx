@@ -1,253 +1,449 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
-import ExplanationModal from '../../../ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import mascotImg from '../../../../assets/mascot.png';
+
+const BLUE_THEME_CSS = `
+    .option-btn-modern.selected {
+        border-color: #3B82F6 !important;
+        background-color: #EFF6FF !important;
+        color: #1E40AF !important;
+        box-shadow: 0 4px 0 #2563EB !important;
+    }
+    .option-btn-modern {
+        min-height: 65px;
+        min-width: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem !important;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+    .grey-selection-theme {
+        --selected-border: #3B82F6;
+        --selected-bg: #EFF6FF;
+    }
+    .exam-report-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+    .report-stat-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        transition: transform 0.2s;
+    }
+    .report-stat-card:hover {
+        transform: translateY(-5px);
+    }
+    .solution-accordion {
+        border: 2px solid #FEF08A;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        background: white;
+    }
+    .solution-header {
+        padding: 1rem;
+        background: #F8FAFC;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    .solution-content {
+        padding: 1.5rem;
+        background: white;
+        border-top: 1px solid #E2E8F0;
+    }
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    .status-correct { background: #DCFCE7; color: #166534; }
+    .status-wrong { background: #FEE2E2; color: #991B1B; }
+    .status-skipped { background: #F1F5F9; color: #475569; }
+
+    .nav-pastel-btn {
+        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+        transition: all 0.3s ease !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.5px !important;
+    }
+    .nav-pastel-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+        background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+    }
+    .nav-pastel-btn:disabled {
+        background: #E2E8F0 !important;
+        color: #94A3B8 !important;
+        box-shadow: none !important;
+        transform: none !important;
+        cursor: not-allowed !important;
+    }
+
+    /* Mobile Responsiveness for Practice Session Layout */
+    @media (max-width: 1024px) {
+        .practice-board-container {
+            grid-template-columns: 1fr !important;
+            justify-items: center !important;
+            margin-bottom: 2rem !important;
+        }
+        .practice-left-col {
+            width: 100% !important;
+            max-width: 600px !important;
+            margin: 0 auto !important;
+        }
+        .question-palette-container {
+            width: 100% !important;
+            max-width: 500px !important;
+            margin: 2rem auto 0 auto !important;
+            max-height: none !important;
+            height: auto !important;
+        }
+        .options-grid-modern {
+            grid-template-columns: 1fr !important;
+            justify-items: center !important;
+        }
+        .practice-content-wrapper {
+            padding-bottom: 80px !important;
+        }
+        .option-btn-modern {
+            min-height: 55px;
+            font-size: 0.9rem;
+            min-width: unset !important;
+            width: 100% !important;
+            max-width: 350px !important;
+            margin: 0 auto !important;
+        }
+    }
+    @media (max-width: 640px) {
+        .junior-practice-header {
+            padding: 0 1rem !important;
+        }
+        .practice-content-wrapper {
+            padding: 1rem 1rem 80px 1rem !important;
+        }
+        .question-card-modern {
+            padding: 1.5rem !important;
+        }
+        .question-text-modern {
+            font-size: 1.1rem !important;
+        }
+    }
+`;
+
+const SKILL_ID = 1208;
+const SKILL_NAME = "Arithmetic Progressions - Chapter Test";
 
 const ArithmeticProgressionsTest = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isCorrect, setIsCorrect] = useState(false);
-    const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
-    const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [isTestOver, setIsTestOver] = useState(false);
+    const [responses, setResponses] = useState({});
+
+    const questionStartTime = useRef(Date.now());
+    const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
 
-    // Logging states
-    const [sessionId, setSessionId] = useState(null);
-    const questionStartTime = useRef(Date.now());
-    const accumulatedTime = useRef(0);
-    const isTabActive = useRef(true);
-
-    const SKILL_ID = 1110; // Arithmetic Progressions Chapter Test
-    const SKILL_NAME = "Arithmetic Progressions - Chapter Test";
-    const [answers, setAnswers] = useState({});
-
     const generateQuestions = () => {
-        const createQuestion = (id, text, options, answer, solution) => ({
-            id, text, options: options.sort(() => Math.random() - 0.5), correctAnswer: answer, solution
-        });
-
-        // 2 Questions from each topic
         const pool = [
-            // Topic 1
-            createQuestion(1,
-                `In a savings scheme, a student saves ₹50 in the first week, ₹60 in the second, ₹70 in the third, and so on. What is the amount saved in the 5th week?`,
-                [`₹80`, `₹90`, `₹100`, `₹110`],
-                `₹90`,
-                `1. Identify the first term (a) and common difference (d):
-   - Savings in 1st week ($a$) = ₹50
-   - Savings in 2nd week = ₹60
-   - Difference ($d$) = $60 - 50 = 10$
-   - This forms an Arithmetic Progression: 50, 60, 70...
-
-2. Find the savings for subsequent weeks by adding $d$:
-   - 3rd week = $60 + 10$ = ₹70
-   - 4th week = $70 + 10$ = ₹80
-   - 5th week = $80 + 10$ = ₹90
-
-3. Conclusion:
-   - Therefore, the amount saved in the 5th week is ₹90.`
-            ),
-            createQuestion(2,
-                `Identify the rule for the sequence: 100, 95, 90, 85...`,
-                [`Subtract 5`, `Add 5`, `Subtract 10`, `Divide by 5`],
-                `Subtract 5`,
-                `1. Find the difference between consecutive terms:
-   - $95 - 100 = -5$
-   - $90 - 95 = -5$
-   - $85 - 90 = -5$
-
-2. Analyze the result:
-   - The difference is constant: -5.
-   - This means we subtract 5 to get the next term.
-
-3. Conclusion:
-   - Therefore, the rule for the sequence is "Subtract 5".`
-            ),
-            // Topic 2
-            createQuestion(3,
-                `Which of the following sequences is an Arithmetic Progression (AP)?`,
-                [`1, 2, 3, 4...`, `1, 2, 4, 8...`, `1, 3, 9, 27...`, `1, 1, 2, 3...`],
-                `1, 2, 3, 4...`,
-                `1. Check differences for each sequence:
-   - Sequence 1: 1, 2, 3, 4...
-     $2-1=1$, $3-2=1$, $4-3=1$ (Constant difference)
-   - Sequence 2: 1, 2, 4, 8...
-     $2-1=1$, $4-2=2$ (Difference changes)
-
-2. Conclusion:
-   - Since the first sequence has a constant common difference ($d=1$), it is an Arithmetic Progression.`
-            ),
-            createQuestion(4,
-                `Find the common difference 'd' of the AP: 2, 4, 6, 8...`,
-                [`2`, `4`, `-2`, `0`],
-                `2`,
-                `1. Identify consecutive terms:
-   - $a_1 = 2$
-   - $a_2 = 4$
-
-2. Calculate the difference:
-   - $d = a_2 - a_1$
-   - $d = 4 - 2 = 2$
-
-3. Conclusion:
-   - Therefore, the common difference $d$ is 2.`
-            ),
-            // Topic 3
-            createQuestion(5,
-                `Find the first term $a$ and common difference $d$ for the AP: $-5, -1, 3, 7...$`,
-                [`a = -5, d = 4`, `a = -5, d = -4`, `a = 5, d = 4`, `a = -1, d = 4`],
-                `a = -5, d = 4`,
-                `1. Find the first term ($a$):
-   - The first number in the sequence is -5.
-   - So, $a = -5$.
-
-2. Find the common difference ($d$):
-   - $d = a_2 - a_1$
-   - $d = -1 - (-5)$
-   - $d = -1 + 5 = 4$
-
-3. Conclusion:
-   - Therefore, $a = -5$ and $d = 4$.`
-            ),
-            createQuestion(6,
-                `Find the common difference of the AP: $\\frac{1}{3}, \\frac{5}{3}, \\frac{9}{3}, \\frac{13}{3}...$`,
-                [`\\frac{4}{3}`, `\\frac{1}{3}`, `\\frac{2}{3}`, `4`],
-                `\\frac{4}{3}`,
-                `1. Identify terms:
-   - First term ($a_1$) = $\\frac{1}{3}$
-   - Second term ($a_2$) = $\\frac{5}{3}$
-
-2. Calculate difference:
-   - $d = a_2 - a_1$
-   - $d = \\frac{5}{3} - \\frac{1}{3}$
-   - $d = \\frac{5-1}{3} = \\frac{4}{3}$
-
-3. Conclusion:
-   - Therefore, the common difference is $\\frac{4}{3}$.`
-            ),
-            // Topic 4
-            createQuestion(7,
-                `Find the 10th term of the AP: 2, 7, 12...`,
-                [`47`, `52`, `45`, `50`],
-                `47`,
-                `1. Identify the parameters:
-   - First term ($a$) = 2
-   - Common difference ($d$) = $7 - 2 = 5$
-   - Number of terms ($n$) = 10
-
-2. Apply the formula:
-   - $a_n = a + (n-1)d$
-   - $a_{10} = 2 + (10 - 1)5$
-   - $a_{10} = 2 + 9(5)$
-   - $a_{10} = 2 + 45 = 47$
-
-3. Conclusion:
-   - Therefore, the 10th term is 47.`
-            ),
-            createQuestion(8,
-                `Subba Rao started work at a salary of ₹5000 and received an increment of ₹200 each year. In which year did his salary reach ₹7000?`,
-                [`11th year`, `10th year`, `12th year`, `20th year`],
-                `11th year`,
-                `1. Identify the Arithmetic Progression parameters:
-   - Initial salary ($a$) = ₹5000
-   - Annual increment ($d$) = ₹200
-   - Final salary ($a_n$) = ₹7000
-
-2. Use the formula $a_n = a + (n-1)d$:
-   - $7000 = 5000 + (n-1)200$
-   - $2000 = (n-1)200$
-   - $10 = n - 1$
-   - $n = 11$
-
-3. Conclusion:
-   - Therefore, in the 11th year, his salary reached ₹7000.`
-            ),
-            // Topic 5
-            createQuestion(9,
-                `Find the sum of the first 22 terms of the AP: 8, 3, -2...`,
-                [`-979`, `-1000`, `-970`, `-989`],
-                `-979`,
-                `1. Identify parameters:
-   - $a = 8$
-   - $d = 3 - 8 = -5$
-   - $n = 22$
-
-2. Apply the sum formula:
-   - $S_n = \\frac{n}{2}[2a + (n-1)d]$
-   - $S_{22} = \\frac{22}{2}[2(8) + (22-1)(-5)]$
-   - $S_{22} = 11[16 + 21(-5)]$
-   - $S_{22} = 11[16 - 105]$
-   - $S_{22} = 11(-89)$
-   - $S_{22} = -979$
-
-3. Conclusion:
-   - Therefore, the sum is -979.`
-            ),
-            createQuestion(10,
-                `How many terms of the AP: 24, 21, 18... must be taken so that their sum is 78?`,
-                [`4 or 13`, `4 only`, `13 only`, `5 or 12`],
-                `4 or 13`,
-                `1. Identify parameters:
-   - $a = 24$, $d = -3$, $S_n = 78$
-
-2. Set up the equation:
-   - $78 = \\frac{n}{2}[2(24) + (n-1)(-3)]$
-   - $156 = n[48 - 3n + 3]$
-   - $156 = n[51 - 3n]$
-   - $156 = 51n - 3n^2$
-
-3. Solve the quadratic equation:
-   - $3n^2 - 51n + 156 = 0$
-   - $n^2 - 17n + 52 = 0$ (Divide by 3)
-   - $(n - 4)(n - 13) = 0$
-   - $n = 4$ or $n = 13$
-
-4. Conclusion:
-   - Both values are positive integers, so both are valid answers.
-   - Therefore, 4 or 13 terms.`
-            )
+            {
+                id: 1,
+                text: "In an AP, if $d = -4, n = 7, a_n = 4$, then $a$ is:",
+                options: ["$6$", "$7$", "$12$", "$28$"],
+                correctAnswer: "$28$",
+                solution: "$a_n = a + (n-1)d \\Rightarrow 4 = a + (7-1)(-4) \\Rightarrow 4 = a - 24 \\Rightarrow a = 28$."
+            },
+            {
+                id: 2,
+                text: "In an AP, if $a = 3.5, d = 0, n = 101$, then $a_n$ will be:",
+                options: ["$0$", "$3.5$", "$103.5$", "$104.5$"],
+                correctAnswer: "$3.5$",
+                solution: "Since $d = 0$, all terms are the same as $a$. So $a_n = 3.5$."
+            },
+            {
+                id: 3,
+                text: "The 11th term of the AP: $-3, -\\frac{1}{2}, 2...$ is:",
+                options: ["$28$", "$22$", "$-38$", "$-48$"],
+                correctAnswer: "$22$",
+                solution: "$a = -3, d = -\\frac{1}{2} - (-3) = 2.5$. $a_{11} = -3 + 10(2.5) = -3 + 25 = 22$."
+            },
+            {
+                id: 4,
+                text: "The first four terms of an AP, whose first term is $-2$ and the common difference is $-2$, are:",
+                options: ["$-2, 0, 2, 4$", "$-2, -4, -6, -8$", "$-2, -4, -8, -16$", "$-2, -4, -6, -10$"],
+                correctAnswer: "$-2, -4, -6, -8$",
+                solution: "$a_1 = -2, a_2 = -2-2=-4, a_3 = -4-2=-6, a_4 = -6-2=-8$."
+            },
+            {
+                id: 5,
+                text: "The 21st term of the AP whose first two terms are $-3$ and $4$ is:",
+                options: ["$17$", "$137$", "$143$", "$-143$"],
+                correctAnswer: "$137$",
+                solution: "$a = -3, d = 4 - (-3) = 7. a_{21} = -3 + 20(7) = -3 + 140 = 137$."
+            },
+            {
+                id: 6,
+                text: "If the 2nd term of an AP is 13 and the 5th term is 25, what is its 7th term?",
+                options: ["$30$", "$33$", "$37$", "$38$"],
+                correctAnswer: "$33$",
+                solution: "$a+d=13, a+4d=25$. Subtracting: $3d=12 \\Rightarrow d=4$. $a=9$. $a_7 = 9 + 6(4) = 33$."
+            },
+            {
+                id: 7,
+                text: "Which term of the AP: $21, 42, 63, 84...$ is 210?",
+                options: ["$9^{th}$", "$10^{th}$", "$11^{th}$", "$12^{th}$"],
+                correctAnswer: "$10^{th}$",
+                solution: "$a = 21, d = 21, a_n = 210. 210 = 21 + (n-1)21 \\Rightarrow 189 = (n-1)21 \\Rightarrow n-1 = 9 \\Rightarrow n = 10$."
+            },
+            {
+                id: 8,
+                text: "In an AP with $d = 5$, what is $a_{18} - a_{13}$?",
+                options: ["$5$", "$20$", "$25$", "$30$"],
+                correctAnswer: "$25$",
+                solution: "$a_{18} - a_{13} = (a+17d) - (a+12d) = 5d = 5(5) = 25$."
+            },
+            {
+                id: 9,
+                text: "What is the common difference of an AP in which $a_{18} - a_{14} = 32$?",
+                options: ["$8$", "$-8$", "$4$", "$-4$"],
+                correctAnswer: "$8$",
+                solution: "$4d = 32 \\Rightarrow d = 8$."
+            },
+            {
+                id: 10,
+                text: "The sum of first five multiples of 3 is:",
+                options: ["$45$", "$55$", "$65$", "$75$"],
+                correctAnswer: "$45$",
+                solution: "AP: 3, 6, 9, 12, 15. $S_5 = 3+6+9+12+15 = 45$."
+            },
+            {
+                id: 11,
+                text: "The sum of first 16 terms of the AP: $10, 6, 2...$ is:",
+                options: ["$-320$", "$320$", "$-352$", "$-400$"],
+                correctAnswer: "$-320$",
+                solution: "$a=10, d=-4, n=16. S_{16} = 8[20 + 15(-4)] = 8[20-60] = 8(-40) = -320$."
+            },
+            {
+                id: 12,
+                text: "Find the 10th term from the end of the AP: $4, 9, 14, ..., 254$.",
+                options: ["$209$", "$205$", "$214$", "$199$"],
+                correctAnswer: "$209$",
+                solution: "New AP from end: $a=254, d=-5. a_{10} = 254 + 9(-5) = 254 - 45 = 209$."
+            },
+            {
+                id: 13,
+                text: "If 7 times the 7th term of an AP is equal to 11 times its 11th term, then its 18th term will be:",
+                options: ["$7$", "$11$", "$18$", "$0$"],
+                correctAnswer: "$0$",
+                solution: "$7(a+6d) = 11(a+10d) \\Rightarrow 7a+42d = 11a+110d \\Rightarrow 4a+68d=0 \\Rightarrow a+17d=0 \\Rightarrow a_{18}=0$."
+            },
+            {
+                id: 14,
+                text: "The sum of first n terms of an AP is $3n^2 + n$. Find its common difference.",
+                options: ["$3$", "$6$", "$9$", "$1$"],
+                correctAnswer: "$6$",
+                solution: "$S_1 = 3(1)+1 = 4 = a_1$. $S_2 = 3(4)+2 = 14 = a_1+a_2 \\Rightarrow a_2=10. d = 10-4=6$."
+            },
+            {
+                id: 15,
+                text: "If the common difference of an AP is 5, then what is $a_{18} - a_{13}$?",
+                options: ["$5$", "$20$", "$25$", "$30$"],
+                correctAnswer: "$25$",
+                solution: "Same as previous: $5d = 25$."
+            },
+            {
+                id: 16,
+                text: "Find the sum of all two-digit odd numbers.",
+                options: ["$2475$", "$2500$", "$2400$", "$2450$"],
+                correctAnswer: "$2475$",
+                solution: "11, 13, ..., 99. $n = 45$. $S_{45} = \\frac{45}{2}(11+99) = \\frac{45}{2}(110) = 45 \\times 55 = 2475$."
+            },
+            {
+                id: 17,
+                text: "How many multiples of 4 lie between 10 and 250?",
+                options: ["$60$", "$50$", "$55$", "$58$"],
+                correctAnswer: "$60$",
+                solution: "12, 16, ..., 248. $248 = 12 + (n-1)4 \\Rightarrow 236 = (n-1)4 \\Rightarrow n-1 = 59 \\Rightarrow n = 60$."
+            },
+            {
+                id: 18,
+                text: "For what value of $n$, are the nth terms of two APs: $63, 65, 67...$ and $3, 10, 17...$ equal?",
+                options: ["$12$", "$13$", "$14$", "$15$"],
+                correctAnswer: "$13$",
+                solution: "$63 + (n-1)2 = 3 + (n-1)7 \\Rightarrow 60 = 5(n-1) \\Rightarrow 12 = n-1 \\Rightarrow n=13$."
+            },
+            {
+                id: 19,
+                text: "Find the number of terms in AP: $7, 13, 19, ..., 205$.",
+                options: ["$33$", "$34$", "$35$", "$36$"],
+                correctAnswer: "$34$",
+                solution: "$205 = 7 + (n-1)6 \\Rightarrow 198 = (n-1)6 \\Rightarrow n-1 = 33 \\Rightarrow n=34$."
+            },
+            {
+                id: 20,
+                text: "In an AP, $a = 1, a_n = 20$ and $S_n = 399$, then $n$ is:",
+                options: ["$34$", "$38$", "$40$", "$42$"],
+                correctAnswer: "$38$",
+                solution: "$S_n = \\frac{n}{2}(a+a_n) \\Rightarrow 399 = \\frac{n}{2}(21) \\Rightarrow 38 = n$."
+            },
+            {
+                id: 21,
+                text: "What is the sum of first 10 terms of an AP: $2, 7, 12...$?",
+                options: ["$245$", "$250$", "$235$", "$240$"],
+                correctAnswer: "$245$",
+                solution: "$S_{10} = 5[4 + 9(5)] = 5[49] = 245$."
+            },
+            {
+                id: 22,
+                text: "If $k-1, k+3, 3k-1$ are three consecutive terms of an AP, then $k$ is:",
+                options: ["$k=4$", "$k=5$", "$k=3$", "$k=2$"],
+                correctAnswer: "$k=4$",
+                solution: "$2(k+3) = (k-1) + (3k-1) \\Rightarrow 2k+6 = 4k-2 \\Rightarrow 2k=8 \\Rightarrow k=4$."
+            },
+            {
+                id: 23,
+                text: "Find $n$ if $a=5, d=3, a_n=50$.",
+                options: ["$15$", "$16$", "$17$", "$18$"],
+                correctAnswer: "$16$",
+                solution: "$50 = 5 + (n-1)3 \\Rightarrow 45 = (n-1)3 \\Rightarrow 15 = n-1 \\Rightarrow n=16$."
+            },
+            {
+                id: 24,
+                text: "Sum of first 1000 positive integers is:",
+                options: ["500500", "505050", "499500", "500000"],
+                correctAnswer: "500500",
+                solution: "$S_{1000} = \\frac{1000(1001)}{2} = 500500$."
+            },
+            {
+                id: 25,
+                text: "If $a_3 = 5$ and $a_7 = 9$, find $a_{10}$.",
+                options: ["$12$", "$13$", "$11$", "$14$"],
+                correctAnswer: "$12$",
+                solution: "$a+2d=5, a+6d=9 \\Rightarrow 4d=4 \\Rightarrow d=1, a=3. a_{10} = 3 + 9(1) = 12$."
+            }
         ];
-
-        // Shuffle questions
         return pool.sort(() => Math.random() - 0.5);
     };
 
     useEffect(() => {
         setQuestions(generateQuestions());
-    }, []);
-
-    // Restore state when qIndex changes
-    useEffect(() => {
-        const savedAnswer = answers[qIndex];
-        if (savedAnswer) {
-            setSelectedOption(savedAnswer.selectedOption);
-            setIsCorrect(savedAnswer.isCorrect);
-            setIsSubmitted(true);
-        } else {
-            setSelectedOption(null);
-            setIsCorrect(false);
-            setIsSubmitted(false);
-        }
-    }, [qIndex, answers]);
-
-    const CORRECT_MESSAGES = ["Good job!", "Excellent!", "Perfect!", "Well done!"];
-    useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            api.createPracticeSession(uid, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
+    }, []);
+
+    useEffect(() => {
+        if (isTestOver) return;
         const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
         return () => clearInterval(timer);
-    }, [SKILL_ID]);
+    }, [isTestOver]);
+
+    const handleRecordResponse = () => {
+        const currentQ = questions[qIndex];
+        const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
+        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const isSkipped = !selectedOption;
+
+        const responseData = {
+            selectedOption,
+            isCorrect,
+            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent,
+            isSkipped
+        };
+
+        setResponses(prev => ({ ...prev, [qIndex]: responseData }));
+
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            const attemptData = {
+                user_id: uid,
+                session_id: sessionId,
+                skill_id: SKILL_ID,
+                question_text: currentQ.text,
+                correct_answer: currentQ.correctAnswer,
+                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                is_correct: isSkipped ? false : isCorrect,
+                solution_text: currentQ.solution,
+                time_spent_seconds: timeSpent
+            };
+            api.recordAttempt(attemptData).catch(console.error);
+        }
+    };
+
+    const navigateToQuestion = (targetIndex) => {
+        handleRecordResponse();
+        setQIndex(targetIndex);
+        setSelectedOption(responses[targetIndex]?.selectedOption || null);
+        questionStartTime.current = Date.now();
+    };
+
+    const handleNext = () => {
+        if (qIndex < questions.length - 1) {
+            navigateToQuestion(qIndex + 1);
+        } else {
+            handleRecordResponse();
+            finalizeTest();
+        }
+    };
+
+    const handlePrev = () => {
+        if (qIndex > 0) {
+            navigateToQuestion(qIndex - 1);
+        }
+    };
+
+    const finalizeTest = async () => {
+        setIsTestOver(true);
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
+            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+            const skippedCount = questions.length - correctCount - wrongCount;
+            await api.createReport({
+                title: SKILL_NAME,
+                type: 'practice',
+                score: (correctCount / questions.length) * 100,
+                parameters: {
+                    skill_id: SKILL_ID,
+                    total_questions: questions.length,
+                    correct_answers: correctCount,
+                    skipped_questions: skippedCount,
+                    time_taken_seconds: timeElapsed
+                },
+                user_id: uid
+            }).catch(console.error);
+        }
+    };
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -255,172 +451,266 @@ const ArithmeticProgressionsTest = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleCheck = () => {
-        if (!selectedOption) return;
-        const currentQ = questions[qIndex];
-        const isRight = selectedOption === currentQ.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        if (isRight) setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        else setShowExplanationModal(true);
-        setAnswers(prev => ({
-            ...prev,
-            [qIndex]: {
-                selectedOption: selectedOption,
-                isCorrect: isRight
-            }
-        }));
-
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            let t = accumulatedTime.current;
-            if (isTabActive.current) t += Date.now() - questionStartTime.current;
-            const sec = Math.max(0, Math.round(t / 1000));
-            api.recordAttempt({
-                user_id: parseInt(userId), session_id: sessionId, skill_id: SKILL_ID,
-                question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: currentQ.solution,
-                time_spent_seconds: sec
-            }).catch(console.error);
-        }
-    };
-
-    const handlePrevious = () => {
-        if (qIndex > 0) {
-            setQIndex(prev => prev - 1);
-            accumulatedTime.current = 0;
-            questionStartTime.current = Date.now();
-        }
-    };
-
-    const handleNext = async () => {
-        if (qIndex < questions.length - 1) {
-            setQIndex(p => p + 1);
-            accumulatedTime.current = 0;
-            questionStartTime.current = Date.now();
-        } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
-                        skill_name: SKILL_NAME,
-                        total_questions: questions.length,
-                        correct_answers: totalCorrect,
-                        timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: parseInt(userId, 10)
-                }).catch(console.error);
-            }
-            navigate(-1);
-        }
-    };
-
     if (questions.length === 0) return <div>Loading...</div>;
-    const currentQuestion = questions[qIndex];
 
-    return (
-        <div className="junior-practice-page" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>
-                    {SKILL_NAME}
-                </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {questions.length}
+    if (isTestOver) {
+        const correct = Object.values(responses).filter(r => r.isCorrect === true).length;
+        const wrong = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+        const skipped = questions.length - correct - wrong;
+
+        return (
+            <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem', overflowY: 'auto' }}>
+                <style>{BLUE_THEME_CSS}</style>
+                <div className="exam-report-container">
+                    <div className="results-hero-section flex flex-col items-center mb-8 mt-4">
+                        <img src={mascotImg} alt="Happy Mascot" className="w-40 h-40 mb-2 drop-shadow-lg object-contain" />
+                        <h1 className="text-5xl font-black text-[#31326F] mb-2 tracking-tight">Test Report</h1>
+                        <p className="text-[#64748B] text-xl font-medium mb-8">How you performed in <span className="font-bold">{SKILL_NAME}</span></p>
+
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-5xl">
+                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
+                                <span className="text-4xl font-black text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
+                            </div>
+                            <div className="stat-card bg-[#F0FDF4] p-6 rounded-3xl shadow-sm border-2 border-[#DCFCE7] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
+                                <span className="text-4xl font-black text-[#14532D]">{correct}</span>
+                            </div>
+                            <div className="stat-card bg-[#FEF2F2] p-6 rounded-3xl shadow-sm border-2 border-[#FEE2E2] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
+                                <span className="text-4xl font-black text-[#7F1D1D]">{wrong}</span>
+                            </div>
+                            <div className="stat-card bg-[#F8FAFC] p-6 rounded-3xl shadow-sm border-2 border-[#E2E8F0] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#64748B] mb-1">Skipped</span>
+                                <span className="text-4xl font-black text-[#334155]">{skipped}</span>
+                            </div>
+                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Total Time</span>
+                                <span className="text-4xl font-black text-[#1E3A8A]">{formatTime(timeElapsed)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="bg-white text-[#31326F] border-2 border-[#31326F] px-8 py-3 rounded-2xl font-black uppercase tracking-wider hover:bg-[#31326F] hover:text-white transition-colors"
+                            style={{ fontSize: '1.1rem', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                        >
+                            Back to Topics
+                        </button>
+                    </div>
+
+                    <div style={{ marginBottom: '2rem', maxWidth: '1000px', marginLeft: 'auto', marginRight: 'auto' }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1E293B', marginBottom: '1.5rem' }}>Detailed Review & Solutions</h2>
+                        {questions.map((q, idx) => {
+                            const res = responses[idx] || { isSkipped: true, timeTaken: 0 };
+                            return (
+                                <details key={idx} className="solution-accordion group">
+                                    <summary className="solution-header cursor-pointer hover:bg-slate-50 transition-colors" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', listStyle: 'none', width: '100%' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, overflow: 'hidden' }}>
+                                            <span style={{ fontWeight: '800', minWidth: '32px', height: '32px', background: '#FBBF24', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontSize: '0.9rem', flexShrink: 0 }}>{idx + 1}</span>
+                                            <div className="hidden md:block truncate text-sm text-slate-500" style={{ flex: 1, maxWidth: '350px' }}>
+                                                <LatexText text={q.text} />
+                                            </div>
+                                            {res.isSkipped ? <span className="status-badge status-skipped shrink-0">Skipped</span> :
+                                                res.isCorrect ? <span className="status-badge status-correct shrink-0">Correct</span> :
+                                                    <span className="status-badge status-wrong shrink-0">Incorrect</span>}
+                                        </div>
+                                        <div style={{ color: '#64748B', display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}>
+                                            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-blue-600 font-semibold text-sm whitespace-nowrap">
+                                                Check Solution ↓
+                                            </span>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                <Clock size={16} /> {res.timeTaken}s
+                                            </div>
+                                        </div>
+                                    </summary>
+                                    <div className="solution-content">
+                                        <div style={{ marginBottom: '1rem', padding: '1rem', borderLeft: '4px solid #3B82F6', background: '#F8FAFC' }}>
+                                            <LatexText text={q.text} />
+                                        </div>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+                                            {q.options.map((opt, oIdx) => (
+                                                <div key={oIdx} style={{
+                                                    padding: '0.75rem', borderRadius: '8px', border: '1px solid #E2E8F0',
+                                                    background: opt === q.correctAnswer ? '#DCFCE7' : (opt === res.selectedOption ? '#FEE2E2' : 'white'),
+                                                    color: opt === q.correctAnswer ? '#166534' : (opt === res.selectedOption ? '#991B1B' : '#475569')
+                                                }}>
+                                                    <LatexText text={opt} />
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                                            <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                                                <h5 style={{ fontSize: '0.7rem', fontWeight: '800', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.5px' }}>Your Answer</h5>
+                                                {res.isSkipped ? (
+                                                    <span style={{ color: '#F59E0B', fontWeight: '700', fontSize: '1.1rem' }}>Skipped</span>
+                                                ) : (
+                                                    <span style={{ color: res.isCorrect ? '#166534' : '#DC2626', fontWeight: '700', fontSize: '1.1rem' }}>
+                                                        {res.selectedOption ? <LatexText text={res.selectedOption} /> : "Skipped"}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div style={{ background: '#DCFCE7', padding: '1rem', borderRadius: '12px', border: '1px solid #BBF7D0' }}>
+                                                <h5 style={{ fontSize: '0.7rem', fontWeight: '800', color: '#166534', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.5px' }}>Correct Answer</h5>
+                                                <span style={{ color: '#166534', fontWeight: '700', fontSize: '1.1rem' }}>
+                                                    <LatexText text={q.correctAnswer} />
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div style={{ background: '#F0F9FF', padding: '1.5rem', borderRadius: '12px', border: '1px solid #E0F2FE' }}>
+                                            <h4 style={{ color: '#0284C7', fontWeight: '800', marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.5px' }}>Solution:</h4>
+                                            {(() => {
+                                                const steps = q.solution.split(/(?<=\.)\s+(?=[A-Z0-9\$])/);
+                                                if (steps.length <= 1) {
+                                                    return <LatexText text={q.solution} />;
+                                                }
+                                                return (
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                                                        {steps.map((stepStr, sIdx) => (
+                                                            <div key={sIdx} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                                                <span style={{ fontWeight: '800', color: '#0F172A', fontSize: '0.9rem' }}>Step {sIdx + 1}:</span>
+                                                                <span style={{ color: '#334155', lineHeight: '1.6' }}><LatexText text={stepStr.trim()} /></span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+                                </details>
+                            );
+                        })}
                     </div>
                 </div>
-                <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
-                        {formatTime(timeElapsed)}
+            </div>
+        );
+    }
+    return (
+        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <style>{BLUE_THEME_CSS}</style>
+            <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {SKILL_NAME}
+                </div>
+                <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-black text-xl shadow-lg">
+                    {qIndex + 1} / {questions.length}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#3B82F6]/30 text-[#1E40AF] font-bold text-lg shadow-md flex items-center gap-2">
+                        <Clock size={20} /> {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
-            <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 140px 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: '60px' }}>
+
+                    {/* Left Column: Question Card */}
+                    <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                             <div className="question-header-modern">
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', color: '#2D3748' }}>
-                                    <LatexText text={currentQuestion.text} />
+                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
+                                    <LatexText text={questions[qIndex].text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern">
-                                <div className="options-grid-modern">
-                                    {currentQuestion.options.map((option, idx) => (
+                            <div className="interaction-area-modern" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                                    {questions[qIndex].options.map((option, idx) => (
                                         <button
                                             key={idx}
-                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
-                                            style={{ fontWeight: '500' }}
-                                            onClick={() => !isSubmitted && setSelectedOption(option)}
-                                            disabled={isSubmitted}
+                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                            onClick={() => setSelectedOption(option)}
                                         >
                                             <LatexText text={option} />
                                         </button>
                                     ))}
-                                    {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' }}>
-                                            {feedbackMessage}
-                                        </motion.div>
-                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* Right Column: Question Palette */}
+                    <div className="question-palette-container" style={{ width: '300px', background: 'white', padding: '1.5rem', borderRadius: '24px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: 'calc(100vh - 220px)' }}>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#1E293B', marginBottom: '1rem', textAlign: 'center', flexShrink: 0 }}>Question Palette</h3>
+                        <div className="palette-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.4rem', flex: 1, alignContent: 'start' }}>
+                            {questions.map((_, idx) => {
+                                const isCurrent = qIndex === idx;
+                                const hasResponded = responses[idx] && !responses[idx].isSkipped;
+                                const isSkipped = responses[idx] && responses[idx].isSkipped;
+
+                                let btnBg = '#F8FAFC';
+                                let btnColor = '#64748B';
+                                let btnBorder = '1px solid #E2E8F0';
+
+                                if (isCurrent) {
+                                    btnBorder = '2px solid #3B82F6';
+                                    btnBg = '#EFF6FF';
+                                    btnColor = '#1D4ED8';
+                                } else if (hasResponded) {
+                                    btnBg = '#DCFCE7';
+                                    btnColor = '#166534';
+                                    btnBorder = '1px solid #BBF7D0';
+                                } else if (isSkipped) {
+                                    btnBg = '#FFF7ED';
+                                    btnColor = '#C2410C';
+                                    btnBorder = '1px solid #FFEDD5';
+                                }
+
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => navigateToQuestion(idx)}
+                                        style={{
+                                            height: '36px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            borderRadius: '6px', fontWeight: '700', fontSize: '0.85rem',
+                                            cursor: 'pointer', transition: 'all 0.2s',
+                                            background: btnBg, color: btnColor, border: btnBorder, padding: '0'
+                                        }}
+                                        className="hover:shadow-md hover:-translate-y-0.5"
+                                    >
+                                        {idx + 1}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', rowGap: '0.5rem', columnGap: '1rem', fontSize: '0.8rem', color: '#64748B' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#DCFCE7', border: '1px solid #BBF7D0' }}></div> Answered</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#FFF7ED', border: '1px solid #FFEDD5' }}></div> Skipped</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#F8FAFC', border: '1px solid #E2E8F0' }}></div> Unvisited</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: '12px', height: '12px', borderRadius: '3px', background: '#EFF6FF', border: '2px solid #3B82F6' }}></div> Current</div>
+                        </div>
+                    </div>
+
                 </div>
             </main>
-
-            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate(-1)}>Exit</button>
-                    </div>
-                    <div className="bottom-center">
-                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> Explain</button>}
+                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate(-1)}>Exit Test</button>
                     </div>
                     <div className="bottom-right">
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <button
-                                className="nav-pill-next-btn bg-gray-200 text-gray-600"
-                                onClick={handlePrevious}
-                                disabled={qIndex === 0}
-                                style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0.5rem 1rem', borderRadius: '9999px', fontWeight: 'bold' }}
-                            >
-                                <ChevronLeft size={28} strokeWidth={3} />
-                                Prev
+                        <div style={{ display: 'flex', gap: '1.5rem' }}>
+                            <button className="nav-pill-next-btn nav-pastel-btn" onClick={handlePrev} disabled={qIndex === 0}>
+                                <ChevronLeft size={20} /> Previous
                             </button>
-                            {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight /></button> :
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check /></button>
-                            }
+                            <button className="nav-pill-next-btn nav-pastel-btn" onClick={handleNext}>
+                                {qIndex === questions.length - 1 ? "Finish Test" : "Next Question"} <ChevronRight size={20} />
+                            </button>
                         </div>
                     </div>
                 </div>
                 <div className="mobile-footer-controls">
-                    <div className="mobile-footer-right">
-                        <button
-                            className="nav-pill-next-btn bg-gray-200 text-gray-600 p-2"
-                            onClick={handlePrevious}
-                            disabled={qIndex === 0}
-                            style={{ minWidth: 'auto' }}
-                        >
-                            <ChevronLeft size={20} />
-                        </button>
-                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={18} /> Explain</button>}
-                        {isSubmitted ?
-                            <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight size={20} /></button> :
-                            <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={20} /></button>
-                        }
-                    </div>
+                    <button className="nav-pill-next-btn nav-pastel-btn" style={{ padding: '0.5rem 1rem' }} onClick={handlePrev} disabled={qIndex === 0}>
+                        <ChevronLeft size={24} />
+                    </button>
+                    <button className="nav-pill-next-btn nav-pastel-btn" onClick={handleNext} style={{ flex: 1 }}>
+                        {qIndex === questions.length - 1 ? "Finish" : "Next"} <ChevronRight size={24} />
+                    </button>
                 </div>
             </footer>
         </div>

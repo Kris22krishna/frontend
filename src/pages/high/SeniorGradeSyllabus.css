@@ -386,6 +386,99 @@
     background: #F8FAFC;
 }
 
+/* ─── Grade 11 Subject Cards ─── */
+.g11-subject-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.g11-subject-card {
+    position: relative;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 220px;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 30px -8px var(--card-shadow, rgba(0, 0, 0, 0.15));
+}
+
+.g11-subject-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px -8px var(--card-shadow, rgba(0, 0, 0, 0.25));
+}
+
+.g11-card-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--card-gradient);
+    z-index: 0;
+    transition: opacity 0.3s;
+}
+
+.g11-card-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+}
+
+.g11-card-content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 1.75rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.g11-icon {
+    font-size: 2.75rem;
+    margin-bottom: 0.75rem;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+    transition: transform 0.3s;
+}
+
+.g11-subject-card:hover .g11-icon {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+.g11-card-content h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.g11-card-content p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.g11-explore {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.g11-subject-card:hover .g11-explore {
+    opacity: 1;
+    transform: translateX(0);
+}
+
 /* Responsive */
 @media (max-width: 1280px) {
     .topics-grid-container {
@@ -423,6 +516,10 @@
 
 @media (max-width: 640px) {
     .topics-grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .g11-subject-grid {
         grid-template-columns: 1fr;
     }
 }

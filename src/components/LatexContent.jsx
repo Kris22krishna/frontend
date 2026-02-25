@@ -36,6 +36,10 @@ const LatexContent = ({ html, className, block = false }) => {
                         { left: '\\(', right: '\\)', display: false },
                         { left: '$', right: '$', display: false },
                     ],
+                    strict: 'ignore',
+                    macros: {
+                        "₹": "\\text{₹}"
+                    },
                     throwOnError: false
                 });
             } catch (e) {

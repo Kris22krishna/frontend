@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X, CheckCircle2, ChevronRight, Target, Clock, BookOpen, ArrowLeft } from 'lucide-react';
 import { FullScreenScratchpad } from '../../components/FullScreenScratchpad';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
+import { trackPracticeStarted, trackPracticeCompleted, trackResultViewed } from '../../lib/gtag';
 
 // Assets
 import mascotImg from '../../assets/mascot.png';
@@ -84,6 +85,7 @@ const MiddlePracticeSession = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const hasFetched = useRef(false);
+    const practiceStartTimeRef = useRef(Date.now());
 
     // Computed navigation targets
     const prevSkill = skillIdx > 0 ? skillsList[skillIdx - 1] : null;
@@ -224,6 +226,21 @@ const MiddlePracticeSession = () => {
         fetchQuestions(null, true);
     }, [skillId]);
 
+    // Track practice started when questions load
+    useEffect(() => {
+        if (questions.length > 0 && skillName) {
+            trackPracticeStarted(skillId, skillName, 'Math');
+        }
+    }, [questions, skillName, skillId]);
+
+    // Track result viewed when completed
+    useEffect(() => {
+        if (completed && stats.total > 0) {
+            const score = Math.round((stats.correct / stats.total) * 100);
+            trackResultViewed(skillId, score);
+        }
+    }, [completed, stats]);
+
     // Rerender MathJax
     useEffect(() => {
         if (window.MathJax && questions.length > 0) {
@@ -302,6 +319,12 @@ const MiddlePracticeSession = () => {
 
         if (stats.total >= QUESTIONS_PER_SESSION) {
             if (sessionId) api.finishSession(sessionId).catch(console.error);
+
+            // Track practice completion
+            const timeTaken = Math.round((Date.now() - practiceStartTimeRef.current) / 1000);
+            const score = Math.round((stats.correct / stats.total) * 100);
+            trackPracticeCompleted(skillId, skillName, 'Math', score, timeTaken);
+
             setCompleted(true);
             return;
         }
@@ -508,6 +531,7 @@ const MiddlePracticeSession = () => {
                             {currentQ && (
                                 <QuestionCard
                                     question={currentQ}
+                                    serialNumber={currentIndex + 1}
                                     selectedAnswer={userAnswers[currentQ.id]}
                                     onAnswer={handleAnswer}
                                     onViewExplanation={() => setShowExplanation(true)}

@@ -136,9 +136,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${coeff1}x + ${coeff2}y$<br/><br/>$= ${a} \\times ${b}x + ${a} \\times ${c}y$<br/><br/>$= ${a}(${b}x + ${c}y)$`,
             options: uniqueOptions(correctAnswer, [
-                `$${b}(${a}x + ${c}y)$`,
-                `$${c}(${b}x + ${a}y)$`,
-                `$${a + 1}(${b}x + ${c}y)$`
+                `$${a}(${b}x - ${c}y)$`,
+                `$${a + 1}(${b}x + ${c}y)$`,
+                `$${a}(${c}x + ${b}y)$`
             ])
         };
     };
@@ -154,9 +154,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${coeff1}x^2 + ${a}x$<br/><br/>$= ${a}x \\times ${b}x + ${a}x \\times 1$<br/><br/>$= ${a}x(${b}x + 1)$`,
             options: uniqueOptions(correctAnswer, [
-                `$${b}x(${a}x + 1)$`,
-                `$${a}(${b}x^2 + x)$`,
-                `$x(${coeff1}x + ${a})$`
+                `$${a}x(${b}x - 1)$`,
+                `$${a + 1}x(${b}x + 1)$`,
+                `$${a}x(${b + 1}x + 1)$`
             ])
         };
     };
@@ -177,9 +177,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${t1}a + ${t2}b$<br/><br/>$= ${cf} \\times ${a}a + ${cf} \\times ${b}b$<br/><br/>$= ${cf}(${a}a + ${b}b)$`,
             options: uniqueOptions(correctAnswer, [
-                `$${a}(${cf}a + ${b}b)$`,
+                `$${cf}(${a}a - ${b}b)$`,
                 `$${cf + 1}(${a}a + ${b}b)$`,
-                `$${b}(${a}a + ${cf}b)$`
+                `$${cf}(${b}a + ${a}b)$`
             ])
         };
     };
@@ -200,9 +200,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${coeff1}y^2 - ${coeff2}y$<br/><br/>$= ${a}y \\times ${b}y - ${a}y \\times ${c}$<br/><br/>$= ${a}y(${b}y - ${c})$`,
             options: uniqueOptions(correctAnswer, [
-                `$${b}y(${a}y - ${c})$`,
-                `$${a}(${b}y^2 - ${c}y)$`,
-                `$${a}y(${b}y + ${c})$`
+                `$${a}y(${b}y + ${c})$`,
+                `$${a + 1}y(${b}y - ${c})$`,
+                `$${a}y(${c}y - ${b})$`
             ])
         };
     };
@@ -225,9 +225,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${t1}x^2 + ${t2}x + ${t3}$<br/><br/>$= ${cf}(${a}x^2 + ${b}x + ${c})$<br/><br/>Taking $${cf}$ common from all terms.`,
             options: uniqueOptions(correctAnswer, [
-                `$${a}(${cf}x^2 + ${b}x + ${c})$`,
                 `$${cf}(${a}x^2 - ${b}x + ${c})$`,
-                `$${cf + 1}(${a}x^2 + ${b}x + ${c})$`
+                `$${cf + 1}(${a}x^2 + ${b}x + ${c})$`,
+                `$${cf}(${a}x^2 + ${b}x - ${c})$`
             ])
         };
     };
@@ -248,9 +248,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${coeff1}a^2b + ${coeff2}ab^2$<br/><br/>$= ${a}ab \\times ${b}a + ${a}ab \\times ${c}b$<br/><br/>$= ${a}ab(${b}a + ${c}b)$`,
             options: uniqueOptions(correctAnswer, [
-                `$${a}a(${b}ab + ${c}b^2)$`,
-                `$${a}b(${b}a^2 + ${c}ab)$`,
-                `$${b}ab(${a}a + ${c}b)$`
+                `$${a}ab(${b}a - ${c}b)$`,
+                `$${a + 1}ab(${b}a + ${c}b)$`,
+                `$${a}ab(${c}a + ${b}b)$`
             ])
         };
     };
@@ -273,9 +273,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${t1}x^3 + ${t2}x^2 + ${t3}x$<br/><br/>$= ${a}x(${b}x^2 + ${c}x + ${d})$<br/><br/>Taking $${a}x$ common from all terms.`,
             options: uniqueOptions(correctAnswer, [
-                `$${a}(${b}x^3 + ${c}x^2 + ${d}x)$`,
-                `$${a}x^2(${b}x + ${c} + ${d})$`,
-                `$x(${t1}x^2 + ${t2}x + ${t3})$`
+                `$${a}x(${b}x^2 - ${c}x + ${d})$`,
+                `$${a + 1}x(${b}x^2 + ${c}x + ${d})$`,
+                `$${a}x(${b}x^2 + ${c}x - ${d})$`
             ])
         };
     };
@@ -292,7 +292,7 @@ const MethodOfCommonFactorsComponent = () => {
             options: uniqueOptions(correctAnswer, [
                 `$(x + ${a})(${b}x - 1)$`,
                 `$(x - ${a})(${b}x + 1)$`,
-                `$${b}(x + ${a})(x + 1)$`
+                `$(x + ${a})(${b + 1}x + 1)$`
             ])
         };
     };
@@ -314,9 +314,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${coeff1}x^2y + ${coeff2}xy + ${coeff3}y^2$<br/><br/>HCF of ${coeff1}, ${coeff2}, ${coeff3} is $${a}$<br/><br/>$= ${a}(${b * c}x^2y + ${b}xy + ${c}y^2)$`,
             options: uniqueOptions(correctAnswer, [
-                `$${b}(${a * c}x^2y + ${a}xy + ${c}y^2)$`,
-                `$${c}(${a * b}x^2y + ${b}xy + ${a}y^2)$`,
-                `$${a + 1}(${b * c}x^2y + ${b}xy + ${c}y^2)$`
+                `$${a}(${b * c}x^2y - ${b}xy + ${c}y^2)$`,
+                `$${a + 1}(${b * c}x^2y + ${b}xy + ${c}y^2)$`,
+                `$${a}(${b * c}x^2y + ${b}xy - ${c}y^2)$`
             ])
         };
     };
@@ -337,9 +337,9 @@ const MethodOfCommonFactorsComponent = () => {
             correctAnswer,
             solution: `$${t1}l + ${t2}b$<br/><br/>$= ${a} \\times ${b}l + ${a} \\times ${c}b$<br/><br/>$= ${a}(${b}l + ${c}b)$`,
             options: uniqueOptions(correctAnswer, [
-                `$${b}(${a}l + ${c}b)$`,
+                `$${a}(${b}l - ${c}b)$`,
                 `$${a + 1}(${b}l + ${c}b)$`,
-                `$${c}(${b}l + ${a}b)$`
+                `$${a}(${c}l + ${b}b)$`
             ])
         };
     };

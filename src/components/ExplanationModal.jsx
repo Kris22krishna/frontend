@@ -52,7 +52,7 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
                                             <div className="w-2.5 h-2.5 lg:w-3 lg:h-3 bg-[#4FB7B3] rounded-full" />
                                         </div>
                                         <span className="text-lg lg:text-xl font-bold text-[#31326F] dark:text-white">
-                                            <LatexText text={correctAnswer} />
+                                            {React.isValidElement(correctAnswer) ? correctAnswer : <LatexText text={correctAnswer} />}
                                         </span>
                                     </div>
                                 </div>

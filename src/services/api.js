@@ -1,4 +1,4 @@
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, ''); // Adjust if backend runs elsewhere
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/$/, ''); // Adjust if backend runs elsewhere
 
 // Override fetch to always include credentials (cookies)
 const fetch = (url, options = {}) => {
@@ -730,6 +730,22 @@ export const api = {
         return handleResponse(response);
     },
 
+    getAdminMentorStudents: async (mentorId) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/mentors/${mentorId}/students`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    assignStudents: async (mentorId, studentIds) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/mentors/${mentorId}/assign-students`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ student_ids: studentIds }),
+        });
+        return handleResponse(response);
+    },
+
     getAdminParents: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/admin/parents`, {
             headers: getHeaders()
@@ -791,5 +807,25 @@ export const api = {
         const result = await handleResponse(response);
         console.log('✅ finishSession response:', result);
         return result;
+    },
+
+    getAllPracticeSessions: async (skillId = null, limit = 200) => {
+        const params = new URLSearchParams();
+        if (skillId) params.append('skill_id', skillId);
+        if (limit) params.append('limit', limit);
+        const response = await fetch(`${BASE_URL}/api/v1/practice/all-sessions?${params.toString()}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    // --- Internship ---
+    submitInternshipRegistration: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/internship/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        return handleResponse(response);
     },
 };

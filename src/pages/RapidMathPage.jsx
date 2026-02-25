@@ -1,6 +1,7 @@
 import React from 'react';
 import { SpeedTestGame } from '../components/rapid-math/SpeedTestGame';
 import SEO from '../components/common/SEO';
+import Navbar from '../components/Navbar';
 
 const RapidMathPage = () => {
     return (
@@ -9,7 +10,8 @@ const RapidMathPage = () => {
                 title="Rapid Math - Speed Challenge"
                 description="Test your mathematical speed and accuracy in the Rapid Math challenge."
             />
-            <main className="flex-1 flex flex-col">
+            <Navbar />
+            <main className="flex-1 flex flex-col pt-[80px]">
                 <SpeedTestGame />
             </main>
         </div>

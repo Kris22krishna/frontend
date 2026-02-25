@@ -6,7 +6,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { api } from '../../../../services/api';
 import Navbar from '../../../Navbar';
 import { TOPIC_CONFIGS } from '../../../../lib/topicConfig';
-import '../../grade-1/Grade1Practice.css';
+import "@/pages/juniors/class-1/Grade1Practice.css";
 
 const TOTAL_QUESTIONS = 5;
 

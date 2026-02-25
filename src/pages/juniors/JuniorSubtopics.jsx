@@ -32,13 +32,7 @@ const JuniorSubtopics = () => {
     const [pendingSubtopic, setPendingSubtopic] = useState(null);
     const decodedTopic = decodeURIComponent(topic);
 
-    const handleSubtopicClick = (subtopic, index) => {
-        if (!isAuthenticated) {
-            setPendingSubtopic(subtopic);
-            setShowLoginModal(true);
-            return;
-        }
-
+    const navigateToSubtopic = (subtopic, index) => {
         if (subtopic.id === "RB-01") {
             navigate(`/junior/grade/${grade}/raksha-bandhan/intro`);
             return;
@@ -65,6 +59,54 @@ const JuniorSubtopics = () => {
         }
         if (subtopic.id === "FS-04") {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
+            return;
+        }
+        if (subtopic.id === "FCP-01") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
+            return;
+        }
+        if (subtopic.id === "FCP-02") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
+            return;
+        }
+        if (subtopic.id === "HH2-01") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
+            return;
+        }
+        if (subtopic.id === "HH2-02") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/neighbouring-numbers`);
+            return;
+        }
+        if (subtopic.id === "HH2-03") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/help-cranes`);
+            return;
+        }
+        if (subtopic.id === "HH2-04") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/tambola`);
+            return;
+        }
+        if (subtopic.id === "HH2-05") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/skip-and-solve`);
+            return;
+        }
+        if (subtopic.id === "HH2-06") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-in-the-centre`);
+            return;
+        }
+        if (subtopic.id === "HH2-07") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/number-puzzles`);
+            return;
+        }
+        if (subtopic.id === "HH2-08") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/the-number-detective`);
+            return;
+        }
+        if (subtopic.id === "HH2-09") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/paper-slips`);
+            return;
+        }
+        if (subtopic.id === "HH2-10") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/guess-the-number`);
             return;
         }
 
@@ -125,6 +167,15 @@ const JuniorSubtopics = () => {
             `/junior/grade/${grade}/practice?topic=${encodeURIComponent(decodedTopic)}&skillId=${subtopic.id}&skillName=${encodeURIComponent(subtopic.name)}`,
             { state: { skills: subtopics, currentIndex: index } }
         );
+    };
+
+    const handleSubtopicClick = (subtopic, index) => {
+        if (!isAuthenticated) {
+            setPendingSubtopic(subtopic);
+            setShowLoginModal(true);
+            return;
+        }
+        navigateToSubtopic(subtopic, index);
     };
 
     const handleLoginSuccess = () => {
@@ -305,10 +356,10 @@ const JuniorSubtopics = () => {
                                 return (
                                     <button
                                         key={subtopic.id}
-                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''}`}
+                                        className={`subtopic-pill ${hoveredSubtopic === subtopic.id ? 'hovered' : ''} ${subtopic.completed ? 'completed' : ''} ${subtopic.name.toLowerCase().includes('chapter test') ? 'chapter-test-pill' : ''}`}
                                         style={{
-                                            '--pill-color': style.color,
-                                            '--pill-gradient': style.gradient,
+                                            '--pill-color': subtopic.name.toLowerCase().includes('chapter test') ? '#FFD700' : style.color,
+                                            '--pill-gradient': subtopic.name.toLowerCase().includes('chapter test') ? 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFD700 100%)' : style.gradient,
                                             '--animation-delay': `${index * 0.1}s`
                                         }}
                                         onMouseEnter={() => setHoveredSubtopic(subtopic.id)}
@@ -320,7 +371,11 @@ const JuniorSubtopics = () => {
 
                                         {/* Icon container */}
                                         <div className="pill-icon">
-                                            <span className="number-icon">{index + 1}</span>
+                                            {subtopic.name.toLowerCase().includes('chapter test') ? (
+                                                <span className="number-icon" style={{ fontSize: '1.2rem' }}>🏆</span>
+                                            ) : (
+                                                <span className="number-icon">{index + 1}</span>
+                                            )}
                                         </div>
 
                                         {/* Text */}
@@ -332,7 +387,7 @@ const JuniorSubtopics = () => {
                                         {/* Hover label */}
                                         {hoveredSubtopic === subtopic.id && !subtopic.completed && (
                                             <div className="hover-label">
-                                                Click to start! 🚀
+                                                {subtopic.name.toLowerCase().includes('chapter test') ? 'Take the test! 📝' : 'Click to start! 🚀'}
                                             </div>
                                         )}
                                     </button>

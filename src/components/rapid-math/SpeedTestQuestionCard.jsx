@@ -6,7 +6,10 @@ import { CheckCircle2, XCircle } from "lucide-react";
 export function SpeedTestQuestionCard({
     question,
     onSubmit,
+    onSkip,
+    elapsedSeconds,
     questionNumber,
+    totalQuestions,
 }) {
     const [userAnswer, setUserAnswer] = useState("");
     const [feedback, setFeedback] = useState(null);
@@ -97,39 +100,58 @@ export function SpeedTestQuestionCard({
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [userAnswer, submitted, feedback, handleAnswerChange]);
-
-
     return (
-        <Card className="w-full max-w-4xl mx-auto border-none shadow-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-3xl overflow-hidden">
-            <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row h-full">
-                    <div className="flex-1 p-8 flex flex-col items-center justify-center space-y-8 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800/50">
+        <Card className="w-full max-w-4xl mx-auto border-none shadow-2xl bg-white dark:bg-slate-900 backdrop-blur-xl rounded-[2.5rem] overflow-hidden relative">
+            {/* Progress Bar mapped from Image 2 top blue stripe layout */}
+            <div className="absolute top-0 left-0 h-1.5 bg-slate-100 dark:bg-slate-800 w-full z-10">
+                <div
+                    className="h-full bg-blue-500 rounded-r-full transition-all duration-300"
+                    style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
+                />
+            </div>
 
-                        <div className="text-sm font-bold text-orange-500 uppercase tracking-widest">
-                            Question {questionNumber}
+            <CardContent className="p-0">
+                <div className="flex flex-col md:flex-row min-h-[380px]">
+                    <div className="flex-[1.2] p-6 pt-10 flex flex-col items-center justify-center relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800/50">
+
+                        <div className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest bg-slate-100 dark:bg-slate-800 px-4 py-1.5 rounded-full mb-8 shadow-sm">
+                            QUESTION {questionNumber} / {totalQuestions}
                         </div>
 
-                        <div className="text-center space-y-2">
+                        <div className="flex-1 flex flex-col items-center justify-center w-full space-y-4">
                             <div className="text-6xl sm:text-7xl font-black text-slate-900 dark:text-white tracking-tighter whitespace-nowrap">
                                 {question.num1} {question.operation.replace('*', '×').replace('/', '÷')} {question.num2}
                             </div>
-                            <div className="text-4xl text-slate-300 dark:text-slate-600">=</div>
+
+                            <div className="text-3xl text-slate-300 dark:text-slate-600 font-black">=</div>
+
+                            <div className={`
+                        relative w-full max-w-[280px] h-20 rounded-2xl flex items-center justify-center text-4xl sm:text-5xl font-mono font-bold tracking-widest
+                        transition-all duration-200 border-2
+                        ${feedback === "correct"
+                                    ? "bg-green-50 border-green-200 text-green-600 shadow-[0_0_30px_rgba(34,197,94,0.2)]"
+                                    : "bg-white dark:bg-black/20 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 shadow-inner"
+                                }
+                            `}>
+                                {userAnswer || <span className="opacity-20">?</span>}
+
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                                    {feedback === "correct" && <CheckCircle2 size={40} className="text-green-500 animate-in zoom-in spin-in-12 duration-300" />}
+                                    {feedback === "incorrect" && <XCircle size={40} className="text-red-500 animate-in zoom-in duration-300" />}
+                                </div>
+                            </div>
                         </div>
 
-                        <div className={`
-                    relative w-full max-w-xs h-24 rounded-2xl flex items-center justify-center text-5xl sm:text-6xl font-mono font-bold tracking-widest
-                    transition-all duration-200 border-2
-                    ${feedback === "correct"
-                                ? "bg-green-50 border-green-200 text-green-600 shadow-[0_0_30px_rgba(34,197,94,0.2)]"
-                                : "bg-white dark:bg-black/20 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 shadow-inner"
-                            }
-                `}>
-                            {userAnswer || <span className="opacity-20">?</span>}
-
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                                {feedback === "correct" && <CheckCircle2 size={40} className="text-green-500 animate-in zoom-in spin-in-12 duration-300" />}
-                                {feedback === "incorrect" && <XCircle size={40} className="text-red-500 animate-in zoom-in duration-300" />}
-                            </div>
+                        {/* Skip Button (visible after 15s) */}
+                        <div className="h-10 mt-4 w-full flex justify-center items-end">
+                            {elapsedSeconds >= 15 && (
+                                <button
+                                    onClick={onSkip}
+                                    className="animate-in fade-in slide-in-from-bottom-2 duration-300 px-6 py-2 rounded-full border border-orange-200 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20 font-bold text-sm transition-colors"
+                                >
+                                    Skip Question
+                                </button>
+                            )}
                         </div>
                     </div>
 
