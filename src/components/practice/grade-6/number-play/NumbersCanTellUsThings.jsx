@@ -27,12 +27,13 @@ const NumbersCanTellUsThings = () => {
         const data = sessionStorage.getItem(key);
         return data !== null ? JSON.parse(data) : defaultValue;
     };
-    
+
     const storageKey = `practice_${window.location.pathname}`;
 
     const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
     const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
+    const [userInput, setUserInput] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
@@ -499,15 +500,15 @@ const NumbersCanTellUsThings = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Numbers can Tell us Things</span>
+                    <span className="text-[#31326F] text-lg sm:text-xl">Numbers can Tell us Things</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -539,7 +540,7 @@ const NumbersCanTellUsThings = () => {
                                                         key={idx}
                                                         onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                         disabled={isSubmitted}
-                                                        className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
+                                                        className={`p-4 rounded-xl border-2 text-lg transition-all transform hover:scale-102
                                                             ${isSubmitted
                                                                 ? option === currentQuestion.correctAnswer
                                                                     ? 'bg-green-100 border-green-500 text-green-700'
@@ -564,7 +565,7 @@ const NumbersCanTellUsThings = () => {
                                                     onChange={(e) => setUserInput(e.target.value)}
                                                     placeholder="Type your answer here..."
                                                     disabled={isSubmitted}
-                                                    className={`w-full max-w-md p-4 text-xl text-center font-bold rounded-xl border-2 outline-none transition-all
+                                                    className={`w-full max-w-md p-4 text-xl text-center rounded-xl border-2 outline-none transition-all
                                                         ${isSubmitted
                                                             ? isCorrect
                                                                 ? 'bg-green-50 border-green-500 text-green-700'
@@ -612,13 +613,13 @@ const NumbersCanTellUsThings = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -631,19 +632,19 @@ const NumbersCanTellUsThings = () => {
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
                             >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
@@ -652,7 +653,7 @@ const NumbersCanTellUsThings = () => {
                                     onClick={handleCheck}
                                     disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput.trim()}
                                 >
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -679,7 +680,7 @@ const NumbersCanTellUsThings = () => {
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
                                 style={{
@@ -691,20 +692,18 @@ const NumbersCanTellUsThings = () => {
                                     minWidth: 'auto'
                                 }}
                             >
-                                <ChevronLeft size={20} strokeWidth={3} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheck}
                                     disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput.trim()}
-                                >
-                                    Submit
-                                </button>
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>

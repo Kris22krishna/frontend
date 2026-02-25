@@ -167,15 +167,15 @@ const SquarePractice = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Square</span>
+                    <span className="text-[#31326F] text-lg sm:text-xl">Square</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -187,15 +187,14 @@ const SquarePractice = () => {
                         <div className="question-card-modern" style={{ padding: '2rem' }}>
                             <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
                                 <div className="text-center space-y-2 w-full">
-                                    <h2 className="text-2xl font-medium text-[#31326F]">
-                                        Find the <span className="font-bold">{mode === 'area' ? 'Area' : 'Perimeter'}</span>
+                                    <h2 className="text-2xl text-[#31326F]">
+                                        Find the <span className="font-normal">{mode === 'area' ? 'Area' : 'Perimeter'}</span> of the square
                                     </h2>
-                                    <p className="text-gray-400 text-lg">of the square</p>
                                 </div>
                             </div>
 
-                            <div className="flex-1 flex items-center justify-center w-full py-4 mb-8">
-                                <svg viewBox="0 0 300 300" className="w-full max-w-[340px] drop-shadow-lg">
+                            <div className="flex-1 flex items-center justify-center w-full py-2 mb-4 min-h-0">
+                                <svg viewBox="0 0 300 300" className="w-full h-full max-h-[180px] max-w-[340px] drop-shadow-lg" style={{ objectFit: 'contain' }}>
                                     {(() => {
                                         const rectSize = 180;
                                         const x = (300 - rectSize) / 2;
@@ -210,11 +209,11 @@ const SquarePractice = () => {
                                                 />
                                                 <g transform={`translate(${x - 25}, ${y + rectSize / 2})`}>
                                                     <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{side} cm</text>
+                                                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{side} cm</text>
                                                 </g>
                                                 <g transform={`translate(${x + rectSize / 2}, ${y + rectSize + 25})`}>
                                                     <rect x="-30" y="-12" width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg font-bold fill-[#31326F]">{side} cm</text>
+                                                    <text textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{side} cm</text>
                                                 </g>
                                                 {mode === 'perimeter' && (
                                                     <rect
@@ -239,27 +238,16 @@ const SquarePractice = () => {
                                                 if (!isSubmitted) setUserAnswer(e.target.value);
                                             }}
                                             disabled={isSubmitted}
-                                            className="w-full bg-indigo-50/50 text-center text-3xl font-bold py-6 rounded-2xl border-2 border-transparent focus:border-[#3B82F6] focus:bg-white focus:outline-none transition-all placeholder:text-gray-300 text-[#31326F]"
+                                            className={`w-full text-center text-3xl py-6 rounded-2xl border-2 transition-all placeholder:text-gray-300 ${!isSubmitted ? "bg-indigo-50/50 border-transparent focus:border-[#3B82F6] focus:bg-white text-[#31326F]" : isCorrect ? "bg-green-100 border-green-500 text-green-700" : "bg-red-100 border-red-500 text-red-700"}`}
                                             placeholder="?"
                                             onKeyDown={(e) => e.key === 'Enter' && userAnswer && !isSubmitted && handleCheck()}
                                         />
-                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-xl">
+                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
                                             {mode === 'area' ? 'cm²' : 'cm'}
                                         </div>
                                     </div>
 
-                                    {isSubmitted && (
-                                        <motion.div
-                                            initial={{ scale: 0.5, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            className={`w-full p-4 rounded-xl text-center border-2 mt-4 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}
-                                        >
-                                            <p className={`text-xl font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
-                                                {isCorrect ? "Correct! 🎉" : "Not quite right"}
-                                            </p>
-                                            {isCorrect && <p className="text-green-600 mt-1">{feedbackMessage}</p>}
-                                        </motion.div>
-                                    )}
+                                    
                                 </div>
                             </div>
                         </div>
@@ -267,17 +255,17 @@ const SquarePractice = () => {
                 </div>
             </main>
 
-            <footer className="junior-bottom-bar">
+            <footer className="junior-bottom-bar relative z-50">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId.current) await api.finishSession(sessionId.current).catch(console.error);
                                 clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -292,21 +280,21 @@ const SquarePractice = () => {
                             <button
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                className={`px-4 py-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border-2 border-gray-100 text-gray-500 hover:bg-gray-50'}`}
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                                <ChevronLeft size={20} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!userAnswer}>
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -335,18 +323,16 @@ const SquarePractice = () => {
                             <button
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                className={`p-2 rounded-full font-bold transition-all flex items-center gap-2 ${qIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'bg-white border border-gray-100 text-gray-500'}`}
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                                <ChevronLeft size={20} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!userAnswer}>
-                                    Submit
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!userAnswer}>SUBMIT</button>
                             )}
                         </div>
                     </div>
@@ -358,11 +344,11 @@ const SquarePractice = () => {
                 isOpen={showExplanation}
                 onClose={() => setShowExplanation(false)}
                 isCorrect={isCorrect}
-                correctAnswer={`${getCorrectAnswer()} ${mode === 'area' ? 'sq cm' : 'cm'}`}
+                correctAnswer={`${getCorrectAnswer()} ${mode === 'area' ? 'cm²' : 'cm'}`}
                 explanation={
                     mode === 'area'
-                        ? `To find the area of a square, multiply side by side:<br/><strong>Area = ${side} × ${side} = ${getCorrectAnswer()}</strong>`
-                        : `To find the perimeter, add all 4 sides or multiply side by 4:<br/><strong>Perimeter = 4 × ${side} = ${getCorrectAnswer()}</strong>`
+                        ? `To find the area of a square, multiply side by side:<br/><strong>Area = ${side} × ${side} = ${getCorrectAnswer()} ${mode === 'area' ? 'cm²' : 'cm'}</strong>`
+                        : `To find the perimeter, add all 4 sides or multiply side by 4:<br/><strong>Perimeter = 4 × ${side} = ${getCorrectAnswer()} ${mode === 'area' ? 'cm²' : 'cm'}</strong>`
                 }
             />
         </div>

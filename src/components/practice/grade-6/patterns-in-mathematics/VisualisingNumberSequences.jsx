@@ -390,15 +390,15 @@ const VisualisingNumberSequences = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">{SKILL_NAME.split(' - ')[1]}</span>
+                    <span className="text-[#31326F] text-lg sm:text-xl">{SKILL_NAME.split(' - ')[1]}</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -429,7 +429,7 @@ const VisualisingNumberSequences = () => {
                                                     key={idx}
                                                     onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                     disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
+                                                    className={`p-4 rounded-xl border-2 text-lg transition-all transform hover:scale-102
                                                         ${isSubmitted
                                                             ? option === currentQuestion.correctAnswer
                                                                 ? 'bg-green-100 border-green-500 text-green-700'
@@ -477,13 +477,13 @@ const VisualisingNumberSequences = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -498,14 +498,14 @@ const VisualisingNumberSequences = () => {
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -533,12 +533,10 @@ const VisualisingNumberSequences = () => {
                         <div className="nav-buttons-group">
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
                             )}
                         </div>
                     </div>

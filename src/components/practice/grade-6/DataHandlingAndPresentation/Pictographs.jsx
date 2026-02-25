@@ -553,13 +553,13 @@ const Pictographs = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
                                 clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -572,19 +572,19 @@ const Pictographs = () => {
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
                             >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
@@ -593,7 +593,7 @@ const Pictographs = () => {
                                     onClick={handleCheck}
                                     disabled={!selectedOption}
                                 >
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -620,7 +620,7 @@ const Pictographs = () => {
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
                                 style={{
@@ -632,20 +632,18 @@ const Pictographs = () => {
                                     minWidth: 'auto'
                                 }}
                             >
-                                <ChevronLeft size={20} strokeWidth={3} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheck}
                                     disabled={!selectedOption}
-                                >
-                                    Submit
-                                </button>
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>
