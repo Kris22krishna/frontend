@@ -6,6 +6,7 @@ import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/fair-share.css';
 
 // --- Configuration ---
 // Switch to odd columns so we have a center column for the axis
@@ -492,9 +493,9 @@ const FairShareDraw = () => {
                         onClick={nextQuestion}
                     >
                         {qIndex < TOTAL_QUESTIONS - 1 ? (
-                            <>Next <ChevronRight size={28} strokeWidth={4} /></>
+                            <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                         ) : (
-                            <>Done <Check size={28} strokeWidth={4} /></>
+                            <>DONE <Check size={24} strokeWidth={3} /></>
                         )}
                     </button>
                 ) : (

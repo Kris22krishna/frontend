@@ -10,6 +10,7 @@ import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/Raksha-Bandhan.css';
 
 const CORRECT_MESSAGES = [
     "✨ Amazing job! You got it! ✨",
@@ -256,14 +257,14 @@ const RakshaBandhanFillInTheBlanks = () => {
     };
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+        <div className="junior-practice-page raksha-theme raksha-bandhan-practice-page">
+            <header className="junior-practice-header raksha-bandhan-header">
                 <div className="header-left">
                     {/* Empty or Logo if needed */}
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}
                     </div>
                 </div>
@@ -277,8 +278,8 @@ const RakshaBandhanFillInTheBlanks = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
+                <div className="practice-board-container raksha-bandhan-board-container">
+                    <div className="practice-left-col raksha-bandhan-left-col">
                         <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                             <div className="question-header-modern">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
@@ -334,15 +335,7 @@ const RakshaBandhanFillInTheBlanks = () => {
                 {/* Desktop Controls */}
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            Exit Practice
-                        </button>
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
@@ -353,26 +346,17 @@ const RakshaBandhanFillInTheBlanks = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
-                            <button
-                                className="nav-pill-next-btn"
-                                onClick={handlePrevious}
-                                disabled={qIndex === 0}
-                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
-                            >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
-                            </button>
+                            <button onClick={handlePrevious} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < questions.length - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit <Check size={28} strokeWidth={3} />
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT <Check size={24} strokeWidth={3} /></button>
                             )}
                         </div>
                     </div>
@@ -381,15 +365,7 @@ const RakshaBandhanFillInTheBlanks = () => {
                 {/* Mobile Controls */}
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
 
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
@@ -420,9 +396,7 @@ const RakshaBandhanFillInTheBlanks = () => {
                                     {qIndex < questions.length - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
                             )}
                         </div>
                     </div>

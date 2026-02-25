@@ -8,6 +8,7 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/Fun-at-class-party.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -609,11 +610,13 @@ const LongerShorterStrings = () => {
     }
 
     return (
-        <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"></div>
+        <div className="junior-practice-page raksha-theme fun-at-class-party-practice-page">
+            <header className="junior-practice-header fun-at-class-party-header">
+                <div className="header-left">
+                    <div className="skill-name-label">{SKILL_NAME}</div>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-lg shadow-sm whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
@@ -636,51 +639,53 @@ const LongerShorterStrings = () => {
                                 transition={{ duration: 0.3 }}
                                 style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                    <div className="question-header-modern" style={{ flex: '1 1 auto', minHeight: '0', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', fontWeight: 'bold', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%' }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', justifyContent: 'flex-start', paddingTop: '2rem' }}>
+                                    <div className="question-header-modern" style={{ width: '100%', textAlign: 'center', marginBottom: '1rem', flex: '0 0 auto' }}>
+                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', fontWeight: 'bold', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%', margin: 0 }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
+                                    </div>
+
+                                    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', flex: '1 1 auto', minHeight: 0, gap: '1.5rem', alignItems: 'center' }}>
                                         <div style={{
+                                            flex: '1 1 50%',
                                             display: 'flex',
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            width: '100%',
-                                            flex: '1 1 auto',
-                                            minHeight: '0',
-                                            overflow: 'hidden',
-                                            padding: '0.5rem',
                                             background: 'rgba(255,255,255,0.5)',
                                             borderRadius: '1rem',
-                                            marginTop: '0.4rem'
+                                            padding: '1rem',
+                                            height: 'auto',
+                                            maxHeight: '100%'
                                         }}>
-                                            <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center" style={{ maxHeight: '100%', overflow: 'hidden' }} />
+                                            <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
                                         </div>
-                                    </div>
-                                    <div className="interaction-area-modern" style={{ flex: '0 0 auto' }}>
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
-                                                    style={{ fontWeight: '500', fontSize: '1.5rem' }}
-                                                    onClick={() => handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
+
+                                        <div className="interaction-area-modern" style={{ flex: '1 1 50%', display: 'flex', flexDirection: 'column', borderTop: 'none', paddingTop: 0, height: '100%', justifyContent: 'center' }}>
+                                            <div className="options-grid-modern" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', maxWidth: '350px' }}>
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
+                                                        style={{ fontWeight: '600', fontSize: '1.1rem', width: '100%', padding: '0.5rem', minHeight: '50px' }}
+                                                        onClick={() => handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '10px', fontSize: '1rem', padding: '0.4rem 1rem' }}
                                                 >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
                                         </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
                                     </div>
                                 </div>
                             </motion.div>
@@ -701,16 +706,7 @@ const LongerShorterStrings = () => {
             <footer className="junior-bottom-bar" style={{ height: '70px', padding: '0 1rem' }}>
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <StickerExit size={20} className="hidden" />
-                            Exit Practice
-                        </button>
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
@@ -722,22 +718,18 @@ const LongerShorterStrings = () => {
                     <div className="bottom-right">
                         <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                             {qIndex > 0 && (
-                                <button className="nav-pill-btn" onClick={handlePrev} style={{ background: 'white', border: '2px solid #4FB7B3', color: '#31326F', borderRadius: '999px', padding: '0.5rem 1.2rem', fontWeight: 'bold', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                                    <ChevronLeft size={22} strokeWidth={3} /> Prev
-                                </button>
+                                <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                             )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit <Check size={28} strokeWidth={3} />
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT <Check size={24} strokeWidth={3} /></button>
                             )}
                         </div>
                     </div>
@@ -745,15 +737,7 @@ const LongerShorterStrings = () => {
 
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
                                 <Eye size={18} /> Explain
@@ -763,18 +747,14 @@ const LongerShorterStrings = () => {
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
                             {qIndex > 0 && (
-                                <button onClick={handlePrev} style={{ background: 'white', border: '2px solid #4FB7B3', color: '#31326F', borderRadius: '999px', padding: '0.4rem 0.8rem', fontWeight: 'bold', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '2px', cursor: 'pointer' }}>
-                                    <ChevronLeft size={18} strokeWidth={3} /> Prev
-                                </button>
+                                <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                             )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
                             )}
                         </div>
                     </div>

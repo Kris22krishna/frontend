@@ -8,6 +8,7 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/Fun-at-class-party.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const pick = (arr) => arr[randomInt(0, arr.length - 1)];
@@ -674,17 +675,17 @@ const HeightsAndMeters = () => {
 
     // ─── MAIN RENDER ──────────────────────────────────────────────────────────
     return (
-        <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div className="junior-practice-page raksha-theme fun-at-class-party-practice-page">
             {/* HEADER */}
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header fun-at-class-party-header">
                 <div className="header-left" />
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-lg shadow-sm whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-base shadow-sm">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -738,10 +739,7 @@ const HeightsAndMeters = () => {
                 {/* Desktop */}
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-5 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors"
-                            onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>
-                            Exit Practice
-                        </button>
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
@@ -753,18 +751,14 @@ const HeightsAndMeters = () => {
                     <div className="bottom-right">
                         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                             {qIndex > 0 && (
-                                <button onClick={handlePrev} style={{ background: 'white', border: '2px solid #4FB7B3', color: '#31326F', borderRadius: '999px', padding: '0.5rem 1.2rem', fontWeight: 'bold', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                                    <ChevronLeft size={22} strokeWidth={3} /> Prev
-                                </button>
+                                <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                             )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? <><span>Next</span><ChevronRight size={28} strokeWidth={3} /></> : <><span>Done</span><Check size={28} strokeWidth={3} /></>}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit <Check size={28} strokeWidth={3} />
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT <Check size={24} strokeWidth={3} /></button>
                             )}
                         </div>
                     </div>
@@ -773,10 +767,7 @@ const HeightsAndMeters = () => {
                 {/* Mobile */}
                 <div className="mobile-footer-controls">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
                                 <Eye size={18} /> Explain
@@ -785,18 +776,14 @@ const HeightsAndMeters = () => {
                     </div>
                     <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                         {qIndex > 0 && (
-                            <button onClick={handlePrev} style={{ background: 'white', border: '2px solid #4FB7B3', color: '#31326F', borderRadius: '999px', padding: '0.4rem 0.8rem', fontWeight: 'bold', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '2px', cursor: 'pointer' }}>
-                                <ChevronLeft size={18} strokeWidth={3} /> Prev
-                            </button>
+                            <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                         )}
                         {isSubmitted ? (
                             <button className="nav-pill-next-btn" onClick={handleNext}>
                                 {qIndex < TOTAL_QUESTIONS - 1 ? 'Next' : 'Done'}
                             </button>
                         ) : (
-                            <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                Submit
-                            </button>
+                            <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
                         )}
                     </div>
                 </div>

@@ -4,6 +4,7 @@ import { ArrowLeft, Check, X, ChevronRight, ChevronLeft, Eye, RotateCcw } from '
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import ExplanationModal from '../../../../components/ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
 const questions = [
     {
@@ -532,9 +533,9 @@ const PaperSlips = () => {
                     </button>
                     {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanation(true)}><Eye size={20} /> View Steps</button>}
                     <div className="nav-buttons-group">
-                        <button className="nav-pill-next-btn" onClick={handlePrevious} disabled={currentQIndex === 0} style={{ opacity: currentQIndex === 0 ? 0.5 : 1, background: '#eef2ff', color: '#31326F' }}><ChevronLeft size={24} /> Prev</button>
+                        <button onClick={handlePrevious} disabled={currentQIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" onClick={handleNext}>{currentQIndex < questions.length - 1 ? <>Next <ChevronRight size={24} /></> : <>Done <Check size={24} /></>}</button>
+                            <button className="nav-pill-next-btn" onClick={handleNext}>{currentQIndex < questions.length - 1 ? <>NEXT <ChevronRight size={24} strokeWidth={3} /></> : <>DONE <Check size={24} strokeWidth={3} /></>}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted}>Submit <Check size={24} /></button>
                         )}

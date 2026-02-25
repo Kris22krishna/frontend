@@ -4,6 +4,7 @@ import { ArrowLeft, RefreshCw, Check, X, Star, ChevronLeft, ChevronRight, Eye } 
 import { useNavigate } from 'react-router-dom';
 import ExplanationModal from '../../../ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
 // --- Tile Assets (CSS/SVG Shapes) ---
 const Tile100 = ({ className, style }) => (
@@ -28,7 +29,7 @@ const Tile10 = ({ className, style }) => (
 
 const Tile1 = ({ className, style }) => (
     <div className={`tile-1 ${className}`} style={{
-        width: '15px', height: '15px', backgroundColor: '#A5D6A7', border: '2px solid #66BB6A',
+        width: '35px', height: '35px', backgroundColor: '#A5D6A7', border: '2px solid #66BB6A',
         boxShadow: '1px 1px 0px rgba(0,0,0,0.1)', flexShrink: 0, ...style
     }} />
 );
@@ -225,7 +226,10 @@ const DrawTiles = () => {
     return (
         <div className="junior-practice-page" ref={containerRef}>
             {/* Header */}
-            <header className="junior-practice-header flex items-center justify-between px-6 pt-4">
+            <header className="junior-practice-header flex items-center justify-between px-6 pt-4 relative">
+                <div className="header-left absolute left-6">
+                    <div className="skill-name-label" style={{ fontWeight: 'bold', color: '#31326F', fontSize: '0.95rem' }}>House of Hundreds II - Draw Tiles</div>
+                </div>
                 <div className="flex-1 text-center">
                     <h2 className="text-2xl font-black text-[#31326F] bg-white/50 inline-block px-6 py-2 rounded-full backdrop-blur-sm">
                         Question {currentQIndex + 1} / {questions.length}
@@ -433,20 +437,13 @@ const DrawTiles = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
-                            <button
-                                className="nav-pill-next-btn"
-                                onClick={handlePrevious}
-                                disabled={currentQIndex === 0}
-                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
-                            >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
-                            </button>
+                            <button onClick={handlePrevious} disabled={currentQIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {currentQIndex < questions.length - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (

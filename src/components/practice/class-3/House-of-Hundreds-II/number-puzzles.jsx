@@ -5,6 +5,7 @@ import { ArrowLeft, Check, X, ChevronLeft, ChevronRight, Eye } from 'lucide-reac
 import { motion } from 'framer-motion';
 import ExplanationModal from '../../../ExplanationModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
 // --- QUESTION DATA ---
 const questions = [
@@ -403,7 +404,7 @@ const NumberPuzzles = () => {
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {currentQIndex + 1} / {questions.length}
                     </div>
                 </div>
@@ -418,7 +419,7 @@ const NumberPuzzles = () => {
             {/* --- MAIN CONTENT --- */}
             <main className="practice-content-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto', width: '100%', height: 'auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
+                    <div className="practice-left-col house-of-hundreds-ii-left-col">
                         <div className="question-card-modern" style={{ padding: '2rem', paddingBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flexGrow: 1, justifyContent: 'center' }}>
                             <div className="question-header-modern" style={{ marginBottom: '0' }}>
                                 <div className="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full font-bold uppercase tracking-wide text-xs mb-2">
@@ -609,20 +610,13 @@ const NumberPuzzles = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
-                            <button
-                                className="nav-pill-next-btn"
-                                onClick={handlePrevious}
-                                disabled={currentQIndex === 0}
-                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
-                            >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
-                            </button>
+                            <button onClick={handlePrevious} disabled={currentQIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {currentQIndex < questions.length - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (

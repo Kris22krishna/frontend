@@ -1,0 +1,18 @@
+
+.raksha-bandhan-practice-page {
+    font-family: 'Open Sans', sans-serif;
+}
+.raksha-bandhan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+.raksha-bandhan-board-container {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.raksha-bandhan-left-col {
+    width: 100%;
+}

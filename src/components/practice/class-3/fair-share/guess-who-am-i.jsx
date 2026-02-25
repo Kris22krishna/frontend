@@ -7,6 +7,7 @@ import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import LatexContent from '../../../LatexContent';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/fair-share.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -305,16 +306,7 @@ const FairShareGuesswho = () => {
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls w-full flex justify-between px-8 py-4">
-                    <button
-                        className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                        onClick={async () => {
-                            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                            navigate(-1);
-                        }}
-                    >
-                        <StickerExit size={20} className="hidden" />
-                        Exit
-                    </button>
+                    <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
 
                     <div className="bottom-center">
                         {isSubmitted && (
@@ -328,9 +320,9 @@ const FairShareGuesswho = () => {
                         {isSubmitted ? (
                             <button className="nav-pill-next-btn bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full text-xl font-bold flex items-center gap-2 shadow-lg transition-all transform hover:scale-105" onClick={handleNext}>
                                 {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                    <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                    <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                 ) : (
-                                    <>Done <Check size={28} strokeWidth={3} /></>
+                                    <>DONE <Check size={24} strokeWidth={3} /></>
                                 )}
                             </button>
                         ) : (
@@ -347,15 +339,7 @@ const FairShareGuesswho = () => {
 
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
 
                         {isSubmitted && (
                             <button className="bg-white text-[#00695C] border-2 border-[#00BFA5] p-2 rounded-lg font-bold flex items-center gap-1" onClick={() => setShowExplanationModal(true)}>
@@ -369,9 +353,9 @@ const FairShareGuesswho = () => {
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full text-lg font-bold flex items-center gap-2" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={24} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={24} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (

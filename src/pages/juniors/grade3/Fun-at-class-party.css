@@ -1,0 +1,18 @@
+
+.fun-at-class-party-practice-page {
+    font-family: 'Open Sans', sans-serif;
+}
+.fun-at-class-party-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+.fun-at-class-party-board-container {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.fun-at-class-party-left-col {
+    width: 100%;
+}
