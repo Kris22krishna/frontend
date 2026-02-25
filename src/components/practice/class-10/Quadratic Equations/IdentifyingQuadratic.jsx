@@ -299,7 +299,7 @@ Eq: $x^2 + 2x + 1 = x^2 + 2x + 5 \\Rightarrow 1 = 5$, which is false (and defini
                         </div>
                     </div>
                 </div>
-                <div className="mobile-footer-controls" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                <div className="mobile-footer-controls" style={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                     <div className="mobile-footer-left">
                         <button className="bg-red-50 text-red-500 px-3 py-2 rounded-xl border-2 border-red-100 font-bold" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center' }} onClick={() => navigate(-1)}>
                             Exit

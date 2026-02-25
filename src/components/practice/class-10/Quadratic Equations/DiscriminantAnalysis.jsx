@@ -291,7 +291,7 @@ $4k(k-6)=0$. $k=0$ or $k=6$. If $k=0$, equation disappears. So $k=6$.`
                         </div>
                     </div>
                 </div>
-                <div className="mobile-footer-controls" style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                <div className="mobile-footer-controls" style={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                     <div className="mobile-footer-left">
                         <button className="bg-red-50 text-red-500 px-3 py-2 rounded-xl border-2 border-red-100 font-bold" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center' }} onClick={() => navigate(-1)}>
                             Exit
