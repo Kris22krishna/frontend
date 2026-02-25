@@ -32,19 +32,26 @@ const ICONS = [
 
 const Pictographs = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
-    const [history, setHistory] = useState({});
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+    
+    const storageKey = `practice_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
+    const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
@@ -52,8 +59,26 @@ const Pictographs = () => {
     const SKILL_NAME = "Pictographs";
 
     const TOTAL_QUESTIONS = 10;
-    const [answers, setAnswers] = useState({});
+    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
     const [usedQuestions, setUsedQuestions] = useState(new Set());
+
+    useEffect(() => {
+        if (qIndex !== undefined && history && answers) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
+            sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
+        }
+    }, [qIndex, history, answers, sessionId]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_history`);
+        sessionStorage.removeItem(`${storageKey}_answers`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -128,7 +153,7 @@ const Pictographs = () => {
         // Render Scale Key
         const keyHtml = `
             <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #fef3c7; border-radius: 8px; margin-bottom: 15px; width: fit-content;">
-                <span style="font-weight: bold; color: #d97706;">Key:</span>
+                <span style="font-weight: normal; color: #d97706;">Key:</span>
                 <span style="display: flex; align-items: center;">
                     1 <span class="w-6 h-6 inline-block mx-1" style="color: ${iconData.color};">📍</span> = ${scale} items
                 </span>
@@ -159,8 +184,8 @@ const Pictographs = () => {
         const symbol = emojiMap[iconData.name] || "🟦";
 
         const displayKey = `
-            <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px; background: white; margin-bottom: 16px;">
-                 <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Key:</div>
+            <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 10px; background: white; margin-bottom: 12px; font-size: 0.9em;">
+                 <div style="font-weight: normal; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 4px;">Key:</div>
                  <div style="display: flex; align-items: center; gap: 8px; font-size: 1.1em;">
                     ${symbol} = ${scale} ${iconData.name}s
                  </div>
@@ -184,17 +209,19 @@ const Pictographs = () => {
         };
 
         const chartHtml = `
-            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                <thead>
-                    <tr style="background-color: #f3f4f6;">
-                        <th style="text-align: left; padding: 8px; border-radius: 8px 0 0 8px;">Day</th>
-                        <th style="text-align: left; padding: 8px; border-radius: 0 8px 8px 0;">Number of ${iconData.name}s</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${renderTableRows()}
-                </tbody>
-            </table>
+            <div style="width: 100%; max-width: 450px; font-size: 0.9em; margin: 0 auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                    <thead>
+                        <tr style="background-color: #f3f4f6;">
+                            <th style="text-align: left; padding: 8px;">Day</th>
+                            <th style="text-align: left; padding: 8px;">Number of ${iconData.name}s</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${renderTableRows()}
+                    </tbody>
+                </table>
+            </div>
         `;
 
         const tableAndKey = displayKey + chartHtml;
@@ -204,14 +231,9 @@ const Pictographs = () => {
             const iconCount = data[targetDay];
             const actualValue = iconCount * scale;
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>How many ${iconData.name}s were collected on <strong>${targetDay}</strong>?</p>
-                </div>
-            `;
+            qText = `How many ${iconData.name}s were collected on ${targetDay}?`;
             correct = actualValue.toString();
-            explanation = `On ${targetDay}, there are <strong>${iconCount}</strong> symbols.<br/>Each symbol = ${scale} units.<br/>Total = ${iconCount} × ${scale} = <strong>${actualValue}</strong>.`;
+            explanation = `On ${targetDay}, there are ${iconCount} symbols.<br/>Each symbol = ${scale} units.<br/>Total = ${iconCount} × ${scale} = ${actualValue}.`;
 
             options = [
                 actualValue.toString(),
@@ -225,14 +247,9 @@ const Pictographs = () => {
             const winners = categories.filter(c => data[c] === maxVal);
             const winner = winners[0]; // Simplified for single correct
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>On which day were the <strong>most</strong> ${iconData.name}s collected?</p>
-                </div>
-            `;
+            qText = `On which day were the most ${iconData.name}s collected?`;
             correct = winner;
-            explanation = `Look for the row with the most symbols.<br/><strong>${winner}</strong> has the most (${maxVal} symbols = ${maxVal * scale}).`;
+            explanation = `Look for the row with the most symbols.<br/>${winner} has the most (${maxVal} symbols = ${maxVal * scale}).`;
             options = [winner, ...categories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "compare_least") {
@@ -240,28 +257,18 @@ const Pictographs = () => {
             const winners = categories.filter(c => data[c] === minVal);
             const winner = winners[0];
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>On which day were the <strong>least</strong> ${iconData.name}s collected?</p>
-                </div>
-            `;
+            qText = `On which day were the least ${iconData.name}s collected?`;
             correct = winner;
-            explanation = `Look for the row with the fewest symbols.<br/><strong>${winner}</strong> has the fewest (${minVal} symbols = ${minVal * scale}).`;
+            explanation = `Look for the row with the fewest symbols.<br/>${winner} has the fewest (${minVal} symbols = ${minVal * scale}).`;
             options = [winner, ...categories.filter(c => c !== winner)].slice(0, 4);
 
         } else if (type === "calculate_total") {
             const totalSymbols = Object.values(data).reduce((a, b) => a + b, 0);
             const totalValue = totalSymbols * scale;
 
-            qText = `
-                <div class='question-container'>
-                    ${tableAndKey}
-                    <p>What is the <strong>total</strong> number of ${iconData.name}s collected over all 5 days?</p>
-                </div>
-            `;
+            qText = `What is the total number of ${iconData.name}s collected over all 5 days?`;
             correct = totalValue.toString();
-            explanation = `Count all the symbols in the chart: <strong>${totalSymbols}</strong>.<br/>Multiply by the key value (${scale}): ${totalSymbols} × ${scale} = <strong>${totalValue}</strong>.`;
+            explanation = `Count all the symbols in the chart: ${totalSymbols}.<br/>Multiply by the key value (${scale}): ${totalSymbols} × ${scale} = ${totalValue}.`;
             options = [
                 totalValue.toString(),
                 (totalValue + scale).toString(),
@@ -274,14 +281,9 @@ const Pictographs = () => {
             const testVal = randomInt(2, 6) * scale;
             const symbolsNeeded = testVal / scale;
 
-            qText = `
-                <div class='question-container'>
-                    <div style="margin-bottom:15px; font-weight:bold;">${displayKey}</div>
-                    <p>If a student collected <strong>${testVal}</strong> ${iconData.name}s, how many symbols would be drawn?</p>
-                </div>
-            `;
+            qText = `If a student collected ${testVal} ${iconData.name}s, how many symbols would be drawn?`;
             correct = symbolsNeeded.toString();
-            explanation = `Total items = ${testVal}. Key = ${scale}.<br/>Symbols needed = ${testVal} ÷ ${scale} = <strong>${symbolsNeeded}</strong>.`;
+            explanation = `Total items = ${testVal}. Key = ${scale}.<br/>Symbols needed = ${testVal} ÷ ${scale} = ${symbolsNeeded}.`;
             options = [
                 symbolsNeeded.toString(),
                 (symbolsNeeded + 1).toString(),
@@ -304,6 +306,7 @@ const Pictographs = () => {
 
         const newQuestion = {
             text: qText,
+            chart: type === "reverse_logic" ? displayKey : tableAndKey,
             correctAnswer: correct,
             solution: explanation,
             type: 'mcq',
@@ -439,7 +442,7 @@ const Pictographs = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            clearProgress(); navigate(-1);
         }
     };
 
@@ -454,15 +457,15 @@ const Pictographs = () => {
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Data Handling: Pictographs</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling: Pictographs</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -478,49 +481,57 @@ const Pictographs = () => {
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -50, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: '1.2rem', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', width: '100%', overflowX: 'auto', marginBottom: '1.5rem' }}>
+                                <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem' }}>
+                                    <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg font-bold transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
-                                                                : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                            : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                        }
-                                                    `}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
+                                    <div className="flex flex-col md:flex-row w-full items-start justify-center gap-6 lg:gap-10 mt-4">
+                                        {/* Chart Side */}
+                                        <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                            <LatexContent block={true} html={currentQuestion.chart} />
                                         </div>
 
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
+                                        {/* Options Side */}
+                                        <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center">
+                                            <div className="options-grid-modern flex flex-col gap-3 w-full">
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                        className={`p-3 rounded-xl border-2 text-base font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full
+                                                        ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                    `}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '20px' }}
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -542,13 +553,13 @@ const Pictographs = () => {
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit Practice
+                            Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -561,19 +572,19 @@ const Pictographs = () => {
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
-                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
                             >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
@@ -582,7 +593,7 @@ const Pictographs = () => {
                                     onClick={handleCheck}
                                     disabled={!selectedOption}
                                 >
-                                    Submit <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -595,7 +606,7 @@ const Pictographs = () => {
                             className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
+                                clearProgress(); navigate(-1);
                             }}
                         >
                             <X size={20} />
@@ -609,7 +620,7 @@ const Pictographs = () => {
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={qIndex === 0}
                                 style={{
@@ -621,20 +632,18 @@ const Pictographs = () => {
                                     minWidth: 'auto'
                                 }}
                             >
-                                <ChevronLeft size={20} strokeWidth={3} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheck}
                                     disabled={!selectedOption}
-                                >
-                                    Submit
-                                </button>
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>
