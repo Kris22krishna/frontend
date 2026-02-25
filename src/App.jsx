@@ -81,6 +81,7 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+import Grade4PracticeSession from './pages/juniors/class-4/Grade4PracticeSession';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -306,7 +307,7 @@ function App() {
         <Route path="/junior/grade/:grade/topic/:topic" element={<JuniorSubtopics />} />
         <Route path="/junior/grade/:grade/practice" element={
           <ProtectedRoute redirectTo="/login">
-            <JuniorPracticeSession />
+            <PracticeRouteWrapper />
           </ProtectedRoute>
         } />
 
@@ -877,6 +878,12 @@ function App() {
       </Routes>
     </Router>
   );
+}
+
+function PracticeRouteWrapper() {
+  const { grade } = useParams();
+  const isGrade4 = String(grade).replace(/\D/g, '') === '4';
+  return isGrade4 ? <Grade4PracticeSession /> : <JuniorPracticeSession />;
 }
 
 export default App;
