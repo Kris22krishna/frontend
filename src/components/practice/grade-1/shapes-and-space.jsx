@@ -11,7 +11,7 @@ import ExplanationModal from '../../ExplanationModal';
 import StickerExit from '../../StickerExit';
 import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
-import './Grade1Practice.css';
+import '../../../pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'shape') {
@@ -34,9 +34,9 @@ const DynamicVisual = ({ type, data }) => {
     if (type === 'position') {
         const { pos } = data;
         return (
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{border: "none"}}>
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{ border: "none" }}>
                 <svg width="100%" height="100%" style={{ maxWidth: '280px' }} viewBox="0 0 200 120">
-                    <rect x="50" y="40" width="100" height="70" rx="10" fill="white" stroke="none"  />
+                    <rect x="50" y="40" width="100" height="70" rx="10" fill="white" stroke="none" />
                     <text x="100" y="85" textAnchor="middle" fill="#A0AEC0" fontSize="14" fontWeight="400">BOX</text>
                     {pos === 'top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
                     {pos === 'bottom' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="95" r="18" fill="url(#ballGradient)" />}
@@ -95,7 +95,7 @@ const ShapesAndSpace = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    
+
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -108,7 +108,7 @@ const ShapesAndSpace = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
-const generateQuestions = (selectedSkill) => {
+    const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
 
@@ -236,12 +236,23 @@ const generateQuestions = (selectedSkill) => {
         }
     }, [qIndex, answers]);
 
+    const handleExit = async () => {
+        try {
+            if (sessionId) {
+                await api.finishSession(sessionId);
+            }
+        } catch (e) {
+            console.error("Error finishing session:", e);
+        }
+        navigate('/junior/grade/1');
+    };
+
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
     };
 
-    
+
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
@@ -254,7 +265,7 @@ const generateQuestions = (selectedSkill) => {
             const qData = sessionQuestions[qIndex] || {};
             const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
             const currentTimer = typeof timer !== 'undefined' ? timer : 0;
-            
+
             if (uid && sessionId) {
                 api.recordAttempt({
                     user_id: parseInt(uid, 10),
@@ -270,7 +281,7 @@ const generateQuestions = (selectedSkill) => {
                     time_spent_seconds: currentTimer
                 }).catch(err => console.error("Auto-log failed:", err));
             }
-        } catch(err) {
+        } catch (err) {
             console.error("Auto-log error:", err);
         }
         // -----------------------------
@@ -291,7 +302,7 @@ const generateQuestions = (selectedSkill) => {
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
             }
         }));
-        
+
         // Auto advance if correct, or show modal if incorrect
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
@@ -303,7 +314,7 @@ const generateQuestions = (selectedSkill) => {
         }
     };
 
-const handleNext = async () => {
+    const handleNext = async () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
@@ -369,7 +380,7 @@ const handleNext = async () => {
                     </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </header>
 
@@ -526,7 +537,7 @@ const handleNext = async () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-<div className="g1-timer-badge">
+                    <div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
                     </div>
@@ -542,7 +553,7 @@ const handleNext = async () => {
                     )}
 
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </div>
 
@@ -554,7 +565,7 @@ const handleNext = async () => {
                     <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
 
                     <div className="g1-content-split">
-                        <div className="g1-visual-area" style={{border: "none", background: "transparent"}}>
+                        <div className="g1-visual-area" style={{ border: "none", background: "transparent" }}>
                             <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
                         </div>
 

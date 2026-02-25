@@ -11,7 +11,7 @@ import ExplanationModal from '../../ExplanationModal';
 import StickerExit from '../../StickerExit';
 import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
-import './Grade1Practice.css';
+import '../../../pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'day-night') {
@@ -207,7 +207,7 @@ const Time = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    
+
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -220,7 +220,7 @@ const Time = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
-const generateQuestions = (selectedSkill) => {
+    const generateQuestions = (selectedSkill) => {
         const questions = [];
         const types = ['day-night', 'days-week', 'clock'];
 
@@ -337,6 +337,17 @@ const generateQuestions = (selectedSkill) => {
         }
     }, [qIndex, answers]);
 
+    const handleExit = async () => {
+        try {
+            if (sessionId) {
+                await api.finishSession(sessionId);
+            }
+        } catch (e) {
+            console.error("Error finishing session:", e);
+        }
+        navigate('/junior/grade/1');
+    };
+
     const handleSkip = () => {
         if (isAnswered) return;
         handleNext();
@@ -355,7 +366,7 @@ const generateQuestions = (selectedSkill) => {
         setSelectedOption(option);
     };
 
-    
+
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
@@ -368,7 +379,7 @@ const generateQuestions = (selectedSkill) => {
             const qData = sessionQuestions[qIndex] || {};
             const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
             const currentTimer = typeof timer !== 'undefined' ? timer : 0;
-            
+
             if (uid && sessionId) {
                 api.recordAttempt({
                     user_id: parseInt(uid, 10),
@@ -384,7 +395,7 @@ const generateQuestions = (selectedSkill) => {
                     time_spent_seconds: currentTimer
                 }).catch(err => console.error("Auto-log failed:", err));
             }
-        } catch(err) {
+        } catch (err) {
             console.error("Auto-log error:", err);
         }
         // -----------------------------
@@ -405,7 +416,7 @@ const generateQuestions = (selectedSkill) => {
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
             }
         }));
-        
+
         // Auto advance if correct, or show modal if incorrect
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
@@ -417,7 +428,7 @@ const generateQuestions = (selectedSkill) => {
         }
     };
 
-const handleNext = async () => {
+    const handleNext = async () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
@@ -466,7 +477,7 @@ const handleNext = async () => {
                     </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </header>
 
@@ -623,7 +634,7 @@ const handleNext = async () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-<div className="g1-timer-badge">
+                    <div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
                     </div>
@@ -662,7 +673,7 @@ const handleNext = async () => {
                     )}
 
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </div>
 
@@ -696,7 +707,7 @@ const handleNext = async () => {
                         </div>
                     </div>
 
-                    
+
                     {/* --- INJECTED FOOTER V2 --- */}
                     <div className="g1-navigation-footer">
                         <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>

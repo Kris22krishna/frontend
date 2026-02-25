@@ -10,7 +10,7 @@ import { LatexText } from '../../LatexText';
 import ExplanationModal from '../../ExplanationModal';
 import StickerExit from '../../StickerExit';
 import mascotImg from '../../../assets/mascot.png';
-import './Grade1Practice.css';
+import '../../../pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ data }) => {
     const { seq, missingIdx } = data;
@@ -61,7 +61,7 @@ const Patterns = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-    
+
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     useEffect(() => {
@@ -72,9 +72,20 @@ const Patterns = () => {
             setSelectedOption(null);
             setIsAnswered(false);
             setShowExplanationModal(false);
-            
+
         }
     }, [qIndex, answers]);
+
+    const handleExit = async () => {
+        try {
+            if (sessionId) {
+                await api.finishSession(sessionId);
+            }
+        } catch (e) {
+            console.error("Error finishing session:", e);
+        }
+        navigate('/junior/grade/1');
+    };
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -86,7 +97,7 @@ const Patterns = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
-const generateQuestions = (selectedSkill) => {
+    const generateQuestions = (selectedSkill) => {
         const questions = [];
         const patternTypes = [
             { items: ['🍎', '🍌'] },
@@ -182,7 +193,7 @@ const generateQuestions = (selectedSkill) => {
         setSelectedOption(option);
     };
 
-    
+
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
@@ -195,7 +206,7 @@ const generateQuestions = (selectedSkill) => {
             const qData = sessionQuestions[qIndex] || {};
             const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
             const currentTimer = typeof timer !== 'undefined' ? timer : 0;
-            
+
             if (uid && sessionId) {
                 api.recordAttempt({
                     user_id: parseInt(uid, 10),
@@ -211,7 +222,7 @@ const generateQuestions = (selectedSkill) => {
                     time_spent_seconds: currentTimer
                 }).catch(err => console.error("Auto-log failed:", err));
             }
-        } catch(err) {
+        } catch (err) {
             console.error("Auto-log error:", err);
         }
         // -----------------------------
@@ -232,7 +243,7 @@ const generateQuestions = (selectedSkill) => {
                 explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
             }
         }));
-        
+
         // Auto advance if correct, or show modal if incorrect
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
@@ -244,7 +255,7 @@ const generateQuestions = (selectedSkill) => {
         }
     };
 
-const handleSkip = () => {
+    const handleSkip = () => {
         if (isAnswered) return;
         setAnswers(prev => ({
             ...prev,
@@ -310,7 +321,7 @@ const handleSkip = () => {
                     </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </header>
 
@@ -454,7 +465,7 @@ const handleSkip = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
-<div className="g1-timer-badge">
+                    <div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
                     </div>
@@ -493,7 +504,7 @@ const handleSkip = () => {
                     )}
 
                     <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
-                        <StickerExit onClick={() => navigate('/junior/grade/1')} />
+                        <StickerExit onClick={handleExit} />
                     </div>
                 </div>
 
