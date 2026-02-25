@@ -72,7 +72,7 @@ const JuniorGradeSyllabus = () => {
                         return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii");
                     }
                     if (isGrade4) {
-                        return topicName === "the cleanest village" || topicName === "equal groups";
+                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers");
                     }
                     if (isGrade1 || isGrade2) {
                         return false; // Strictly hide all API topics for Grade 1 and Grade 2
