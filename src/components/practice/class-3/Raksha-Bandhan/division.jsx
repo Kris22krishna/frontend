@@ -96,7 +96,7 @@ const RakshaBandhanDivision = () => {
                             <p><strong>How many brothers are there?</strong></p>
                         </div>
                     `;
-                    explanation = `Total Rakhis = ${total}.<br/>Rakhis per brother = ${groupSize}.<br/>Number of brothers = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
+                    explanation = `Total Rakhis = ${total}. Rakhis per brother = ${groupSize}. Number of brothers = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else if (storyType === "laddoos") {
                     questionText = `
                         <div class='question-container'>
@@ -105,7 +105,7 @@ const RakshaBandhanDivision = () => {
                             <p><strong>How many plates are needed?</strong></p>
                         </div>
                     `;
-                    explanation = `Total laddoos = ${total}.<br/>Laddoos per plate = ${groupSize}.<br/>Number of plates = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
+                    explanation = `Total laddoos = ${total}. Laddoos per plate = ${groupSize}. Number of plates = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else if (storyType === "kaju") {
                     questionText = `
                         <div class='question-container'>
@@ -114,7 +114,7 @@ const RakshaBandhanDivision = () => {
                             <p><strong>How many boxes can be made?</strong></p>
                         </div>
                     `;
-                    explanation = `Total kaju katlis = ${total}.<br/>Sweets per box = ${groupSize}.<br/>Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
+                    explanation = `Total kaju katlis = ${total}. Sweets per box = ${groupSize}. Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else if (storyType === "giftBoxes") {
                     questionText = `
                         <div class='question-container'>
@@ -123,7 +123,7 @@ const RakshaBandhanDivision = () => {
                             <p><strong>How many gift boxes do we need?</strong></p>
                         </div>
                     `;
-                    explanation = `Total gifts = ${total}.<br/>Gifts per box = ${groupSize}.<br/>Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
+                    explanation = `Total gifts = ${total}. Gifts per box = ${groupSize}. Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else {
                     questionText = `
                         <div class='question-container'>
@@ -132,7 +132,7 @@ const RakshaBandhanDivision = () => {
                             <p><strong>How many envelopes are used?</strong></p>
                         </div>
                     `;
-                    explanation = `Total cards = ${total}.<br/>Cards per envelope = ${groupSize}.<br/>Number of envelopes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
+                    explanation = `Total cards = ${total}. Cards per envelope = ${groupSize}. Number of envelopes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 }
 
                 const options = [
@@ -488,7 +488,7 @@ const RakshaBandhanDivision = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                                <div className="question-card-modern" style={{  }}>
                                     <div className="question-header-modern">
                                         <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />

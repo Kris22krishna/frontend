@@ -371,7 +371,7 @@ const HelpCranesOnNumberLine = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '900px', margin: '0 auto' }}>
                     <div className="practice-left-col house-of-hundreds-ii-left-col">
-                        <div className="question-card-modern" style={{ paddingLeft: '2rem', paddingRight: '2rem', paddingBottom: '2rem' }}>
+                        <div className="question-card-modern" style={{ paddingRight: '2rem', paddingBottom: '2rem' }}>
                             <div className="question-header-modern">
                                 <div className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold uppercase tracking-wide text-xs mb-2">
                                     Number Line Adventure

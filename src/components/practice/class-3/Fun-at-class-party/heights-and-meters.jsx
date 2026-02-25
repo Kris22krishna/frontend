@@ -252,7 +252,7 @@ const HeightsAndMeters = () => {
             }).join('');
 
             return {
-                text: `Who is the <b>${askTallest ? 'tallest' : 'shortest'}</b> among them?`,
+                text: `Who is the ${askTallest ? 'tallest' : 'shortest'} among them?`,
                 visual: `<svg viewBox="0 0 290 240" width="100%" height="220" style="overflow:visible">
                     <line x1="10" y1="${baseY}" x2="280" y2="${baseY}" stroke="#795548" stroke-width="3"/>
                     ${figures}
@@ -276,7 +276,7 @@ const HeightsAndMeters = () => {
             for (let i = 0; i < 3; i++) svgContent += drawBottle(xs[i], hList[i], colorList[i], labels[i]);
 
             return {
-                text: `Which bottle is the <b>${askTallest ? 'tallest' : 'shortest'}</b>?`,
+                text: `Which bottle is the ${askTallest ? 'tallest' : 'shortest'}?`,
                 visual: `<svg viewBox="0 0 300 250" width="100%" height="240" style="overflow:visible">${svgContent}</svg>`,
                 options: labels,
                 correctAnswer: labels[targetIdx],
@@ -297,7 +297,7 @@ const HeightsAndMeters = () => {
             for (let i = 0; i < 3; i++) svgContent += drawPole(xs[i], poleH[i], poleColors[i], labels[i]);
 
             return {
-                text: `Which pole is the <b>${askTallest ? 'tallest' : 'shortest'}</b>?`,
+                text: `Which pole is the ${askTallest ? 'tallest' : 'shortest'}?`,
                 visual: `<svg viewBox="0 0 310 250" width="100%" height="245" style="overflow:visible">${svgContent}</svg>`,
                 options: labels,
                 correctAnswer: labels[targetIdx],
@@ -319,7 +319,7 @@ const HeightsAndMeters = () => {
             for (let i = 0; i < 3; i++) svgContent += drawTree(xs[i], treeH[i], trunkColors[i], leafColors[i], labels[i]);
 
             return {
-                text: `Which tree is the <b>${askTallest ? 'tallest' : 'shortest'}</b>?`,
+                text: `Which tree is the ${askTallest ? 'tallest' : 'shortest'}?`,
                 visual: `<svg viewBox="0 0 310 255" width="100%" height="245" style="overflow:visible">${svgContent}</svg>`,
                 options: labels,
                 correctAnswer: labels[targetIdx],
@@ -339,7 +339,7 @@ const HeightsAndMeters = () => {
             for (let i = 0; i < 3; i++) svgContent += drawBuilding(xs[i], buildH[i], buildColors[i], String(i + 1), 3);
 
             return {
-                text: `Which building is the <b>${askTallest ? 'tallest' : 'shortest'}</b>?`,
+                text: `Which building is the ${askTallest ? 'tallest' : 'shortest'}?`,
                 visual: `<svg viewBox="0 0 310 255" width="100%" height="245" style="overflow:visible">${svgContent}</svg>`,
                 options: ['Building 1', 'Building 2', 'Building 3'],
                 correctAnswer: `Building ${targetIdx + 1}`,
@@ -364,7 +364,7 @@ const HeightsAndMeters = () => {
             const totalH = steps * blockH;
 
             return {
-                text: `How many <b>steps</b> does this staircase have?`,
+                text: `How many steps does this staircase have?`,
                 visual: `<svg viewBox="0 0 ${totalW} 230" width="100%" height="200" style="overflow:visible">
                     <line x1="10" y1="205" x2="${totalW}" y2="205" stroke="#A1887F" stroke-width="3"/>
                     ${stairSVG}
@@ -396,7 +396,7 @@ const HeightsAndMeters = () => {
             <text x="${rx + objLen * pixPerCm / 2}" y="177" text-anchor="middle" font-size="10" font-weight="800" fill="#333" font-family="Arial">${objName}</text>`;
 
             return {
-                text: `How long is the <b>${objName}</b>? (in cm)`,
+                text: `How long is the ${objName}? (in cm)`,
                 visual: `<svg viewBox="0 0 ${rx * 2 + totalCm * pixPerCm + 10} 218" width="100%" height="150" style="overflow:visible">
                     ${rulerSVG}${objSVG}
                 </svg>`,
@@ -479,7 +479,7 @@ const HeightsAndMeters = () => {
             <text x="269" y="${halfLineY + 2}" text-anchor="middle" font-size="10" font-weight="900" fill="white" font-family="Arial">½ m</text>`;
 
             return {
-                text: `A half metre = 50 cm. Which is about <b>half a metre</b> long?`,
+                text: `A half metre = 50 cm. Which is about half a metre long?`,
                 visual: `<svg viewBox="0 0 300 240" width="100%" height="220" style="overflow:visible">
                     <line x1="10" y1="205" x2="290" y2="205" stroke="#795548" stroke-width="3"/>
                     ${bars}${halfLine}
@@ -518,7 +518,7 @@ const HeightsAndMeters = () => {
             });
 
             return {
-                text: `Which of these is the <b>${askShortest ? 'shortest' : 'tallest'}</b>?`,
+                text: `Which of these is the ${askShortest ? 'shortest' : 'tallest'}?`,
                 visual: `<svg viewBox="0 0 300 230" width="100%" height="210" style="overflow:visible">
                     <line x1="10" y1="195" x2="290" y2="195" stroke="#795548" stroke-width="3"/>
                     ${bars}
@@ -556,7 +556,7 @@ const HeightsAndMeters = () => {
             ${measureText(220, boxTopY + boxH / 2, `Box:${boxH}cm`, '#e65100')}`;
 
             return {
-                text: `${name2} is on a box! Who is <b>actually taller</b> (without the box)?`,
+                text: `${name2} is on a box! Who is actually taller (without the box)?`,
                 visual: `<svg viewBox="0 0 280 250" width="100%" height="235" style="overflow:visible">
                     <line x1="10" y1="${baseY}" x2="270" y2="${baseY}" stroke="#795548" stroke-width="3"/>
                     ${fig1}${boxSVG}${fig2}
@@ -677,56 +677,87 @@ const HeightsAndMeters = () => {
     return (
         <div className="junior-practice-page raksha-theme fun-at-class-party-practice-page">
             {/* HEADER */}
-            <header className="junior-practice-header fun-at-class-party-header">
-                <div className="header-left" />
+            <header className="junior-practice-header fun-at-class-party-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left">
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             {/* MAIN */}
-            <main className="practice-content-wrapper" style={{ flex: 1, overflow: 'hidden', padding: '0.75rem', display: 'flex', alignItems: 'stretch' }}>
-                <div style={{ maxWidth: '800px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <AnimatePresence mode="wait">
-                        <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4 }} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                            <div className="question-card-modern" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                <div className="question-header-modern" style={{ flex: '1 1 auto', minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                    <h2 className="question-text-modern" style={{ fontSize: 'clamp(0.95rem, 2vw, 1.35rem)', fontWeight: 600, textAlign: 'center' }}>
-                                        <LatexContent html={currentQuestion.text} />
-                                    </h2>
-                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: '1 1 auto', minHeight: 0, overflow: 'hidden', padding: '0.5rem', background: 'rgba(255,255,255,0.5)', borderRadius: '1rem', marginTop: '0.4rem' }}>
-                                        <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} style={{ width: '100%', maxHeight: '100%', overflow: 'visible', display: 'flex', justifyContent: 'center' }} />
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col" style={{ width: '100%' }}>
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={qIndex}
+                                initial={{ x: 50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -50, opacity: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                style={{ width: '100%' }}
+                            >
+                                <div className="question-card-modern flex flex-col justify-start w-full bg-white rounded-3xl sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg" style={{ height: 'auto', minHeight: '100%' }}>
+                                    <div className="question-header-modern mb-2 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
+                                            <LatexContent html={currentQuestion.text} />
+                                        </h2>
+                                    </div>
+                                    <div className={`flex flex-col ${currentQuestion.visual ? 'md:flex-row' : ''} w-full items-start justify-center gap-6 lg:gap-10 mt-4`}>
+                                        {currentQuestion.visual && (
+                                            <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                                <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
+                                            </div>
+                                        )}
+                                        <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${currentQuestion.visual ? 'max-w-sm' : 'max-w-3xl mt-6'}`}>
+                                            <div className={`options-grid-modern w-full ${currentQuestion.visual ? 'flex flex-col gap-3' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => { if (!isSubmitted) setSelectedOption(option); }}
+                                                        disabled={isSubmitted}
+                                                        className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full ${currentQuestion.visual ? 'p-3 text-base min-h-[48px]' : 'p-4 text-lg min-h-[60px]'}
+                                                        ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                    `}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '20px' }}
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="interaction-area-modern">
-                                    <div className="options-grid-modern">
-                                        {shuffledOptions.map((option, idx) => (
-                                            <button key={idx}
-                                                className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
-                                                style={{ fontWeight: 600, fontSize: '1.05rem' }}
-                                                onClick={() => { if (!isSubmitted) setSelectedOption(option); }}
-                                                disabled={isSubmitted}>
-                                                <LatexContent html={option} />
-                                            </button>
-                                        ))}
-                                    </div>
-                                    {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '12px' }}>
-                                            {feedbackMessage}
-                                        </motion.div>
-                                    )}
-                                </div>
-                            </div>
-                        </motion.div>
-                    </AnimatePresence>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
                 </div>
             </main>
 
@@ -750,15 +781,30 @@ const HeightsAndMeters = () => {
                     </div>
                     <div className="bottom-right">
                         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                            {qIndex > 0 && (
-                                <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
-                            )}
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? <><span>Next</span><ChevronRight size={28} strokeWidth={3} /></> : <><span>Done</span><Check size={28} strokeWidth={3} /></>}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? (
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
+                                    ) : (
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
+                                    )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT <Check size={24} strokeWidth={3} /></button>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >
+                                    SUBMIT <Check size={24} strokeWidth={3} />
+                                </button>
                             )}
                         </div>
                     </div>
@@ -774,16 +820,32 @@ const HeightsAndMeters = () => {
                             </button>
                         )}
                     </div>
-                    <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
-                        {qIndex > 0 && (
-                            <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
-                        )}
+                    <div className="nav-buttons-group">
+                        <button
+                            className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                            onClick={handlePrev}
+                            disabled={qIndex === 0}
+                            style={{
+                                opacity: qIndex === 0 ? 0.5 : 1,
+                                padding: '8px 12px',
+                                marginRight: '8px',
+                                backgroundColor: '#eef2ff',
+                                color: '#31326F',
+                                minWidth: 'auto'
+                            }}
+                        >
+                            <ChevronLeft size={24} strokeWidth={3} /> PREV
+                        </button>
                         {isSubmitted ? (
                             <button className="nav-pill-next-btn" onClick={handleNext}>
-                                {qIndex < TOTAL_QUESTIONS - 1 ? 'Next' : 'Done'}
+                                {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                             </button>
                         ) : (
-                            <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
+                            <button
+                                className="nav-pill-submit-btn"
+                                onClick={handleCheck}
+                                disabled={!selectedOption}
+                            >SUBMIT</button>
                         )}
                     </div>
                 </div>

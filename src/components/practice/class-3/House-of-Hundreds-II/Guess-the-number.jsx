@@ -257,7 +257,7 @@ const GuessTheNumber = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="question-card-modern h-full flex flex-col items-center justify-center p-4 max-w-5xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50">
+                    <div className="question-card-modern h-full flex flex-col justify-start items-center max-w-5xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg border border-white/50">
                         <div className="text-center mb-6">
                             <div className="inline-block bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">Guess the Number</div>
                             <h2 className="text-2xl md:text-3xl font-bold text-[#31326F]">{currentQ.question}</h2>

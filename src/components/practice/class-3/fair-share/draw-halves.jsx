@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, RotateCcw, Trash2, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, RotateCcw, Trash2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
@@ -88,6 +88,7 @@ const pathToLines = (path) => {
 const FairShareDraw = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [history, setHistory] = useState({}); // qIndex => { userLines, isSubmitted, isCorrect }
     const [userLines, setUserLines] = useState([]); // Array of {c1,r1,c2,r2}
 
     // Interaction State
@@ -118,6 +119,20 @@ const FairShareDraw = () => {
         const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
         return () => clearInterval(timer);
     }, []);
+
+    // Load state when qIndex changes
+    useEffect(() => {
+        if (history[qIndex]) {
+            setUserLines(history[qIndex].userLines);
+            setIsSubmitted(history[qIndex].isSubmitted);
+            setIsCorrect(history[qIndex].isCorrect);
+        } else {
+            setUserLines([]);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+        }
+        setShowExplanationModal(false);
+    }, [qIndex]);
 
     // Derived State
     const currentLeftPath = SHAPE_PATHS[qIndex];
@@ -183,7 +198,7 @@ const FairShareDraw = () => {
         }
     };
 
-    const handlePointerUp = (e) => {
+    const handlePointerUp = () => {
         setIsDragging(false);
         setDragStartPoint(null);
         setCurrentPointer(null);
@@ -233,6 +248,13 @@ const FairShareDraw = () => {
         return `${l.c1},${l.r1}-${l.c2},${l.r2}`;
     };
 
+    const handlePrev = () => {
+        if (qIndex > 0) {
+            setHistory(prev => ({ ...prev, [qIndex]: { userLines, isSubmitted, isCorrect } }));
+            setQIndex(p => p - 1);
+        }
+    };
+
     const checkAnswer = () => {
         // 1. Decompose both sets to atomic unit segments
         const userSegments = expandToUnitSegments(userLines);
@@ -260,6 +282,8 @@ const FairShareDraw = () => {
                 skill_id: SKILL_ID,
                 difficulty_level: 'Medium',
                 question_text: "Draw Symmetry",
+                correct_answer: "right answer",
+                student_answer: correct ? "right answer" : "wrong answer",
                 is_correct: correct,
                 time_spent_seconds: timeElapsed
             }).catch(console.error);
@@ -291,12 +315,9 @@ const FairShareDraw = () => {
     };
 
     const nextQuestion = async () => {
+        setHistory(prev => ({ ...prev, [qIndex]: { userLines, isSubmitted, isCorrect } }));
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(p => p + 1);
-            setUserLines([]);
-            setIsSubmitted(false);
-            setIsCorrect(false);
-            setShowExplanationModal(false);
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             navigate(-1);
@@ -311,7 +332,7 @@ const FairShareDraw = () => {
 
 
     return (
-        <div className="junior-practice-page fair-share-theme font-sans lg:h-screen lg:overflow-hidden flex flex-col">
+        <div className="junior-practice-page fair-share-theme font-sans flex flex-col fixed inset-0 w-full h-[100dvh] overflow-hidden">
             <style>{`
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -335,11 +356,11 @@ const FairShareDraw = () => {
                     .fixed.right-6 { right: 0.5rem !important; }
                     
                     .gap-4 { gap: 0.5rem !important; }
-                    .md\:gap-8 { gap: 1.5rem !important; }
+                    .md\\:gap-8 { gap: 1.5rem !important; }
                     .pt-4, .pt-8 { padding-top: 0.5rem !important; }
                     .pb-32 { padding-bottom: 4rem !important; }
 
-                    .text-sm.md\:text-lg {
+                    .text-sm.md\\:text-lg {
                         font-size: 0.75rem !important;
                         margin-bottom: 0.2rem !important;
                     }
@@ -357,18 +378,17 @@ const FairShareDraw = () => {
                 }
             `}</style>
 
-            <header className="junior-practice-header flex justify-between items-center px-4 md:px-8 flex-none relative">
-                <div className="header-left invisible md:visible"></div>
-
-                {/* Progress Indicator - Centered via flex-1 + text-center or absolute depending on space */}
-                <div className="flex-1 flex justify-center">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-1 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-base md:text-lg shadow-lg">
-                        Symmetry {qIndex + 1} / {TOTAL_QUESTIONS}
+            <header className="junior-practice-header fair-share-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div className="header-left">
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                </div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-
-                <div className="header-right ml-2">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm md:text-base shadow-md">
+                <div className="header-right">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -377,13 +397,13 @@ const FairShareDraw = () => {
             <main className="flex-1 flex flex-col items-center justify-center p-4 min-h-0 overflow-hidden relative w-full">
                 <div className="w-full max-w-[500px] md:max-w-[800px] lg:max-w-[950px] flex flex-col h-full max-h-full relative mx-auto">
 
-                    {/* Scrollable Area containing Card AND Buttons */}
+                    {/* Area containing Card AND Buttons */}
                     <div
-                        className="flex-1 overflow-y-auto no-scrollbar min-h-0 flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-8 pt-4 md:pt-8 pb-32"
+                        className="flex-1 overflow-hidden min-h-0 flex flex-col md:flex-row items-center md:justify-center gap-4 md:gap-8 pt-4 md:pt-8 pb-32"
                     >
                         {/* Card */}
                         <div className="bg-white rounded-3xl shadow-xl p-3 md:p-6 border-4 border-[#E2E8F0] relative w-full md:w-auto md:flex-none max-w-[500px] my-auto">
-                            <div className="text-center mb-2 md:mb-4 text-[#475569] font-bold text-sm md:text-lg">
+                            <div className="text-center mb-2 md:mb-4 text-[#31326F] font-normal text-lg md:text-xl">
                                 Complete the picture! The red line is a mirror.
                             </div>
 
@@ -473,38 +493,41 @@ const FairShareDraw = () => {
                 </div>
             </main>
 
-            {/* Floating Sticky Navigation Controls - No Footer */}
-            <div className="fixed bottom-6 left-6 z-50 pointer-events-none">
-                <button
-                    className="pointer-events-auto bg-white/90 backdrop-blur-md text-red-500 px-6 py-3 rounded-2xl border-2 border-red-100 font-bold hover:bg-red-100 transition-all shadow-lg hover:scale-105 flex items-center gap-2 active:scale-95"
-                    onClick={async () => {
-                        if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                        navigate(-1);
-                    }}
-                >
-                    <X size={20} strokeWidth={3} /> <span className="hidden md:inline">Exit</span>
+            {/* Sticky Buttons Replacement for Bottom Bar */}
+            <div className="fixed bottom-4 left-4 z-50 flex gap-2">
+                <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] p-3 md:px-6 md:py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg shadow-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>
+                    <span className="hidden md:inline">Exit</span>
+                    <X className="md:hidden" size={20} />
                 </button>
+                {isSubmitted && (
+                    <button className="shadow-lg bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-full flex items-center gap-2" onClick={() => setShowExplanationModal(true)}>
+                        <Eye size={20} /> <span className="hidden md:inline">View Explanation</span><span className="md:hidden">Explain</span>
+                    </button>
+                )}
             </div>
 
-            <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
+            <div className="fixed bottom-4 right-4 z-50 flex items-center gap-2 bg-white/80 p-2 rounded-2xl backdrop-blur-sm shadow-lg border border-gray-100">
+                <button
+                    className={`flex items-center gap-1 transition-all p-2 md:px-4 rounded-xl ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-100"}`}
+                    onClick={handlePrev}
+                    disabled={qIndex === 0}
+                    style={{ backgroundColor: qIndex === 0 ? '#f3f4f6' : '#eef2ff', color: '#31326F', fontWeight: 600 }}
+                >
+                    <ChevronLeft size={20} className="md:w-6 md:h-6" strokeWidth={3} /> <span className="hidden md:inline">PREV</span>
+                </button>
                 {isSubmitted ? (
-                    <button
-                        className="pointer-events-auto bg-[#FF6B6B] text-white px-8 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#EE5253] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#EE5253] active:translate-y-[2px] active:shadow-[0_2px_0_#EE5253] transition-all flex items-center gap-2"
-                        onClick={nextQuestion}
-                    >
-                        {qIndex < TOTAL_QUESTIONS - 1 ? (
-                            <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
-                        ) : (
-                            <>DONE <Check size={24} strokeWidth={3} /></>
-                        )}
+                    <button className="shadow-md py-2 px-4 rounded-xl flex items-center gap-1 bg-green-500 text-white font-bold hover:bg-green-600 transition-colors" onClick={nextQuestion}>
+                        <span className="hidden md:inline">NEXT </span><ChevronRight size={20} className="md:w-6 md:h-6 md:hidden lg:inline" strokeWidth={3} />
+                        <span className="md:hidden">NEXT</span>
                     </button>
                 ) : (
                     <button
-                        className="pointer-events-auto bg-[#4FB7B3] text-white px-8 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#3A8C89] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#3A8C89] active:translate-y-[2px] active:shadow-[0_2px_0_#3A8C89] transition-all flex items-center gap-2 disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none"
+                        className="shadow-md py-2 px-4 rounded-xl flex items-center gap-1 font-bold disabled:opacity-50 disabled:cursor-not-allowed bg-[#4FB7B3] text-white hover:bg-[#3FA09D] transition-colors"
                         onClick={checkAnswer}
                         disabled={userLines.length === 0}
                     >
-                        Submit <Check size={28} strokeWidth={4} />
+                        <span className="hidden md:inline">SUBMIT </span><Check size={20} className="md:hidden lg:inline" strokeWidth={3} />
+                        <span className="md:hidden">SUBMIT</span>
                     </button>
                 )}
             </div>

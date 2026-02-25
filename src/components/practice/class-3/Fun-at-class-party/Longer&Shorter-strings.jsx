@@ -186,7 +186,7 @@ const LongerShorterStrings = () => {
             const askLongest = Math.random() > 0.5;
             const correct = (askLongest && isALonger) || (!askLongest && !isALonger) ? "String A" : "String B";
             return {
-                text: `Which string is <b>${askLongest ? 'longer' : 'shorter'}</b>?`,
+                text: `Which string is ${askLongest ? 'longer' : 'shorter'}?`,
                 visual: `<div class='flex flex-col gap-2 items-center w-full justify-center'>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>A:</span> ${svgA}</div>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>B:</span> ${svgB}</div>
@@ -211,7 +211,7 @@ const LongerShorterStrings = () => {
             const [labelA, labelB] = labels;
             const correct = labelA.isLonger ? labelA.name : labelB.name;
             return {
-                text: "Which is <b>longer</b> when straightened out?",
+                text: "Which is longer when straightened out?",
                 visual: `<div class='flex flex-col gap-2 items-center justify-center w-full'>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>A:</span> ${labelA.svg}</div>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>B:</span> ${labelB.svg}</div>
@@ -241,7 +241,7 @@ const LongerShorterStrings = () => {
                 ? items.reduce((p, c) => p.len < c.len ? p : c)
                 : items.reduce((p, c) => p.len > c.len ? p : c);
             return {
-                text: `Which string of lights is the <b>${askShortest ? 'shortest' : 'longest'}</b>?`,
+                text: `Which string of lights is the ${askShortest ? 'shortest' : 'longest'}?`,
                 visual: `<div class='flex flex-col gap-1 w-full justify-center'>
                     ${items.map(item => `<div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-xl w-8'>${item.id}</span> ${item.svg}</div>`).join('')}
                 </div>`,
@@ -269,7 +269,7 @@ const LongerShorterStrings = () => {
                 ? ribbons.indexOf(ribbons.reduce((a, b) => a.val > b.val ? a : b)) + 1
                 : ribbons.indexOf(ribbons.reduce((a, b) => a.val < b.val ? a : b)) + 1;
             return {
-                text: `Which ribbon is the <b>${askLongest ? 'longest' : 'shortest'}</b>?`,
+                text: `Which ribbon is the ${askLongest ? 'longest' : 'shortest'}?`,
                 visual: visualHTML,
                 options: ["1", "2", "3"],
                 correctAnswer: target.toString(),
@@ -286,7 +286,7 @@ const LongerShorterStrings = () => {
             const names = [['Necklace A', 'Necklace B'], ['Ring 1', 'Ring 2'], ['Bangle A', 'Bangle B']][randomInt(0, 2)];
             const swap = Math.random() > 0.5;
             return {
-                text: `Which <b>${names[0].split(' ')[0].toLowerCase()}</b> uses <b>more</b> string?`,
+                text: `Which ${names[0].split(' ')[0].toLowerCase()} uses more string?`,
                 visual: `<div class='flex justify-around items-center w-full gap-4'>
                     <div class='flex flex-col items-center gap-1'>${swap ? svgBig : svgSmall}<span class='font-bold'>${names[0]}</span></div>
                     <div class='flex flex-col items-center gap-1'>${swap ? svgSmall : svgBig}<span class='font-bold'>${names[1]}</span></div>
@@ -317,7 +317,7 @@ const LongerShorterStrings = () => {
             const opts = [total, wrong1, wrong2, wrong3].filter((v, i, a) => a.indexOf(v) === i && v >= 0).slice(0, 4);
             while (opts.length < 4) opts.push(total + opts.length);
             return {
-                text: `Two pieces of string are joined. How long is the <b>total</b> string?`,
+                text: `Two pieces of string are joined. How long is the total string?`,
                 visual: svgPieces,
                 options: opts.map(o => `${o} cm`),
                 correctAnswer: `${total} cm`,
@@ -346,7 +346,7 @@ const LongerShorterStrings = () => {
                 ? items.reduce((a, b) => a.l > b.l ? a : b).name
                 : items.reduce((a, b) => a.l < b.l ? a : b).name;
             return {
-                text: `Which string is the <b>${askLongest ? 'longest' : 'shortest'}</b>?`,
+                text: `Which string is the ${askLongest ? 'longest' : 'shortest'}?`,
                 visual: visual,
                 options: items.map(i => i.name),
                 correctAnswer: correct,
@@ -367,7 +367,7 @@ const LongerShorterStrings = () => {
                 <circle cx="${endX}" cy="${midY}" r="5" fill="#333"/><text x="${endX - 12}" y="${midY - 8}" font-size="11">End</text>
             </svg>`;
             return {
-                text: "Both paths go from Start to End. Which path is <b>shorter</b>?",
+                text: "Both paths go from Start to End. Which path is shorter?",
                 visual: svgPath,
                 options: ["Path A", "Path B"],
                 correctAnswer: "Path B",
@@ -393,7 +393,7 @@ const LongerShorterStrings = () => {
             </svg>`;
             const correct = top > bot ? "A" : "B";
             return {
-                text: "Each paperclip is the same size. Which chain is <b>longer</b>?",
+                text: "Each paperclip is the same size. Which chain is longer?",
                 visual: svg,
                 options: ["A", "B"],
                 correctAnswer: correct,
@@ -419,7 +419,7 @@ const LongerShorterStrings = () => {
                 <text x="${10 + 45 + gapW * 0.3}" y="32" text-anchor="middle" font-size="22" fill="#555">?</text>
             </svg>`;
             return {
-                text: "Which string fits <b>exactly</b> in the gap?",
+                text: "Which string fits exactly in the gap?",
                 visual: `<div class='flex flex-col items-center gap-2 w-full'>
                     <div style='width:100%'>${gapSVG}</div>
                     <div class='flex flex-col gap-1 w-full items-center'>
@@ -611,65 +611,66 @@ const LongerShorterStrings = () => {
 
     return (
         <div className="junior-practice-page raksha-theme fun-at-class-party-practice-page">
-            <header className="junior-practice-header fun-at-class-party-header">
+            <header className="junior-practice-header fun-at-class-party-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <div className="skill-name-label">{SKILL_NAME}</div>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-base shadow-sm flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
-            <main className="practice-content-wrapper" style={{ flex: 1, overflow: 'hidden', padding: '0.75rem', display: 'flex', alignItems: 'stretch' }}>
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column' }}>
-                    <div className="practice-left-col" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={qIndex}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.3 }}
-                                style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}
+                                initial={{ x: 50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -50, opacity: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', justifyContent: 'flex-start', paddingTop: '2rem' }}>
-                                    <div className="question-header-modern" style={{ width: '100%', textAlign: 'center', marginBottom: '1rem', flex: '0 0 auto' }}>
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', fontWeight: 'bold', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%', margin: 0 }}>
+                                <div className="question-card-modern flex flex-col justify-start w-full bg-white rounded-3xl sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg" style={{ height: 'auto', minHeight: '100%' }}>
+                                    <div className="question-header-modern mb-2 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
 
-                                    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', flex: '1 1 auto', minHeight: 0, gap: '1.5rem', alignItems: 'center' }}>
-                                        <div style={{
-                                            flex: '1 1 50%',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            background: 'rgba(255,255,255,0.5)',
-                                            borderRadius: '1rem',
-                                            padding: '1rem',
-                                            height: 'auto',
-                                            maxHeight: '100%'
-                                        }}>
-                                            <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
-                                        </div>
-
-                                        <div className="interaction-area-modern" style={{ flex: '1 1 50%', display: 'flex', flexDirection: 'column', borderTop: 'none', paddingTop: 0, height: '100%', justifyContent: 'center' }}>
-                                            <div className="options-grid-modern" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', maxWidth: '350px' }}>
+                                    <div className={`flex flex-col ${currentQuestion.visual ? 'md:flex-row' : ''} w-full items-start justify-center gap-6 lg:gap-10 mt-4`}>
+                                        {currentQuestion.visual && (
+                                            <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                                <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
+                                            </div>
+                                        )}
+                                        <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${currentQuestion.visual ? 'max-w-sm' : 'max-w-3xl mt-6'}`}>
+                                            <div className={`options-grid-modern w-full ${currentQuestion.visual ? 'flex flex-col gap-3' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
                                                 {shuffledOptions.map((option, idx) => (
                                                     <button
                                                         key={idx}
-                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
-                                                        style={{ fontWeight: '600', fontSize: '1.1rem', width: '100%', padding: '0.5rem', minHeight: '50px' }}
-                                                        onClick={() => handleOptionSelect(option)}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                         disabled={isSubmitted}
+                                                        className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full ${currentQuestion.visual ? 'p-3 text-base min-h-[48px]' : 'p-4 text-lg min-h-[60px]'}
+                                                        ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                    `}
                                                     >
                                                         <LatexContent html={option} />
                                                     </button>
@@ -680,7 +681,7 @@ const LongerShorterStrings = () => {
                                                     initial={{ scale: 0.5, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     className="feedback-mini correct"
-                                                    style={{ marginTop: '10px', fontSize: '1rem', padding: '0.4rem 1rem' }}
+                                                    style={{ marginTop: '20px' }}
                                                 >
                                                     {feedbackMessage}
                                                 </motion.div>
@@ -717,9 +718,14 @@ const LongerShorterStrings = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                            {qIndex > 0 && (
-                                <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
-                            )}
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -729,7 +735,13 @@ const LongerShorterStrings = () => {
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT <Check size={24} strokeWidth={3} /></button>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >
+                                    SUBMIT <Check size={24} strokeWidth={3} />
+                                </button>
                             )}
                         </div>
                     </div>
@@ -746,15 +758,31 @@ const LongerShorterStrings = () => {
                     </div>
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
-                            {qIndex > 0 && (
-                                <button onClick={handlePrev} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
-                            )}
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>

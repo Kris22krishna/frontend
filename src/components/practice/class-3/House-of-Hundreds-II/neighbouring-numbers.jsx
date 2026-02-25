@@ -226,7 +226,7 @@ const NeighbouringNumbers = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container house-of-hundreds-ii-board-container">
                     <div className="practice-left-col house-of-hundreds-ii-left-col">
-                        <div className="question-card-modern" style={{ paddingLeft: '2rem', paddingRight: '2rem' }}>
+                        <div className="question-card-modern" style={{ paddingRight: '2rem' }}>
                             <div className="question-header-modern">
                                 <div className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold uppercase tracking-wide text-xs mb-2">
                                     {currentQ.type.toUpperCase()} NEIGHBOURS

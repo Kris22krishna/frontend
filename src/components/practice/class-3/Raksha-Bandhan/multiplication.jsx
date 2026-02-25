@@ -165,8 +165,8 @@ const RakshaBandhanMultiplication = () => {
                 questions.push({
                     text: templates[templateIdx],
                     correctAnswer: total.toString(),
-                    solution: `We can find the total by adding ${perGroup} repeatedly ${groups} times:<br/>
-                               <strong>${repeatedAddition} = ${total}</strong>.<br/><br/>
+                    solution: `We can find the total by adding ${perGroup} repeatedly ${groups} times: 
+                               <strong>${repeatedAddition} = ${total}</strong>.  
                                In multiplication, this is <strong>${groups} × ${perGroup} = ${total}</strong>.`,
                     shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
                 });
@@ -498,7 +498,7 @@ const RakshaBandhanMultiplication = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem', paddingTop: '2rem', justifyContent: 'flex-start' }}>
+                                <div className="question-card-modern" style={{ paddingTop: '2rem', justifyContent: 'flex-start' }}>
                                     <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
                                         <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />

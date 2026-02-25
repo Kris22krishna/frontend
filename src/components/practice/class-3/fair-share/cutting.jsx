@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, Pencil, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -269,7 +269,7 @@ const FairShareCutting = () => {
 
         const svgImage = generateSVG(selectedType.type, parts);
 
-        const questionText = `Look at this ${selectedType.name}. It has been cut into equal parts.<br/><br/>How many equal parts are there?`;
+        const questionText = `Look at this ${selectedType.name}. It has been cut into equal parts. How many equal parts are there?`;
 
         const correctAnswer = parts.toString();
 
@@ -291,7 +291,7 @@ const FairShareCutting = () => {
 
         const solutionText = `
             The ${selectedType.name} is divided into <strong>${parts}</strong> equal sections. 
-            <br/>You can count them one by one to find the total number of parts.
+             You can count them one by one to find the total number of parts.
         `;
 
         const qData = {
@@ -341,6 +341,15 @@ const FairShareCutting = () => {
             });
         } catch (e) {
             console.error("Failed to record attempt", e);
+        }
+    };
+
+    const handlePrev = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
         }
     };
 
@@ -414,27 +423,27 @@ const FairShareCutting = () => {
 
     return (
         <div className="junior-practice-page raksha-theme fair-share-practice-page">
-            <header className="junior-practice-header fair-share-header">
+            <header className="junior-practice-header fair-share-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <div className="skill-name-label">{SKILL_NAME}</div>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
 
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container fair-share-board-container">
-                    <div className="practice-left-col fair-share-left-col">
+                <div className="practice-board-container mt-6" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col fair-share-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={qIndex}
@@ -442,39 +451,39 @@ const FairShareCutting = () => {
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -50, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', justifyContent: 'flex-start', paddingTop: '2rem' }}>
-                                    <div className="question-header-modern" style={{ width: '100%', textAlign: 'center', marginBottom: '1rem', flex: '0 0 auto' }}>
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', fontWeight: 'bold', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%', margin: 0 }}>
+                                <div className="question-card-modern flex flex-col justify-start w-full bg-white rounded-3xl sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg" style={{ height: 'auto', minHeight: '100%' }}>
+                                    <div className="question-header-modern mb-2 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-
-                                    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', flex: '1 1 auto', minHeight: 0, gap: '1.5rem', alignItems: 'center' }}>
-                                        <div style={{
-                                            flex: '1 1 50%',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            background: 'rgba(255,255,255,0.5)',
-                                            borderRadius: '1rem',
-                                            padding: '1rem',
-                                            height: 'auto',
-                                            maxHeight: '100%'
-                                        }}>
-                                            <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
-                                        </div>
-
-                                        <div className="interaction-area-modern" style={{ flex: '1 1 50%', display: 'flex', flexDirection: 'column', borderTop: 'none', paddingTop: 0, height: '100%', justifyContent: 'center' }}>
-                                            <div className="options-grid-modern" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', maxWidth: '350px' }}>
+                                    <div className={`flex flex-col ${currentQuestion.visual ? 'md:flex-row' : ''} w-full items-start justify-center gap-6 lg:gap-10 mt-0`}>
+                                        {currentQuestion.visual && (
+                                            <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                                <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
+                                            </div>
+                                        )}
+                                        <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${currentQuestion.visual ? 'max-w-sm' : 'max-w-3xl mt-2'}`}>
+                                            <div className={`options-grid-modern w-full ${currentQuestion.visual ? 'flex flex-col gap-3' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
                                                 {shuffledOptions.map((option, idx) => (
                                                     <button
                                                         key={idx}
-                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
-                                                        style={{ fontWeight: '600', fontSize: '1.1rem', width: '100%', padding: '0.5rem', minHeight: '50px' }}
                                                         onClick={() => handleOptionSelect(option)}
                                                         disabled={isSubmitted}
+                                                        className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full p-3 text-base min-h-[48px]
+                                                        ${isSubmitted
+                                                                ? option === currentQuestion.correctAnswer
+                                                                    ? 'bg-green-100 border-green-500 text-green-700'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-red-100 border-red-500 text-red-700'
+                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                : selectedOption === option
+                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                            }
+                                                    `}
                                                     >
                                                         <LatexContent html={option} />
                                                     </button>
@@ -508,8 +517,7 @@ const FairShareCutting = () => {
                 onNext={() => setShowExplanationModal(false)}
             />
 
-            <footer className="junior-bottom-bar">
-                {/* Desktop Controls */}
+            <footer className="junior-bottom-bar" style={{ height: '70px', padding: '0 1rem' }}>
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
                         <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
@@ -522,7 +530,15 @@ const FairShareCutting = () => {
                         )}
                     </div>
                     <div className="bottom-right">
-                        <div className="nav-buttons-group">
+                        <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -532,13 +548,18 @@ const FairShareCutting = () => {
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT <Check size={24} strokeWidth={3} /></button>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >
+                                    SUBMIT <Check size={24} strokeWidth={3} />
+                                </button>
                             )}
                         </div>
                     </div>
                 </div>
 
-                {/* Mobile Controls */}
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
                         <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
@@ -552,9 +573,24 @@ const FairShareCutting = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>

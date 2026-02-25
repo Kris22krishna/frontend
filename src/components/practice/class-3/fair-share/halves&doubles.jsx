@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, Pencil, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -23,7 +23,7 @@ const CORRECT_MESSAGES = [
 ];
 
 const generateGridSVG = (rows, cols, filled) => {
-    const size = 40;
+    const size = 30;
     const width = cols * size;
     const height = rows * size;
 
@@ -56,7 +56,7 @@ const generateGridSVG = (rows, cols, filled) => {
         }
     }
 
-    return `<svg viewBox="0 -5 ${width} ${height + 10}" width="${Math.min(width, 300)}" height="${Math.min(height, 200)}" style="display:block; margin:20px auto; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));">${rects}</svg>`;
+    return `<svg viewBox="0 -5 ${width} ${height + 10}" width="${Math.min(width, 240)}" height="${Math.min(height, 160)}" style="display:block; margin:5px auto; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));">${rects}</svg>`;
 };
 
 const FairShareHalvesDoubles = () => {
@@ -116,12 +116,15 @@ const FairShareHalvesDoubles = () => {
         generateQuestion(qIndex);
     }, [qIndex]);
 
-    const generateQuestion = (index) => {
+    const generateQuestion = () => {
         // Alternate between Text (Halves/Doubles) and Visual (Grid)
         // Or randomly mix. Let's do random but ensure coverage.
-        const type = Math.random() < 0.5 ? 'text' : 'visual';
-
-        let questionText, correctAnswer, solution, options;
+        const type = randomInt(1, 2) === 1 ? 'text' : 'visual';
+        let questionText = "";
+        let correctAnswer = "";
+        let solution = "";
+        let options = [];
+        let svg = null;
 
         if (type === 'text') {
             // "4 marbles are ___ of 8 marbles"
@@ -198,18 +201,16 @@ const FairShareHalvesDoubles = () => {
                 displayTarget = "More than half";
             }
 
-            const svg = generateGridSVG(rows, cols, filledCount);
+            svg = generateGridSVG(rows, cols, filledCount);
 
             questionText = `
-                <div class='question-container'>
-                    <p>Look at the shaded part of the chocolate.</p>
-                    ${svg}
-                    <p>How much is shaded?</p>
+                <div class='question-container flex flex-col items-center justify-center '>
+                    <p class="m-0 p-0 text-[#31326F] text-2xl mb-1">Look at the shaded part of the chocolate. How much is shaded?</p>
                 </div>
             `;
             correctAnswer = displayAnswer;
-            const filledStr = `${filledCount} out of ${total}`;
-            solution = `There are ${total} blocks total. Half of ${total} is ${total / 2}. <br/>Since ${filledCount} is ${displayTarget.toLowerCase()}, the answer is <strong>${displayAnswer}</strong>.`;
+
+            solution = `There are ${total} blocks total. Half of ${total} is ${total / 2}.  Since ${filledCount} is ${displayTarget.toLowerCase()}, the answer is <strong>${displayAnswer}</strong>.`;
 
             options = ["Less than Half", "More than Half", "Exactly Half", "Full"];
             // If total is odd, 'Exactly Half' is a valid distractor but impossible.
@@ -217,6 +218,7 @@ const FairShareHalvesDoubles = () => {
 
         const qData = {
             text: questionText,
+            visual: svg,
             correctAnswer: correctAnswer,
             solution: solution,
             options: options
@@ -233,6 +235,15 @@ const FairShareHalvesDoubles = () => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const handlePrev = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
+        }
     };
 
     const handleCheck = () => {
@@ -313,7 +324,9 @@ const FairShareHalvesDoubles = () => {
     return (
         <div className="junior-practice-page raksha-theme fair-share-practice-page">
             <header className="junior-practice-header fair-share-header">
-                <div className="header-left"></div>
+                <div className="header-left">
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
@@ -338,38 +351,45 @@ const FairShareHalvesDoubles = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                                <div className="question-card-modern" style={{  }}>
                                     <div className="question-header-modern">
                                         <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
-                                                        } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
-                                                        }`}
-                                                    style={{ fontWeight: '500', fontSize: '1.5rem' }}
-                                                    onClick={() => handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
+                                    <div className={`flex flex-col ${currentQuestion.visual ? 'md:flex-row md:items-stretch' : ''} w-full justify-center gap-6 mt-4`}>
+                                        {currentQuestion.visual && (
+                                            <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-center">
+                                                <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center h-full" style={{ maxHeight: '100%', overflow: 'visible' }} />
+                                            </div>
                                         )}
+                                        <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center justify-center mx-auto ${currentQuestion.visual ? 'max-w-sm h-full' : 'max-w-3xl mt-2'}`}>
+                                            <div className={`options-grid-modern w-full ${currentQuestion.visual ? 'flex flex-col gap-2 justify-center h-full' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                                            } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
+                                                            }`}
+                                                        style={{ fontWeight: '500', fontSize: '1.1rem', padding: '0.25rem 0.5rem', minHeight: '2.5rem' }}
+                                                        onClick={() => handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '20px' }}
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -400,7 +420,15 @@ const FairShareHalvesDoubles = () => {
                         )}
                     </div>
                     <div className="bottom-right">
-                        <div className="nav-buttons-group">
+                        <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -428,6 +456,21 @@ const FairShareHalvesDoubles = () => {
 
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
@@ -439,7 +482,7 @@ const FairShareHalvesDoubles = () => {
                     </div>
                 </div>
             </footer>
-        </div>
+        </div >
     );
 };
 
