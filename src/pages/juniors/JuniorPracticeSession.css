@@ -198,29 +198,18 @@
 .question-card-modern {
     background: white;
     border-radius: 2.5rem;
-    padding: 3rem;
-    /* Increased padding */
+    padding: 2rem 2.5rem;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     width: 100%;
-    min-height: 500px;
-    /* Substantial minimum height */
-    max-height: 100%;
-    /* Fit within wrapper */
+    height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    /* Center content vertically */
+    justify-content: flex-start;
     align-items: center;
-    /* Center content horizontally */
     position: relative;
     z-index: 10;
-    z-index: 10;
     border: 4px solid #FFFFFF;
-    overflow: hidden;
-    flex: 1;
-    /* Take available space */
-    min-height: 0;
-    /* Allow shrinking for scroll */
+    overflow: visible;
 }
 
 /* Custom Scrollbar for Webkit */
@@ -429,13 +418,24 @@
 
 /* Feedback Mini */
 .feedback-mini {
-    margin-top: 1rem;
     font-size: 1.2rem;
     font-weight: 800;
-    padding: 0.5rem 1.5rem;
+    padding: 0.75rem 2rem;
     border-radius: 1rem;
     animation: popIn 0.3s ease-out;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: fit-content;
+}
+
+/* Center encouragement pill across both grid columns */
+.options-grid-modern .feedback-mini {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin: 1rem auto 0;
 }
 
 .feedback-mini.correct {
