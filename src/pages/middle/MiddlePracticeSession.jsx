@@ -8,7 +8,7 @@ import './MiddlePracticeSession.css';
 import Navbar from '../../components/Navbar';
 import { QuestionCard } from '../../components/QuestionCard';
 import { BottomBar } from '../../components/BottomBar';
-import { SunTimer } from '../../components/SunTimer';
+// import { SunTimer } from '../../components/SunTimer'; // Removed as requested
 import { InlineScratchpad } from '../../components/InlineScratchpad';
 import { LatexText } from '../../components/LatexText';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -508,20 +508,35 @@ const MiddlePracticeSession = () => {
                 )}
             </AnimatePresence>
 
-            <header className="relative flex items-center justify-between px-4 lg:px-8 py-2 lg:py-4 shrink-0 z-20 h-24 lg:h-32 landscape:h-16 landscape:lg:h-32">
+            <header className="middle-practice-header relative flex items-center justify-between px-4 lg:px-8 py-2 shrink-0 z-20 h-20 lg:h-24">
                 <div className="flex items-center">
-                    <SunTimer timeLeft={elapsedTime} />
+                    <span className="text-xl font-bold text-[#31326F] hidden md:block">{capitalizeFirstLetter(skillName)}</span>
                 </div>
+
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-lg shadow-lg whitespace-nowrap">
+                        Question {currentIndex + 1} / {stats.total >= QUESTIONS_PER_SESSION ? stats.total : QUESTIONS_PER_SESSION}
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                        <Clock size={20} /> {Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}
+                    </div>
+                </div>
+
                 {encouragement && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none">
-                        <div className="px-6 py-2 lg:px-8 lg:py-3 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full font-black text-lg lg:text-xl shadow-lg border-2 border-white/50 animate-in zoom-in fade-in slide-in-from-bottom-2 duration-300 whitespace-nowrap">
-                            {encouragement}
-                        </div>
+                    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] pointer-events-none">
+                        <motion.div
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="bg-white/95 backdrop-blur-md border-4 border-green-400 p-6 rounded-[32px] shadow-2xl flex flex-col items-center gap-4"
+                        >
+                            <img src={mascotImg} alt="Mascot" className="w-24 h-24 object-contain" />
+                            <span className="text-2xl font-black text-[#31326F]">{encouragement}</span>
+                        </motion.div>
                     </div>
                 )}
-                <div className="flex items-center">
-                    <img src={mascotImg} alt="Mascot" className="w-16 h-16 lg:w-24 lg:h-24 object-contain drop-shadow-lg" />
-                </div>
             </header>
 
             <div className="flex-1 flex flex-col lg:flex-row gap-4 lg:gap-6 px-4 lg:px-6 pb-4 lg:pb-6 overflow-hidden max-w-[1400px] mx-auto w-full">

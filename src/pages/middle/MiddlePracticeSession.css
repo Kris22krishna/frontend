@@ -8,8 +8,14 @@
     height: 100vh;
     background: #ecfdf5;
     font-family: 'DM Sans', sans-serif;
-    color: #0f172a;
-    overflow-x: hidden;
+    color: #31326F;
+    overflow: hidden;
+}
+
+.middle-practice-header {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(79, 183, 179, 0.1);
 }
 
 /* Background Animated Blobs */
