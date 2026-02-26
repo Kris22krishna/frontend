@@ -228,17 +228,17 @@ const AlgebraicExpressionsTest = () => {
         if (uid) {
             const c = Object.values(answers).filter(v => v.isCorrect).length;
             await api.createReport({
-                title: SKILL_NAME,
-                type: 'practice',
-                score: (c / questions.length) * 100,
-                parameters: {
+                uid: parseInt(uid),
+                category: 'Practice',
+                reportData: {
                     skill_id: SKILL_ID,
                     skill_name: SKILL_NAME,
                     total_questions: questions.length,
                     correct_answers: c,
-                    time_taken_seconds: timeElapsed
-                },
-                user_id: parseInt(uid)
+                    time_taken_seconds: timeElapsed,
+                    score: (c / questions.length) * 100,
+                    type: 'Practice'
+                }
             }).catch(console.error);
         }
         setIsFinished(true);
