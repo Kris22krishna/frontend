@@ -69,7 +69,42 @@
   }
 }
 
-/* Fix KaTeX missing glyphs (like \neq) by enforcing math fonts over UI fonts */
-.katex {
-  font-family: KaTeX_Main, 'Times New Roman', serif !important;
+
+/* Feedback/Explanation Box styling for Practice Components */
+.explanation-box {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  width: 100%;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.explanation-box.correct {
+  background-color: #ecfdf5;
+  border-color: #10b981;
+  color: #064e3b;
+}
+
+.explanation-box.incorrect {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+  color: #7f1d1d;
+}
+
+.explanation-box .katex {
+  font-size: 0.95em !important;
+}
+
+@media (max-width: 768px) {
+  .explanation-box {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.3;
+  }
 }
