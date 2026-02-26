@@ -111,6 +111,8 @@ const questions = [
 ];
 
 const HelpCranesOnNumberLine = () => {
+    const SKILL_NAME = "House of Hundreds II - Help Cranes on Number Line";
+    const SHORT_SKILL_NAME = "Help Cranes";
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [history, setHistory] = useState({});
@@ -333,42 +335,36 @@ const HelpCranesOnNumberLine = () => {
         );
     };
 
-    if (showResult) {
-        return (
-            <div className="junior-practice-page results-view">
-                <div className="practice-content-wrapper flex-col">
-                    <h1 className="text-4xl font-black text-[#31326F] mb-6">Discovery Complete! 🌟</h1>
-                    <div className="bg-white p-8 rounded-[2rem] shadow-xl border-4 border-white text-center max-w-md w-full">
-                        <div className="flex justify-center mb-6">
-                            <span className="text-8xl">🦢</span>
-                        </div>
-                        <h2 className="text-3xl font-bold text-[#31326F] mb-2">{score} / {questions.length} Correct</h2>
-                        <p className="text-gray-500 mb-8 font-medium">You're a number line navigator!</p>
-                        <div className="grid grid-cols-2 gap-4">
-                            <button onClick={handleRestart} className="py-3 rounded-xl bg-[#31326F] text-white font-bold text-lg hover:bg-[#25265E] transition-all">Play Again</button>
-                            <button onClick={() => navigate(-1)} className="py-3 rounded-xl border-2 border-[#31326F] text-[#31326F] font-bold text-lg hover:bg-blue-50 transition-all">Exit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
     }
 
     return (
-        <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme house-of-hundreds-ii-practice-page" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
+            <header className="junior-practice-header house-of-hundreds-ii-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Number Line Adventure</span>
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
-
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
-                        Question {currentQIndex + 1} / {questions.length}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{currentQIndex + 1} / {questions.length}
                     </div>
                 </div>
-
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -377,55 +373,47 @@ const HelpCranesOnNumberLine = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '900px', margin: '0 auto' }}>
                     <div className="practice-left-col house-of-hundreds-ii-left-col">
-                        <div className="question-card-modern" style={{ paddingRight: '2rem', paddingBottom: '2rem' }}>
-                            <div className="question-header-modern">
-                                <div className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold uppercase tracking-wide text-xs mb-2">
-                                    Number Line Adventure
-                                </div>
+                        <div className="question-card-modern" style={{ paddingRight: '2rem', paddingBottom: '2rem', justifyContent: 'flex-start' }}>
+                            {/* Question text — top full width */}
+                            <div className="question-header-modern mb-4 w-full">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.5rem)', fontWeight: '500', textAlign: 'center', width: '100%', justifyContent: 'center' }}>
                                     {currentQ.question}
                                 </h2>
                             </div>
 
-                            {/* SVG Container */}
-                            <div className="w-full bg-blue-50/50 rounded-xl border-2 border-blue-100 mb-6 overflow-hidden relative" style={{ height: '200px' }}>
-                                {renderNumberLine()}
-                            </div>
-
-                            <div className="interaction-area-modern">
-                                <div className="options-grid-modern">
-                                    {currentQ.options.map((opt, i) => {
-                                        const isRight = isSubmitted && opt === currentQ.correct;
-                                        const isWrong = isSubmitted && selectedOption === opt && opt !== currentQ.correct;
-
-                                        return (
-                                            <button
-                                                key={i}
-                                                className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''}`}
-                                                onClick={() => handleOptionSelect(opt)}
-                                                disabled={isSubmitted}
-                                                style={{
-                                                    minHeight: '60px',
-                                                    fontWeight: '500',
-                                                    fontSize: '1.2rem',
-                                                    backgroundColor: isRight ? '#4CAF50' : (isWrong ? '#EF5350' : undefined),
-                                                    color: (isRight || isWrong) ? 'white' : undefined,
-                                                    borderColor: isRight ? '#2E7D32' : (isWrong ? '#C62828' : undefined),
-                                                    transform: isRight ? 'scale(1.02)' : 'none',
-                                                    boxShadow: isRight ? '0 4px 12px rgba(76, 175, 80, 0.3)' : undefined
-                                                }}
-                                            >
-                                                {opt}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                                {isSubmitted && isCorrect && (
-                                    <div className="feedback-mini correct mt-4">
-                                        <span className="text-2xl mr-2">🦢</span>
-                                        Spot on!
+                            {/* Number line left + options right */}
+                            <div className="flex flex-col md:flex-row w-full gap-4 md:gap-6 items-stretch">
+                                {/* SVG Number Line — left, with Spot on below it */}
+                                <div className="flex-1 flex flex-col gap-1">
+                                    <div className="bg-blue-50/50 rounded-xl border-2 border-blue-100 overflow-hidden relative" style={{ minHeight: '110px' }}>
+                                        {renderNumberLine()}
                                     </div>
-                                )}
+                                    {isSubmitted && isCorrect && (
+                                        <div className="feedback-mini correct w-full justify-center" style={{ fontSize: '0.85rem', padding: '0.3rem 0.75rem' }}>
+                                            <span className="text-base mr-1">🦢</span>
+                                            Spot on!
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Options — right */}
+                                <div className="interaction-area-modern flex-shrink-0 md:w-36 flex flex-col justify-center">
+                                    <div className="options-grid-modern flex flex-col gap-1">
+                                        {currentQ.options.map((opt, i) => {
+                                            return (
+                                                <button
+                                                    key={i}
+                                                    className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQ.correct ? 'correct' : ''} ${isSubmitted && selectedOption === opt && opt !== currentQ.correct ? 'wrong' : ''}`}
+                                                    onClick={() => handleOptionSelect(opt)}
+                                                    disabled={isSubmitted}
+                                                    style={{ minHeight: '28px', padding: '0.1rem 0.3rem', fontSize: '0.78rem', borderRadius: '0.5rem' }}
+                                                >
+                                                    {opt}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

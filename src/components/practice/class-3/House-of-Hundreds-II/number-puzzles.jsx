@@ -116,6 +116,8 @@ const questions = [
 ];
 
 const NumberPuzzles = () => {
+    const SKILL_NAME = "House of Hundreds II - Number Puzzles";
+    const SHORT_SKILL_NAME = "Number Puzzles";
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [history, setHistory] = useState({});
@@ -381,42 +383,36 @@ const NumberPuzzles = () => {
         );
     };
 
-    if (showResult) {
-        return (
-            <div className="junior-practice-page results-view">
-                <div className="practice-content-wrapper flex-col">
-                    <h1 className="text-4xl font-black text-[#31326F] mb-6">Puzzle Master! 🧩</h1>
-                    <div className="bg-white p-8 rounded-[2rem] shadow-xl border-4 border-white text-center max-w-md w-full">
-                        <div className="flex justify-center mb-6">
-                            <span className="text-8xl">🏆</span>
-                        </div>
-                        <h2 className="text-3xl font-bold text-[#31326F] mb-2">{score} / {questions.length} Correct</h2>
-                        <div className="grid grid-cols-2 gap-4 mt-8">
-                            <button onClick={handleRestart} className="py-3 rounded-xl bg-[#31326F] text-white font-bold text-lg hover:bg-[#25265E] transition-all">Play Again</button>
-                            <button onClick={() => navigate(-1)} className="py-3 rounded-xl border-2 border-[#31326F] text-[#31326F] font-bold text-lg hover:bg-blue-50 transition-all">Exit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
     }
 
     return (
-        <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
-            {/* --- HEADER --- */}
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme house-of-hundreds-ii-practice-page" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
+            <header className="junior-practice-header house-of-hundreds-ii-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Number Puzzles</span>
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
-
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
-                        Question {currentQIndex + 1} / {questions.length}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{currentQIndex + 1} / {questions.length}
                     </div>
                 </div>
-
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -449,18 +445,7 @@ const NumberPuzzles = () => {
                                                 return (
                                                     <button
                                                         key={i}
-                                                        className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''}`}
-                                                        style={{
-                                                            fontSize: '1.1rem',
-                                                            minHeight: '45px',
-                                                            padding: '0.25rem',
-                                                            backgroundColor: isRight ? '#4CAF50' : (isWrong ? '#EF5350' : undefined),
-                                                            color: (isRight || isWrong) ? 'white' : undefined,
-                                                            borderColor: isRight ? '#2E7D32' : (isWrong ? '#C62828' : undefined),
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center'
-                                                        }}
+                                                        className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQ.correct ? 'correct' : ''} ${isSubmitted && selectedOption === opt && opt !== currentQ.correct ? 'wrong' : ''}`}
                                                         onClick={() => !isSubmitted && setSelectedOption(opt)}
                                                     >
                                                         {opt}

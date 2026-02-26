@@ -88,6 +88,7 @@ const pathToLines = (path) => {
 const FairShareDraw = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [showResult, setShowResult] = useState(false);
     const [history, setHistory] = useState({}); // qIndex => { userLines, isSubmitted, isCorrect }
     const [userLines, setUserLines] = useState([]); // Array of {c1,r1,c2,r2}
 
@@ -107,6 +108,7 @@ const FairShareDraw = () => {
 
     const SKILL_ID = 9007;
     const SKILL_NAME = "Fair Share - Symmetry Drawing";
+    const SHORT_SKILL_NAME = "Symmetry";
     const TOTAL_QUESTIONS = SHAPE_PATHS.length;
 
     useEffect(() => {
@@ -320,7 +322,7 @@ const FairShareDraw = () => {
             setQIndex(p => p + 1);
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            navigate(-1);
+            setShowResult(true);
         }
     };
 
@@ -330,6 +332,22 @@ const FairShareDraw = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
 
     return (
         <div className="junior-practice-page fair-share-theme font-sans flex flex-col fixed inset-0 w-full h-[100dvh] overflow-hidden">
@@ -378,17 +396,18 @@ const FairShareDraw = () => {
                 }
             `}</style>
 
-            <header className="junior-practice-header fair-share-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header fair-share-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>

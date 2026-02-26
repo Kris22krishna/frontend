@@ -191,6 +191,7 @@ const generateSVG = (type, parts) => {
 const FairShareCutting = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [showResult, setShowResult] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -209,6 +210,7 @@ const FairShareCutting = () => {
     // Ensure unique ID for this skill
     const SKILL_ID = 9005;
     const SKILL_NAME = "Fair Share - Cutting";
+    const SHORT_SKILL_NAME = "Cutting";
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
@@ -410,7 +412,7 @@ const FairShareCutting = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setShowResult(true);
         }
     };
 
@@ -421,16 +423,33 @@ const FairShareCutting = () => {
 
     if (!currentQuestion) return <div>Loading...</div>;
 
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
     return (
-        <div className="junior-practice-page raksha-theme fair-share-practice-page">
-            <header className="junior-practice-header fair-share-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme fair-share-practice-page">
+            <header className="junior-practice-header fair-share-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
 
@@ -472,18 +491,7 @@ const FairShareCutting = () => {
                                                         key={idx}
                                                         onClick={() => handleOptionSelect(option)}
                                                         disabled={isSubmitted}
-                                                        className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full p-3 text-base min-h-[48px]
-                                                        ${isSubmitted
-                                                                ? option === currentQuestion.correctAnswer
-                                                                    ? 'bg-green-100 border-green-500 text-green-700'
-                                                                    : selectedOption === option
-                                                                        ? 'bg-red-100 border-red-500 text-red-700'
-                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                                : selectedOption === option
-                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                            }
-                                                    `}
+                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && option !== currentQuestion.correctAnswer ? 'wrong' : ''}`}
                                                     >
                                                         <LatexContent html={option} />
                                                     </button>

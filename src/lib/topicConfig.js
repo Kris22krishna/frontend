@@ -98,8 +98,7 @@ export const TOPIC_CONFIGS = {
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
-            { id: "RB-03", name: "Division" },
-            { id: "RB-04", name: "Factors" }
+            { id: "RB-03", name: "Division" }
         ],
         'Fair Share': [
             { id: "FS-01", name: "Cutting equal parts" },

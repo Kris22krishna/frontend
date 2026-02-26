@@ -9,7 +9,7 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+
 import '../../../../pages/juniors/grade3/Raksha-Bandhan.css';
 
 const CORRECT_MESSAGES = [
@@ -27,6 +27,7 @@ const RakshaBandhanFillInTheBlanks = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [showResult, setShowResult] = useState(false);
     const [history, setHistory] = useState({});
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -42,24 +43,20 @@ const RakshaBandhanFillInTheBlanks = () => {
     const isTabActive = useRef(true);
     const SKILL_ID = 9001; // Reserved ID for Raksha Bandhan Fill in the Blanks
     const SKILL_NAME = "Raksha Bandhan - Conceptual questions";
+    const SHORT_SKILL_NAME = "Concepts";
     const [answers, setAnswers] = useState({}); // Track correct answers { 0: true, 1: false }
 
     const questions = [
         {
             topic: "multiplication",
-            text: `<div class='question-container'>
-                      <p>Multiplication means adding the same number again and again. What is Multiplication also called?</p>
-                    </div>`,
+            text: "Multiplication means adding the same number again and again. What is Multiplication also called?",
             correctAnswer: "Repeated addition",
             solution: "Multiplication is adding the same number repeatedly. For example, $2 \\times 3$ means adding 2, three times ($2+2+2$). This is why it is called <strong>repeated addition</strong>.",
             options: ["Repeated addition", "Repeated subtraction", "Repeated division", "Fast counting"]
         },
         {
             topic: "division",
-            text: `<div class='question-container'>
-                      <p>Division means subtracting the same number again and again.</p>
-                      <p>Division is also called _______________ .</p>
-                    </div>`,
+            text: "Division means subtracting the same number again and again. Division is also called ______________ .",
             correctAnswer: "Repeated subtraction",
             solution: "Division is subtracting the same number repeatedly. For example, $6 \\div 2$ means subtracting 2 from 6 until you reach 0. This is why it is called <strong>repeated subtraction</strong>.",
             options: ["Repeated addition", "Repeated subtraction", "Repeated multiplication", "Group counting"]
@@ -247,7 +244,7 @@ const RakshaBandhanFillInTheBlanks = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setShowResult(true);
         }
     };
 
@@ -256,22 +253,38 @@ const RakshaBandhanFillInTheBlanks = () => {
         setSelectedOption(option);
     };
 
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
     return (
-        <div className="junior-practice-page raksha-theme raksha-bandhan-practice-page">
+        <div className="junior-practice-page raksha-theme grey-selection-theme raksha-bandhan-practice-page">
             <header className="junior-practice-header raksha-bandhan-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    {/* Desktop: full skill name */}
+                    <span className="raksha-skill-desktop text-[#31326F] font-normal text-xl">{SKILL_NAME}</span>
+                    {/* Mobile: short skill name */}
+                    <span className="raksha-skill-mobile text-[#31326F] font-semibold text-[0.85rem] leading-tight">{SHORT_SKILL_NAME}</span>
                 </div>
-
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {questions.length}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {questions.length}
                     </div>
                 </div>
-
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
-
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -280,14 +293,14 @@ const RakshaBandhanFillInTheBlanks = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container raksha-bandhan-board-container">
                     <div className="practice-left-col raksha-bandhan-left-col">
-                        <div className="question-card-modern" style={{}}>
-                            <div className="question-header-modern">
+                        <div className="question-card-modern" style={{ paddingTop: '1.5rem', justifyContent: 'flex-start' }}>
+                            <div className="question-header-modern" style={{ marginBottom: '0.75rem' }}>
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                     <LatexContent html={currentQuestion.text} />
                                 </h2>
                             </div>
                             <div className="interaction-area-modern">
-                                <div className="options-grid-modern">
+                                <div className="options-grid-modern" style={{ gap: '0.75rem' }}>
                                     {shuffledOptions.map((option, idx) => (
                                         <button
                                             key={idx}

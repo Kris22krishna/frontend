@@ -200,11 +200,13 @@ const JuniorSubtopics = () => {
                 }
 
                 // Filter by topic and get unique skills
+                const HIDDEN_SKILLS = ['factors']; // Skill names to hide (lowercase)
                 const filteredSkills = (skillsResponse || [])
                     .filter(skill => !isGrade1 && skill.topic === decodedTopic) // Block Grade 1 API topics
                     .filter((skill, index, self) =>
                         skill.skill_name && self.findIndex(s => s.skill_id === skill.skill_id) === index
-                    );
+                    )
+                    .filter(skill => !HIDDEN_SKILLS.includes(skill.skill_name?.trim().toLowerCase()));
 
                 const subtopicList = filteredSkills.map((skill, index) => {
                     return {

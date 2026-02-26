@@ -1,2 +1,10 @@
 /* Styles handled via Tailwind in ExplanationModal.jsx */
 /* Landscape mode styles moved to JuniorPracticeSession.css */
+
+/* Remove bold from all explanation text content */
+.explanation-content strong,
+.explanation-content b,
+.explanation-content .font-bold,
+.explanation-content .font-black {
+    font-weight: 400 !important;
+}

@@ -64,6 +64,7 @@ const RakshaBandhanMultiplication = () => {
     const isTabActive = useRef(true);
     const SKILL_ID = 9002; // Reserved ID for Raksha Bandhan Multiplication
     const SKILL_NAME = "Raksha Bandhan - Multiplication";
+    const SHORT_SKILL_NAME = "Multiplication";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -133,19 +134,9 @@ const RakshaBandhanMultiplication = () => {
                 const repeatedAddition = Array(groups).fill(perGroup).join(' + ');
 
                 const templates = [
-                    `<div class='question-container'>
-                        <p>We found ${groups} ${item.plural} for the celebration.</p>
-                        <p>Each ${item.singular} has ${perGroup} ${item.unit}.</p>
-                        <p>How many ${item.unit} do we have in total?</p>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>During Raksha Bandhan, we used ${groups} ${item.plural}.</p>
-                        <p>If every ${item.singular} contains ${perGroup} ${item.unit}, what is the total number of ${item.unit}?</p>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>There are ${groups} ${item.plural} placed on a tray.</p>
-                        <p>Since each ${item.singular} holds ${perGroup} ${item.unit}, calculate the total count of ${item.unit}.</p>
-                     </div>`
+                    `We found ${groups} ${item.plural} for the celebration. Each ${item.singular} has ${perGroup} ${item.unit}. How many ${item.unit} do we have in total?`,
+                    `During Raksha Bandhan, we used ${groups} ${item.plural}. If every ${item.singular} contains ${perGroup} ${item.unit}, what is the total number of ${item.unit}?`,
+                    `There are ${groups} ${item.plural} placed on a tray. Since each ${item.singular} holds ${perGroup} ${item.unit}, calculate the total count of ${item.unit}.`
                 ];
 
                 const options = [
@@ -338,7 +329,23 @@ const RakshaBandhanMultiplication = () => {
         const total = stats.total;
         const percentage = Math.round((score / total) * 100);
 
-        return (
+        
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
+    return (
             <div className="junior-practice-page results-view overflow-y-auto">
                 <header className="junior-practice-header results-header relative">
                     <button
@@ -471,20 +478,21 @@ const RakshaBandhanMultiplication = () => {
     }
 
     return (
-        <div className="junior-practice-page raksha-theme raksha-bandhan-practice-page">
+        <div className="junior-practice-page raksha-theme grey-selection-theme raksha-bandhan-practice-page">
             <header className="junior-practice-header raksha-bandhan-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    {/* Desktop: full skill name */}
+                    <span className="raksha-skill-desktop text-[#31326F] font-normal text-xl">{SKILL_NAME}</span>
+                    {/* Mobile: short skill name */}
+                    <span className="raksha-skill-mobile text-[#31326F] font-semibold text-[0.85rem] leading-tight">{SHORT_SKILL_NAME}</span>
                 </div>
-
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -502,14 +510,14 @@ const RakshaBandhanMultiplication = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingTop: '2rem', justifyContent: 'flex-start' }}>
-                                    <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
+                                <div className="question-card-modern">
+                                    <div className="question-header-modern" style={{ marginBottom: '0.75rem' }}>
                                         <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
                                     <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+                                        <div className="options-grid-modern" style={{ gap: '0.75rem' }}>
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}

@@ -127,6 +127,8 @@ const questions = [
 ];
 
 const GuessTheNumber = () => {
+    const SKILL_NAME = "House of Hundreds II - Guess the Number";
+    const SHORT_SKILL_NAME = "Guess Number";
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [history, setHistory] = useState({});
@@ -233,19 +235,36 @@ const GuessTheNumber = () => {
         );
     };
 
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
     return (
-        <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme house-of-hundreds-ii-practice-page" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
+            <header className="junior-practice-header house-of-hundreds-ii-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Guess the Number</span>
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black shadow-md flex items-center gap-2">
-                        <span>🃏</span> Question {currentQIndex + 1} / {questions.length}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{currentQIndex + 1} / {questions.length}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -266,35 +285,30 @@ const GuessTheNumber = () => {
                     </div>
                 ) : (
                     <div className="question-card-modern h-full flex flex-col justify-start items-center max-w-5xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl sm: sm: sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg border border-white/50">
-                        <div className="text-center mb-6">
-                            <div className="inline-block bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">Guess the Number</div>
-                            <h2 className="text-2xl md:text-3xl font-bold text-[#31326F]">{currentQ.question}</h2>
+                        <div className="text-center mb-4">
+                            <h2 className="text-xl md:text-2xl font-semibold text-[#31326F]">{currentQ.question}</h2>
                         </div>
 
-                        {/* VISUAL AREA */}
-                        <div className="mb-8 w-full flex justify-center flex-wrap gap-4 min-h-[12rem] items-center">
+                        {/* VISUAL AREA — show cards only (no big number for reverse) */}
+                        <div className="mb-4 w-full flex justify-center flex-wrap gap-4 items-center">
                             {!currentQ.isReverse ? (
-                                // Show Cards
                                 currentQ.cards.map((digit, i) => (
                                     <React.Fragment key={i}>
                                         {renderCard(digit)}
                                     </React.Fragment>
                                 ))
                             ) : (
-                                // Show Target Number
-                                <div className="p-8 bg-blue-50 rounded-3xl border-4 border-blue-200">
-                                    <span className="text-8xl font-black text-[#31326F] tracking-widest">{currentQ.targetNumber}</span>
+                                <div className="p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 text-center">
+                                    <span className="text-4xl font-black text-[#31326F] tracking-widest">{currentQ.targetNumber}</span>
                                 </div>
                             )}
                         </div>
 
                         {/* INTERACTION AREA */}
                         <div className="w-full flex-grow flex flex-col justify-center max-w-3xl mx-auto">
-                            <div className={`grid gap-4 w-full ${currentQ.isReverse ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-4'}`}>
+                            <div className={`options-grid-modern w-full ${currentQ.isReverse ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-4'}`} style={{ display: 'grid', gap: '0.75rem' }}>
                                 {currentQ.options.map((opt, i) => {
                                     const isSelected = selectedOption === opt;
-
-                                    // Logic for correct checking during render
                                     let isRight = false;
                                     if (isSubmitted) {
                                         if (currentQ.isReverse) {
@@ -304,22 +318,16 @@ const GuessTheNumber = () => {
                                             if (opt === currentQ.correct) isRight = true;
                                         }
                                     }
-
                                     const isWrong = isSubmitted && isSelected && !isRight;
-
                                     return (
                                         <button
                                             key={i}
                                             onClick={() => !isSubmitted && setSelectedOption(opt)}
-                                            className={`
-                                                p-6 rounded-2xl border-b-4 transition-all shadow-sm flex items-center justify-center gap-2 relative overflow-hidden group
-                                                ${isSelected ? 'border-b-blue-600 border-blue-500 bg-blue-50 -translate-y-1' : 'border-slate-200 bg-white hover:border-blue-300 hover:-translate-y-1'}
-                                                ${isRight ? '!bg-green-100 !border-green-500 !text-green-800' : ''}
-                                                ${isWrong ? '!bg-red-100 !border-red-500 !text-red-800' : ''}
-                                            `}
+                                            className={`option-btn-modern ${isSelected ? 'selected' : ''} ${isRight ? 'correct' : ''} ${isWrong ? 'wrong' : ''}`}
+                                            style={{ fontFamily: '"Open Sans", sans-serif', fontSize: 'clamp(1rem, 2vw, 1.4rem)', fontWeight: '600' }}
                                         >
                                             {currentQ.isReverse ? (
-                                                <div className="flex gap-2">
+                                                <div className="flex gap-2 justify-center">
                                                     {opt.values.map((v, k) => (
                                                         <div key={k} className="flex flex-col items-center">
                                                             <span className="text-2xl">{WORD_NUMERALS[v].icon}</span>
@@ -328,13 +336,7 @@ const GuessTheNumber = () => {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <span className="text-3xl font-black text-slate-700 group-hover:text-blue-600 transition-colors">{opt}</span>
-                                            )}
-
-                                            {isSelected && !isSubmitted && (
-                                                <div className="absolute top-2 right-2 text-blue-500">
-                                                    <Check size={16} />
-                                                </div>
+                                                <span>{opt}</span>
                                             )}
                                         </button>
                                     );

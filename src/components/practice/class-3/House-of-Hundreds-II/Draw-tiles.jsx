@@ -76,6 +76,14 @@ const DrawTiles = () => {
     const [selectedMcqOption, setSelectedMcqOption] = useState(null); // Tracks selected MCQ option
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const [timeElapsed, setTimeElapsed] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
     // State for Drag & Drop questions
     const [droppedTiles, setDroppedTiles] = useState({ 100: 0, 10: 0, 1: 0 });
@@ -142,10 +150,9 @@ const DrawTiles = () => {
         setIsCorrect(isRight);
 
         if (isRight) {
-            setFeedback('correct');
             setScore(s => s + 1);
         } else {
-            setFeedback('wrong');
+            setShowExplanationModal(true);
         }
     };
 
@@ -197,92 +204,61 @@ const DrawTiles = () => {
         if (!isSubmitted) setSelectedMcqOption(opt);
     };
 
-    if (showResult) {
-        const percentage = Math.round((score / questions.length) * 100);
-
-        return (
-            <div className="junior-practice-page results-view">
-                <div className="practice-content-wrapper flex-col">
-                    <h1 className="text-4xl font-black text-[#31326F] mb-6">Quest Complete! 🎉</h1>
-
-                    <div className="bg-white p-8 rounded-[2rem] shadow-xl border-4 border-white text-center max-w-md w-full">
-                        <div className="flex justify-center mb-6">
-                            <img src="https://cdn-icons-png.flaticon.com/512/2278/2278992.png" alt="Trophy" className="w-32 h-32" />
-                        </div>
-                        <h2 className="text-3xl font-bold text-[#31326F] mb-2">{score} / {questions.length} Correct</h2>
-                        <p className="text-gray-500 mb-8 font-medium">
-                            {percentage >= 80 ? "Amazing job! You're a Tile Master!" : "Great practice! Keep going!"}
-                        </p>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <button onClick={handleRestart} className="py-3 rounded-xl bg-[#31326F] text-white font-bold text-lg hover:bg-[#25265E] transition-all">
-                                Play Again
-                            </button>
-                            <button onClick={() => navigate(-1)} className="py-3 rounded-xl border-2 border-[#31326F] text-[#31326F] font-bold text-lg hover:bg-blue-50 transition-all">
-                                Exit
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
     }
+
+    const SKILL_NAME = "House of Hundreds II - Draw Tiles";
+    const SHORT_SKILL_NAME = "Draw Tiles";
 
     // Determine if submit should be disabled
     const isSubmitDisabled = currentQ.type === 'mcq' ? selectedMcqOption === null : false;
 
     return (
-        <div className="junior-practice-page" ref={containerRef}>
-            {/* Header */}
-            <header className="junior-practice-header flex items-center justify-between px-6 pt-4 relative">
-                <div className="header-left absolute left-6">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Draw Tiles</span>
+        <div className="junior-practice-page raksha-theme grey-selection-theme house-of-hundreds-ii-practice-page" ref={containerRef}>
+            <header className="junior-practice-header house-of-hundreds-ii-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
+                <div className="header-left">
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
-                <div className="flex-1 text-center">
-                    <h2 className="text-2xl font-black text-[#31326F] bg-white/50 inline-block px-6 py-2 rounded-full backdrop-blur-sm">
-                        Question {currentQIndex + 1} / {questions.length}
-                    </h2>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{currentQIndex + 1} / {questions.length}
+                    </div>
+                </div>
+                <div className="header-right">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
+                        {formatTime(timeElapsed)}
+                    </div>
                 </div>
             </header>
 
             {/* Main Content */}
-            <main className="practice-content-wrapper relative z-10">
-                <div className="w-full max-w-5xl h-[85%] bg-white rounded-[3rem] shadow-2xl border-4 border-white overflow-hidden flex flex-col md:flex-row relative">
-
-                    {/* Feedback Overlay */}
-                    {feedback && (
-                        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] animation-fade-in pointer-events-none">
-                            <motion.div
-                                initial={{ scale: 0.5, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className={`p-8 rounded-3xl shadow-2xl flex flex-col items-center border-4 ${feedback === 'correct' ? 'bg-[#E8F5E9] border-[#4CAF50]' : 'bg-[#FFEBEE] border-[#EF5350]'}`}
-                            >
-                                {feedback === 'correct' ? (
-                                    <>
-                                        <div className="w-20 h-20 bg-[#4CAF50] rounded-full flex items-center justify-center mb-4 shadow-lg">
-                                            <Check size={40} color="white" strokeWidth={4} />
-                                        </div>
-                                        <h2 className="text-3xl font-black text-[#1B5E20]">Correct!</h2>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="w-20 h-20 bg-[#EF5350] rounded-full flex items-center justify-center mb-4 shadow-lg">
-                                            <X size={40} color="white" strokeWidth={4} />
-                                        </div>
-                                        <h2 className="text-3xl font-black text-[#B71C1C]">Try Again!</h2>
-                                    </>
-                                )}
-                            </motion.div>
-                        </div>
-                    )}
+            <main className="practice-content-wrapper relative z-10" style={{ alignItems: 'stretch', padding: '0.5rem' }}>
+                <div className="w-full max-w-5xl bg-white rounded-[2rem] shadow-2xl border-4 border-white overflow-hidden flex flex-col md:flex-row relative" style={{ flex: 1, minHeight: 0 }}>
 
                     {/* Left Side: Question & Visuals */}
-                    <div className={`p-8 flex flex-col ${currentQ.type === 'drag-drop' ? 'w-full md:w-2/3 border-b-2 md:border-b-0 md:border-r-2 border-slate-100' : 'w-full h-full items-center justify-center'}`}>
+                    <div className={`p-4 md:p-8 flex flex-col ${currentQ.type === 'drag-drop'
+                        ? 'flex-1 w-full md:w-2/3 border-b-2 md:border-b-0 md:border-r-2 border-slate-100'
+                        : 'flex-1 w-full justify-start gap-6'
+                        }`}>
 
                         {/* Question Text */}
-                        <h1 className="text-3xl md:text-4xl font-black text-[#31326F] mb-8 text-center leading-tight">
+                        <h1 className="text-lg md:text-2xl font-normal text-[#31326F] text-center leading-tight" style={{ fontFamily: '"Open Sans", sans-serif' }}>
                             {currentQ.type === 'drag-drop' && (
-                                <>Draw tiles to show <span className="text-[#00BFA5] text-5xl inline-block transform translate-y-1 mx-2">{currentQ.target}</span></>
+                                <>Draw tiles to show <span className="text-[#00BFA5] text-2xl md:text-4xl inline-block transform translate-y-1 mx-2 font-medium">{currentQ.target}</span></>
                             )}
                             {currentQ.type === 'mcq' && (
                                 currentQ.text ? currentQ.text : "What is represented by these tiles?"
@@ -290,32 +266,31 @@ const DrawTiles = () => {
                         </h1>
 
                         {/* Question Area */}
-                        <div className="flex-1 flex flex-col items-center justify-center w-full relative">
+                        <div className={`flex flex-col items-center w-full relative ${currentQ.type === 'drag-drop' ? 'flex-1 justify-center' : 'gap-6'
+                            }`}>
 
                             {/* DROP ZONE (For Drag & Drop) */}
                             {currentQ.type === 'drag-drop' && (
                                 <div
                                     ref={dropZoneRef}
-                                    className="w-full h-full bg-slate-50 rounded-3xl border-4 border-dashed border-slate-300 relative flex flex-wrap content-start p-4 gap-2 transition-colors duration-300"
+                                    className="w-full bg-slate-50 rounded-3xl border-4 border-dashed border-slate-300 relative flex flex-wrap content-start p-4 gap-2 transition-colors duration-300"
+                                    style={{ minHeight: '160px', flex: 1 }}
                                 >
-                                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-200 font-bold text-4xl pointer-events-none uppercase tracking-widest">
+                                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-200 font-normal text-xl md:text-3xl pointer-events-none uppercase tracking-widest text-center">
                                         Drop Tiles Here
                                     </span>
 
                                     {/* Render Dropped Tiles */}
-                                    {/* Hundreds */}
                                     {[...Array(droppedTiles[100])].map((_, i) => (
                                         <motion.div key={`100-${i}`} layoutId={`100-${i}`} onClick={() => removeTile(100)} className="cursor-pointer hover:scale-95 transition-transform" title="100 (Click to remove)">
                                             <Tile100 />
                                         </motion.div>
                                     ))}
-                                    {/* Tens */}
                                     {[...Array(droppedTiles[10])].map((_, i) => (
                                         <motion.div key={`10-${i}`} layoutId={`10-${i}`} onClick={() => removeTile(10)} className="cursor-pointer hover:scale-95 transition-transform" title="10 (Click to remove)">
                                             <Tile10 />
                                         </motion.div>
                                     ))}
-                                    {/* Ones */}
                                     {[...Array(droppedTiles[1])].map((_, i) => (
                                         <motion.div key={`1-${i}`} layoutId={`1-${i}`} onClick={() => removeTile(1)} className="cursor-pointer hover:scale-95 transition-transform" title="1 (Click to remove)">
                                             <Tile1 />
@@ -326,23 +301,41 @@ const DrawTiles = () => {
 
                             {/* MCQ Visuals */}
                             {currentQ.type === 'mcq' && !currentQ.text && currentQ.tiles && (
-                                <div className="bg-[#E0F7FA] p-8 rounded-3xl border-4 border-[#B2DFDB] flex flex-wrap gap-4 justify-center shadow-inner max-w-2xl">
+                                <div className="bg-[#E0F7FA] p-6 rounded-2xl border-2 border-[#B2DFDB] flex flex-wrap gap-3 justify-center shadow-inner w-full">
                                     {[...Array(currentQ.tiles[100])].map((_, i) => <Tile100 key={`m100-${i}`} />)}
                                     {[...Array(currentQ.tiles[10])].map((_, i) => <Tile10 key={`m10-${i}`} />)}
                                     {[...Array(currentQ.tiles[1])].map((_, i) => <Tile1 key={`m1-${i}`} />)}
                                 </div>
                             )}
+
+                            {/* MCQ Options — inline below visual */}
+                            {currentQ.type === 'mcq' && (
+                                <div className="options-grid-modern w-full" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+                                    {currentQ.options.map((opt, i) => (
+                                        <button
+                                            key={i}
+                                            onClick={() => handleMcqSelect(opt)}
+                                            className={`option-btn-modern ${selectedMcqOption === opt ? 'selected' : ''
+                                                } ${isSubmitted && opt === currentQ.correct ? 'correct' : ''
+                                                } ${isSubmitted && selectedMcqOption === opt && selectedMcqOption !== currentQ.correct ? 'wrong' : ''
+                                                }`}
+                                            style={{ fontSize: '1.1rem', fontWeight: '400', fontFamily: '"Open Sans", sans-serif' }}
+                                            disabled={isSubmitted}
+                                        >
+                                            {opt}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    {/* Right Side / Bottom: Interaction Area */}
-                    <div className={`${currentQ.type === 'drag-drop' ? 'w-full md:w-1/3 bg-slate-50' : 'w-full md:w-full absolute bottom-0 left-0 p-8 flex justify-center'}`}>
-
-                        {/* DRAG SOURCES for Drag & Drop */}
-                        {currentQ.type === 'drag-drop' && (
-                            <div className="h-full flex flex-row md:flex-col items-center justify-around p-4 gap-6">
+                    {/* Right Side (desktop) / Bottom strip (mobile): Tile Sources — drag-drop only */}
+                    {currentQ.type === 'drag-drop' && (
+                        <div className="w-full md:w-1/3 bg-slate-50 border-t-2 md:border-t-0 md:border-l-0 border-slate-100">
+                            <div className="flex flex-row md:flex-col items-center justify-around p-3 md:p-4 gap-4 md:gap-6 h-full">
                                 <div className="flex flex-col items-center gap-2">
-                                    <span className="font-bold text-slate-400 uppercase tracking-wider text-xs">Hundreds</span>
+                                    <span className="font-normal text-slate-400 uppercase tracking-wider text-xs">Hundreds</span>
                                     <div className="relative group">
                                         <div className="absolute inset-0 bg-yellow-200 rounded-lg transform rotate-6 opacity-50"></div>
                                         <div className="absolute inset-0 bg-yellow-200 rounded-lg transform -rotate-3 opacity-50"></div>
@@ -352,9 +345,8 @@ const DrawTiles = () => {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="flex flex-col items-center gap-2">
-                                    <span className="font-bold text-slate-400 uppercase tracking-wider text-xs">Tens</span>
+                                    <span className="font-normal text-slate-400 uppercase tracking-wider text-xs">Tens</span>
                                     <div className="relative group">
                                         <DraggableTile type={10} onDrop={handleDrop} constraintsRef={containerRef} />
                                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-lg text-sm border-2 border-white">
@@ -362,9 +354,8 @@ const DrawTiles = () => {
                                         </div>
                                     </div>
                                 </div>
-
                                 <div className="flex flex-col items-center gap-2">
-                                    <span className="font-bold text-slate-400 uppercase tracking-wider text-xs">Ones</span>
+                                    <span className="font-normal text-slate-400 uppercase tracking-wider text-xs">Ones</span>
                                     <div className="relative group">
                                         <DraggableTile type={1} onDrop={handleDrop} constraintsRef={containerRef} />
                                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-lg text-sm border-2 border-white">
@@ -373,30 +364,8 @@ const DrawTiles = () => {
                                     </div>
                                 </div>
                             </div>
-                        )}
-
-                        {/* OPTIONS for MCQ */}
-                        {currentQ.type === 'mcq' && (
-                            <div className="grid grid-cols-4 gap-4 w-full max-w-4xl bg-white/90 p-4 rounded-3xl backdrop-blur-md shadow-2xl border-2 border-slate-100">
-                                {currentQ.options.map((opt, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => handleMcqSelect(opt)}
-                                        className={`py-3 rounded-2xl border-b-4 text-3xl font-black transition-all shadow-lg text-center relative
-                                            ${selectedMcqOption === opt
-                                                ? 'bg-[#31326F] border-[#1e1f48] text-white scale-[1.02] shadow-xl z-10 ring-4 ring-blue-100'
-                                                : 'bg-white border-slate-200 text-[#31326F] hover:bg-blue-50 hover:border-blue-300 hover:text-[#2979FF] hover:-translate-y-1'}
-                                            ${isSubmitted && opt === currentQ.correct ? '!bg-green-500 !border-green-700 !text-white !ring-green-200' : ''}
-                                            ${isSubmitted && selectedMcqOption === opt && selectedMcqOption !== currentQ.correct ? '!bg-red-500 !border-red-700 !text-white !ring-red-200' : ''}
-                                        `}
-                                        disabled={isSubmitted}
-                                    >
-                                        {opt}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </main>
 

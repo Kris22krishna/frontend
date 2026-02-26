@@ -9,7 +9,7 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+
 import '../../../../pages/juniors/grade3/Raksha-Bandhan.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -47,6 +47,7 @@ const RakshaBandhanDivision = () => {
     const isTabActive = useRef(true);
     const SKILL_ID = 800; // Reserved ID for Raksha Bandhan Division
     const SKILL_NAME = "Raksha Bandhan - Division";
+    const SHORT_SKILL_NAME = "Division";
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
@@ -89,49 +90,19 @@ const RakshaBandhanDivision = () => {
                 const correctAnswer = groups;
 
                 if (storyType === "rakhis") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} Rakhi threads to be tied.</p>
-                            <p>Each brother receives ${groupSize} Rakhis.</p>
-                            <p><strong>How many brothers are there?</strong></p>
-                        </div>
-                    `;
+                    questionText = `There are ${total} Rakhi threads to be tied. Each brother receives ${groupSize} Rakhis. How many brothers are there?`;
                     explanation = `Total Rakhis = ${total}. Rakhis per brother = ${groupSize}. Number of brothers = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else if (storyType === "laddoos") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} delicious laddoos in a box.</p>
-                            <p>Each plate can hold ${groupSize} laddoos.</p>
-                            <p><strong>How many plates are needed?</strong></p>
-                        </div>
-                    `;
+                    questionText = `There are ${total} delicious laddoos in a box. Each plate can hold ${groupSize} laddoos. How many plates are needed?`;
                     explanation = `Total laddoos = ${total}. Laddoos per plate = ${groupSize}. Number of plates = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else if (storyType === "kaju") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} kaju katlis in a tray.</p>
-                            <p>${groupSize} kaju katlis are packed in one small box.</p>
-                            <p><strong>How many boxes can be made?</strong></p>
-                        </div>
-                    `;
+                    questionText = `There are ${total} kaju katlis in a tray. ${groupSize} kaju katlis are packed in one small box. How many boxes can be made?`;
                     explanation = `Total kaju katlis = ${total}. Sweets per box = ${groupSize}. Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else if (storyType === "giftBoxes") {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} small gifts to be wrapped.</p>
-                            <p>Each large gift box can hold ${groupSize} gifts.</p>
-                            <p><strong>How many gift boxes do we need?</strong></p>
-                        </div>
-                    `;
+                    questionText = `There are ${total} small gifts to be wrapped. Each large gift box can hold ${groupSize} gifts. How many gift boxes do we need?`;
                     explanation = `Total gifts = ${total}. Gifts per box = ${groupSize}. Number of boxes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 } else {
-                    questionText = `
-                        <div class='question-container'>
-                            <p>There are ${total} greeting cards for Raksha Bandhan.</p>
-                            <p>Each envelope contains ${groupSize} cards.</p>
-                            <p><strong>How many envelopes are used?</strong></p>
-                        </div>
-                    `;
+                    questionText = `There are ${total} greeting cards for Raksha Bandhan. Each envelope contains ${groupSize} cards. How many envelopes are used?`;
                     explanation = `Total cards = ${total}. Cards per envelope = ${groupSize}. Number of envelopes = ${total} ÷ ${groupSize} = <strong>${correctAnswer}</strong>.`;
                 }
 
@@ -336,7 +307,23 @@ const RakshaBandhanDivision = () => {
         const percentage = Math.round((score / total) * 100);
         const avatarImg = "/src/assets/avatar.png"; // Fallback path if import is missing
 
-        return (
+        
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
+    return (
             <div className="junior-practice-page results-view overflow-y-auto">
                 <header className="junior-practice-header results-header relative">
                     <button
@@ -469,23 +456,25 @@ const RakshaBandhanDivision = () => {
     }
 
     return (
-        <div className="junior-practice-page raksha-theme raksha-bandhan-practice-page">
+        <div className="junior-practice-page raksha-theme grey-selection-theme raksha-bandhan-practice-page">
             <header className="junior-practice-header raksha-bandhan-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    {/* Desktop: full skill name */}
+                    <span className="raksha-skill-desktop text-[#31326F] font-normal text-xl">{SKILL_NAME}</span>
+                    {/* Mobile: short skill name */}
+                    <span className="raksha-skill-mobile text-[#31326F] font-semibold text-[0.85rem] leading-tight">{SHORT_SKILL_NAME}</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-2xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
-
             <main className="practice-content-wrapper">
                 <div className="practice-board-container raksha-bandhan-board-container">
                     <div className="practice-left-col raksha-bandhan-left-col">
@@ -505,7 +494,7 @@ const RakshaBandhanDivision = () => {
                                         </h2>
                                     </div>
                                     <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+                                        <div className="options-grid-modern" style={{ gap: '0.75rem' }}>
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}

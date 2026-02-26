@@ -115,6 +115,7 @@ const generateStringSVG = (type, config) => {
 const LongerShorterStrings = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [showResult, setShowResult] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -131,6 +132,7 @@ const LongerShorterStrings = () => {
 
     const SKILL_ID = 9006;
     const SKILL_NAME = "Longer & Shorter Strings";
+    const SHORT_SKILL_NAME = "Strings";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
     const [showReport, setShowReport] = useState(false);
@@ -555,7 +557,23 @@ const LongerShorterStrings = () => {
         const totalCorrect = Object.values(answers).filter(val => val === true).length;
         const percentage = Math.round((totalCorrect / TOTAL_QUESTIONS) * 100);
         const stars = percentage >= 80 ? 3 : percentage >= 50 ? 2 : 1;
-        return (
+        
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
+    return (
             <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -610,26 +628,27 @@ const LongerShorterStrings = () => {
     }
 
     return (
-        <div className="junior-practice-page raksha-theme fun-at-class-party-practice-page">
-            <header className="junior-practice-header fun-at-class-party-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme fun-at-class-party-practice-page font-sans">
+            <header className="junior-practice-header fun-at-class-party-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
+                <div className="practice-board-container mt-2" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col fun-at-class-party-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={qIndex}
@@ -639,38 +658,27 @@ const LongerShorterStrings = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern flex flex-col justify-start w-full bg-white rounded-3xl sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg" style={{ height: 'auto', minHeight: '100%' }}>
+                                <div className="question-card-modern flex flex-col justify-start w-full bg-white rounded-3xl sm: px-6 sm:px-10 pt-8 sm:pt-10 pb-6 sm:pb-10 shadow-lg" style={{ height: 'auto', minHeight: '100%' }}>
                                     <div className="question-header-modern mb-2 w-full" style={{ flexShrink: 0 }}>
                                         <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
 
-                                    <div className={`flex flex-col ${currentQuestion.visual ? 'md:flex-row' : ''} w-full items-start justify-center gap-6 lg:gap-10 mt-4`}>
+                                    <div className={`flex flex-col ${currentQuestion.visual ? 'md:flex-row' : ''} w-full items-center justify-center gap-3 lg:gap-6 mt-0`}>
                                         {currentQuestion.visual && (
                                             <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
                                                 <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
                                             </div>
                                         )}
                                         <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${currentQuestion.visual ? 'max-w-sm' : 'max-w-3xl mt-6'}`}>
-                                            <div className={`options-grid-modern w-full ${currentQuestion.visual ? 'flex flex-col gap-3' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
+                                            <div className={`options-grid-modern w-full ${currentQuestion.visual ? 'flex flex-col gap-2' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
                                                 {shuffledOptions.map((option, idx) => (
                                                     <button
                                                         key={idx}
                                                         onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                         disabled={isSubmitted}
-                                                        className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full ${currentQuestion.visual ? 'p-3 text-base min-h-[48px]' : 'p-4 text-lg min-h-[60px]'}
-                                                        ${isSubmitted
-                                                                ? option === currentQuestion.correctAnswer
-                                                                    ? 'bg-green-100 border-green-500 text-green-700'
-                                                                    : selectedOption === option
-                                                                        ? 'bg-red-100 border-red-500 text-red-700'
-                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                                : selectedOption === option
-                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                            }
-                                                    `}
+                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && option !== currentQuestion.correctAnswer ? 'wrong' : ''}`}
                                                     >
                                                         <LatexContent html={option} />
                                                     </button>
