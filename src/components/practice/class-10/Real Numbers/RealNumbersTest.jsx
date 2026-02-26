@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, isSubmitted } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -152,7 +152,7 @@ const BLUE_THEME_CSS = `
     }
 `;
 
-const SKILL_ID = 1206;
+const SKILL_ID = 1119;
 const SKILL_NAME = "Real Numbers - Chapter Test";
 
 const RealNumbersTest = () => {
@@ -424,23 +424,6 @@ const RealNumbersTest = () => {
         }
     };
 
-    const handleCheck = () => {
-        if (!selectedOption) return;
-        const currentQ = questions[qIndex];
-        const isRight = selectedOption === currentQ.correctAnswer;
-        setIsCorrect(isRight);
-        setIsSubmitted(true);
-        if (isRight) setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
-        else setShowExplanationModal(true);
-        setAnswers(prev => ({
-            ...prev,
-            [qIndex]: {
-                selectedOption: selectedOption,
-                isCorrect: isRight
-            }
-        }));
-    };
-
     const navigateToQuestion = (index) => {
         handleRecordResponse(!selectedOption);
         setQIndex(index);
@@ -625,7 +608,7 @@ const RealNumbersTest = () => {
             <style>{BLUE_THEME_CSS}</style>
             <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
                 <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {SKILL_NAME}
+                    {SKILL_NAME.length > 30 ? "Chapter Test" : SKILL_NAME}
                 </div>
                 <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-black text-xl shadow-lg">
                     {qIndex + 1} / {questions.length}
@@ -741,9 +724,6 @@ const RealNumbersTest = () => {
                             Exit
                         </button>
                     </div>
-                    <div className="mobile-footer-center" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-                        {isSubmitted && <button className="view-explanation-btn" style={{ fontSize: '0.7rem', padding: '0.3rem 0.5rem' }} onClick={() => setShowExplanationModal(true)}><Eye size={14} /> VIEW EXPLANATION</button>}
-                    </div>
                     <div className="mobile-footer-right" style={{ display: 'flex', gap: '5px' }}>
                         <button
                             className="nav-pill-next-btn bg-gray-200 text-gray-600"
@@ -753,11 +733,13 @@ const RealNumbersTest = () => {
                         >
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
-                        {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
-                        ) : (
-                            <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
-                        )}
+                        <button
+                            className="nav-pill-next-btn"
+                            style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }}
+                            onClick={handleNext}
+                        >
+                            {qIndex === questions.length - 1 ? "Finish" : "Next"} <ChevronRight size={16} strokeWidth={3} />
+                        </button>
                     </div>
                 </div>
             </footer>

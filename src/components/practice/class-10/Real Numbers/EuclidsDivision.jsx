@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const EuclidsDivision = () => {
@@ -14,6 +15,7 @@ const EuclidsDivision = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
@@ -199,9 +201,12 @@ const EuclidsDivision = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, [SKILL_ID]);
+    }, [SKILL_ID, showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -270,10 +275,10 @@ const EuclidsDivision = () => {
                         timestamp: new Date().toISOString(),
                         time_taken_seconds: timeElapsed
                     },
-                    user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
+                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
                 }).catch(console.error);
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -321,7 +326,7 @@ const EuclidsDivision = () => {
                                         </button>
                                     ))}
                                     {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
+                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
                                             {feedbackMessage}
                                         </motion.div>
                                     )}
@@ -333,6 +338,16 @@ const EuclidsDivision = () => {
             </main>
 
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
+
+            <PracticeReportModal 
+                isOpen={showReportModal} 
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }} 
+                onContinue={() => navigate(-1)} 
+            />
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
@@ -354,7 +369,7 @@ const EuclidsDivision = () => {
                                 Prev
                             </button>
                             {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight /></button> :
+                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight />}</button> :
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check /></button>
                             }
                         </div>
@@ -379,7 +394,7 @@ const EuclidsDivision = () => {
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}
