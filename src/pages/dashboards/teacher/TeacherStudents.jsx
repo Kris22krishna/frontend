@@ -70,7 +70,7 @@ const TeacherStudents = () => {
                             <tr key={s.id} className="border-b border-gray-50 hover:bg-gray-50">
                                 <td className="py-4 px-6">
                                     <div className="flex items-center gap-3">
-                                        <div className="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-medium text-sm">{s.name.split(' ').map(n => n[0]).join('')}</div>
+                                        <div className="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-medium text-sm">{(s.name || '').split(' ').filter(Boolean).map(n => n[0]).join('') || '?'}</div>
                                         <div><div className="font-medium text-gray-800">{s.name}</div><div className="text-sm text-gray-500">{s.email}</div></div>
                                     </div>
                                 </td>

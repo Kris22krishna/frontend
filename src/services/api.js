@@ -716,15 +716,21 @@ export const api = {
         return handleResponse(response);
     },
 
-    getAdminStudents: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/students`, {
+    getAdminStudents: async (skip = 0, limit = 50, search = '', grade = '') => {
+        const params = new URLSearchParams();
+        params.append('skip', skip);
+        params.append('limit', limit);
+        if (search) params.append('search', search);
+        if (grade && grade !== 'All') params.append('grade', grade);
+
+        const response = await fetch(`${BASE_URL}/api/v1/admin/students?${params.toString()}`, {
             headers: getHeaders()
         });
         return handleResponse(response);
     },
 
-    getAdminTeachers: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/teachers`, {
+    getAdminTeachers: async (skip = 0, limit = 50) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/teachers?skip=${skip}&limit=${limit}`, {
             headers: getHeaders()
         });
         return handleResponse(response);
@@ -746,8 +752,8 @@ export const api = {
         return handleResponse(response);
     },
 
-    getAdminParents: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/admin/parents`, {
+    getAdminParents: async (skip = 0, limit = 50) => {
+        const response = await fetch(`${BASE_URL}/api/v1/admin/parents?skip=${skip}&limit=${limit}`, {
             headers: getHeaders()
         });
         return handleResponse(response);

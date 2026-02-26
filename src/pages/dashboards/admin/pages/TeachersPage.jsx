@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, MoreVertical, Download, Filter, Loader2, RefreshCw, UserPlus, X, Check, Eye } from 'lucide-react';
+import { Search, Plus, MoreVertical, Download, Filter, Loader2, RefreshCw, UserPlus, X, Check, Eye, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../../../../services/api';
 
 const TeachersPage = () => {
     const [loading, setLoading] = useState(true);
     const [teachers, setTeachers] = useState([]);
+    const [totalTeachers, setTotalTeachers] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);
+    const [page, setPage] = useState(1);
+    const limit = 15;
 
     // Assignment Modal State
     const [showAssignModal, setShowAssignModal] = useState(false);
@@ -23,12 +26,15 @@ const TeachersPage = () => {
     const [assignedStudents, setAssignedStudents] = useState([]);
     const [loadingAssignments, setLoadingAssignments] = useState(false);
 
-    const fetchTeachers = async () => {
+    const fetchTeachers = async (targetPage = page) => {
         setLoading(true);
         setError(null);
         try {
-            const data = await api.getAdminTeachers();
-            setTeachers(data || []);
+            const skip = (targetPage - 1) * limit;
+            const data = await api.getAdminTeachers(skip, limit);
+            setTeachers(data?.teachers || []);
+            setTotalTeachers(data?.total || 0);
+            setPage(targetPage);
         } catch (err) {
             console.error('Failed to fetch teachers:', err);
             setError('Failed to load teachers');
@@ -41,15 +47,30 @@ const TeachersPage = () => {
         fetchTeachers();
     }, []);
 
+    // Also support page changes when `page` updates
+    useEffect(() => {
+        const timer = setTimeout(() => fetchTeachers(page), 0);
+        return () => clearTimeout(timer);
+    }, [page]);
+
     const handleOpenAssignModal = async (teacher) => {
         setSelectedTeacher(teacher);
         setShowAssignModal(true);
         setLoadingStudents(true);
         try {
-            const studentsData = await api.getAdminStudents();
-            setAllStudents(studentsData || []);
+            // Fetch all students for the list
+            const studentsData = await api.getAdminStudents(0, 1000);
+            setAllStudents(studentsData?.students || []);
+
+            // Pre-select currently assigned students
+            const currentAssignments = await api.getAdminMentorStudents(teacher.id);
+            if (currentAssignments && Array.isArray(currentAssignments)) {
+                setSelectedStudents(currentAssignments.map(s => s.id));
+            } else {
+                setSelectedStudents([]);
+            }
         } catch (err) {
-            console.error('Failed to fetch students:', err);
+            console.error('Failed to fetch students for assignment:', err);
         } finally {
             setLoadingStudents(false);
         }
@@ -96,13 +117,15 @@ const TeachersPage = () => {
 
     // Calculate stats from real data
     const stats = [
-        { label: 'Total Teachers', value: teachers.length },
-        { label: 'Active (Last 7d)', value: teachers.filter(t => t.lastActive !== 'Never' && !t.lastActive?.includes('w ago')).length },
-        { label: 'Inactive', value: teachers.filter(t => t.lastActive === 'Never' || t.lastActive?.includes('w ago')).length },
+        { label: 'Total Teachers', value: totalTeachers },
+        { label: 'Active (Last 7d)', value: (teachers || []).filter(t => t.lastActive !== 'Never' && !t.lastActive?.includes('w ago')).length },
+        { label: 'Inactive', value: (teachers || []).filter(t => t.lastActive === 'Never' || t.lastActive?.includes('w ago')).length },
     ];
 
+    const totalPages = Math.ceil(totalTeachers / limit);
+
     // Filter teachers
-    const filteredTeachers = teachers.filter(teacher => {
+    const filteredTeachers = (teachers || []).filter(teacher => {
         const matchesSearch = teacher.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             teacher.email?.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesSearch;
@@ -212,7 +235,7 @@ const TeachersPage = () => {
                                 <td className="py-4 px-6">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-medium">
-                                            {teacher.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
+                                            {(teacher.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2) || '?'}
                                         </div>
                                         <span className="font-medium text-gray-900">{teacher.name || 'Unknown'}</span>
                                     </div>
@@ -262,6 +285,55 @@ const TeachersPage = () => {
                         )}
                     </tbody>
                 </table>
+
+                {/* Pagination Controls */}
+                {totalTeachers > 0 && (
+                    <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+                        <div className="text-sm text-gray-600">
+                            Showing <span className="font-bold text-gray-900">{(page - 1) * limit + 1}</span> to <span className="font-bold text-gray-900">{Math.min(page * limit, totalTeachers)}</span> of <span className="font-bold text-gray-900">{totalTeachers}</span> teachers
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPage(p => Math.max(1, p - 1))}
+                                disabled={page === 1 || loading}
+                                className="p-2 border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed bg-white shadow-sm transition-colors"
+                            >
+                                <ChevronLeft className="h-4 w-4 text-gray-600" />
+                            </button>
+
+                            <div className="flex items-center gap-1">
+                                {[...Array(Math.min(5, totalPages))].map((_, idx) => {
+                                    let pageNum = page;
+                                    if (totalPages <= 5) pageNum = idx + 1;
+                                    else if (page <= 3) pageNum = idx + 1;
+                                    else if (page >= totalPages - 2) pageNum = totalPages - 4 + idx;
+                                    else pageNum = page - 2 + idx;
+
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => setPage(pageNum)}
+                                            disabled={loading}
+                                            className={`w-8 h-8 rounded-lg text-sm font-bold transition-colors ${page === pageNum
+                                                ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+                                                : 'text-gray-600 hover:bg-gray-200 bg-transparent'}`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <button
+                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                disabled={page === totalPages || loading}
+                                className="p-2 border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed bg-white shadow-sm transition-colors"
+                            >
+                                <ChevronRight className="h-4 w-4 text-gray-600" />
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Assign Students Modal */}
@@ -330,14 +402,14 @@ const TeachersPage = () => {
                                                 key={student.id}
                                                 onClick={() => toggleStudentSelection(student.id)}
                                                 className={`flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all ${selectedStudents.includes(student.id)
-                                                        ? 'bg-blue-50 border border-blue-200 shadow-sm'
-                                                        : 'hover:bg-slate-50 border border-transparent'
+                                                    ? 'bg-blue-50 border border-blue-200 shadow-sm'
+                                                    : 'hover:bg-slate-50 border border-transparent'
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <div className={`h-10 w-10 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${selectedStudents.includes(student.id) ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'
                                                         }`}>
-                                                        {student.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
+                                                        {(student.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2) || '?'}
                                                     </div>
                                                     <div className="min-w-0">
                                                         <div className="flex items-center gap-2">
