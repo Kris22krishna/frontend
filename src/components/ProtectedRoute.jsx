@@ -34,6 +34,7 @@ const ProtectedRoute = ({ children, allowedRoles = [], redirectTo = '/admin-logi
         const dashboardRoutes = {
             student: '/student-dashboard',
             teacher: '/teacher-dashboard',
+            mentor: '/mentor-dashboard',
             parent: '/parent-dashboard',
             admin: '/admin',
             uploader: '/uploader-dashboard',

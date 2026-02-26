@@ -99,7 +99,6 @@ export const api = {
         const data = await response.json();
         // Token handled by HttpOnly cookie, but also saving for fallback
         if (data.access_token) sessionStorage.setItem('access_token', data.access_token);
-        window.dispatchEvent(new Event('auth-change'));
         return data;
     },
 
@@ -117,7 +116,6 @@ export const api = {
 
         const resData = await response.json();
         if (resData.access_token) sessionStorage.setItem('access_token', resData.access_token);
-        window.dispatchEvent(new Event('auth-change'));
         return resData;
     },
 
@@ -703,6 +701,17 @@ export const api = {
 
     getMentorStats: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/mentor/stats`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    getMentorStudentTimes: async (dateString = null) => {
+        let url = `${BASE_URL}/api/v1/mentor/students/time`;
+        if (dateString) {
+            url += `?date=${dateString}`;
+        }
+        const response = await fetch(url, {
             headers: getHeaders()
         });
         return handleResponse(response);
