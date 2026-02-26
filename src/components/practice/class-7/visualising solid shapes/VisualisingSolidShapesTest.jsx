@@ -1,14 +1,82 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, X, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import mascotImg from '../../../../assets/mascot.png';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import mascotImg from '../../../../assets/mascot.png';
 
-const CORRECT_MESSAGES = ["✨ Amazing!", "🌟 Brilliant!", "🎉 Correct!", "🚀 Super!", "💎 Excellent!"];
+const BLUE_THEME_CSS = `
+    .option-btn-modern.selected {
+        border-color: #3B82F6 !important;
+        background-color: #EFF6FF !important;
+        color: #1E40AF !important;
+        box-shadow: 0 4px 0 #2563EB !important;
+    }
+    .option-btn-modern {
+        min-height: 65px;
+        min-width: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem !important;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+    .exam-report-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+    .solution-accordion {
+        border: 2px solid #FEF08A;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        background: white;
+    }
+    .solution-header {
+        padding: 1rem;
+        background: #F8FAFC;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    .solution-content {
+        padding: 1.5rem;
+        background: white;
+        border-top: 1px solid #E2E8F0;
+    }
+    .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; }
+    .status-correct { background: #DCFCE7; color: #166534; }
+    .status-wrong { background: #FEE2E2; color: #991B1B; }
+    .status-skipped { background: #F1F5F9; color: #475569; }
+    .nav-pastel-btn {
+        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
+        color: white !important; border: none !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+        transition: all 0.3s ease !important; font-weight: 800 !important;
+    }
+    .nav-pastel-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important; }
+    .nav-pastel-btn:disabled { background: #E2E8F0 !important; color: #94A3B8 !important; box-shadow: none !important; cursor: not-allowed !important; }
+    @media (max-width: 1024px) {
+        .practice-board-container { grid-template-columns: 1fr !important; justify-items: center !important; }
+        .practice-left-col { width: 100% !important; max-width: 600px !important; margin: 0 auto !important; }
+        .question-palette-container { width: 100% !important; max-width: 500px !important; margin: 2rem auto 0 auto !important; max-height: none !important; height: auto !important; }
+        .options-grid-modern { grid-template-columns: 1fr !important; justify-items: center !important; }
+        .practice-content-wrapper { padding-bottom: 80px !important; }
+        .option-btn-modern { min-height: 55px; font-size: 0.9rem; min-width: unset !important; width: 100% !important; max-width: 350px !important; margin: 0 auto !important; }
+    }
+    @media (max-width: 640px) {
+        .junior-practice-header { padding: 0 1rem !important; }
+        .practice-content-wrapper { padding: 1rem 1rem 80px 1rem !important; }
+        .question-card-modern { padding: 1.5rem !important; }
+        .question-text-modern { font-size: 1.1rem !important; }
+    }
+`;
 
 /* ─── Simple shape visual for test ─── */
 const ShapeVisual = ({ type, name }) => {
@@ -23,29 +91,21 @@ const ShapeVisual = ({ type, name }) => {
 };
 
 /* ─── Main Component ─── */
+
+const SKILL_ID = 1083;
+const SKILL_NAME = "Class 7 - Visualising Solid Shapes - Chapter Test";
+
 const VisualisingSolidShapesTest = () => {
     const navigate = useNavigate();
-    const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isCorrect, setIsCorrect] = useState(false);
-    const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
-    const [feedbackMessage, setFeedbackMessage] = useState("");
-    const [answers, setAnswers] = useState({});
-    const [isFinished, setIsFinished] = useState(false);
-    const [showReview, setShowReview] = useState(false);
-    const [fromReview, setFromReview] = useState(false);
-    const [sessionId, setSessionId] = useState(null);
+    const [isTestOver, setIsTestOver] = useState(false);
+    const [responses, setResponses] = useState({});
     const questionStartTime = useRef(Date.now());
-    const accumulatedTime = useRef(0);
-    const isTabActive = useRef(true);
+    const [sessionId, setSessionId] = useState(null);
+    const [questions, setQuestions] = useState([]);
 
-    const SKILL_ID = 1083;
-    const SKILL_NAME = "Class 7 - Visualising Solid Shapes - Chapter Test";
-
-    /* ─── Helper: pick N random items from an array ─── */
     const pickRandom = (arr, n) => {
         const shuffled = [...arr].sort(() => Math.random() - 0.5);
         return shuffled.slice(0, n);
@@ -120,330 +180,200 @@ const VisualisingSolidShapesTest = () => {
     }, []);
 
     useEffect(() => {
-        if (isFinished) return;
-        const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (uid && !sessionId) api.createPracticeSession(uid, SKILL_ID).then(s => s && setSessionId(s.session_id)).catch(console.error);
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
-        const hv = () => { if (document.hidden) { accumulatedTime.current += Date.now() - questionStartTime.current; isTabActive.current = false; } else { questionStartTime.current = Date.now(); isTabActive.current = true; } };
-        document.addEventListener("visibilitychange", hv);
-        return () => { clearInterval(timer); document.removeEventListener("visibilitychange", hv); };
-    }, [sessionId, isFinished]);
-
-    const recordAttempt = async (q, sel, cor, isSkipped = false) => {
-        const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (!uid) return;
-        let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
-        const seconds = Math.max(0, Math.round(t / 1000));
-        try { await api.recordAttempt({ user_id: parseInt(uid), session_id: sessionId, skill_id: SKILL_ID, difficulty_level: 'Medium', question_text: String(q.text), correct_answer: String(q.correctAnswer), student_answer: String(sel), is_correct: cor, solution_text: String(q.solution), time_spent_seconds: seconds }); } catch (e) { console.error(e); }
-    };
-
-    const handleQuestionComplete = () => {
-        if (!selectedOption || !questions[qIndex]) return;
-        const right = selectedOption === questions[qIndex].correctAnswer;
-
-        let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
-        const timeSpent = Math.max(0, Math.round(t / 1000));
-
-        const updatedAnswers = { ...answers, [qIndex]: { selectedOption, isCorrect: right, timeSpent, isSkipped: false } };
-        setAnswers(updatedAnswers);
-        recordAttempt(questions[qIndex], selectedOption, right);
-
-        if (fromReview) {
-            setFromReview(false);
-            setShowReview(true);
-            return;
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            api.createPracticeSession(uid, SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            });
         }
-
-        if (qIndex < questions.length - 1) {
-            setQIndex(prev => prev + 1);
-            accumulatedTime.current = 0;
-            questionStartTime.current = Date.now();
-        } else {
-            const skippedIndices = questions.map((_, i) => i).filter(i => !updatedAnswers[i] || updatedAnswers[i].isSkipped);
-            if (skippedIndices.length > 0) {
-                setShowReview(true);
-            } else {
-                handleFinalSubmit();
-            }
-        }
-    };
-
-    const handlePrevious = () => {
-        if (qIndex > 0) {
-            setQIndex(prev => prev - 1);
-        }
-    };
-
-    const handleSkip = () => {
-        let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
-        const timeSpent = Math.max(0, Math.round(t / 1000));
-
-        setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption: 'Skipped', isCorrect: false, timeSpent, isSkipped: true } }));
-        recordAttempt(questions[qIndex], 'Skipped', false, true);
-
-        if (fromReview) {
-            setFromReview(false);
-            setShowReview(true);
-            return;
-        }
-        handleNext();
-    };
-
-    const handleNext = async () => {
-        if (qIndex < questions.length - 1) {
-            setQIndex(prev => prev + 1);
-            accumulatedTime.current = 0; questionStartTime.current = Date.now();
-        } else {
-            const skippedIndices = questions.map((_, i) => i).filter(i => !answers[i] || answers[i].isSkipped);
-            if (skippedIndices.length > 0) {
-                setShowReview(true);
-            } else {
-                await handleFinalSubmit();
-            }
-        }
-    };
-
-    const handleFinalSubmit = async () => {
-        if (sessionId) await api.finishSession(sessionId).catch(console.error);
-        const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (uid) {
-            const c = Object.values(answers).filter(v => v.isCorrect).length;
-            await api.createReport({
-                uid: parseInt(uid),
-                category: 'Practice',
-                reportData: {
-                    skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: questions.length, correct_answers: c, time_taken_seconds: timeElapsed,
-                    score: (c / questions.length) * 100,
-                    type: 'Practice'
-                }
-            }).catch(console.error);
-        }
-        setIsFinished(true);
-        setShowReview(false);
-    };
+    }, []);
 
     useEffect(() => {
-        const saved = answers[qIndex];
-        if (saved && !saved.isSkipped) {
-            setSelectedOption(saved.selectedOption);
-        } else {
-            setSelectedOption(null);
+        if (isTestOver) return;
+        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        return () => clearInterval(timer);
+    }, [isTestOver]);
+
+    const handleRecordResponse = () => {
+        const currentQ = questions[qIndex];
+        const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
+        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const isSkipped = !selectedOption;
+        setResponses(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect, timeTaken: (prev[qIndex]?.timeTaken || 0) + timeSpent, isSkipped } }));
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            api.recordAttempt({ user_id: uid, session_id: sessionId, skill_id: SKILL_ID, template_id: null, difficulty_level: 'Medium',
+                question_text: String(currentQ.text || ''), correct_answer: String(currentQ.correctAnswer || ''),
+                student_answer: String(isSkipped ? "SKIPPED" : (selectedOption || '')), is_correct: isSkipped ? false : isCorrect,
+                solution_text: String(currentQ.solution || ''), time_spent_seconds: timeSpent
+            }).catch(console.error);
         }
-        setIsCorrect(false);
-        setIsSubmitted(false);
-        setShowExplanationModal(false);
-    }, [qIndex]);
+    };
 
-    if (questions.length === 0) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: '#31326F' }}>Loading questions...</div>;
-    if (isFinished) {
-        const attempted = Object.values(answers).filter(a => !a.isSkipped).length;
-        const correct = Object.values(answers).filter(a => a.isCorrect).length;
-        const wrong = attempted - correct;
-        const skipped = Object.values(answers).filter(a => a.isSkipped).length;
+    const navigateToQuestion = (targetIndex) => {
+        handleRecordResponse();
+        setQIndex(targetIndex);
+        setSelectedOption(responses[targetIndex]?.selectedOption || null);
+        questionStartTime.current = Date.now();
+    };
 
+    const handleNext = () => { if (qIndex < questions.length - 1) { navigateToQuestion(qIndex + 1); } else { handleRecordResponse(); finalizeTest(); } };
+    const handlePrev = () => { if (qIndex > 0) { navigateToQuestion(qIndex - 1); } };
+
+    const finalizeTest = async () => {
+        setIsTestOver(true);
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
+            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+            const skippedCount = questions.length - correctCount - wrongCount;
+            await api.createReport({ title: SKILL_NAME, type: 'practice', score: (correctCount / questions.length) * 100,
+                parameters: { skill_id: SKILL_ID, total_questions: questions.length, correct_answers: correctCount, skipped_questions: skippedCount, time_taken_seconds: timeElapsed },
+                user_id: uid }).catch(console.error);
+        }
+    };
+
+    const formatTime = (s) => `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
+
+    if (questions.length === 0) return <div>Loading...</div>;
+
+    if (isTestOver) {
+        const correct = Object.values(responses).filter(r => r.isCorrect === true).length;
+        const wrong = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+        const skipped = questions.length - correct - wrong;
         return (
-            <div className="junior-practice-page raksha-theme p-3 sm:p-8 pb-24 sm:pb-32" style={{ fontFamily: '"Open Sans", sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
-                <div className="max-w-3xl mx-auto w-full">
-                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xl border-2 border-[#4FB7B3]/20 my-4 sm:my-8">
-                        <div className="text-center mb-6 sm:mb-8">
-                            <img src={mascotImg} alt="Mascot" className="w-16 h-16 sm:w-24 sm:h-24 mx-auto mb-3 sm:mb-4 object-contain" />
-                            <h2 className="text-2xl sm:text-3xl font-bold text-[#31326F] mb-1 sm:mb-2 text-balance">Test Complete!</h2>
-                            <p className="text-sm sm:text-base text-gray-500 line-clamp-2">How you performed in<br />{SKILL_NAME}</p>
+            <div className="junior-practice-page grey-selection-theme p-4 md:p-8" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
+                <style>{BLUE_THEME_CSS}</style>
+                <div className="exam-report-container mx-auto p-4 md:p-8 my-4 md:my-8">
+                    <div className="flex flex-col items-center mb-8 mt-4 text-center">
+                        <img src={mascotImg} alt="Mascot" className="w-32 h-32 md:w-40 md:h-40 mb-2 drop-shadow-lg object-contain" />
+                        <h1 className="text-3xl md:text-5xl font-black text-[#31326F] mb-2">Test Report</h1>
+                        <p className="text-[#64748B] text-base md:text-xl font-medium mb-8">How you performed in <span className="font-bold">{SKILL_NAME}</span></p>
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-5xl">
+                            <div className="bg-[#EFF6FF] p-4 md:p-6 rounded-2xl shadow-sm border-2 border-[#DBEAFE] text-center"><span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Score</span><span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{Math.round((correct/questions.length)*100)}%</span></div>
+                            <div className="bg-[#F0FDF4] p-4 md:p-6 rounded-2xl shadow-sm border-2 border-[#DCFCE7] text-center"><span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#22C55E] mb-1">Correct</span><span className="text-2xl md:text-4xl font-black text-[#14532D]">{correct}</span></div>
+                            <div className="bg-[#FEF2F2] p-4 md:p-6 rounded-2xl shadow-sm border-2 border-[#FEE2E2] text-center"><span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span><span className="text-2xl md:text-4xl font-black text-[#7F1D1D]">{wrong}</span></div>
+                            <div className="bg-[#F8FAFC] p-4 md:p-6 rounded-2xl shadow-sm border-2 border-[#E2E8F0] text-center"><span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#64748B] mb-1">Skipped</span><span className="text-2xl md:text-4xl font-black text-[#334155]">{skipped}</span></div>
+                            <div className="bg-[#EFF6FF] p-4 md:p-6 rounded-2xl shadow-sm border-2 border-[#DBEAFE] text-center col-span-2 md:col-span-1"><span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Time</span><span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{formatTime(timeElapsed)}</span></div>
                         </div>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-8">
-                            <div className="bg-blue-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-blue-100">
-                                <div className="text-blue-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Total Time</div>
-                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
-                            </div>
-                            <div className="bg-green-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-green-100">
-                                <div className="text-green-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Correct</div>
-                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{correct}</div>
-                            </div>
-                            <div className="bg-red-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-red-100">
-                                <div className="text-red-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Wrong</div>
-                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{wrong}</div>
-                            </div>
-                            <div className="bg-gray-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl text-center border border-gray-100">
-                                <div className="text-gray-500 font-bold text-[10px] sm:text-sm mb-0.5 sm:mb-1 uppercase tracking-wider">Skipped</div>
-                                <div className="text-lg sm:text-2xl font-black text-[#31326F]">{skipped}</div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-4 sm:space-y-6">
-                            <h3 className="text-lg sm:text-xl font-bold text-[#31326F] border-b pb-2">Detailed Report</h3>
-                            {questions.map((q, idx) => {
-                                const ans = answers[idx] || { isSkipped: true, selectedOption: 'Not Attempted', isCorrect: false, timeSpent: 0 };
-                                return (
-                                    <div key={idx} className="p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 border-gray-100 hover:border-[#4FB7B3]/30 transition-all bg-white shadow-sm">
-                                        <div className="flex justify-between items-start gap-2 mb-3 sm:mb-4">
-                                            <div className="flex items-center gap-3">
-                                                <span className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#31326F] text-white flex items-center justify-center font-bold text-xs sm:text-sm">{idx + 1}</span>
-                                                <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold text-gray-500">
-                                                    Time: {ans.timeSpent}s
-                                                </div>
-                                            </div>
-                                            {ans.isSkipped ? (
-                                                <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-gray-100 text-gray-600 font-bold text-[9px] sm:text-xs uppercase">Skipped</span>
-                                            ) : ans.isCorrect ? (
-                                                <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-green-100 text-green-600 font-bold text-[9px] sm:text-xs uppercase">Correct</span>
-                                            ) : (
-                                                <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-red-100 text-red-600 font-bold text-[9px] sm:text-xs uppercase">Incorrect</span>
-                                            )}
+                    </div>
+                    <div className="flex justify-center mb-12"><button onClick={() => navigate(-1)} className="bg-white text-[#31326F] border-2 border-[#31326F] px-8 py-3 rounded-2xl font-black uppercase hover:bg-[#31326F] hover:text-white transition-colors" style={{ fontSize: '1.1rem' }}>Back to Topics</button></div>
+                    <div style={{ maxWidth: 1000, margin: '0 auto 2rem' }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1E293B', marginBottom: '1.5rem' }}>Detailed Review & Solutions</h2>
+                        {questions.map((q, idx) => {
+                            const res = responses[idx] || { isSkipped: true, timeTaken: 0 };
+                            return (
+                                <details key={idx} className="solution-accordion group">
+                                    <summary className="solution-header cursor-pointer hover:bg-slate-50" style={{ listStyle: 'none', width: '100%' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+                                            <span style={{ fontWeight: 800, minWidth: 32, height: 32, background: '#FBBF24', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontSize: '0.9rem', flexShrink: 0 }}>{idx+1}</span>
+                                            <div className="hidden md:block truncate text-sm text-slate-500" style={{ flex: 1, maxWidth: 350 }}><LatexContent html={q.text} /></div>
+                                            {res.isSkipped ? <span className="status-badge status-skipped">Skipped</span> : res.isCorrect ? <span className="status-badge status-correct">Correct</span> : <span className="status-badge status-wrong">Incorrect</span>}
                                         </div>
-                                        <div className="text-[#31326F] mb-3 sm:mb-4 font-medium text-sm sm:text-base leading-relaxed"><LatexContent html={q.text} /></div>
-                                        {q.visual && <div className="flex justify-center my-4 sm:my-6 overflow-x-auto"><ShapeVisual {...q.visual} /></div>}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4 text-xs sm:text-sm">
-                                            <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gray-50 border border-gray-100">
-                                                <span className="text-gray-400 block mb-0.5 sm:mb-1 text-[9px] sm:text-xs">Your Answer:</span>
-                                                <span className={ans.isCorrect ? "text-green-600 font-bold" : "text-red-500 font-bold"}>
-                                                    <LatexContent html={ans.selectedOption} />
-                                                </span>
+                                        <div style={{ color: '#64748B', display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0 }}>
+                                            <span className="opacity-0 group-hover:opacity-100 text-blue-600 font-semibold text-sm">Check Solution ↓</span>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Clock size={16}/> {res.timeTaken}s</div>
+                                        </div>
+                                    </summary>
+                                    <div className="solution-content">
+                                        <div style={{ marginBottom: '1rem', padding: '1rem', borderLeft: '4px solid #3B82F6', background: '#F8FAFC' }}><LatexContent html={q.text} /></div>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+                                            {q.options.map((opt, oIdx) => (<div key={oIdx} style={{ padding: '0.75rem', borderRadius: 8, border: '1px solid #E2E8F0', background: opt===q.correctAnswer?'#DCFCE7':(opt===res.selectedOption?'#FEE2E2':'white'), color: opt===q.correctAnswer?'#166534':(opt===res.selectedOption?'#991B1B':'#475569') }}><LatexContent html={opt} /></div>))}
+                                        </div>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                                            <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: 12, border: '1px solid #E2E8F0' }}>
+                                                <h5 style={{ fontSize: '0.7rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Your Answer</h5>
+                                                {res.isSkipped ? <span style={{ color: '#F59E0B', fontWeight: 700 }}>Skipped</span> : <span style={{ color: res.isCorrect?'#166534':'#DC2626', fontWeight: 700 }}>{res.selectedOption ? <LatexContent html={res.selectedOption}/> : "Skipped"}</span>}
                                             </div>
-                                            <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-green-50 border border-green-100">
-                                                <span className="text-green-400 block mb-0.5 sm:mb-1 text-[9px] sm:text-xs">Correct Answer:</span>
-                                                <span className="text-green-700 font-bold"><LatexContent html={q.correctAnswer} /></span>
+                                            <div style={{ background: '#DCFCE7', padding: '1rem', borderRadius: 12, border: '1px solid #BBF7D0' }}>
+                                                <h5 style={{ fontSize: '0.7rem', fontWeight: 800, color: '#166534', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Correct Answer</h5>
+                                                <span style={{ color: '#166534', fontWeight: 700 }}><LatexContent html={q.correctAnswer}/></span>
                                             </div>
                                         </div>
-                                        <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-amber-50/50 border border-amber-100 text-[#31326F] text-xs sm:text-sm italic">
-                                            <span className="font-bold block mb-0.5 sm:mb-1 not-italic text-amber-700">Explanation:</span>
+                                        <div style={{ background: '#F0F9FF', padding: '1.5rem', borderRadius: 12, border: '1px solid #E0F2FE' }}>
+                                            <h4 style={{ color: '#0284C7', fontWeight: 800, marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.85rem' }}>Solution:</h4>
                                             <LatexContent html={q.solution} />
                                         </div>
                                     </div>
-                                );
-                            })}
-                        </div>
-
-                        <div className="mt-8 sm:mt-10 flex justify-center">
-                            <button className="bg-[#31326F] text-white w-full sm:w-auto px-12 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-lg sm:text-xl hover:scale-105 active:scale-95 transition-all shadow-xl" onClick={() => navigate(-1)}>Done</button>
-                        </div>
-                    </motion.div>
+                                </details>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
         );
     }
-
-    // Review screen for unanswered questions
-    if (showReview) {
-        const skippedIndices = questions.map((_, i) => i).filter(i => !answers[i] || answers[i].isSkipped);
-        return (
-            <div className="junior-practice-page raksha-theme p-3 sm:p-8" style={{ fontFamily: '"Open Sans", sans-serif', backgroundColor: '#F8FAFC', minHeight: '100vh' }}>
-                <div className="max-w-3xl mx-auto w-full">
-                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-xl border-2 border-[#4FB7B3]/20 my-4 sm:my-8">
-                        <div className="text-center mb-6 sm:mb-8">
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                                <Eye className="text-amber-600" size={36} />
-                            </div>
-                            <h2 className="text-2xl sm:text-3xl font-bold text-[#31326F] mb-2">Review Your Test</h2>
-                            <p className="text-gray-500 text-base sm:text-lg">You have <span className="font-bold text-amber-600">{skippedIndices.length}</span> unanswered question{skippedIndices.length > 1 ? 's' : ''}.</p>
-                        </div>
-
-                        <div className="mb-6 sm:mb-8">
-                            <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Tap to answer</p>
-                            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3">
-                                {skippedIndices.map(idx => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => { setQIndex(idx); setShowReview(false); setFromReview(true); }}
-                                        className="aspect-square rounded-xl border-2 border-amber-200 bg-amber-50 text-[#31326F] font-bold text-lg sm:text-xl hover:bg-amber-100 hover:border-amber-300 active:scale-95 transition-all flex items-center justify-center shadow-sm"
-                                    >
-                                        Q{idx + 1}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                            <button
-                                onClick={() => { setQIndex(questions.length - 1); setShowReview(false); }}
-                                className="px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl border-2 border-[#31326F] text-[#31326F] font-bold text-base sm:text-lg hover:bg-gray-50 transition-all"
-                            >
-                                Go Back
-                            </button>
-                            <button
-                                onClick={handleFinalSubmit}
-                                className="px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-[#31326F] text-white font-black text-base sm:text-lg hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 justify-center"
-                            >
-                                Submit Anyway <Check size={22} />
-                            </button>
-                        </div>
-                    </motion.div>
-                </div>
-            </div>
-        );
-    }
-
-    const cq = questions[qIndex];
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"><span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>Chapter Test — Visualising Solid Shapes</span></div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {questions.length}</div>
-                </div>
-                <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">{Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}</div>
+        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <style>{BLUE_THEME_CSS}</style>
+            <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto minmax(0,1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{SKILL_NAME}</div>
+                <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-black text-xl shadow-lg">{qIndex+1} / {questions.length}</div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#3B82F6]/30 text-[#1E40AF] font-bold text-lg shadow-md flex items-center gap-2"><Clock size={20}/> {formatTime(timeElapsed)}</div>
                 </div>
             </header>
-
-            <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                            <div className="question-header-modern">
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}><LatexContent html={cq.text} /></h2>
+            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 140px 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '2rem', maxWidth: 1200, margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: 60 }}>
+                    <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible', justifyContent: 'flex-start' }}>
+                            <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: '1rem' }}>
+                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem,1.8vw,1.35rem)', maxHeight: 'none', fontWeight: 500, textAlign: 'left', color: '#2D3748', lineHeight: 1.5, marginBottom: '1rem' }}>
+                                    <LatexContent html={questions[qIndex].text} />
+                                </h2>
                             </div>
-                            {cq.visual && <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}><ShapeVisual {...cq.visual} /></div>}
-                            <div className="interaction-area-modern">
-                                <div className="options-grid-modern">
-                                    {cq.options.map((opt, i) => (
-                                        <button key={i} className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''}`} onClick={() => setSelectedOption(opt)}><LatexContent html={opt} /></button>
+                            <div className="interaction-area-modern" style={{ display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
+                                <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: 800, gridTemplateColumns: 'repeat(2,1fr)' }}>
+                                    {questions[qIndex].options.map((option, idx) => (
+                                        <button key={idx} className={`option-btn-modern ${selectedOption===option?'selected':''}`} onClick={() => setSelectedOption(option)}>
+                                            <LatexContent html={option} />
+                                        </button>
                                     ))}
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div className="question-palette-container" style={{ width: 300, background: 'white', padding: '1.5rem', borderRadius: 24, boxShadow: '0 4px 6px -1px rgb(0 0 0/0.1)', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: 'calc(100vh - 220px)' }}>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', marginBottom: '1rem', textAlign: 'center' }}>Question Palette</h3>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: '0.4rem', flex: 1, alignContent: 'start' }}>
+                            {questions.map((_,idx) => {
+                                const isCurrent = qIndex===idx;
+                                const hasResponded = responses[idx] && !responses[idx].isSkipped;
+                                const isSkipped = responses[idx] && responses[idx].isSkipped;
+                                let bg='#F8FAFC',clr='#64748B',bdr='1px solid #E2E8F0';
+                                if (isCurrent) { bdr='2px solid #3B82F6'; bg='#EFF6FF'; clr='#1D4ED8'; }
+                                else if (hasResponded) { bg='#DCFCE7'; clr='#166534'; bdr='1px solid #BBF7D0'; }
+                                else if (isSkipped) { bg='#FFF7ED'; clr='#C2410C'; bdr='1px solid #FFEDD5'; }
+                                return (<button key={idx} onClick={() => navigateToQuestion(idx)} style={{ height: 36, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', background: bg, color: clr, border: bdr, padding: 0 }} className="hover:shadow-md hover:-translate-y-0.5">{idx+1}</button>);
+                            })}
+                        </div>
+                        <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', rowGap: '0.5rem', columnGap: '1rem', fontSize: '0.8rem', color: '#64748B' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: 12, height: 12, borderRadius: 3, background: '#DCFCE7', border: '1px solid #BBF7D0' }}></div> Answered</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: 12, height: 12, borderRadius: 3, background: '#FFF7ED', border: '1px solid #FFEDD5' }}></div> Skipped</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: 12, height: 12, borderRadius: 3, background: '#F8FAFC', border: '1px solid #E2E8F0' }}></div> Unvisited</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><div style={{ width: 12, height: 12, borderRadius: 3, background: '#EFF6FF', border: '2px solid #3B82F6' }}></div> Current</div>
+                        </div>
+                    </div>
                 </div>
             </main>
-
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
-                    <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>Exit</button>
-                    <div className="bottom-center"></div>
-                    <div className="nav-buttons-group">
-                        <button
-                            className="nav-pill-next-btn bg-gray-200 text-gray-700 border-2 border-gray-300"
-                            onClick={handlePrevious}
-                            disabled={qIndex === 0}
-                            style={{ opacity: qIndex === 0 ? 0.5 : 1 }}
-                        >
-                            <ChevronLeft size={28} strokeWidth={3} /> Prev
-                        </button>
-                        <button className="nav-pill-next-btn bg-gray-500 text-white border-2 border-gray-600" onClick={handleSkip}>
-                            Skip <ChevronRight size={28} strokeWidth={3} />
-                        </button>
-                        <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
-                            {qIndex < questions.length - 1 ? <>Next <ChevronRight size={28} strokeWidth={3} /></> : <>Done <Check size={28} strokeWidth={3} /></>}
-                        </button>
+                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate(-1)}>Exit Test</button></div>
+                    <div className="bottom-right">
+                        <div style={{ display: 'flex', gap: '1.5rem' }}>
+                            <button className="nav-pill-next-btn nav-pastel-btn" onClick={handlePrev} disabled={qIndex===0}><ChevronLeft size={20}/> Previous</button>
+                            <button className="nav-pill-next-btn nav-pastel-btn" onClick={handleNext}>{qIndex===questions.length-1?"Finish Test":"Next Question"} <ChevronRight size={20}/></button>
+                        </div>
                     </div>
                 </div>
                 <div className="mobile-footer-controls">
-                    <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
-                    <div className="nav-buttons-group">
-                        <button
-                            className="nav-pill-next-btn bg-gray-200 text-gray-700 p-2 border border-gray-300"
-                            onClick={handlePrevious}
-                            disabled={qIndex === 0}
-                            style={{ opacity: qIndex === 0 ? 0.5 : 1, minWidth: 'auto' }}
-                        >
-                            <ChevronLeft size={20} />
-                        </button>
-                        <button className="nav-pill-next-btn bg-gray-500 text-white p-2 border border-gray-600" onClick={handleSkip}>Skip</button>
-                        <button className="nav-pill-next-btn" onClick={handleQuestionComplete} disabled={!selectedOption}>
-                            {qIndex < questions.length - 1 ? "Next" : "Done"}
-                        </button>
-                    </div>
+                    <button className="nav-pill-next-btn nav-pastel-btn" style={{ padding: '0.5rem 1rem' }} onClick={handlePrev} disabled={qIndex===0}><ChevronLeft size={24}/></button>
+                    <button className="nav-pill-next-btn nav-pastel-btn" onClick={handleNext} style={{ flex: 1 }}>{qIndex===questions.length-1?"Finish":"Next"} <ChevronRight size={24}/></button>
                 </div>
             </footer>
         </div>
