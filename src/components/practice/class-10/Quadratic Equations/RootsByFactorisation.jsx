@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
+import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
+import { api } from '../../../../services/api';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 
 const RootsByFactorisation = () => {
@@ -15,6 +17,7 @@ const RootsByFactorisation = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
@@ -47,29 +50,29 @@ Roots: $x=5, x=-2$.`
         // Q2: 2x^2 + x - 6 = 0
         newQuestions.push(createQuestion(2,
             `Find roots of $2x^2 + x - 6 = 0$.`,
-            [`$3/2, -2$`, `$-3/2, 2$`, `$2, 3$`, `$1, -6$`],
-            `$3/2, -2$`,
+            [`$\\dfrac{3}{2}, -2$`, `$-\\dfrac{3}{2}, 2$`, `$2, 3$`, `$1, -6$`],
+            `$\\dfrac{3}{2}, -2$`,
             `$2 \\times (-6) = -12$. Factors of $-12$ summing to 1 are $4, -3$.
 $2x^2 + 4x - 3x - 6 = 2x(x+2) - 3(x+2) = (2x-3)(x+2) = 0$.
-Roots: $x=3/2, x=-2$.`
+Roots: $x=\\dfrac{3}{2}, x=-2$.`
         ));
 
         // Q3: Root 2
         newQuestions.push(createQuestion(3,
             `Solve: $\\sqrt{2}x^2 + 7x + 5\\sqrt{2} = 0$.`,
-            [`$-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$`, `$\\frac{5}{\\sqrt{2}}, \\sqrt{2}$`, `$-\\sqrt{2}, -5$`, `$1, 5$`],
-            `$-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$`,
+            [`$-\\dfrac{5}{\\sqrt{2}}, -\\sqrt{2}$`, `$\\dfrac{5}{\\sqrt{2}}, \\sqrt{2}$`, `$-\\sqrt{2}, -5$`, `$1, 5$`],
+            `$-\\dfrac{5}{\\sqrt{2}}, -\\sqrt{2}$`,
             `Prod $= 10$ ($5\\sqrt{2} \\times \\sqrt{2}$). Sum $= 7$. Factors $5, 2$.
 $\\sqrt{2}x^2 + 2x + 5x + 5\\sqrt{2} = \\sqrt{2}x(x+\\sqrt{2}) + 5(x+\\sqrt{2}) = (\\sqrt{2}x+5)(x+\\sqrt{2})=0$.
-Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
+Roots: $-\\dfrac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
         ));
 
         // Q4: 100x^2 - 20x + 1 = 0
         newQuestions.push(createQuestion(4,
             `Solve: $100x^2 - 20x + 1 = 0$.`,
-            [`$\\frac{1}{10}, \\frac{1}{10}$`, `$\\frac{1}{10}, -\\frac{1}{10}$`, `$-\\frac{1}{10}, -\\frac{1}{10}$`, `$\\frac{1}{20}, \\frac{1}{5}$`],
-            `$\\frac{1}{10}, \\frac{1}{10}$`,
-            `$(10x - 1)^2 = 0$. Roots: $\\frac{1}{10}, \\frac{1}{10}$.`
+            [`$\\dfrac{1}{10}, \\dfrac{1}{10}$`, `$\\dfrac{1}{10}, -\\dfrac{1}{10}$`, `$-\\dfrac{1}{10}, -\\dfrac{1}{10}$`, `$\\dfrac{1}{20}, \\dfrac{1}{5}$`],
+            `$\\dfrac{1}{10}, \\dfrac{1}{10}$`,
+            `$(10x - 1)^2 = 0$. Roots: $\\dfrac{1}{10}, \\dfrac{1}{10}$.`
         ));
 
         // Q5: Simple
@@ -82,18 +85,18 @@ Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
 
         // Q6: 2x^2 - x + 1/8 = 0
         newQuestions.push(createQuestion(6,
-            `Solve: $2x^2 - x + \\frac{1}{8} = 0$.`,
-            [`$\\frac{1}{4}, \\frac{1}{4}$`, `$\\frac{1}{8}, \\frac{1}{8}$`, `$\\frac{1}{4}, -\\frac{1}{4}$`, `$\\frac{1}{2}, \\frac{1}{4}$`],
-            `$\\frac{1}{4}, \\frac{1}{4}$`,
-            `Multiply by 8: $16x^2 - 8x + 1 = 0 \Rightarrow (4x-1)^2 = 0$. Roots: $\\frac{1}{4}, \\frac{1}{4}$.`
+            `Solve: $2x^2 - x + \\dfrac{1}{8} = 0$.`,
+            [`$\\dfrac{1}{4}, \\dfrac{1}{4}$`, `$\\dfrac{1}{8}, \\dfrac{1}{8}$`, `$\\dfrac{1}{4}, -\\dfrac{1}{4}$`, `$\\dfrac{1}{2}, \\dfrac{1}{4}$`],
+            `$\\dfrac{1}{4}, \\dfrac{1}{4}$`,
+            `Multiply by 8: $16x^2 - 8x + 1 = 0 \Rightarrow (4x-1)^2 = 0$. Roots: $\\dfrac{1}{4}, \\dfrac{1}{4}$.`
         ));
 
         // Q7: Difference of squares
         newQuestions.push(createQuestion(7,
             `Roots of $4x^2 - 9 = 0$.`,
-            [`$\\frac{3}{2}, -\\frac{3}{2}$`, `$3, -3$`, `$\\frac{2}{3}, -\\frac{2}{3}$`, `$\\frac{9}{4}, -\\frac{9}{4}$`],
-            `$\\frac{3}{2}, -\\frac{3}{2}$`,
-            `$(2x-3)(2x+3)=0$. Roots: $\\frac{3}{2}, -\\frac{3}{2}$.`
+            [`$\\dfrac{3}{2}, -\\dfrac{3}{2}$`, `$3, -3$`, `$\\dfrac{2}{3}, -\\dfrac{2}{3}$`, `$\\dfrac{9}{4}, -\\dfrac{9}{4}$`],
+            `$\\dfrac{3}{2}, -\\dfrac{3}{2}$`,
+            `$(2x-3)(2x+3)=0$. Roots: $\\dfrac{3}{2}, -\\dfrac{3}{2}$.`
         ));
 
         // Q8: Common term
@@ -132,9 +135,12 @@ Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, [SKILL_ID]);
+    }, [SKILL_ID, showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -182,7 +188,7 @@ Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val === true).length;
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 await api.createReport({
                     title: SKILL_NAME,
                     type: 'practice',
@@ -195,10 +201,10 @@ Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
                         timestamp: new Date().toISOString(),
                         time_taken_seconds: timeElapsed
                     },
-                    user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
+                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
                 }).catch(console.error);
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -269,6 +275,16 @@ Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
 
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
 
+            <PracticeReportModal 
+                isOpen={showReportModal} 
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }} 
+                onContinue={() => navigate(-1)} 
+            />
+
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
@@ -289,7 +305,7 @@ Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
                                 Prev
                             </button>
                             {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight /></button> :
+                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight />}</button> :
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check /></button>
                             }
                         </div>
@@ -314,7 +330,7 @@ Roots: $-\\frac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}
