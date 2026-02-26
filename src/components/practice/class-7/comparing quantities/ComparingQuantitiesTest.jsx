@@ -281,19 +281,19 @@ const ComparingQuantitiesTest = () => {
             const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
             try {
                 await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
+                uid: parseInt(userId, 10),
+                category: 'Practice',
+                reportData: {
+                    skill_id: SKILL_ID,
                         skill_name: SKILL_NAME,
                         total_questions: questions.length,
                         correct_answers: totalCorrect,
                         timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: parseInt(userId, 10)
-                });
+                        time_taken_seconds: timeElapsed,
+                    score: (totalCorrect / questions.length) * 100,
+                    type: 'Practice'
+                }
+            });
             } catch (err) { console.error("Failed to create report", err); }
         }
         setIsFinished(true);

@@ -26,6 +26,8 @@ const UseOfPercentages = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const [showReport, setShowReport] = useState(false);
+    const [finalTime, setFinalTime] = useState(0);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
@@ -295,24 +297,25 @@ const UseOfPercentages = () => {
 
                 try {
                     await api.createReport({
-                        title: SKILL_NAME,
-                        type: 'practice',
-                        score: (totalCorrect / questions.length) * 100,
-                        parameters: {
-                            skill_id: SKILL_ID,
+                uid: parseInt(userId, 10),
+                category: 'Practice',
+                reportData: {
+                    skill_id: SKILL_ID,
                             skill_name: SKILL_NAME,
                             total_questions: questions.length,
                             correct_answers: totalCorrect,
                             timestamp: new Date().toISOString(),
-                            time_taken_seconds: timeElapsed
-                        },
-                        user_id: parseInt(userId, 10)
-                    });
+                            time_taken_seconds: timeElapsed,
+                    score: (totalCorrect / questions.length) * 100,
+                    type: 'Practice'
+                }
+            });
                 } catch (err) {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setFinalTime(timeElapsed);
+            setShowReport(true);
         }
     };
 
@@ -324,6 +327,34 @@ const UseOfPercentages = () => {
     if (questions.length === 0) return <div>Loading...</div>;
 
     const currentQuestion = questions[qIndex];
+
+    
+    if (showReport) {
+        return (
+            <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f8f9fa' }}>
+                <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={{ background: 'white', padding: '3rem', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', textAlign: 'center', maxWidth: '500px', width: '100%' }}>
+                    <h1 style={{ fontSize: '2.5rem', color: '#31326F', marginBottom: '1rem', fontWeight: 'bold' }}>Practice Complete! 🎉</h1>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', margin: '2rem 0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem', background: '#f8f9fa', borderRadius: '16px', fontSize: '1.2rem' }}>
+                            <span style={{ color: '#666', fontWeight: '600' }}>Time Taken:</span>
+                            <span style={{ color: '#31326F', fontWeight: 'bold', fontSize: '1.4rem' }}>{Math.floor(finalTime / 60)}:{(finalTime % 60).toString().padStart(2, '0')}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem', background: '#f0fdf4', borderRadius: '16px', fontSize: '1.2rem' }}>
+                            <span style={{ color: '#16a34a', fontWeight: '600' }}>Correct Answers:</span>
+                            <span style={{ color: '#15803d', fontWeight: 'bold', fontSize: '1.4rem' }}>{Object.values(answers).filter((v) => v.isCorrect).length} / {questions.length}</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem', background: '#fef2f2', borderRadius: '16px', fontSize: '1.2rem' }}>
+                            <span style={{ color: '#dc2626', fontWeight: '600' }}>Wrong Answers:</span>
+                            <span style={{ color: '#b91c1c', fontWeight: 'bold', fontSize: '1.4rem' }}>{questions.length - Object.values(answers).filter((v) => v.isCorrect).length} / {questions.length}</span>
+                        </div>
+                    </div>
+                    <button onClick={() => navigate(-1)} style={{ width: '100%', padding: '1rem', background: '#31326F', color: 'white', border: 'none', borderRadius: '16px', fontSize: '1.2rem', fontWeight: 'bold', cursor: 'pointer', marginTop: '1rem', boxShadow: '0 4px 12px rgba(49, 50, 111, 0.2)' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
+                        Continue
+                    </button>
+                </motion.div>
+            </div>
+        );
+    }
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
@@ -346,7 +377,7 @@ const UseOfPercentages = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                        <div className="question-card-modern">
                             <div className="question-header-modern">
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                     <LatexContent html={currentQuestion.text} />
@@ -371,9 +402,9 @@ const UseOfPercentages = () => {
                                             initial={{ scale: 0.5, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
                                             className="feedback-mini correct"
-                                            style={{ marginTop: '20px' }}
+                                            style={{ marginTop: '1.25rem' }}
                                         >
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center justify-center gap-3">
                                                 <img src={mascotImg} alt="Mascot" className="w-12 h-12 object-contain" />
                                                 <span>{feedbackMessage}</span>
                                             </div>
