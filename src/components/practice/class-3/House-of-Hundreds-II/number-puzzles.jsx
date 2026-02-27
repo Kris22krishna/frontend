@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExplanationModal from '../../../ExplanationModal';
+import GenericReportCard from '../GenericReportCard';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
@@ -383,18 +384,18 @@ const NumberPuzzles = () => {
         );
     };
 
-    
+
     const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
     if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
+        const scoreVal = typeof score !== 'undefined'
+            ? score
+            : (typeof stats !== 'undefined' && stats.correct !== undefined
+                ? stats.correct
                 : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
+        const totalVal = typeof questions !== 'undefined'
+            ? questions.length
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0
+                ? sessionQuestions.length
                 : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
         return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
     }
@@ -422,12 +423,9 @@ const NumberPuzzles = () => {
             <main className="practice-content-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto', width: '100%', height: 'auto' }}>
                     <div className="practice-left-col house-of-hundreds-ii-left-col">
-                        <div className="question-card-modern" style={{ padding: '2rem', paddingBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flexGrow: 1, justifyContent: 'center' }}>
-                            <div className="question-header-modern" style={{ marginBottom: '0' }}>
-                                <div className="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full font-bold uppercase tracking-wide text-xs mb-2">
-                                    Number Puzzles
-                                </div>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', fontWeight: '600', textAlign: 'center', width: '100%', justifyContent: 'center', margin: 0 }}>
+                        <div className="question-card-modern" style={{ padding: '1rem 1.5rem', paddingBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flexGrow: 1, justifyContent: 'center' }}>
+                            <div className="question-header-modern" style={{ marginBottom: '0.1rem' }}>
+                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2.8vw, 1.5rem)', fontWeight: '600', textAlign: 'center', width: '100%', justifyContent: 'center', margin: 0 }}>
                                     {currentQ.question}
                                 </h2>
                             </div>
@@ -435,18 +433,26 @@ const NumberPuzzles = () => {
                             {/* --- DYNAMIC CONTENT AREA --- */}
 
                             {currentQ.type === 'mcq' && (
-                                <div className="flex flex-col items-center w-full h-full justify-center">
-                                    {renderVisualDiagram()}
-                                    <div className="interaction-area-modern w-full flex flex-col items-center mt-2">
-                                        <div className="options-grid-modern w-full grid grid-cols-2 gap-2">
+                                <div className="flex flex-col md:flex-row gap-4 lg:gap-8 items-center justify-center w-full h-full mt-1">
+                                    <div className="flex-1 w-full flex flex-col justify-center items-center">
+                                        {renderVisualDiagram()}
+                                        {isSubmitted && isCorrect && (
+                                            <div className="mt-3 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-base md:text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm self-center">
+                                                <span className="text-2xl">🌟</span> Awesome! Correct!
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="flex-1 w-full max-w-xs xl:max-w-sm interaction-area-modern !mt-0 flex flex-col justify-center">
+                                        <div className="flex flex-col gap-2 w-full">
                                             {currentQ.options.map((opt, i) => {
                                                 const isRight = isSubmitted && opt === currentQ.correct;
                                                 const isWrong = isSubmitted && selectedOption === opt && opt !== currentQ.correct;
                                                 return (
                                                     <button
                                                         key={i}
-                                                        className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQ.correct ? 'correct' : ''} ${isSubmitted && selectedOption === opt && opt !== currentQ.correct ? 'wrong' : ''}`}
+                                                        className={`option-btn-modern w-full ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQ.correct ? 'correct' : ''} ${isSubmitted && selectedOption === opt && opt !== currentQ.correct ? 'wrong' : ''}`}
                                                         onClick={() => !isSubmitted && setSelectedOption(opt)}
+                                                        style={{ padding: '0.6rem 1rem', minHeight: '3rem' }}
                                                     >
                                                         {opt}
                                                     </button>
@@ -454,11 +460,6 @@ const NumberPuzzles = () => {
                                             })}
                                         </div>
                                     </div>
-                                    {isSubmitted && isCorrect && (
-                                        <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm mb-1">
-                                            <span className="text-2xl">🌟</span> Awesome! Correct!
-                                        </div>
-                                    )}
                                 </div>
                             )}
 

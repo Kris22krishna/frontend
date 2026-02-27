@@ -309,22 +309,28 @@ const NumberInTheCentre = () => {
             <main className="practice-content-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto', width: '100%', height: 'auto' }}>
                     <div className="practice-left-col house-of-hundreds-ii-left-col">
-                        <div className="question-card-modern" style={{ padding: '2rem', paddingBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flexGrow: 1, justifyContent: 'center' }}>
-                            <div className="question-header-modern" style={{ marginBottom: '1rem' }}>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', fontWeight: '600', textAlign: 'center', width: '100%', justifyContent: 'center', margin: 0 }}>
+                        <div className="question-card-modern" style={{ padding: '1rem 1.5rem', paddingBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flexGrow: 1, justifyContent: 'center' }}>
+                            <div className="question-header-modern" style={{ marginBottom: '0.1rem' }}>
+                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.5rem)', fontWeight: '600', textAlign: 'center', width: '100%', justifyContent: 'center', margin: 0 }}>
                                     {currentQ.question}
                                 </h2>
                             </div>
 
-                            <div className="flex flex-col md:flex-row gap-8 items-center justify-center w-full mt-2">
+                            <div className="flex flex-col md:flex-row gap-4 lg:gap-8 items-center justify-center w-full mt-1">
                                 {/* Left side: Diagram */}
-                                <div className="flex-1 w-full flex justify-center items-center">
+                                <div className="flex-1 w-full flex flex-col justify-center items-center">
                                     {renderDiagram()}
+                                    {isSubmitted && isCorrect && (
+                                        <div className="mt-3 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-base md:text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm self-center">
+                                            <span className="text-2xl mr-2">🌟</span>
+                                            Perfect match!
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Right side: Options */}
                                 <div className="flex-1 w-full max-w-xs xl:max-w-sm interaction-area-modern !mt-0">
-                                    <div className="flex flex-col gap-3 w-full">
+                                    <div className="flex flex-col gap-2 w-full">
                                         {currentQ.options.map((opt, i) => {
                                             const isRight = isSubmitted && opt === currentQ.correct;
                                             const isWrong = isSubmitted && selectedOption === opt && opt !== currentQ.correct;
@@ -335,18 +341,13 @@ const NumberInTheCentre = () => {
                                                     className={`option-btn-modern w-full ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQ.correct ? 'correct' : ''} ${isSubmitted && selectedOption === opt && opt !== currentQ.correct ? 'wrong' : ''}`}
                                                     onClick={() => handleOptionSelect(opt)}
                                                     disabled={isSubmitted}
+                                                    style={{ padding: '0.6rem 1rem', minHeight: '3rem' }}
                                                 >
                                                     {opt}
                                                 </button>
                                             );
                                         })}
                                     </div>
-                                    {isSubmitted && isCorrect && (
-                                        <div className="feedback-mini correct mt-4">
-                                            <span className="text-2xl mr-2">🌟</span>
-                                            Perfect match!
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </div>
