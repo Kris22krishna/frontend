@@ -92,7 +92,10 @@ import NumberInTheCentre from './components/practice/class-3/House-of-Hundreds-I
 import NumberPuzzles from './components/practice/class-3/House-of-Hundreds-II/number-puzzles';
 import TheNumberDetective from './components/practice/class-3/House-of-Hundreds-II/The-number-detective';
 import PaperSlips from './components/practice/class-3/House-of-Hundreds-II/Paper-slips';
-import GuessTheNumber from './components/practice/class-3/House-of-Hundreds-II/Guess-the-number';
+import RakshaBandhanTest from './components/practice/class-3/Raksha-Bandhan/RakshaBandhanTest';
+import FairShareTest from './components/practice/class-3/fair-share/FairShareTest';
+import FunAtClassPartyTest from './components/practice/class-3/Fun-at-class-party/FunAtClassPartyTest';
+import HouseOfHundredsIITest from './components/practice/class-3/House-of-Hundreds-II/HouseOfHundredsIITest';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -457,6 +460,11 @@ function App() {
             <RakshaBandhanDivision />
           </ProtectedRoute>
         } />
+        <Route path="/junior/grade/:grade/raksha-bandhan/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanTest />
+          </ProtectedRoute>
+        } />
         <Route path="/junior/grade/:grade/fair-share/cutting" element={
           <ProtectedRoute redirectTo="/login">
             <FairShareCutting />
@@ -477,6 +485,11 @@ function App() {
             <FairShareGuesswho />
           </ProtectedRoute>
         } />
+        <Route path="/junior/grade/:grade/fair-share/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareTest />
+          </ProtectedRoute>
+        } />
         <Route path="/junior/grade/:grade/fun-at-class-party/longer-shorter" element={
           <ProtectedRoute redirectTo="/login">
             <LongerShorterStrings />
@@ -485,6 +498,11 @@ function App() {
         <Route path="/junior/grade/:grade/fun-at-class-party/heights-and-meters" element={
           <ProtectedRoute redirectTo="/login">
             <HeightsAndMeters />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-at-class-party/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FunAtClassPartyTest />
           </ProtectedRoute>
         } />
 
@@ -541,10 +559,9 @@ function App() {
             <PaperSlips />
           </ProtectedRoute>
         } />
-
-        <Route path="/junior/grade/:grade/house-of-hundreds-ii/guess-the-number" element={
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/chapter-test" element={
           <ProtectedRoute redirectTo="/login">
-            <GuessTheNumber />
+            <HouseOfHundredsIITest />
           </ProtectedRoute>
         } />
 

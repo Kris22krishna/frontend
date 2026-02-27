@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, X, ChevronRight, ChevronLeft, Eye, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import ExplanationModal from '../../../../components/ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import GenericReportCard from '../GenericReportCard';
 import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
 const questions = [
@@ -168,6 +168,23 @@ const PaperSlips = () => {
     const svgRef = useRef(null);
     const dotRefs = useRef({});
     const timerRef = useRef(null);
+
+    
+    const handleRestart = () => {
+        setCurrentQIndex(0);
+        setShowResult(false);
+        setHistory({});
+        if (typeof setScore === 'function') setScore(0);
+        if (typeof setQuestionResults === 'function') setQuestionResults({});
+        if (typeof setTimeElapsed === 'function') setTimeElapsed(0);
+        if (typeof setFeedback === 'function') setFeedback(null);
+        if (typeof setIsSubmitted === 'function') setIsSubmitted(false);
+        if (typeof setIsCorrect === 'function') setIsCorrect(false);
+        if (typeof setSelectedOption === 'function') setSelectedOption(null);
+        if (typeof setShowExplanation === 'function') setShowExplanation(false);
+        if (typeof setConnections === 'function') setConnections([]);
+        if (typeof setSwapSourceIndex === 'function') setSwapSourceIndex(null);
+    };
 
     const currentQ = questions[currentQIndex];
 
@@ -364,7 +381,7 @@ const PaperSlips = () => {
                         animate={{ scale: 1 }}
                         transition={{ delay: idx * 0.1 }}
                         className={`
-                            w-20 h-12 md:w-24 md:h-16 rounded-lg shadow-md border-2 font-bold flex items-center justify-center text-2xl md:text-2xl
+                            w-20 h-12 md:w-24 md:h-16 rounded-lg shadow-md border-2 font-normal font-sans flex items-center justify-center text-2xl md:text-2xl
                             ${val === 100 ? 'bg-indigo-100 border-indigo-300 text-indigo-700' :
                                 val === 10 ? 'bg-orange-100 border-orange-300 text-orange-700' :
                                     'bg-green-100 border-green-300 text-green-700'}
@@ -384,20 +401,20 @@ const PaperSlips = () => {
         return null;
     };
 
-    
+
     const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
     if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
+        const scoreVal = typeof score !== 'undefined'
+            ? score
+            : (typeof stats !== 'undefined' && stats.correct !== undefined
+                ? stats.correct
                 : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
+        const totalVal = typeof questions !== 'undefined'
+            ? questions.length
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0
+                ? sessionQuestions.length
                 : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={handleRestart} />;
     }
 
     return (
@@ -413,141 +430,190 @@ const PaperSlips = () => {
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal font-sans text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
-            <main className="practice-content-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 140px)' }}>
+            <main className="practice-content-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
                 {showResult ? (
                     <div className="w-full h-full flex items-center justify-center">
                         <div className="bg-white p-8 rounded-[2rem] shadow-xl border-4 border-white text-center max-w-md w-full animate-up">
                             <div className="text-6xl mb-4">🏆</div>
-                            <h2 className="text-3xl font-bold text-[#31326F] mb-2">{score} / {questions.length} Correct</h2>
+                            <h2 className="text-3xl font-normal font-sans text-[#31326F] mb-2">{score} / {questions.length} Correct</h2>
                             <p className="text-gray-500 mb-6">Great calculations with paper slips!</p>
                             <div className="grid grid-cols-2 gap-4">
-                                <button onClick={() => navigate(0)} className="py-3 rounded-xl bg-[#31326F] text-white font-bold text-lg hover:bg-[#25265E]">Replay</button>
-                                <button onClick={() => navigate(-1)} className="py-3 rounded-xl border-2 border-[#31326F] text-[#31326F] font-bold">Exit</button>
+                                <button onClick={() => navigate(0)} className="py-3 rounded-xl bg-[#31326F] text-white font-normal font-sans text-lg hover:bg-[#25265E]">Replay</button>
+                                <button onClick={() => navigate(-1)} className="py-3 rounded-xl border-2 border-[#31326F] text-[#31326F] font-normal font-sans">Exit</button>
                             </div>
                         </div>
                     </div>
                 ) : (
                     <div className="question-card-modern h-full flex flex-col justify-start items-center max-w-4xl mx-auto w-full bg-white/80 backdrop-blur-sm rounded-3xl sm: sm: sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg border border-white/50">
                         <div className="text-center mb-6">
-                            <div className="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">Paper Slips</div>
-                            <h2 className="text-2xl md:text-3xl font-bold text-[#31326F]">{currentQ.question}</h2>
+                            <h2 className="text-xl md:text-2xl font-normal font-sans text-[#31326F]">{currentQ.question}</h2>
                         </div>
 
-                        {/* VISUAL DIAGRAM AREA */}
-                        <div className="mb-6 w-full flex justify-center">
-                            {renderQuestionVisual()}
-                        </div>
-
-                        {/* INTERACTION AREA */}
-                        <div className="w-full flex-grow flex flex-col justify-center">
-
-                            {/* MCQ */}
-                            {currentQ.type === 'mcq' && (
-                                <div className={`grid gap-3 w-full max-w-2xl mx-auto ${currentQ.isVisualOptions ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2'}`}>
-                                    {currentOptions.map((opt, i) => {
-                                        // Safeguard against stale state during transition
-                                        if (currentQ.isVisualOptions && (!opt || !opt.items)) return null;
-                                        if (!currentQ.isVisualOptions && typeof opt === 'object') return null;
-
-                                        const isSelected = selectedOption === (currentQ.isVisualOptions ? opt.value : opt);
-                                        const isRight = isSubmitted && (currentQ.isVisualOptions ? opt.value : opt) === currentQ.correct;
-                                        const isWrong = isSubmitted && isSelected && !isRight;
-
-                                        return (
-                                            <button
-                                                key={i}
-                                                onClick={() => !isSubmitted && setSelectedOption(currentQ.isVisualOptions ? opt.value : opt)}
-                                                className={`
-                                                    p-4 rounded-xl border-2 transition-all shadow-sm flex items-center justify-center gap-2
-                                                    ${isSelected ? 'border-[#31326F] bg-blue-50 ring-2 ring-blue-100' : 'border-slate-200 bg-white hover:border-blue-300'}
-                                                    ${isRight ? '!bg-green-100 !border-green-500 !text-green-800' : ''}
-                                                    ${isWrong ? '!bg-red-100 !border-red-500 !text-red-800' : ''}
-                                                `}
-                                            >
-                                                {currentQ.isVisualOptions ? (
-                                                    <div className="flex gap-2 flex-wrap justify-center">
-                                                        {opt.items.map((v, k) => (
-                                                            <span key={k} className={`text-sm md:text-base px-3 py-2 rounded-md border font-bold ${v === 100 ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : v === 10 ? 'bg-orange-50 border-orange-200 text-orange-700' : 'bg-green-50 border-green-200 text-green-700'}`}>{v}</span>
-                                                        ))}
-                                                    </div>
-                                                ) : (
-                                                    <span className="text-2xl font-bold">{opt}</span>
-                                                )}
-                                            </button>
-                                        );
-                                    })}
+                        {/* DYNAMIC LAYOUT AREA */}
+                        {currentQ.type === 'mcq' && currentQ.diagramType !== 'none' ? (
+                            <div className="flex flex-col md:flex-row gap-4 lg:gap-8 items-center justify-center w-full mt-1 flex-grow">
+                                <div className="flex-1 w-full flex flex-col justify-center items-center">
+                                    {renderQuestionVisual()}
+                                    {isSubmitted && isCorrect && (
+                                        <div className="mt-2 text-green-700 px-4 py-2 font-normal font-sans text-base md:text-lg animate-bounce flex items-center gap-2">
+                                            <span className="text-2xl">🌟</span> Awesome! Correct!
+                                        </div>
+                                    )}
                                 </div>
-                            )}
+                                <div className="flex-1 w-full max-w-xs xl:max-w-sm interaction-area-modern !mt-0 flex flex-col justify-center">
+                                    <div className="grid gap-3 w-full grid-cols-1 md:grid-cols-2">
+                                        {currentOptions.map((opt, i) => {
+                                            if (currentQ.isVisualOptions && (!opt || !opt.items)) return null;
+                                            if (!currentQ.isVisualOptions && typeof opt === 'object') return null;
 
-                            {/* DRAG SORT */}
-                            {currentQ.type === 'drag-sort' && (
-                                <div className="flex flex-col gap-2 max-w-sm mx-auto w-full">
-                                    <p className="text-xs text-center text-gray-400 font-bold uppercase mb-2">Drag to Reorder</p>
-                                    <Reorder.Group axis="y" values={dragItems} onReorder={setDragItems} className="flex flex-col gap-3">
-                                        {dragItems.map((item) => (
-                                            <Reorder.Item key={item} value={item}>
-                                                <div
+                                            const isSelected = selectedOption === (currentQ.isVisualOptions ? opt.value : opt);
+                                            const isRight = isSubmitted && (currentQ.isVisualOptions ? opt.value : opt) === currentQ.correct;
+                                            const isWrong = isSubmitted && isSelected && !isRight;
+
+                                            return (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => !isSubmitted && setSelectedOption(currentQ.isVisualOptions ? opt.value : opt)}
                                                     className={`
+                                                        p-4 rounded-xl border-2 transition-all shadow-sm flex items-center justify-center gap-2
+                                                        ${isSelected ? 'border-[#31326F] bg-blue-50 ring-2 ring-blue-100' : 'border-slate-200 bg-white hover:border-blue-300'}
+                                                        ${isRight ? '!bg-green-100 !border-green-500 !text-green-800' : ''}
+                                                        ${isWrong ? '!bg-red-100 !border-red-500 !text-red-800' : ''}
+                                                    `}
+                                                    style={{ minHeight: '3rem', padding: '0.6rem 1rem' }}
+                                                >
+                                                    {currentQ.isVisualOptions ? (
+                                                        <div className="flex gap-2 flex-wrap justify-center">
+                                                            {opt.items.map((v, k) => (
+                                                                <span key={k} className={`text-sm md:text-base px-3 py-2 rounded-md border font-normal font-sans ${v === 100 ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : v === 10 ? 'bg-orange-50 border-orange-200 text-orange-700' : 'bg-green-50 border-green-200 text-green-700'}`}>{v}</span>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-xl font-normal font-sans">{opt}</span>
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                {/* VISUAL DIAGRAM AREA */}
+                                <div className="mb-4 w-full flex justify-center">
+                                    {renderQuestionVisual()}
+                                </div>
+
+                                {/* INTERACTION AREA */}
+                                <div className="w-full flex-grow flex flex-col justify-center">
+
+                                    {/* MCQ NO DIAGRAM */}
+                                    {currentQ.type === 'mcq' && currentQ.diagramType === 'none' && (
+                                        <div className="grid gap-3 w-full max-w-2xl mx-auto grid-cols-1 md:grid-cols-2">
+                                            {currentOptions.map((opt, i) => {
+                                                if (currentQ.isVisualOptions && (!opt || !opt.items)) return null;
+                                                if (!currentQ.isVisualOptions && typeof opt === 'object') return null;
+
+                                                const isSelected = selectedOption === (currentQ.isVisualOptions ? opt.value : opt);
+                                                const isRight = isSubmitted && (currentQ.isVisualOptions ? opt.value : opt) === currentQ.correct;
+                                                const isWrong = isSubmitted && isSelected && !isRight;
+
+                                                return (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => !isSubmitted && setSelectedOption(currentQ.isVisualOptions ? opt.value : opt)}
+                                                        className={`
+                                                            p-4 rounded-xl border-2 transition-all shadow-sm flex items-center justify-center gap-2
+                                                            ${isSelected ? 'border-[#31326F] bg-blue-50 ring-2 ring-blue-100' : 'border-slate-200 bg-white hover:border-blue-300'}
+                                                            ${isRight ? '!bg-green-100 !border-green-500 !text-green-800' : ''}
+                                                            ${isWrong ? '!bg-red-100 !border-red-500 !text-red-800' : ''}
+                                                        `}
+                                                    >
+                                                        {currentQ.isVisualOptions ? (
+                                                            <div className="flex gap-2 flex-wrap justify-center">
+                                                                {opt.items.map((v, k) => (
+                                                                    <span key={k} className={`text-sm md:text-base px-3 py-2 rounded-md border font-normal font-sans ${v === 100 ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : v === 10 ? 'bg-orange-50 border-orange-200 text-orange-700' : 'bg-green-50 border-green-200 text-green-700'}`}>{v}</span>
+                                                                ))}
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-xl font-normal font-sans">{opt}</span>
+                                                        )}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
+                                    {/* DRAG SORT */}
+                                    {currentQ.type === 'drag-sort' && (
+                                        <div className="flex flex-col gap-2 max-w-sm mx-auto w-full">
+                                            <p className="text-xs text-center text-gray-400 font-normal font-sans uppercase mb-2">Drag to Reorder</p>
+                                            <Reorder.Group axis="y" values={dragItems} onReorder={setDragItems} className="flex flex-col gap-3">
+                                                {dragItems.map((item) => (
+                                                    <Reorder.Item key={item} value={item}>
+                                                        <div
+                                                            className={`
                                                         p-4 bg-white rounded-xl border-2 shadow-sm flex justify-between items-center cursor-grab active:cursor-grabbing
                                                         ${isSubmitted && isCorrect ? 'border-green-400 bg-green-50' : 'border-slate-200 hover:border-slate-300'}
                                                     `}
-                                                >
-                                                    <span className="text-2xl font-bold text-[#31326F]">{item}</span>
-                                                </div>
-                                            </Reorder.Item>
-                                        ))}
-                                    </Reorder.Group>
-                                </div>
-                            )}
-
-                            {/* DRAG MATCH */}
-                            {currentQ.type === 'drag-match' && (
-                                <div className="w-full flex-grow relative touch-none select-none bg-slate-50 rounded-2xl border-2 border-slate-100 flex flex-col p-4">
-                                    <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0">
-                                        {connections.map((conn, i) => {
-                                            const start = getDotPos(conn.from);
-                                            const end = getDotPos(conn.to);
-                                            if (!start.x || !end.x) return null;
-                                            return <line key={i} x1={start.x} y1={start.y} x2={end.x} y2={end.y} stroke="#31326F" strokeWidth="3" strokeLinecap="round" />;
-                                        })}
-                                        {currentLine && <line x1={currentLine.x1} y1={currentLine.y1} x2={currentLine.x2} y2={currentLine.y2} stroke="#31326F" strokeWidth="3" strokeDasharray="5,5" />}
-                                    </svg>
-                                    <div className="flex justify-between items-center h-full relative z-10 w-full gap-8 md:gap-16 px-4">
-                                        <div className="flex flex-col gap-4 w-5/12 max-w-xs">
-                                            {currentQ.pairs.map(p => (
-                                                <div key={p.id} className="relative">
-                                                    <div
-                                                        onMouseDown={(e) => handleDragStart(e, p.id)}
-                                                        onTouchStart={(e) => handleDragStart(e, p.id)}
-                                                        className="bg-white p-3 rounded-xl border-2 border-indigo-100 shadow-sm text-center font-bold text-sm md:text-base cursor-grab active:scale-95"
-                                                    >
-                                                        {p.text}
-                                                    </div>
-                                                    <div ref={el => dotRefs.current[p.id] = el} className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-500 rounded-full border-2 border-white" />
-                                                </div>
-                                            ))}
+                                                        >
+                                                            <span className="text-2xl font-normal font-sans text-[#31326F]">{item}</span>
+                                                        </div>
+                                                    </Reorder.Item>
+                                                ))}
+                                            </Reorder.Group>
                                         </div>
-                                        <div className="flex flex-col gap-4 w-5/12 max-w-xs">
-                                            {shuffledTargets.map(t => (
-                                                <div key={t.id} className="relative" data-target-id={t.id}>
-                                                    <div className="bg-white p-3 rounded-xl border-2 border-orange-100 shadow-sm text-center font-bold text-sm md:text-base">
-                                                        {t.text}
-                                                    </div>
-                                                    <div ref={el => dotRefs.current[t.id] = el} className="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-orange-500 rounded-full border-2 border-white" />
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                                    )}
 
-                        </div>
+                                    {/* DRAG MATCH */}
+                                    {currentQ.type === 'drag-match' && (
+                                        <div className="w-full flex-grow relative touch-none select-none bg-slate-50 rounded-2xl border-2 border-slate-100 flex flex-col p-4">
+                                            <svg ref={svgRef} className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                                                {connections.map((conn, i) => {
+                                                    const start = getDotPos(conn.from);
+                                                    const end = getDotPos(conn.to);
+                                                    if (!start.x || !end.x) return null;
+                                                    return <line key={i} x1={start.x} y1={start.y} x2={end.x} y2={end.y} stroke="#31326F" strokeWidth="3" strokeLinecap="round" />;
+                                                })}
+                                                {currentLine && <line x1={currentLine.x1} y1={currentLine.y1} x2={currentLine.x2} y2={currentLine.y2} stroke="#31326F" strokeWidth="3" strokeDasharray="5,5" />}
+                                            </svg>
+                                            <div className="flex justify-between items-center h-full relative z-10 w-full gap-8 md:gap-16 px-4">
+                                                <div className="flex flex-col gap-4 w-5/12 max-w-xs">
+                                                    {currentQ.pairs.map(p => (
+                                                        <div key={p.id} className="relative">
+                                                            <div
+                                                                onMouseDown={(e) => handleDragStart(e, p.id)}
+                                                                onTouchStart={(e) => handleDragStart(e, p.id)}
+                                                                className="bg-white p-3 rounded-xl border-2 border-indigo-100 shadow-sm text-center font-normal font-sans text-sm md:text-base cursor-grab active:scale-95"
+                                                            >
+                                                                {p.text}
+                                                            </div>
+                                                            <div ref={el => dotRefs.current[p.id] = el} className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-500 rounded-full border-2 border-white" />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="flex flex-col gap-4 w-5/12 max-w-xs">
+                                                    {shuffledTargets.map(t => (
+                                                        <div key={t.id} className="relative" data-target-id={t.id}>
+                                                            <div className="bg-white p-3 rounded-xl border-2 border-orange-100 shadow-sm text-center font-normal font-sans text-sm md:text-base">
+                                                                {t.text}
+                                                            </div>
+                                                            <div ref={el => dotRefs.current[t.id] = el} className="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-orange-500 rounded-full border-2 border-white" />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
                 )}
             </main>
@@ -561,30 +627,85 @@ const PaperSlips = () => {
                 onNext={() => setShowExplanation(false)}
             />
 
-            <footer className="junior-bottom-bar">
+            <footer className="junior-bottom-bar" style={{ height: '70px', padding: '0 1rem' }}>
                 <div className="desktop-footer-controls">
-                    <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 flex items-center gap-2" onClick={() => navigate(-1)}>
-                        <X size={20} /> Exit
-                    </button>
-                    {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanation(true)}><Eye size={20} /> View Steps</button>}
-                    <div className="nav-buttons-group">
-                        <button onClick={handlePrevious} disabled={currentQIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
-                        {isSubmitted ? (
-                            <button className="nav-pill-next-btn" onClick={handleNext}>{currentQIndex < questions.length - 1 ? <>NEXT <ChevronRight size={24} strokeWidth={3} /></> : <>DONE <Check size={24} strokeWidth={3} /></>}</button>
-                        ) : (
-                            <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted}>Submit <Check size={24} /></button>
+                    <div className="bottom-left">
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={() => navigate(-1)}>Exit</button>
+                    </div>
+                    <div className="bottom-center">
+                        {isSubmitted && (
+                            <button className="view-explanation-btn" onClick={() => setShowExplanation(true)}>
+                                <Eye size={20} /> View Explanation
+                            </button>
                         )}
                     </div>
+                    <div className="bottom-right">
+                        <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrevious}
+                                disabled={currentQIndex === 0}
+                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {currentQIndex < questions.length - 1 ? (
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
+                                    ) : (
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
+                                    )}
+                                </button>
+                            ) : (
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheckAnswer}
+                                    disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}
+                                >
+                                    SUBMIT <Check size={24} strokeWidth={3} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
+
                 <div className="mobile-footer-controls">
-                    <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
-                    {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanation(true)}><Eye size={18} /> Steps</button>}
-                    <div className="nav-buttons-group">
-                        {isSubmitted ? (
-                            <button className="nav-pill-next-btn" onClick={handleNext}>{currentQIndex < questions.length - 1 ? 'Next' : 'Done'}</button>
-                        ) : (
-                            <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted}>Submit</button>
+                    <div className="flex items-center gap-2">
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
+
+                        {isSubmitted && (
+                            <button className="view-explanation-btn" onClick={() => setShowExplanation(true)}>
+                                <Eye size={18} /> Explain
+                            </button>
                         )}
+                    </div>
+
+                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
+                        <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrevious}
+                                disabled={currentQIndex === 0}
+                                style={{
+                                    opacity: currentQIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {currentQIndex < questions.length - 1 ? "NEXT" : "DONE"}
+                                </button>
+                            ) : (
+                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}>SUBMIT</button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </footer>

@@ -9,7 +9,6 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
 import '../../../../pages/juniors/grade3/Raksha-Bandhan.css';
 // import { useTheme } from 'next-themes';
 
@@ -512,7 +511,7 @@ const RakshaBandhanMultiplication = () => {
                             >
                                 <div className="question-card-modern">
                                     <div className="question-header-modern" style={{ marginBottom: '0.75rem' }}>
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>

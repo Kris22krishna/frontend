@@ -98,17 +98,20 @@ export const TOPIC_CONFIGS = {
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
-            { id: "RB-03", name: "Division" }
+            { id: "RB-03", name: "Division" },
+            { id: "RB-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
         'Fair Share': [
             { id: "FS-01", name: "Cutting equal parts" },
             { id: "FS-02", name: "Halves and doubles" },
             { id: "FS-03", name: "Drawing other half" },
-            { id: "FS-04", name: "Guess Who Am I?" }
+            { id: "FS-04", name: "Guess Who Am I?" },
+            { id: "FS-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
         'Fun at Class Party': [
             { id: "FCP-01", name: "Longer & Shorter Strings", route: "longer-shorter" },
-            { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" }
+            { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" },
+            { id: "FCP-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
         'House of Hundreds II': [
             { id: "HH2-01", name: "Draw tiles" },
@@ -120,7 +123,7 @@ export const TOPIC_CONFIGS = {
             { id: "HH2-07", name: "Number Puzzles" },
             { id: "HH2-08", name: "The Number Detective" },
             { id: "HH2-09", name: "Paper Slips" },
-            { id: "HH2-10", name: "Guess the Number" }
+            { id: "HH2-TEST", name: "Chapter Test", route: "chapter-test" }
         ]
     },
     '4': {

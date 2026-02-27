@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, X, ChevronLeft, ChevronRight, Eye, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import GenericReportCard from '../GenericReportCard';
 import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
 const questions = [
@@ -184,7 +184,8 @@ const Tambola = () => {
         setIsCorrect(false);
         setSelectedOption(null);
         setTimeElapsed(0);
-    };
+        setHistory({});
+};
 
     
     const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
@@ -289,63 +290,83 @@ const Tambola = () => {
                 onNext={() => setShowExplanationModal(false)}
             />
 
-            <footer className="junior-bottom-bar">
+            <footer className="junior-bottom-bar" style={{ height: '70px', padding: '0 1rem' }}>
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                            onClick={() => navigate(-1)}
-                        >
-                            <X size={20} /> Exit Case
-                        </button>
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={() => navigate(-1)}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={20} /> View Evidence
+                                <Eye size={20} /> View Explanation
                             </button>
                         )}
                     </div>
                     <div className="bottom-right">
-                        <div className="nav-buttons-group">
-                            <button onClick={handlePrevious} disabled={currentQIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
+                        <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrevious}
+                                disabled={currentQIndex === 0}
+                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {currentQIndex < questions.length - 1 ? (
-                                        <>Next Case <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Solved All <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={!selectedOption}>
-                                    Identify <Check size={28} strokeWidth={3} />
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheckAnswer}
+                                    disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}
+                                >
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
                     </div>
                 </div>
+
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}>
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
+
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={18} /> Evidence
+                                <Eye size={18} /> Explain
                             </button>
                         )}
                     </div>
+
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrevious}
+                                disabled={currentQIndex === 0}
+                                style={{
+                                    opacity: currentQIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {currentQIndex < questions.length - 1 ? "Next" : "Done"}
+                                    {currentQIndex < questions.length - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={!selectedOption}>
-                                    Identify
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}>SUBMIT</button>
                             )}
                         </div>
                     </div>

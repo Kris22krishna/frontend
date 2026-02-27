@@ -6,7 +6,6 @@ import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import LatexContent from '../../../LatexContent';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
 import '../../../../pages/juniors/grade3/fair-share.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;

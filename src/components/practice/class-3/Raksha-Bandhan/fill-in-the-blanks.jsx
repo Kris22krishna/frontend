@@ -293,9 +293,9 @@ const RakshaBandhanFillInTheBlanks = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container raksha-bandhan-board-container">
                     <div className="practice-left-col raksha-bandhan-left-col">
-                        <div className="question-card-modern" style={{ paddingTop: '1.5rem', justifyContent: 'flex-start' }}>
+                        <div className="question-card-modern" style={{ paddingTop: '1.5rem' }}>
                             <div className="question-header-modern" style={{ marginBottom: '0.75rem' }}>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', overflow: 'visible' }}>
                                     <LatexContent html={currentQuestion.text} />
                                 </h2>
                             </div>

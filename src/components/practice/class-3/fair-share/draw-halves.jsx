@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
 import '../../../../pages/juniors/grade3/fair-share.css';
 
 // --- Configuration ---
