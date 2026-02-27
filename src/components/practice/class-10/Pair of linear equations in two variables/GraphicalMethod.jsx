@@ -8,7 +8,7 @@ import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import { api } from '../../../../services/api';
 import InteractiveGraph from '../../../InteractiveGraph'; // Keep this from original
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../TenthPracticeSession.css';
 
 const GraphicalMethod = () => {
     const navigate = useNavigate();

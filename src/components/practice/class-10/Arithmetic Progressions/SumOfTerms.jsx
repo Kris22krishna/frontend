@@ -6,7 +6,7 @@ import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import { api } from '../../../../services/api';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../TenthPracticeSession.css';
 
 const SumOfTerms = () => {
     const navigate = useNavigate();

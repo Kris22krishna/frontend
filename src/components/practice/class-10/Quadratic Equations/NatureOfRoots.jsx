@@ -7,7 +7,7 @@ import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../TenthPracticeSession.css';
 
 const NatureOfRoots = () => {
     const navigate = useNavigate();

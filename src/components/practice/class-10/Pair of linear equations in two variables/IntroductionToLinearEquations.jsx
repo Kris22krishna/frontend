@@ -8,7 +8,7 @@ import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../TenthPracticeSession.css';
 
 const IntroductionToLinearEquations = () => {
     const navigate = useNavigate();

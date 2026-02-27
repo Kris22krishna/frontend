@@ -4,7 +4,7 @@ import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshC
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../TenthPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
 
 const BLUE_THEME_CSS = `
