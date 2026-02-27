@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LatexText } from '../../../LatexText';
+import { LatexText } from '../../../../LatexText';
 import MatrixGrid from '../components/MatrixGrid';
 import QuizEngine from '../components/QuizEngine';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Repeat, MoveRight, ChevronRight, AlertTriangle } from 'lucide-react';
-import { LatexText } from '../../../LatexText';
+import { LatexText } from '../../../../LatexText';
 import MatrixGrid from '../components/MatrixGrid';
 import QuizEngine from '../components/QuizEngine';
 

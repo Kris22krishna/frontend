@@ -311,21 +311,22 @@ import IrrationalOperations from './components/practice/class-10/Real Numbers/Ir
 import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
 
 // Class 12 - Matrices Chapter
-import MatricesChapter from './components/practice/class-12/MatricesChapter';
-import WhoUsesMatrices from './components/practice/class-12/pages/WhoUsesMatrices';
-import WhatIsMatrix from './components/practice/class-12/pages/WhatIsMatrix';
-import WhenDoWeNeedMatrices from './components/practice/class-12/pages/WhenDoWeNeedMatrices';
-import HowOperationsWork from './components/practice/class-12/pages/HowOperationsWork';
-import WhyRulesWork from './components/practice/class-12/pages/WhyRulesWork';
-import WhereApplied from './components/practice/class-12/pages/WhereApplied';
-import InvertibleMatrices from './components/practice/class-12/pages/InvertibleMatrices';
-import MatrixOrderTest from './components/practice/class-12/tests/MatrixOrderTest';
-import MatrixTypesTest from './components/practice/class-12/tests/MatrixTypesTest';
-import MatrixEqualityTest from './components/practice/class-12/tests/MatrixEqualityTest';
-import MatrixOperationsTest from './components/practice/class-12/tests/MatrixOperationsTest';
-import MatrixTransposeTest from './components/practice/class-12/tests/MatrixTransposeTest';
-import InvertibleMatricesTest from './components/practice/class-12/tests/InvertibleMatricesTest';
-import MatricesChapterTest from './components/practice/class-12/tests/MatricesChapterTest';
+import MatricesChapter from './components/practice/class-12/matrices/MatricesChapter';
+import WhoUsesMatrices from './components/practice/class-12/matrices/pages/WhoUsesMatrices';
+import WhatIsMatrix from './components/practice/class-12/matrices/pages/WhatIsMatrix';
+import WhenDoWeNeedMatrices from './components/practice/class-12/matrices/pages/WhenDoWeNeedMatrices';
+import HowOperationsWork from './components/practice/class-12/matrices/pages/HowOperationsWork';
+import WhyRulesWork from './components/practice/class-12/matrices/pages/WhyRulesWork';
+import WhereApplied from './components/practice/class-12/matrices/pages/WhereApplied';
+import InvertibleMatrices from './components/practice/class-12/matrices/pages/InvertibleMatrices';
+import MatrixOrderTest from './components/practice/class-12/matrices/tests/MatrixOrderTest';
+import MatrixTypesTest from './components/practice/class-12/matrices/tests/MatrixTypesTest';
+import MatrixEqualityTest from './components/practice/class-12/matrices/tests/MatrixEqualityTest';
+import MatrixOperationsTest from './components/practice/class-12/matrices/tests/MatrixOperationsTest';
+import MatrixTransposeTest from './components/practice/class-12/matrices/tests/MatrixTransposeTest';
+import InvertibleMatricesTest from './components/practice/class-12/matrices/tests/InvertibleMatricesTest';
+import MatricesChapterTest from './components/practice/class-12/matrices/tests/MatricesChapterTest';
+import CBSEQuestions from './components/practice/class-12/matrices/tests/CBSEQuestions';
 
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
@@ -1300,6 +1301,7 @@ function App() {
         <Route path="/senior/grade/12/matrices/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><MatrixTransposeTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test" element={<ProtectedRoute redirectTo="/login"><MatricesChapterTest /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/cbse" element={<ProtectedRoute redirectTo="/login"><CBSEQuestions /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

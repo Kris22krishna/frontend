@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, Lightbulb } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { api } from '../../../../services/api';
-import { LatexText } from '../../../LatexText';
-import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import { api } from '../../../../../services/api';
+import { LatexText } from '../../../../LatexText';
+import ExplanationModal from '../../../../ExplanationModal';
+import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 /**
  * QuizEngine — reusable embedded quiz component.

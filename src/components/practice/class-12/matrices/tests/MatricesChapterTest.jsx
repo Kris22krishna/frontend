@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { api } from '../../../../services/api';
-import { LatexText } from '../../../LatexText';
-import mascotImg from '../../../../assets/mascot.png';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import { api } from '../../../../../services/api';
+import { LatexText } from '../../../../LatexText';
+import mascotImg from '../../../../../assets/mascot.png';
+import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const SKILL_ID = 12200;
 const SKILL_NAME = 'Matrices — Full Chapter Assessment';

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, BookOpen, PenTool, Trophy } from 'lucide-react';
-import { api } from '../../../services/api';
+import { ChevronRight, ArrowLeft, BookOpen, PenTool, Trophy, ClipboardList } from 'lucide-react';
+import { api } from '../../../../services/api';
 import './MatricesChapter.css';
 
 const PAGES = [
@@ -206,6 +206,33 @@ const MatricesChapter = () => {
                     <div className="card-footer">
                         <span className="card-badge" style={{ background: '#FEF3C7', color: '#92400E', fontWeight: 800 }}>
                             {allTestsComplete ? 'Start Assessment' : '🔒 Locked'}
+                        </span>
+                        <div className="card-arrow"><ChevronRight size={18} /></div>
+                    </div>
+                </div>
+            </div>
+
+            {/* CBSE BOARD QUESTIONS */}
+            <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '40px 0 20px', padding: '12px 20px', background: 'linear-gradient(135deg, #F0F9FF, #E0F2FE)', borderRadius: 14, border: '2px solid #7DD3FC' }}>
+                    <ClipboardList size={24} color="#0284C7" />
+                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#1E293B', margin: 0 }}>CBSE Board Practice</h2>
+                    <span style={{ fontSize: '0.8rem', color: '#0369A1', marginLeft: 'auto', fontWeight: 600 }}>25 Questions</span>
+                </div>
+            </div>
+
+            <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px 60px' }}>
+                <div
+                    className="matrix-topic-card"
+                    onClick={() => navigate('/senior/grade/12/matrices/cbse')}
+                    style={{ cursor: 'pointer', border: '2px solid #7DD3FC', background: 'linear-gradient(135deg, #F0F9FF, #E0F2FE)', maxWidth: 500, margin: '0 auto' }}
+                >
+                    <div className="card-icon" style={{ fontSize: '2.5rem' }}>📝</div>
+                    <h3 style={{ fontSize: '1.3rem' }}>CBSE Board Questions</h3>
+                    <p className="card-desc">Practice with CBSE-style MCQs, short answer, long answer and case study questions with step-by-step solutions.</p>
+                    <div className="card-footer">
+                        <span className="card-badge" style={{ background: '#E0F2FE', color: '#0369A1', fontWeight: 800 }}>
+                            Start Practice
                         </span>
                         <div className="card-arrow"><ChevronRight size={18} /></div>
                     </div>
