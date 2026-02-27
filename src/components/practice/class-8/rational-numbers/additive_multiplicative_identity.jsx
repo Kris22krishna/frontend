@@ -397,13 +397,13 @@ const AdditiveMultiplicativeIdentityComponent = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem' , justifyContent: 'flex-start' }}>
+                                    <div className="question-header-modern"  style={{  flexShrink: 0, marginBottom: "1rem" }}>
                                         <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
+                                    <div className="interaction-area-modern" style={{ marginTop: '1rem', flex: "none" }} style={{ marginTop: '1rem', flex: "none" }}>
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
@@ -424,7 +424,7 @@ const AdditiveMultiplicativeIdentityComponent = () => {
                                                 initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
+                                                style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}
                                             >
                                                 {feedbackMessage}
                                             </motion.div>

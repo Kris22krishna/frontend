@@ -8,9 +8,8 @@
     padding: 0;
     box-sizing: border-box;
     background-color: #E0F7FA;
-    font-family: 'Fredoka', 'Nunito', sans-serif;
-    overflow: hidden;
-    /* Prevent body scrolling */
+    font-family: 'Open Sans', 'Nunito', sans-serif;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     z-index: 50;
@@ -335,8 +334,9 @@
     box-shadow: 0 4px 0 #CBD5E0;
     cursor: pointer;
     transition: all 0.1s;
-    font-family: 'Fredoka', sans-serif;
-    min-height: 68px;
+    font-family: 'Open Sans', 'Nunito', sans-serif;
+    min-height: 100px;
+    /* Fixed min-height for symmetry */
     height: 100%;
     display: flex;
     align-items: center;
@@ -592,7 +592,7 @@
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s;
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'Open Sans', 'Nunito', sans-serif;
     white-space: nowrap;
 }
 
@@ -642,7 +642,7 @@
     padding: 0.8rem 1.5rem;
     font-size: 1.2rem;
     font-weight: 700;
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'Open Sans', 'Nunito', sans-serif;
     display: flex;
     align-items: center;
     gap: 0.8rem;
@@ -776,7 +776,7 @@
     align-items: center;
     gap: 0.5rem;
     transition: all 0.2s;
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'Open Sans', 'Nunito', sans-serif;
     box-shadow: 0 3px 0 #FFAB91;
     /* Ensure it's visible */
     display: flex;
@@ -806,7 +806,7 @@
     align-items: center;
     gap: 0.8rem;
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'Open Sans', 'Nunito', sans-serif;
     font-size: 1.1rem;
     box-shadow: 0 4px 0 #00897B;
     text-transform: uppercase;
@@ -839,7 +839,7 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    font-family: 'Fredoka', sans-serif;
+    font-family: 'Open Sans', 'Nunito', sans-serif;
     font-size: 1.3rem;
     box-shadow: 0 5px 0 #1565C0, 0 8px 15px rgba(41, 121, 255, 0.3);
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1393,7 +1393,11 @@
     }
 }
 
-/* Mobile Footer Toggle */
+/* Mobile Footer Toggle - Hide on desktop by default */
+.mobile-footer-controls {
+    display: none !important;
+}
+
 @media (max-width: 900px) {
     .desktop-footer-controls {
         display: none !important;

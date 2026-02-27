@@ -17,6 +17,7 @@
     background-attachment: fixed;
     font-family: 'Nunito', sans-serif;
     color: var(--text-main);
+    font-weight: 400;
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
@@ -83,7 +84,7 @@
     max-width: 100%;
     width: 100%;
     margin: 0 auto;
-    padding: 20px 100px;
+    padding: 30px 100px 20px 100px;
     box-sizing: border-box;
 }
 
@@ -108,7 +109,7 @@
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     transition: all 0.3s;
-    font-weight: 700;
+    font-weight: 400;
     color: var(--accent-color);
 }
 
@@ -123,10 +124,10 @@
     border: 2px dashed #FB923C;
     padding: 8px 16px;
     border-radius: 20px;
-    font-weight: 800;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.2s;
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -149,18 +150,18 @@
 }
 
 .g1-topic-name {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #64748B;
-    font-weight: 700;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
 .g1-skill-name {
-    font-family: 'Fredoka', cursive !important;
-    font-size: 2.2rem;
+    font-family: 'Nunito', sans-serif !important;
+    font-size: 1.8rem;
     color: #2D3436;
-    font-weight: 800;
+    font-weight: 400;
 }
 
 .g1-progress-container {
@@ -196,9 +197,9 @@
 }
 
 .g1-question-text {
-    font-family: 'Fredoka', cursive !important;
+    font-family: 'Nunito', sans-serif !important;
     font-size: 2.8rem;
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
     color: #2D3436;
     margin-bottom: 20px;
@@ -221,7 +222,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 3px dashed rgba(0, 0, 0, 0.05);
+    border: none;
     position: relative;
 }
 
@@ -249,7 +250,7 @@
 }
 
 .g1-number-visual {
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -300,7 +301,7 @@
     padding: 16px 30px;
     border-radius: 20px;
     font-size: 1.4rem;
-    font-weight: 800;
+    font-weight: 400;
     color: #4A5568;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -390,7 +391,7 @@
 
 .g1-stat-value {
     font-size: 1.8rem;
-    font-weight: 900;
+    font-weight: 400;
     color: var(--accent-color);
 }
 
@@ -407,7 +408,7 @@
     border-radius: 30px;
     border: none;
     font-size: 1.25rem;
-    font-weight: 800;
+    font-weight: 400;
     cursor: pointer;
     box-shadow: 0 10px 25px rgba(135, 206, 235, 0.4);
     transition: all 0.3s;
@@ -431,9 +432,9 @@
     gap: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--glass-border);
-    font-weight: 800;
+    font-weight: 400;
     color: #4ECDC4;
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
     font-size: 1.1rem;
 }
 
@@ -469,9 +470,9 @@
 }
 
 .g1-motivation-text {
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 400;
     color: #2F855A;
     display: block;
     margin-bottom: 5px;
@@ -480,7 +481,7 @@
 .g1-motivation-sub {
     font-size: 1rem;
     color: #38A169;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 /* Skeleton/Loading State */
@@ -508,7 +509,7 @@
     background: rgba(255, 255, 255, 0.5) !important;
     padding: clamp(20px, 5vw, 40px) !important;
     border-radius: 40px !important;
-    border: 3px dashed rgba(0, 0, 0, 0.05) !important;
+    border: 3px solid rgba(0, 0, 0, 0.05) !important;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04) !important;
     margin: 20px 0;
 }
@@ -521,8 +522,8 @@
     justify-content: center;
     border-radius: 30px;
     font-size: 5rem;
-    font-weight: 800;
-    font-family: 'Fredoka', cursive;
+    font-weight: 400;
+    font-family: 'Nunito', sans-serif;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -547,9 +548,9 @@
     background: white;
     border: 4px solid #F0F0F0;
     border-radius: 30px;
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
     font-size: 4rem;
-    font-weight: 800;
+    font-weight: 400;
     text-align: center;
     color: #2D3436;
     outline: none;
@@ -570,7 +571,7 @@
     border: none;
     border-radius: 25px;
     font-size: 1.5rem;
-    font-weight: 800;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
@@ -712,8 +713,8 @@
 .results-title {
     color: white;
     font-size: 2.5rem;
-    font-weight: 900;
-    font-family: 'Fredoka', cursive;
+    font-weight: 400;
+    font-family: 'Nunito', sans-serif;
 }
 
 .results-content {
@@ -758,7 +759,7 @@
 .stat-label {
     display: block;
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: #4FB7B3;
@@ -767,9 +768,9 @@
 
 .stat-value-large {
     font-size: 2rem;
-    font-weight: 900;
+    font-weight: 400;
     color: #31326F;
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
 }
 
 .detailed-breakdown {
@@ -778,10 +779,10 @@
 
 .breakdown-title {
     font-size: 1.8rem;
-    font-weight: 900;
+    font-weight: 400;
     color: #31326F;
     margin-bottom: 1.5rem;
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
 }
 
 .quest-log-item {
@@ -825,7 +826,7 @@
 
 .log-question {
     font-size: 1.2rem;
-    font-weight: 700;
+    font-weight: 400;
     color: #2D3436;
     margin-bottom: 1rem;
 }
@@ -857,14 +858,14 @@
 .log-label {
     display: block;
     font-size: 0.7rem;
-    font-weight: 800;
+    font-weight: 400;
     text-transform: uppercase;
     color: #94A3B8;
     margin-bottom: 0.3rem;
 }
 
 .log-value {
-    font-weight: 800;
+    font-weight: 400;
     color: #31326F;
 }
 
@@ -892,9 +893,9 @@
 .action-btn-large {
     padding: 1rem 2.5rem;
     border-radius: 1.5rem;
-    font-weight: 900;
+    font-weight: 400;
     font-size: 1.2rem;
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -968,10 +969,10 @@
 }
 
 .timer-text-sun {
-    font-weight: 800;
+    font-weight: 400;
     color: #E65100;
     font-size: 0.9rem;
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
 }
 
 @keyframes rotateRays {
@@ -1054,9 +1055,9 @@
 }
 
 .g1-group-label {
-    font-family: 'Fredoka', cursive;
+    font-family: 'Nunito', sans-serif;
     font-size: 1.5rem;
-    font-weight: 800;
+    font-weight: 400;
     margin-bottom: 20px;
 }
 
@@ -1121,13 +1122,13 @@
 .g1-pattern-target {
     width: clamp(65px, 15vw, 90px);
     height: clamp(65px, 15vw, 90px);
-    border: 3px dashed #A78BFA;
+    border: 3px solid #A78BFA;
     border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: clamp(2rem, 4.5vw, 2.8rem);
-    font-weight: 900;
+    font-weight: 400;
     color: #A78BFA;
     background: #FAF5FF;
 }
@@ -1147,8 +1148,389 @@
         height: 58px;
         font-size: 1.8rem;
     }
+}
 
-    .g1-pattern-arrow {
+/* Enforce Nunito font consistency for the ExplanationModal in Grade 1 */
+.grade1-practice-page .fixed.inset-0,
+.grade1-practice-page .fixed {
+    font-family: 'Nunito', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+/* ── Navigation Footer ── */
+.g1-navigation-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding: 0 40px;
+}
+
+.g1-navigation-footer>div {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.g1-nav-btn {
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-family: 'Nunito', sans-serif;
+}
+
+.g1-nav-btn:active {
+    transform: scale(0.95);
+}
+
+.g1-nav-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.prev-btn {
+    background: white;
+    color: #4A5568;
+    border: 2px solid #CBD5E0;
+}
+
+.prev-btn:hover:not(:disabled) {
+    background: #F7FAFC;
+    border-color: #A0AEC0;
+}
+
+.submit-btn,
+.next-btn {
+    padding: 15px 40px;
+}
+
+.submit-btn {
+    background: #4ECDC4;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: #45B7AF;
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.6);
+    transform: translateY(-2px);
+}
+
+.steps-btn {
+    background: #FFE66D;
+    color: #B7950B;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 230, 109, 0.4);
+}
+
+.steps-btn:hover:not(:disabled) {
+    background: #FFD93D;
+    box-shadow: 0 6px 20px rgba(255, 230, 109, 0.6);
+    transform: translateY(-2px);
+}
+
+.next-btn {
+    background: #FF6B6B;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.next-btn:hover:not(:disabled) {
+    background: #FF5252;
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    transform: translateY(-2px);
+}
+
+/* ── Final Mobile Response Overhaul ── */
+@media screen and (max-width: 768px) {
+    .g1-practice-container {
+        padding: 15px 12px 10px 12px;
+    }
+
+    .g1-question-card {
+        padding: 12px 8px;
+        border-radius: 20px;
+        margin-top: 0;
+    }
+
+    .g1-quiz-side {
+        width: 100%;
+    }
+
+    .g1-options-grid {
+        width: 100%;
+    }
+
+    .g1-option-btn {
+        width: 100%;
+    }
+
+
+    .g1-question-text {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+
+    .g1-content-split {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .g1-visual-area {
+        min-height: 160px;
+        padding: 10px;
+        border-radius: 20px;
+    }
+
+    /* Prevent visual stacking on mobile */
+    .g1-addition-visual,
+    .g1-subtraction-visual,
+    .g1-visual-grid,
+    .g1-mini-grid {
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+    }
+
+    .g1-addition-visual>div,
+    .g1-subtraction-visual>div {
+        flex-wrap: nowrap !important;
+    }
+
+    .g1-visual-item svg {
+        max-width: 130px !important;
+        max-height: 130px !important;
+    }
+
+    .g1-compare-box {
+        min-width: unset;
+        width: 45%;
+        padding: 10px;
+    }
+
+    .g1-header-nav {
+        margin-bottom: 5px;
+        gap: 8px;
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+
+    .g1-timer-badge {
+        font-size: 0.85rem;
+        padding: 5px 10px;
+    }
+
+    .g1-progress-container {
+        margin: 0 5px 8px 5px;
+        height: 8px;
+    }
+
+    .g1-navigation-footer {
+        padding: 0;
+        margin-top: 12px;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .g1-navigation-footer>div {
+        gap: 8px;
+    }
+
+    .g1-nav-btn {
+        padding: 10px 15px;
+        font-size: 0.95rem;
+        border-radius: 15px;
+    }
+
+    .submit-btn,
+    .next-btn {
+        padding: 10px 15px;
+    }
+
+    .g1-options-grid {
+        gap: 10px;
+    }
+
+    .g1-option-btn {
+        padding: 12px 15px;
+        font-size: 1.15rem;
+        border-radius: 16px;
+    }
+
+    .g1-skill-name {
+        font-size: 1.3rem;
+    }
+
+    .g1-topic-name {
+        font-size: 0.7rem;
+    }
+}
+
+@media screen and (max-height: 700px) and (max-width: 768px) {
+    .g1-visual-area {
+        min-height: 120px;
+    }
+
+    .g1-question-text {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+
+    .g1-navigation-footer {
+        margin-top: 8px;
+    }
+
+    .g1-option-btn {
+        padding: 10px 12px;
         font-size: 1rem;
     }
+}
+
+@media screen and (max-width: 480px) {
+    .g1-question-text {
+        font-size: 1.1rem;
+    }
+
+    .g1-visual-area {
+        min-height: 130px;
+    }
+
+    /* Force visual containers to fit narrow screens */
+    .g1-addition-visual,
+    .g1-subtraction-visual,
+    .g1-numeric-card {
+        max-width: 100%;
+        gap: 10px !important;
+        overflow-x: hidden;
+    }
+
+    /* Constrain the group boxes explicitly */
+    .g1-group,
+    .g1-num-box {
+        padding: 8px !important;
+        min-width: unset !important;
+        border-radius: 15px !important;
+    }
+
+    /* Constrain the SVGs within visual groups explicitly on mobile */
+    .g1-group svg,
+    .g1-subtraction-visual svg {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    .g1-num-box {
+        font-size: 2rem !important;
+        padding: 5px 15px !important;
+    }
+
+    .g1-options-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .g1-option-btn {
+        padding: 12px 15px;
+        font-size: 1.1rem;
+        border-radius: 14px;
+        border: 2px solid #E2E8F0;
+        /* Visible border */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        /* More visible shadow */
+        background: white;
+        font-weight: 600;
+    }
+
+    .g1-nav-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .submit-btn,
+    .next-btn {
+        padding: 8px 12px;
+    }
+
+    /* Report Layout Optimization */
+    .results-content {
+        padding: 0 5px 30px !important;
+    }
+
+    .quest-log-item {
+        padding: 1rem 0.6rem !important;
+        gap: 0.8rem !important;
+        border-radius: 1.2rem !important;
+    }
+
+    .log-number {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .log-question {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+
+    .log-answers {
+        gap: 0.6rem !important;
+    }
+
+    .log-answer-box {
+        padding: 0.6rem !important;
+        border-radius: 0.8rem !important;
+    }
+
+    .log-explanation {
+        padding: 0.8rem !important;
+        border-radius: 0.8rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .log-icon {
+        display: none !important;
+        /* Hide results icon on small mobile to save side space */
+    }
+}
+
+
+/* Base style for Quest Log Visuals */
+.log-visual-area {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    border: none;
+}
+
+.log-visual-area .g1-visual-item svg {
+    max-width: 100px !important;
+    max-height: 100px !important;
+}
+
+.log-visual-area .g1-addition-visual svg {
+    max-width: 60px !important;
+    max-height: 60px !important;
+}
+
+.log-visual-area .g1-compare-box {
+    padding: 10px;
+    min-width: unset;
+    font-size: 0.8rem;
+}
+
+.log-visual-area .g1-compare-box svg {
+    max-width: 40px !important;
+    max-height: 40px !important;
 }
