@@ -132,53 +132,53 @@ export default function AlgebraTerminology({ onBack }) {
     const [expanded, setExpanded] = useState(null);
 
     return (
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 60px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 16px 60px' }}>
 
             {/* 7 Words Banner */}
-            <div className="alg-7words-banner" style={{
+            <div style={{
                 background: 'linear-gradient(135deg, rgba(108,99,255,0.15), rgba(0,212,170,0.1))',
                 border: '1px solid rgba(108,99,255,0.3)',
                 borderRadius: 16,
-                padding: '32px',
-                marginBottom: 36,
+                padding: '24px 20px',
+                marginBottom: 28,
                 textAlign: 'center'
             }}>
                 <div style={{
-                    fontSize: 12, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase',
+                    fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase',
                     color: '#6c63ff', marginBottom: 12
                 }}>
                     🔑 Learn Algebra with These 7 Words
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, marginBottom: 16 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 14 }}>
                     {SEVEN_WORDS.map((w, i) => (
                         <span key={i} style={{
                             background: 'linear-gradient(135deg, #6c63ff, #8b5cf6)',
                             color: '#fff',
                             fontFamily: 'Outfit, sans-serif',
                             fontWeight: 700,
-                            fontSize: 15,
-                            padding: '8px 18px',
+                            fontSize: 13,
+                            padding: '6px 14px',
                             borderRadius: 50,
-                            boxShadow: '0 4px 12px rgba(108,99,255,0.35)'
+                            boxShadow: '0 3px 10px rgba(108,99,255,0.35)'
                         }}>{w}</span>
                     ))}
                 </div>
-                <p style={{ color: '#9090bb', fontSize: 14, margin: 0 }}>
+                <p style={{ color: '#9090bb', fontSize: 13, margin: 0 }}>
                     Master these 7 words and you'll speak the language of Algebra fluently!
                 </p>
             </div>
 
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: 12, marginBottom: 36, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 10, marginBottom: 28, flexWrap: 'wrap' }}>
                 {[
-                    { id: 'terms', label: '📚 Terminology (9 Terms)', },
-                    { id: 'rules', label: '📏 5 Golden Rules', },
+                    { id: 'terms', label: '📚 Terminology (9 Terms)' },
+                    { id: 'rules', label: '📏 5 Golden Rules' },
                 ].map(tab => (
                     <button
                         key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
+                        onClick={() => { setActiveTab(tab.id); setExpanded(null); }}
                         style={{
-                            padding: '12px 28px',
+                            padding: '10px 22px',
                             borderRadius: 50,
                             border: '2px solid ' + (activeTab === tab.id ? 'transparent' : 'rgba(108,99,255,0.3)'),
                             background: activeTab === tab.id
@@ -186,10 +186,10 @@ export default function AlgebraTerminology({ onBack }) {
                                 : 'transparent',
                             color: activeTab === tab.id ? '#fff' : '#9090bb',
                             fontWeight: 700,
-                            fontSize: 14,
+                            fontSize: 13,
                             cursor: 'pointer',
                             transition: 'all 0.3s',
-                            boxShadow: activeTab === tab.id ? '0 0 20px rgba(108,99,255,0.4)' : 'none',
+                            boxShadow: activeTab === tab.id ? '0 0 18px rgba(108,99,255,0.4)' : 'none',
                         }}
                     >
                         {tab.label}
@@ -199,103 +199,163 @@ export default function AlgebraTerminology({ onBack }) {
 
             {/* TERMS view */}
             {activeTab === 'terms' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    {TERMS.map((term, idx) => (
-                        <div
-                            key={idx}
-                            onClick={() => setExpanded(expanded === idx ? null : idx)}
-                            style={{
-                                background: '#1e1e3a',
-                                border: `1px solid ${expanded === idx ? term.color + '55' : 'rgba(108,99,255,0.2)'}`,
-                                borderRadius: 14,
-                                padding: '20px 24px',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                boxShadow: expanded === idx ? `0 0 24px ${term.color}25` : 'none',
-                                borderLeft: `4px solid ${term.color}`,
-                            }}
-                        >
-                            {/* Header */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 14, justifyContent: 'space-between' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {TERMS.map((term, idx) => {
+                        const isOpen = expanded === idx;
+                        return (
+                            <div
+                                key={idx}
+                                style={{
+                                    background: isOpen ? `${term.color}0d` : '#1e1e3a',
+                                    border: `1px solid ${isOpen ? term.color + '55' : 'rgba(108,99,255,0.18)'}`,
+                                    borderRadius: 14,
+                                    borderLeft: `4px solid ${term.color}`,
+                                    overflow: 'hidden',
+                                    transition: 'background 0.3s ease, border-color 0.3s ease',
+                                    boxShadow: isOpen ? `0 4px 24px ${term.color}20` : 'none',
+                                }}
+                            >
+                                {/* ── Collapsed header (always visible) ── */}
+                                <button
+                                    onClick={() => setExpanded(isOpen ? null : idx)}
+                                    style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 12,
+                                        padding: '16px 18px',
+                                        background: 'transparent',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    {/* Icon */}
                                     <div style={{
-                                        width: 44, height: 44, borderRadius: 12,
-                                        background: `${term.color}20`, display: 'flex',
-                                        alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0
+                                        width: 40, height: 40, borderRadius: 11,
+                                        background: `${term.color}22`,
+                                        display: 'flex', alignItems: 'center',
+                                        justifyContent: 'center', fontSize: 20, flexShrink: 0,
                                     }}>{term.icon}</div>
-                                    <div>
-                                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 19, fontWeight: 800, color: '#fff' }}>
+
+                                    {/* Name + def */}
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div style={{
+                                            fontFamily: 'Outfit, sans-serif',
+                                            fontSize: 'clamp(15px, 4vw, 18px)',
+                                            fontWeight: 800, color: '#fff',
+                                            marginBottom: 3,
+                                        }}>
                                             {term.name}
                                         </div>
-                                        <div style={{ fontSize: 13.5, color: '#9090bb', lineHeight: 1.5, maxWidth: 600 }}>
+                                        <div style={{
+                                            fontSize: 'clamp(12px, 3.5vw, 13.5px)',
+                                            color: '#9090bb', lineHeight: 1.5,
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: isOpen ? 'unset' : 2,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: isOpen ? 'visible' : 'hidden',
+                                        }}>
                                             {term.def}
                                         </div>
                                     </div>
-                                </div>
-                                <div style={{ fontSize: 20, color: '#9090bb', flexShrink: 0 }}>{expanded === idx ? '▲' : '▼'}</div>
-                            </div>
 
-                            {/* Expanded content */}
-                            {expanded === idx && (
-                                <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
+                                    {/* Chevron */}
+                                    <div style={{
+                                        fontSize: 16, color: isOpen ? term.color : '#9090bb',
+                                        flexShrink: 0,
+                                        transition: 'transform 0.3s ease, color 0.3s ease',
+                                        transform: isOpen ? 'rotate(180deg)' : 'none',
+                                        marginLeft: 4,
+                                    }}>▼</div>
+                                </button>
 
-                                        {/* Examples */}
-                                        <div>
-                                            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: term.color, marginBottom: 10, textTransform: 'uppercase' }}>
+                                {/* ── Expanded detail panel ── */}
+                                {isOpen && (
+                                    <div style={{
+                                        padding: '0 18px 20px',
+                                        borderTop: `1px solid ${term.color}25`,
+                                        animation: 'fadeSlideIn 0.25s ease',
+                                    }}>
+                                        <style>{`
+                                            @keyframes fadeSlideIn {
+                                                from { opacity: 0; transform: translateY(-6px); }
+                                                to   { opacity: 1; transform: translateY(0); }
+                                            }
+                                        `}</style>
+
+                                        {/* ── EXAMPLES ── */}
+                                        <div style={{ marginTop: 16 }}>
+                                            <div style={{
+                                                fontSize: 10, fontWeight: 700, letterSpacing: 1.5,
+                                                color: term.color, marginBottom: 10,
+                                                textTransform: 'uppercase',
+                                            }}>
                                                 Examples
                                             </div>
                                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                                                 {term.examples.map((ex, i) => (
                                                     <span key={i} style={{
                                                         fontFamily: 'JetBrains Mono, monospace',
-                                                        background: `${term.color}15`,
-                                                        border: `1px solid ${term.color}30`,
+                                                        background: `${term.color}18`,
+                                                        border: `1px solid ${term.color}35`,
                                                         color: term.color,
-                                                        padding: '5px 12px',
+                                                        padding: '5px 11px',
                                                         borderRadius: 8,
-                                                        fontSize: 14,
+                                                        fontSize: 'clamp(12px, 3.5vw, 14px)',
                                                     }}>{ex}</span>
                                                 ))}
                                             </div>
                                         </div>
 
-                                        {/* In Use */}
-                                        <div>
-                                            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: '#22d9a0', marginBottom: 10, textTransform: 'uppercase' }}>
+                                        {/* ── IN AN EXPRESSION ── */}
+                                        <div style={{ marginTop: 14 }}>
+                                            <div style={{
+                                                fontSize: 10, fontWeight: 700, letterSpacing: 1.5,
+                                                color: '#22d9a0', marginBottom: 8,
+                                                textTransform: 'uppercase',
+                                            }}>
                                                 In an Expression
                                             </div>
                                             <div style={{
-                                                background: 'rgba(34,217,160,0.08)',
-                                                border: '1px solid rgba(34,217,160,0.2)',
-                                                borderRadius: 8, padding: '10px 14px',
-                                                fontSize: 14, color: '#c8c8e8', lineHeight: 1.6,
-                                                fontFamily: 'JetBrains Mono, monospace'
+                                                background: 'rgba(34,217,160,0.07)',
+                                                border: '1px solid rgba(34,217,160,0.22)',
+                                                borderRadius: 10, padding: '11px 14px',
+                                                fontFamily: 'JetBrains Mono, monospace',
+                                                fontSize: 'clamp(12px, 3.5vw, 14px)',
+                                                color: '#c8c8e8', lineHeight: 1.65,
+                                                wordBreak: 'break-word',
                                             }}>
                                                 {term.inUse}
                                             </div>
                                         </div>
 
-                                        {/* Memory trick */}
-                                        <div style={{ gridColumn: '1 / -1' }}>
-                                            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: '#f9a825', marginBottom: 10, textTransform: 'uppercase' }}>
+                                        {/* ── MEMORY TRICK ── */}
+                                        <div style={{ marginTop: 14 }}>
+                                            <div style={{
+                                                fontSize: 10, fontWeight: 700, letterSpacing: 1.5,
+                                                color: '#f9a825', marginBottom: 8,
+                                                textTransform: 'uppercase',
+                                            }}>
                                                 🧠 Memory Trick
                                             </div>
                                             <div style={{
-                                                background: 'rgba(249,168,37,0.08)',
-                                                border: '1px solid rgba(249,168,37,0.2)',
-                                                borderRadius: 8, padding: '12px 16px',
-                                                fontSize: 14, color: '#e8e8ff', lineHeight: 1.6,
-                                                fontStyle: 'italic'
+                                                background: 'rgba(249,168,37,0.07)',
+                                                border: '1px solid rgba(249,168,37,0.22)',
+                                                borderRadius: 10, padding: '11px 14px',
+                                                fontSize: 'clamp(12px, 3.5vw, 14px)',
+                                                color: '#e8e8ff', lineHeight: 1.7,
+                                                fontStyle: 'italic',
+                                                wordBreak: 'break-word',
                                             }}>
                                                 {term.memory}
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             )}
 
