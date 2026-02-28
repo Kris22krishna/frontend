@@ -57,179 +57,201 @@ const cards5W1H = [
     },
 ];
 
-export default function AlgebraIntro5W1H({ onBack }) {
-    const [flipped, setFlipped] = useState({});
-
-    const toggleFlip = (idx) => {
-        setFlipped(prev => ({ ...prev, [idx]: !prev[idx] }));
-    };
-
-    const colorMap = {
-        '#6c63ff': '#6c63ff',
-        '#00d4aa': '#00d4aa',
-        '#f9a825': '#f9a825',
-        '#ff6b9d': '#ff6b9d',
-        '#8b5cf6': '#8b5cf6',
-        '#22d9a0': '#22d9a0',
-    };
+/* ─── Single Card ─────────────────────────────────────────────────────────── */
+function W1HCard({ card }) {
+    const [open, setOpen] = useState(false);
 
     return (
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 60px' }}>
+        <div
+            style={{
+                background: '#1e1e3a',
+                border: `1px solid ${open ? card.color + '55' : 'rgba(108,99,255,0.2)'}`,
+                borderRadius: 16,
+                overflow: 'hidden',
+                boxShadow: open ? `0 8px 32px ${card.color}25` : '0 2px 12px rgba(0,0,0,0.3)',
+                transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+                cursor: 'pointer',
+            }}
+            onClick={() => setOpen(o => !o)}
+        >
+            <style>{`
+                @keyframes w1hFadeIn {
+                    from { opacity: 0; transform: translateY(-8px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+            `}</style>
+
+            {/* ── Front face (always visible as header) ── */}
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 16,
+                padding: '20px 22px',
+                borderBottom: open ? `1px solid ${card.color}25` : '1px solid transparent',
+                transition: 'border-color 0.3s',
+            }}>
+                {/* Icon bubble */}
+                <div style={{
+                    width: 52, height: 52, borderRadius: 14,
+                    background: card.bg,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 26, flexShrink: 0,
+                }}>{card.icon}</div>
+
+                {/* Q + label */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                        fontFamily: 'Outfit, sans-serif',
+                        fontSize: 'clamp(22px, 5vw, 32px)',
+                        fontWeight: 900,
+                        color: card.color,
+                        lineHeight: 1,
+                        textShadow: `0 0 16px ${card.color}55`,
+                    }}>{card.q}</div>
+                    <div style={{
+                        fontSize: 'clamp(12px, 3.5vw, 14px)',
+                        fontWeight: 600,
+                        color: '#e8e8ff',
+                        marginTop: 4,
+                    }}>{card.label}</div>
+                </div>
+
+                {/* Chevron indicator */}
+                <div style={{
+                    flexShrink: 0,
+                    fontSize: 15,
+                    color: open ? card.color : '#9090bb',
+                    transition: 'transform 0.35s ease, color 0.3s',
+                    transform: open ? 'rotate(180deg)' : 'none',
+                }}>▼</div>
+            </div>
+
+            {/* ── Back face (revealed on open) ── */}
+            {!open && (
+                <div style={{
+                    padding: '10px 22px 16px',
+                    display: 'flex', justifyContent: 'center',
+                }}>
+                    <span style={{
+                        fontSize: 11, color: '#9090bb', fontWeight: 600,
+                        letterSpacing: 1.5, textTransform: 'uppercase',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        padding: '5px 14px', borderRadius: 50,
+                    }}>
+                        Tap to explore →
+                    </span>
+                </div>
+            )}
+
+            {open && (
+                <div style={{
+                    padding: '20px 22px 22px',
+                    animation: 'w1hFadeIn 0.3s ease',
+                }}>
+                    {/* Main explanation */}
+                    <p style={{
+                        color: '#c8c8e8',
+                        fontSize: 'clamp(13px, 3.5vw, 15px)',
+                        lineHeight: 1.8,
+                        margin: '0 0 16px',
+                        wordBreak: 'break-word',
+                    }}>
+                        {card.content}
+                    </p>
+
+                    {/* Fact chip — fixed overflow by using normal flow */}
+                    <div style={{
+                        background: card.bg,
+                        border: `1px solid ${card.color}35`,
+                        borderRadius: 12,
+                        padding: '12px 16px',
+                        fontSize: 'clamp(12px, 3.5vw, 14px)',
+                        color: '#e8e8ff',
+                        lineHeight: 1.65,
+                        wordBreak: 'break-word',
+                    }}>
+                        {card.fact}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+/* ─── Main component ─────────────────────────────────────────────────────── */
+export default function AlgebraIntro5W1H({ onBack }) {
+    return (
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 16px 60px' }}>
+
             {/* Module intro */}
             <div style={{
                 background: 'linear-gradient(135deg, rgba(108,99,255,0.12), rgba(0,212,170,0.08))',
                 border: '1px solid rgba(108,99,255,0.25)',
                 borderRadius: 16,
-                padding: '32px',
-                marginBottom: 40,
-                textAlign: 'center'
+                padding: '28px 24px',
+                marginBottom: 36,
+                textAlign: 'center',
             }}>
-                <div style={{ fontSize: 48, marginBottom: 12 }}>🧮</div>
+                <div style={{ fontSize: 44, marginBottom: 12 }}>🧮</div>
                 <h2 style={{
                     fontFamily: 'Outfit, sans-serif',
-                    fontSize: 'clamp(1.4rem, 4vw, 2rem)',
+                    fontSize: 'clamp(1.3rem, 4vw, 2rem)',
                     fontWeight: 800,
                     color: '#fff',
-                    marginBottom: 12
+                    marginBottom: 10,
                 }}>
-                    Discover Algebra Through <span style={{ color: '#6c63ff' }}>6 Big Questions</span>
+                    Discover Algebra Through{' '}
+                    <span style={{ color: '#6c63ff' }}>6 Big Questions</span>
                 </h2>
-                <p style={{ color: '#9090bb', fontSize: 16, lineHeight: 1.7, maxWidth: 580, margin: '0 auto' }}>
+                <p style={{
+                    color: '#9090bb',
+                    fontSize: 'clamp(13px, 3.5vw, 15px)',
+                    lineHeight: 1.7,
+                    maxWidth: 560,
+                    margin: '0 auto',
+                }}>
                     Before diving into formulas and equations, let's build curiosity!
                     Tap each card to explore — Algebra is far more exciting than you think. ✨
                 </p>
             </div>
 
-            {/* 5W1H Grid */}
+            {/* 5W1H Cards — simple vertical stack, mobile-first */}
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: 24
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+                gap: 16,
             }}>
                 {cards5W1H.map((card, idx) => (
-                    <div
-                        key={idx}
-                        onClick={() => toggleFlip(idx)}
-                        style={{
-                            cursor: 'pointer',
-                            perspective: 1000,
-                            minHeight: 280,
-                        }}
-                    >
-                        <div style={{
-                            position: 'relative',
-                            width: '100%',
-                            height: '100%',
-                            minHeight: 280,
-                            transformStyle: 'preserve-3d',
-                            transition: 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)',
-                            transform: flipped[idx] ? 'rotateY(180deg)' : 'none',
-                        }}>
-                            {/* FRONT */}
-                            <div style={{
-                                position: 'absolute',
-                                inset: 0,
-                                backfaceVisibility: 'hidden',
-                                background: '#1e1e3a',
-                                border: `1px solid rgba(${card.color === '#6c63ff' ? '108,99,255' : card.color === '#00d4aa' ? '0,212,170' : card.color === '#f9a825' ? '249,168,37' : card.color === '#ff6b9d' ? '255,107,157' : card.color === '#8b5cf6' ? '139,92,246' : '34,217,160'},0.3)`,
-                                borderRadius: 16,
-                                padding: '28px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textAlign: 'center',
-                                minHeight: 280,
-                            }}>
-                                <div style={{
-                                    width: 80, height: 80, borderRadius: 20,
-                                    background: card.bg,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    fontSize: 36, marginBottom: 20,
-                                }}>{card.icon}</div>
-                                <div style={{
-                                    fontFamily: 'Outfit, sans-serif',
-                                    fontSize: 40, fontWeight: 900,
-                                    color: card.color, marginBottom: 8,
-                                    textShadow: `0 0 20px ${card.color}55`
-                                }}>{card.q}</div>
-                                <div style={{ fontSize: 16, fontWeight: 600, color: '#e8e8ff', marginBottom: 16 }}>
-                                    {card.label}
-                                </div>
-                                <div style={{
-                                    fontSize: 12, color: '#9090bb', fontWeight: 600,
-                                    letterSpacing: 1.5, textTransform: 'uppercase',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    padding: '6px 16px', borderRadius: 50
-                                }}>
-                                    Tap to reveal →
-                                </div>
-                            </div>
-
-                            {/* BACK */}
-                            <div style={{
-                                position: 'absolute',
-                                inset: 0,
-                                backfaceVisibility: 'hidden',
-                                transform: 'rotateY(180deg)',
-                                background: '#1e1e3a',
-                                border: `1px solid ${card.color}55`,
-                                borderRadius: 16,
-                                padding: '24px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                minHeight: 280,
-                                boxShadow: `0 0 30px ${card.color}25`,
-                            }}>
-                                <div>
-                                    <div style={{
-                                        display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16
-                                    }}>
-                                        <span style={{ fontSize: 22 }}>{card.icon}</span>
-                                        <span style={{
-                                            fontFamily: 'Outfit, sans-serif',
-                                            fontSize: 15, fontWeight: 800, color: card.color,
-                                            textTransform: 'uppercase', letterSpacing: 1.5
-                                        }}>{card.label}</span>
-                                    </div>
-                                    <p style={{ color: '#c8c8e8', fontSize: 14.5, lineHeight: 1.75 }}>
-                                        {card.content}
-                                    </p>
-                                </div>
-                                <div style={{
-                                    background: card.bg,
-                                    border: `1px solid ${card.color}30`,
-                                    borderRadius: 10,
-                                    padding: '12px 16px',
-                                    fontSize: 13,
-                                    color: '#e8e8ff',
-                                    lineHeight: 1.6,
-                                    marginTop: 16,
-                                }}>
-                                    {card.fact}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <W1HCard key={idx} card={card} />
                 ))}
             </div>
 
             {/* Motivation strip */}
             <div style={{
-                marginTop: 48, display: 'flex', gap: 16,
+                marginTop: 40,
+                display: 'flex',
+                gap: 16,
                 background: '#1e1e3a',
                 border: '1px solid rgba(108,99,255,0.25)',
-                borderRadius: 16, padding: '24px 28px',
-                alignItems: 'center', flexWrap: 'wrap'
+                borderRadius: 16,
+                padding: '22px 24px',
+                alignItems: 'center',
+                flexWrap: 'wrap',
             }}>
-                <div style={{ fontSize: 48 }}>🌟</div>
-                <div style={{ flex: 1, minWidth: 220 }}>
-                    <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 6 }}>
+                <div style={{ fontSize: 44 }}>🌟</div>
+                <div style={{ flex: 1, minWidth: 200 }}>
+                    <div style={{
+                        fontFamily: 'Outfit, sans-serif',
+                        fontSize: 'clamp(15px, 4vw, 18px)',
+                        fontWeight: 800,
+                        color: '#fff',
+                        marginBottom: 6,
+                    }}>
                         Ready to start your Algebra adventure?
                     </div>
                     <p style={{ color: '#9090bb', fontSize: 14, lineHeight: 1.6, margin: 0 }}>
-                        Head over to the <strong style={{ color: '#6c63ff' }}>Terminology</strong> tab next —
+                        Head over to the{' '}
+                        <strong style={{ color: '#6c63ff' }}>Terminology</strong> tab next —
                         learn the 7 building-block words and 5 golden rules of Algebra!
                     </p>
                 </div>
