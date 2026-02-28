@@ -22,6 +22,7 @@ import PracticeSession from './pages/PracticeSession';
 import UploaderLogin from './pages/UploaderLogin';
 import RapidMathPage from './pages/RapidMathPage';
 import Internship from './pages/internship/Internship';
+import Algebra from './components/Math-Branches/Algebra/Algebra';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -445,6 +446,7 @@ function App() {
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
+          <Route path="algebra" element={<Algebra />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
