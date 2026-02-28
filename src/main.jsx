@@ -11,18 +11,16 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <HelmetProvider>
-      <AuthProvider>
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          containerStyle={{
-            top: 20,
-            zIndex: 99999,
-          }}
-        />
-        <App />
-      </AuthProvider>
-    </HelmetProvider>
+    <AuthProvider>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        containerStyle={{
+          top: 20,
+          zIndex: 99999,
+        }}
+      />
+      <App />
+    </AuthProvider>
   </React.StrictMode>,
 );
