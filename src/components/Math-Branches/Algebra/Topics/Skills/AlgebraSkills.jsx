@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../../algebra.css';
+import MathRenderer from '../../../../MathRenderer';
 
 // ─── Shared Quiz Engine ────────────────────────────────────────────────────
-function QuizEngine({ questions, title, onBack }) {
+function QuizEngine({ questions, title, onBack, color }) {
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
@@ -30,45 +33,40 @@ function QuizEngine({ questions, title, onBack }) {
 
     if (finished) {
         const pct = Math.round((score / questions.length) * 100);
-        const conicDeg = Math.round((score / questions.length) * 360);
-        let msg = pct >= 90 ? '🏆 Excellent!' : pct >= 70 ? '🌟 Great job!' : pct >= 50 ? '👍 Good effort!' : '💪 Keep practising!';
-        let msgSub = pct >= 90 ? 'You\'ve mastered this skill!' : pct >= 70 ? 'Almost there — review the ones you missed.' : pct >= 50 ? 'Review the concepts and try again.' : 'Go back and study the examples, then retry.';
+        let msg = pct >= 90 ? '🏆 Mastered!' : pct >= 75 ? '🌟 Great Job!' : pct >= 50 ? '👍 Keep it up!' : '💪 Keep Learning!';
+        let msgSub = pct >= 90 ? 'You have excellent control over this topic!' : 'Review the concepts and try again for 100%.';
 
         return (
-            <div style={{ textAlign: 'center', padding: '48px 24px' }}>
-                <div style={{
-                    width: 160, height: 160, borderRadius: '50%',
-                    background: `conic-gradient(#6c63ff ${conicDeg}deg, rgba(255,255,255,0.05) 0deg)`,
-                    margin: '0 auto 32px',
+            <div className="alg-quiz-finished" style={{ textAlign: 'center', padding: '40px 0' }}>
+                <div className="alg-quiz-score-circle" style={{
+                    width: 140, height: 140, borderRadius: '50%',
+                    background: `conic-gradient(${color} ${pct * 3.6}deg, #f1f5f9 0deg)`,
+                    margin: '0 auto 24px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 0 50px rgba(108,99,255,0.4)',
-                    flexDirection: 'column',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                    border: '8px solid #fff'
                 }}>
-                    <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 48, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{score}</div>
-                    <div style={{ fontSize: 14, color: '#9090bb', fontWeight: 600 }}>/{questions.length}</div>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: 'var(--alg-text)', lineHeight: 1 }}>{score}</div>
+                        <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>out of {questions.length}</div>
+                    </div>
                 </div>
-                <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8 }}>{msg}</div>
-                <div style={{ color: '#9090bb', fontSize: 15, marginBottom: 8 }}>{msgSub}</div>
-                <div style={{ color: '#6c63ff', fontSize: 20, fontWeight: 700, marginBottom: 36 }}>{pct}% Score</div>
-                <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: 'var(--alg-text)', margin: '0 0 8px' }}>{msg}</h2>
+                <p style={{ color: 'var(--alg-muted)', fontSize: 15, margin: '0 0 32px' }}>{msgSub}</p>
+                <div className="alg-quiz-finished-actions" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                     <button
+                        className="alg-btn-primary"
                         onClick={() => { setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}
-                        style={{
-                            padding: '14px 32px', borderRadius: 50, background: 'linear-gradient(135deg, #6c63ff, #8b5cf6)',
-                            color: '#fff', fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer',
-                        }}
+                        style={{ padding: '12px 24px', background: color }}
                     >
                         Try Again
                     </button>
                     <button
+                        className="alg-btn-secondary"
                         onClick={onBack}
-                        style={{
-                            padding: '14px 32px', borderRadius: 50,
-                            border: '2px solid rgba(108,99,255,0.3)', background: 'transparent',
-                            color: '#e8e8ff', fontWeight: 700, fontSize: 15, cursor: 'pointer',
-                        }}
+                        style={{ padding: '12px 24px' }}
                     >
-                        ← Back to Skills
+                        Return to Skills
                     </button>
                 </div>
             </div>
@@ -76,82 +74,100 @@ function QuizEngine({ questions, title, onBack }) {
     }
 
     return (
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '24px' }}>
+        <div className="alg-quiz-active alg-quiz-container">
             {/* Header */}
-            <div style={{ marginBottom: 24 }}>
-                <button onClick={onBack} style={{
-                    background: 'none', border: 'none', color: '#9090bb',
-                    fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12
-                }}>← Back to Skills</button>
-                <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 8 }}>{title}</h3>
-                <div style={{ background: 'rgba(108,99,255,0.15)', borderRadius: 50, height: 8, overflow: 'hidden', marginBottom: 6 }}>
-                    <div style={{ height: '100%', width: `${progress}%`, background: 'linear-gradient(90deg, #6c63ff, #00d4aa)', borderRadius: 50, transition: 'width 0.4s ease' }} />
+            <div style={{ marginBottom: 28 }}>
+                <div className="alg-score-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 }}>
+                    <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>Skill Verification</div>
+                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: 'var(--alg-text)', margin: 0 }}>{title}</h3>
+                    </div>
+                    <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>
+                        Question <span style={{ color: color }}>{current + 1}</span> / {questions.length}
+                    </div>
                 </div>
-                <div style={{ textAlign: 'right', fontSize: 13, color: '#9090bb' }}>
-                    Question {current + 1} of {questions.length}
+                <div style={{ background: '#f1f5f9', borderRadius: 10, height: 6, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${progress}%`, background: color, borderRadius: 10, transition: 'width 0.4s ease' }} />
                 </div>
             </div>
 
             {/* Question Card */}
-            <div style={{
-                background: '#1e1e3a', border: '1px solid rgba(108,99,255,0.25)',
-                borderRadius: 16, padding: 32, marginBottom: 20, boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
+            <div className="alg-quiz-card" style={{
+                background: '#fff',
+                borderRadius: 20, padding: '32px 36px',
+                marginBottom: 20,
+                boxShadow: '0 12px 30px rgba(0,0,0,0.03)',
+                border: '1px solid rgba(0,0,0,0.05)'
             }}>
                 <div style={{
-                    display: 'inline-block', background: 'linear-gradient(90deg, #6c63ff, #8b5cf6)',
-                    padding: '4px 14px', borderRadius: 50, fontSize: 12, fontWeight: 700, color: '#fff', marginBottom: 16
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    background: `${color}15`, padding: '4px 12px', borderRadius: 8,
+                    fontSize: 12, fontWeight: 800, color: color, marginBottom: 16
                 }}>
-                    Q{current + 1}
+                    <span>QUESTION</span> {current + 1}
                 </div>
-                <div style={{ fontSize: 17, fontWeight: 600, color: '#fff', lineHeight: 1.65, marginBottom: 20 }}>
+                <div className="alg-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: 'var(--alg-text)', lineHeight: 1.6, marginBottom: 24 }}>
                     {q.question}
                 </div>
                 {q.math && (
                     <div style={{
-                        fontFamily: 'JetBrains Mono, monospace',
-                        background: 'rgba(108,99,255,0.1)', border: '1px solid rgba(108,99,255,0.2)',
-                        borderRadius: 10, padding: '12px 18px', marginBottom: 20,
-                        fontSize: 18, color: '#00d4aa', textAlign: 'center'
+                        background: '#f8fafc', border: `1px solid ${color}20`,
+                        borderRadius: 12, padding: '16px', marginBottom: 24,
+                        fontSize: 24, color: color, textAlign: 'center', fontWeight: 700
                     }}>
-                        {q.math}
+                        <MathRenderer text={q.math.includes('$') ? q.math : `$$${q.math}$$`} />
                     </div>
                 )}
 
                 {/* Options */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
                     {q.options.map((opt, oi) => {
-                        let borderColor = 'rgba(255,255,255,0.08)';
-                        let bgColor = 'rgba(255,255,255,0.03)';
-                        let textColor = '#e8e8ff';
+                        let borderColor = 'rgba(0,0,0,0.04)';
+                        let bgColor = '#fff';
+                        let textColor = 'var(--alg-text)';
+                        let dotColor = '#f1f5f9';
+
                         if (answered) {
-                            if (oi === q.correct) { borderColor = '#22d9a0'; bgColor = 'rgba(34,217,160,0.12)'; textColor = '#22d9a0'; }
-                            else if (oi === selected && selected !== q.correct) { borderColor = '#ff5a7e'; bgColor = 'rgba(255,90,126,0.1)'; textColor = '#ff5a7e'; }
+                            if (oi === q.correct) {
+                                borderColor = 'var(--alg-teal)';
+                                bgColor = 'rgba(16,185,129,0.05)';
+                                textColor = 'var(--alg-teal)';
+                                dotColor = 'var(--alg-teal)';
+                            }
+                            else if (oi === selected) {
+                                borderColor = 'var(--alg-red)';
+                                bgColor = 'rgba(239,68,68,0.05)';
+                                textColor = 'var(--alg-red)';
+                                dotColor = 'var(--alg-red)';
+                            }
                         } else if (selected === oi) {
-                            borderColor = '#6c63ff'; bgColor = 'rgba(108,99,255,0.15)';
+                            borderColor = color;
+                            bgColor = `${color}05`;
+                            dotColor = color;
                         }
+
                         return (
                             <button
                                 key={oi}
                                 onClick={() => handleSelect(oi)}
                                 disabled={answered}
                                 style={{
-                                    display: 'flex', alignItems: 'center', gap: 14,
-                                    padding: '16px 20px', borderRadius: 10,
-                                    border: `2px solid ${borderColor}`,
+                                    display: 'flex', alignItems: 'center', gap: 12,
+                                    padding: '14px 16px', borderRadius: 12,
+                                    border: `2.5px solid ${borderColor}`,
                                     background: bgColor, cursor: answered ? 'default' : 'pointer',
-                                    fontSize: 15, color: textColor, textAlign: 'left', width: '100%',
-                                    transition: 'all 0.2s ease'
+                                    fontSize: 15, color: textColor, textAlign: 'left',
+                                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    fontWeight: selected === oi ? 700 : 500,
+                                    boxShadow: selected === oi && !answered ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
                                 }}
                             >
-                                <span style={{
-                                    width: 32, height: 32, borderRadius: 8,
-                                    background: `${borderColor}30`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    fontWeight: 700, fontSize: 13, flexShrink: 0, color: borderColor
-                                }}>
-                                    {String.fromCharCode(65 + oi)}
-                                </span>
-                                <span style={{ fontFamily: opt.includes('^') || opt.includes('=') ? 'JetBrains Mono, monospace' : 'inherit' }}>
-                                    {opt}
+                                <div style={{
+                                    width: 10, height: 10, borderRadius: '50%', background: dotColor, flexShrink: 0,
+                                    transition: 'all 0.2s'
+                                }} />
+                                <span style={{ fontSize: '1.1rem' }}>
+                                    <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
                                 </span>
                             </button>
                         );
@@ -161,36 +177,39 @@ function QuizEngine({ questions, title, onBack }) {
                 {/* Explanation */}
                 {answered && (
                     <div style={{
-                        marginTop: 18, padding: '16px 20px', borderRadius: 10,
-                        background: 'rgba(34,217,160,0.06)', border: '1px solid rgba(34,217,160,0.2)',
-                        color: '#9090bb', fontSize: 14, lineHeight: 1.6
+                        marginTop: 24, padding: '16px 20px', borderRadius: 12,
+                        background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)',
+                        color: 'var(--alg-muted)', fontSize: 13.5, lineHeight: 1.6
                     }}>
-                        <strong style={{ color: '#22d9a0' }}>💡 Explanation: </strong>
-                        {q.explanation}
+                        <strong style={{ color: 'var(--alg-blue)' }}>💡 Explanation: </strong>
+                        <MathRenderer text={q.explanation} />
                     </div>
                 )}
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <button
                     onClick={handleNext}
                     disabled={!answered}
+                    className="alg-btn-primary"
                     style={{
-                        padding: '14px 36px', borderRadius: 50,
-                        background: answered ? 'linear-gradient(135deg, #6c63ff, #8b5cf6)' : 'rgba(108,99,255,0.2)',
-                        color: '#fff', fontWeight: 700, fontSize: 15, border: 'none', cursor: answered ? 'pointer' : 'not-allowed',
-                        transition: 'all 0.3s'
+                        padding: '12px 40px',
+                        background: answered ? color : '#f1f5f9',
+                        color: answered ? '#fff' : '#94a3b8',
+                        cursor: answered ? 'pointer' : 'not-allowed',
+                        border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 800,
+                        boxShadow: answered ? `0 8px 20px ${color}30` : 'none'
                     }}
                 >
-                    {current + 1 >= questions.length ? 'View Score →' : 'Next Question →'}
+                    {current + 1 >= questions.length ? 'See Final Score' : 'Next Question'}
                 </button>
             </div>
         </div>
     );
 }
 
-// ─── SKILL 1: Laws of Exponents ──────────────────────────────────────────
+// ─── QUESTIONS & DATA ──────────────────────────────────────────────────────
 const exponentQuestions = [
     { question: 'What is the value of x³ × x⁴?', math: 'x³ × x⁴ = ?', options: ['x⁷', 'x¹²', 'x', 'x⁻¹'], correct: 0, explanation: 'When multiplying terms with the same base, ADD the exponents: 3 + 4 = 7, so x³ × x⁴ = x⁷.' },
     { question: 'Simplify: a⁵ ÷ a²', math: 'a⁵ ÷ a² = ?', options: ['a³', 'a⁷', 'a¹⁰', 'a⁻³'], correct: 0, explanation: 'When dividing terms with the same base, SUBTRACT the exponents: 5 − 2 = 3, so a⁵ ÷ a² = a³.' },
@@ -217,7 +236,6 @@ const exponentAssessment = [
     { question: 'Which is NOT a valid simplification of n⁵ ÷ n⁵?', math: 'n⁵ ÷ n⁵ = ?', options: ['n⁰', '1', '0', 'n⁵/n⁵'], correct: 2, explanation: 'n⁵/n⁵ = n⁰ = 1. The answer is NOT 0.' },
 ];
 
-// ─── SKILL 2: Like and Unlike Terms ──────────────────────────────────────
 const likeTermsQuestions = [
     { question: 'Which pair are LIKE terms?', options: ['3x and 3y', '5x² and 5x', '4ab and −ab', '7 and 7y'], correct: 2, explanation: '4ab and −ab have the same variables (a and b) raised to the same powers. They are like terms!' },
     { question: 'Which pair are UNLIKE terms?', options: ['6m and −2m', '3x² and 7x²', '5ab and 2ab', '4p and 3q'], correct: 3, explanation: '4p and 3q have DIFFERENT variables (p vs q), making them unlike terms.' },
@@ -244,7 +262,6 @@ const likeTermsAssessment = [
     { question: 'Which statement is FALSE?', options: ['5x and −5x are like terms', '3y² and 3y are unlike terms', 'abc and cba are like terms', '4x and 4y are like terms'], correct: 3, explanation: '4x and 4y have DIFFERENT variables — they are unlike terms. This is false.' },
 ];
 
-// ─── SKILL 3: Simplifying Expressions ─────────────────────────────────────
 const expressionQuestions = [
     { question: 'Add the expressions: (3x + 5) + (2x − 3)', math: '(3x + 5) + (2x − 3)', options: ['5x + 2', '5x + 8', '5x − 2', '5x + 3'], correct: 0, explanation: 'Add like terms: (3x + 2x) + (5 − 3) = 5x + 2.' },
     { question: 'Subtract: (7x + 4) − (3x + 1)', math: '(7x + 4) − (3x + 1)', options: ['4x + 3', '4x + 5', '10x + 5', '4x + 3'], correct: 0, explanation: 'Distribute the minus: 7x + 4 − 3x − 1 = (7x−3x) + (4−1) = 4x + 3.' },
@@ -271,7 +288,6 @@ const expressionAssessment = [
     { question: 'Expand and simplify: (a + b)² = ?', math: '(a + b)²', options: ['a² + b²', 'a² + ab + b²', 'a² + 2ab + b²', '2a + 2b'], correct: 2, explanation: '(a+b)² = (a+b)(a+b) = a² + 2ab + b². This is a key identity!' },
 ];
 
-// ─── SKILL 4: Solving Equations ───────────────────────────────────────────
 const equationQuestions = [
     { question: 'Solve: x + 7 = 15', math: 'x + 7 = 15', options: ['x = 8', 'x = 22', 'x = 7', 'x = 105'], correct: 0, explanation: 'Subtract 7 from both sides: x = 15 − 7 = 8.' },
     { question: 'Solve: 3x = 21', math: '3x = 21', options: ['x = 7', 'x = 63', 'x = 18', 'x = 8'], correct: 0, explanation: 'Divide both sides by 3: x = 21 ÷ 3 = 7.' },
@@ -298,7 +314,6 @@ const equationAssessment = [
     { question: 'Solve: x/3 + 2 = 5', math: 'x/3 + 2 = 5', options: ['x = 9', 'x = 3', 'x = 21', 'x = 1'], correct: 0, explanation: 'x/3 = 3 → x = 9.' },
 ];
 
-// ─── SKILL 5: Changing the Subject ────────────────────────────────────────
 const subjectQuestions = [
     { question: 'Make x the subject: y = x + 5', math: 'y = x + 5  →  x = ?', options: ['x = y − 5', 'x = y + 5', 'x = 5 − y', 'x = y/5'], correct: 0, explanation: 'Subtract 5 from both sides: x = y − 5.' },
     { question: 'Make x the subject: y = 3x', math: 'y = 3x  →  x = ?', options: ['x = y + 3', 'x = y − 3', 'x = y/3', 'x = 3y'], correct: 2, explanation: 'Divide both sides by 3: x = y/3.' },
@@ -325,162 +340,337 @@ const subjectAssessment = [
     { question: 'Make r the subject: C = 2πr', math: 'C = 2πr  →  r = ?', options: ['r = C/2π', 'r = 2πC', 'r = C − 2π', 'r = C²/2π'], correct: 0, explanation: 'Divide by 2π: r = C/(2π).' },
 ];
 
-// ─── Main Skills Component ────────────────────────────────────────────────
+// ─── SKILLS DATA ───────────────────────────────────────────────────────────
 const SKILLS = [
     {
         id: 'exponents',
         title: 'Laws of Exponents',
         subtitle: 'Skill 1 · Simplifying Terms',
         icon: '⚡',
-        color: '#6c63ff',
-        desc: 'Apply laws like product rule, quotient rule, power rule, and zero exponent to simplify algebraic terms.',
+        color: '#6366f1',
+        desc: 'Product, power, and zero laws to simplify expressions.',
         practice: exponentQuestions,
         assessment: exponentAssessment,
+        learn: {
+            concept: 'Exponents are shorthand for repeated multiplication. These 9 laws are the "grammar rules" of algebra that let you simplify even the scariest expressions.',
+            rules: [
+                { title: 'Product Law', f: 'xᵃ · xᵇ = xᵃ⁺ᵇ', d: 'When multiplying powers with the same base, ADD the exponents.', ex: 'x³ · x⁴ = x³⁺⁴ = x⁷', tip: 'Think: 3 copies + 4 copies = 7 copies total!' },
+                { title: 'Quotient Law', f: 'xᵃ / xᵇ = xᵃ⁻ᵇ', d: 'When dividing powers with the same base, SUBTRACT the bottom exponent from the top.', ex: 'y⁸ / y² = y⁸⁻² = y⁶', tip: 'You are "canceling out" matching variables from the top and bottom.' },
+                { title: 'Power Law', f: '(xᵃ)ᵇ = xᵃᵇ', d: 'A power of a power? MULTIPLY the exponents together.', ex: '(x²)³ = x²·³ = x⁶', tip: 'A group of powers being powered up grows very fast!' },
+                { title: 'Power of Product', f: '(xy)ᵃ = xᵃyᵃ', d: 'Every factor inside the parentheses gets the power outside.', ex: '(2x)³ = 2³x³ = 8x³', tip: 'Always remember to apply the power to the number (coefficient) too!' },
+                { title: 'Power of Quotient', f: '(x/y)ᵃ = xᵃ/yᵃ', d: 'The power applies to both the numerator (top) and denominator (bottom).', ex: '(x/3)² = x²/3² = x²/9', tip: 'Distribute the power to every part of the fraction.' },
+                { title: 'Zero Law', f: 'x⁰ = 1', d: 'Any non-zero base raised to the power of zero is ALWAYS 1.', ex: '525⁰ = 1', tip: 'It doesn\'t matter how big the number is; power 0 makes it 1!' },
+                { title: 'Identity Law', f: 'x¹ = x', d: 'Any base raised to the power of 1 remains the same.', ex: 'y¹ = y', tip: 'The exponent 1 is usually "invisible" in algebra.' },
+                { title: 'Negative Law', f: 'x⁻ⁿ = 1/xⁿ', d: 'A negative exponent means the "Reciprocal". It moves the base to the bottom.', ex: 'x⁻² = 1/x²', tip: 'Think of the minus sign as a ticket to cross the fraction line!' },
+                { title: 'Fractional Law', f: 'xᵃ/ᵇ = ᵇ√xᵃ', d: 'Fractional powers are secretly roots. The bottom number is the root index.', ex: 'x¹/² = √x', tip: 'Bottom = Root. Top = Power.' },
+            ]
+        }
     },
     {
         id: 'liketerms',
         title: 'Like & Unlike Terms',
-        subtitle: 'Skill 2 · Identification',
+        subtitle: 'Skill 2 · Mastery',
         icon: '🤝',
-        color: '#00d4aa',
-        desc: 'Learn to identify like terms (same variable, same power) and unlike terms, then combine like terms correctly.',
+        color: '#0891b2',
+        desc: 'Combine matching variables and powers accurately.',
         practice: likeTermsQuestions,
         assessment: likeTermsAssessment,
+        learn: {
+            concept: 'Like terms are the mathematical equivalent of identical twins. To combine them, they must share the exact same variable part.',
+            rules: [
+                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '3x + 4y stays as 3x + 4y', tip: 'You can\'t add apples and oranges!' },
+                { title: 'Power Match', f: 'x² + 2x² = 3x²', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: 'x² + x³ cannot be added', tip: 'Check the letters AND the tiny numbers above them.' },
+                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '5x² + 4x² = 9x² (not 9x⁴)', tip: 'You are counting how many of that "item" you have.' },
+                { title: 'Invisible Coeff.', f: 'x = 1x', d: 'If a variable has no number in front, its coefficient is secretly 1.', ex: 'x + 3x = 1x + 3x = 4x', tip: 'Don\'t forget the 1!' },
+            ]
+        }
     },
     {
         id: 'expressions',
         title: 'Simplifying Expressions',
-        subtitle: 'Skill 3 · Add, Subtract, Multiply, Divide',
+        subtitle: 'Skill 3 · Mastery',
         icon: '📝',
-        color: '#f9a825',
-        desc: 'Simplify algebraic expressions through addition, subtraction, multiplication (including FOIL), and division.',
+        color: '#f59e0b',
+        desc: 'Solve multi-part algebraic phrases with ease.',
         practice: expressionQuestions,
         assessment: expressionAssessment,
+        learn: {
+            concept: 'Simplifying an expression means writing it in its shortest, most efficient form by combining all possible terms.',
+            rules: [
+                { title: 'Distribution', f: 'a(b + c) = ab + ac', d: 'Multiply the outside term by every term inside the parentheses.', ex: '3(x + 2) = 3x + 6', tip: 'Fairness rule: the term outside must visit everyone inside!' },
+                { title: 'Combo Order', f: 'Group → Combine', d: 'First, rewrite the expression by grouping all like terms together.', ex: '3x + 5 + 2x = 3x + 2x + 5 = 5x + 5', tip: 'Organizing your terms first prevents mistakes.' },
+                { title: 'Sign Safety', f: '-(x + y) = -x - y', d: 'A minus sign in front of a bracket flips the sign of EVERYTHING inside.', ex: '10 - (x + 3) = 10 - x - 3', tip: 'Treat that minus sign like a multiplier of -1.' },
+                { title: 'PEMDAS Rule', f: 'Order Matters', d: 'Always follow the standard order: Parentheses, Exponents, Mult/Div, Add/Sub.', ex: '2 + 3(x) is not 5x', tip: 'Multiplication comes before addition!' },
+            ]
+        }
     },
     {
         id: 'equations',
         title: 'Solving Equations',
-        subtitle: 'Skill 4 · Linear, Two-Variable & Quadratic',
+        subtitle: 'Skill 4 · Mastery',
         icon: '⚖️',
-        color: '#ff6b9d',
-        desc: 'Solve linear equations in one variable, simultaneous equations in two variables, and quadratic equations.',
+        color: '#ec4899',
+        desc: 'Isolate variables in linear and quadratic problems.',
         practice: equationQuestions,
         assessment: equationAssessment,
+        learn: {
+            concept: 'To solve an equation, you must find the value of the variable that makes the scale balance perfectly.',
+            rules: [
+                { title: 'Golden Balance', f: 'LHS = RHS', d: 'Whatever you do to one side, you MUST do to the other side.', ex: 'If you add 5 to the left, add 5 to the right.', tip: 'The equals sign is sacred balance point.' },
+                { title: 'Inverses', f: '+ ⟷ - , · ⟷ /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: 'To move a +3, use -3. To move a multiplier of 2, divide by 2.', tip: 'Do the opposite to cross the bridge.' },
+                { title: 'Isolate Target', f: 'x = Result', d: 'Keep undoing operations until the variable (target) is all alone on one side.', ex: '2x = 10 → x = 5', tip: 'Goal: Leave x by itself!' },
+                { title: 'Two-Step rule', f: 'Move ± first', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 → 2x = 6 → x = 3', tip: 'Clean up the additions/subtractions first.' },
+            ]
+        }
     },
     {
         id: 'subject',
         title: 'Changing the Subject',
-        subtitle: 'Skill 5 · Rearranging Formulas',
+        subtitle: 'Skill 5 · Mastery',
         icon: '🔄',
-        color: '#8b5cf6',
-        desc: 'Rearrange formulas to make any variable the subject — an essential skill in physics, geometry, and science.',
+        color: '#7c3aed',
+        desc: 'Rearrange formulas to solve for any variable.',
         practice: subjectQuestions,
         assessment: subjectAssessment,
+        learn: {
+            concept: 'Changing the subject is like re-crowning a new king. You move all other terms away so the new variable stands on the throne.',
+            rules: [
+                { title: 'The Target', f: 'Target = Formula', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: 'In v=u+at, make "a" the subject.', tip: 'Treat the target like a treasure to be uncovered.' },
+                { title: 'Strip away', f: 'Work Outwards', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at → v - u = at', tip: 'Peel the equation like an onion.' },
+                { title: 'Undo Roots', f: '√ ⟷ x²', d: 'To get rid of a square root, square both sides. To remove a power of 2, take the root.', ex: 'y = √x → y² = x', tip: 'Powers and roots are the ultimate opposites.' },
+                { title: 'Denominator', f: 'Multiply Up', d: 'If your target or part of its expression is in a fraction bottom, multiply it out.', ex: 'A/b = c → A = bc', tip: 'Get your variables onto one line as soon as possible.' },
+            ]
+        }
     },
 ];
 
-export default function AlgebraSkills({ onBack }) {
-    const [view, setView] = useState('list'); // 'list' | 'practice' | 'assessment'
+export default function AlgebraSkills() {
+    const navigate = useNavigate();
+    const [view, setView] = useState('list'); // 'list' | 'practice' | 'assessment' | 'learn'
     const [activeSkill, setActiveSkill] = useState(null);
+    const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
-    if (view === 'practice' && activeSkill !== null) {
-        return (
-            <div style={{ background: '#0f0f1a', minHeight: '100vh', padding: '24px 0' }}>
-                <QuizEngine
-                    questions={SKILLS[activeSkill].practice}
-                    title={`Practice: ${SKILLS[activeSkill].title}`}
-                    onBack={() => setView('list')}
-                />
-            </div>
-        );
-    }
+    const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
 
-    if (view === 'assessment' && activeSkill !== null) {
+    if (view !== 'list' && skill) {
         return (
-            <div style={{ background: '#0f0f1a', minHeight: '100vh', padding: '24px 0' }}>
-                <QuizEngine
-                    questions={SKILLS[activeSkill].assessment}
-                    title={`Assessment: ${SKILLS[activeSkill].title}`}
-                    onBack={() => setView('list')}
-                />
+            <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', padding: '100px 0 60px' }}>
+                <nav className="intro-nav">
+                    <button className="intro-nav-back" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>← Back to Skills</button>
+                    <div className="intro-nav-links">
+                        <button className="intro-nav-link" onClick={() => navigate('/algebra/introduction')}>🌟 Intro</button>
+                        <button className="intro-nav-link" onClick={() => navigate('/algebra/terminology')}>📖 Terminology</button>
+                        <button className="intro-nav-link intro-nav-link--active">🎯 Skills</button>
+                    </div>
+                </nav>
+                <div style={{ padding: '0 24px' }}>
+                    {view === 'learn' ? (
+                        <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '0 auto' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
+                                <div style={{ width: 44, height: 44, borderRadius: 12, background: `${skill.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>{skill.icon}</div>
+                                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.5rem', fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>Learn: {skill.title}</h1>
+                            </div>
+
+                            <div className="alg-learn-grid">
+                                {/* Side Selector */}
+                                <aside className="alg-learn-sidebar" style={{
+                                    background: 'rgba(255,255,255,0.7)', padding: '12px', borderRadius: 20,
+                                    border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8,
+                                    maxHeight: '65vh', overflowY: 'auto'
+                                }}>
+                                    {skill.learn.rules.map((rule, ri) => (
+                                        <button
+                                            key={ri}
+                                            onClick={() => setSelectedLearnIdx(ri)}
+                                            style={{
+                                                display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12,
+                                                border: '1px solid', borderColor: selectedLearnIdx === ri ? skill.color : 'rgba(0,0,0,0.05)',
+                                                background: selectedLearnIdx === ri ? skill.color : '#fff',
+                                                color: selectedLearnIdx === ri ? '#fff' : 'var(--alg-text)',
+                                                transition: 'all 0.2s', cursor: 'pointer', textAlign: 'left'
+                                            }}
+                                        >
+                                            <div style={{
+                                                width: 24, height: 24, borderRadius: 6,
+                                                background: selectedLearnIdx === ri ? 'rgba(255,255,255,0.2)' : `${skill.color}15`,
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                fontSize: 14, fontWeight: 900, flexShrink: 0
+                                            }}>{ri + 1}</div>
+                                            <span style={{ fontWeight: 700, fontSize: 15 }}>{rule.title}</span>
+                                        </button>
+                                    ))}
+                                </aside>
+
+                                {/* Detailed Window */}
+                                <main className="details-window-anim alg-details-window" key={selectedLearnIdx} style={{
+                                    background: '#fff', borderRadius: 20, padding: '24px 32px', border: `2px solid ${skill.color}15`,
+                                    boxShadow: '0 8px 30px rgba(0,0,0,0.03)', minHeight: 400
+                                }}>
+                                    <div className="alg-learn-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                                        <div>
+                                            <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>{skill.learn.rules[selectedLearnIdx].title}</h3>
+                                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--alg-muted)' }}>RULE {selectedLearnIdx + 1} OF {skill.learn.rules.length}</div>
+                                        </div>
+                                        <div style={{ fontSize: 32 }}>{skill.icon}</div>
+                                    </div>
+
+                                    {/* Core Formula Box */}
+                                    <div style={{ background: `${skill.color}05`, padding: '24px', borderRadius: 20, border: `2px solid ${skill.color}15`, marginBottom: 32, textAlign: 'center' }}>
+                                        <div className="formula-text" style={{ fontSize: 42, fontWeight: 800, color: skill.color }}>
+                                            <MathRenderer text={`$$${skill.learn.rules[selectedLearnIdx].f}$$`} />
+                                        </div>
+                                    </div>
+
+                                    <div className="alg-rule-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                                        <div>
+                                            <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>Explanation</h4>
+                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>{skill.learn.rules[selectedLearnIdx].d}</p>
+
+                                            <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: '16px', borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
+                                                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
+                                                    <span style={{ fontWeight: 800, color: 'var(--alg-teal)' }}>🛡️ Survival Tip: </span>
+                                                    {skill.learn.rules[selectedLearnIdx].tip}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>Practical Example</h4>
+                                            <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
+                                                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)' }}>
+                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$$${skill.learn.rules[selectedLearnIdx].ex}$$`} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Action Footnotes */}
+                                    <div className="alg-learn-footer" style={{ marginTop: 40, display: 'flex', gap: 16 }}>
+                                        <button className="alg-btn-primary" onClick={() => setView('practice')} style={{ padding: '14px 32px', background: skill.color, fontSize: 15 }}>Mastered this? Try Practice →</button>
+                                        <button className="alg-btn-secondary" onClick={() => {
+                                            const nextIdx = (selectedLearnIdx + 1) % skill.learn.rules.length;
+                                            setSelectedLearnIdx(nextIdx);
+                                        }} style={{ padding: '14px 32px', fontSize: 15 }}>Next: {skill.learn.rules[(selectedLearnIdx + 1) % skill.learn.rules.length].title}</button>
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+                    ) : (
+                        <QuizEngine
+                            questions={view === 'practice' ? skill.practice : skill.assessment}
+                            title={`${view === 'practice' ? 'Practice' : 'Assessment'}: ${skill.title}`}
+                            onBack={() => setView('list')}
+                            color={skill.color}
+                        />
+                    )}
+                </div>
             </div>
         );
     }
 
     return (
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 60px' }}>
-            {/* Intro banner */}
-            <div style={{
-                background: 'linear-gradient(135deg, rgba(108,99,255,0.12), rgba(255,107,157,0.08))',
-                border: '1px solid rgba(108,99,255,0.25)', borderRadius: 16, padding: 28, marginBottom: 36,
-                textAlign: 'center'
-            }}>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>🎯</div>
-                <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', fontWeight: 800, color: '#fff', marginBottom: 8 }}>
-                    5 Core Algebra Skills
-                </h3>
-                <p style={{ color: '#9090bb', fontSize: 15, margin: 0 }}>
-                    Each skill has <strong style={{ color: '#6c63ff' }}>10 practice questions</strong> to build confidence and a
-                    <strong style={{ color: '#ff6b9d' }}> 10-question assessment</strong> to test mastery.
-                </p>
-            </div>
+        <div className="skills-page">
+            {/* ── TOP NAV BAR ──────────────────────────────── */}
+            <nav className="intro-nav">
+                <button
+                    className="intro-nav-back"
+                    onClick={() => navigate('/algebra')}
+                >
+                    ← Back to Algebra
+                </button>
 
-            {/* Skill Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {SKILLS.map((skill, idx) => (
-                    <div key={skill.id} style={{
-                        background: '#1e1e3a', border: `1px solid rgba(${skill.color === '#6c63ff' ? '108,99,255' : skill.color === '#00d4aa' ? '0,212,170' : skill.color === '#f9a825' ? '249,168,37' : skill.color === '#ff6b9d' ? '255,107,157' : '139,92,246'},0.25)`,
-                        borderRadius: 16, padding: '24px', borderLeft: `5px solid ${skill.color}`,
-                        transition: 'all 0.3s ease',
-                    }}>
-                        {/* Card header */}
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 16 }}>
-                            <div style={{
-                                width: 52, height: 52, borderRadius: 14,
-                                background: `${skill.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: 24, flexShrink: 0,
-                            }}>{skill.icon}</div>
-                            <div>
-                                <div style={{
-                                    fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: skill.color,
-                                    textTransform: 'uppercase', marginBottom: 4
-                                }}>{skill.subtitle}</div>
-                                <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 19, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
-                                    {skill.title}
+                <div className="intro-nav-links">
+                    <button
+                        className="intro-nav-link"
+                        onClick={() => navigate('/algebra/introduction')}
+                    >
+                        🌟 Introduction
+                    </button>
+                    <button
+                        className="intro-nav-link"
+                        onClick={() => navigate('/algebra/terminology')}
+                    >
+                        📖 Terminology
+                    </button>
+                    <button
+                        className="intro-nav-link intro-nav-link--active"
+                        onClick={() => navigate('/algebra/skills')}
+                    >
+                        🎯 Skills
+                    </button>
+                </div>
+            </nav>
+
+            {/* ── MAIN CONTENT ──────────────────────────────── */}
+            <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '80px auto 40px', padding: '0 24px' }}>
+
+                {/* Compact Heading Line */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    marginBottom: 32
+                }}>
+                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.1rem', fontWeight: 900, color: 'var(--alg-text)', margin: '0 0 6px' }}>
+                        Algebra <span style={{ background: 'linear-gradient(135deg, var(--alg-teal), var(--alg-indigo))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Skills</span>
+                    </h1>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--alg-muted)', letterSpacing: 0.5 }}>
+                        Step up from concepts to mastery with targeted practice.
+                    </div>
+                </div>
+
+                {/* Vertical Skills List */}
+                <div className="alg-skills-list">
+                    {SKILLS.map((skill, idx) => (
+                        <div key={skill.id} className="alg-skill-card">
+                            {/* Skill Info */}
+                            <div className="alg-skill-info">
+                                <div className="alg-skill-icon" style={{ background: `${skill.color}15` }}>
+                                    {skill.icon}
                                 </div>
-                                <div style={{ fontSize: 14, color: '#9090bb', lineHeight: 1.6 }}>{skill.desc}</div>
+                                <div>
+                                    <div style={{ fontSize: 10, fontWeight: 800, color: skill.color, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>
+                                        {skill.subtitle}
+                                    </div>
+                                    <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: 'var(--alg-text)' }}>{skill.title}</h3>
+                                    <p style={{ margin: 0, fontSize: 12, color: 'var(--alg-muted)' }}>{skill.desc}</p>
+                                </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="alg-skill-actions">
+                                <button
+                                    onClick={() => { setActiveSkill(idx); setView('learn'); }}
+                                    className="alg-btn-secondary"
+                                    style={{ padding: '8px 16px', fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap', border: '1.5px solid rgba(0,0,0,0.1)' }}
+                                >
+                                    Learn
+                                </button>
+                                <button
+                                    onClick={() => { setActiveSkill(idx); setView('practice'); }}
+                                    className="alg-btn-secondary"
+                                    style={{ padding: '8px 16px', fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap' }}
+                                >
+                                    Practice
+                                </button>
+                                <button
+                                    onClick={() => { setActiveSkill(idx); setView('assessment'); }}
+                                    className="alg-btn-primary"
+                                    style={{ padding: '8px 16px', fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap', background: skill.color }}
+                                >
+                                    Assess
+                                </button>
                             </div>
                         </div>
+                    ))}
+                </div>
 
-                        {/* Actions */}
-                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                            <button
-                                onClick={() => { setActiveSkill(idx); setView('practice'); }}
-                                style={{
-                                    padding: '10px 24px', borderRadius: 50,
-                                    background: `linear-gradient(135deg, ${skill.color}, ${skill.color}aa)`,
-                                    color: '#fff', fontWeight: 700, fontSize: 13, border: 'none', cursor: 'pointer',
-                                    display: 'flex', alignItems: 'center', gap: 6,
-                                    boxShadow: `0 4px 14px ${skill.color}40`,
-                                }}
-                            >
-                                ▶ Practice (10 Q)
-                            </button>
-                            <button
-                                onClick={() => { setActiveSkill(idx); setView('assessment'); }}
-                                style={{
-                                    padding: '10px 24px', borderRadius: 50,
-                                    background: 'linear-gradient(135deg, #ff6b9d, #ff8c42)',
-                                    color: '#fff', fontWeight: 700, fontSize: 13, border: 'none', cursor: 'pointer',
-                                    display: 'flex', alignItems: 'center', gap: 6,
-                                    boxShadow: '0 4px 14px rgba(255,107,157,0.4)',
-                                }}
-                            >
-                                📋 Assessment (10 Q)
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                {/* Final Motivation */}
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                    <p style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 600 }}>
+                        Done with all? You're officially an <span style={{ color: 'var(--alg-indigo)' }}>Algebra Pro!</span> 🏅
+                    </p>
+                </div>
             </div>
         </div>
     );

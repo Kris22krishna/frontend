@@ -91,12 +91,9 @@ export function HomeGrades() {
                         </div>
                     </div>
 
-                    {/* Column 4: Math Branches with Indigo gradient */}
-                    <div className="rounded-2xl p-8 bg-gradient-to-br from-indigo-300 via-violet-300 to-indigo-400 relative overflow-hidden">
+                    {/* Column 4: Algebra */}
+                    <div className="rounded-2xl p-8 bg-gradient-to-br from-indigo-300 via-violet-300 to-indigo-400 relative overflow-hidden flex flex-col justify-center">
                         <div className="space-y-4 relative z-10">
-                            <div className="text-xs font-bold uppercase tracking-widest text-indigo-800 mb-2 px-2 opacity-70">
-                                📐 Math Branches
-                            </div>
                             <button
                                 id="algebra-btn"
                                 onClick={() => navigate('/algebra')}

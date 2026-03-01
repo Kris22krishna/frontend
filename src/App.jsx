@@ -23,6 +23,9 @@ import UploaderLogin from './pages/UploaderLogin';
 import RapidMathPage from './pages/RapidMathPage';
 import Internship from './pages/internship/Internship';
 import Algebra from './components/Math-Branches/Algebra/Algebra';
+import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
+import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
+import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -446,7 +449,11 @@ function App() {
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
-          <Route path="algebra" element={<Algebra />} />
+          <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
+          {/* Algebra Topic Pages */}
+          <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
