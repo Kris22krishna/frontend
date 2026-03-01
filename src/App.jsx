@@ -449,11 +449,11 @@ function App() {
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
-          <Route path="algebra" element={<Algebra />} />
+          <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
           {/* Algebra Topic Pages */}
-          <Route path="algebra/introduction" element={<AlgebraIntro5W1H onBack={() => window.history.back()} />} />
-          <Route path="algebra/terminology" element={<AlgebraTerminology onBack={() => window.history.back()} />} />
-          <Route path="algebra/skills" element={<AlgebraSkills onBack={() => window.history.back()} />} />
+          <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../algebra.css';
+import MathRenderer from '../../../../MathRenderer';
 
 const cards5W1H = [
     {
@@ -128,7 +129,9 @@ function W1HCard({ card }) {
             {/* Expanded content */}
             {open && (
                 <div className="intro-card-body">
-                    <p className="intro-card-content">{card.content}</p>
+                    <div className="intro-card-content">
+                        <MathRenderer text={card.content} />
+                    </div>
                     <div
                         className="intro-card-fact"
                         style={{
@@ -136,7 +139,7 @@ function W1HCard({ card }) {
                             borderColor: card.gradFrom + '30',
                         }}
                     >
-                        {card.fact}
+                        <MathRenderer text={card.fact} />
                     </div>
                 </div>
             )}
@@ -183,7 +186,7 @@ export default function AlgebraIntro5W1H({ onBack }) {
             </nav>
 
             {/* ── HERO BANNER ──────────────────────────────── */}
-            <div className="intro-hero">
+            <div className="intro-hero" style={{ padding: '16px 24px 20px' }}>
                 <div className="intro-hero-deco intro-hero-deco-a" />
                 <div className="intro-hero-deco intro-hero-deco-b" />
                 <div className="intro-hero-inner">
@@ -198,7 +201,7 @@ export default function AlgebraIntro5W1H({ onBack }) {
             </div>
 
             {/* ── 5W1H CARDS GRID ──────────────────────────── */}
-            <div className="intro-content">
+            <div className="intro-content" style={{ padding: '10px 24px 20px' }}>
                 <div className="intro-grid">
                     {cards5W1H.map((card, idx) => (
                         <W1HCard key={idx} card={card} />

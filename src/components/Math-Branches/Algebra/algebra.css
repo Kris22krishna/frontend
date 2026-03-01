@@ -144,6 +144,32 @@
   background: rgba(255, 255, 255, 0.22);
 }
 
+.alg-word-chip-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.alg-word-chip {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.25s ease;
+  cursor: default;
+}
+
+.alg-word-chip:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
 /* The big number — solid white so it is ALWAYS readable */
 .alg-stat-num {
   font-family: 'Outfit', sans-serif;
@@ -340,7 +366,7 @@
   background: #f8fafc;
   color: var(--alg-muted);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -387,7 +413,7 @@
 
 .alg-section-subtitle {
   color: var(--alg-muted);
-  font-size: 15px;
+  font-size: 17px;
   margin-bottom: 40px;
   line-height: 1.6;
 }
@@ -475,7 +501,45 @@
   font-size: 15px;
 }
 
-/* ── TERMINOLOGY ─────────────────────────────────────── */
+/* ── TABS ────────────────────────────────────────────── */
+.alg-module-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.alg-tab {
+  padding: 12px 24px;
+  border-radius: 100px;
+  border: 2px solid rgba(8, 145, 178, 0.1);
+  background: #fff;
+  color: var(--alg-muted);
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.alg-tab:hover {
+  border-color: rgba(8, 145, 178, 0.3);
+  transform: translateY(-2px);
+}
+
+.alg-tab.active {
+  background: linear-gradient(135deg, var(--alg-teal), var(--alg-indigo));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(8, 145, 178, 0.3);
+}
+
+.alg-tab-icon {
+  font-size: 18px;
+}
+
 .alg-term-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -483,30 +547,22 @@
 }
 
 .alg-term-card {
-  background: #fff;
-  border-radius: var(--alg-r);
-  border: 1px solid var(--alg-border);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  border-radius: var(--alg-rlg);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
   overflow: hidden;
 }
 
-.alg-term-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  border-radius: 4px 0 0 4px;
-}
-
 .alg-term-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px) scale(1.02);
   border-color: var(--alg-teal);
-  box-shadow: var(--alg-shlg);
+  box-shadow: 0 12px 30px rgba(8, 145, 178, 0.15);
+  background: #fff;
 }
 
 .alg-term-name {
@@ -859,7 +915,7 @@
 .alg-btn-primary {
   padding: 14px 32px;
   border-radius: 100px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -884,7 +940,7 @@
 .alg-btn-secondary {
   padding: 14px 32px;
   border-radius: 100px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -1125,7 +1181,7 @@
 .intro-nav-link {
   padding: 8px 18px;
   border-radius: 100px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1557,4 +1613,213 @@
 /* ── UTILITY: HIDE GLOBAL FOOTER ON INTRO PAGE ───────── */
 .main-layout:has(.intro-page) .main-footer {
   display: none !important;
+}
+
+/* ── SKILLS LIST RESPONSIVENESS ─────────────────────── */
+.alg-skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.alg-skill-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px 20px;
+  border: 1.5px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.alg-skill-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+.alg-skill-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.alg-skill-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.alg-skill-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Learn View Responsiveness */
+.alg-learn-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .alg-learn-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .alg-learn-sidebar {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    max-height: none !important;
+    white-space: nowrap;
+    gap: 8px !important;
+  }
+
+  .alg-learn-sidebar::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .alg-learn-sidebar button {
+    flex-shrink: 0;
+  }
+
+  .alg-details-window {
+    padding: 24px 20px !important;
+  }
+
+  .alg-rule-split {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .alg-skill-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .alg-skill-info {
+    width: 100%;
+  }
+
+  .alg-skill-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .alg-skill-actions button {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px !important;
+    font-size: 11px !important;
+  }
+
+  .alg-lexicon-container {
+    margin: 40px auto 20px !important;
+    padding: 0 16px !important;
+  }
+
+  .alg-learn-header-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .alg-skill-actions {
+    flex-wrap: wrap;
+  }
+
+  .alg-skill-actions button {
+    min-width: calc(50% - 5px);
+  }
+
+  .alg-skill-actions button:last-child {
+    min-width: 100%;
+  }
+
+  .alg-learn-footer {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .alg-learn-footer button {
+    width: 100%;
+  }
+
+  .formula-text {
+    font-size: 28px !important;
+  }
+}
+
+/* ── QUIZ ENGINE RESPONSIVENESS ─────────────────────── */
+.alg-quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .alg-quiz-active {
+    padding: 0 4px !important;
+  }
+
+  .alg-quiz-active h3 {
+    font-size: 1.25rem !important;
+  }
+
+  .alg-quiz-card {
+    padding: 24px 20px !important;
+    border-radius: 16px !important;
+  }
+
+  .alg-quiz-question-text {
+    font-size: 1.1rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .alg-quiz-score-circle {
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  .alg-quiz-score-circle div:first-child {
+    font-size: 32px !important;
+  }
+
+  .alg-quiz-finished h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .alg-score-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .alg-quiz-finished-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .alg-quiz-finished-actions button {
+    width: 100%;
+  }
 }
