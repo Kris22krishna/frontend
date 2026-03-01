@@ -23,6 +23,9 @@ import UploaderLogin from './pages/UploaderLogin';
 import RapidMathPage from './pages/RapidMathPage';
 import Internship from './pages/internship/Internship';
 import Algebra from './components/Math-Branches/Algebra/Algebra';
+import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
+import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
+import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -447,6 +450,10 @@ function App() {
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<Algebra />} />
+          {/* Algebra Topic Pages */}
+          <Route path="algebra/introduction" element={<AlgebraIntro5W1H onBack={() => window.history.back()} />} />
+          <Route path="algebra/terminology" element={<AlgebraTerminology onBack={() => window.history.back()} />} />
+          <Route path="algebra/skills" element={<AlgebraSkills onBack={() => window.history.back()} />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
