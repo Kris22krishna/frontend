@@ -138,7 +138,16 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-exp-test', skill_name: 'Exponents and Powers Chapter Assessment', topic: 'Exponents and Powers' },
                         { skill_id: 'local-8-rn-test', skill_name: 'Rational Numbers Chapter Assessment', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-mens-test', skill_name: 'Mensuration Chapter Assessment', topic: 'Mensuration' },
-                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' }
+                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' },
+                        { skill_id: '1247', skill_name: 'Identify Perfect Squares', topic: 'Squares and Square Roots' },
+                        { skill_id: '1248', skill_name: 'Properties of Square Numbers', topic: 'Squares and Square Roots' },
+                        { skill_id: '1249', skill_name: 'Square Using Identity Patterns', topic: 'Squares and Square Roots' },
+                        { skill_id: '1250', skill_name: 'Pythagorean Triplets', topic: 'Squares and Square Roots' },
+                        { skill_id: '1251', skill_name: 'Concept of Square Root', topic: 'Squares and Square Roots' },
+                        { skill_id: '1252', skill_name: 'Square Root via Prime Factorization', topic: 'Squares and Square Roots' },
+                        { skill_id: '1253', skill_name: 'Square Root via Long Division', topic: 'Squares and Square Roots' },
+                        { skill_id: '1254', skill_name: 'Square Root of Decimals', topic: 'Squares and Square Roots' },
+                        { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -408,6 +417,82 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Factorisation Chapter Assessment',
                 isLocal: true,
                 path: '/senior/grade/8/factorisation/chapter-test'
+            }
+        ];
+
+        // Hardcode all Grade 8 skills for Squares and Square Roots (8 skills + 1 test)
+        skillsByTopic['Squares and Square Roots'] = [
+            {
+                skill_id: '1247',
+                skill_name: 'Identify Perfect Squares',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/identify-perfect-squares'
+            },
+            {
+                skill_id: '1248',
+                skill_name: 'Properties of Square Numbers',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/properties-of-square-numbers'
+            },
+            {
+                skill_id: '1249',
+                skill_name: 'Square Using Identity Patterns',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-using-identity-patterns'
+            },
+            {
+                skill_id: '1250',
+                skill_name: 'Pythagorean Triplets',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/pythagorean-triplets'
+            },
+            {
+                skill_id: '1251',
+                skill_name: 'Concept of Square Root',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/concept-of-square-root'
+            },
+            {
+                skill_id: '1252',
+                skill_name: 'Square Root via Prime Factorization',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-root-prime-factorization'
+            },
+            {
+                skill_id: '1253',
+                skill_name: 'Square Root via Long Division',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-root-long-division'
+            },
+            {
+                skill_id: '1254',
+                skill_name: 'Square Root of Decimals',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-root-of-decimals'
+            },
+            {
+                skill_id: '1255',
+                skill_name: 'Squares and Square Roots Test',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares and Square Roots Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/chapter-test'
             }
         ];
     }

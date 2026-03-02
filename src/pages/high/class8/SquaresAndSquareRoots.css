@@ -1,0 +1,264 @@
+/* d:\Learners\frontend\src\pages\high\class8\SquaresAndSquareRoots.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.class8-practice-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    color: #2d3748;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.class8-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.class8-skill-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4c51bf;
+    letter-spacing: 0.5px;
+}
+
+.class8-progress-pill {
+    background: #edf2f7;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    border: 1px solid #cbd5e0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c5282;
+}
+
+.class8-timer {
+    background: #ebf4ff;
+    padding: 0.5rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #bee3f8;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #3182ce;
+}
+
+.class8-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+.class8-card {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.class8-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.class8-question-text {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #2d3748;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+}
+
+.class8-options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.class8-option {
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.class8-option:hover:not(:disabled) {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+    transform: translateY(-2px);
+}
+
+.class8-option.selected {
+    background: #ebf4ff;
+    border-color: #4299e1;
+    color: #2b6cb0;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.class8-option.correct {
+    background: #f0fff4;
+    border-color: #48bb78;
+    color: #276749;
+    box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2);
+}
+
+.class8-option.wrong {
+    background: #fff5f5;
+    border-color: #f56565;
+    color: #c53030;
+    opacity: 0.8;
+}
+
+.class8-feedback {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    animation: fadeIn 0.4s ease;
+}
+
+.class8-feedback.correct {
+    background: #f0fff4;
+    color: #38a169;
+    border: 1px solid #9ae6b4;
+}
+
+.class8-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-top: 2px solid #e2e8f0;
+}
+
+.class8-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+}
+
+.class8-btn-exit {
+    background: #fff5f5;
+    color: #e53e3e;
+    border: 1px solid #feb2b2;
+}
+
+.class8-btn-exit:hover {
+    background: #fed7d7;
+}
+
+.class8-btn-explain {
+    background: #faf5ff;
+    color: #805ad5;
+    border: 1px solid #d6bcfa;
+}
+
+.class8-btn-explain:hover {
+    background: #e9d8fd;
+}
+
+.class8-btn-prev {
+    background: #edf2f7;
+    color: #4a5568;
+    border: 1px solid #cbd5e0;
+}
+
+.class8-btn-prev:hover:not(:disabled) {
+    background: #e2e8f0;
+}
+
+.class8-btn-prev:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.class8-btn-submit {
+    background: #48bb78;
+    color: white;
+    box-shadow: 0 4px 10px rgba(72, 187, 120, 0.3);
+}
+
+.class8-btn-submit:hover:not(:disabled) {
+    background: #38a169;
+    transform: translateY(-2px);
+}
+
+.class8-btn-submit:disabled {
+    background: #cbd5e0;
+    color: #718096;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+
+    .class8-header,
+    .class8-footer {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .class8-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .class8-card {
+        padding: 1.5rem;
+    }
+
+    .class8-question-text {
+        font-size: 1.3rem;
+    }
+}
