@@ -33,7 +33,7 @@ const SeniorGradeSyllabus = () => {
     };
 
     const handleSkillClick = (skill) => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated && grade === '10') {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
@@ -79,33 +79,34 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1209, skill_name: 'Pair of Linear Equations Chapter Assessment', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Pair of Linear Equations Chapter Assessment' },
 
                         // Real Numbers
-                        { skill_id: 10201, skill_name: 'Real Number Foundations', topic: 'Real Numbers', subtopic: 'Real Number Foundations' },
-                        { skill_id: 10202, skill_name: 'Euclid\'s Division Lemma', topic: 'Real Numbers', subtopic: 'Euclid\'s Division Lemma' },
-                        { skill_id: 10203, skill_name: 'Breaking Numbers into Prime Factors', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10204, skill_name: 'Uniqueness of Prime Factorisation (Fundamental Theorem)', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10205, skill_name: 'Finding HCF and LCM Using Prime Factors', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10206, skill_name: 'Applying HCF and LCM to Real-Life Situations', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10207, skill_name: 'Proving the Irrationality of Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
-                        { skill_id: 10208, skill_name: 'Behaviour of Operations on Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
-                        { skill_id: 1206, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
+                        { skill_id: 1111, skill_name: 'Understanding Real Numbers', topic: 'Real Numbers', subtopic: 'Real Number Foundations' },
+                        { skill_id: 1112, skill_name: 'Euclid’s Division Algorithm', topic: 'Real Numbers', subtopic: 'Euclid\'s Division Lemma' },
+                        { skill_id: 1113, skill_name: 'Prime Factorisation', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1114, skill_name: 'Fundamental Theorem of Arithmetic', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1115, skill_name: 'HCF and LCM Using Prime Factorisation', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1116, skill_name: 'Applications of HCF and LCM', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1117, skill_name: 'Proving Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
+                        { skill_id: 1118, skill_name: 'Operations on Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
+                        { skill_id: 1119, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
+
                         // Arithmetic Progressions
-                        { skill_id: 10101, skill_name: 'Recognising and Describing Number Patterns', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
-                        { skill_id: 10102, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
-                        { skill_id: 10103, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
-                        { skill_id: 10104, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
-                        { skill_id: 10105, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
-                        { skill_id: 1208, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
+                        { skill_id: 1105, skill_name: 'Number Patterns Recognition', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 1106, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 1107, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
+                        { skill_id: 1108, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
+                        { skill_id: 1109, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
+                        { skill_id: 1110, skill_name: 'Arithmetic Progressions Chapter Assessment', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
 
                         // Quadratic Equations
-                        { skill_id: 10201, skill_name: 'Foundations and Meaning of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Foundations and Meaning of Quadratic Equations' },
-                        { skill_id: 10202, skill_name: 'Representing Real-Life Situations Mathematically', topic: 'Quadratic Equations', subtopic: 'Representing Real-Life Situations Mathematically' },
-                        { skill_id: 10203, skill_name: 'Identifying and Verifying Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Identifying and Verifying Quadratic Equations' },
-                        { skill_id: 10204, skill_name: 'Finding Roots by Factorisation', topic: 'Quadratic Equations', subtopic: 'Finding Roots by Factorisation' },
-                        { skill_id: 10205, skill_name: 'Solving Word Problems Using Factorisation', topic: 'Quadratic Equations', subtopic: 'Solving Word Problems Using Factorisation' },
-                        { skill_id: 10206, skill_name: 'Understanding Roots and Their Nature', topic: 'Quadratic Equations', subtopic: 'Understanding Roots and Their Nature' },
-                        { skill_id: 10207, skill_name: 'Using the Discriminant to Analyse Roots', topic: 'Quadratic Equations', subtopic: 'Using the Discriminant to Analyse Roots' },
-                        { skill_id: 10208, skill_name: 'Applying Quadratic Equations to Real-Life Situations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
-                        { skill_id: 1207, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' }
+                        { skill_id: 1120, skill_name: 'Understanding Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Foundations and Meaning of Quadratic Equations' },
+                        { skill_id: 1121, skill_name: 'Forming Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Representing Real-Life Situations Mathematically' },
+                        { skill_id: 1122, skill_name: 'Checking Whether an Equation Is Quadratic', topic: 'Quadratic Equations', subtopic: 'Identifying and Verifying Quadratic Equations' },
+                        { skill_id: 1123, skill_name: 'Solving Quadratic Equations by Factorisation', topic: 'Quadratic Equations', subtopic: 'Finding Roots by Factorisation' },
+                        { skill_id: 1124, skill_name: 'Applying Quadratic Equations to Word Problems', topic: 'Quadratic Equations', subtopic: 'Solving Word Problems Using Factorisation' },
+                        { skill_id: 1125, skill_name: 'Understanding the Nature of Roots', topic: 'Quadratic Equations', subtopic: 'Understanding Roots and Their Nature' },
+                        { skill_id: 1126, skill_name: 'Finding Roots Using the Discriminant', topic: 'Quadratic Equations', subtopic: 'Using the Discriminant to Analyse Roots' },
+                        { skill_id: 1127, skill_name: 'Real-Life Applications of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
+                        { skill_id: 1128, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
@@ -548,7 +549,7 @@ const SeniorGradeSyllabus = () => {
                             onClick={() => {
                                 const topicSkills = skillsByTopic[topic];
                                 if (topicSkills.length === 1 && topicSkills[0].path) {
-                                    navigate(topicSkills[0].path);
+                                    handleSkillClick(topicSkills[0]);
                                 } else {
                                     setSelectedTopic(topic);
                                 }
@@ -615,13 +616,7 @@ const SeniorGradeSyllabus = () => {
                                                         <div
                                                             key={skill.skill_id}
                                                             className="skill-card-modal"
-                                                            onClick={() => {
-                                                                if (skill.isLocal) {
-                                                                    navigate(skill.path);
-                                                                } else {
-                                                                    navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
-                                                                }
-                                                            }}
+                                                            onClick={() => handleSkillClick(skill)}
                                                         >
                                                             <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                                             <div className="skill-card-footer">
@@ -646,13 +641,7 @@ const SeniorGradeSyllabus = () => {
                                                 <div
                                                     key={skill.skill_id}
                                                     className="chapter-assessment-card group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-2"
-                                                    onClick={() => {
-                                                        if (skill.isLocal) {
-                                                            navigate(skill.path);
-                                                        } else {
-                                                            navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
-                                                        }
-                                                    }}
+                                                    onClick={() => handleSkillClick(skill)}
                                                     style={{
                                                         background: 'linear-gradient(135deg, #4F46E5 0%, #3B82F6 100%)',
                                                         color: 'white',

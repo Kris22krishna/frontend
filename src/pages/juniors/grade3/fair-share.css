@@ -1,0 +1,2159 @@
+/* Junior Practice Session - Modern Reference Design */
+
+.junior-practice-page {
+    position: relative;
+    height: 100vh;
+    /* Fixed height */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #E0F7FA;
+    font-family: 'Fredoka', 'Nunito', sans-serif;
+    overflow: hidden;
+    /* Prevent body scrolling */
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+}
+
+/* Ensure global box-sizing for this component's children if not already set globally */
+.junior-practice-page * {
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* Header */
+.junior-practice-header {
+    height: 60px;
+    /* Thinner header */
+    position: relative;
+    z-index: 20;
+    flex-shrink: 0;
+}
+
+/* Skill Name Label - Desktop (inside header-left) */
+.skill-name-label {
+    color: #31326F;
+    font-weight: 700;
+    font-size: 0.95rem;
+    max-width: 260px;
+    line-height: 1.25;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Skill Name Label - Mobile (above question card) */
+.skill-name-mobile {
+    display: none;
+}
+
+/* Sun Timer - Top Left */
+.sun-timer-container {
+    position: absolute;
+    left: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sun-timer {
+    width: 70px;
+    height: 70px;
+    background: #FFD54F;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #FFC107;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+    z-index: 2;
+}
+
+.sun-rays {
+    position: absolute;
+    width: 130%;
+    height: 130%;
+    /* Softer gradient with slight transition for smoothness */
+    background: repeating-conic-gradient(from 0deg, #FFC107 0deg 15deg, transparent 20deg 35deg);
+    border-radius: 50%;
+    z-index: -1;
+    animation: rotateRays 20s linear infinite;
+    /* Slower, smoother rotation */
+    /* Optional: Mas k to fade out tips if desired, or just kept clean */
+    -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
+    mask-image: radial-gradient(circle, black 60%, transparent 100%);
+}
+
+@keyframes rotateRays {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.timer-text {
+    font-weight: 800;
+    color: #E65100;
+    font-size: 1.1rem;
+}
+
+/* Main Content Wrapper */
+.practice-content-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    /* Center horizontally/vertically */
+    justify-content: center;
+    position: relative;
+    padding: 0.5rem;
+    /* Reduced padding */
+    overflow: hidden;
+    /* Contain children */
+    /* Height is now managed by flexbox */
+}
+
+
+/* Board Container - Responsive Grid */
+.practice-board-container {
+    display: grid;
+    /* Desktop: 2 columns (Question | Scratchpad) */
+    grid-template-columns: minmax(0, 1fr) 300px;
+    grid-template-rows: 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1400px;
+    height: 100%;
+    padding: 0 1rem;
+    align-items: stretch;
+    /* Stretch columns to fill height */
+}
+
+/* Left Column */
+.practice-left-col {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    /* Contain the scrollable card */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Right Column - Desktop */
+.practice-right-col {
+    position: relative;
+    height: 100%;
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.magic-pad-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.magic-pad-close-mobile {
+    display: none;
+    /* Hidden on desktop */
+}
+
+/* Mascot - Overlapping Left of Question Card */
+.mascot-overlap {
+    position: absolute;
+    left: 0px;
+    bottom: 100px;
+    /* Lower position */
+    z-index: 25;
+    width: 120px;
+    filter: drop-shadow(5px 10px 15px rgba(0, 0, 0, 0.15));
+    pointer-events: none;
+}
+
+.mascot-img-large {
+    width: 100%;
+    height: auto;
+}
+
+/* Modern Question Card */
+.question-card-modern {
+    background: white;
+    border-radius: 2.5rem;
+    padding: 3rem;
+    /* Increased padding */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    min-height: 500px;
+    /* Substantial minimum height */
+    max-height: 100%;
+    /* Fit within wrapper */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Center content vertically */
+    align-items: center;
+    /* Center content horizontally */
+    position: relative;
+    z-index: 10;
+    z-index: 10;
+    border: 4px solid #FFFFFF;
+    overflow: hidden;
+    flex: 1;
+    /* Take available space */
+    min-height: 0;
+    /* Allow shrinking for scroll */
+}
+
+/* Custom Scrollbar for Webkit */
+.question-card-modern::-webkit-scrollbar {
+    width: 8px;
+}
+
+.question-card-modern::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.question-card-modern::-webkit-scrollbar-thumb {
+    background-color: #B2DFDB;
+    border-radius: 20px;
+}
+
+/* Question Styling */
+.question-header-modern {
+    margin-bottom: 0.5rem;
+    /* Reduced margin */
+    text-align: center;
+    width: 100%;
+    flex: 0 1 auto;
+    /* Don't force stretch if text is short */
+    overflow-y: auto;
+    /* Only the question text area scrolls */
+    padding-right: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: #B2DFDB transparent;
+}
+
+/* Custom Scrollbar for Question Text */
+.question-header-modern::-webkit-scrollbar {
+    width: 6px;
+}
+
+.question-header-modern::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.question-header-modern::-webkit-scrollbar-thumb {
+    background-color: #B2DFDB;
+    border-radius: 10px;
+}
+
+/* ... existing styles ... */
+
+.question-text-modern {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: clamp(1.2rem, 2.2vw, 2rem);
+    font-weight: 400 !important;
+    /* Non-bold */
+    color: #2D3748;
+    line-height: 1.6;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    overflow: visible;
+    text-align: center;
+}
+
+/* ... */
+
+/* Interaction Area */
+.interaction-area-modern {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: none;
+    /* Allow it to grow */
+    min-height: min-content;
+    /* Crucial for nested flex scrolling */
+    justify-content: flex-start;
+    /* Start from top */
+    overflow-y: visible;
+    /* DISABLE INTERNAL SCROLL */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    /* Extra padding at bottom */
+    height: auto;
+    border-top: 2px dashed #F1F5F9;
+    /* Subtle separator */
+}
+
+
+/* Options Grid - Responsive */
+.options-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+    /* Large gap for spreading out */
+    width: 100%;
+    max-width: 900px;
+    /* Wider grid */
+    margin: 0 auto;
+    align-content: center;
+}
+
+.option-btn-modern {
+    background: white;
+    border: 3px solid #E2E8F0;
+    border-radius: 1.2rem;
+    padding: 0.75rem 1.25rem;
+    font-size: clamp(1rem, 1.6vw, 1.3rem);
+    font-weight: 500;
+    color: #4A5568;
+    box-shadow: 0 4px 0 #CBD5E0;
+    cursor: pointer;
+    transition: all 0.1s;
+    font-family: 'Fredoka', sans-serif;
+    min-height: 68px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 0 0 calc(50% - 0.5rem);
+    width: auto;
+}
+
+.option-btn-modern:hover {
+    border-color: #94A3B8;
+    transform: translateY(-2px);
+    background: #F1F5F9;
+}
+
+.option-btn-modern:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.option-btn-modern.selected {
+    border-color: #00BFA5;
+    background: #E0F2F1;
+    color: #00695C;
+    box-shadow: 0 4px 0 #00897B;
+}
+
+.raksha-theme .option-btn-modern.selected {
+    border-color: #94A3B8;
+    background: #E2E8F0;
+    color: #334155;
+    box-shadow: 0 4px 0 #64748B;
+}
+
+/* Grey Selection Theme (Override) */
+.grey-selection-theme .option-btn-modern {
+    border-color: #CBD5E0;
+}
+
+.grey-selection-theme .option-btn-modern:hover:not(:disabled) {
+    border-color: #94A3B8;
+    background: #F1F5F9;
+    transform: translateY(-2px);
+}
+
+.grey-selection-theme .option-btn-modern.selected {
+    border-color: #94A3B8;
+    background: #E2E8F0;
+    color: #334155;
+    box-shadow: 0 4px 0 #64748B;
+}
+
+/* After submit: correct/wrong always win regardless of selection state */
+.grey-selection-theme .option-btn-modern.correct,
+.grey-selection-theme .option-btn-modern.correct.selected {
+    background: #C8E6C9 !important;
+    border-color: #4CAF50 !important;
+    color: #1B5E20 !important;
+    box-shadow: 0 4px 0 #388E3C !important;
+}
+
+.grey-selection-theme .option-btn-modern.wrong,
+.grey-selection-theme .option-btn-modern.wrong.selected {
+    background: #FFCDD2 !important;
+    border-color: #EF5350 !important;
+    color: #B71C1C !important;
+    box-shadow: 0 4px 0 #D32F2F !important;
+}
+
+/* Base Correct/Wrong — general */
+.fair-share-theme .option-btn-modern.selected {
+    border-color: #7C3AED;
+    background: #EDE9FE;
+    color: #5B21B6;
+    box-shadow: 0 4px 0 #6D28D9;
+}
+
+.option-btn-modern.correct {
+    background: #C8E6C9;
+    border-color: #4CAF50;
+    color: #1B5E20;
+    box-shadow: 0 4px 0 #388E3C;
+}
+
+.option-btn-modern.wrong {
+    background: #FFCDD2;
+    border-color: #EF5350;
+    color: #B71C1C;
+    box-shadow: 0 4px 0 #D32F2F;
+}
+
+/* Grey Theme Specific Feedback (Higher Specificity) */
+.grey-selection-theme .option-btn-modern.correct {
+    background: #C8E6C9 !important;
+    border-color: #4CAF50 !important;
+    color: #1B5E20 !important;
+    box-shadow: 0 4px 0 #388E3C !important;
+}
+
+.grey-selection-theme .option-btn-modern.wrong {
+    background: #FFCDD2 !important;
+    border-color: #EF5350 !important;
+    color: #B71C1C !important;
+    box-shadow: 0 4px 0 #D32F2F !important;
+}
+
+/* Feedback Mini */
+.feedback-mini {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    padding: 0.5rem 1.5rem;
+    border-radius: 1rem;
+    animation: popIn 0.3s ease-out;
+    text-align: center;
+}
+
+.feedback-mini.correct {
+    color: #2E7D32;
+    background: #E8F5E9;
+    border: 2px solid #A5D6A7;
+}
+
+.feedback-mini.incorrect {
+    color: #C62828;
+    background: #FFEBEE;
+    border: 2px solid #EF9A9A;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Input Field */
+.user-input-modern {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.modern-input-field {
+    width: 100%;
+    max-width: 500px;
+    padding: 1rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    border: 3px solid #B2DFDB;
+    border-radius: 1.5rem;
+    background: white;
+    color: #2D3748;
+}
+
+.modern-input-field:focus {
+    border-color: #00BFA5;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 191, 165, 0.2);
+    background: white;
+}
+
+.modern-input-field.correct {
+    background: #C8E6C9;
+    border-color: #4CAF50;
+    color: #1B5E20;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
+}
+
+.modern-input-field.wrong {
+    background: #FFCDD2;
+    border-color: #EF5350;
+    color: #B71C1C;
+    box-shadow: 0 0 0 4px rgba(239, 83, 80, 0.2);
+}
+
+/* Bottom Action Bar */
+
+.junior-bottom-bar {
+    width: 100%;
+    height: 60px;
+    /* Thinner footer */
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.1);
+    z-index: 30;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    box-sizing: border-box;
+}
+
+/* Footer Controls Containers */
+.desktop-footer-controls {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mobile-footer-controls {
+    display: none;
+    /* Hidden by default on Desktop/Tablet */
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Footer Button Styles */
+.footer-icon-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 1rem;
+    border: 2px solid #E2E8F0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.footer-icon-btn:hover {
+    background: #F1F5F9;
+    border-color: #CBD5E1;
+    color: #475569;
+}
+
+.footer-icon-btn.active {
+    background: #E0E7FF;
+    border-color: #818CF8;
+    color: #4338CA;
+}
+
+.footer-pill-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 1.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Fredoka', sans-serif;
+    white-space: nowrap;
+}
+
+.footer-pill-btn.explain-btn {
+    background: white;
+    border: 2px solid #00BFA5;
+    color: #00695C;
+}
+
+.footer-pill-btn.explain-btn:hover {
+    background: #E0F2F1;
+}
+
+.footer-pill-btn.next-btn {
+    background: #2979FF;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 0 #1565C0;
+}
+
+.footer-pill-btn.next-btn:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.footer-pill-btn.submit-btn {
+    background: #00C853;
+    color: white;
+    border: none;
+    box-shadow: 0 4px 0 #009624;
+}
+
+.footer-center-btn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+
+/* Magic Pad Button */
+.magic-pad-btn {
+    background: #7986CB;
+    /* Indigo */
+    color: white;
+    border: none;
+    border-radius: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: 'Fredoka', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #5C6BC0;
+    transition: all 0.2s;
+    /* Hidden on desktop since it's side-by-side */
+    display: none;
+}
+
+.magic-pad-btn:hover {
+    transform: translateY(-2px);
+    background: #9FA8DA;
+}
+
+.magic-pad-btn:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.pencil-icon {
+    color: #FFECB3;
+}
+
+/* Navigation Buttons */
+.nav-buttons-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-circle-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 3px solid #B2DFDB;
+    background: white;
+    color: #009688;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.2rem;
+}
+
+.nav-circle-btn:hover:not(:disabled) {
+    border-color: #009688;
+    background: #E0F2F1;
+    transform: scale(1.05);
+}
+
+.nav-circle-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #E0E0E0;
+    color: #BDBDBD;
+}
+
+/* Hide explicitly requested removed buttons */
+.nav-circle-btn.prev,
+.start-over-link {
+    display: none !important;
+}
+
+.nav-circle-big-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 1.5rem;
+}
+
+.nav-circle-big-btn.submit {
+    background: #00C853;
+    /* Green check */
+    color: white;
+    box-shadow: 0 4px 0 #009624;
+}
+
+.nav-circle-big-btn.submit:hover {
+    transform: scale(1.05) translateY(-2px);
+    background: #00E676;
+}
+
+.nav-circle-big-btn.submit:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.nav-circle-big-btn.submit:disabled {
+    background: #BDBDBD;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.nav-circle-big-btn.next {
+    background: #2979FF;
+    /* Blue next arrow */
+    color: white;
+    box-shadow: 0 4px 0 #1565C0;
+}
+
+.nav-circle-big-btn.next:hover {
+    transform: scale(1.05) translateY(-2px);
+    background: #448AFF;
+}
+
+.nav-circle-big-btn.next:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+/* Clear Selection */
+.clear-action-btn {
+    background: white;
+    border: 2px solid #FFCCBC;
+    color: #D84315;
+    padding: 0.8rem 1.5rem;
+    border-radius: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    font-family: 'Fredoka', sans-serif;
+    box-shadow: 0 3px 0 #FFAB91;
+    /* Ensure it's visible */
+    display: flex;
+    margin-right: 1rem;
+}
+
+.clear-action-btn:hover {
+    background: #FBE9E7;
+    transform: translateY(-2px);
+}
+
+.clear-action-btn:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+/* View Explanation Button - High Contrast Pill */
+.view-explanation-btn {
+    background: #FFFFFF;
+    color: #00695C;
+    border: 3px solid #00BFA5;
+    padding: 0.8rem 1.8rem;
+    border-radius: 2rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 0 #00897B;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 180px;
+    justify-content: center;
+}
+
+.view-explanation-btn:hover {
+    background: #E0F2F1;
+    transform: translateY(-3px);
+    box-shadow: 0 7px 0 #00897B;
+}
+
+.view-explanation-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #00897B;
+}
+
+/* Next Button - Appealing Pill Shape */
+.nav-pill-next-btn {
+    background: linear-gradient(135deg, #2979FF 0%, #448AFF 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2.5rem;
+    /* Wide pill */
+    border-radius: 2rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.3rem;
+    box-shadow: 0 5px 0 #1565C0, 0 8px 15px rgba(41, 121, 255, 0.3);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.nav-pill-next-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 0 #1565C0, 0 12px 20px rgba(41, 121, 255, 0.4);
+    background: linear-gradient(135deg, #448AFF 0%, #2979FF 100%);
+}
+
+.nav-pill-next-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #1565C0;
+}
+
+/* Submit Button - Vibrant Green Pill */
+.nav-pill-submit-btn {
+    background: linear-gradient(135deg, #00C853 0%, #69F0AE 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 2.5rem;
+    border-radius: 2rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.3rem;
+    box-shadow: 0 5px 0 #009624, 0 8px 15px rgba(0, 200, 83, 0.3);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.nav-pill-submit-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 0 #009624, 0 12px 20px rgba(0, 200, 83, 0.4);
+    background: linear-gradient(135deg, #69F0AE 0%, #00C853 100%);
+}
+
+.nav-pill-submit-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #009624;
+}
+
+.nav-pill-submit-btn:disabled {
+    background: #E0E0E0;
+    color: #9E9E9E;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive Breakpoints */
+
+/* Tablet (768px - 1199px) */
+@media (max-width: 1200px) {
+    .practice-board-container {
+        grid-template-columns: 1fr auto;
+        /* Shrink scratchpad */
+    }
+
+    .magic-pad-wrapper {
+        width: 280px;
+        /* Reduced scratchpad width */
+    }
+
+    .mascot-overlap {
+        width: 160px;
+        /* Smaller mascot */
+        left: -20px;
+    }
+}
+
+/* Small Tablet / Large Mobile (600px - 767px) */
+@media (max-width: 900px) {
+    .practice-board-container {
+        display: flex;
+        /* Stack layout */
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .practice-right-col {
+        display: block !important;
+        /* Was display: none; changed to block so Bottom Sheet can render */
+    }
+
+    .magic-pad-btn {
+        display: flex !important;
+        /* Show toggle button */
+    }
+
+    .mascot-overlap {
+        display: none !important;
+        /* Hide mascot */
+    }
+
+    .question-card-modern {
+        padding: 1.5rem;
+    }
+}
+
+/* Mobile & Small Tablet Specific Adjustments (Stack/Overlay) */
+@media (max-width: 900px) {
+
+    /* Revert to single column block */
+    .practice-board-container {
+        display: block;
+        max-height: 100%;
+    }
+
+    /* Right Column acts as Overlay when toggled */
+    /* Right Column acts as Overlay when toggled */
+    /* REMOVED OLD OVERLAY STYLES - Now handled by Bottom Sheet Component */
+
+    /* Hide Desktop Magic Pad Wrapper on Mobile */
+    .magic-pad-wrapper.desktop-only {
+        display: none !important;
+    }
+
+    /* Bottom Sheet Styles */
+    .bottom-sheet-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        /* Dimmed background */
+        backdrop-filter: blur(2px);
+        z-index: 1000;
+        touch-action: none;
+    }
+
+    .bottom-sheet-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60vh;
+        /* Default to 60% height */
+        max-height: 90vh;
+        /* Allow resizing up to 90% via drag (if implemented fully dynamic) - currently fixed start but draggable */
+        background: white;
+        border-top-left-radius: 1.5rem;
+        border-top-right-radius: 1.5rem;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        /* Above backdrop */
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .sheet-handle-bar {
+        width: 100%;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        cursor: grab;
+    }
+
+    .sheet-handle {
+        width: 40px;
+        height: 5px;
+        background: #E2E8F0;
+        border-radius: 10px;
+    }
+
+    .sheet-header-mobile {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1rem 0.5rem 1rem;
+        border-bottom: 1px solid #F1F5F9;
+        flex-shrink: 0;
+    }
+
+    .sheet-title {
+        font-weight: 700;
+        color: #64748B;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .sheet-close-btn {
+        background: #EF4444;
+        /* Solid Red */
+        color: white;
+        border: 2px solid white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+    }
+
+    .sheet-close-btn:active {
+        transform: scale(0.9);
+    }
+
+    .sheet-content {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+        background: white;
+    }
+
+    /* Override Whiteboard styles when inside sheet to fit perfectly */
+    .sheet-content .whiteboard-panel {
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    .sheet-content .whiteboard-header {
+        display: none;
+        /* Hide internal whiteboard header in mobile sheet mode to avoid double headers */
+    }
+
+    /* Restore Magic Pad Button in Footer */
+    .magic-pad-btn {
+        display: flex;
+        /* Show button! */
+    }
+
+    /* Adjust padding for question card since mascot is different or overlay */
+    .question-card-modern {
+        padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+        /* Top padding for mascot */
+        border-radius: 1.5rem;
+    }
+
+    .mascot-overlap {
+        display: none !important;
+        /* Hide mascot on mobile as requested */
+    }
+}
+
+/* Mobile Small (Phones) */
+@media (max-width: 768px) {
+    .junior-practice-header {
+        height: 60px;
+    }
+
+    /* Hide desktop skill label on mobile */
+    .skill-name-label {
+        display: none;
+    }
+
+    /* Show mobile skill label above question card */
+    .skill-name-mobile {
+        display: block;
+        color: #31326F;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0 1.2rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+        text-align: left;
+    }
+
+    .sun-timer-container {
+        left: 0.5rem;
+        /* Tighter to edge */
+        transform: translateY(-50%) scale(0.8);
+        /* Scale down timer */
+    }
+
+    .sun-timer {
+        width: 45px;
+        height: 45px;
+        border-width: 2px;
+    }
+
+    .timer-text {
+        font-size: 0.7rem;
+    }
+
+    .exit-practice-container {
+        display: none;
+        /* Hide top sticker exit on mobile */
+    }
+
+    .practice-content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 0;
+        padding: 1rem 0 80px 0;
+        /* Top padding + Bottom padding for footer */
+        width: 100%;
+        overflow-y: auto;
+        /* Allow scroll */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .practice-board-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 480px;
+        /* Max width constraint */
+        margin: 0 auto;
+        justify-content: center;
+        /* Center vertically if space allows */
+        min-height: min-content;
+        flex: 1;
+    }
+
+    .practice-left-col {
+        height: auto;
+        /* Remove fixed height */
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .question-card-modern {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        width: 90%;
+        /* 90% Width */
+        margin: 0 auto;
+        /* Centered */
+        height: auto;
+        /* Grow with content */
+        max-height: none;
+        /* No clipping */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        /* Consistent shadow */
+        gap: 1.5rem;
+        /* Gap between question and options */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .question-header-modern {
+        flex-shrink: 0;
+        margin-bottom: 0;
+    }
+
+    .question-text-modern {
+        font-size: 1.1rem;
+        /* Comfortable size */
+        line-height: 1.5;
+        text-align: left;
+        /* Left align */
+        font-weight: 700;
+        color: #1A202C;
+        display: inline;
+        /* Inline for number */
+        max-height: none;
+        /* No resize/clipping */
+    }
+
+    .question-number-modern {
+        font-size: 1.1rem;
+        color: #00BFA5;
+        margin-right: 0.5rem;
+        font-weight: 800;
+    }
+
+    .interaction-area-modern {
+        width: 100%;
+        padding: 0;
+        overflow: visible;
+        /* Show all options */
+        flex: 0 0 auto;
+        /* Don't shrink */
+    }
+
+    .options-grid-modern {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        /* 12px gap */
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .option-btn-modern {
+        width: 100%;
+        flex: 0 0 auto;
+        min-height: 62px;
+        padding: 0.9rem 1.4rem;
+        font-size: 1.05rem;
+        border-radius: 1rem;
+        background: white;
+        border: 2px solid #E2E8F0;
+        box-shadow: 0 2px 0 #E2E8F0;
+        color: #4A5568;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        white-space: normal;
+        line-height: 1.3;
+    }
+
+
+    .option-btn-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #CBD5E0;
+    }
+
+    .option-btn-modern:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 #CBD5E0;
+    }
+
+    /* Selected State */
+    .option-btn-modern.selected {
+        border-color: #3182CE;
+        background: #EBF8FF;
+        color: #2B6CB0;
+        box-shadow: 0 4px 0 #2B6CB0;
+    }
+
+    /* Override mobile selected with validation colors */
+    .option-btn-modern.correct {
+        background: #C8E6C9 !important;
+        border-color: #4CAF50 !important;
+        color: #1B5E20 !important;
+        box-shadow: 0 4px 0 #388E3C !important;
+    }
+
+    .option-btn-modern.wrong {
+        background: #FFCDD2 !important;
+        border-color: #EF5350 !important;
+        color: #B71C1C !important;
+        box-shadow: 0 4px 0 #D32F2F !important;
+    }
+
+
+
+    /* Icon-only Magic Pad Btn - HIDDEN as per request */
+    .magic-pad-btn {
+        display: none !important;
+    }
+
+    .junior-bottom-bar {
+        height: 70px;
+        /* Slightly taller for padding */
+        padding: 0 1rem;
+        gap: 0.5rem;
+    }
+
+    .footer-icon-btn {
+        width: 45px;
+        height: 45px;
+    }
+
+    .footer-pill-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .clear-action-btn {
+        font-size: 0;
+        padding: 0.8rem;
+        width: 45px;
+        height: 45px;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+
+    .clear-action-btn svg {
+        margin: 0;
+    }
+
+    .nav-circle-big-btn {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* Resize Pill Buttons for Mobile - Matching Class 3 Reference */
+    .nav-pill-next-btn,
+    .nav-pill-submit-btn,
+    .nav-pill-prev-btn {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.7rem !important;
+        height: 30px !important;
+        border-radius: 0.8rem !important;
+        min-width: auto !important;
+        white-space: nowrap !important;
+        gap: 0.3rem !important;
+    }
+
+    /* Hide icon in Previous button on mobile to save space */
+    .nav-pill-prev-btn svg {
+        display: none !important;
+    }
+
+    .view-explanation-btn {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.65rem !important;
+        height: 28px !important;
+        border-radius: 0.7rem !important;
+        border-width: 1.5px !important;
+        white-space: nowrap !important;
+    }
+
+    /* Target very small screens specifically */
+    @media (max-width: 360px) {
+        .question-text-modern {
+            font-size: 0.9rem;
+        }
+
+        .option-btn-modern {
+            min-height: 30px;
+            font-size: 0.85rem;
+            padding: 0.2rem;
+        }
+
+        .view-explanation-btn {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.4rem;
+        }
+
+        .nav-pill-next-btn,
+        .nav-pill-submit-btn,
+        .nav-pill-prev-btn {
+            font-size: 0.75rem !important;
+            padding: 0.3rem 0.6rem !important;
+        }
+    }
+
+    .view-explanation-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Mobile Footer Toggle */
+@media (max-width: 900px) {
+    .desktop-footer-controls {
+        display: none !important;
+    }
+
+    .mobile-footer-controls {
+        display: flex !important;
+    }
+
+    /* Reduce padding for mobile footer */
+    /* Fixed Footer with Flex Layout */
+    .junior-bottom-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 72px;
+        background: white;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        display: flex !important;
+        align-items: center;
+        /* Ensure padding handles safe area */
+        padding: 0 0.5rem 0 0.5rem !important;
+        box-sizing: border-box;
+        z-index: 60;
+    }
+
+    /* Mobile Footer Internal Layout */
+    .mobile-footer-controls {
+        display: flex !important;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+    }
+
+    .mobile-footer-left {
+        display: flex;
+        align-items: center;
+        width: auto;
+    }
+
+    .mobile-footer-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
+        gap: 4px !important;
+    }
+
+    /* Navigation buttons group spacing */
+    .nav-buttons-group {
+        display: flex !important;
+        gap: 4px !important;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .header-left {
+        display: none !important;
+    }
+
+    /* Adjust Sticker Exit size for footer */
+    .mobile-sticker-exit {
+        transform: scale(0.65);
+        transform-origin: left center;
+        /* Remove default margins if any */
+        margin: 0;
+        display: block !important;
+    }
+
+    /* Hide Mascot on Mobile */
+    .mascot-overlap {
+        display: none !important;
+    }
+
+    /* Position Exit Button in Top Right (replacing mascot) */
+    .exit-practice-container {
+        display: block !important;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 100;
+        transform: scale(0.65);
+        transform-origin: right top;
+    }
+
+    .mascot-img-large {
+        width: 100%;
+        height: auto;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+
+    /* Floating Narrow Question Card - FIXED WIDTHS */
+    .question-card-modern {
+        background: white;
+        /* Mobile: 92-95vw, max 480px */
+        width: 94vw;
+        max-width: 480px;
+        margin: 20px auto 0 auto;
+        /* Push down, center */
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        justify-content: center;
+        gap: 1rem;
+        border: none;
+        height: auto;
+        flex: 0 1 auto;
+        /* Ensure it doesn't get too tall but allows content */
+        max-height: none;
+        min-height: 50vh;
+        /* Occupy at least 50% screen */
+    }
+
+    /* Option Button Scaling Rule: Wide buttons */
+    .option-btn-modern {
+        width: 100%;
+        /* Fill the grid column */
+        min-height: 48px;
+        /* Touch target */
+        font-size: 1rem;
+    }
+
+    .options-grid-modern {
+        /* Ensure single column on mobile implies full width if 1fr */
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 0.8rem;
+    }
+
+    .interaction-area-modern {
+        width: 100%;
+        /* Ensure full width of card */
+        padding: 0;
+    }
+
+    /* Container adjustments */
+    .practice-board-container {
+        align-items: flex-start;
+        /* Align top to allow scrolling if needed */
+        padding-top: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .practice-content-wrapper {
+        padding-bottom: 80px;
+        /* Space for footer */
+        justify-content: flex-start;
+        overflow-y: auto;
+        /* Main scroll */
+        height: 100dvh;
+    }
+
+    /* Button Styling to match "Faint/Outlined" look for secondary actions */
+    .footer-icon-btn {
+        border-color: #E2E8F0;
+        color: #94A3B8;
+        background: white;
+        border-radius: 12px;
+        /* Soft square */
+        /* Ensure distinct shape */
+        width: 48px;
+        height: 48px;
+    }
+
+    .footer-icon-btn.magic-btn {
+        width: 60px;
+        /* Larger button */
+        height: 60px;
+        border: 3px solid #FF9800;
+        /* Thicker border */
+        background: white;
+        color: #E65100;
+        /* margin-right: 10px; */
+        /* Removed for space-between layout */
+        box-shadow: 0 6px 0 #E65100, 0 8px 15px rgba(255, 152, 0, 0.4);
+        /* Stronger shadow */
+        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .footer-icon-btn.magic-btn:active {
+        box-shadow: 0 2px 0 #81C784;
+        transform: translateY(2px);
+    }
+
+    .footer-icon-btn.exit-btn {
+        border-color: #FFCCBC;
+        /* Faint red/orange */
+        color: #FF7043;
+        background: white;
+        /* Keep white for exit */
+    }
+
+    /* Active/Filled Styles */
+    .footer-pill-btn.explain-btn {
+        border: 2px solid #7E57C2;
+    }
+
+    .footer-pill-btn.next-btn,
+    .footer-pill-btn.submit-btn {
+        background: #26A69A;
+        box-shadow: 0 4px 0 #00796B;
+    }
+}
+
+/* ============================================
+   FORCE MOBILE QUESTION + OPTIONS TO FIT
+   No Cutoff / No Hidden Content
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    /* Enable Page Scrolling */
+    .junior-practice-page {
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh;
+        overflow-y: auto !important;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Keep Footer Fixed */
+    .junior-bottom-bar {
+        position: fixed !important;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    /* Kill fixed heights everywhere else */
+    html,
+    body {
+        height: auto !important;
+        overflow-y: auto !important;
+    }
+
+    .practice-content-wrapper,
+    .practice-board-container,
+    .practice-left-col,
+    .question-card-modern,
+    .interaction-area-modern {
+        height: auto !important;
+        min-height: unset !important;
+        max-height: unset !important;
+        flex: none !important;
+        overflow: visible !important;
+    }
+
+    /* Main wrapper */
+    .practice-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start !important;
+        padding-bottom: 120px !important;
+        /* Extra space for fixed footer */
+    }
+
+    /* Scale down large visuals on mobile */
+    .question-text-modern svg {
+        max-width: 100%;
+        height: auto !important;
+        max-height: 180px;
+        /* Cap height on mobile */
+    }
+
+    .practice-board-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start !important;
+        align-items: center;
+    }
+
+    .practice-left-col {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Question card */
+    .question-card-modern {
+        margin: 0.5rem auto 1rem;
+        padding: 1.4rem;
+        display: block !important;
+        box-sizing: border-box;
+    }
+
+    /* Question text */
+    .question-text-modern {
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    /* Options container */
+    .interaction-area-modern {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .options-grid-modern {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.8rem;
+    }
+
+    /* Options */
+    .option-btn-modern {
+        min-height: 52px;
+        padding: 0.7rem 1rem;
+    }
+
+}
+
+
+/* ============================================
+   SMALL PHONES
+   ============================================ */
+
+@media (max-width: 360px) {
+
+    .question-card-modern {
+        padding: 1rem;
+    }
+
+    .option-btn-modern {
+        min-height: 46px;
+        font-size: 0.85rem;
+    }
+
+}
+
+/* Results View Styles */
+.results-view {
+    padding-top: 80px;
+    /* Clear fixed Navbar */
+    background-color: #F0FDFA;
+    min-height: 100vh;
+}
+
+.results-header {
+    background: #31326F;
+    height: 160px;
+    /* Taller header for results */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom-left-radius: 4rem;
+    border-bottom-right-radius: 4rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(49, 50, 111, 0.2);
+}
+
+.results-header .back-topics-top {
+    z-index: 1001;
+    /* Above Navbar if needed */
+}
+
+/* Previous Button - Pill Shape (Matching Next, Same Color, Reduced Length) */
+.nav-pill-prev-btn {
+    background: linear-gradient(135deg, #2979FF 0%, #448AFF 100%);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    /* Reduced padding */
+    border-radius: 2rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.3rem;
+    box-shadow: 0 5px 0 #1565C0, 0 8px 15px rgba(41, 121, 255, 0.3);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.nav-pill-prev-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 0 #1565C0, 0 12px 20px rgba(41, 121, 255, 0.4);
+    background: linear-gradient(135deg, #448AFF 0%, #2979FF 100%);
+}
+
+.nav-pill-prev-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #1565C0;
+}
+
+
+/* ============================================
+   LANDSCAPE MODE OPTIMIZATIONS
+   For mobile devices in landscape orientation
+   ============================================ */
+
+/* Landscape Mode: Question Scrollability & Layout */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    /* Make practice content scrollable */
+    .practice-content-wrapper {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 90px !important;
+    }
+
+    /* Ensure question card doesn't have max-height restrictions */
+    .question-card-modern {
+        max-height: none !important;
+        height: auto !important;
+        margin-bottom: 1.2rem !important;
+        padding: 1.2rem !important;
+    }
+
+    /* Make interaction area fully visible */
+    .interaction-area-modern {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* Reduce header height in landscape */
+    .junior-practice-header {
+        height: 55px !important;
+    }
+
+    /* Smaller timer in landscape */
+    .sun-timer-container {
+        transform: translateY(-50%) scale(0.65) !important;
+    }
+
+    .sun-timer {
+        width: 50px !important;
+        height: 50px !important;
+    }
+
+    .timer-text {
+        font-size: 0.85rem !important;
+    }
+
+    /* Adjust footer height */
+    .junior-bottom-bar {
+        height: 58px !important;
+        padding: 0 0.4rem !important;
+    }
+
+    /* Smaller footer buttons in landscape */
+    .nav-pill-next-btn,
+    .nav-pill-submit-btn,
+    .nav-pill-prev-btn {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.65rem !important;
+        height: 28px !important;
+    }
+
+    .view-explanation-btn {
+        padding: 0.2rem 0.4rem !important;
+        font-size: 0.6rem !important;
+        height: 26px !important;
+    }
+
+    /* Compact question text */
+    .question-text-modern {
+        font-size: 1rem !important;
+        line-height: 1.3 !important;
+    }
+
+    /* Smaller options */
+    .option-btn-modern {
+        min-height: 42px !important;
+        padding: 0.5rem 0.8rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Very Short Landscape Screens (e.g., folding phones) */
+@media (max-height: 400px) and (orientation: landscape) {
+
+    /* More aggressive header reduction */
+    .junior-practice-header {
+        height: 48px !important;
+    }
+
+    /* Smaller footer */
+    .junior-bottom-bar {
+        height: 52px !important;
+    }
+
+    /* Even tighter question spacing */
+    .question-card-modern {
+        padding: 0.8rem !important;
+        gap: 0.6rem !important;
+    }
+
+    /* More compact option buttons */
+    .option-btn-modern {
+        min-height: 38px !important;
+        padding: 0.4rem 0.7rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Tiny footer buttons */
+    .nav-pill-next-btn,
+    .nav-pill-submit-btn,
+    .nav-pill-prev-btn {
+        padding: 0.15rem 0.35rem !important;
+        font-size: 0.6rem !important;
+        height: 26px !important;
+    }
+}
+
+/* NEW LANDSCAPE FIXES */
+@media (max-width: 900px) and (orientation: landscape) {
+    .practice-board-container {
+        display: flex !important;
+        flex-direction: row !important;
+        /* Use width! */
+        align-items: flex-start !important;
+        gap: 20px;
+        padding-top: 10px;
+    }
+
+    .practice-left-col {
+        width: 100% !important;
+    }
+
+    .question-card-modern {
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 1rem !important;
+    }
+
+    .interaction-area-modern {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .options-grid-modern {
+        grid-template-columns: repeat(2, 1fr) !important;
+        /* Back to 2 cols if space allows */
+    }
+}
+
+/* Picture Based Questions - Split Layout */
+.question-card-modern.picture-layout {
+    max-width: 1200px;
+    width: 95%;
+}
+
+.picture-question-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    align-items: center;
+    width: 100%;
+}
+
+.picture-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 2rem;
+    border: 3px solid #E2E8F0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.content-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.content-section .question-header-modern {
+    margin-bottom: 2rem;
+}
+
+.content-section .question-text-modern {
+    text-align: left !important;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem) !important;
+}
+
+.content-section .options-grid-modern {
+    max-width: 100% !important;
+    gap: 1.5rem !important;
+}
+
+@media (max-width: 1024px) {
+    .picture-question-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .picture-section {
+        padding: 1rem;
+    }
+}
+.fair-share-practice-page {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.fair-share-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.fair-share-board-container {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.fair-share-left-col {
+    width: 100%;
+}
+
+.skill-name-mobile {
+    display: none;
+}
+
+/* Mobile: skill name left, question center, timer right */
+@media (max-width: 768px) {
+    .fair-share-header {
+        padding: 0 0.75rem !important;
+        display: flex !important;
+        justify-content: space-between !important;
+    }
+
+    .skill-name-desktop {
+        display: none !important;
+    }
+
+    /* Force header-left to show (it is hidden by default in global mobile CSS) */
+    .fair-share-header .header-left {
+        display: flex !important;
+        flex: 1 !important;
+        min-width: 0;
+        align-items: center;
+    }
+
+    /* Skill name span — compact on mobile */
+    .fair-share-header .header-left .skill-name-mobile {
+        display: block !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        color: #31326F !important;
+        white-space: normal;
+        line-height: 1.1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        max-width: 90px;
+    }
+
+    /* Ensure header-right takes up its space and aligns timer to right */
+    .fair-share-header .header-right {
+        display: flex !important;
+        flex: 1 !important;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    /* Timer pill — compact on mobile */
+    .fair-share-header .header-right>div {
+        min-width: unset !important;
+        padding: 0.2rem 0.6rem !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* Reduce option size and padding to avoid scrolling — for halves&doubles type questions with visuals */
+.fair-share-practice-page .question-card-modern {
+    padding: 1.25rem 1.5rem !important;
+    min-height: auto !important;
+    border-radius: 2rem !important;
+    justify-content: flex-start !important;
+    overflow-y: auto !important;
+}
+
+.fair-share-practice-page .practice-content-wrapper {
+    padding-top: 0.5rem !important;
+}
+
+.fair-share-practice-page .option-btn-modern {
+    min-height: 48px !important;
+    padding: 0.4rem 0.75rem !important;
+    font-size: clamp(0.85rem, 1.3vw, 1.1rem) !important;
+    border-radius: 1rem !important;
+}
+
+.fair-share-practice-page .options-grid-modern {
+    gap: 0.6rem !important;
+}
+
+.fair-share-practice-page .interaction-area-modern {
+    margin-top: 0.5rem !important;
+}
+
+.fair-share-practice-page .question-header-modern {
+    margin-bottom: 0.25rem !important;
+}
+
+@media (min-width: 768px) {
+    .fair-share-practice-page .options-grid-modern.flex-col {
+        gap: 0.5rem !important;
+    }
+
+    .fair-share-practice-page .question-card-modern {
+        padding: 1.5rem 2rem !important;
+    }
+}
+
+/* ========================================================= */
+/* FIX: Center question card when there is no right column */
+/* ========================================================= */
+@media (min-width: 1025px) {
+    .practice-board-container {
+        display: flex !important;
+        justify-content: center !important;
+        max-width: 1200px !important;
+        margin: 0 auto;
+    }
+    .practice-left-col {
+        flex: 1;
+        max-width: 1000px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .practice-board-container:has(.practice-right-col) {
+        max-width: 1400px !important;
+    }
+    .practice-board-container:has(.practice-right-col) .practice-left-col {
+        max-width: 1100px;
+    }
+    .practice-right-col {
+        width: 300px;
+        flex-shrink: 0;
+    }
+    /* Enforce text center alignment inside the question header for text-only */
+    .question-header-modern {
+        text-align: center !important;
+    }
+    .question-text-modern {
+        text-align: center !important;
+        justify-content: center !important;
+    }
+    .question-text-modern span {
+        text-align: center !important;
+    }
+}

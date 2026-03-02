@@ -345,47 +345,65 @@ const BalanceScaleComparison = () => {
                         </h2>
                     </div>
 
-                    <div className="flex justify-center items-center w-full max-w-2xl mb-24 md:mb-32 relative h-64 md:h-96">
+                    <div className="flex justify-center items-center w-full max-w-4xl mb-16 md:mb-24 relative h-80 md:h-[450px]">
                         {/* Interactive Balance Scale Visual */}
-                        <div className="absolute bottom-0 w-32 h-4 md:w-48 bg-gray-400 rounded-full z-10 hidden md:block" />
-                        <div className="absolute bottom-2 w-4 h-48 md:h-72 bg-gray-600 z-10" />
-                        <div className="absolute top-1/3 left-1/2 w-4 h-4 bg-yellow-400 rounded-full z-30 transform -translate-x-1/2 -translate-y-1/2" />
+                        <div className="absolute bottom-0 w-40 h-4 md:w-56 bg-gray-400 rounded-full z-10" />
+                        <div className="absolute top-[25%] bottom-2 w-4 bg-gray-600 z-10" />
+                        <div className="absolute top-[25%] left-1/2 w-4 h-4 bg-yellow-400 rounded-full z-30 transform -translate-x-1/2 -translate-y-1/2" />
 
                         {/* Scale Beam */}
                         <motion.div
-                            className="absolute top-1/3 w-full max-w-[300px] md:max-w-[440px] h-3 bg-gray-500 rounded-full z-20 origin-center"
+                            className="absolute top-[25%] w-[90%] md:w-[85%] max-w-[600px] md:max-w-[800px] h-3 md:h-4 bg-gray-500 rounded-full z-20 origin-center"
                             animate={{ rotate: isSubmitted ? (currentQuestion.leftValue > currentQuestion.rightValue ? -15 : 15) : 0 }}
                             transition={{ type: "spring", stiffness: 60, damping: 12 }}
                         >
                             {/* Left Option Ball */}
-                            <div className="absolute left-0 -translate-x-1/2 top-0 flex flex-col items-center origin-top" style={{ transform: "translateY(0px)" }}>
-                                <div className="w-1 h-12 md:h-20 bg-gray-400" />
-                                <button
-                                    onClick={() => handleAnswer("Left Side")}
-                                    disabled={isSubmitted}
-                                    className={`w-24 h-24 md:w-36 md:h-36 rounded-full flex justify-center items-center shadow-xl transition-all transform hover:scale-105 active:scale-95 z-40 relative ${selectedOption === "Left Side" ? 'bg-[#31326F] border-4 border-[#4FB7B3] scale-110 shadow-2xl' : 'bg-[#4FB7B3] border-4 border-white'
-                                        } ${isSubmitted && "Left Side" === currentQuestion.correctAnswer ? 'bg-green-500 border-white' : ''
-                                        } ${isSubmitted && selectedOption === "Left Side" && !isCorrect ? 'bg-red-500 border-white' : ''
-                                        }`}
-                                >
-                                    <span className="text-lg md:text-3xl font-bold text-white text-center px-3 leading-tight drop-shadow-md"><LatexContent html={currentQuestion.leftText} /></span>
-                                </button>
-                            </div>
+                            <motion.div
+                                className="absolute left-0 top-0 origin-top z-40"
+                                style={{ x: "-50%" }}
+                                animate={{
+                                    rotate: isSubmitted ? (currentQuestion.leftValue > currentQuestion.rightValue ? 15 : -15) : 0
+                                }}
+                                transition={{ type: "spring", stiffness: 60, damping: 12 }}
+                            >
+                                <div className="flex flex-col items-center">
+                                    <div className="w-1 md:w-1.5 h-10 md:h-16 bg-gray-400" />
+                                    <button
+                                        onClick={() => handleAnswer("Left Side")}
+                                        disabled={isSubmitted}
+                                        className={`w-28 h-28 md:w-36 md:h-36 rounded-full flex justify-center items-center shadow-xl transition-all transform hover:scale-105 active:scale-95 z-40 relative ${selectedOption === "Left Side" ? 'bg-[#31326F] border-4 border-[#4FB7B3] scale-110 shadow-2xl' : 'bg-[#4FB7B3] border-4 border-white'
+                                            } ${isSubmitted && "Left Side" === currentQuestion.correctAnswer ? 'bg-green-500 border-white' : ''
+                                            } ${isSubmitted && selectedOption === "Left Side" && !isCorrect ? 'bg-red-500 border-white' : ''
+                                            }`}
+                                    >
+                                        <span className="text-xl md:text-3xl font-bold text-white text-center px-3 leading-tight drop-shadow-md"><LatexContent html={currentQuestion.leftText} /></span>
+                                    </button>
+                                </div>
+                            </motion.div>
 
                             {/* Right Option Ball */}
-                            <div className="absolute right-0 translate-x-1/2 top-0 flex flex-col items-center origin-top" style={{ transform: "translateY(0px)" }}>
-                                <div className="w-1 h-12 md:h-20 bg-gray-400" />
-                                <button
-                                    onClick={() => handleAnswer("Right Side")}
-                                    disabled={isSubmitted}
-                                    className={`w-24 h-24 md:w-36 md:h-36 rounded-full flex justify-center items-center shadow-xl transition-all transform hover:scale-105 active:scale-95 z-40 relative ${selectedOption === "Right Side" ? 'bg-[#31326F] border-4 border-[#4FB7B3] scale-110 shadow-2xl' : 'bg-[#4FB7B3] border-4 border-white'
-                                        } ${isSubmitted && "Right Side" === currentQuestion.correctAnswer ? 'bg-green-500 border-white' : ''
-                                        } ${isSubmitted && selectedOption === "Right Side" && !isCorrect ? 'bg-red-500 border-white' : ''
-                                        }`}
-                                >
-                                    <span className="text-lg md:text-3xl font-bold text-white text-center px-3 leading-tight drop-shadow-md"><LatexContent html={currentQuestion.rightText} /></span>
-                                </button>
-                            </div>
+                            <motion.div
+                                className="absolute right-0 top-0 origin-top z-40"
+                                style={{ x: "50%" }}
+                                animate={{
+                                    rotate: isSubmitted ? (currentQuestion.leftValue > currentQuestion.rightValue ? 15 : -15) : 0
+                                }}
+                                transition={{ type: "spring", stiffness: 60, damping: 12 }}
+                            >
+                                <div className="flex flex-col items-center">
+                                    <div className="w-1 md:w-1.5 h-10 md:h-16 bg-gray-400" />
+                                    <button
+                                        onClick={() => handleAnswer("Right Side")}
+                                        disabled={isSubmitted}
+                                        className={`w-28 h-28 md:w-36 md:h-36 rounded-full flex justify-center items-center shadow-xl transition-all transform hover:scale-105 active:scale-95 z-40 relative ${selectedOption === "Right Side" ? 'bg-[#31326F] border-4 border-[#4FB7B3] scale-110 shadow-2xl' : 'bg-[#4FB7B3] border-4 border-white'
+                                            } ${isSubmitted && "Right Side" === currentQuestion.correctAnswer ? 'bg-green-500 border-white' : ''
+                                            } ${isSubmitted && selectedOption === "Right Side" && !isCorrect ? 'bg-red-500 border-white' : ''
+                                            }`}
+                                    >
+                                        <span className="text-xl md:text-3xl font-bold text-white text-center px-3 leading-tight drop-shadow-md"><LatexContent html={currentQuestion.rightText} /></span>
+                                    </button>
+                                </div>
+                            </motion.div>
                         </motion.div>
                     </div>
 

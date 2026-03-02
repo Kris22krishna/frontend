@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
+import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
-import InteractiveGraph from '../../../InteractiveGraph';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import PracticeReportModal from '../../PracticeReportModal';
+import { api } from '../../../../services/api';
+import InteractiveGraph from '../../../InteractiveGraph'; // Keep this from original
+import '../TenthPracticeSession.css';
 
 const GraphicalMethod = () => {
     const navigate = useNavigate();
@@ -18,6 +20,7 @@ const GraphicalMethod = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
@@ -220,15 +223,15 @@ const GraphicalMethod = () => {
         if (SKILL_ID === 10021) {
             // Type 1: Parallel Lines
             newQuestions.push(createQuestion(1,
-                "The graph of a system of linear equations shows two **parallel lines**. How many solutions does the system have?",
+                "The graph of a system of linear equations shows two parallel lines. How many solutions does the system have?",
                 ["One unique solution", "No solution", "Infinitely many solutions", "Two solutions"],
                 "No solution",
-                "Parallel lines never intersect. Therefore, there is no common point and **no solution**."
+                "Parallel lines never intersect. Therefore, there is no common point and no solution."
             ));
 
             // Type 2: Intersecting Lines
             newQuestions.push(createQuestion(2,
-                "The graph of a system of linear equations shows two lines **intersecting at exactly one point**. The system has:",
+                "The graph of a system of linear equations shows two lines intersecting at exactly one point. The system has:",
                 ["One unique solution", "No solution", "Infinitely many solutions", "Two solutions"],
                 "One unique solution",
                 "Lines that intersect at a single point have exactly one common solution."
@@ -236,26 +239,26 @@ const GraphicalMethod = () => {
 
             // Type 3: Coincident Lines
             newQuestions.push(createQuestion(3,
-                "The graph of a system of linear equations shows that the two lines are **coincident** (one on top of the other). The system has:",
+                "The graph of a system of linear equations shows that the two lines are coincident (one on top of the other). The system has:",
                 ["One unique solution", "No solution", "Infinitely many solutions", "Two solutions"],
                 "Infinitely many solutions",
-                "Coincident lines touch at every point. Since every point on the line is a solution, there are **infinitely many solutions**."
+                "Coincident lines touch at every point. Since every point on the line is a solution, there are infinitely many solutions."
             ));
 
             // Type 4: Visual - Parallel
             newQuestions.push(createQuestion(4,
-                "Two lines satisfy the condition $a_1/a_2 = b_1/b_2$ ≠ $c_1/c_2$. Geometrically, these lines are:",
+                "Two lines satisfy the condition $\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} ≠ \\dfrac{c_1}{c_2}$. Geometrically, these lines are:",
                 ["Intersecting", "Parallel", "Coincident", "Perpendicular"],
                 "Parallel",
-                "The condition $a_1/a_2 = b_1/b_2$ ≠ $c_1/c_2$ corresponds to **parallel lines** (same slope, different intercept)."
+                "The condition $\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} ≠ \\dfrac{c_1}{c_2}$ corresponds to parallel lines (same slope, different intercept)."
             ));
 
             // Type 5: Visual - Coincident
             newQuestions.push(createQuestion(5,
-                "If a pair of linear equations has **infinitely many solutions**, what does their graph look like?",
+                "If a pair of linear equations has infinitely many solutions, what does their graph look like?",
                 ["Intersecting lines", "Parallel lines", "Coincident lines", "Perpendicular lines"],
                 "Coincident lines",
-                "Infinitely many solutions mean the lines overlap completely, which are called **coincident lines**."
+                "Infinitely many solutions mean the lines overlap completely, which are called coincident lines."
             ));
         }
 
@@ -292,9 +295,12 @@ const GraphicalMethod = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, [SKILL_ID]);
+    }, [SKILL_ID, showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -393,7 +399,7 @@ const GraphicalMethod = () => {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val === true).length;
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 await api.createReport({
                     title: SKILL_NAME,
                     type: 'practice',
@@ -409,7 +415,7 @@ const GraphicalMethod = () => {
                     user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
                 }).catch(console.error);
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -418,7 +424,10 @@ const GraphicalMethod = () => {
 
     return (
         <div className="junior-practice-page" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>
+                    {SKILL_NAME}
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}
@@ -517,7 +526,7 @@ const GraphicalMethod = () => {
                                             </button>
                                         ))}
                                         {isSubmitted && isCorrect && (
-                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
+                                            <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
                                                 {feedbackMessage}
                                             </motion.div>
                                         )}
@@ -633,6 +642,16 @@ const GraphicalMethod = () => {
 
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
 
+            <PracticeReportModal 
+                isOpen={showReportModal} 
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }} 
+                onContinue={() => navigate(-1)} 
+            />
+
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
@@ -653,7 +672,7 @@ const GraphicalMethod = () => {
                                 Prev
                             </button>
                             {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight /></button> :
+                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight />}</button> :
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheck}
@@ -684,7 +703,7 @@ const GraphicalMethod = () => {
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}

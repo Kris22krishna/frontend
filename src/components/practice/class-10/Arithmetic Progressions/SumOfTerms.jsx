@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import PracticeReportModal from '../../PracticeReportModal';
+import { api } from '../../../../services/api';
+import '../TenthPracticeSession.css';
 
 const SumOfTerms = () => {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ const SumOfTerms = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
@@ -36,30 +38,30 @@ const SumOfTerms = () => {
         const qs = [
             // 1. Need for formula (Conceptual)
             createQuestion(1,
-                `To find the sum of natural numbers from 1 to 100, which formula for $S_n$ is easiest to use?`,
-                [`Sn = n/2 (a + l)`, `Sn = n/2 (2a + (n-1)d)`, `Sn = n(n+1)/2`, `Sn = n^2`],
-                `Sn = n(n+1)/2`,
+                `Which formula is used to find the sum of the first n natural numbers?`,
+                [`$S_n = \\dfrac{n}{2} (a + l)$`, `$S_n = \\dfrac{n}{2} (2a + (n-1)d)$`, `$S_n = \\dfrac{n(n+1)}{2}$`, `$S_n = n^2$`],
+                `$S_n = \\dfrac{n(n+1)}{2}$`,
                 `1. Identify the type of sequence:
    - The sequence is $1, 2, 3... 100$. This is the sum of the first $n$ natural numbers.
 
 2. Recall the special formula:
-   - For natural numbers, $S_n = \\frac{n(n+1)}{2}$.
-   - This comes from $S_n = \\frac{n}{2}(a+l)$ where $a=1, l=n$.
+   - For natural numbers, $S_n = \\dfrac{n(n+1)}{2}$.
+   - This comes from $S_n = \\dfrac{n}{2}(a+l)$ where $a=1, l=n$.
 
 3. Conclusion:
-   - Therefore, the easiest formula is $S_n = \\frac{n(n+1)}{2}$.`
+   - Therefore, the easiest formula is $S_n = \\dfrac{n(n+1)}{2}$.`
             ),
             // 2. Sum Formula (Formula)
             createQuestion(2,
-                `Which formula gives the sum of first n terms of an AP with first term 'a' and last term 'l'?`,
-                [`S = n/2 (a + l)`, `S = n (a + l)`, `S = n/2 (2a + l)`, `S = 2n (a + l)`],
-                `S = n/2 (a + l)`,
+                `What is the formula for the sum of an AP when the first term 'a' and last term 'l' are given?`,
+                [`$S = \\dfrac{n}{2} (a + l)$`, `$S = n (a + l)$`, `$S = \\dfrac{n}{2} (2a + l)$`, `$S = 2n (a + l)$`],
+                `$S = \\dfrac{n}{2} (a + l)$`,
                 `1. Recall the sum formula using first and last terms:
    - The sum of an AP when the last term $l$ is known is given by:
-   - $S_n = \\frac{n}{2}(a + l)$
+   - $S_n = \\dfrac{n}{2}(a + l)$
 
 2. Conclusion:
-   - Therefore, the correct formula is $S_n = \\frac{n}{2}(a + l)$.`
+   - Therefore, the correct formula is $S_n = \\dfrac{n}{2}(a + l)$.`
             ),
             // 3. Finding Sum (Easy)
             createQuestion(3,
@@ -72,8 +74,8 @@ const SumOfTerms = () => {
    - $n = 22$
 
 2. Apply the sum formula:
-   - $S_n = \\frac{n}{2}[2a + (n-1)d]$
-   - $S_{22} = \\frac{22}{2}[2(8) + (22-1)(-5)]$
+   - $S_n = \\dfrac{n}{2}[2a + (n-1)d]$
+   - $S_{22} = \\dfrac{22}{2}[2(8) + (22-1)(-5)]$
    - $S_{22} = 11[16 + 21(-5)]$
    - $S_{22} = 11[16 - 105]$
    - $S_{22} = 11(-89)$
@@ -88,10 +90,10 @@ const SumOfTerms = () => {
                 [`5050`, `5000`, `5100`, `5051`],
                 `5050`,
                 `1. Use the sum formula for natural numbers:
-   - $S_n = \\frac{n(n+1)}{2}$
+   - $S_n = \\dfrac{n(n+1)}{2}$
 
 2. Substitute $n=100$:
-   - $S_{100} = \\frac{100(100+1)}{2}$
+   - $S_{100} = \\dfrac{100(100+1)}{2}$
    - $S_{100} = 50(101)$
    - $S_{100} = 5050$
 
@@ -100,24 +102,24 @@ const SumOfTerms = () => {
             ),
             // 5. Finding Sum (Medium - Fraction)
             createQuestion(5,
-                `Find the sum of first 11 terms of the AP: $\\frac{1}{15}, \\frac{1}{12}, \\frac{1}{10}...$`,
-                [`33/20`, `30/20`, `31/20`, `35/20`],
-                `33/20`,
+                `Find the sum of first 11 terms of the AP: $\\dfrac{1}{15}, \\dfrac{1}{12}, \\dfrac{1}{10}...$`,
+                [`$\\dfrac{33}{20}$`, `$\\dfrac{30}{20}$`, `$\\dfrac{31}{20}$`, `$\\dfrac{35}{20}$`],
+                `$\\dfrac{33}{20}$`,
                 `1. Identify parameters:
-   - $a = \\frac{1}{15}$
-   - $d = \\frac{1}{12} - \\frac{1}{15} = \\frac{5}{60} - \\frac{4}{60} = \\frac{1}{60}$
+   - $a = \\dfrac{1}{15}$
+   - $d = \\dfrac{1}{12} - \\dfrac{1}{15} = \\dfrac{5}{60} - \\dfrac{4}{60} = \\dfrac{1}{60}$
    - $n = 11$
 
 2. Apply the sum formula:
-   - $S_{11} = \\frac{11}{2}[2(\\frac{1}{15}) + (11-1)(\\frac{1}{60})]$
-   - $S_{11} = \\frac{11}{2}[\\frac{2}{15} + 10(\\frac{1}{60})]$
-   - $S_{11} = \\frac{11}{2}[\\frac{2}{15} + \\frac{1}{6}]$
-   - $S_{11} = \\frac{11}{2}[\\frac{4+5}{30}]$
-   - $S_{11} = \\frac{11}{2} \\times \\frac{9}{30}$
-   - $S_{11} = \\frac{33}{20}$
+   - $S_{11} = \\dfrac{11}{2}[2(\\dfrac{1}{15}) + (11-1)(\\dfrac{1}{60})]$
+   - $S_{11} = \\dfrac{11}{2}[\\dfrac{2}{15} + 10(\\dfrac{1}{60})]$
+   - $S_{11} = \\dfrac{11}{2}[\\dfrac{2}{15} + \\dfrac{1}{6}]$
+   - $S_{11} = \\dfrac{11}{2}[\\dfrac{4+5}{30}]$
+   - $S_{11} = \\dfrac{11}{2} \\times \\dfrac{9}{30}$
+   - $S_{11} = \\dfrac{33}{20}$
 
 3. Conclusion:
-   - Therefore, the sum is $\\frac{33}{20}$.`
+   - Therefore, the sum is $\\dfrac{33}{20}$.`
             ),
             // 6. Finding n given Sum (Medium)
             createQuestion(6,
@@ -128,7 +130,7 @@ const SumOfTerms = () => {
    - $a = 24$, $d = -3$, $S_n = 78$
 
 2. Set up the equation:
-   - $78 = \\frac{n}{2}[2(24) + (n-1)(-3)]$
+   - $78 = \\dfrac{n}{2}[2(24) + (n-1)(-3)]$
    - $156 = n[48 - 3n + 3]$
    - $156 = n[51 - 3n]$
    - $156 = 51n - 3n^2$
@@ -172,9 +174,9 @@ const SumOfTerms = () => {
    - $a = a_2 - d = 14 - 4 = 10$
 
 2. Calculate sum for $n=51$:
-   - $S_{51} = \\frac{51}{2}[2(10) + (51-1)4]$
-   - $S_{51} = \\frac{51}{2}[20 + 200]$
-   - $S_{51} = \\frac{51}{2}(220)$
+   - $S_{51} = \\dfrac{51}{2}[2(10) + (51-1)4]$
+   - $S_{51} = \\dfrac{51}{2}[20 + 200]$
+   - $S_{51} = \\dfrac{51}{2}(220)$
    - $S_{51} = 51(110)$
    - $S_{51} = 5610$
 
@@ -190,7 +192,7 @@ const SumOfTerms = () => {
    - $S_n = 200$, $a = 20$, $d = -1$
 
 2. Set up equation:
-   - $200 = \\frac{n}{2}[2(20) + (n-1)(-1)]$
+   - $200 = \\dfrac{n}{2}[2(20) + (n-1)(-1)]$
    - $400 = n[40 - n + 1]$
    - $400 = n[41 - n]$
    - $n^2 - 41n + 400 = 0$
@@ -212,7 +214,7 @@ const SumOfTerms = () => {
    - $S_n = 700$, $n = 7$, $d = -20$
 
 2. Find a:
-   - $700 = \\frac{7}{2}[2a + (7-1)(-20)]$
+   - $700 = \\dfrac{7}{2}[2a + (7-1)(-20)]$
    - $200 = 2a + 6(-20)$ (Dividing by 7/2)
    - $200 = 2a - 120$
    - $320 = 2a$
@@ -252,9 +254,12 @@ const SumOfTerms = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, [SKILL_ID]);
+    }, [SKILL_ID, showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -323,10 +328,10 @@ const SumOfTerms = () => {
                         timestamp: new Date().toISOString(),
                         time_taken_seconds: timeElapsed
                     },
-                    user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
+                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
                 }).catch(console.error);
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -374,7 +379,7 @@ const SumOfTerms = () => {
                                         </button>
                                     ))}
                                     {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
+                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
                                             {feedbackMessage}
                                         </motion.div>
                                     )}
@@ -386,6 +391,16 @@ const SumOfTerms = () => {
             </main>
 
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
+
+            <PracticeReportModal
+                isOpen={showReportModal}
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }}
+                onContinue={() => navigate(-1)}
+            />
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
@@ -407,7 +422,7 @@ const SumOfTerms = () => {
                                 Prev
                             </button>
                             {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight /></button> :
+                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight />}</button> :
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check /></button>
                             }
                         </div>
@@ -432,7 +447,7 @@ const SumOfTerms = () => {
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}
