@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Repeat, MoveRight, ChevronRight, AlertTriangle } from 'lucide-react';
-import { LatexText } from '../../../LatexText';
-import MatrixGrid from '../components/MatrixGrid';
-import QuizEngine from '../components/QuizEngine';
+import { LatexText } from '../../../../../LatexText';
+import MatrixGrid from '../../Shared/MatrixGrid';
+import QuizEngine from '../../Shared/QuizEngine';
 
 const SCENARIOS = [
     {
@@ -238,7 +238,7 @@ const WhyRulesWork = () => {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 20 }}>
                     <button
-                        onClick={() => navigate('/senior/grade/12/matrices/how-operations')}
+                        onClick={() => navigate('/senior/grade/12/matrices/deep-dive/how-operations')}
                         style={{
                             background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0', padding: '16px 24px',
                             borderRadius: 12, fontSize: '1rem', fontWeight: 600, cursor: 'pointer',
@@ -247,7 +247,7 @@ const WhyRulesWork = () => {
                         Back to "Operations"
                     </button>
                     <button
-                        onClick={() => navigate('/senior/grade/12/matrices/where-applied')}
+                        onClick={() => navigate('/senior/grade/12/matrices/deep-dive/where-applied')}
                         style={{
                             background: '#4F46E5', color: '#fff', border: 'none', padding: '16px 32px',
                             borderRadius: 12, fontSize: '1.1rem', fontWeight: 700, cursor: 'pointer',
@@ -263,3 +263,6 @@ const WhyRulesWork = () => {
 };
 
 export default WhyRulesWork;
+
+
+

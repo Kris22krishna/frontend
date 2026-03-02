@@ -142,7 +142,7 @@ const WhoUsesMatrices = () => {
                                 progress['who-uses'] = true;
                                 localStorage.setItem('matrices_progress', JSON.stringify(progress));
                             } catch { }
-                            navigate('/senior/grade/12/matrices/what-is');
+                            navigate('/senior/grade/12/matrices/deep-dive/what-is');
                         }}
                         style={{
                             background: '#4F46E5', color: '#fff', border: 'none', padding: '16px 32px',
@@ -159,3 +159,6 @@ const WhoUsesMatrices = () => {
 };
 
 export default WhoUsesMatrices;
+
+
+
