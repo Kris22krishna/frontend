@@ -316,6 +316,16 @@ import ProvingIrrationality from './components/practice/class-10/Real Numbers/Pr
 import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
 import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
 
+// Class 10: Polynomials
+import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
+import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
+import GeometricalInterpretation from './components/practice/class-10/Polynomials/GeometricalInterpretation';
+import NumberFromGraphicalBehaviour from './components/practice/class-10/Polynomials/NumberFromGraphicalBehaviour';
+import RelationshipQuadratic from './components/practice/class-10/Polynomials/RelationshipQuadratic';
+import ConstructingQuadratic from './components/practice/class-10/Polynomials/ConstructingQuadratic';
+import RelationshipCubic from './components/practice/class-10/Polynomials/RelationshipCubic';
+import PolynomialsTest from './components/practice/class-10/Polynomials/PolynomialsTest';
+
 // Class 12 - Matrices Chapter
 import MatricesChapter from './components/practice/class-12/MatricesChapter';
 import WhoUsesMatrices from './components/practice/class-12/pages/WhoUsesMatrices';
@@ -1205,6 +1215,17 @@ function App() {
         <Route path="/high/practice/1126" element={<DiscriminantAnalysis />} />
         <Route path="/high/practice/1127" element={<RealLifeApplications />} />
         <Route path="/high/practice/1128" element={<QuadraticEquationsTest />} />
+
+        {/* Class 10: Polynomials Routes */}
+        <Route path="/high/practice/1233" element={<TypesAndDegrees />} />
+        <Route path="/high/practice/1234" element={<EvaluatingAndIdentifying />} />
+        <Route path="/high/practice/1235" element={<GeometricalInterpretation />} />
+        <Route path="/high/practice/1236" element={<NumberFromGraphicalBehaviour />} />
+        <Route path="/high/practice/1237" element={<RelationshipQuadratic />} />
+        <Route path="/high/practice/1238" element={<ConstructingQuadratic />} />
+        <Route path="/high/practice/1239" element={<RelationshipCubic />} />
+        <Route path="/high/practice/1240" element={<PolynomialsTest />} />
+
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
         {/* Class 11 Biology */}
