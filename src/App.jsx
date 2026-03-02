@@ -389,6 +389,20 @@ import CountHowManyUnitsFit from './components/practice/class-4/Weigh_It_Pour_It
 import RepeatedAdditionToOneWhole from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/repeated_addition_to_one_whole';
 import CompareWeightsAndCapacities from './components/practice/class-4/Weigh_It_Pour_It/Comparison_of_Quantities/compare_weights_and_capacities';
 import WeightAndCapacityWordProblems from './components/practice/class-4/Weigh_It_Pour_It/Mixed_Measurement_Word_Problems/weight_and_capacity_word_problems';
+
+// Grade 4 - Fun with Symmetry
+import IdentifyLineOfSymmetry from './components/practice/class-4/Fun_with_Symmetry/Line_Symmetry/identify_line_of_symmetry';
+import DrawLineOfSymmetry from './components/practice/class-4/Fun_with_Symmetry/Line_Symmetry/draw_line_of_symmetry';
+import PaperFoldSymmetry from './components/practice/class-4/Fun_with_Symmetry/Symmetry_by_Folding_and_Mirror/paper_fold_symmetry';
+import MirrorImageShapes from './components/practice/class-4/Fun_with_Symmetry/Symmetry_by_Folding_and_Mirror/mirror_image_shapes';
+import CompleteHalfDesign from './components/practice/class-4/Fun_with_Symmetry/Completing_Symmetric_Figures/complete_half_design';
+import SymmetryOnDotGrid from './components/practice/class-4/Fun_with_Symmetry/Completing_Symmetric_Figures/symmetry_on_dot_grid';
+import LinesOfSymmetryInPolygons from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Shapes_and_Characters/lines_of_symmetry_in_polygons';
+import MirrorSymmetricNumbersLetters from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Shapes_and_Characters/mirror_symmetric_numbers_letters';
+import IdentifyRepeatingTile from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/identify_repeating_tile';
+import CreateTilingWithoutGaps from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/create_tiling_without_gaps';
+import ClassifySymmetricalObjects from './components/practice/class-4/Fun_with_Symmetry/Real_Life_Symmetry/classify_symmetrical_objects';
+
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
     <h1 className="text-6xl mb-4">🚧</h1>
@@ -840,6 +854,63 @@ function App() {
         <Route path="/junior/grade/:grade/weigh-it-pour-it/weight-and-capacity-word-problems" element={
           <ProtectedRoute redirectTo="/login">
             <WeightAndCapacityWordProblems />
+          </ProtectedRoute>
+        } />
+
+        {/* Fun with Symmetry Routes */}
+        <Route path="/junior/grade/:grade/fun-with-symmetry/identify-line-of-symmetry" element={
+          <ProtectedRoute redirectTo="/login">
+            <IdentifyLineOfSymmetry />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/draw-line-of-symmetry" element={
+          <ProtectedRoute redirectTo="/login">
+            <DrawLineOfSymmetry />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/paper-fold-symmetry" element={
+          <ProtectedRoute redirectTo="/login">
+            <PaperFoldSymmetry />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/mirror-image-shapes" element={
+          <ProtectedRoute redirectTo="/login">
+            <MirrorImageShapes />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/complete-half-design" element={
+          <ProtectedRoute redirectTo="/login">
+            <CompleteHalfDesign />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/symmetry-on-dot-grid" element={
+          <ProtectedRoute redirectTo="/login">
+            <SymmetryOnDotGrid />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/lines-of-symmetry-in-polygons" element={
+          <ProtectedRoute redirectTo="/login">
+            <LinesOfSymmetryInPolygons />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/mirror-symmetric-numbers-letters" element={
+          <ProtectedRoute redirectTo="/login">
+            <MirrorSymmetricNumbersLetters />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/identify-repeating-tile" element={
+          <ProtectedRoute redirectTo="/login">
+            <IdentifyRepeatingTile />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/create-tiling-without-gaps" element={
+          <ProtectedRoute redirectTo="/login">
+            <CreateTilingWithoutGaps />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-with-symmetry/classify-symmetrical-objects" element={
+          <ProtectedRoute redirectTo="/login">
+            <ClassifySymmetricalObjects />
           </ProtectedRoute>
         } />
 
