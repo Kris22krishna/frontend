@@ -107,9 +107,9 @@ function QuizEngine({ questions, title, onBack, color }) {
                     <span>QUESTION</span> {current + 1}
                 </div>
                 <div className="alg-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: 'var(--alg-text)', lineHeight: 1.6, marginBottom: 24 }}>
-                    {q.question}
+                    <MathRenderer text={q.question.includes('$') ? q.question : `$$${q.question}$$`} />
                 </div>
-                {q.math && (
+                {/* {q.math && (
                     <div style={{
                         background: '#f8fafc', border: `1px solid ${color}20`,
                         borderRadius: 12, padding: '16px', marginBottom: 24,
@@ -117,7 +117,7 @@ function QuizEngine({ questions, title, onBack, color }) {
                     }}>
                         <MathRenderer text={q.math.includes('$') ? q.math : `$$${q.math}$$`} />
                     </div>
-                )}
+                )} */}
 
                 {/* Options */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
@@ -210,18 +210,145 @@ function QuizEngine({ questions, title, onBack, color }) {
 }
 
 // ─── QUESTIONS & DATA ──────────────────────────────────────────────────────
-const exponentQuestions = [
-    { question: 'What is the value of x³ × x⁴?', math: 'x³ × x⁴ = ?', options: ['x⁷', 'x¹²', 'x', 'x⁻¹'], correct: 0, explanation: 'When multiplying terms with the same base, ADD the exponents: 3 + 4 = 7, so x³ × x⁴ = x⁷.' },
-    { question: 'Simplify: a⁵ ÷ a²', math: 'a⁵ ÷ a² = ?', options: ['a³', 'a⁷', 'a¹⁰', 'a⁻³'], correct: 0, explanation: 'When dividing terms with the same base, SUBTRACT the exponents: 5 − 2 = 3, so a⁵ ÷ a² = a³.' },
-    { question: 'What is (x²)³?', math: '(x²)³ = ?', options: ['x⁵', 'x⁶', 'x⁸', 'x²'], correct: 1, explanation: 'Power of a power rule: MULTIPLY the exponents. 2 × 3 = 6, so (x²)³ = x⁶.' },
-    { question: 'What is any number raised to the power of zero?', math: 'x⁰ = ?', options: ['0', '1', 'x', 'undefined'], correct: 1, explanation: 'Any non-zero number raised to the power 0 equals 1. x⁰ = 1 (for x ≠ 0).' },
-    { question: 'Simplify: (2x)³', math: '(2x)³ = ?', options: ['2x³', '6x³', '8x³', '2x'], correct: 2, explanation: 'Raise each factor to the power: 2³ = 8 and x³. So (2x)³ = 8x³.' },
-    { question: 'What is x⁻² equal to?', math: 'x⁻² = ?', options: ['−x²', '1/x²', '−1/x²', 'x²'], correct: 1, explanation: 'Negative exponents mean reciprocal: x⁻² = 1/x². The base flips to the denominator.' },
-    { question: 'Simplify: y² × y³ × y', math: 'y² × y³ × y = ?', options: ['y⁵', 'y⁶', 'y⁷', 'y⁸'], correct: 1, explanation: 'Add all exponents: 2 + 3 + 1 = 6, so the result is y⁶.' },
-    { question: 'Simplify: (x³)⁰', math: '(x³)⁰ = ?', options: ['x³', '0', '1', '3x'], correct: 2, explanation: 'Any expression (non-zero) raised to the power 0 = 1. So (x³)⁰ = 1.' },
-    { question: 'Simplify: a⁴ × b⁴', math: 'a⁴ × b⁴ = ?', options: ['ab⁴', '(ab)⁴', 'a⁸b⁴', 'a⁴b⁸'], correct: 1, explanation: 'When different bases have the same power: a⁴ × b⁴ = (ab)⁴.' },
-    { question: 'Simplify: m⁶ ÷ m⁶', math: 'm⁶ ÷ m⁶ = ?', options: ['m⁰', '1', '0', 'm⁶'], correct: 1, explanation: 'Subtracting equal exponents gives 0: m⁶ ÷ m⁶ = m⁰ = 1.' },
-];
+const generateExponentQuestions = () => {
+    const questions = [];
+    const getNum = () => Math.floor(Math.random() * 9) + 2; // 2 to 10
+    const getLetter = () => String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z
+    const getLetter2 = (exclude) => {
+        let l = getLetter();
+        while (l === exclude) l = getLetter();
+        return l;
+    };
+
+    // 1. Product Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum(), b = getNum();
+        questions.push({
+            question: `Simplify: $${base}^{${a}} \\cdot ${base}^{${b}}$`,
+            math: `${base}^{${a}} \\cdot ${base}^{${b}} = ?`,
+            options: [`$${base}^{${a + b}}$`, `$${base}^{${a * b}}$`, `$${base}^{${Math.abs(a - b)}}$`, `$${base}$`],
+            correct: 0,
+            explanation: `When multiplying terms with the same base, ADD the exponents: $${a} + ${b} = ${a + b}$, so the result is $${base}^{${a + b}}$.`
+        });
+    }
+
+    // 2. Quotient Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum() + 5, b = getNum(); // Ensure a > b usually
+        questions.push({
+            question: `Simplify: $\\frac{${base}^{${a}}}{${base}^{${b}}}$`,
+            math: `\\frac{${base}^{${a}}}{${base}^{${b}}} = ?`,
+            options: [`$${base}^{${a - b}}$`, `$${base}^{${a + b}}$`, `$${base}^{${a * b}}$`, `$${base}^{${b - a}}$`],
+            correct: 0,
+            explanation: `When dividing terms with the same base, SUBTRACT the bottom exponent from the top: $${a} - ${b} = ${a - b}$, so the result is $${base}^{${a - b}}$.`
+        });
+    }
+
+    // 3. Power Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum(), b = getNum();
+        questions.push({
+            question: `Simplify: $(${base}^{${a}})^{${b}}$`,
+            math: `(${base}^{${a}})^{${b}} = ?`,
+            options: [`$${base}^{${a * b}}$`, `$${base}^{${a + b}}$`, `$${base}^{${Math.pow(a, b)}}$`, `$${base}^{${a}}$`],
+            correct: 0,
+            explanation: `Power of a power rule: MULTIPLY the exponents: $${a} \\times ${b} = ${a * b}$, so the result is $${base}^{${a * b}}$.`
+        });
+    }
+
+    // 4. Power of Product
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base1 = isLetter ? getLetter() : getNum();
+        let base2 = isLetter ? getLetter2(base1) : getNum();
+        if (!isLetter && base1 === base2) base2++;
+        let a = getNum();
+        questions.push({
+            question: `Simplify: $(${base1} \\cdot ${base2})^{${a}}$`,
+            math: `(${base1} \\cdot ${base2})^{${a}} = ?`,
+            options: [`$${base1}^{${a}} \\cdot ${base2}^{${a}}$`, `$${base1} \\cdot ${base2}^{${a}}$`, `$${base1}^{${a}} \\cdot ${base2}$`, `$(${base1} + ${base2})^{${a}}$`],
+            correct: 0,
+            explanation: `Every factor inside the parentheses gets the power outside: $${base1}^{${a}} \\cdot ${base2}^{${a}}$.`
+        });
+    }
+
+    // 5. Power of Quotient
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base1 = isLetter ? getLetter() : getNum();
+        let base2 = isLetter ? getLetter2(base1) : getNum();
+        if (!isLetter && base1 === base2) base2++;
+        let a = getNum();
+        questions.push({
+            question: `Simplify: $\\left(\\frac{${base1}}{${base2}}\\right)^{${a}}$`,
+            math: `\\left(\\frac{${base1}}{${base2}}\\right)^{${a}} = ?`,
+            options: [`$\\frac{${base1}^{${a}}}{${base2}^{${a}}}$`, `$\\frac{${base1}^{${a}}}{${base2}}$`, `$\\frac{${base1}}{${base2}^{${a}}}$`, `$\\frac{${base1}^{${a}}}{${base2}^{-${a}}}$`],
+            correct: 0,
+            explanation: `The power applies to both the numerator and the denominator: $\\frac{${base1}^{${a}}}{${base2}^{${a}}}$.`
+        });
+    }
+
+    // 6. Zero Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        questions.push({
+            question: `What is $${base}^0$?`,
+            math: `${base}^0 = ?`,
+            options: [`$1$`, `$0$`, `$${base}$`, `$\\text{undefined}$`],
+            correct: 0,
+            explanation: `Any non-zero base raised to the power of zero is ALWAYS $1$. So $${base}^0 = 1$.`
+        });
+    }
+
+    // 7. Identity Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        questions.push({
+            question: `What is $${base}^1$?`,
+            math: `${base}^1 = ?`,
+            options: [`$${base}$`, `$1$`, `$0$`, `$${base}^2$`],
+            correct: 0,
+            explanation: `Any base raised to the power of 1 remains the same. So $${base}^1 = ${base}$.`
+        });
+    }
+
+    // 8. Negative Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum();
+        questions.push({
+            question: `Simplify: $${base}^{-${a}}$`,
+            math: `${base}^{-${a}} = ?`,
+            options: [`$\\frac{1}{${base}^{${a}}}$`, `$-${base}^{${a}}$`, `$${base}^{${a}}$`, `$\\frac{-1}{${base}^{${a}}}$`],
+            correct: 0,
+            explanation: `A negative exponent means the reciprocal. It moves the base to the bottom: $\\frac{1}{${base}^{${a}}}$.`
+        });
+    }
+
+    // 9. Fractional Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum(), b = getNum() + 1; // Distinct denominator
+        questions.push({
+            question: `Write as a radical: $${base}^{\\frac{${a}}{${b}}}$`,
+            math: `${base}^{\\frac{${a}}{${b}}} = ?`,
+            options: [`$\\sqrt[${b}]{${base}^{${a}}}$`, `$\\sqrt[${a}]{${base}^{${b}}}$`, `$\\frac{${a}}{${b}} \\sqrt{${base}}$`, `$\\frac{1}{\\sqrt[${b}]{${base}^{${a}}}}$`],
+            correct: 0,
+            explanation: `Fractional powers are roots. The bottom number (${b}) is the root index, and the top number (${a}) is the power: $\\sqrt[${b}]{${base}^{${a}}}$.`
+        });
+    }
+
+    // SHUFFLE options so the correct answer is not always [0]!
+    return questions.map(q => {
+        const correctOpt = q.options[q.correct];
+        const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+        const newCorrect = shuffled.indexOf(correctOpt);
+        return { ...q, options: shuffled, correct: newCorrect };
+    });
+};
+
+const exponentQuestions = generateExponentQuestions();
 
 const exponentAssessment = [
     { question: 'Which law applies when you multiply powers with the same base?', math: 'xᵃ × xᵇ = ?', options: ['x^(a+b)', 'x^(a×b)', 'x^(a-b)', 'x^(a÷b)'], correct: 0, explanation: 'Product of Powers Law: add the exponents when multiplying same base.' },
