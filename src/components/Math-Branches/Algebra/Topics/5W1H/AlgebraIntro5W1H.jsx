@@ -11,7 +11,7 @@ const cards5W1H = [
         gradFrom: '#0891b2',
         gradTo: '#06b6d4',
         shadow: 'rgba(6,182,212,0.35)',
-        content: `Algebra is the language of patterns and unknowns. Imagine you have a mystery box 📦 — you don't know what's inside, but you know it's 3 more than 5. So the box = 8! In Algebra, we use letters like x, y, or n to represent those mystery numbers. It's like cracking a secret code every time you solve an equation!`,
+        content: `Algebra is the language of patterns and unknowns. Imagine you have a mystery box 📦 — you don't know what's inside, but you know it's 3 more than 5. So the number inside the box = 8 . In Algebra, we use letters like x, y, or n to represent those mystery numbers. It's like cracking a secret code every time you solve an equation!`,
         fact: '💡 The word "Algebra" comes from the Arabic word "al-jabr" meaning "reunion of broken parts."',
     },
     {
