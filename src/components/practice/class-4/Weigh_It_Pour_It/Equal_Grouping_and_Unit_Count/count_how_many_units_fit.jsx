@@ -459,7 +459,7 @@ const CountHowManyUnitsFit = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                <div className="practice-board-container w-full max-w-5xl mx-auto" style={{ gridTemplateColumns: '1fr' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div

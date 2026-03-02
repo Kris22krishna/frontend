@@ -341,7 +341,7 @@ const AdditionChartPatterns = () => {
     if (!currentQuestion) return <div>Loading...</div>;
 
     const Grid100 = () => (
-        <div className="grid grid-cols-10 gap-1 md:gap-2 p-4 bg-white/80 rounded-3xl border-4 border-blue-100 shadow-lg mx-auto w-[min(90vw,600px)] aspect-square self-center justify-self-center">
+        <div className="grid grid-cols-10 gap-0.5 md:gap-1 p-1.5 md:p-3 bg-white/80 rounded-[1.5rem] md:rounded-3xl border-4 border-blue-100 shadow-lg mx-auto w-full max-w-[340px] sm:max-w-[400px] md:max-w-[480px] aspect-square self-center justify-self-center">
             {Array.from({ length: 100 }, (_, i) => i + 1).map(num => {
                 const isHighlighted = highlightedCells.includes(num);
                 const isTargetCell = num === parseInt(currentQuestion.correctAnswer);
@@ -363,7 +363,7 @@ const AdditionChartPatterns = () => {
                                 value={selectedOption || ''}
                                 onChange={(e) => handleInputValue(e.target.value)}
                                 disabled={isSubmitted}
-                                className={`w-full h-full text-center bg-transparent focus:outline-none text-sm md:text-xl lg:text-2xl font-bold rounded-lg ${isSubmitted ? 'text-white' : 'text-[#31326F]'}`}
+                                className={`w-full h-full text-center bg-transparent focus:outline-none text-[10px] sm:text-xs md:text-base font-bold rounded-lg ${isSubmitted ? 'text-white' : 'text-[#31326F]'}`}
                                 placeholder="?"
                                 style={{ WebkitAppearance: 'none', margin: 0 }}
                             />
@@ -372,7 +372,7 @@ const AdditionChartPatterns = () => {
                 }
 
                 return (
-                    <div key={num} className={`flex items-center justify-center rounded-lg text-xs md:text-base lg:text-xl transition-all ${bgClass}`}>
+                    <div key={num} className={`flex items-center justify-center rounded-[4px] md:rounded-md text-[9px] sm:text-[11px] md:text-[13px] font-semibold transition-all ${bgClass}`}>
                         {num}
                     </div>
                 );
@@ -390,17 +390,17 @@ const AdditionChartPatterns = () => {
                 <div className="header-right"><div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md">{formatTime(timeElapsed)}</div></div>
             </header>
 
-            <main className="practice-content-wrapper flex flex-col justify-center min-h-[calc(100vh-200px)] p-4 relative top-[-20px]">
-                <div className="w-full max-w-6xl mx-auto bg-white/90 backdrop-blur-sm rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-4 md:p-6 lg:p-8 flex flex-col gap-6 items-stretch">
+            <main className="practice-content-wrapper flex flex-col justify-center min-h-[calc(100vh-160px)] p-2 sm:p-4 pb-[120px] md:pb-[140px] relative top-[-10px] z-10">
+                <div className="w-full max-w-4xl mx-auto bg-white/90 backdrop-blur-sm rounded-[2rem] md:rounded-[3rem] shadow-xl border-4 border-[#E0FBEF] p-4 md:p-6 lg:p-8 flex flex-col gap-4 md:gap-6 items-center">
 
-                    <div className="flex flex-col justify-center items-center w-full max-w-3xl mx-auto text-center">
-                        <div className="bg-blue-100 p-4 rounded-full mb-4 shadow-md hidden md:block"><GridIcon size={32} className="text-blue-600" /></div>
-                        <h2 className="text-xl md:text-2xl lg:text-3xl font-normal text-[#31326F] leading-relaxed tracking-wider">
+                    <div className="flex justify-center items-center w-full max-w-3xl mb-2 text-center gap-3 md:gap-4">
+                        <div className="bg-blue-100 p-2 md:p-3 rounded-full shadow-md hidden sm:block shrink-0"><GridIcon size={24} className="text-blue-600 md:w-8 md:h-8" /></div>
+                        <h2 className="text-lg md:text-2xl font-normal text-[#31326F] leading-relaxed tracking-wider">
                             <LatexContent html={currentQuestion.text} />
                         </h2>
                     </div>
 
-                    <div className="w-full flex justify-center pb-6 border-b-2 border-dashed border-gray-200">
+                    <div className="w-full flex justify-center pb-4 border-b-2 border-dashed border-gray-200">
                         <Grid100 />
                     </div>
 
