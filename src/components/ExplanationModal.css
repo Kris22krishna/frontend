@@ -1,6 +1,13 @@
 /* Styles handled via Tailwind in ExplanationModal.jsx */
 /* Landscape mode styles moved to JuniorPracticeSession.css */
 
+.explanation-text-container .katex {
+    padding: 0.2em 0;
+}
+
+.explanation-text-container .katex-display {
+    margin: 0.8em 0;
+}
 /* Remove bold from all explanation text content */
 .explanation-content strong,
 .explanation-content b,

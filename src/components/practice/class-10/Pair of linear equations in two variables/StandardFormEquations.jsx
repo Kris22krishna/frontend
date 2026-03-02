@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
 import { LatexText } from '../../../LatexText';
+import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../TenthPracticeSession.css';
 
 const StandardFormEquations = () => {
     const navigate = useNavigate();
@@ -17,6 +19,7 @@ const StandardFormEquations = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
@@ -79,7 +82,7 @@ const StandardFormEquations = () => {
         // HARD 1: x/a + y/b = 1 (Fractional)
         newQuestions.push(createQuestion(
             5,
-            `Convert $\\frac{x}{2} + \\frac{y}{3} = 1$ to standard form.`,
+            `Convert $\\dfrac{x}{2} + \\dfrac{y}{3} = 1$ to standard form.`,
             [`$3x + 2y - 6 = 0$`, `$2x + 3y - 6 = 0$`, `$3x + 2y - 1 = 0$`, `$3x + 2y + 6 = 0$`],
             `$3x + 2y - 6 = 0$`,
             `Multiply by 6 (LCM): $3x + 2y = 6$. Standard form: $3x + 2y - 6 = 0$.`
@@ -116,7 +119,7 @@ const StandardFormEquations = () => {
         // NEW: HARD 2 - Fraction Equation
         newQuestions.push(createQuestion(
             9,
-            `Write $\\frac{y}{2} - 5 = x$ in standard form.`,
+            `Write $\\dfrac{y}{2} - 5 = x$ in standard form.`,
             [`$2x - y + 10 = 0$`, `$2x + y - 10 = 0$`, `$x - 2y + 10 = 0$`, `$2x - y - 10 = 0$`],
             `$2x - y + 10 = 0$`,
             `Multiply by 2: $y - 10 = 2x$. Rearrange: $2x - y + 10 = 0$.`
@@ -125,7 +128,7 @@ const StandardFormEquations = () => {
         // NEW: HARD 3 - Cross Multiplication
         newQuestions.push(createQuestion(
             10,
-            `Rewrite $\\frac{2x + 5}{y} = 7$ in standard form.`,
+            `Rewrite $\\dfrac{2x + 5}{y} = 7$ in standard form.`,
             [`$2x - 7y + 5 = 0$`, `$2x + 7y + 5 = 0$`, `$7x - 2y + 5 = 0$`, `$2x - 7y - 5 = 0$`],
             `$2x - 7y + 5 = 0$`,
             `Multiply by $y$: $2x + 5 = 7y$. Rearrange: $2x - 7y + 5 = 0$.`
@@ -170,9 +173,12 @@ const StandardFormEquations = () => {
             }).catch(err => console.error("Failed to start session", err));
         }
 
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => {
+                setTimeElapsed(prev => prev + 1);
+            }, 1000);
+        }
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -189,7 +195,7 @@ const StandardFormEquations = () => {
             clearInterval(timer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -258,14 +264,14 @@ const StandardFormEquations = () => {
 
     const handleNext = async () => {
         if (qIndex < questions.length - 1) {
-            setQIndex(prev => prev + 1);
+            setQIndex(p => p + 1);
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val === true).length;
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 await api.createReport({
                     title: SKILL_NAME,
                     type: 'practice',
@@ -281,7 +287,7 @@ const StandardFormEquations = () => {
                     user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
                 }).catch(console.error);
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -290,7 +296,10 @@ const StandardFormEquations = () => {
 
     return (
         <div className="junior-practice-page" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>
+                    {SKILL_NAME}
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}
@@ -326,7 +335,7 @@ const StandardFormEquations = () => {
                                         </button>
                                     ))}
                                     {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
+                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
                                             {feedbackMessage}
                                         </motion.div>
                                     )}
@@ -337,12 +346,16 @@ const StandardFormEquations = () => {
                 </div>
             </main>
 
-            <ExplanationModal
-                isOpen={showExplanationModal}
-                isCorrect={isCorrect}
-                correctAnswer={currentQuestion.correctAnswer}
-                explanation={currentQuestion.solution}
-                onClose={() => setShowExplanationModal(false)}
+            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
+
+            <PracticeReportModal 
+                isOpen={showReportModal} 
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }} 
+                onContinue={() => navigate(-1)} 
             />
 
             <footer className="junior-bottom-bar">
@@ -372,7 +385,7 @@ const StandardFormEquations = () => {
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < questions.length - 1 ? <>Next <ChevronRight size={28} strokeWidth={3} /></> : <>Done <Check size={28} strokeWidth={3} /></>}
+                                    {qIndex < questions.length - 1 ? <>Next <ChevronRight size={28} strokeWidth={3} /></> : <>Finish <Check size={28} strokeWidth={3} /></>}
                                 </button>
                             ) : (
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
@@ -401,7 +414,7 @@ const StandardFormEquations = () => {
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}
