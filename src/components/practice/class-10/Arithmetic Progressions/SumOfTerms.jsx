@@ -38,6 +38,7 @@ const SumOfTerms = () => {
         const qs = [
             // 1. Need for formula (Conceptual)
             createQuestion(1,
+                `Which formula is used to find the sum of the first n natural numbers?`,
                 [`$S_n = \\dfrac{n}{2} (a + l)$`, `$S_n = \\dfrac{n}{2} (2a + (n-1)d)$`, `$S_n = \\dfrac{n(n+1)}{2}$`, `$S_n = n^2$`],
                 `$S_n = \\dfrac{n(n+1)}{2}$`,
                 `1. Identify the type of sequence:
@@ -52,6 +53,7 @@ const SumOfTerms = () => {
             ),
             // 2. Sum Formula (Formula)
             createQuestion(2,
+                `What is the formula for the sum of an AP when the first term 'a' and last term 'l' are given?`,
                 [`$S = \\dfrac{n}{2} (a + l)$`, `$S = n (a + l)$`, `$S = \\dfrac{n}{2} (2a + l)$`, `$S = 2n (a + l)$`],
                 `$S = \\dfrac{n}{2} (a + l)$`,
                 `1. Recall the sum formula using first and last terms:
@@ -390,14 +392,14 @@ const SumOfTerms = () => {
 
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
 
-            <PracticeReportModal 
-                isOpen={showReportModal} 
+            <PracticeReportModal
+                isOpen={showReportModal}
                 stats={{
                     timeTaken: formatTime(timeElapsed),
                     correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
                     totalQuestions: questions.length
-                }} 
-                onContinue={() => navigate(-1)} 
+                }}
+                onContinue={() => navigate(-1)}
             />
 
             <footer className="junior-bottom-bar">
