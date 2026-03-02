@@ -30,8 +30,8 @@ const MODULES = [
         path: '/algebra/skills',
         label: 'Skills',
         emoji: '🎯',
-        tagline: 'Practice & Assessment',
-        desc: '5 core skills, 10 practice questions and 10 assessment questions each.',
+        tagline: 'Learn, Practice & Assess',
+        desc: '7 core skills, 10 practice questions and 10 assessment questions for each skill.',
         gradFrom: '#0369a1',
         gradTo: '#3b82f6',
         shadow: 'rgba(59,130,246,0.4)',
@@ -43,7 +43,7 @@ const STATS = [
     { val: '7', label: 'Key Terms', color: '#7c3aed' },
     { val: '5', label: 'Rules', color: '#059669' },
     { val: '5', label: 'Skills', color: '#0369a1' },
-    { val: '100', label: 'Practice Qs', color: '#b45309' },
+    // { val: '100', label: 'Practice Qs', color: '#b45309' },
 ];
 
 export default function Algebra() {
