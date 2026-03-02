@@ -5,11 +5,21 @@ import MathRenderer from '../../../../MathRenderer';
 
 // ─── Shared Quiz Engine ────────────────────────────────────────────────────
 function QuizEngine({ questions, title, onBack, color }) {
+    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
+
+    React.useEffect(() => {
+        setQuestionSet(typeof questions === 'function' ? questions() : questions);
+        setCurrent(0);
+        setSelected(null);
+        setAnswered(false);
+        setScore(0);
+        setFinished(false);
+    }, [questions]);
 
     // Timer state for Practice: Starts at 0, counts up
     const [timeTaken, setTimeTaken] = useState(0);
@@ -29,8 +39,8 @@ function QuizEngine({ questions, title, onBack, color }) {
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
-    const q = questions[current];
-    const progress = ((current + (finished ? 1 : 0)) / questions.length) * 100;
+    const q = questionSet[current];
+    const progress = ((current + (finished ? 1 : 0)) / questionSet.length) * 100;
 
     const handleSelect = (optIdx) => {
         if (answered) return;
@@ -40,7 +50,7 @@ function QuizEngine({ questions, title, onBack, color }) {
     };
 
     const handleNext = () => {
-        if (current + 1 >= questions.length) {
+        if (current + 1 >= questionSet.length) {
             setFinished(true);
         } else {
             setCurrent(c => c + 1);
@@ -50,7 +60,7 @@ function QuizEngine({ questions, title, onBack, color }) {
     };
 
     if (finished) {
-        const pct = Math.round((score / questions.length) * 100);
+        const pct = Math.round((score / questionSet.length) * 100);
         let msg = pct >= 90 ? '🏆 Mastered!' : pct >= 75 ? '🌟 Great Job!' : pct >= 50 ? '👍 Keep it up!' : '💪 Keep Learning!';
         let msgSub = pct >= 90 ? 'You have excellent control over this topic!' : 'Review the concepts and try again for 100%.';
 
@@ -66,7 +76,7 @@ function QuizEngine({ questions, title, onBack, color }) {
                 }}>
                     <div style={{ textAlign: 'center' }}>
                         <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: 'var(--alg-text)', lineHeight: 1 }}>{score}</div>
-                        <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>out of {questions.length}</div>
+                        <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>out of {questionSet.length}</div>
                     </div>
                 </div>
 
@@ -82,7 +92,10 @@ function QuizEngine({ questions, title, onBack, color }) {
                 <div className="alg-quiz-finished-actions" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                     <button
                         className="alg-btn-primary"
-                        onClick={() => { setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false); }}
+                        onClick={() => {
+                            if (typeof questions === 'function') { setQuestionSet(questions()); }
+                            setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false);
+                        }}
                         style={{ padding: '12px 24px', background: color }}
                     >
                         Try Again
@@ -113,7 +126,7 @@ function QuizEngine({ questions, title, onBack, color }) {
                             ⏱️ {formatTime(timeTaken)}
                         </div>
                         <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>
-                            Question <span style={{ color: color }}>{current + 1}</span> / {questions.length}
+                            Question <span style={{ color: color }}>{current + 1}</span> / {questionSet.length}
                         </div>
                     </div>
                 </div>
@@ -233,7 +246,7 @@ function QuizEngine({ questions, title, onBack, color }) {
                         boxShadow: answered ? `0 8px 20px ${color}30` : 'none'
                     }}
                 >
-                    {current + 1 >= questions.length ? 'See Final Score' : 'Next Question'}
+                    {current + 1 >= questionSet.length ? 'See Final Score' : 'Next Question'}
                 </button>
             </div>
         </div>
@@ -242,12 +255,21 @@ function QuizEngine({ questions, title, onBack, color }) {
 
 // ─── Shared Assessment Engine ───────────────────────────────────────────────
 function AssessmentEngine({ questions, title, onBack, color }) {
+    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
-    const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+    const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [finished, setFinished] = useState(false);
 
+    React.useEffect(() => {
+        const newQs = typeof questions === 'function' ? questions() : questions;
+        setQuestionSet(newQs);
+        setCurrent(0);
+        setAnswers(Array(newQs.length).fill(null));
+        setFinished(false);
+    }, [questions]);
+
     // Timer state: 1 minute per question
-    const [timeLeft, setTimeLeft] = useState(questions.length * 60);
+    const [timeLeft, setTimeLeft] = useState(questionSet.length * 60);
 
     React.useEffect(() => {
         if (finished) return;
@@ -278,7 +300,7 @@ function AssessmentEngine({ questions, title, onBack, color }) {
     };
 
     const handleNext = () => {
-        if (current + 1 < questions.length) setCurrent(c => c + 1);
+        if (current + 1 < questionSet.length) setCurrent(c => c + 1);
     };
 
     const handlePrev = () => {
@@ -295,22 +317,22 @@ function AssessmentEngine({ questions, title, onBack, color }) {
     if (finished) {
         let score = 0;
         answers.forEach((ans, i) => {
-            if (ans === questions[i].correct) score++;
+            if (ans === questionSet[i].correct) score++;
         });
-        const pct = Math.round((score / questions.length) * 100);
+        const pct = Math.round((score / questionSet.length) * 100);
 
         return (
             <div className="alg-quiz-finished" style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 40 }}>
                     <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: 'var(--alg-text)' }}>Assessment Complete</h2>
-                    <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questions.length}</div>
+                    <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questionSet.length}</div>
                     <div style={{ fontSize: 18, color: 'var(--alg-muted)', fontWeight: 600 }}>Score: {pct}%</div>
                     <button className="alg-btn-secondary" onClick={onBack} style={{ marginTop: 20, padding: '10px 20px' }}>Return to Skills</button>
                 </div>
 
                 <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: 'var(--alg-text)' }}>Summary Report</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    {questions.map((question, i) => {
+                    {questionSet.map((question, i) => {
                         const isCorrect = answers[i] === question.correct;
                         const correctOptText = question.options[question.correct];
                         const userOptText = answers[i] !== null ? question.options[answers[i]] : 'Not Answered';
@@ -398,7 +420,7 @@ function AssessmentEngine({ questions, title, onBack, color }) {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
                     <button onClick={handlePrev} disabled={current === 0} className="alg-btn-secondary" style={{ visibility: current === 0 ? 'hidden' : 'visible' }}>← Previous</button>
-                    {current + 1 === questions.length ? (
+                    {current + 1 === questionSet.length ? (
                         <button onClick={handleSubmit} className="alg-btn-primary" style={{ background: 'var(--alg-red)', border: 'none', color: '#fff' }}>Submit Assessment</button>
                     ) : (
                         <button onClick={handleNext} className="alg-btn-primary" style={{ background: color, border: 'none', color: '#fff' }}>Next →</button>
@@ -422,7 +444,7 @@ function AssessmentEngine({ questions, title, onBack, color }) {
 
                 <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 16, color: 'var(--alg-text)' }}>Question Palette</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
-                    {questions.map((_, i) => {
+                    {questionSet.map((_, i) => {
                         const isAnswered = answers[i] !== null;
                         const isCurrent = current === i;
                         return (
@@ -792,18 +814,160 @@ const expressionAssessment = [
     { question: 'Expand and simplify: (a + b)² = ?', math: '(a + b)²', options: ['a² + b²', 'a² + ab + b²', 'a² + 2ab + b²', '2a + 2b'], correct: 2, explanation: '(a+b)² = (a+b)(a+b) = a² + 2ab + b². This is a key identity!' },
 ];
 
-const equationQuestions = [
-    { question: 'Solve: x + 7 = 15', math: 'x + 7 = 15', options: ['x = 8', 'x = 22', 'x = 7', 'x = 105'], correct: 0, explanation: 'Subtract 7 from both sides: x = 15 − 7 = 8.' },
-    { question: 'Solve: 3x = 21', math: '3x = 21', options: ['x = 7', 'x = 63', 'x = 18', 'x = 8'], correct: 0, explanation: 'Divide both sides by 3: x = 21 ÷ 3 = 7.' },
-    { question: 'Solve: 2x − 5 = 11', math: '2x − 5 = 11', options: ['x = 3', 'x = 8', 'x = 6', 'x = 16'], correct: 1, explanation: 'Add 5: 2x = 16. Divide by 2: x = 8.' },
-    { question: 'Solve: x/4 = 5', math: 'x/4 = 5', options: ['x = 20', 'x = 1.25', 'x = 9', 'x = 5'], correct: 0, explanation: 'Multiply both sides by 4: x = 5 × 4 = 20.' },
-    { question: 'Solve: 4x + 2 = 18', math: '4x + 2 = 18', options: ['x = 4', 'x = 5', 'x = 3', 'x = 6'], correct: 0, explanation: 'Subtract 2: 4x = 16. Divide by 4: x = 4.' },
-    { question: 'Solve the system: x + y = 10, x − y = 2', math: 'x + y = 10  and  x − y = 2', options: ['x=6, y=4', 'x=5, y=5', 'x=4, y=6', 'x=8, y=2'], correct: 0, explanation: 'Adding equations: 2x = 12 → x = 6. Then y = 10 − 6 = 4.' },
-    { question: 'Solve: 2x + y = 7 and x = 2', math: '2x + y = 7, x = 2', options: ['y = 3', 'y = 5', 'y = 11', 'y = 2'], correct: 0, explanation: 'Substitute x = 2: 2(2) + y = 7 → 4 + y = 7 → y = 3.' },
-    { question: 'Solve the quadratic: x² = 9', math: 'x² = 9', options: ['$x = 3$ only', 'x = 9', 'x = ±3', 'x = ±9'], correct: 2, explanation: 'Taking square root of both sides: x = ±√9 = ±3.' },
-    { question: 'Solve: x² − 5x + 6 = 0', math: 'x² − 5x + 6 = 0', options: ['$x = 2$ or $x = 3$', '$x = -2$ or $x = -3$', '$x = 1$ or $x = 6$', '$x = 5$ or $x = 1$'], correct: 0, explanation: 'Factorise: (x−2)(x−3) = 0, so x = 2 or x = 3.' },
-    { question: 'Solve: x² + x − 6 = 0', math: 'x² + x − 6 = 0', options: ['$x = 2$ or $x = -3$', '$x = -2$ or $x = 3$', '$x = 1$ or $x = -6$', '$x = 2$ or $x = 3$'], correct: 0, explanation: 'Factorise: (x+3)(x−2) = 0, so x = −3 or x = 2. Rearranged: x = 2 or x = −3.' },
-];
+const generateEquationQuestionsLinear1 = () => {
+    const questions = [];
+    const getNum = (min = 1, max = 12) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const getC = (min = 1, max = 5) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    for (let i = 0; i < 10; i++) {
+        const type = i % 5;
+        let q, options, explanation;
+
+        if (type === 0) {
+            // ax = b
+            let a = getC(), ans = getNum(), b = a * ans;
+            q = `Solve: $${a}x = ${b}$`;
+            options = [`$x = ${ans}$`, `$x = ${ans + a}$`, `$x = ${ans + 2}$`, `$x = ${Math.abs(ans - a) + 1}$`];
+            explanation = `Divide both sides by $${a}$: $x = ${b} / ${a} = ${ans}$.`;
+        } else if (type === 1) {
+            // x + a = b
+            let a = getNum(), ans = getNum(), b = ans + a;
+            q = `Solve: $x + ${a} = ${b}$`;
+            options = [`$x = ${ans}$`, `$x = ${ans + a}$`, `$x = ${b + a}$`, `$x = ${Math.max(1, ans - 2)}$`];
+            explanation = `Subtract $${a}$ from both sides: $x = ${b} - ${a} = ${ans}$.`;
+        } else if (type === 2) {
+            // ax + b = c
+            let a = getC(2, 6), b = getNum(), ans = getNum(), c = a * ans + b;
+            q = `Solve: $${a}x + ${b} = ${c}$`;
+            options = [`$x = ${ans}$`, `$x = ${ans + 1}$`, `$x = ${ans + 3}$`, `$x = ${Math.max(1, ans - 1)}$`];
+            explanation = `Subtract $${b}$: $${a}x = ${c - b}$. Divide by $${a}$: $x = ${ans}$.`;
+        } else if (type === 3) {
+            // ax - b = c
+            let a = getC(2, 6), b = getNum(), ans = getNum(), c = a * ans - b;
+            q = `Solve: $${a}x - ${b} = ${c}$`;
+            options = [`$x = ${ans}$`, `$x = ${ans + 2}$`, `$x = ${Math.max(1, ans - 1)}$`, `$x = ${ans + 4}$`];
+            explanation = `Add $${b}$: $${a}x = ${c + b}$. Divide by $${a}$: $x = ${ans}$.`;
+        } else {
+            // x/a = b
+            let a = getC(2, 5), ans = getNum(), b = ans; // We want ans to be the final result, so x/a = ans
+            q = `Solve: $x / ${a} = ${b}$`;
+            let trueAns = a * b;
+            options = [`$x = ${trueAns}$`, `$x = ${b}$`, `$x = ${trueAns + a}$`, `$x = ${Math.max(1, trueAns - a)}$`];
+            explanation = `Multiply both sides by $${a}$: $x = ${b} \\times ${a} = ${trueAns}$.`;
+        }
+
+        // Shuffle
+        let shuffled = [...options].sort(() => Math.random() - 0.5);
+        questions.push({
+            question: q, math: '', options: shuffled,
+            correct: shuffled.indexOf(options[0]),
+            explanation
+        });
+    }
+    return questions;
+};
+
+const generateEquationQuestionsLinear2 = () => {
+    const questions = [];
+    const getVal = (min = 1, max = 8) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    for (let i = 0; i < 10; i++) {
+        let x = getVal(), y = getVal(1, x); // Keep ans positive
+        const type = i % 3;
+        let q, options, explanation;
+
+        if (type === 0) {
+            // Standard elimination: x+y=a, x-y=b
+            let a = x + y;
+            let b = x - y;
+            q = `Solve the system: $x + y = ${a}$ and $x - y = ${b}$`;
+            options = [`$x=${x}, y=${y}$`, `$x=${x + 1}, y=${y + 1}$`, `$x=${y}, y=${x}$`, `$x=${x + 2}, y=${Math.max(0, y - 1)}$`];
+            explanation = `Add equations directly: $2x = ${a + b} \\rightarrow x = ${x}$. Then $${x} + y = ${a} \\rightarrow y = ${y}$.`;
+        } else if (type === 1) {
+            // Substitution: y=cx, x+y=a
+            let c = getVal(2, 4);
+            let ny = c * x; // force y to be multiple
+            let a = x + ny;
+            q = `Use substitution: $y = ${c}x$ and $x + y = ${a}$`;
+            options = [`$x=${x}, y=${ny}$`, `$x=${ny}, y=${x}$`, `$x=${x + 1}, y=${ny + 1}$`, `$x=${x + 2}, y=${ny + 2}$`];
+            explanation = `Substitute $y$: $x + ${c}x = ${a} \\rightarrow ${c + 1}x = ${a} \\rightarrow x = ${x}$. Then $y = ${c}(${x}) = ${ny}$.`;
+        } else {
+            // General elimination: cx + y = a, dx - y = b
+            let c = getVal(2, 4), d = getVal(2, 3);
+            let a = c * x + y;
+            let b = d * x - y;
+            q = `Solve using elimination: $${c}x + y = ${a}$ and $${d}x - y = ${b}$`;
+            options = [`$x=${x}, y=${y}$`, `$x=${x + 1}, y=${y}$`, `$x=${y}, y=${x}$`, `$x=${x + 2}, y=${y + 1}$`];
+            explanation = `Add directly to eliminate $y$: $${c + d}x = ${a + b} \\rightarrow x = ${x}$. Then $${c}(${x}) + y = ${a} \\rightarrow ${c * x} + y = ${a} \\rightarrow y = ${y}$.`;
+        }
+
+        // Shuffle
+        let shuffled = [...options].sort(() => Math.random() - 0.5);
+        questions.push({
+            question: q, math: '', options: shuffled,
+            correct: shuffled.indexOf(options[0]),
+            explanation
+        });
+    }
+    return questions;
+};
+
+const generateEquationQuestionsQuadratic = () => {
+    const questions = [];
+    const getVal = (min = 1, max = 9) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    for (let i = 0; i < 10; i++) {
+        const type = i < 3 ? 'root' : 'factor';
+        let q, options, explanation;
+
+        if (type === 'root') {
+            // x^2 = c^2
+            let c = getVal(3, 12);
+            let c2 = c * c;
+            q = `Solve the quadratic: $x^2 = ${c2}$`;
+            options = [`$x = \\pm${c}$`, `$x = ${c}$ only`, `$x = ${c2}$`, `$x = \\pm${c + 1}$`];
+            explanation = `Taking the square root of both sides gives a positive and negative answer: $x = \\pm${c}$.`;
+        } else {
+            // (x+a)(x+b) = x^2 + (a+b)x + ab = 0
+            // Keep roots simple (negative roots means a and b are positive)
+            let a = getVal(1, 6), b = getVal(1, 6);
+
+            // Randomly flip signs for variety in questions
+            if (Math.random() > 0.5) a = -a;
+            if (Math.random() > 0.5) b = -b;
+
+            let sum = a + b;
+            let prod = a * b;
+
+            // Format + - nicely
+            let sumStr = sum === 0 ? '' : sum > 0 ? `+ ${sum}x` : `- ${Math.abs(sum)}x`;
+            if (Math.abs(sum) === 1) sumStr = sum > 0 ? `+ x` : `- x`; // hide 1
+            let prodStr = prod === 0 ? '' : prod > 0 ? `+ ${prod}` : `- ${Math.abs(prod)}`;
+
+            q = `Solve by factoring: $x^2 ${sumStr} ${prodStr} = 0$`;
+
+            // Answers are the roots: -a and -b
+            let r1 = -a, r2 = -b;
+            // Ensure unique representations in options
+            if (r1 === r2) {
+                options = [`$x = ${r1}$`, `$x = ${r1 + 2}$`, `$x = ${r1 - 2}$`, `$x = ${-r1}$`];
+                explanation = `Factorise: $(x ${a > 0 ? '+' : ''}${a})^2 = 0$, so $x = ${r1}$.`;
+            } else {
+                options = [`$x = ${r1}$ or $x = ${r2}$`, `$x = ${-r1}$ or $x = ${-r2}$`, `$x = ${r1 + 1}$ or $x = ${r2 + 1}$`, `$x = ${r2}$ or $x = ${r1 - 2}$`];
+                explanation = `Factorise: $(x ${a > 0 ? '+' : ''}${a})(x ${b > 0 ? '+' : ''}${b}) = 0$, so $x = ${r1}$ or $x = ${r2}$.`;
+            }
+        }
+
+        // Shuffle
+        let shuffled = [...options].sort(() => Math.random() - 0.5);
+        questions.push({
+            question: q, math: '', options: shuffled,
+            correct: shuffled.indexOf(options[0]),
+            explanation
+        });
+    }
+    return questions;
+};
 
 const equationAssessment = [
     { question: 'Solve: n − 13 = 5', math: 'n − 13 = 5', options: ['n = 18', 'n = 8', 'n = −8', 'n = 65'], correct: 0, explanation: 'Add 13 to both sides: n = 18.' },
@@ -941,7 +1105,12 @@ const SKILLS = [
         icon: '⚖️',
         color: '#ec4899',
         desc: 'Isolate variables in linear and quadratic problems.',
-        practice: equationQuestions,
+        practiceCategories: [
+            { title: 'Linear equation in 1 variable', questions: generateEquationQuestionsLinear1 },
+            { title: 'Pair of linear equations in 2 variables', questions: generateEquationQuestionsLinear2 },
+            { title: 'Quadratic Equation', questions: generateEquationQuestionsQuadratic }
+        ],
+        practice: generateEquationQuestionsLinear1, // Default fallback
         assessment: equationAssessment,
         learn: {
             concept: 'To solve an equation, you must find the value of the variable that makes the scale balance perfectly.',
@@ -1005,6 +1174,42 @@ export default function AlgebraSkills() {
     const [activeSkill, setActiveSkill] = useState(null);
     const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
+    // Component for handling multi-category practice sections
+    const CategorizedPracticeEngine = ({ skill, onBack }) => {
+        const [activeCat, setActiveCat] = useState(0);
+        const category = skill.practiceCategories[activeCat];
+
+        return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 280px) 1fr', gap: 24, margin: '0 24px' }}>
+                <aside className="alg-learn-sidebar" style={{ background: 'rgba(255,255,255,0.7)', padding: '16px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'start' }}>
+                    <button onClick={onBack} style={{ marginBottom: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--alg-muted)', textAlign: 'left', fontWeight: 'bold' }}>← Back to Skills</button>
+                    <h3 style={{ margin: '0 0 12px 0', fontSize: 16, textTransform: 'uppercase', letterSpacing: 1, color: skill.color }}>Categories</h3>
+                    {skill.practiceCategories.map((c, i) => (
+                        <button key={i} onClick={() => setActiveCat(i)} className={`alg-sidebar-btn ${activeCat === i ? 'active' : ''}`} style={{
+                            '--skill-color': skill.color,
+                            '--skill-color-15': `${skill.color}15`,
+                            '--skill-color-40': `${skill.color}40`,
+                            '--skill-color-05': `${skill.color}05`,
+                            textAlign: 'left',
+                            fontSize: 14,
+                            lineHeight: 1.4,
+                        }}>
+                            {c.title}
+                        </button>
+                    ))}
+                </aside>
+                <main>
+                    <QuizEngine
+                        key={activeCat} // Force remount to reset state
+                        questions={category.questions}
+                        title={`Practice: ${category.title}`}
+                        onBack={onBack}
+                        color={skill.color}
+                    />
+                </main>
+            </div>
+        );
+    };
     const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
 
     if (view !== 'list' && skill) {
@@ -1113,14 +1318,18 @@ export default function AlgebraSkills() {
                             onBack={() => setView('list')}
                             color={skill.color}
                         />
-                    ) : (
-                        <QuizEngine
-                            questions={skill.practice}
-                            title={`Practice: ${skill.title} `}
-                            onBack={() => setView('list')}
-                            color={skill.color}
-                        />
-                    )}
+                    ) : view === 'practice' ? (
+                        skill.practiceCategories ? (
+                            <CategorizedPracticeEngine skill={skill} onBack={() => setView('list')} />
+                        ) : (
+                            <QuizEngine
+                                questions={skill.practice}
+                                title={`Practice: ${skill.title} `}
+                                onBack={() => setView('list')}
+                                color={skill.color}
+                            />
+                        )
+                    ) : null}
                 </div>
             </div>
         );
