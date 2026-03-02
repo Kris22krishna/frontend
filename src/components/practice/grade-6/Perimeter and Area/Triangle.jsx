@@ -4,7 +4,7 @@ import { Check, ChevronRight, X, ChevronLeft, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import './polynomials.css';
 
 const TrianglePractice = () => {
     const navigate = useNavigate();
@@ -294,7 +294,7 @@ const TrianglePractice = () => {
                                         </div>
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
                         </div>
