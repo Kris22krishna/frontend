@@ -7,4 +7,10 @@
 
 .explanation-text-container .katex-display {
     margin: 0.8em 0;
+/* Remove bold from all explanation text content */
+.explanation-content strong,
+.explanation-content b,
+.explanation-content .font-bold,
+.explanation-content .font-black {
+    font-weight: 400 !important;
 }

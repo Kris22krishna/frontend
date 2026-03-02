@@ -7,7 +7,7 @@ import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/Fun-at-class-party.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -114,6 +114,7 @@ const generateStringSVG = (type, config) => {
 const LongerShorterStrings = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [showResult, setShowResult] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -130,6 +131,7 @@ const LongerShorterStrings = () => {
 
     const SKILL_ID = 9006;
     const SKILL_NAME = "Longer & Shorter Strings";
+    const SHORT_SKILL_NAME = "Strings";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
     const [showReport, setShowReport] = useState(false);
@@ -185,7 +187,7 @@ const LongerShorterStrings = () => {
             const askLongest = Math.random() > 0.5;
             const correct = (askLongest && isALonger) || (!askLongest && !isALonger) ? "String A" : "String B";
             return {
-                text: `Which string is <b>${askLongest ? 'longer' : 'shorter'}</b>?`,
+                text: `Which string is ${askLongest ? 'longer' : 'shorter'}?`,
                 visual: `<div class='flex flex-col gap-2 items-center w-full justify-center'>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>A:</span> ${svgA}</div>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>B:</span> ${svgB}</div>
@@ -210,7 +212,7 @@ const LongerShorterStrings = () => {
             const [labelA, labelB] = labels;
             const correct = labelA.isLonger ? labelA.name : labelB.name;
             return {
-                text: "Which is <b>longer</b> when straightened out?",
+                text: "Which is longer when straightened out?",
                 visual: `<div class='flex flex-col gap-2 items-center justify-center w-full'>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>A:</span> ${labelA.svg}</div>
                     <div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-lg w-8'>B:</span> ${labelB.svg}</div>
@@ -240,7 +242,7 @@ const LongerShorterStrings = () => {
                 ? items.reduce((p, c) => p.len < c.len ? p : c)
                 : items.reduce((p, c) => p.len > c.len ? p : c);
             return {
-                text: `Which string of lights is the <b>${askShortest ? 'shortest' : 'longest'}</b>?`,
+                text: `Which string of lights is the ${askShortest ? 'shortest' : 'longest'}?`,
                 visual: `<div class='flex flex-col gap-1 w-full justify-center'>
                     ${items.map(item => `<div class='flex items-center gap-3 w-full justify-center'><span class='font-bold text-xl w-8'>${item.id}</span> ${item.svg}</div>`).join('')}
                 </div>`,
@@ -268,7 +270,7 @@ const LongerShorterStrings = () => {
                 ? ribbons.indexOf(ribbons.reduce((a, b) => a.val > b.val ? a : b)) + 1
                 : ribbons.indexOf(ribbons.reduce((a, b) => a.val < b.val ? a : b)) + 1;
             return {
-                text: `Which ribbon is the <b>${askLongest ? 'longest' : 'shortest'}</b>?`,
+                text: `Which ribbon is the ${askLongest ? 'longest' : 'shortest'}?`,
                 visual: visualHTML,
                 options: ["1", "2", "3"],
                 correctAnswer: target.toString(),
@@ -285,7 +287,7 @@ const LongerShorterStrings = () => {
             const names = [['Necklace A', 'Necklace B'], ['Ring 1', 'Ring 2'], ['Bangle A', 'Bangle B']][randomInt(0, 2)];
             const swap = Math.random() > 0.5;
             return {
-                text: `Which <b>${names[0].split(' ')[0].toLowerCase()}</b> uses <b>more</b> string?`,
+                text: `Which ${names[0].split(' ')[0].toLowerCase()} uses more string?`,
                 visual: `<div class='flex justify-around items-center w-full gap-4'>
                     <div class='flex flex-col items-center gap-1'>${swap ? svgBig : svgSmall}<span class='font-bold'>${names[0]}</span></div>
                     <div class='flex flex-col items-center gap-1'>${swap ? svgSmall : svgBig}<span class='font-bold'>${names[1]}</span></div>
@@ -316,7 +318,7 @@ const LongerShorterStrings = () => {
             const opts = [total, wrong1, wrong2, wrong3].filter((v, i, a) => a.indexOf(v) === i && v >= 0).slice(0, 4);
             while (opts.length < 4) opts.push(total + opts.length);
             return {
-                text: `Two pieces of string are joined. How long is the <b>total</b> string?`,
+                text: `Two pieces of string are joined. How long is the total string?`,
                 visual: svgPieces,
                 options: opts.map(o => `${o} cm`),
                 correctAnswer: `${total} cm`,
@@ -345,7 +347,7 @@ const LongerShorterStrings = () => {
                 ? items.reduce((a, b) => a.l > b.l ? a : b).name
                 : items.reduce((a, b) => a.l < b.l ? a : b).name;
             return {
-                text: `Which string is the <b>${askLongest ? 'longest' : 'shortest'}</b>?`,
+                text: `Which string is the ${askLongest ? 'longest' : 'shortest'}?`,
                 visual: visual,
                 options: items.map(i => i.name),
                 correctAnswer: correct,
@@ -366,7 +368,7 @@ const LongerShorterStrings = () => {
                 <circle cx="${endX}" cy="${midY}" r="5" fill="#333"/><text x="${endX - 12}" y="${midY - 8}" font-size="11">End</text>
             </svg>`;
             return {
-                text: "Both paths go from Start to End. Which path is <b>shorter</b>?",
+                text: "Both paths go from Start to End. Which path is shorter?",
                 visual: svgPath,
                 options: ["Path A", "Path B"],
                 correctAnswer: "Path B",
@@ -392,7 +394,7 @@ const LongerShorterStrings = () => {
             </svg>`;
             const correct = top > bot ? "A" : "B";
             return {
-                text: "Each paperclip is the same size. Which chain is <b>longer</b>?",
+                text: "Each paperclip is the same size. Which chain is longer?",
                 visual: svg,
                 options: ["A", "B"],
                 correctAnswer: correct,
@@ -418,7 +420,7 @@ const LongerShorterStrings = () => {
                 <text x="${10 + 45 + gapW * 0.3}" y="32" text-anchor="middle" font-size="22" fill="#555">?</text>
             </svg>`;
             return {
-                text: "Which string fits <b>exactly</b> in the gap?",
+                text: "Which string fits exactly in the gap?",
                 visual: `<div class='flex flex-col items-center gap-2 w-full'>
                     <div style='width:100%'>${gapSVG}</div>
                     <div class='flex flex-col gap-1 w-full items-center'>
@@ -554,7 +556,23 @@ const LongerShorterStrings = () => {
         const totalCorrect = Object.values(answers).filter(val => val === true).length;
         const percentage = Math.round((totalCorrect / TOTAL_QUESTIONS) * 100);
         const stars = percentage >= 80 ? 3 : percentage >= 50 ? 2 : 1;
-        return (
+        
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
+    return (
             <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -609,78 +627,73 @@ const LongerShorterStrings = () => {
     }
 
     return (
-        <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
-                <div className="header-left"></div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-lg shadow-sm whitespace-nowrap">
-                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+        <div className="junior-practice-page raksha-theme grey-selection-theme fun-at-class-party-practice-page font-sans">
+            <header className="junior-practice-header fun-at-class-party-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
+                <div className="header-left">
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
+                </div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-base shadow-sm flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
-            <main className="practice-content-wrapper" style={{ flex: 1, overflow: 'hidden', padding: '0.75rem', display: 'flex', alignItems: 'stretch' }}>
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column' }}>
-                    <div className="practice-left-col" style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <main className="practice-content-wrapper">
+                <div className="practice-board-container mt-2" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col fun-at-class-party-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={qIndex}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.3 }}
-                                style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}
+                                initial={{ x: 50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -50, opacity: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                    <div className="question-header-modern" style={{ flex: '1 1 auto', minHeight: '0', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.4rem)', fontWeight: 'bold', textAlign: 'center', justifyContent: 'center', overflow: 'visible', width: '100%' }}>
+                                <div className="question-card-modern flex flex-col justify-start w-full bg-white rounded-3xl sm: px-6 sm:px-10 pt-8 sm:pt-10 pb-6 sm:pb-10 shadow-lg" style={{ height: 'auto', minHeight: '100%' }}>
+                                    <div className="question-header-modern mb-2 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
-                                        <div style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            width: '100%',
-                                            flex: '1 1 auto',
-                                            minHeight: '0',
-                                            overflow: 'hidden',
-                                            padding: '0.5rem',
-                                            background: 'rgba(255,255,255,0.5)',
-                                            borderRadius: '1rem',
-                                            marginTop: '0.4rem'
-                                        }}>
-                                            <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center" style={{ maxHeight: '100%', overflow: 'hidden' }} />
-                                        </div>
                                     </div>
-                                    <div className="interaction-area-modern" style={{ flex: '0 0 auto' }}>
-                                        <div className="options-grid-modern">
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
-                                                    style={{ fontWeight: '500', fontSize: '1.5rem' }}
-                                                    onClick={() => handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
+
+                                    <div className={`flex flex-col ${currentQuestion.visual ? 'md:flex-row' : ''} w-full items-center justify-center gap-3 lg:gap-6 mt-0`}>
+                                        {currentQuestion.visual && (
+                                            <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                                <div dangerouslySetInnerHTML={{ __html: currentQuestion.visual }} className="w-full flex justify-center items-center" style={{ maxHeight: '100%', overflow: 'visible' }} />
+                                            </div>
                                         )}
+                                        <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${currentQuestion.visual ? 'max-w-sm' : 'max-w-3xl mt-6'}`}>
+                                            <div className={`options-grid-modern w-full ${currentQuestion.visual ? 'flex flex-col gap-2' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
+                                                {shuffledOptions.map((option, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                        disabled={isSubmitted}
+                                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && option !== currentQuestion.correctAnswer ? 'wrong' : ''}`}
+                                                    >
+                                                        <LatexContent html={option} />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            {isSubmitted && isCorrect && (
+                                                <motion.div
+                                                    initial={{ scale: 0.5, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '20px' }}
+                                                >
+                                                    {feedbackMessage}
+                                                </motion.div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -701,16 +714,7 @@ const LongerShorterStrings = () => {
             <footer className="junior-bottom-bar" style={{ height: '70px', padding: '0 1rem' }}>
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <StickerExit size={20} className="hidden" />
-                            Exit Practice
-                        </button>
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
@@ -721,22 +725,29 @@ const LongerShorterStrings = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                            {qIndex > 0 && (
-                                <button className="nav-pill-btn" onClick={handlePrev} style={{ background: 'white', border: '2px solid #4FB7B3', color: '#31326F', borderRadius: '999px', padding: '0.5rem 1.2rem', fontWeight: 'bold', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                                    <ChevronLeft size={22} strokeWidth={3} /> Prev
-                                </button>
-                            )}
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit <Check size={28} strokeWidth={3} />
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
@@ -745,15 +756,7 @@ const LongerShorterStrings = () => {
 
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
                                 <Eye size={18} /> Explain
@@ -762,19 +765,31 @@ const LongerShorterStrings = () => {
                     </div>
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
-                            {qIndex > 0 && (
-                                <button onClick={handlePrev} style={{ background: 'white', border: '2px solid #4FB7B3', color: '#31326F', borderRadius: '999px', padding: '0.4rem 0.8rem', fontWeight: 'bold', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '2px', cursor: 'pointer' }}>
-                                    <ChevronLeft size={18} strokeWidth={3} /> Prev
-                                </button>
-                            )}
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit
-                                </button>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>

@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import { Check, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import GenericReportCard from '../GenericReportCard';
+import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
 // --- QUESTION DATA ---
 const questions = [
@@ -115,8 +116,11 @@ const questions = [
 ];
 
 const NumberPuzzles = () => {
+    const SKILL_NAME = "House of Hundreds II - Number Puzzles";
+    const SHORT_SKILL_NAME = "Number Puzzles";
     const navigate = useNavigate();
     const [currentQIndex, setCurrentQIndex] = useState(0);
+    const [history, setHistory] = useState({});
     const [score, setScore] = useState(0);
     const [showResult, setShowResult] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -149,7 +153,18 @@ const NumberPuzzles = () => {
 
     useEffect(() => {
         try {
-            // Reset state on question change
+            if (history[currentQIndex]) {
+                setIsSubmitted(history[currentQIndex].isSubmitted);
+                setIsCorrect(history[currentQIndex].isCorrect);
+                setSelectedOption(history[currentQIndex].selectedOption);
+                setFeedback(history[currentQIndex].feedback);
+            } else {
+                setIsSubmitted(false);
+                setIsCorrect(false);
+                setSelectedOption(null);
+                setFeedback(null);
+            }
+            // Always reset interactive elements
             if (currentQ.type === 'drag-sort') {
                 if (currentQ.items) {
                     setDragItems([...currentQ.items].sort(() => Math.random() - 0.5));
@@ -164,10 +179,6 @@ const NumberPuzzles = () => {
             } else {
                 setShuffledTargets([]);
             }
-            setIsSubmitted(false);
-            setIsCorrect(false);
-            setSelectedOption(null);
-            setFeedback(null);
         } catch (e) {
             console.error(e);
         }
@@ -296,8 +307,8 @@ const NumberPuzzles = () => {
         }
     };
 
-    // --- Navigation Handlers ---
     const handleNext = () => {
+        setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, feedback } }));
         // Reset happens in useEffect
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
@@ -307,7 +318,10 @@ const NumberPuzzles = () => {
     };
 
     const handlePrevious = () => {
-        if (currentQIndex > 0) setCurrentQIndex(prev => prev - 1);
+        if (currentQIndex > 0) {
+            setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, feedback } }));
+            setCurrentQIndex(prev => prev - 1);
+        }
     };
 
     const handleRestart = () => {
@@ -315,7 +329,8 @@ const NumberPuzzles = () => {
         setScore(0);
         setShowResult(false);
         setTimeElapsed(0);
-    };
+        setHistory({});
+};
 
 
     // --- Renderers ---
@@ -369,47 +384,36 @@ const NumberPuzzles = () => {
         );
     };
 
-    if (showResult) {
-        return (
-            <div className="junior-practice-page results-view">
-                <div className="practice-content-wrapper flex-col">
-                    <h1 className="text-4xl font-black text-[#31326F] mb-6">Puzzle Master! 🧩</h1>
-                    <div className="bg-white p-8 rounded-[2rem] shadow-xl border-4 border-white text-center max-w-md w-full">
-                        <div className="flex justify-center mb-6">
-                            <span className="text-8xl">🏆</span>
-                        </div>
-                        <h2 className="text-3xl font-bold text-[#31326F] mb-2">{score} / {questions.length} Correct</h2>
-                        <div className="grid grid-cols-2 gap-4 mt-8">
-                            <button onClick={handleRestart} className="py-3 rounded-xl bg-[#31326F] text-white font-bold text-lg hover:bg-[#25265E] transition-all">Play Again</button>
-                            <button onClick={() => navigate(-1)} className="py-3 rounded-xl border-2 border-[#31326F] text-[#31326F] font-bold text-lg hover:bg-blue-50 transition-all">Exit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
+
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined'
+            ? score
+            : (typeof stats !== 'undefined' && stats.correct !== undefined
+                ? stats.correct
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined'
+            ? questions.length
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0
+                ? sessionQuestions.length
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
     }
 
     return (
-        <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
-            {/* --- HEADER --- */}
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme house-of-hundreds-ii-practice-page" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden' }}>
+            <header className="junior-practice-header house-of-hundreds-ii-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
                 <div className="header-left">
-                    <button
-                        className="bg-white/50 text-[#31326F] p-2 rounded-full hover:bg-white transition-colors"
-                        onClick={() => navigate(-1)}
-                    >
-                        <ArrowLeft size={24} />
-                    </button>
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
                 </div>
-
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
-                        Question {currentQIndex + 1} / {questions.length}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{currentQIndex + 1} / {questions.length}
                     </div>
                 </div>
-
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -418,13 +422,10 @@ const NumberPuzzles = () => {
             {/* --- MAIN CONTENT --- */}
             <main className="practice-content-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto', width: '100%', height: 'auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', paddingBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flexGrow: 1, justifyContent: 'center' }}>
-                            <div className="question-header-modern" style={{ marginBottom: '0' }}>
-                                <div className="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full font-bold uppercase tracking-wide text-xs mb-2">
-                                    Number Puzzles
-                                </div>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.8rem)', fontWeight: '600', textAlign: 'center', width: '100%', justifyContent: 'center', margin: 0 }}>
+                    <div className="practice-left-col house-of-hundreds-ii-left-col">
+                        <div className="question-card-modern" style={{ padding: '1rem 1.5rem', paddingBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flexGrow: 1, justifyContent: 'center' }}>
+                            <div className="question-header-modern" style={{ marginBottom: '0.1rem' }}>
+                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2.8vw, 1.5rem)', fontWeight: '600', textAlign: 'center', width: '100%', justifyContent: 'center', margin: 0 }}>
                                     {currentQ.question}
                                 </h2>
                             </div>
@@ -432,29 +433,26 @@ const NumberPuzzles = () => {
                             {/* --- DYNAMIC CONTENT AREA --- */}
 
                             {currentQ.type === 'mcq' && (
-                                <div className="flex flex-col items-center w-full h-full justify-center">
-                                    {renderVisualDiagram()}
-                                    <div className="interaction-area-modern w-full flex flex-col items-center mt-2">
-                                        <div className="options-grid-modern w-full grid grid-cols-2 gap-2">
+                                <div className="flex flex-col md:flex-row gap-4 lg:gap-8 items-center justify-center w-full h-full mt-1">
+                                    <div className="flex-1 w-full flex flex-col justify-center items-center">
+                                        {renderVisualDiagram()}
+                                        {isSubmitted && isCorrect && (
+                                            <div className="mt-3 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-base md:text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm self-center">
+                                                <span className="text-2xl">🌟</span> Awesome! Correct!
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="flex-1 w-full max-w-xs xl:max-w-sm interaction-area-modern !mt-0 flex flex-col justify-center">
+                                        <div className="flex flex-col gap-2 w-full">
                                             {currentQ.options.map((opt, i) => {
                                                 const isRight = isSubmitted && opt === currentQ.correct;
                                                 const isWrong = isSubmitted && selectedOption === opt && opt !== currentQ.correct;
                                                 return (
                                                     <button
                                                         key={i}
-                                                        className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''}`}
-                                                        style={{
-                                                            fontSize: '1.1rem',
-                                                            minHeight: '45px',
-                                                            padding: '0.25rem',
-                                                            backgroundColor: isRight ? '#4CAF50' : (isWrong ? '#EF5350' : undefined),
-                                                            color: (isRight || isWrong) ? 'white' : undefined,
-                                                            borderColor: isRight ? '#2E7D32' : (isWrong ? '#C62828' : undefined),
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center'
-                                                        }}
+                                                        className={`option-btn-modern w-full ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQ.correct ? 'correct' : ''} ${isSubmitted && selectedOption === opt && opt !== currentQ.correct ? 'wrong' : ''}`}
                                                         onClick={() => !isSubmitted && setSelectedOption(opt)}
+                                                        style={{ padding: '0.6rem 1rem', minHeight: '3rem' }}
                                                     >
                                                         {opt}
                                                     </button>
@@ -462,11 +460,6 @@ const NumberPuzzles = () => {
                                             })}
                                         </div>
                                     </div>
-                                    {isSubmitted && isCorrect && (
-                                        <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm mb-1">
-                                            <span className="text-xl">🌟</span> Awesome! Correct!
-                                        </div>
-                                    )}
                                 </div>
                             )}
 
@@ -495,7 +488,7 @@ const NumberPuzzles = () => {
                                     </div>
                                     {isSubmitted && isCorrect && (
                                         <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm">
-                                            <span className="text-xl">🎉</span> Correct Sequence!
+                                            <span className="text-2xl">🎉</span> Correct Sequence!
                                         </div>
                                     )}
                                 </div>
@@ -567,7 +560,7 @@ const NumberPuzzles = () => {
                                     </div>
                                     {isSubmitted && isCorrect ? (
                                         <div className="mt-2 bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold text-lg animate-bounce flex items-center gap-2 border border-green-200 shadow-sm">
-                                            <span className="text-xl">✨</span> Perfect Match!
+                                            <span className="text-2xl">✨</span> Perfect Match!
                                         </div>
                                     ) : (
                                         <div className="text-center pt-2 pb-1 text-[10px] text-gray-400 uppercase tracking-widest font-bold">Draw lines to connect</div>
@@ -590,79 +583,83 @@ const NumberPuzzles = () => {
             />
 
             {/* --- FOOTER (Bottom Bar) --- */}
-            <footer className="junior-bottom-bar">
+            <footer className="junior-bottom-bar" style={{ height: '70px', padding: '0 1rem' }}>
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                            onClick={() => navigate(-1)}
-                        >
-                            <X size={20} /> Exit
-                        </button>
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={() => navigate(-1)}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={20} /> Steps
+                                <Eye size={20} /> View Explanation
                             </button>
                         )}
                     </div>
                     <div className="bottom-right">
-                        <div className="nav-buttons-group">
+                        <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                             <button
-                                className="nav-pill-next-btn"
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                 onClick={handlePrevious}
                                 disabled={currentQIndex === 0}
-                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
+                                style={{ opacity: currentQIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
                             >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {currentQIndex < questions.length - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheckAnswer}
-                                    disabled={currentQ.type === 'mcq' && !selectedOption}
-                                    style={{ opacity: (currentQ.type === 'mcq' && !selectedOption) ? 0.5 : 1 }}
+                                    disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}
                                 >
-                                    Check <Check size={28} strokeWidth={3} />
+                                    SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
                         </div>
                     </div>
                 </div>
+
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}>
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={() => navigate(-1)}><X size={20} /></button>
+
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={18} /> Steps
+                                <Eye size={18} /> Explain
                             </button>
                         )}
                     </div>
+
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${currentQIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrevious}
+                                disabled={currentQIndex === 0}
+                                style={{
+                                    opacity: currentQIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {currentQIndex < questions.length - 1 ? "Next" : "Done"}
+                                    {currentQIndex < questions.length - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button
-                                    className="nav-pill-submit-btn"
-                                    onClick={handleCheckAnswer}
-                                    disabled={currentQ.type === 'mcq' && !selectedOption}
-                                >
-                                    Check
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}>SUBMIT</button>
                             )}
                         </div>
                     </div>

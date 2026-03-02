@@ -45,6 +45,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
             return;
         }
+        if (subtopic.id === "RB-TEST") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/chapter-test`);
+            return;
+        }
         if (subtopic.id === "FS-01") {
             navigate(`/junior/grade/${grade}/fair-share/cutting`);
             return;
@@ -61,12 +65,20 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             return;
         }
+        if (subtopic.id === "FS-TEST") {
+            navigate(`/junior/grade/${grade}/fair-share/chapter-test`);
+            return;
+        }
         if (subtopic.id === "FCP-01") {
             navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
             return;
         }
         if (subtopic.id === "FCP-02") {
             navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
+            return;
+        }
+        if (subtopic.id === "FCP-TEST") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/chapter-test`);
             return;
         }
         if (subtopic.id === "HH2-01") {
@@ -107,6 +119,10 @@ const JuniorSubtopics = () => {
         }
         if (subtopic.id === "HH2-10") {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/guess-the-number`);
+            return;
+        }
+        if (subtopic.id === "HH2-TEST") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/chapter-test`);
             return;
         }
 
@@ -272,11 +288,13 @@ const JuniorSubtopics = () => {
                 }
 
                 // Filter by topic and get unique skills
+                const HIDDEN_SKILLS = ['factors']; // Skill names to hide (lowercase)
                 const filteredSkills = (skillsResponse || [])
                     .filter(skill => !isGrade1 && skill.topic === decodedTopic) // Block Grade 1 API topics
                     .filter((skill, index, self) =>
                         skill.skill_name && self.findIndex(s => s.skill_id === skill.skill_id) === index
-                    );
+                    )
+                    .filter(skill => !HIDDEN_SKILLS.includes(skill.skill_name?.trim().toLowerCase()));
 
                 const subtopicList = filteredSkills.map((skill, index) => {
                     return {
