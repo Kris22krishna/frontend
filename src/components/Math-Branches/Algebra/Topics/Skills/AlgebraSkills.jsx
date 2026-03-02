@@ -11,6 +11,24 @@ function QuizEngine({ questions, title, onBack, color }) {
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
 
+    // Timer state for Practice: Starts at 0, counts up
+    const [timeTaken, setTimeTaken] = useState(0);
+
+    React.useEffect(() => {
+        if (finished) return;
+        const timer = setInterval(() => {
+            setTimeTaken(prev => prev + 1);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [finished]);
+
+    // Format time (MM:SS)
+    const formatTime = (seconds) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    };
+
     const q = questions[current];
     const progress = ((current + (finished ? 1 : 0)) / questions.length) * 100;
 
@@ -51,12 +69,20 @@ function QuizEngine({ questions, title, onBack, color }) {
                         <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>out of {questions.length}</div>
                     </div>
                 </div>
+
+                <div style={{
+                    display: 'inline-block', padding: '6px 16px', background: `${color}15`,
+                    color: color, borderRadius: 50, fontSize: 14, fontWeight: 800, marginBottom: 16
+                }}>
+                    ⏱️ Time Taken: {formatTime(timeTaken)}
+                </div>
+
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: 'var(--alg-text)', margin: '0 0 8px' }}>{msg}</h2>
                 <p style={{ color: 'var(--alg-muted)', fontSize: 15, margin: '0 0 32px' }}>{msgSub}</p>
                 <div className="alg-quiz-finished-actions" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                     <button
                         className="alg-btn-primary"
-                        onClick={() => { setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}
+                        onClick={() => { setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false); }}
                         style={{ padding: '12px 24px', background: color }}
                     >
                         Try Again
@@ -82,8 +108,13 @@ function QuizEngine({ questions, title, onBack, color }) {
                         <div style={{ fontSize: 11, fontWeight: 800, color: color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>Skill Verification</div>
                         <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: 'var(--alg-text)', margin: 0 }}>{title}</h3>
                     </div>
-                    <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>
-                        Question <span style={{ color: color }}>{current + 1}</span> / {questions.length}
+                    <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: 13, color: color, fontWeight: 800, marginBottom: 4, background: `${color}15`, padding: '4px 10px', borderRadius: 8, display: 'inline-block' }}>
+                            ⏱️ {formatTime(timeTaken)}
+                        </div>
+                        <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>
+                            Question <span style={{ color: color }}>{current + 1}</span> / {questions.length}
+                        </div>
                     </div>
                 </div>
                 <div style={{ background: '#f1f5f9', borderRadius: 10, height: 6, overflow: 'hidden' }}>
@@ -107,9 +138,9 @@ function QuizEngine({ questions, title, onBack, color }) {
                     <span>QUESTION</span> {current + 1}
                 </div>
                 <div className="alg-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: 'var(--alg-text)', lineHeight: 1.6, marginBottom: 24 }}>
-                    {q.question}
+                    <MathRenderer text={q.question} />
                 </div>
-                {q.math && (
+                {/* {q.math && (
                     <div style={{
                         background: '#f8fafc', border: `1px solid ${color}20`,
                         borderRadius: 12, padding: '16px', marginBottom: 24,
@@ -117,7 +148,7 @@ function QuizEngine({ questions, title, onBack, color }) {
                     }}>
                         <MathRenderer text={q.math.includes('$') ? q.math : `$$${q.math}$$`} />
                     </div>
-                )}
+                )} */}
 
                 {/* Options */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
@@ -209,32 +240,502 @@ function QuizEngine({ questions, title, onBack, color }) {
     );
 }
 
-// ─── QUESTIONS & DATA ──────────────────────────────────────────────────────
-const exponentQuestions = [
-    { question: 'What is the value of x³ × x⁴?', math: 'x³ × x⁴ = ?', options: ['x⁷', 'x¹²', 'x', 'x⁻¹'], correct: 0, explanation: 'When multiplying terms with the same base, ADD the exponents: 3 + 4 = 7, so x³ × x⁴ = x⁷.' },
-    { question: 'Simplify: a⁵ ÷ a²', math: 'a⁵ ÷ a² = ?', options: ['a³', 'a⁷', 'a¹⁰', 'a⁻³'], correct: 0, explanation: 'When dividing terms with the same base, SUBTRACT the exponents: 5 − 2 = 3, so a⁵ ÷ a² = a³.' },
-    { question: 'What is (x²)³?', math: '(x²)³ = ?', options: ['x⁵', 'x⁶', 'x⁸', 'x²'], correct: 1, explanation: 'Power of a power rule: MULTIPLY the exponents. 2 × 3 = 6, so (x²)³ = x⁶.' },
-    { question: 'What is any number raised to the power of zero?', math: 'x⁰ = ?', options: ['0', '1', 'x', 'undefined'], correct: 1, explanation: 'Any non-zero number raised to the power 0 equals 1. x⁰ = 1 (for x ≠ 0).' },
-    { question: 'Simplify: (2x)³', math: '(2x)³ = ?', options: ['2x³', '6x³', '8x³', '2x'], correct: 2, explanation: 'Raise each factor to the power: 2³ = 8 and x³. So (2x)³ = 8x³.' },
-    { question: 'What is x⁻² equal to?', math: 'x⁻² = ?', options: ['−x²', '1/x²', '−1/x²', 'x²'], correct: 1, explanation: 'Negative exponents mean reciprocal: x⁻² = 1/x². The base flips to the denominator.' },
-    { question: 'Simplify: y² × y³ × y', math: 'y² × y³ × y = ?', options: ['y⁵', 'y⁶', 'y⁷', 'y⁸'], correct: 1, explanation: 'Add all exponents: 2 + 3 + 1 = 6, so the result is y⁶.' },
-    { question: 'Simplify: (x³)⁰', math: '(x³)⁰ = ?', options: ['x³', '0', '1', '3x'], correct: 2, explanation: 'Any expression (non-zero) raised to the power 0 = 1. So (x³)⁰ = 1.' },
-    { question: 'Simplify: a⁴ × b⁴', math: 'a⁴ × b⁴ = ?', options: ['ab⁴', '(ab)⁴', 'a⁸b⁴', 'a⁴b⁸'], correct: 1, explanation: 'When different bases have the same power: a⁴ × b⁴ = (ab)⁴.' },
-    { question: 'Simplify: m⁶ ÷ m⁶', math: 'm⁶ ÷ m⁶ = ?', options: ['m⁰', '1', '0', 'm⁶'], correct: 1, explanation: 'Subtracting equal exponents gives 0: m⁶ ÷ m⁶ = m⁰ = 1.' },
-];
+// ─── Shared Assessment Engine ───────────────────────────────────────────────
+function AssessmentEngine({ questions, title, onBack, color }) {
+    const [current, setCurrent] = useState(0);
+    const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+    const [finished, setFinished] = useState(false);
 
-const exponentAssessment = [
-    { question: 'Which law applies when you multiply powers with the same base?', math: 'xᵃ × xᵇ = ?', options: ['x^(a+b)', 'x^(a×b)', 'x^(a-b)', 'x^(a÷b)'], correct: 0, explanation: 'Product of Powers Law: add the exponents when multiplying same base.' },
-    { question: 'What is (3²)³?', math: '(3²)³ = ?', options: ['3⁵', '3⁶', '27', '729²'], correct: 1, explanation: '(3²)³ = 3^(2×3) = 3⁶ = 729.' },
-    { question: 'Simplify: p⁸ ÷ p³', math: 'p⁸ ÷ p³ = ?', options: ['p⁵', 'p¹¹', 'p²⁴', 'p⁻⁵'], correct: 0, explanation: 'Quotient of powers: subtract exponents = 8 − 3 = 5.' },
-    { question: 'What does x⁻³ equal?', math: 'x⁻³ = ?', options: ['−x³', '1/x³', 'x³', '−1/x³'], correct: 1, explanation: 'Negative exponent means reciprocal: x⁻³ = 1/x³.' },
-    { question: 'What is (4ab)⁰?', math: '(4ab)⁰ = ?', options: ['4ab', '0', '1', '4'], correct: 2, explanation: 'Anything to the power 0 = 1 (as long as base ≠ 0).' },
-    { question: 'Simplify: 2³ × 2⁴', math: '2³ × 2⁴ = ?', options: ['2⁷', '2¹²', '4⁷', '128'], correct: 0, explanation: 'Same base: 2³ × 2⁴ = 2^(3+4) = 2⁷.' },
-    { question: 'Simplify: (xy)³', math: '(xy)³ = ?', options: ['xy³', 'x³y', 'x³y³', 'xy'], correct: 2, explanation: 'Power of a product: (xy)³ = x³ × y³ = x³y³.' },
-    { question: 'What is (a²)⁴ × a²?', math: '(a²)⁴ × a² = ?', options: ['a⁸', 'a¹⁰', 'a⁶', 'a¹²'], correct: 1, explanation: '(a²)⁴ = a⁸, then a⁸ × a² = a^(8+2) = a¹⁰.' },
-    { question: 'Simplify: (2x²)³', math: '(2x²)³ = ?', options: ['6x⁵', '8x⁶', '2x⁶', '6x⁶'], correct: 1, explanation: '2³ = 8, (x²)³ = x⁶. So (2x²)³ = 8x⁶.' },
-    { question: 'Which is NOT a valid simplification of n⁵ ÷ n⁵?', math: 'n⁵ ÷ n⁵ = ?', options: ['n⁰', '1', '0', 'n⁵/n⁵'], correct: 2, explanation: 'n⁵/n⁵ = n⁰ = 1. The answer is NOT 0.' },
-];
+    // Timer state: 1 minute per question
+    const [timeLeft, setTimeLeft] = useState(questions.length * 60);
+
+    React.useEffect(() => {
+        if (finished) return;
+        if (timeLeft <= 0) {
+            setFinished(true); // Auto-submit when time is up
+            return;
+        }
+        const timer = setInterval(() => {
+            setTimeLeft(prev => prev - 1);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [timeLeft, finished]);
+
+    // Format time (MM:SS)
+    const formatTime = (seconds) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    };
+
+    const q = questions[current];
+
+    const handleSelect = (optIdx) => {
+        if (finished) return;
+        const newAns = [...answers];
+        newAns[current] = optIdx;
+        setAnswers(newAns);
+    };
+
+    const handleNext = () => {
+        if (current + 1 < questions.length) setCurrent(c => c + 1);
+    };
+
+    const handlePrev = () => {
+        if (current > 0) setCurrent(c => c - 1);
+    };
+
+    const handleSubmit = () => {
+        if (answers.includes(null)) {
+            if (!window.confirm("You have unanswered questions. Are you sure you want to submit?")) return;
+        }
+        setFinished(true);
+    };
+
+    if (finished) {
+        let score = 0;
+        answers.forEach((ans, i) => {
+            if (ans === questions[i].correct) score++;
+        });
+        const pct = Math.round((score / questions.length) * 100);
+
+        return (
+            <div className="alg-quiz-finished" style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
+                <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: 'var(--alg-text)' }}>Assessment Complete</h2>
+                    <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questions.length}</div>
+                    <div style={{ fontSize: 18, color: 'var(--alg-muted)', fontWeight: 600 }}>Score: {pct}%</div>
+                    <button className="alg-btn-secondary" onClick={onBack} style={{ marginTop: 20, padding: '10px 20px' }}>Return to Skills</button>
+                </div>
+
+                <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: 'var(--alg-text)' }}>Summary Report</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {questions.map((question, i) => {
+                        const isCorrect = answers[i] === question.correct;
+                        const correctOptText = question.options[question.correct];
+                        const userOptText = answers[i] !== null ? question.options[answers[i]] : 'Not Answered';
+
+                        return (
+                            <div key={i} style={{
+                                padding: 20, borderRadius: 12,
+                                border: `2px solid ${isCorrect ? 'var(--alg-teal)' : 'var(--alg-red)'}`,
+                                background: isCorrect ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)'
+                            }}>
+                                <div style={{ fontWeight: 800, marginBottom: 8, color: isCorrect ? 'var(--alg-teal)' : 'var(--alg-red)' }}>Question {i + 1} - {isCorrect ? 'Correct' : 'Incorrect'}</div>
+                                <div className="alg-quiz-question-text" style={{ fontSize: 16, marginBottom: 16, color: 'var(--alg-text)', fontWeight: 600 }}>
+                                    <MathRenderer text={question.question} />
+                                </div>
+                                <div style={{ display: 'flex', gap: 20, fontSize: 15, background: '#fff', padding: 16, borderRadius: 12, border: '1px solid rgba(0,0,0,0.05)' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <strong style={{ color: 'var(--alg-teal)' }}>Correct Answer:</strong>
+                                        <div style={{ marginTop: 6 }}><MathRenderer text={correctOptText.includes('$') || correctOptText.includes('^') ? (correctOptText.includes('$') ? correctOptText : `$${correctOptText}$`) : correctOptText} /></div>
+                                    </div>
+                                    <div style={{ flex: 1, borderLeft: '2px solid rgba(0,0,0,0.04)', paddingLeft: 20 }}>
+                                        <strong style={{ color: isCorrect ? 'var(--alg-teal)' : 'var(--alg-red)' }}>Your Answer:</strong>
+                                        <div style={{ marginTop: 6 }}>{answers[i] === null ? 'Not Answered' : <MathRenderer text={userOptText.includes('$') || userOptText.includes('^') ? (userOptText.includes('$') ? userOptText : `$${userOptText}$`) : userOptText} />}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="alg-quiz-active" style={{ display: 'flex', gap: 24, alignItems: 'flex-start', maxWidth: 1000, margin: '0 auto' }}>
+            {/* Left Main Question Area */}
+            <div style={{ flex: 1 }}>
+                <div className="alg-score-header" style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Assessment</div>
+                    <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, margin: 0, color: 'var(--alg-text)' }}>{title}</h3>
+                </div>
+
+                <div className="alg-quiz-card" style={{
+                    background: '#fff', borderRadius: 20, padding: '32px 36px',
+                    boxShadow: '0 12px 30px rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)'
+                }}>
+                    <div style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        background: `${color}15`, padding: '4px 12px', borderRadius: 8,
+                        fontSize: 12, fontWeight: 800, color, marginBottom: 16
+                    }}>
+                        <span>QUESTION</span> {current + 1}
+                    </div>
+                    <div className="alg-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: 'var(--alg-text)', lineHeight: 1.6, marginBottom: 24 }}>
+                        <MathRenderer text={q.question} />
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
+                        {q.options.map((opt, oi) => {
+                            const isSelected = answers[current] === oi;
+                            return (
+                                <button
+                                    key={oi}
+                                    onClick={() => handleSelect(oi)}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', gap: 12,
+                                        padding: '14px 16px', borderRadius: 12,
+                                        border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
+                                        background: isSelected ? `${color}05` : '#fff',
+                                        cursor: 'pointer', fontSize: 15, textAlign: 'left',
+                                        transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: 'var(--alg-text)'
+                                    }}
+                                >
+                                    <div style={{
+                                        width: 10, height: 10, borderRadius: '50%',
+                                        background: isSelected ? color : '#f1f5f9', flexShrink: 0
+                                    }} />
+                                    <span>
+                                        <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
+                    <button onClick={handlePrev} disabled={current === 0} className="alg-btn-secondary" style={{ visibility: current === 0 ? 'hidden' : 'visible' }}>← Previous</button>
+                    {current + 1 === questions.length ? (
+                        <button onClick={handleSubmit} className="alg-btn-primary" style={{ background: 'var(--alg-red)', border: 'none', color: '#fff' }}>Submit Assessment</button>
+                    ) : (
+                        <button onClick={handleNext} className="alg-btn-primary" style={{ background: color, border: 'none', color: '#fff' }}>Next →</button>
+                    )}
+                </div>
+            </div>
+
+            {/* Right Question Palette */}
+            <div style={{
+                width: 280, background: '#fff', borderRadius: 20, padding: 24,
+                boxShadow: '0 12px 30px rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)', flexShrink: 0
+            }}>
+                <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    padding: '12px', background: timeLeft < 60 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(8, 145, 178, 0.05)',
+                    color: timeLeft < 60 ? 'var(--alg-red)' : 'var(--alg-text)',
+                    borderRadius: 12, marginBottom: 24, fontWeight: 800, fontSize: 20
+                }}>
+                    ⏱️ {formatTime(timeLeft)}
+                </div>
+
+                <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 16, color: 'var(--alg-text)' }}>Question Palette</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+                    {questions.map((_, i) => {
+                        const isAnswered = answers[i] !== null;
+                        const isCurrent = current === i;
+                        return (
+                            <button
+                                key={i}
+                                onClick={() => setCurrent(i)}
+                                style={{
+                                    aspectRatio: '1/1', borderRadius: 8, fontSize: 14, fontWeight: 700,
+                                    background: isAnswered ? color : '#f1f5f9',
+                                    color: isAnswered ? '#fff' : 'var(--alg-muted)',
+                                    border: isCurrent ? `3px solid var(--alg-text)` : 'none',
+                                    cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}
+                            >
+                                {i + 1}
+                            </button>
+                        );
+                    })}
+                </div>
+                <div style={{ marginTop: 20, fontSize: 12, color: 'var(--alg-muted)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><div style={{ width: 12, height: 12, background: color, borderRadius: 3 }} /> Answered</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><div style={{ width: 12, height: 12, background: '#f1f5f9', borderRadius: 3 }} /> Not Answered</div>
+                </div>
+                <button onClick={handleSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: 'var(--alg-red)', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>Submit Assessment</button>
+            </div>
+        </div>
+    );
+}
+
+// ─── QUESTIONS & DATA ──────────────────────────────────────────────────────
+const generateExponentQuestions = () => {
+    const questions = [];
+    const getNum = () => Math.floor(Math.random() * 9) + 2; // 2 to 10
+    const getLetter = () => String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z
+    const getLetter2 = (exclude) => {
+        let l = getLetter();
+        while (l === exclude) l = getLetter();
+        return l;
+    };
+
+    // 1. Product Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum(), b = getNum();
+        questions.push({
+            question: `Simplify: $${base}^{${a}} \\cdot ${base}^{${b}}$`,
+            math: `${base}^{${a}} \\cdot ${base}^{${b}} = ?`,
+            options: [`$${base}^{${a + b}}$`, `$${base}^{${a * b}}$`, `$${base}^{${Math.abs(a - b)}}$`, `$${base}$`],
+            correct: 0,
+            explanation: `When multiplying terms with the same base, ADD the exponents: $${a} + ${b} = ${a + b}$, so the result is $${base}^{${a + b}}$.`
+        });
+    }
+
+    // 2. Quotient Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum() + 5, b = getNum(); // Ensure a > b usually
+        questions.push({
+            question: `Simplify: $\\frac{${base}^{${a}}}{${base}^{${b}}}$`,
+            math: `\\frac{${base}^{${a}}}{${base}^{${b}}} = ?`,
+            options: [`$${base}^{${a - b}}$`, `$${base}^{${a + b}}$`, `$${base}^{${a * b}}$`, `$${base}^{${b - a}}$`],
+            correct: 0,
+            explanation: `When dividing terms with the same base, SUBTRACT the bottom exponent from the top: $${a} - ${b} = ${a - b}$, so the result is $${base}^{${a - b}}$.`
+        });
+    }
+
+    // 3. Power Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum(), b = getNum();
+        questions.push({
+            question: `Simplify: $(${base}^{${a}})^{${b}}$`,
+            math: `(${base}^{${a}})^{${b}} = ?`,
+            options: [`$${base}^{${a * b}}$`, `$${base}^{${a + b}}$`, `$${base}^{${Math.pow(a, b)}}$`, `$${base}^{${a}}$`],
+            correct: 0,
+            explanation: `Power of a power rule: MULTIPLY the exponents: $${a} \\times ${b} = ${a * b}$, so the result is $${base}^{${a * b}}$.`
+        });
+    }
+
+    // 4. Power of Product
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base1 = isLetter ? getLetter() : getNum();
+        let base2 = isLetter ? getLetter2(base1) : getNum();
+        if (!isLetter && base1 === base2) base2++;
+        let a = getNum();
+        questions.push({
+            question: `Simplify: $(${base1} \\cdot ${base2})^{${a}}$`,
+            math: `(${base1} \\cdot ${base2})^{${a}} = ?`,
+            options: [`$${base1}^{${a}} \\cdot ${base2}^{${a}}$`, `$${base1} \\cdot ${base2}^{${a}}$`, `$${base1}^{${a}} \\cdot ${base2}$`, `$(${base1} + ${base2})^{${a}}$`],
+            correct: 0,
+            explanation: `Every factor inside the parentheses gets the power outside: $${base1}^{${a}} \\cdot ${base2}^{${a}}$.`
+        });
+    }
+
+    // 5. Power of Quotient
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base1 = isLetter ? getLetter() : getNum();
+        let base2 = isLetter ? getLetter2(base1) : getNum();
+        if (!isLetter && base1 === base2) base2++;
+        let a = getNum();
+        questions.push({
+            question: `Simplify: $\\left(\\frac{${base1}}{${base2}}\\right)^{${a}}$`,
+            math: `\\left(\\frac{${base1}}{${base2}}\\right)^{${a}} = ?`,
+            options: [`$\\frac{${base1}^{${a}}}{${base2}^{${a}}}$`, `$\\frac{${base1}^{${a}}}{${base2}}$`, `$\\frac{${base1}}{${base2}^{${a}}}$`, `$\\frac{${base1}^{${a}}}{${base2}^{-${a}}}$`],
+            correct: 0,
+            explanation: `The power applies to both the numerator and the denominator: $\\frac{${base1}^{${a}}}{${base2}^{${a}}}$.`
+        });
+    }
+
+    // 6. Zero Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        questions.push({
+            question: `What is $${base}^0$?`,
+            math: `${base}^0 = ?`,
+            options: [`$1$`, `$0$`, `$${base}$`, `$\\text{undefined}$`],
+            correct: 0,
+            explanation: `Any non-zero base raised to the power of zero is ALWAYS $1$. So $${base}^0 = 1$.`
+        });
+    }
+
+    // 7. Identity Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        questions.push({
+            question: `What is $${base}^1$?`,
+            math: `${base}^1 = ?`,
+            options: [`$${base}$`, `$1$`, `$0$`, `$${base}^2$`],
+            correct: 0,
+            explanation: `Any base raised to the power of 1 remains the same. So $${base}^1 = ${base}$.`
+        });
+    }
+
+    // 8. Negative Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum();
+        questions.push({
+            question: `Simplify: $${base}^{-${a}}$`,
+            math: `${base}^{-${a}} = ?`,
+            options: [`$\\frac{1}{${base}^{${a}}}$`, `$-${base}^{${a}}$`, `$${base}^{${a}}$`, `$\\frac{-1}{${base}^{${a}}}$`],
+            correct: 0,
+            explanation: `A negative exponent means the reciprocal. It moves the base to the bottom: $\\frac{1}{${base}^{${a}}}$.`
+        });
+    }
+
+    // 9. Fractional Law
+    for (let isLetter = 0; isLetter < 2; isLetter++) {
+        let base = isLetter ? getLetter() : getNum();
+        let a = getNum(), b = getNum() + 1; // Distinct denominator
+        questions.push({
+            question: `Write as a radical: $${base}^{\\frac{${a}}{${b}}}$`,
+            math: `${base}^{\\frac{${a}}{${b}}} = ?`,
+            options: [`$\\sqrt[${b}]{${base}^{${a}}}$`, `$\\sqrt[${a}]{${base}^{${b}}}$`, `$\\frac{${a}}{${b}} \\sqrt{${base}}$`, `$\\frac{1}{\\sqrt[${b}]{${base}^{${a}}}}$`],
+            correct: 0,
+            explanation: `Fractional powers are roots. The bottom number (${b}) is the root index, and the top number (${a}) is the power: $\\sqrt[${b}]{${base}^{${a}}}$.`
+        });
+    }
+
+    // ─── TRICKY QUESTIONS (12 extra questions testing misconceptions) ───
+
+    // Tricky 1: Different bases, same exponent (Multiplication) - Number base
+    let tb1 = getNum(), tb2 = tb1 + 1, ta1 = getNum();
+    questions.push({
+        question: `Simplify: $${tb1}^{${ta1}} \\cdot ${tb2}^{${ta1}}$`,
+        math: `${tb1}^{${ta1}} \\cdot ${tb2}^{${ta1}} = ?`,
+        options: [`$${tb1 * tb2}^{${ta1}}$`, `$${tb1 + tb2}^{${ta1}}$`, `$${tb1 * tb2}^{${ta1 + ta1}}$`, `$${tb1}^{${ta1}} \\cdot ${tb2}^{${ta1}}$`],
+        correct: 0, // Option 0 is correct, others are traps
+        explanation: `Since the bases are different but the exponents are exactly the same, you multiply the bases and keep the exponent: $(${tb1} \\cdot ${tb2})^{${ta1}} = ${tb1 * tb2}^{${ta1}}.$`
+    });
+
+    // Tricky 2: Different bases, same exponent (Multiplication) - Letter base
+    let tl1 = getLetter(), tl2 = getLetter2(tl1), tpa = getNum();
+    questions.push({
+        question: `Simplify: $${tl1}^{${tpa}} \\cdot ${tl2}^{${tpa}}$`,
+        math: `${tl1}^{${tpa}} \\cdot ${tl2}^{${tpa}} = ?`,
+        options: [`$(${tl1}${tl2})^{${tpa}}$`, `$(${tl1}+${tl2})^{${tpa}}$`, `$(${tl1}${tl2})^{${tpa * 2}}$`, `$${tl1}${tl2}^{${tpa}}$`],
+        correct: 0,
+        explanation: `Power of a Product backwards: Since the exponents are identical, you group the bases: $(${tl1}${tl2})^{${tpa}}$.`
+    });
+
+    // Tricky 3: Addition instead of Multiplication (Trap) - Letters
+    let addBase = getLetter(), addP1 = getNum(), addP2 = addP1 + 1;
+    questions.push({
+        question: `Simplify: $${addBase}^{${addP1}} + ${addBase}^{${addP2}}$`,
+        math: `${addBase}^{${addP1}} + ${addBase}^{${addP2}} = ?`,
+        options: [`$\\text{Cannot be simplified}$`, `$${addBase}^{${addP1 + addP2}}$`, `$${addBase}^{${addP1 * addP2}}$`, `$2${addBase}^{${addP1 + addP2}}$`],
+        correct: 0,
+        explanation: `TRICK QUESTION! You can only add exponents when MULTIPLYING terms with the same base. You cannot combine terms with addition unless they are exactly Like Terms (same base AND same power).`
+    });
+
+    // Tricky 4: Addition instead of Multiplication (Trap) - Numbers
+    let trNum = getNum(), tryP = getNum();
+    questions.push({
+        question: `Simplify: $${trNum}^{${tryP}} + ${trNum}^{${tryP}}$`,
+        math: `${trNum}^{${tryP}} + ${trNum}^{${tryP}} = ?`,
+        options: [`$2 \\cdot ${trNum}^{${tryP}}$`, `$${trNum}^{${tryP + tryP}}$`, `$${trNum + trNum}^{${tryP}}$`, `$${trNum}^{${tryP * 2}}$`],
+        correct: 0,
+        explanation: `You are ADDING two identical terms. $x + x = 2x$. Therefore, $${trNum}^{${tryP}} + ${trNum}^{${tryP}} = 2 \\cdot ${trNum}^{${tryP}}$. Do not add the exponents unless you are multiplying!`
+    });
+
+    // Tricky 5: Nested powers vs Multiplication of terms 
+    let tn5 = getLetter(), tp5a = getNum(), tp5b = getNum() + 1;
+    questions.push({
+        question: `Which is greater: $(${tn5}^{${tp5a}})^{${tp5b}}$ or $${tn5}^{${tp5a}} \\cdot ${tn5}^{${tp5b}}$? (Assume $${tn5}>1$)`,
+        math: ``,
+        options: [`$(${tn5}^{${tp5a}})^{${tp5b}}$`, `$${tn5}^{${tp5a}} \\cdot ${tn5}^{${tp5b}}$`, `$\\text{They are equal}$`, `$\\text{Depends on } ${tn5}$`],
+        correct: 0,
+        explanation: `Power of a power multiples: ${tp5a} $\\times$ ${tp5b} = ${tp5a * tp5b}. Multiplying bases adds: ${tp5a} $+$ ${tp5b} = ${tp5a + tp5b}. Multiplying numbers $>1$ gives a higher result than adding them!`
+    });
+
+    // Tricky 6: Different bases, different powers (Cannot simplify)
+    let bDif1 = getLetter(), bDif2 = getLetter2(bDif1), pDif1 = getNum(), pDif2 = pDif1 + 1;
+    questions.push({
+        question: `Simplify: $${bDif1}^{${pDif1}} \\cdot ${bDif2}^{${pDif2}}$`,
+        math: `${bDif1}^{${pDif1}} \\cdot ${bDif2}^{${pDif2}} = ?`,
+        options: [`$\\text{Cannot be further simplified}$`, `$(${bDif1}${bDif2})^{${pDif1 + pDif2}}$`, `$(${bDif1}${bDif2})^{${pDif1 * pDif2}}$`, `$${bDif1}${bDif2}^{${pDif1 + pDif2}}$`],
+        correct: 0,
+        explanation: `Because the bases ($${bDif1}, ${bDif2}$) are different AND the exponents ($${pDif1}, ${pDif2}$) are different, NO exponent law applies here. It stays exactly as it is.`
+    });
+
+    // Tricky 7: Negative base inside parenthesis vs outside
+    let nNum = getNum() * 2; // Even power
+    questions.push({
+        question: `Are $(-x)^{${nNum}}$ and $-x^{${nNum}}$ equal?`,
+        math: ``,
+        options: [`$\\text{No}$`, `$\\text{Yes}$`, `$\\text{Only if } x = 0$`, `$\\text{Cannot be determined}$`],
+        correct: 0,
+        explanation: `$(-x)^{${nNum}}$ means the negative sign is raised to an even power, making it positive ($x^{${nNum}}$). But $-x^{${nNum}}$ means the negative is applied AFTER squaring, so it is negative.`
+    });
+
+    // Tricky 8: Fraction raised to negative power
+    let fA = getNum(), fB = getNum() + 1, fP = getNum();
+    questions.push({
+        question: `Simplify: $\\left(\\frac{${fA}}{${fB}}\\right)^{-${fP}}$`,
+        math: `\\left(\\frac{${fA}}{${fB}}\\right)^{-${fP}} = ?`,
+        options: [`$\\left(\\frac{${fB}}{${fA}}\\right)^{${fP}}$`, `$-\\left(\\frac{${fA}}{${fB}}\\right)^{${fP}}$`, `$\\left(\\frac{-${fA}}{${fB}}\\right)^{${fP}}$`, `$\\frac{${fA}^{-${fP}}}{${fB}}$`],
+        correct: 0,
+        explanation: `A negative exponent on a fraction flips (reciprocates) the entire fraction first, and then the exponent becomes positive: $\\left(\\frac{${fB}}{${fA}}\\right)^{${fP}}$.`
+    });
+
+    // Tricky 9: Division trap with subtraction
+    let dV = getLetter(), dP = getNum();
+    questions.push({
+        question: `Evaluate: $\\frac{${dV}^{${dP}} - ${dV}^{${dP}}}{${dV}^{${dP}}}$`,
+        math: ``,
+        options: [`$0$`, `$1$`, `$${dV}$`, `$\\text{undefined}$`],
+        correct: 0,
+        explanation: `Always calculate the numerator first! $${dV}^{${dP}} - ${dV}^{${dP}} = 0$. And $0$ divided by anything (except $0$) is $0$.`
+    });
+
+    // Tricky 10: Coefficient Trap multiplication
+    let c1 = getNum(), c2 = getNum() + 1, cV = getLetter(), cp1 = getNum(), cp2 = getNum();
+    questions.push({
+        question: `Simplify: $(${c1}${cV}^{${cp1}}) \\cdot (${c2}${cV}^{${cp2}})$`,
+        math: `(${c1}${cV}^{${cp1}}) \\cdot (${c2}${cV}^{${cp2}}) = ?`,
+        options: [`$${c1 * c2}${cV}^{${cp1 + cp2}}$`, `$${c1 + c2}${cV}^{${cp1 + cp2}}$`, `$${c1 * c2}${cV}^{${cp1 * cp2}}$`, `$${c1}${c2}${cV}^{${cp1 + cp2}}$`],
+        correct: 0,
+        explanation: `First multiply the coefficients (normal numbers): $${c1} \\cdot ${c2} = ${c1 * c2}$. Then multiply variables using the Product Law (add exponents): ${cp1} + ${cp2} = ${cp1 + cp2}.`
+    });
+
+    // Tricky 11: Base of 1
+    let opP = Math.floor(Math.random() * 900) + 100;
+    questions.push({
+        question: `What is $1^{${opP}}$?`,
+        math: `1^{${opP}} = ?`,
+        options: [`$1$`, `$${opP}$`, `$0$`, `$100$`],
+        correct: 0,
+        explanation: `The number $1$ multiplied by itself, no matter how many times ($${opP}$ times here), will always equal just $1$.`
+    });
+
+    // Tricky 12: Coefficient Trap powers
+    let cBase = getNum(), tcP = getNum(), outP = getNum();
+    questions.push({
+        question: `Simplify: $(${cBase}x^{${tcP}})^{${outP}}$`,
+        math: `(${cBase}x^{${tcP}})^{${outP}} = ?`,
+        options: [`$${Math.pow(cBase, outP)}x^{${tcP * outP}}$`, `$${cBase}x^{${tcP * outP}}$`, `$${cBase * outP}x^{${tcP * outP}}$`, `$${Math.pow(cBase, outP)}x^{${tcP + outP}}$`],
+        correct: 0,
+        explanation: `The power outside applies to BOTH the coefficient AND the variable. $${cBase}^{${outP}} = ${Math.pow(cBase, outP)}$, and $(x^{${tcP}})^{${outP}} = x^{${tcP * outP}}$.`
+    });
+
+    // SHUFFLE options so the correct answer is not always [0]!
+    return questions.map(q => {
+        const correctOpt = q.options[q.correct];
+        const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+        const newCorrect = shuffled.indexOf(correctOpt);
+        return { ...q, options: shuffled, correct: newCorrect };
+    });
+};
+
+const exponentQuestions = generateExponentQuestions();
+
+const generateExponentAssessment = () => {
+    const pool = generateExponentQuestions();
+    const assessment = [];
+
+    // Pick 1 from each law guarantees 9 distinct law questions
+    for (let i = 0; i < 9; i++) {
+        const offset = i * 2;
+        const takeIdx = offset + Math.floor(Math.random() * 2);
+        assessment.push(pool[takeIdx]);
+        pool[takeIdx] = null;
+    }
+
+    // Pick 16 more questions from the remaining mixed/tricky pool
+    const remaining = pool.filter(q => q !== null);
+    const shuffledRemaining = [...remaining].sort(() => Math.random() - 0.5);
+    assessment.push(...shuffledRemaining.slice(0, 16));
+
+    return assessment.sort(() => Math.random() - 0.5);
+};
+
+const exponentAssessment = generateExponentAssessment();
 
 const likeTermsQuestions = [
     { question: 'Which pair are LIKE terms?', options: ['3x and 3y', '5x² and 5x', '4ab and −ab', '7 and 7y'], correct: 2, explanation: '4ab and −ab have the same variables (a and b) raised to the same powers. They are like terms!' },
@@ -253,8 +754,8 @@ const likeTermsAssessment = [
     { question: 'Which are like terms?', options: ['x³ and x²', '2xy and 3xy', '4x and 4', '5x and 5y'], correct: 1, explanation: '2xy and 3xy have identical variable parts (xy), so they are like terms.' },
     { question: 'Simplify: 9n − 5n + n', math: '9n − 5n + n = ?', options: ['5n', '4n', '3n', '15n'], correct: 0, explanation: '9 − 5 + 1 = 5, so the result is 5n.' },
     { question: 'Identify all like terms in: 5x², 3x, 7x², 2y, −x', options: ['5x² and 3x', '5x² and 7x²; 3x and −x', '3x and 2y', '5x² and −x'], correct: 1, explanation: '5x² and 7x² share power 2; 3x and −x share power 1. Two sets of like terms.' },
-    { question: 'Which expression is fully simplified?', options: ['3x + 5x + 2y', '8x + 2y', '10xy', '2x + 5 + y'], correct: 1, explanation: '3x + 5x = 8x (combined), plus 2y (cannot combine). So 8x + 2y is simplest.' },
-    { question: 'What is the coefficient of x² in: 4x² − 7 + 2x − 4x²?', options: ['4', '−4', '0', '2'], correct: 2, explanation: '4x² − 4x² = 0x² = 0. The coefficient of x² is 0.' },
+    { question: 'Simplify: 3x + 5x + 2y', math: '3x + 5x + 2y = ?', options: ['3x + 5x + 2y', '8x + 2y', '10xy', '10x + 2y'], correct: 1, explanation: '3x + 5x = 8x (combined), plus 2y (cannot combine). So 8x + 2y is simplest.' },
+    { question: 'What is the coefficient of x² in the simplified form of: 5x² − 7 + 2x − 2x²?', options: ['5', '−2', '3', '2'], correct: 2, explanation: 'First simplify: 5x² − 2x² = 3x². So the coefficient of x² is 3.' },
     { question: 'Are 3abc and −2abc like terms?', options: ['No — different signs', 'No — different letters', 'Yes — same variable part', 'Cannot determine'], correct: 2, explanation: 'Sign doesn\'t matter for "like terms" classification. Both have same variables abc.' },
     { question: 'Simplify: a + 2a + 3a + 4a', math: 'a + 2a + 3a + 4a = ?', options: ['24a', '10a', '12a', '9a'], correct: 1, explanation: '1 + 2 + 3 + 4 = 10. Result is 10a.' },
     { question: 'How many unlike-term pairs in: 3x, 7y, 4x, 2z?', options: ['1', '2', '3', '0'], correct: 2, explanation: '3x/7y, 3x/2z, 7y/2z (plus 4x/7y, 4x/2z) — multiple unlike pairs exist.' },
@@ -354,15 +855,15 @@ const SKILLS = [
         learn: {
             concept: 'Exponents are shorthand for repeated multiplication. These 9 laws are the "grammar rules" of algebra that let you simplify even the scariest expressions.',
             rules: [
-                { title: 'Product Law', f: 'xᵃ · xᵇ = xᵃ⁺ᵇ', d: 'When multiplying powers with the same base, ADD the exponents.', ex: 'x³ · x⁴ = x³⁺⁴ = x⁷', tip: 'Think: 3 copies + 4 copies = 7 copies total!' },
-                { title: 'Quotient Law', f: 'xᵃ / xᵇ = xᵃ⁻ᵇ', d: 'When dividing powers with the same base, SUBTRACT the bottom exponent from the top.', ex: 'y⁸ / y² = y⁸⁻² = y⁶', tip: 'You are "canceling out" matching variables from the top and bottom.' },
-                { title: 'Power Law', f: '(xᵃ)ᵇ = xᵃᵇ', d: 'A power of a power? MULTIPLY the exponents together.', ex: '(x²)³ = x²·³ = x⁶', tip: 'A group of powers being powered up grows very fast!' },
-                { title: 'Power of Product', f: '(xy)ᵃ = xᵃyᵃ', d: 'Every factor inside the parentheses gets the power outside.', ex: '(2x)³ = 2³x³ = 8x³', tip: 'Always remember to apply the power to the number (coefficient) too!' },
-                { title: 'Power of Quotient', f: '(x/y)ᵃ = xᵃ/yᵃ', d: 'The power applies to both the numerator (top) and denominator (bottom).', ex: '(x/3)² = x²/3² = x²/9', tip: 'Distribute the power to every part of the fraction.' },
-                { title: 'Zero Law', f: 'x⁰ = 1', d: 'Any non-zero base raised to the power of zero is ALWAYS 1.', ex: '525⁰ = 1', tip: 'It doesn\'t matter how big the number is; power 0 makes it 1!' },
-                { title: 'Identity Law', f: 'x¹ = x', d: 'Any base raised to the power of 1 remains the same.', ex: 'y¹ = y', tip: 'The exponent 1 is usually "invisible" in algebra.' },
-                { title: 'Negative Law', f: 'x⁻ⁿ = 1/xⁿ', d: 'A negative exponent means the "Reciprocal". It moves the base to the bottom.', ex: 'x⁻² = 1/x²', tip: 'Think of the minus sign as a ticket to cross the fraction line!' },
-                { title: 'Fractional Law', f: 'xᵃ/ᵇ = ᵇ√xᵃ', d: 'Fractional powers are secretly roots. The bottom number is the root index.', ex: 'x¹/² = √x', tip: 'Bottom = Root. Top = Power.' },
+                { title: 'Product Law', f: 'x^a \\cdot x^b = x^{a+b}', d: 'When multiplying powers with the same base, ADD the exponents.', ex: 'x^3 \\cdot x^4 = x^{3+4} = x^7', tip: 'Think: 3 copies + 4 copies = 7 copies total!' },
+                { title: 'Quotient Law', f: '\\frac{x^a}{x^b} = x^{a-b}', d: 'When dividing powers with the same base, SUBTRACT the bottom exponent from the top.', ex: '\\frac{y^8}{y^2} = y^{8-2} = y^6', tip: 'You are "canceling out" matching variables from the top and bottom.' },
+                { title: 'Power Law', f: '(x^a)^b = x^{ab}', d: 'A power of a power? MULTIPLY the exponents together.', ex: '(x^2)^3 = x^{2 \\cdot 3} = x^6', tip: 'A group of powers being powered up grows very fast!' },
+                { title: 'Power of Product', f: '(xy)^a = x^a y^a', d: 'Every factor inside the parentheses gets the power outside.', ex: '(2x)^3 = 2^3 x^3 = 8x^3', tip: 'Always remember to apply the power to the number (coefficient) too!' },
+                { title: 'Power of Quotient', f: '\\left(\\frac{x}{y}\\right)^a = \\frac{x^a}{y^a}', d: 'The power applies to both the numerator (top) and denominator (bottom).', ex: '\\left(\\frac{x}{3}\\right)^2 = \\frac{x^2}{3^2} = \\frac{x^2}{9}', tip: 'Distribute the power to every part of the fraction.' },
+                { title: 'Zero Law', f: 'x^0 = 1', d: 'Any non-zero base raised to the power of zero is ALWAYS 1.', ex: '525^0 = 1', tip: 'It doesn\'t matter how big the number is; power 0 makes it 1!' },
+                { title: 'Identity Law', f: 'x^1 = x', d: 'Any base raised to the power of 1 remains the same.', ex: 'y^1 = y', tip: 'The exponent 1 is usually "invisible" in algebra.' },
+                { title: 'Negative Law', f: 'x^{-n} = \\frac{1}{x^n}', d: 'A negative exponent means the "Reciprocal". It moves the base to the bottom.', ex: 'x^{-2} = \\frac{1}{x^2}', tip: 'Think of the minus sign as a ticket to cross the fraction line!' },
+                { title: 'Fractional Law', f: 'x^{\\frac{a}{b}} = \\sqrt[b]{x^a}', d: 'Fractional powers are secretly roots. The bottom number is the root index.', ex: 'x^{\\frac{1}{2}} = \\sqrt{x}', tip: 'Bottom = Root. Top = Power.' },
             ]
         }
     },
@@ -378,9 +879,9 @@ const SKILLS = [
         learn: {
             concept: 'Like terms are the mathematical equivalent of identical twins. To combine them, they must share the exact same variable part.',
             rules: [
-                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '3x + 4y stays as 3x + 4y', tip: 'You can\'t add apples and oranges!' },
-                { title: 'Power Match', f: 'x² + 2x² = 3x²', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: 'x² + x³ cannot be added', tip: 'Check the letters AND the tiny numbers above them.' },
-                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '5x² + 4x² = 9x² (not 9x⁴)', tip: 'You are counting how many of that "item" you have.' },
+                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '3x + 4y \\text{ stays as } 3x + 4y', tip: 'You can\'t add apples and oranges!' },
+                { title: 'Power Match', f: 'x^2 + 2x^2 = 3x^2', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: 'x^2 + x^3 \\text{ cannot be added}', tip: 'Check the letters AND the tiny numbers above them.' },
+                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '5x^2 + 4x^2 = 9x^2 \\text{ (not } 9x^4)', tip: 'You are counting how many of that "item" you have.' },
                 { title: 'Invisible Coeff.', f: 'x = 1x', d: 'If a variable has no number in front, its coefficient is secretly 1.', ex: 'x + 3x = 1x + 3x = 4x', tip: 'Don\'t forget the 1!' },
             ]
         }
@@ -398,9 +899,9 @@ const SKILLS = [
             concept: 'Simplifying an expression means writing it in its shortest, most efficient form by combining all possible terms.',
             rules: [
                 { title: 'Distribution', f: 'a(b + c) = ab + ac', d: 'Multiply the outside term by every term inside the parentheses.', ex: '3(x + 2) = 3x + 6', tip: 'Fairness rule: the term outside must visit everyone inside!' },
-                { title: 'Combo Order', f: 'Group → Combine', d: 'First, rewrite the expression by grouping all like terms together.', ex: '3x + 5 + 2x = 3x + 2x + 5 = 5x + 5', tip: 'Organizing your terms first prevents mistakes.' },
-                { title: 'Sign Safety', f: '-(x + y) = -x - y', d: 'A minus sign in front of a bracket flips the sign of EVERYTHING inside.', ex: '10 - (x + 3) = 10 - x - 3', tip: 'Treat that minus sign like a multiplier of -1.' },
-                { title: 'PEMDAS Rule', f: 'Order Matters', d: 'Always follow the standard order: Parentheses, Exponents, Mult/Div, Add/Sub.', ex: '2 + 3(x) is not 5x', tip: 'Multiplication comes before addition!' },
+                { title: 'Combo Order', f: '\\text{Group } \\rightarrow \\text{ Combine}', d: 'First, rewrite the expression by grouping all like terms together.', ex: '3x + 5 + 2x = 3x + 2x + 5 = 5x + 5', tip: 'Organizing your terms first prevents mistakes.' },
+                { title: 'Sign Safety', f: '-(x + y) = -x - y', d: 'A minus sign in front of a bracket flips the sign of EVERYTHING inside.', ex: '10 - (x + 3) = 10 - x - 3 = 7 - x', tip: 'Treat that minus sign like a multiplier of -1.' },
+                { title: 'PEMDAS Rule', f: '\\text{Order Matters}', d: 'Always follow the standard order: Parentheses, Exponents, Mult/Div, Add/Sub.', ex: '2 + 3(x) \\neq 5x', tip: 'Multiplication comes before addition!' },
             ]
         }
     },
@@ -416,10 +917,10 @@ const SKILLS = [
         learn: {
             concept: 'To solve an equation, you must find the value of the variable that makes the scale balance perfectly.',
             rules: [
-                { title: 'Golden Balance', f: 'LHS = RHS', d: 'Whatever you do to one side, you MUST do to the other side.', ex: 'If you add 5 to the left, add 5 to the right.', tip: 'The equals sign is sacred balance point.' },
-                { title: 'Inverses', f: '+ ⟷ - , · ⟷ /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: 'To move a +3, use -3. To move a multiplier of 2, divide by 2.', tip: 'Do the opposite to cross the bridge.' },
-                { title: 'Isolate Target', f: 'x = Result', d: 'Keep undoing operations until the variable (target) is all alone on one side.', ex: '2x = 10 → x = 5', tip: 'Goal: Leave x by itself!' },
-                { title: 'Two-Step rule', f: 'Move ± first', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 → 2x = 6 → x = 3', tip: 'Clean up the additions/subtractions first.' },
+                { title: 'Golden Balance', f: '\\text{LHS} = \\text{RHS}', d: 'Whatever you do to one side, you MUST do to the other side.', ex: '\\text{If you add 5 to the left, add 5 to the right.}', tip: 'The equals sign is sacred balance point.' },
+                { title: 'Inverses', f: '+ \\longleftrightarrow - \\text{ , } \\cdot \\longleftrightarrow /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: '\\text{To move a } +3\\text{, use } -3\\text{. To move a multiplier of 2, divide by 2.}', tip: 'Do the opposite to cross the bridge.' },
+                { title: 'Isolate Target', f: 'x = \\text{Result}', d: 'Keep undoing operations until the variable (target) is all alone on one side.', ex: '2x = 10 \\rightarrow x = 5', tip: 'Goal: Leave x by itself!' },
+                { title: 'Two-Step rule', f: '\\text{Move } \\pm \\text{ first}', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 \\rightarrow 2x = 6 \\rightarrow x = 3', tip: 'Clean up the additions/subtractions first.' },
             ]
         }
     },
@@ -435,10 +936,10 @@ const SKILLS = [
         learn: {
             concept: 'Changing the subject is like re-crowning a new king. You move all other terms away so the new variable stands on the throne.',
             rules: [
-                { title: 'The Target', f: 'Target = Formula', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: 'In v=u+at, make "a" the subject.', tip: 'Treat the target like a treasure to be uncovered.' },
-                { title: 'Strip away', f: 'Work Outwards', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at → v - u = at', tip: 'Peel the equation like an onion.' },
-                { title: 'Undo Roots', f: '√ ⟷ x²', d: 'To get rid of a square root, square both sides. To remove a power of 2, take the root.', ex: 'y = √x → y² = x', tip: 'Powers and roots are the ultimate opposites.' },
-                { title: 'Denominator', f: 'Multiply Up', d: 'If your target or part of its expression is in a fraction bottom, multiply it out.', ex: 'A/b = c → A = bc', tip: 'Get your variables onto one line as soon as possible.' },
+                { title: 'The Target', f: '\\text{Target} = \\text{Formula}', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: '\\text{In } v=u+at\\text{, make } a \\text{ the subject.}', tip: 'Treat the target like a treasure to be uncovered.' },
+                { title: 'Strip away', f: '\\text{Work Outwards}', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at \\rightarrow v - u = at', tip: 'Peel the equation like an onion.' },
+                { title: 'Undo Roots', f: '\\sqrt{\\phantom{x}} \\longleftrightarrow x^2', d: 'To get rid of a square root, square both sides. To remove a power of 2, take the root.', ex: 'y = \\sqrt{x} \\rightarrow y^2 = x', tip: 'Powers and roots are the ultimate opposites.' },
+                { title: 'Denominator', f: '\\text{Multiply Up}', d: 'If your target or part of its expression is in a fraction bottom, multiply it out.', ex: '\\frac{A}{b} = c \\rightarrow A = bc', tip: 'Get your variables onto one line as soon as possible.' },
             ]
         }
     },
@@ -454,7 +955,7 @@ export default function AlgebraSkills() {
 
     if (view !== 'list' && skill) {
         return (
-            <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', padding: '100px 0 60px' }}>
+            <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
                 <nav className="intro-nav">
                     <button className="intro-nav-back" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>← Back to Skills</button>
                     <div className="intro-nav-links">
@@ -463,7 +964,7 @@ export default function AlgebraSkills() {
                         <button className="intro-nav-link intro-nav-link--active">🎯 Skills</button>
                     </div>
                 </nav>
-                <div style={{ padding: '0 24px' }}>
+                <div style={{ padding: '40px 24px 0' }}>
                     {view === 'learn' ? (
                         <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '0 auto' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
@@ -482,21 +983,16 @@ export default function AlgebraSkills() {
                                         <button
                                             key={ri}
                                             onClick={() => setSelectedLearnIdx(ri)}
+                                            className={`alg-sidebar-btn ${selectedLearnIdx === ri ? 'active' : ''}`}
                                             style={{
-                                                display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12,
-                                                border: '1px solid', borderColor: selectedLearnIdx === ri ? skill.color : 'rgba(0,0,0,0.05)',
-                                                background: selectedLearnIdx === ri ? skill.color : '#fff',
-                                                color: selectedLearnIdx === ri ? '#fff' : 'var(--alg-text)',
-                                                transition: 'all 0.2s', cursor: 'pointer', textAlign: 'left'
+                                                '--skill-color': skill.color,
+                                                '--skill-color-15': `${skill.color}15`,
+                                                '--skill-color-40': `${skill.color}40`,
+                                                '--skill-color-05': `${skill.color}05`
                                             }}
                                         >
-                                            <div style={{
-                                                width: 24, height: 24, borderRadius: 6,
-                                                background: selectedLearnIdx === ri ? 'rgba(255,255,255,0.2)' : `${skill.color}15`,
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                fontSize: 14, fontWeight: 900, flexShrink: 0
-                                            }}>{ri + 1}</div>
-                                            <span style={{ fontWeight: 700, fontSize: 15 }}>{rule.title}</span>
+                                            <div className="alg-sidebar-btn-num">{ri + 1}</div>
+                                            <span className="alg-sidebar-btn-title">{rule.title}</span>
                                         </button>
                                     ))}
                                 </aside>
@@ -517,7 +1013,7 @@ export default function AlgebraSkills() {
                                     {/* Core Formula Box */}
                                     <div style={{ background: `${skill.color}05`, padding: '24px', borderRadius: 20, border: `2px solid ${skill.color}15`, marginBottom: 32, textAlign: 'center' }}>
                                         <div className="formula-text" style={{ fontSize: 42, fontWeight: 800, color: skill.color }}>
-                                            <MathRenderer text={`$$${skill.learn.rules[selectedLearnIdx].f}$$`} />
+                                            <MathRenderer text={`$$${skill.learn.rules[selectedLearnIdx].f} $$`} />
                                         </div>
                                     </div>
 
@@ -537,7 +1033,7 @@ export default function AlgebraSkills() {
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>Practical Example</h4>
                                             <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
                                                 <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)' }}>
-                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$$${skill.learn.rules[selectedLearnIdx].ex}$$`} />
+                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$$${skill.learn.rules[selectedLearnIdx].ex} $$`} />
                                                 </div>
                                             </div>
                                         </div>
@@ -554,10 +1050,17 @@ export default function AlgebraSkills() {
                                 </main>
                             </div>
                         </div>
+                    ) : view === 'assessment' ? (
+                        <AssessmentEngine
+                            questions={skill.assessment}
+                            title={`Assessment: ${skill.title} `}
+                            onBack={() => setView('list')}
+                            color={skill.color}
+                        />
                     ) : (
                         <QuizEngine
-                            questions={view === 'practice' ? skill.practice : skill.assessment}
-                            title={`${view === 'practice' ? 'Practice' : 'Assessment'}: ${skill.title}`}
+                            questions={skill.practice}
+                            title={`Practice: ${skill.title} `}
                             onBack={() => setView('list')}
                             color={skill.color}
                         />
