@@ -572,7 +572,10 @@ const generateExponentQuestions = () => {
     // 9. Fractional Law
     for (let isLetter = 0; isLetter < 2; isLetter++) {
         let base = isLetter ? getLetter() : getNum();
-        let a = getNum(), b = getNum() + 1; // Distinct denominator
+        let a = getNum();
+        let b = getNum();
+        while (b === a) b = getNum(); // Ensure power and root index are distinct
+
         questions.push({
             question: `Write as a radical: $${base}^{\\frac{${a}}{${b}}}$`,
             math: `${base}^{\\frac{${a}}{${b}}} = ?`,
@@ -797,9 +800,9 @@ const equationQuestions = [
     { question: 'Solve: 4x + 2 = 18', math: '4x + 2 = 18', options: ['x = 4', 'x = 5', 'x = 3', 'x = 6'], correct: 0, explanation: 'Subtract 2: 4x = 16. Divide by 4: x = 4.' },
     { question: 'Solve the system: x + y = 10, x − y = 2', math: 'x + y = 10  and  x − y = 2', options: ['x=6, y=4', 'x=5, y=5', 'x=4, y=6', 'x=8, y=2'], correct: 0, explanation: 'Adding equations: 2x = 12 → x = 6. Then y = 10 − 6 = 4.' },
     { question: 'Solve: 2x + y = 7 and x = 2', math: '2x + y = 7, x = 2', options: ['y = 3', 'y = 5', 'y = 11', 'y = 2'], correct: 0, explanation: 'Substitute x = 2: 2(2) + y = 7 → 4 + y = 7 → y = 3.' },
-    { question: 'Solve the quadratic: x² = 9', math: 'x² = 9', options: ['x = 3 only', 'x = 9', 'x = ±3', 'x = ±9'], correct: 2, explanation: 'Taking square root of both sides: x = ±√9 = ±3.' },
-    { question: 'Solve: x² − 5x + 6 = 0', math: 'x² − 5x + 6 = 0', options: ['x = 2 or x = 3', 'x = −2 or x = −3', 'x = 1 or x = 6', 'x = 5 or x = 1'], correct: 0, explanation: 'Factorise: (x−2)(x−3) = 0, so x = 2 or x = 3.' },
-    { question: 'Solve: x² + x − 6 = 0', math: 'x² + x − 6 = 0', options: ['x = 2 or x = −3', 'x = −2 or x = 3', 'x = 1 or x = −6', 'x = 2 or x = 3'], correct: 0, explanation: 'Factorise: (x+3)(x−2) = 0, so x = −3 or x = 2. Rearranged: x = 2 or x = −3.' },
+    { question: 'Solve the quadratic: x² = 9', math: 'x² = 9', options: ['$x = 3$ only', 'x = 9', 'x = ±3', 'x = ±9'], correct: 2, explanation: 'Taking square root of both sides: x = ±√9 = ±3.' },
+    { question: 'Solve: x² − 5x + 6 = 0', math: 'x² − 5x + 6 = 0', options: ['$x = 2$ or $x = 3$', '$x = -2$ or $x = -3$', '$x = 1$ or $x = 6$', '$x = 5$ or $x = 1$'], correct: 0, explanation: 'Factorise: (x−2)(x−3) = 0, so x = 2 or x = 3.' },
+    { question: 'Solve: x² + x − 6 = 0', math: 'x² + x − 6 = 0', options: ['$x = 2$ or $x = -3$', '$x = -2$ or $x = 3$', '$x = 1$ or $x = -6$', '$x = 2$ or $x = 3$'], correct: 0, explanation: 'Factorise: (x+3)(x−2) = 0, so x = −3 or x = 2. Rearranged: x = 2 or x = −3.' },
 ];
 
 const equationAssessment = [
@@ -808,10 +811,10 @@ const equationAssessment = [
     { question: 'Solve: 3x + 4 = 22', math: '3x + 4 = 22', options: ['x = 6', 'x = 8.67', 'x = 5', 'x = 26/3'], correct: 0, explanation: '3x = 18 → x = 6.' },
     { question: 'Use substitution: y = 2x, x + y = 9. Find x.', math: 'y = 2x, x + y = 9', options: ['x = 3', 'x = 4', 'x = 4.5', 'x = 6'], correct: 0, explanation: 'x + 2x = 9 → 3x = 9 → x = 3.' },
     { question: 'Solve: 2x + 3y = 12 and x = 3', math: '2x + 3y = 12, x = 3', options: ['y = 2', 'y = 3', 'y = 6', 'y = 1'], correct: 0, explanation: '6 + 3y = 12 → 3y = 6 → y = 2.' },
-    { question: 'Solve the quadratic: x² − 7x + 12 = 0', math: 'x² − 7x + 12 = 0', options: ['x = 3 or x = 4', 'x = −3 or x = −4', 'x = 1 or x = 12', 'x = 6 or x = 2'], correct: 0, explanation: 'Factorise: (x−3)(x−4) = 0 → x = 3 or x = 4.' },
+    { question: 'Solve the quadratic: x² − 7x + 12 = 0', math: 'x² − 7x + 12 = 0', options: ['$x = 3$ or $x = 4$', '$x = -3$ or $x = -4$', '$x = 1$ or $x = 12$', '$x = 6$ or $x = 2$'], correct: 0, explanation: 'Factorise: (x−3)(x−4) = 0 → x = 3 or x = 4.' },
     { question: 'A number doubled plus 4 equals 20. Find the number.', options: ['8', '12', '10', '6'], correct: 0, explanation: '2x + 4 = 20 → 2x = 16 → x = 8.' },
     { question: 'Solve: 4x − 2 = 3x + 5', math: '4x − 2 = 3x + 5', options: ['x = 7', 'x = 3', 'x = −3', 'x = 1'], correct: 0, explanation: '4x − 3x = 5 + 2 → x = 7.' },
-    { question: 'What are the roots of x² − 4 = 0?', math: 'x² − 4 = 0', options: ['x = ±2', 'x = 4', 'x = 2 only', 'x = ±4'], correct: 0, explanation: 'x² = 4 → x = ±2.' },
+    { question: 'What are the roots of x² − 4 = 0?', math: 'x² − 4 = 0', options: ['x = ±2', 'x = 4', '$x = 2$ only', 'x = ±4'], correct: 0, explanation: 'x² = 4 → x = ±2.' },
     { question: 'Solve: x/3 + 2 = 5', math: 'x/3 + 2 = 5', options: ['x = 9', 'x = 3', 'x = 21', 'x = 1'], correct: 0, explanation: 'x/3 = 3 → x = 9.' },
 ];
 
@@ -839,6 +842,32 @@ const subjectAssessment = [
     { question: 'Make x subject: y = √(x + 4)', math: 'y = √(x + 4)  →  x = ?', options: ['x = y² − 4', 'x = y + 4', 'x = y² + 4', 'x = √y − 4'], correct: 0, explanation: 'Square both sides: y² = x + 4 → x = y² − 4.' },
     { question: 'Make l the subject: T = 2π√(l/g)', math: 'T = 2π√(l/g)  →  l = ?', options: ['l = gT²/4π²', 'l = 4π²T/g', 'l = gT/2π', 'l = T²g/2π'], correct: 0, explanation: 'T/2π = √(l/g) → T²/4π² = l/g → l = gT²/4π².' },
     { question: 'Make r the subject: C = 2πr', math: 'C = 2πr  →  r = ?', options: ['r = C/2π', 'r = 2πC', 'r = C − 2π', 'r = C²/2π'], correct: 0, explanation: 'Divide by 2π: r = C/(2π).' },
+];
+
+const wordProblemQuestions = [
+    { question: 'Translate to an equation: "Seven less than a number is fifteen". Let the number be $x$.', math: '', options: ['$x - 7 = 15$', '$7 - x = 15$', '$x + 7 = 15$', '$7x = 15$'], correct: 0, explanation: '"Seven less than" means you subtract 7 from the number ($x$). "Is" means equals. So, $x - 7 = 15$.' },
+    { question: 'Translate to an equation: "The product of a number and $4$ is $20$". Let the number be $n$.', math: '', options: ['$n + 4 = 20$', '$4n = 20$', '$n/4 = 20$', '$n - 4 = 20$'], correct: 1, explanation: '"Product" means multiplication. "Is" means equals. So $4 \\times n = 20$, or $4n = 20$.' },
+    { question: 'At a store, $5$ pens cost $\\$15$. Choose the correct equation to find the cost of one pen ($p$).', math: '', options: ['$p + 5 = 15$', '$5/p = 15$', '$5p = 15$', '$p - 5 = 15$'], correct: 2, explanation: 'Five pens times the cost of one pen ($p$) equals $15$. Therefore, $5p = 15$.' },
+    { question: 'Translate: "Half of a number added to $6$ is $14$". Let the number be $y$.', math: '', options: ['$y/2 - 6 = 14$', '$y/2 + 6 = 14$', '$2y + 6 = 14$', '$y + 6 = 14$'], correct: 1, explanation: '"Half of a number" is $y/2$. "Added to 6" means $y/2 + 6$. "Is 14" makes it $y/2 + 6 = 14$.' },
+    { question: 'A cab charges $\\$3$ to start, plus $\\$2$ per mile. If the ride costs $\\$15$, choose the equation to find the miles ($m$).', math: '', options: ['$2m + 3 = 15$', '$3m + 2 = 15$', '$m + 5 = 15$', '$2m - 3 = 15$'], correct: 0, explanation: 'The base fee is $3$. You add $2$ for every mile ($2m$). The total is $15$. So, $2m + 3 = 15$.' },
+    { question: 'Translate: "Double a number, decreased by $4$, equals $10$". Let the number be $x$.', math: '', options: ['$2x + 4 = 10$', '$x/2 - 4 = 10$', '$2x - 4 = 10$', '$4x - 2 = 10$'], correct: 2, explanation: '"Double a number" is $2x$. "Decreased by 4" means subtract 4. So, $2x - 4 = 10$.' },
+    { question: 'Maria has $5$ more apples than John. Together they have $15$ apples. If John has $x$ apples, which equation represents this?', math: '', options: ['$x + 5 = 15$', '$2x + 5 = 15$', '$x - 5 = 15$', '$2x - 5 = 15$'], correct: 1, explanation: 'John = $x$. Maria = $x + 5$. Together: $x + (x + 5) = 15$, which simplifies to $2x + 5 = 15$.' },
+    { question: 'Translate: "The sum of a number and its square is $12$". Let the number be $k$.', math: '', options: ['$k + 2k = 12$', '$k + k^2 = 12$', '$k^2 - k = 12$', '$2k + k^2 = 12$'], correct: 1, explanation: '"Sum" means add. A number ($k$) plus its square ($k^2$) is $12$. So, $k + k^2 = 12$.' },
+    { question: 'A rectangle is twice as long as it is wide. If the width is $w$, what is the equation for its perimeter ($P$)?', math: '', options: ['$P = 2w + w$', '$P = 4w$', '$P = 6w$', '$P = 3w$'], correct: 2, explanation: 'Length = $2w$, Width = $w$. Perimeter = $2 \\times$ Length + $2 \\times$ Width = $2(2w) + 2(w) = 4w + 2w = 6w$.' },
+    { question: 'Sarah earns $\\$10$ an hour, plus a $\\$20$ bonus. If she made $\\$80$, what equation finds her hours ($h$)?', math: '', options: ['$20h + 10 = 80$', '$10h - 20 = 80$', '$10h + 20 = 80$', '$h + 30 = 80$'], correct: 2, explanation: 'Earnings = (rate $\\times$ hours) + bonus. Rate is $10$, bonus is $20$. So, $10h + 20 = 80$.' },
+];
+
+const wordProblemAssessment = [
+    { question: 'Translate: "Nine more than three times a number is $24$". (Let number format = $n$)', math: '', options: ['$3n - 9 = 24$', '$3n + 9 = 24$', '$9n + 3 = 24$', '$3(n + 9) = 24$'], correct: 1, explanation: '"Three times a number" is $3n$. "Nine more than" means add 9. So, $3n + 9 = 24$.' },
+    { question: 'A subscription costs $\\$10$ per month plus a $\\$5$ setup fee. To find the cost ($C$) for $m$ months, use:', math: '', options: ['$C = 5m + 10$', '$C = 10m - 5$', '$C = 15m$', '$C = 10m + 5$'], correct: 3, explanation: 'Monthly rate $\\times$ months ($10m$) + one-time fee ($5$) = Total Cost ($C$). So $C = 10m + 5$.' },
+    { question: 'Translate to an expression: "The difference between twice a number and $8$". (number = $x$)', math: '', options: ['$2x - 8$', '$8 - 2x$', '$x/2 - 8$', '$2(x - 8)$'], correct: 0, explanation: '"Difference" means subtract. The order is given: "twice a number" ($2x$) minus $8$. Result: $2x - 8$.' },
+    { question: 'A box of chocolates has $c$ pieces. You eat $4$ and have $16$ left. Which equation is correct?', math: '', options: ['$c + 4 = 16$', '$c - 4 = 16$', '$4c = 16$', '$c/4 = 16$'], correct: 1, explanation: 'Starting amount ($c$) minus what you ate ($4$) leaves $16$. So, $c - 4 = 16$.' },
+    { question: 'Tom is $3$ years older than his sister. If they are $25$ years old combined, and his sister is $y$ years old, what equation represents this?', math: '', options: ['$y + 3 = 25$', '$2y + 3 = 25$', '$2y - 3 = 25$', '$y - 3 = 25$'], correct: 1, explanation: 'Sister = $y$. Tom = $y + 3$. Combined: $y + (y + 3) = 25$, which is $2y + 3 = 25$.' },
+    { question: 'Translate: "One-third of a number is equal to $12$". (number = $n$)', math: '', options: ['$n - 3 = 12$', '$3n = 12$', '$n/3 = 12$', '$n + 3 = 12$'], correct: 2, explanation: '"One-third of" means dividing by $3$ (or multiplying by $1/3$). So, $n/3 = 12$.' },
+    { question: 'Translate: "The quotient of a number and $5$ is $10$". (number = $x$)', math: '', options: ['$5x = 10$', '$x/5 = 10$', '$5/x = 10$', '$x - 5 = 10$'], correct: 1, explanation: '"Quotient" means division. $x$ divided by $5$ equals $10$. So $x/5 = 10$.' },
+    { question: 'A pizza costs $\\$8$ and each topping is $\\$1.50$. If a pizza cost $\\$14$, which equation finds the number of toppings ($t$)?', math: '', options: ['$1.50t - 8 = 14$', '$8t + 1.50 = 14$', '$1.50t + 8 = 14$', '$9.50t = 14$'], correct: 2, explanation: 'Base pizza ($8$) plus toppings ($1.50 \\times t$) equals total ($14$). $1.50t + 8 = 14$.' },
+    { question: 'Translate: "Four times the sum of a number and $2$ is $36$". (number = $x$)', math: '', options: ['$4x + 2 = 36$', '$4 + x + 2 = 36$', '$x + 8 = 36$', '$4(x + 2) = 36$'], correct: 3, explanation: '"Four times the sum" means you must add first, then multiply. Use parentheses! $4(x + 2) = 36$.' },
+    { question: 'Ana saved $s$ dollars. Bob saved double what Ana saved. Together they have $\\$120$. Equation?', math: '', options: ['$2s = 120$', '$3s = 120$', '$s + 2 = 120$', '$s^2 = 120$'], correct: 1, explanation: 'Ana = $s$. Bob = $2s$. Together: $s + 2s = 120$. This simplifies to $3s = 120$.' },
 ];
 
 // ─── SKILLS DATA ───────────────────────────────────────────────────────────
@@ -869,8 +898,8 @@ const SKILLS = [
     },
     {
         id: 'liketerms',
-        title: 'Like & Unlike Terms',
-        subtitle: 'Skill 2 · Mastery',
+        title: 'Identifying Like & Unlike Terms',
+        subtitle: 'Skill 2',
         icon: '🤝',
         color: '#0891b2',
         desc: 'Combine matching variables and powers accurately.',
@@ -879,17 +908,17 @@ const SKILLS = [
         learn: {
             concept: 'Like terms are the mathematical equivalent of identical twins. To combine them, they must share the exact same variable part.',
             rules: [
-                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '3x + 4y \\text{ stays as } 3x + 4y', tip: 'You can\'t add apples and oranges!' },
-                { title: 'Power Match', f: 'x^2 + 2x^2 = 3x^2', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: 'x^2 + x^3 \\text{ cannot be added}', tip: 'Check the letters AND the tiny numbers above them.' },
-                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '5x^2 + 4x^2 = 9x^2 \\text{ (not } 9x^4)', tip: 'You are counting how many of that "item" you have.' },
-                { title: 'Invisible Coeff.', f: 'x = 1x', d: 'If a variable has no number in front, its coefficient is secretly 1.', ex: 'x + 3x = 1x + 3x = 4x', tip: 'Don\'t forget the 1!' },
+                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '$3x + 4y$ stays as $3x + 4y$', tip: 'You can\'t add apples and oranges!' },
+                { title: 'Power Match', f: 'x^2 + 2x^2 = 3x^2', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: '$x^2 + x^3$ cannot be added', tip: 'Check the letters AND the tiny numbers above them.' },
+                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '$5x^2 + 4x^2 = 9x^2$ (not $9x^4$)', tip: 'You are counting how many of that "item" you have.' },
+                { title: 'Invisible Coeff.', f: 'x = 1x', d: 'If a variable has no number in front, its coefficient is secretly 1.', ex: '$x + 3x = 1x + 3x = 4x$', tip: 'Don\'t forget the 1!' },
             ]
         }
     },
     {
         id: 'expressions',
         title: 'Simplifying Expressions',
-        subtitle: 'Skill 3 · Mastery',
+        subtitle: 'Skill 3',
         icon: '📝',
         color: '#f59e0b',
         desc: 'Solve multi-part algebraic phrases with ease.',
@@ -908,7 +937,7 @@ const SKILLS = [
     {
         id: 'equations',
         title: 'Solving Equations',
-        subtitle: 'Skill 4 · Mastery',
+        subtitle: 'Skill 4',
         icon: '⚖️',
         color: '#ec4899',
         desc: 'Isolate variables in linear and quadratic problems.',
@@ -917,17 +946,23 @@ const SKILLS = [
         learn: {
             concept: 'To solve an equation, you must find the value of the variable that makes the scale balance perfectly.',
             rules: [
-                { title: 'Golden Balance', f: '\\text{LHS} = \\text{RHS}', d: 'Whatever you do to one side, you MUST do to the other side.', ex: '\\text{If you add 5 to the left, add 5 to the right.}', tip: 'The equals sign is sacred balance point.' },
-                { title: 'Inverses', f: '+ \\longleftrightarrow - \\text{ , } \\cdot \\longleftrightarrow /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: '\\text{To move a } +3\\text{, use } -3\\text{. To move a multiplier of 2, divide by 2.}', tip: 'Do the opposite to cross the bridge.' },
+                { title: 'Golden Balance', f: '\\text{LHS} = \\text{RHS}', d: 'Whatever you do to one side, you MUST do to the other side.', ex: 'If you add $5$ to the left, add $5$ to the right.', tip: 'The equals sign is sacred balance point.' },
+                { title: 'Inverses', f: '+ \\longleftrightarrow - \\text{ , } \\cdot \\longleftrightarrow /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: 'To move  $+3$, use $-3$. To move a multiplier of $2$, divide by $2$.', tip: 'Do the opposite to cross the bridge.' },
                 { title: 'Isolate Target', f: 'x = \\text{Result}', d: 'Keep undoing operations until the variable (target) is all alone on one side.', ex: '2x = 10 \\rightarrow x = 5', tip: 'Goal: Leave x by itself!' },
-                { title: 'Two-Step rule', f: '\\text{Move } \\pm \\text{ first}', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 \\rightarrow 2x = 6 \\rightarrow x = 3', tip: 'Clean up the additions/subtractions first.' },
+                { title: 'Two-Step rule', f: '\\text{Move } \\pm \\text{ first}', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 \\\\ 2x = 6 \\\\ x = 3', tip: 'Clean up the additions/subtractions first.' },
+                { title: '1-Variable Linear', f: '3x + 2 = 11', d: 'An equation with only ONE mystery letter. Think of it like a seesaw with a mystery box. Move all regular numbers away from the box to see what is exactly inside!', ex: 'Start with $3x + 2 = 11$. Move $+2$ away: $3x = 9$. Then divide by $3$ to find $x = 3$.', tip: 'Get the mystery letter completely alone!' },
+                { title: '2-Var: Elimination', f: '\\text{Multiply } \\rightarrow \\text{ Add}', d: 'Multiply one or both equations by a clever number until a letter has exact opposite coefficients (like $+3y$ and $-3y$). Then add the equations straight down to destroy that letter!', ex: 'Solve $2x+3y=13$ and $x-y=4$. Multiply the second by $3$ to get $3x-3y=12$. Add them to the first: $5x = 25$, so $x=5$. Plug $x$ back in to find $y=1$', tip: 'Create opposite twins, then add to destroy them!' },
+                { title: '2-Var: Substitution', f: '\\text{Swap it out}', d: 'Use one equation to get a letter completely by itself ($y = \\dots$). Then substitute that entire chunk into the OTHER equation in place of that letter!', ex: 'Solve $2x+y=7$ and $3x-2y=0$. Get $y$ alone in the first: $y=7-2x$. Swap $y$ into the second: $3x-2(7-2x)=0$. This simplifies to $7x=14$, so $x=2$!', tip: 'Use one equation to unlock the other.' },
+                { title: 'Quadratic: Roots', f: 'x^2 = 25', d: 'If you just have a letter squared, take the square root of both sides. But remember: squares always have a positive AND a negative twin answer!', ex: 'If $x^2 = 25$, taking the root gives $x = 5$. But wait! $-5 \\times -5 = 25$ too. So $x = 5$ OR $x = -5$.', tip: 'Always check for the negative twin answer.' },
+                { title: 'Quadratic: Factoring', f: 'x^2 + 5x + 6 = 0', d: 'Turn it into a puzzle! Find two numbers that multiply to make the last number, AND add up to make the middle number. Then you can find the final answers!', ex: 'For $x^2 + 5x + 6 = 0$: $2$ and $3$ multiply to $6$ and add to $5$. The pieces are $(x+2)(x+3)=0$, so $x=-2$ or $x=-3$.', tip: 'Reverse the multiplication to find the hidden numbers!' },
+                { title: 'Quadratic: Formula', f: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}', d: 'When a puzzle is too hard to factor, use the magic Quadratic Formula! Find the numbers $a, b,$ and $c$ from $ax^2+bx+c=0$ and plug them into the formula.', ex: 'For $2x^2 - 5x + 3 = 0$: $a=2, b=-5, c=3$. Plugging them into the formula gives the exact answers $x=1.5$ and $x=1$.', tip: 'The magic formula works on EVERY quadratic equation!' },
             ]
         }
     },
     {
         id: 'subject',
         title: 'Changing the Subject',
-        subtitle: 'Skill 5 · Mastery',
+        subtitle: 'Skill 5',
         icon: '🔄',
         color: '#7c3aed',
         desc: 'Rearrange formulas to solve for any variable.',
@@ -936,10 +971,29 @@ const SKILLS = [
         learn: {
             concept: 'Changing the subject is like re-crowning a new king. You move all other terms away so the new variable stands on the throne.',
             rules: [
-                { title: 'The Target', f: '\\text{Target} = \\text{Formula}', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: '\\text{In } v=u+at\\text{, make } a \\text{ the subject.}', tip: 'Treat the target like a treasure to be uncovered.' },
-                { title: 'Strip away', f: '\\text{Work Outwards}', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at \\rightarrow v - u = at', tip: 'Peel the equation like an onion.' },
+                { title: 'The Target', f: '\\text{Target} = \\text{Formula}', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: 'In $v=u+at$, make $a$ the subject.', tip: 'Treat the target like a treasure to be uncovered.' },
+                { title: 'Strip away', f: '\\text{Work Outwards}', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at \\rightarrow v - u = at \\\\ a = \\frac{(v-u)}{t}', tip: 'Peel the equation like an onion.' },
                 { title: 'Undo Roots', f: '\\sqrt{\\phantom{x}} \\longleftrightarrow x^2', d: 'To get rid of a square root, square both sides. To remove a power of 2, take the root.', ex: 'y = \\sqrt{x} \\rightarrow y^2 = x', tip: 'Powers and roots are the ultimate opposites.' },
                 { title: 'Denominator', f: '\\text{Multiply Up}', d: 'If your target or part of its expression is in a fraction bottom, multiply it out.', ex: '\\frac{A}{b} = c \\rightarrow A = bc', tip: 'Get your variables onto one line as soon as possible.' },
+            ]
+        }
+    },
+    {
+        id: 'wordproblems',
+        title: 'Word Problems',
+        subtitle: 'Skill 6',
+        icon: '🌍',
+        color: '#10b981',
+        desc: 'Apply algebra to real-life scenarios by converting words to math.',
+        practice: wordProblemQuestions,
+        assessment: wordProblemAssessment,
+        learn: {
+            concept: 'Word problems are just puzzles hiding in plain sight. They teach you how to translate English sentences into Math equations!',
+            rules: [
+                { title: 'Translate Words', f: '\\text{Sum} = +, \\text{Diff} = -, \\text{Prod} = \\times, \\text{Quot} = /', d: 'Turn English words into math symbols. Words like "total" or "more than" mean add. "Less than" or "difference" mean subtract.', ex: '"Five more than a number" becomes $x + 5$. "Twice a number" is $2x$.', tip: 'Read carefully, there are secret math code words everywhere!' },
+                { title: 'Identify Variables', f: '\\text{Let } x = \\dots', d: 'Find what you don\'t know. That mystery becomes your variable ($x$, $y$, $c$, etc).', ex: '"How many apples did he buy?" Let $a$ be the number of apples.', tip: 'The question at the end usually tells you exactly what the variable should be.' },
+                { title: 'Build the Equation', f: '\\text{Left Side} = \\text{Right Side}', d: 'Use your translated words to build a balanced equation. The word "is" almost always means "equals" ($=$).', ex: '"Three times a number is twelve" turns directly into $3x = 12$.', tip: 'The word "is" is your center point. Build around it.' },
+                { title: 'Real-Life Scenarios', f: '\\text{Apply to the real world!}', d: 'You can use Algebra to solve money problems, time limits, distance traveled, and more!', ex: 'If $3$ tickets cost $\\$15$, we set up $3t = 15$. Divide by $3$, so $t = 5$ dollars each!', tip: 'Always check if your final answer makes real-world sense. (You can\'t buy $-2$ apples!)' },
             ]
         }
     },
@@ -1020,12 +1074,14 @@ export default function AlgebraSkills() {
                                     <div className="alg-rule-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>Explanation</h4>
-                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>{skill.learn.rules[selectedLearnIdx].d}</p>
+                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
+                                                <MathRenderer text={skill.learn.rules[selectedLearnIdx].d} />
+                                            </p>
 
                                             <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: '16px', borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
                                                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
                                                     <span style={{ fontWeight: 800, color: 'var(--alg-teal)' }}>🛡️ Survival Tip: </span>
-                                                    {skill.learn.rules[selectedLearnIdx].tip}
+                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].tip} />
                                                 </p>
                                             </div>
                                         </div>
@@ -1033,7 +1089,7 @@ export default function AlgebraSkills() {
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>Practical Example</h4>
                                             <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
                                                 <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)' }}>
-                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$$${skill.learn.rules[selectedLearnIdx].ex} $$`} />
+                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$${skill.learn.rules[selectedLearnIdx].ex}$`} />
                                                 </div>
                                             </div>
                                         </div>
