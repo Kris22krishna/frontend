@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
+import StickerExit from '../../../../StickerExit';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -270,11 +271,15 @@ const AreaRealLife = () => {
         <div className="junior-practice-page village-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <button className="bg-white/90 backdrop-blur-md p-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] shadow-md hover:bg-white transition-all" onClick={() => navigate(-1)}><X size={24} /></button>
+                    {/* Empty or Logo if needed */}
                 </div>
+
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-semibold text-sm sm:text-xl shadow-lg whitespace-nowrap">Question {qIndex + 1} / {TOTAL_QUESTIONS}</div>
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                    </div>
                 </div>
+
                 <div className="header-right">
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
@@ -305,20 +310,77 @@ const AreaRealLife = () => {
             </main>
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
             <footer className="junior-bottom-bar">
+                {/* Desktop Controls */}
                 <div className="desktop-footer-controls">
-                    <div className="bottom-left"><button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button></div>
-                    <div className="bottom-center">{isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> Explain</button>}</div>
-                    <div className="bottom-right"><div className="nav-buttons-group">{qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious}><ChevronLeft size={28} strokeWidth={3} /> Prev</button>}{isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex < TOTAL_QUESTIONS - 1 ? (<>Next <ChevronRight size={28} strokeWidth={3} /></>) : (<>Done <Check size={28} strokeWidth={3} /></>)}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={28} strokeWidth={3} /></button>}</div></div>
+                    <div className="bottom-left">
+                        <button
+                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
+                            onClick={async () => {
+                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                                navigate(-1);
+                            }}
+                        >
+                            <StickerExit size={20} className="hidden" />
+                            Exit Practice
+                        </button>
+                    </div>
+                    <div className="bottom-center">
+                        {isSubmitted && (
+                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
+                                <Eye size={20} /> View Explanation
+                            </button>
+                        )}
+                    </div>
+                    <div className="bottom-right">
+                        <div className="nav-buttons-group">
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? (
+                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                    ) : (
+                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                    )}
+                                </button>
+                            ) : (
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                    Submit <Check size={28} strokeWidth={3} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
+
+                {/* Mobile Controls */}
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
-                        {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={18} /> Explain</button>}
+                        <button
+                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
+                            onClick={async () => {
+                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                                navigate(-1);
+                            }}
+                        >
+                            <X size={20} />
+                        </button>
+
+                        {isSubmitted && (
+                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
+                                <Eye size={18} /> Explain
+                            </button>
+                        )}
                     </div>
-                    <div className="mobile-footer-right" style={{ flex: 1, maxWidth: '70%', display: 'flex', justifyContent: 'flex-end' }}>
-                        <div className="nav-buttons-group" style={{ gap: '6px' }}>
-                            {qIndex > 0 && <button className="nav-pill-next-btn" onClick={handlePrevious} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Prev</button>}
-                            {isSubmitted ? <button className="nav-pill-next-btn" onClick={handleNext} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>{qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}</button> : <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption} style={{ padding: '6px 10px', fontSize: '0.85rem' }}>Submit</button>}
+
+                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
+                        <div className="nav-buttons-group">
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
+                                </button>
+                            ) : (
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                    Submit
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
