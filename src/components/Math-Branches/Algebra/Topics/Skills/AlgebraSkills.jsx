@@ -115,8 +115,8 @@ function QuizEngine({ questions, title, onBack, color }) {
     return (
         <div className="alg-quiz-active alg-quiz-container">
             {/* Header */}
-            <div style={{ marginBottom: 28 }}>
-                <div className="alg-score-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 }}>
+            <div style={{ marginBottom: 20 }}>
+                <div className="alg-score-header">
                     <div>
                         <div style={{ fontSize: 11, fontWeight: 800, color: color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>Skill Verification</div>
                         <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: 'var(--alg-text)', margin: 0 }}>{title}</h3>
@@ -136,13 +136,7 @@ function QuizEngine({ questions, title, onBack, color }) {
             </div>
 
             {/* Question Card */}
-            <div className="alg-quiz-card" style={{
-                background: '#fff',
-                borderRadius: 20, padding: '32px 36px',
-                marginBottom: 20,
-                boxShadow: '0 12px 30px rgba(0,0,0,0.03)',
-                border: '1px solid rgba(0,0,0,0.05)'
-            }}>
+            <div className="alg-quiz-card">
                 <div style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
                     background: `${color}15`, padding: '4px 12px', borderRadius: 8,
@@ -259,6 +253,7 @@ function AssessmentEngine({ questions, title, onBack, color }) {
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [finished, setFinished] = useState(false);
+    const topRef = React.useRef(null);
 
     React.useEffect(() => {
         const newQs = typeof questions === 'function' ? questions() : questions;
@@ -267,6 +262,16 @@ function AssessmentEngine({ questions, title, onBack, color }) {
         setAnswers(Array(newQs.length).fill(null));
         setFinished(false);
     }, [questions]);
+
+    // Scroll to top when question changes (for mobile palette)
+    React.useEffect(() => {
+        if (topRef.current) {
+            const yOffset = -100; // Account for sticky nav
+            const element = topRef.current;
+            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    }, [current]);
 
     // Timer state: 1 minute per question
     const [timeLeft, setTimeLeft] = useState(questionSet.length * 60);
@@ -347,12 +352,12 @@ function AssessmentEngine({ questions, title, onBack, color }) {
                                 <div className="alg-quiz-question-text" style={{ fontSize: 16, marginBottom: 16, color: 'var(--alg-text)', fontWeight: 600 }}>
                                     <MathRenderer text={question.question} />
                                 </div>
-                                <div style={{ display: 'flex', gap: 20, fontSize: 15, background: '#fff', padding: 16, borderRadius: 12, border: '1px solid rgba(0,0,0,0.05)' }}>
-                                    <div style={{ flex: 1 }}>
+                                <div className="alg-summary-split">
+                                    <div className="alg-summary-item">
                                         <strong style={{ color: 'var(--alg-teal)' }}>Correct Answer:</strong>
                                         <div style={{ marginTop: 6 }}><MathRenderer text={correctOptText.includes('$') || correctOptText.includes('^') ? (correctOptText.includes('$') ? correctOptText : `$${correctOptText}$`) : correctOptText} /></div>
                                     </div>
-                                    <div style={{ flex: 1, borderLeft: '2px solid rgba(0,0,0,0.04)', paddingLeft: 20 }}>
+                                    <div className="alg-summary-item user-ans">
                                         <strong style={{ color: isCorrect ? 'var(--alg-teal)' : 'var(--alg-red)' }}>Your Answer:</strong>
                                         <div style={{ marginTop: 6 }}>{answers[i] === null ? 'Not Answered' : <MathRenderer text={userOptText.includes('$') || userOptText.includes('^') ? (userOptText.includes('$') ? userOptText : `$${userOptText}$`) : userOptText} />}</div>
                                     </div>
@@ -366,10 +371,10 @@ function AssessmentEngine({ questions, title, onBack, color }) {
     }
 
     return (
-        <div className="alg-quiz-active" style={{ display: 'flex', gap: 24, alignItems: 'flex-start', maxWidth: 1000, margin: '0 auto' }}>
+        <div className="alg-quiz-active alg-assessment-layout">
             {/* Left Main Question Area */}
-            <div style={{ flex: 1 }}>
-                <div className="alg-score-header" style={{ marginBottom: 20 }}>
+            <div style={{ flex: 1 }} ref={topRef}>
+                <div className="alg-score-header">
                     <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Assessment</div>
                     <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, margin: 0, color: 'var(--alg-text)' }}>{title}</h3>
                 </div>
@@ -429,10 +434,7 @@ function AssessmentEngine({ questions, title, onBack, color }) {
             </div>
 
             {/* Right Question Palette */}
-            <div style={{
-                width: 280, background: '#fff', borderRadius: 20, padding: 24,
-                boxShadow: '0 12px 30px rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)', flexShrink: 0
-            }}>
+            <div className="alg-assessment-palette">
                 <div style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     padding: '12px', background: timeLeft < 60 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(8, 145, 178, 0.05)',
@@ -1180,8 +1182,8 @@ export default function AlgebraSkills() {
         const category = skill.practiceCategories[activeCat];
 
         return (
-            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 280px) 1fr', gap: 24, margin: '0 24px' }}>
-                <aside className="alg-learn-sidebar" style={{ background: 'rgba(255,255,255,0.7)', padding: '16px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'start' }}>
+            <div className="alg-practice-layout">
+                <aside className="alg-learn-sidebar">
                     <button onClick={onBack} style={{ marginBottom: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--alg-muted)', textAlign: 'left', fontWeight: 'bold' }}>← Back to Skills</button>
                     <h3 style={{ margin: '0 0 12px 0', fontSize: 16, textTransform: 'uppercase', letterSpacing: 1, color: skill.color }}>Categories</h3>
                     {skill.practiceCategories.map((c, i) => (
@@ -1225,7 +1227,7 @@ export default function AlgebraSkills() {
                 </nav>
                 <div style={{ padding: '40px 24px 0' }}>
                     {view === 'learn' ? (
-                        <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '0 auto' }}>
+                        <div className="alg-lexicon-container">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
                                 <div style={{ width: 44, height: 44, borderRadius: 12, background: `${skill.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>{skill.icon}</div>
                                 <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.5rem', fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>Learn: {skill.title}</h1>
@@ -1233,11 +1235,7 @@ export default function AlgebraSkills() {
 
                             <div className="alg-learn-grid">
                                 {/* Side Selector */}
-                                <aside className="alg-learn-sidebar" style={{
-                                    background: 'rgba(255,255,255,0.7)', padding: '12px', borderRadius: 20,
-                                    border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8,
-                                    maxHeight: '65vh', overflowY: 'auto'
-                                }}>
+                                <aside className="alg-learn-sidebar">
                                     {skill.learn.rules.map((rule, ri) => (
                                         <button
                                             key={ri}
@@ -1257,10 +1255,7 @@ export default function AlgebraSkills() {
                                 </aside>
 
                                 {/* Detailed Window */}
-                                <main className="details-window-anim alg-details-window" key={selectedLearnIdx} style={{
-                                    background: '#fff', borderRadius: 20, padding: '24px 32px', border: `2px solid ${skill.color}15`,
-                                    boxShadow: '0 8px 30px rgba(0,0,0,0.03)', minHeight: 400
-                                }}>
+                                <main className="details-window-anim alg-details-window" key={selectedLearnIdx}>
                                     <div className="alg-learn-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                                         <div>
                                             <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>{skill.learn.rules[selectedLearnIdx].title}</h3>
@@ -1276,7 +1271,7 @@ export default function AlgebraSkills() {
                                         </div>
                                     </div>
 
-                                    <div className="alg-rule-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                                    <div className="alg-rule-split">
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>Explanation</h4>
                                             <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
@@ -1369,7 +1364,7 @@ export default function AlgebraSkills() {
             </nav>
 
             {/* ── MAIN CONTENT ──────────────────────────────── */}
-            <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '80px auto 40px', padding: '0 24px' }}>
+            <div className="alg-lexicon-container">
 
                 {/* Compact Heading Line */}
                 <div style={{
