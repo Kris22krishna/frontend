@@ -328,6 +328,52 @@ import InvertibleMatricesTest from './components/practice/class-12/matrices/test
 import MatricesChapterTest from './components/practice/class-12/matrices/tests/MatricesChapterTest';
 import CBSEQuestions from './components/practice/class-12/matrices/tests/CBSEQuestions';
 
+// Class 12 - Determinants Chapter
+import DeterminantsChapter from './components/practice/class-12/determinants/DeterminantsChapter';
+import DeterminantOrderPractice from './components/practice/class-12/determinants/determinant-order/DeterminantOrderPractice';
+import DeterminantOrder5W1H from './components/practice/class-12/determinants/determinant-order/DeterminantOrder5W1H';
+import DeterminantOrderExamples from './components/practice/class-12/determinants/determinant-order/DeterminantOrderExamples';
+import ExpansionRowColumnPractice from './components/practice/class-12/determinants/expansion-row-column/ExpansionRowColumnPractice';
+import ExpansionRowColumn5W1H from './components/practice/class-12/determinants/expansion-row-column/ExpansionRowColumn5W1H';
+import ExpansionRowColumnExamples from './components/practice/class-12/determinants/expansion-row-column/ExpansionRowColumnExamples';
+import BasicPropertiesPractice from './components/practice/class-12/determinants/basic-properties/BasicPropertiesPractice';
+import BasicProperties5W1H from './components/practice/class-12/determinants/basic-properties/BasicProperties5W1H';
+import BasicPropertiesExamples from './components/practice/class-12/determinants/basic-properties/BasicPropertiesExamples';
+import FactorisationSimplificationPractice from './components/practice/class-12/determinants/factorisation-simplification/FactorisationSimplificationPractice';
+import FactorisationSimplification5W1H from './components/practice/class-12/determinants/factorisation-simplification/FactorisationSimplification5W1H';
+import FactorisationSimplificationExamples from './components/practice/class-12/determinants/factorisation-simplification/FactorisationSimplificationExamples';
+import AreaDeterminantPractice from './components/practice/class-12/determinants/area-determinant/AreaDeterminantPractice';
+import AreaDeterminant5W1H from './components/practice/class-12/determinants/area-determinant/AreaDeterminant5W1H';
+import AreaDeterminantExamples from './components/practice/class-12/determinants/area-determinant/AreaDeterminantExamples';
+import CollinearityPractice from './components/practice/class-12/determinants/collinearity/CollinearityPractice';
+import Collinearity5W1H from './components/practice/class-12/determinants/collinearity/Collinearity5W1H';
+import CollinearityExamples from './components/practice/class-12/determinants/collinearity/CollinearityExamples';
+import EquationOfLinePractice from './components/practice/class-12/determinants/equation-of-line/EquationOfLinePractice';
+import EquationOfLine5W1H from './components/practice/class-12/determinants/equation-of-line/EquationOfLine5W1H';
+import EquationOfLineExamples from './components/practice/class-12/determinants/equation-of-line/EquationOfLineExamples';
+import MinorsPractice from './components/practice/class-12/determinants/minors/MinorsPractice';
+import Minors5W1H from './components/practice/class-12/determinants/minors/Minors5W1H';
+import MinorsExamples from './components/practice/class-12/determinants/minors/MinorsExamples';
+import CofactorsPractice from './components/practice/class-12/determinants/cofactors/CofactorsPractice';
+import Cofactors5W1H from './components/practice/class-12/determinants/cofactors/Cofactors5W1H';
+import CofactorsExamples from './components/practice/class-12/determinants/cofactors/CofactorsExamples';
+import AdjointPractice from './components/practice/class-12/determinants/adjoint/AdjointPractice';
+import Adjoint5W1H from './components/practice/class-12/determinants/adjoint/Adjoint5W1H';
+import AdjointExamples from './components/practice/class-12/determinants/adjoint/AdjointExamples';
+import InverseAdjointPractice from './components/practice/class-12/determinants/inverse-adjoint/InverseAdjointPractice';
+import InverseAdjoint5W1H from './components/practice/class-12/determinants/inverse-adjoint/InverseAdjoint5W1H';
+import InverseAdjointExamples from './components/practice/class-12/determinants/inverse-adjoint/InverseAdjointExamples';
+import MatrixIdentitiesPractice from './components/practice/class-12/determinants/matrix-identities/MatrixIdentitiesPractice';
+import MatrixIdentities5W1H from './components/practice/class-12/determinants/matrix-identities/MatrixIdentities5W1H';
+import MatrixIdentitiesExamples from './components/practice/class-12/determinants/matrix-identities/MatrixIdentitiesExamples';
+import SolvingSystemPractice from './components/practice/class-12/determinants/solving-system/SolvingSystemPractice';
+import SolvingSystem5W1H from './components/practice/class-12/determinants/solving-system/SolvingSystem5W1H';
+import SolvingSystemExamples from './components/practice/class-12/determinants/solving-system/SolvingSystemExamples';
+import ConsistencyPractice from './components/practice/class-12/determinants/consistency/ConsistencyPractice';
+import Consistency5W1H from './components/practice/class-12/determinants/consistency/Consistency5W1H';
+import ConsistencyExamples from './components/practice/class-12/determinants/consistency/ConsistencyExamples';
+import DeterminantsTest from './components/practice/class-12/determinants/tests/DeterminantsTest';
+
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
 import BiologyChapters from './components/practice/class-11/biology/BiologyChapters';
@@ -1302,6 +1348,82 @@ function App() {
         <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test" element={<ProtectedRoute redirectTo="/login"><MatricesChapterTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/cbse" element={<ProtectedRoute redirectTo="/login"><CBSEQuestions /></ProtectedRoute>} />
+
+        {/* Class 12: Determinants Routes */}
+        <Route path="/senior/grade/12/determinants" element={<ProtectedRoute redirectTo="/login"><DeterminantsChapter /></ProtectedRoute>} />
+
+        {/* Subtopic 1.1 */}
+        <Route path="/senior/grade/12/determinants/determinant-order/practice" element={<ProtectedRoute redirectTo="/login"><DeterminantOrderPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/determinant-order/5w1h" element={<ProtectedRoute redirectTo="/login"><DeterminantOrder5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/determinant-order/examples" element={<ProtectedRoute redirectTo="/login"><DeterminantOrderExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 1.2 */}
+        <Route path="/senior/grade/12/determinants/expansion-row-column/practice" element={<ProtectedRoute redirectTo="/login"><ExpansionRowColumnPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/expansion-row-column/5w1h" element={<ProtectedRoute redirectTo="/login"><ExpansionRowColumn5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/expansion-row-column/examples" element={<ProtectedRoute redirectTo="/login"><ExpansionRowColumnExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 2.1 */}
+        <Route path="/senior/grade/12/determinants/basic-properties/practice" element={<ProtectedRoute redirectTo="/login"><BasicPropertiesPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/basic-properties/5w1h" element={<ProtectedRoute redirectTo="/login"><BasicProperties5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/basic-properties/examples" element={<ProtectedRoute redirectTo="/login"><BasicPropertiesExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 2.2 */}
+        <Route path="/senior/grade/12/determinants/factorisation-simplification/practice" element={<ProtectedRoute redirectTo="/login"><FactorisationSimplificationPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/factorisation-simplification/5w1h" element={<ProtectedRoute redirectTo="/login"><FactorisationSimplification5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/factorisation-simplification/examples" element={<ProtectedRoute redirectTo="/login"><FactorisationSimplificationExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 3.1 */}
+        <Route path="/senior/grade/12/determinants/area-determinant/practice" element={<ProtectedRoute redirectTo="/login"><AreaDeterminantPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/area-determinant/5w1h" element={<ProtectedRoute redirectTo="/login"><AreaDeterminant5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/area-determinant/examples" element={<ProtectedRoute redirectTo="/login"><AreaDeterminantExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 3.2 */}
+        <Route path="/senior/grade/12/determinants/collinearity/practice" element={<ProtectedRoute redirectTo="/login"><CollinearityPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/collinearity/5w1h" element={<ProtectedRoute redirectTo="/login"><Collinearity5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/collinearity/examples" element={<ProtectedRoute redirectTo="/login"><CollinearityExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 3.3 */}
+        <Route path="/senior/grade/12/determinants/equation-of-line/practice" element={<ProtectedRoute redirectTo="/login"><EquationOfLinePractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/equation-of-line/5w1h" element={<ProtectedRoute redirectTo="/login"><EquationOfLine5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/equation-of-line/examples" element={<ProtectedRoute redirectTo="/login"><EquationOfLineExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 4.1 */}
+        <Route path="/senior/grade/12/determinants/minors/practice" element={<ProtectedRoute redirectTo="/login"><MinorsPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/minors/5w1h" element={<ProtectedRoute redirectTo="/login"><Minors5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/minors/examples" element={<ProtectedRoute redirectTo="/login"><MinorsExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 4.2 */}
+        <Route path="/senior/grade/12/determinants/cofactors/practice" element={<ProtectedRoute redirectTo="/login"><CofactorsPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/cofactors/5w1h" element={<ProtectedRoute redirectTo="/login"><Cofactors5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/cofactors/examples" element={<ProtectedRoute redirectTo="/login"><CofactorsExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 4.3 */}
+        <Route path="/senior/grade/12/determinants/adjoint/practice" element={<ProtectedRoute redirectTo="/login"><AdjointPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/adjoint/5w1h" element={<ProtectedRoute redirectTo="/login"><Adjoint5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/adjoint/examples" element={<ProtectedRoute redirectTo="/login"><AdjointExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 5.1 */}
+        <Route path="/senior/grade/12/determinants/inverse-adjoint/practice" element={<ProtectedRoute redirectTo="/login"><InverseAdjointPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/inverse-adjoint/5w1h" element={<ProtectedRoute redirectTo="/login"><InverseAdjoint5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/inverse-adjoint/examples" element={<ProtectedRoute redirectTo="/login"><InverseAdjointExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 5.2 */}
+        <Route path="/senior/grade/12/determinants/matrix-identities/practice" element={<ProtectedRoute redirectTo="/login"><MatrixIdentitiesPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/matrix-identities/5w1h" element={<ProtectedRoute redirectTo="/login"><MatrixIdentities5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/matrix-identities/examples" element={<ProtectedRoute redirectTo="/login"><MatrixIdentitiesExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 6.1 */}
+        <Route path="/senior/grade/12/determinants/solving-system/practice" element={<ProtectedRoute redirectTo="/login"><SolvingSystemPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/solving-system/5w1h" element={<ProtectedRoute redirectTo="/login"><SolvingSystem5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/solving-system/examples" element={<ProtectedRoute redirectTo="/login"><SolvingSystemExamples /></ProtectedRoute>} />
+
+        {/* Subtopic 6.2 */}
+        <Route path="/senior/grade/12/determinants/consistency/practice" element={<ProtectedRoute redirectTo="/login"><ConsistencyPractice /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/consistency/5w1h" element={<ProtectedRoute redirectTo="/login"><Consistency5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/determinants/consistency/examples" element={<ProtectedRoute redirectTo="/login"><ConsistencyExamples /></ProtectedRoute>} />
+
+        {/* Chapter Test */}
+        <Route path="/senior/grade/12/determinants/chapter-test" element={<ProtectedRoute redirectTo="/login"><DeterminantsTest /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
