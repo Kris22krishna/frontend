@@ -1,27 +1,93 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, X, RefreshCw } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
-import './polynomials.css';
+import Class8PracticeReportModal from '../Class8PracticeReportModal';
+import mascotImg from '../../../../assets/mascot.png';
+import '../../../../pages/high/class8/SquaresAndSquareRoots.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing! You're a Supercell Master! ✨",
-    "🌟 Brilliant! You see the pattern! 🌟",
-    "🎉 Correct! Square power! 🎉",
+    "✨ Amazing! Pythagorean Master! ✨",
+    "🌟 Brilliant! You've got this! 🌟",
+    "🎉 Correct! Triplet Genius! 🎉",
     "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
+    "🚀 Super! 🚀",
     "🌈 Perfect! Well done! 🌈",
     "🎊 Great job! Moving on... 🎊",
     "💎 Spot on! Excellent! 💎"
 ];
 
-const Supercells = () => {
-    const { grade } = useParams();
+const generateQuestionData = () => {
+    return [
+        {
+            text: "Which of the following describes the general form of a Pythagorean triplet for $m > 1$?",
+            options: ["(2m, m² - 1, m² + 1)", "(2m, m, m²)", "(m, 2m, 3m)", "(m², m² - 1, 2m)"],
+            correctAnswer: "(2m, m² - 1, m² + 1)",
+            solution: "For any integer $m > 1$, $(2m, m^2 - 1, m^2 + 1)$ forms a Pythagorean triplet.",
+        },
+        {
+            text: "Is $(3, 4, 5)$ a Pythagorean triplet?",
+            options: ["Yes", "No", "Only if multiplied", "Cannot be determined"],
+            correctAnswer: "Yes",
+            solution: "$3^2 + 4^2 = 9 + 16 = 25$. $5^2 = 25$. Since $3^2+4^2=5^2$, it is a Pythagorean triplet.",
+        },
+        {
+            text: "Which of the following is a Pythagorean triplet?",
+            options: ["(6, 8, 10)", "(5, 9, 12)", "(6, 7, 8)", "(10, 11, 12)"],
+            correctAnswer: "(6, 8, 10)",
+            solution: "$6^2 + 8^2 = 36 + 64 = 100$. $10^2 = 100$. Thus, $(6, 8, 10)$ is a Pythagorean triplet.",
+        },
+        {
+            text: "Find the Pythagorean triplet containing $14$ as one of its members.",
+            options: ["(14, 48, 50)", "(14, 30, 32)", "(14, 25, 29)", "(14, 18, 22)"],
+            correctAnswer: "(14, 48, 50)",
+            solution: "Let $2m = 14 \\Rightarrow m = 7$. Then $m^2 - 1 = 49 - 1 = 48$ and $m^2 + 1 = 49 + 1 = 50$. The triplet is $(14, 48, 50)$.",
+        },
+        {
+            text: "Find the Pythagorean triplet containing $16$ as one of its members.",
+            options: ["(16, 63, 65)", "(16, 30, 34)", "Both", "None"],
+            correctAnswer: "Both",
+            solution: "Let $2m = 16 \\Rightarrow m = 8$ giving $(16, 63, 65)$. Also $(16, 30, 34)$ is $2 \\times (8, 15, 17)$, which is also a valid triplet since $(8, 15, 17)$ is a primitive triplet.",
+        },
+        {
+            text: "Identify the Pythagorean triplet consisting of $5, 12,$ and $13$.",
+            options: ["Yes", "No", "Only 12 and 13", "Only 5 and 12"],
+            correctAnswer: "Yes",
+            solution: "$5^2 + 12^2 = 25 + 144 = 169$. Since $13^2 = 169$, it is a Pythagorean triplet.",
+        },
+        {
+            text: "Find a Pythagorean triplet whose one member is $18$.",
+            options: ["(18, 80, 82)", "(18, 45, 52)", "(18, 25, 30)", "(18, 70, 75)"],
+            correctAnswer: "(18, 80, 82)",
+            solution: "Let $2m=18 \\Rightarrow m=9$. Then $m^2-1 = 81-1=80$ and $m^2+1=81+1=82$. The triplet is $(18, 80, 82)$.",
+        },
+        {
+            text: "Find a Pythagorean triplet if $m^2 - 1 = 24$.",
+            options: ["(10, 24, 26)", "(8, 24, 25)", "(12, 24, 28)", "(7, 24, 25)"],
+            correctAnswer: "(10, 24, 26)",
+            solution: "If $m^2 - 1 = 24$, then $m^2 = 25$, so $m=5$. The members are $2m = 10$, $m^2-1 = 24$, $m^2+1 = 26$. The triplet is $(10, 24, 26)$.",
+        },
+        {
+            text: "Does there exist a Pythagorean triplet where the longest side (hypotenuse) is $17$?",
+            options: ["Yes, (8, 15, 17)", "Yes, (9, 12, 17)", "Yes, (7, 14, 17)", "No"],
+            correctAnswer: "Yes, (8, 15, 17)",
+            solution: "Let $m^2 + 1 = 17 \\Rightarrow m^2 = 16 \\Rightarrow m=4$. Then $2m=8$ and $m^2-1=15$. The triplet is $(8, 15, 17)$.",
+        },
+        {
+            text: "Can $(6, 8, 11)$ be a Pythagorean triplet?",
+            options: ["Yes", "No", "Sometimes", "Depends on the triangle"],
+            correctAnswer: "No",
+            solution: "$6^2 + 8^2 = 36 + 64 = 100$. However, $11^2 = 121$. Since $100 \\neq 121$, it is NOT a Pythagorean triplet.",
+        }
+    ];
+};
+
+const PythagoreanTriplets = () => {
     const navigate = useNavigate();
     const getSessionData = (key, defaultValue) => {
         const data = sessionStorage.getItem(key);
@@ -33,26 +99,23 @@ const Supercells = () => {
     const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
     const [history, setHistory] = useState(() => getSessionData(`${storageKey}_history`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
-    const [userInput, setUserInput] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
-    const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [shuffledOptions, setShuffledOptions] = useState([]);
+    const [questions, setQuestions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showReportModal, setShowReportModal] = useState(false);
 
     // Logging states
     const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6302; // ID for Number Play - Supercells
-    const SKILL_NAME = "Number Play - Supercells";
-
+    const SKILL_ID = 1250;
+    const SKILL_NAME = "Pythagorean Triplets";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
-    const [usedQuestions, setUsedQuestions] = useState(new Set());
 
     useEffect(() => {
         if (qIndex !== undefined && history && answers) {
@@ -77,7 +140,7 @@ const Supercells = () => {
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
-            }).catch(err => console.error("Failed to start session", err));
+            });
         }
 
         const timer = setInterval(() => {
@@ -95,6 +158,13 @@ const Supercells = () => {
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
+        // Pre-shuffling questions once on mount
+        const prepared = generateQuestionData().map(q => ({
+            ...q,
+            options: [...q.options].sort(() => Math.random() - 0.5)
+        }));
+        setQuestions(prepared);
+
         return () => {
             clearInterval(timer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -102,242 +172,21 @@ const Supercells = () => {
     }, []);
 
     useEffect(() => {
-        if (history[qIndex]) {
-            const data = history[qIndex];
-            setCurrentQuestion(data.question);
-            setShuffledOptions(data.options);
-            setSelectedOption(data.selectedOption);
-            setUserInput(data.userInput || "");
-            setIsSubmitted(data.isSubmitted);
-            setIsCorrect(data.isCorrect);
-            setFeedbackMessage(data.feedbackMessage || "");
-        } else if (!answers[qIndex]) {
-            generateQuestion(qIndex);
+        const isHistory = history[qIndex];
+        if (isHistory) {
+            setSelectedOption(isHistory.selectedOption);
+            setIsSubmitted(isHistory.isSubmitted);
+            setIsCorrect(isHistory.isCorrect);
+            setFeedbackMessage(isHistory.feedbackMessage || "");
+        } else {
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            setFeedbackMessage("");
         }
-    }, [qIndex]);
-
-    const generateQuestion = (index) => {
-        // 8 MCQs, 2 User Inputs
-        // Force User Input on specific indices for variety (e.g., 4 and 8)
-        const isInputParams = (index === 4 || index === 8);
-        const types = ["visual_grid", "calc_cells", "calc_side", "pattern_next", "diff_squares"];
-        const type = types[index % types.length];
-
-        let qText = "";
-        let correct = "";
-        let explanation = "";
-        let options = [];
-        let uniqueId = "";
-        let inputType = isInputParams ? "input" : "mcq";
-
-        const logicDescription = "<strong>Supercells</strong> are perfect squares made of small unit cells. A Supercell of side <em>n</em> has <em>n × n</em> small cells.";
-
-        let attempts = 0;
-        do {
-            attempts++;
-
-            if (type === "visual_grid") {
-                const n = randomInt(2, 5);
-                const total = n * n;
-
-                // Construct visual grid using HTML/CSS
-                const gridStyle = `
-                    display: grid; 
-                    grid-template-columns: repeat(${n}, 30px); 
-                    grid-template-rows: repeat(${n}, 30px); 
-                    gap: 2px; 
-                    margin: 10px auto; 
-                    width: fit-content;
-                `;
-                const cellStyle = `
-                    width: 30px; 
-                    height: 30px; 
-                    background-color: #4FB7B3; 
-                    border-radius: 4px;
-                `;
-                const cellsHtml = Array(total).fill(`<div style="${cellStyle}"></div>`).join("");
-
-                qText = `
-                    <div class='question-container'>
-                        <p>${logicDescription}</p>
-                        <p>Look at this Supercell:</p>
-                        <div style="${gridStyle}">${cellsHtml}</div>
-                        <p>How many small cells are in this ${n} × ${n} Supercell?</p>
-                    </div>
-                `;
-                correct = total.toString();
-                explanation = `This is a square grid with side length <strong>${n}</strong>.<br/>Total cells = ${n} × ${n} = <strong>${total}</strong>.`;
-                uniqueId = `visual_${n}_${inputType}`;
-
-                if (inputType === "mcq") {
-                    options = [
-                        total.toString(),
-                        (total - 1).toString(),
-                        (total + n).toString(),
-                        (n * 2).toString()
-                    ];
-                }
-
-            } else if (type === "calc_cells") {
-                const n = randomInt(3, 12);
-                const total = n * n;
-
-                qText = `
-                    <div class='question-container'>
-                        <p>${logicDescription}</p>
-                        <p>If a Supercell has a side length of <strong>${n}</strong>,</p>
-                        <p>how many small unit cells does it contain?</p>
-                    </div>
-                `;
-                correct = total.toString();
-                explanation = `For a side length of ${n}, the total number of cells is ${n} × ${n} = <strong>${total}</strong>.`;
-                uniqueId = `calc_cells_${n}_${inputType}`;
-
-                if (inputType === "mcq") {
-                    options = [
-                        total.toString(),
-                        (n * 2).toString(),
-                        (total + n).toString(),
-                        (n + 2).toString()
-                    ];
-                }
-
-            } else if (type === "calc_side") {
-                const n = randomInt(3, 10);
-                const total = n * n;
-
-                qText = `
-                    <div class='question-container'>
-                        <p>${logicDescription}</p>
-                        <p>A Supercell is made of <strong>${total}</strong> small cells.</p>
-                        <p>What is the side length of this Supercell?</p>
-                    </div>
-                `;
-                correct = n.toString();
-                explanation = `We need to find a number that multiplied by itself gives ${total}.<br/>Since ${n} × ${n} = ${total}, the side length is <strong>${n}</strong>.`;
-                uniqueId = `calc_side_${total}_${inputType}`;
-
-                if (inputType === "mcq") {
-                    options = [
-                        n.toString(),
-                        (n - 1).toString(),
-                        (n + 1).toString(),
-                        Math.floor(total / 2).toString()
-                    ];
-                }
-
-            } else if (type === "pattern_next") {
-                const start = randomInt(1, 3);
-                const seqLen = 4;
-                const sequence = [];
-                for (let i = 0; i < seqLen; i++) sequence.push((start + i) * (start + i));
-
-                const nextVal = (start + seqLen) * (start + seqLen);
-
-                qText = `
-                    <div class='question-container'>
-                        <p>${logicDescription}</p>
-                        <p>Look at the pattern of cells in growing Supercells:</p>
-                        <p><strong style="font-size:1.4em; letter-spacing:2px;">${sequence.join(", ")}, ...</strong></p>
-                        <p>What is the next number in this pattern?</p>
-                    </div>
-                `;
-                correct = nextVal.toString();
-                explanation = `The pattern is the sequence of square numbers: ${start}², ${start + 1}², ${start + 2}², ${start + 3}²...<br/>The last number shown was ${start + seqLen - 1}² (${sequence[sequence.length - 1]}).<br/>The next one is ${start + seqLen}² = ${start + seqLen} × ${start + seqLen} = <strong>${nextVal}</strong>.`;
-                uniqueId = `pattern_${start}_${inputType}`;
-
-                if (inputType === "mcq") {
-                    options = [
-                        nextVal.toString(),
-                        (sequence[sequence.length - 1] + 2).toString(),
-                        (sequence[sequence.length - 1] * 2).toString(),
-                        (nextVal - 1).toString()
-                    ];
-                }
-
-            } else { // diff_squares
-                const n1 = randomInt(2, 6);
-                const n2 = n1 + 1;
-                const sq1 = n1 * n1;
-                const sq2 = n2 * n2;
-                const diff = sq2 - sq1;
-
-                qText = `
-                    <div class='question-container'>
-                        <p>${logicDescription}</p>
-                        <p>How many <strong>more</strong> cells does a ${n2}×${n2} Supercell have compared to a ${n1}×${n1} Supercell?</p>
-                    </div>
-                `;
-                correct = diff.toString();
-                explanation = `
-                    Cells in ${n2}×${n2} = ${sq2}.<br/>
-                    Cells in ${n1}×${n1} = ${sq1}.<br/>
-                    Difference = ${sq2} - ${sq1} = <strong>${diff}</strong>.
-                `;
-                uniqueId = `diff_${n1}_${n2}_${inputType}`;
-
-                if (inputType === "mcq") {
-                    options = [
-                        diff.toString(),
-                        (n1 + n2).toString(),
-                        (diff + 1).toString(),
-                        "1"
-                    ];
-                }
-            }
-
-            if (attempts > 10) uniqueId = `force_${Date.now()}_${Math.random()}`;
-
-        } while (usedQuestions.has(uniqueId));
-
-        setUsedQuestions(prev => new Set(prev).add(uniqueId));
-
-        // Shuffle options if MCQ
-        let uniqueOpts = [];
-        if (inputType === "mcq") {
-            uniqueOpts = [...new Set(options)];
-            // Ensure 4 distinct numerical options
-            if (options.every(o => !isNaN(parseInt(o)))) {
-                while (uniqueOpts.length < 4) {
-                    const rnd = randomInt(1, 100).toString();
-                    if (!uniqueOpts.includes(rnd)) uniqueOpts.push(rnd);
-                    uniqueOpts = [...new Set(uniqueOpts)];
-                }
-                uniqueOpts.sort((a, b) => parseInt(a) - parseInt(b));
-            }
-            setShuffledOptions([...uniqueOpts].sort(() => Math.random() - 0.5));
-        }
-
-        const newQuestion = {
-            text: qText,
-            correctAnswer: correct,
-            solution: explanation,
-            type: inputType,
-            options: uniqueOpts
-        };
-
-        setCurrentQuestion(newQuestion);
-        setSelectedOption(null);
-        setUserInput("");
-        setIsSubmitted(false);
-        setIsCorrect(false);
-        setFeedbackMessage("");
         questionStartTime.current = Date.now();
-
-        setHistory(prev => ({
-            ...prev,
-            [index]: {
-                question: newQuestion,
-                options: uniqueOpts,
-                selectedOption: null,
-                userInput: "",
-                isSubmitted: false,
-                isCorrect: false,
-                feedbackMessage: ""
-            }
-        }));
-    };
-
+        accumulatedTime.current = 0;
+    }, [qIndex]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -375,18 +224,10 @@ const Supercells = () => {
     };
 
     const handleCheck = () => {
-        if (currentQuestion.type === "mcq" && !selectedOption) return;
-        if (currentQuestion.type === "input" && !userInput.trim()) return;
+        const currentQ = questions[qIndex];
+        if (!selectedOption || !currentQ) return;
 
-        let isRight = false;
-
-        if (currentQuestion.type === "mcq") {
-            isRight = selectedOption === currentQuestion.correctAnswer;
-        } else {
-            const userClean = userInput.replace(/\s+/g, '').toLowerCase();
-            const correctClean = currentQuestion.correctAnswer.replace(/\s+/g, '').toLowerCase();
-            isRight = userClean === correctClean;
-        }
+        const isRight = selectedOption === currentQ.correctAnswer;
 
         setIsCorrect(isRight);
         setIsSubmitted(true);
@@ -403,16 +244,14 @@ const Supercells = () => {
         setHistory(prev => ({
             ...prev,
             [qIndex]: {
-                ...prev[qIndex],
                 selectedOption: selectedOption,
-                userInput: userInput,
                 isSubmitted: true,
                 isCorrect: isRight,
                 feedbackMessage: feedbackMsg
             }
         }));
 
-        recordQuestionAttempt(currentQuestion, currentQuestion.type === "mcq" ? selectedOption : userInput, isRight);
+        recordQuestionAttempt(currentQ, selectedOption, isRight);
     };
 
     const handlePrevious = () => {
@@ -427,7 +266,6 @@ const Supercells = () => {
             setQIndex(prev => prev + 1);
             setShowExplanationModal(false);
             setSelectedOption(null);
-            setUserInput("");
             setIsSubmitted(false);
             setIsCorrect(false);
             accumulatedTime.current = 0;
@@ -459,7 +297,7 @@ const Supercells = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            clearProgress(); navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -468,28 +306,29 @@ const Supercells = () => {
         setSelectedOption(option);
     };
 
+    const currentQuestion = questions[qIndex];
     if (!currentQuestion) return <div>Loading...</div>;
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
-                    <span className="text-[#31326F] text-lg sm:text-xl">Supercells</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Pythagorean Triplets</span>
                 </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -498,23 +337,70 @@ const Supercells = () => {
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -50, opacity: 0 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                <div className="question-card-modern flex flex-col w-full bg-white rounded-3xl p-6 sm:p-10 shadow-lg" style={{ height: 'auto', minHeight: '100%', paddingLeft: '2rem', overflow: 'hidden' }}>
+                                    <div className="question-header-modern mb-8 w-full" style={{ flexShrink: 0, overflow: 'hidden' }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern">
-                                        {currentQuestion.type === 'mcq' ? (
-                                            <div className="options-grid-modern">
-                                                {shuffledOptions.map((option, idx) => (
+
+                                    {currentQuestion.image ? (
+                                        <div className="flex flex-col md:flex-row w-full items-center justify-center gap-6 lg:gap-10 mt-4">
+                                            <div className="chart-container flex-1 w-full max-w-xl flex justify-center items-center">
+                                                <img
+                                                    src={currentQuestion.image}
+                                                    alt="Question visual"
+                                                    className="w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-md"
+                                                />
+                                            </div>
+                                            <div className="interaction-area-modern flex-1 w-full max-w-sm flex flex-col items-center">
+                                                <div className="options-grid-modern flex flex-col gap-3 w-full">
+                                                    {currentQuestion.options.map((option, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                            disabled={isSubmitted}
+                                                            className={`p-3 rounded-xl border-2 text-base font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full 
+                                                                ${isSubmitted
+                                                                    ? option === currentQuestion.correctAnswer
+                                                                        ? 'bg-green-100 border-green-500 text-green-700'
+                                                                        : selectedOption === option
+                                                                            ? 'bg-red-100 border-red-500 text-red-700'
+                                                                            : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                                    : selectedOption === option
+                                                                        ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
+                                                                        : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
+                                                                }
+                                                            `}
+                                                            style={{ fontFamily: '"Open Sans", sans-serif' }}
+                                                        >
+                                                            <LatexContent html={option} />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                {isSubmitted && isCorrect && (
+                                                    <motion.div
+                                                        initial={{ scale: 0.5, opacity: 0 }}
+                                                        animate={{ scale: 1, opacity: 1 }}
+                                                        className="feedback-mini correct mt-6 w-full text-center p-2 rounded-full font-normal bg-[#E8F5E9] border-2 border-[#81C784] text-[#2E7D32] flex items-center justify-center gap-2 shadow-sm"
+                                                    >
+                                                        ✨ {feedbackMessage} ✨
+                                                    </motion.div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col w-full items-center justify-center mt-2 w-full max-w-3xl mx-auto">
+                                            <div className="w-full border-t-2 border-dashed border-gray-100 my-6"></div>
+                                            <div className="options-grid-modern w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                {currentQuestion.options.map((option, idx) => (
                                                     <button
                                                         key={idx}
                                                         onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                         disabled={isSubmitted}
-                                                        className={`p-4 rounded-xl border-2 text-lg transition-all transform hover:scale-102
+                                                        className={`p-4 rounded-2xl border-2 text-base font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[60px] w-full 
                                                             ${isSubmitted
                                                                 ? option === currentQuestion.correctAnswer
                                                                     ? 'bg-green-100 border-green-500 text-green-700'
@@ -526,47 +412,25 @@ const Supercells = () => {
                                                                     : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
                                                             }
                                                         `}
+                                                        style={{ fontFamily: '"Open Sans", sans-serif' }}
                                                     >
                                                         <LatexContent html={option} />
                                                     </button>
                                                 ))}
                                             </div>
-                                        ) : (
-                                            <div className="w-full flex flex-col items-center gap-4">
-                                                <input
-                                                    type="text"
-                                                    value={userInput}
-                                                    onChange={(e) => setUserInput(e.target.value)}
-                                                    placeholder="Type your numerical answer"
-                                                    disabled={isSubmitted}
-                                                    className={`w-full max-w-md p-4 text-xl text-center rounded-xl border-2 outline-none transition-all
-                                                        ${isSubmitted
-                                                            ? isCorrect
-                                                                ? 'bg-green-50 border-green-500 text-green-700'
-                                                                : 'bg-red-50 border-red-500 text-red-700'
-                                                            : 'bg-white border-gray-300 focus:border-[#4FB7B3] focus:shadow-md text-[#31326F]'
-                                                        }
-                                                    `}
-                                                />
-                                                {isSubmitted && !isCorrect && (
-                                                    <div className="text-gray-500">
-                                                        Correct Answer: <strong>{currentQuestion.correctAnswer}</strong>
-                                                    </div>
+                                            <div className="h-16 mt-6 flex items-center justify-center">
+                                                {isSubmitted && isCorrect && (
+                                                    <motion.div
+                                                        initial={{ scale: 0.5, opacity: 0 }}
+                                                        animate={{ scale: 1, opacity: 1 }}
+                                                        className="feedback-mini correct text-center px-6 py-2 rounded-full font-normal bg-[#E8F5E9] border-2 border-[#81C784] text-[#2E7D32] flex items-center justify-center gap-2 shadow-sm"
+                                                    >
+                                                        ✨ {feedbackMessage} ✨
+                                                    </motion.div>
                                                 )}
                                             </div>
-                                        )}
-
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         </AnimatePresence>
@@ -583,6 +447,19 @@ const Supercells = () => {
                 onNext={() => setShowExplanationModal(false)}
             />
 
+            <Class8PracticeReportModal
+                isOpen={showReportModal}
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val === true).length,
+                    totalQuestions: TOTAL_QUESTIONS
+                }}
+                onContinue={() => {
+                    clearProgress();
+                    navigate(-1);
+                }}
+            />
+
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
@@ -593,7 +470,7 @@ const Supercells = () => {
                                 clearProgress(); navigate(-1);
                             }}
                         >
-                            Exit
+                            <X size={20} /> Exit
                         </button>
                     </div>
                     <div className="bottom-center">
@@ -625,7 +502,7 @@ const Supercells = () => {
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheck}
-                                    disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput.trim()}
+                                    disabled={!selectedOption}
                                 >
                                     SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
@@ -676,7 +553,7 @@ const Supercells = () => {
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheck}
-                                    disabled={currentQuestion.type === 'mcq' ? !selectedOption : !userInput.trim()}
+                                    disabled={!selectedOption}
                                 >SUBMIT</button>
                             )}
                         </div>
@@ -686,5 +563,4 @@ const Supercells = () => {
         </div>
     );
 };
-
-export default Supercells;
+export default PythagoreanTriplets;

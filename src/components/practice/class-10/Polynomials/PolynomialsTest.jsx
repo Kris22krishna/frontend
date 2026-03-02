@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import '../TenthPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
+
+const getNow = () => Date.now();
 
 const BLUE_THEME_CSS = `
     .option-btn-modern.selected {
@@ -151,10 +152,64 @@ const BLUE_THEME_CSS = `
     }
 `;
 
-const SKILL_ID = 1128;
-const SKILL_NAME = "Quadratic Equations - Chapter Test";
+const SKILL_ID = 1240;
+const SKILL_NAME = "Polynomials Chapter Assessment";
 
-const QuadraticEquationsTest = () => {
+const generateQuestions = () => {
+    // Pool of questions across all topics
+    const qPool = [
+        // Types and Degrees
+        { text: `Find the degree of the polynomial: $5x^3 - 4x^2 + x - 2$.`, options: [`$3$`, `$2$`, `$5$`, `$1$`], correctAnswer: `$3$`, solution: `The degree is the highest power of $x$, which is 3 in $5x^3$.` },
+        { text: `State whether $2x^2 + 5x + 3$ is linear, quadratic, or cubic.`, options: [`Quadratic`, `Linear`, `Cubic`, `Constant`], correctAnswer: `Quadratic`, solution: `The highest power of $x$ is 2, so it is a quadratic polynomial.` },
+        // Evaluating and Identifying
+        { text: `Find the value of $p(x) = x^2 - 3x - 4$ at $x = -1$.`, options: [`$0$`, `$4$`, `$-8$`, `$8$`], correctAnswer: `$0$`, solution: `$p(-1) = (-1)^2 - 3(-1) - 4 = 1 + 3 - 4 = 0$.` },
+        { text: `Check whether $-2$ is a zero of the polynomial $x + 2$.`, options: [`Yes`, `No`, `Cannot be determined`, `Only if $x=0$`], correctAnswer: `Yes`, solution: `Substitute $x = -2$: $(-2) + 2 = 0$. Since it equals 0, $-2$ is a zero.` },
+        // Geometrical Interpretation
+        { text: `What is the geometrical meaning of the zero of a polynomial $p(x)$?`, options: [`The x-intercept(s) of the graph of $p(x)$`, `The y-intercept of the graph of $p(x)$`, `The vertex of the parabola`, `The origin`], correctAnswer: `The x-intercept(s) of the graph of $p(x)$`, solution: `Geometrically, the zeroes of a polynomial $p(x)$ are the x-coordinates of the points where the graph of $y = p(x)$ intersects the x-axis.` },
+        { text: `The graph of a quadratic polynomial $ax^2 + bx + c$ has the shape of a:`, options: [`Parabola`, `Straight line`, `Circle`, `Sine wave`], correctAnswer: `Parabola`, solution: `The graph of a quadratic polynomial is always a parabola.` },
+        // Graphical Behaviour
+        { text: `How many zeroes does a quadratic polynomial have if its graph intersects the x-axis at two distinct points?`, options: [`$2$`, `$1$`, `$0$`, `$3$`], correctAnswer: `$2$`, solution: `The number of real zeroes is equal to the number of distinct points where the graph intersects the x-axis.` },
+        { text: `If a polynomial graph cuts the x-axis at 3 distinct points, how many real zeroes does it have?`, options: [`$3$`, `$2$`, `$1$`, `$0$`], correctAnswer: `$3$`, solution: `The number of intersections with the x-axis corresponds exactly to the number of real zeroes.` },
+        // Relationship (Quadratic)
+        { text: `Find the sum of the zeroes of the polynomial $x^2 - 5x + 6$.`, options: [`$5$`, `$-5$`, `$6$`, `$-6$`], correctAnswer: `$5$`, solution: `Sum of zeroes $= -\\frac{b}{a} = -\\frac{-5}{1} = 5$.` },
+        { text: `Find the product of the zeroes of the polynomial $2x^2 + 7x + 3$.`, options: [`$\\frac{3}{2}$`, `$-\\frac{7}{2}$`, `$3$`, `$2$`], correctAnswer: `$\\frac{3}{2}$`, solution: `Product of zeroes $= \\frac{c}{a} = \\frac{3}{2}$.` },
+        { text: `If the sum of zeroes of $kx^2 + 2x + 3k$ is equal to their product, find $k$.`, options: [`$-\\frac{2}{3}$`, `$\\frac{2}{3}$`, `$3$`, `$-3$`], correctAnswer: `$-\\frac{2}{3}$`, solution: `Sum = Product $\\Rightarrow -\\frac{2}{k} = \\frac{3k}{k} = 3 \\Rightarrow k = -\\frac{2}{3}$.` },
+        // Constructing Quadratic
+        { text: `Find a quadratic polynomial whose sum of zeroes is $4$ and product of zeroes is $3$.`, options: [`$x^2 - 4x + 3$`, `$x^2 + 4x + 3$`, `$x^2 - 3x + 4$`, `$x^2 - 4x - 3$`], correctAnswer: `$x^2 - 4x + 3$`, solution: `Polynomial is $x^2 - (\\text{Sum})x + (\\text{Product}) = x^2 - 4x + 3$.` },
+        { text: `Find a quadratic polynomial whose zeroes are $-3$ and $4$.`, options: [`$x^2 - x - 12$`, `$x^2 + x - 12$`, `$x^2 - x + 12$`, `$x^2 + 7x - 12$`], correctAnswer: `$x^2 - x - 12$`, solution: `Sum = $1$, Product = $-12$. Polynomial is $x^2 - x - 12$.` },
+        // Relationship (Cubic)
+        { text: `Find the sum of the zeroes of the cubic polynomial $2x^3 - 5x^2 - 14x + 8$.`, options: [`$\\frac{5}{2}$`, `$-\\frac{5}{2}$`, `$-7$`, `$4$`], correctAnswer: `$\\frac{5}{2}$`, solution: `Sum of zeroes $= -\\frac{b}{a} = -\\frac{-5}{2} = \\frac{5}{2}$.` },
+        { text: `Find the product of the zeroes of the cubic polynomial $3x^3 - 5x^2 - 11x - 3$.`, options: [`$1$`, `$-1$`, `$\\frac{11}{3}$`, `$-\\frac{11}{3}$`], correctAnswer: `$1$`, solution: `Product of zeroes $= -\\frac{d}{a} = -\\frac{-3}{3} = 1$.` },
+        // Additional Questions for Variety
+        { text: `What is the degree of the polynomial $7x^4 - 2x^3 + 5x^2 - x + 1$?`, options: [`$4$`, `$3$`, `$7$`, `$1$`], correctAnswer: `$4$`, solution: `The degree is the highest power of $x$, which is 4.` },
+        { text: `Is the polynomial $p(x) = 3x + 5$ linear, quadratic, or cubic?`, options: [`Linear`, `Quadratic`, `Cubic`, `Constant`], correctAnswer: `Linear`, solution: `The highest power of $x$ is 1, so it is a linear polynomial.` },
+        { text: `Find the value of $p(x) = x^2 - 4$ at $x = 2$.`, options: [`$0$`, `$4$`, `$8$`, `$-4$`], correctAnswer: `$0$`, solution: `$p(2) = 2^2 - 4 = 4 - 4 = 0$.` },
+        { text: `What are the zeroes of the polynomial $x^2 - 9$?`, options: [`$3, -3$`, `$3, 0$`, `$9, -9$`, `$0, -9$`], correctAnswer: `$3, -3$`, solution: `$x^2 - 9 = 0 \\Rightarrow x^2 = 9 \\Rightarrow x = \\pm 3$.` },
+        { text: `Find the sum of the zeroes of $x^2 + 7x + 10$.`, options: [`$-7$`, `$7$`, `$10$`, `$-10$`], correctAnswer: `$-7$`, solution: `Sum of zeroes $= -\\frac{b}{a} = -\\frac{7}{1} = -7$.` },
+        { text: `Find the product of the zeroes of $x^2 - 4x + 3$.`, options: [`$3$`, `$-3$`, `$4$`, `$-4$`], correctAnswer: `$3$`, solution: `Product of zeroes $= \\frac{c}{a} = \\frac{3}{1} = 3$.` },
+        { text: `Construct a quadratic polynomial whose zeroes are $2$ and $5$.`, options: [`$x^2 - 7x + 10$`, `$x^2 + 7x + 10$`, `$x^2 - 10x + 7$`, `$x^2 + 10x + 7$`], correctAnswer: `$x^2 - 7x + 10$`, solution: `Sum $= 7$, Product $= 10$. Polynomial is $x^2 - 7x + 10$.` },
+        { text: `Find a quadratic polynomial with sum of zeroes $0$ and product $-1$.`, options: [`$x^2 - 1$`, `$x^2 + 1$`, `$x^2 + x$`, `$x^2 - x$`], correctAnswer: `$x^2 - 1$`, solution: `Sum $= 0$, Product $= -1$. Polynomial is $x^2 - 0x + (-1) = x^2 - 1$.` },
+        { text: `Find the product of the zeroes of the cubic polynomial $x^3 - 6x^2 + 11x - 6$.`, options: [`$6$`, `$-6$`, `$11$`, `$-11$`], correctAnswer: `$6$`, solution: `Product of zeroes $= -\\frac{d}{a} = -\\frac{-6}{1} = 6$.` },
+        { text: `The number of zeroes of a polynomial is equal to the number of points where its graph intersects the:`, options: [`x-axis`, `y-axis`, `Origin`, `Both axes`], correctAnswer: `x-axis`, solution: `Zeroes are the x-coordinates of the points where the graph intersects the x-axis.` },
+        { text: `If one zero of the quadratic polynomial $x^2 + 3x + k$ is $2$, then the value of $k$ is:`, options: [`$-10$`, `$10$`, `$5$`, `$-5$`], correctAnswer: `$-10$`, solution: `Substitute $x=2$: $2^2 + 3(2) + k = 0 \\Rightarrow 4 + 6 + k = 0 \\Rightarrow k = -10$.` },
+        { text: `A cubic polynomial can have at most how many zeroes?`, options: [`$3$`, `$2$`, `$1$`, `$4$`], correctAnswer: `$3$`, solution: `The maximum number of zeroes is equal to the degree of the polynomial.` },
+        { text: `If a graph of $p(x)$ does not intersect the x-axis at all, then it has how many real zeroes?`, options: [`$0$`, `$1$`, `$2$`, `Infinite`], correctAnswer: `$0$`, solution: `Real zeroes correspond to x-axis intersections. No intersection means no real zeroes.` },
+        { text: `The coefficient of $x$ in a quadratic polynomial $ax^2 + bx + c$ is associated with:`, options: [`Sum of zeroes`, `Product of zeroes`, `Difference of zeroes`, `Degree`], correctAnswer: `Sum of zeroes`, solution: `Sum of zeroes $= -\\frac{b}{a}$.` },
+        { text: `If $\\alpha$ and $\\beta$ are zeroes of $x^2 - px + q$, then $\\frac{1}{\\alpha} + \\frac{1}{\\beta}$ is:`, options: [`$\\frac{p}{q}$`, `$\\frac{q}{p}$`, `$-\\frac{p}{q}$`, `$-\\frac{q}{p}$`], correctAnswer: `$\\frac{p}{q}$`, solution: `$\\frac{\\alpha + \\beta}{\\alpha\\beta} = \\frac{p}{q}$.` }
+    ];
+
+    // Shuffle and take 20
+    const shuffled = qPool.sort(() => Math.random() - 0.5).slice(0, 20);
+    return shuffled.map((q, idx) => ({
+        id: idx + 1,
+        text: q.text,
+        options: q.options.sort(() => Math.random() - 0.5),
+        correctAnswer: q.correctAnswer,
+        solution: q.solution
+    }));
+};
+
+const PolynomialsTest = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -162,193 +217,11 @@ const QuadraticEquationsTest = () => {
     const [isTestOver, setIsTestOver] = useState(false);
     const [responses, setResponses] = useState({});
 
-    const questionStartTime = useRef(Date.now());
+    const questionStartTime = useRef(getNow());
     const [sessionId, setSessionId] = useState(null);
-    const [questions, setQuestions] = useState([]);
-
-    const generateQuestions = () => {
-        const pool = [
-            {
-                id: 1,
-                text: "Which of the following is a quadratic equation?",
-                options: ["$x^2 + 2x + 1 = (4-x)^2 + 3$", "$-2x^2 = (5-x)(2x - \\frac{2}{5})$", "$(k+1)x^2 + \\frac{3}{2}x = 7; \\quad (k=-1)$", "$x^3 - x^2 = (x-1)^3$"],
-                correctAnswer: "$x^3 - x^2 = (x-1)^3$",
-                solution: "$x^3 - x^2 = x^3 - 3x^2 + 3x - 1 \\Rightarrow 2x^2 - 3x + 1 = 0$. This is degree 2."
-            },
-            {
-                id: 2,
-                text: "Which of the following equations has 2 as a root?",
-                options: ["$x^2 - 4x + 5 = 0$", "$x^2 + 3x - 12 = 0$", "$2x^2 - 7x + 6 = 0$", "$3x^2 - 6x - 2 = 0$"],
-                correctAnswer: "$2x^2 - 7x + 6 = 0$",
-                solution: "$2(2)^2 - 7(2) + 6 = 8 - 14 + 6 = 0$. So 2 is a root."
-            },
-            {
-                id: 3,
-                text: "If $\\frac{1}{2}$ is a root of the equation $x^2 + kx - \\frac{5}{4} = 0$, then the value of $k$ is:",
-                options: ["$2$", "$-2$", "$\\frac{1}{2}$", "$-\\frac{1}{2}$"],
-                correctAnswer: "$2$",
-                solution: "$(\\frac{1}{2})^2 + k(\\frac{1}{2}) - \\frac{5}{4} = 0 \\Rightarrow \\frac{1}{4} + \\frac{k}{2} - \\frac{5}{4} = 0 \\Rightarrow \\frac{k}{2} = 1 \\Rightarrow k = 2$."
-            },
-            {
-                id: 4,
-                text: "Values of $k$ for which the quadratic equation $2x^2 - kx + k = 0$ has equal roots is:",
-                options: ["$0$ only", "$4$", "$8$ only", "$0, 8$"],
-                correctAnswer: "$0, 8$",
-                solution: "$D = (-k)^2 - 4(2)(k) = 0 \\Rightarrow k^2 - 8k = 0 \\Rightarrow k(k-8) = 0 \\Rightarrow k=0, 8$."
-            },
-            {
-                id: 5,
-                text: "Which constant must be added and subtracted to solve the quadratic equation $9x^2 + \\frac{3}{4}x - \\sqrt{2} = 0$ by the method of completing the square?",
-                options: ["$\\frac{1}{8}$", "$\\frac{1}{64}$", "$\\frac{1}{4}$", "$\\frac{9}{64}$"],
-                correctAnswer: "$\\frac{1}{64}$",
-                solution: "First divide by 9: $x^2 + \\frac{1}{12}x - \\frac{\\sqrt{2}}{9} = 0$. Constant to add is $(\\frac{1}{2} \\times \\frac{1}{12})^2 = (\\frac{1}{24})^2 = \\frac{1}{576}$. Wait, check options. Ah, if we keep 9: $(3x)^2 + 2(3x)(\\frac{1}{8})$. So $(\\frac{1}{8})^2 = \\frac{1}{64}$ needs to be added."
-            },
-            {
-                id: 6,
-                text: "The quadratic equation $2x^2 - \\sqrt{5}x + 1 = 0$ has:",
-                options: ["two distinct real roots", "two equal real roots", "no real roots", "more than 2 real roots"],
-                correctAnswer: "no real roots",
-                solution: "$D = (-\\sqrt{5})^2 - 4(2)(1) = 5 - 8 = -3$. Since $D < 0$, no real roots."
-            },
-            {
-                id: 7,
-                text: "Which of the following equations has two distinct real roots?",
-                options: ["$2x^2 - 3\\sqrt{2}x + \\frac{9}{4} = 0$", "$x^2 + x - 5 = 0$", "$x^2 + 3x + 2\\sqrt{2} = 0$", "$5x^2 - 3x + 1 = 0$"],
-                correctAnswer: "$x^2 + x - 5 = 0$",
-                solution: "For $x^2+x-5=0, D = 1 - 4(1)(-5) = 21 > 0$. Two distinct real roots."
-            },
-            {
-                id: 8,
-                text: "Which of the following equations has no real roots?",
-                options: ["$x^2 - 4x + 3\\sqrt{2} = 0$", "$x^2 + 4x - 3\\sqrt{2} = 0$", "$x^2 - 4x - 3\\sqrt{2} = 0$", "$3x^2 + 4\\sqrt{3}x + 4 = 0$"],
-                correctAnswer: "$x^2 - 4x + 3\\sqrt{2} = 0$",
-                solution: "$D = (-4)^2 - 4(1)(3\\sqrt{2}) = 16 - 12(1.414) = 16 - 16.968 < 0$."
-            },
-            {
-                id: 9,
-                text: "($(x^2 + 1)^2 - x^2 = 0$) has:",
-                options: ["four real roots", "two real roots", "no real roots", "one real root"],
-                correctAnswer: "no real roots",
-                solution: "$x^4 + 2x^2 + 1 - x^2 = 0 \\Rightarrow x^4 + x^2 + 1 = 0$. Let $y = x^2$. $y^2 + y + 1 = 0$. $D = 1-4 = -3 < 0$. No real value for $y$, thus no real $x$."
-            },
-            {
-                id: 10,
-                text: "The roots of the quadratic equation $x^2 - 0.04 = 0$ are:",
-                options: ["$\\pm 0.2$", "$\\pm 0.02$", "$0.4$", "$2$"],
-                correctAnswer: "$\\pm 0.2$",
-                solution: "$x^2 = 0.04 \\Rightarrow x = \\pm \\sqrt{0.04} = \\pm 0.2$."
-            },
-            {
-                id: 11,
-                text: "If the discriminant of $3x^2 - 2x + k = 0$ is 0, find $k$.",
-                options: ["$\\frac{1}{3}$", "$\\frac{2}{3}$", "$1$", "$3$"],
-                correctAnswer: "$\\frac{1}{3}$",
-                solution: "$D = (-2)^2 - 4(3)(k) = 0 \\Rightarrow 4 - 12k = 0 \\Rightarrow k = \\frac{4}{12} = \\frac{1}{3}$."
-            },
-            {
-                id: 12,
-                text: "The product of two consecutive even integers is 80. Formulate the equation.",
-                options: ["$x(x+2) = 80$", "$x(x+1) = 80$", "$2x(2x+2) = 80$", "$x^2 + 2x + 80 = 0$"],
-                correctAnswer: "$x(x+2) = 80$",
-                solution: "Let integers be $x$ and $x+2$. Product is $x(x+2) = 80$."
-            },
-            {
-                id: 13,
-                text: "Find the roots of $x^2 - 3x - 10 = 0$ by factorisation.",
-                options: ["$5, -2$", "$-5, 2$", "$5, 2$", "$-5, -2$"],
-                correctAnswer: "$5, -2$",
-                solution: "$(x-5)(x+2) = 0 \\Rightarrow x = 5, -2$."
-            },
-            {
-                id: 14,
-                text: "The sum of the squares of two consecutive natural numbers is 313. The numbers are:",
-                options: ["$12, 13$", "$13, 14$", "$11, 12$", "$14, 15$"],
-                correctAnswer: "$12, 13$",
-                solution: "$x^2 + (x+1)^2 = 313 \\Rightarrow 2x^2 + 2x - 312 = 0 \\Rightarrow x^2 + x - 156 = 0 \\Rightarrow (x+13)(x-12) = 0 \\Rightarrow x=12$."
-            },
-            {
-                id: 15,
-                text: "The discriminant of quadratic equation $ax^2 + bx + c = 0$ is:",
-                options: ["$b^2 - 4ac$", "$b^2 + 4ac$", "$4ac - b^2$", "$b - 4ac$"],
-                correctAnswer: "$b^2 - 4ac$",
-                solution: "Definition of discriminant $D = b^2 - 4ac$."
-            },
-            {
-                id: 16,
-                text: "If $D = 0$, then the roots are:",
-                options: ["Real and equal", "Real and unequal", "Imaginary", "None of these"],
-                correctAnswer: "Real and equal",
-                solution: "Discriminant zero implies two identical real roots."
-            },
-            {
-                id: 17,
-                text: "Find $k$ if $x^2 - 4x + k = 0$ has distinct real roots.",
-                options: ["$k < 4$", "$k > 4$", "$k = 4$", "$k$ ≠ $4$"],
-                correctAnswer: "$k < 4$",
-                solution: "$D > 0 \\Rightarrow 16 - 4k > 0 \\Rightarrow 16 > 4k \\Rightarrow k < 4$."
-            },
-            {
-                id: 18,
-                text: "The roots of $2x^2 + x - 6 = 0$ are:",
-                options: ["$\\frac{3}{2}, -2$", "$-\\frac{3}{2}, 2$", "$2, 3$", "$1, -6$"],
-                correctAnswer: "$\\frac{3}{2}, -2$",
-                solution: "$(2x-3)(x+2) = 0 \\Rightarrow x = \\frac{3}{2}, -2$."
-            },
-            {
-                id: 19,
-                text: "A rectangular field has area 528 $m^2$. Its length is 1 more than twice its breadth. Equation?",
-                options: ["$2x^2 + x - 528 = 0$", "$x^2 + 2x - 528 = 0$", "$2x^2 - x - 528 = 0$", "$2x^2 + x + 528 = 0$"],
-                correctAnswer: "$2x^2 + x - 528 = 0$",
-                solution: "Let breadth be $x$, length $2x+1$. Area $x(2x+1) = 528 \\Rightarrow 2x^2 + x - 528 = 0$."
-            },
-            {
-                id: 20,
-                text: "The roots of $(x-3)(x+4) = 0$ are:",
-                options: ["$3, -4$", "$-3, 4$", "$3, 4$", "$-3, -4$"],
-                correctAnswer: "$3, -4$",
-                solution: "Directly from factors: $x=3, x=-4$."
-            },
-            {
-                id: 21,
-                text: "If $ax^2 + bx + c = 0$ has equal roots, then $c = $:",
-                options: ["$\\frac{b^2}{4a}$", "$-\\frac{b^2}{4a}$", "$\\frac{b}{2a}$", "None of these"],
-                correctAnswer: "$\\frac{b^2}{4a}$",
-                solution: "$b^2 - 4ac = 0 \\Rightarrow 4ac = b^2 \\Rightarrow c = \\frac{b^2}{4a}$."
-            },
-            {
-                id: 22,
-                text: "Is $x + \\frac{1}{x} = 1$ a quadratic equation?",
-                options: ["Yes", "No"],
-                correctAnswer: "Yes",
-                solution: "$x^2 + 1 = x \\Rightarrow x^2 - x + 1 = 0$. Degree 2."
-            },
-            {
-                id: 23,
-                text: "The sum of the roots of $x^2 - 5x + 6 = 0$ is:",
-                options: ["$5$", "$-5$", "$6$", "$-6$"],
-                correctAnswer: "$5$",
-                solution: "Sum of roots $= -\\frac{b}{a} = -\\frac{-5}{1} = 5$."
-            },
-            {
-                id: 24,
-                text: "The product of the roots of $2x^2 - 3x + 1 = 0$ is:",
-                options: ["$\\frac{1}{2}$", "$-\\frac{1}{2}$", "$\\frac{3}{2}$", "$-\\frac{3}{2}$"],
-                correctAnswer: "$\\frac{1}{2}$",
-                solution: "Product of roots $= \\frac{c}{a} = \\frac{1}{2}$."
-            },
-            {
-                id: 25,
-                text: "The quadratic formula is $x = $:",
-                options: ["$\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$", "$\\frac{b \\pm \\sqrt{b^2-4ac}}{2a}$", "$\\frac{-b \\pm \\sqrt{b^2+4ac}}{2a}$", "$\\frac{-b \\pm \\sqrt{b-4ac}}{2a}$"],
-                correctAnswer: "$\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$",
-                solution: "Standard quadratic formula."
-            }
-        ];
-        return pool.sort(() => Math.random() - 0.5);
-    };
+    const [questions, setQuestions] = useState(() => generateQuestions());
 
     useEffect(() => {
-        setQuestions(generateQuestions());
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
@@ -364,16 +237,17 @@ const QuadraticEquationsTest = () => {
         return () => clearInterval(timer);
     }, [isTestOver]);
 
-    const handleRecordResponse = (skipped = false) => {
+    const handleRecordResponse = () => {
         const currentQ = questions[qIndex];
-        const isCorrect = selectedOption === currentQ.correctAnswer;
-        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
+        const timeSpent = Math.round((getNow() - questionStartTime.current) / 1000);
+        const isSkipped = !selectedOption;
 
         const responseData = {
             selectedOption,
-            isCorrect: skipped ? null : isCorrect,
-            timeTaken: timeSpent,
-            isSkipped: skipped
+            isCorrect,
+            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent,
+            isSkipped
         };
 
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
@@ -388,47 +262,35 @@ const QuadraticEquationsTest = () => {
                 skill_id: SKILL_ID,
                 question_text: currentQ.text,
                 correct_answer: currentQ.correctAnswer,
-                student_answer: skipped ? "SKIPPED" : selectedOption,
-                is_correct: skipped ? false : isCorrect,
+                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                is_correct: isSkipped ? false : isCorrect,
                 solution_text: currentQ.solution,
                 time_spent_seconds: timeSpent
             };
-
-            console.log('🔍 recordAttempt called with:', attemptData);
-            api.recordAttempt(attemptData).then(res => {
-                console.log('✅ recordAttempt response:', res);
-            }).catch(console.error);
+            api.recordAttempt(attemptData).catch(console.error);
         }
     };
 
+    const navigateToQuestion = (targetIndex) => {
+        handleRecordResponse();
+        setQIndex(targetIndex);
+        setSelectedOption(responses[targetIndex]?.selectedOption || null);
+        questionStartTime.current = getNow();
+    };
+
     const handleNext = () => {
-        handleRecordResponse(!selectedOption);
         if (qIndex < questions.length - 1) {
-            setQIndex(prev => prev + 1);
-            const nextResp = responses[qIndex + 1];
-            setSelectedOption(nextResp ? nextResp.selectedOption : null);
-            questionStartTime.current = Date.now();
+            navigateToQuestion(qIndex + 1);
         } else {
+            handleRecordResponse();
             finalizeTest();
         }
     };
 
     const handlePrev = () => {
-        handleRecordResponse(!selectedOption);
         if (qIndex > 0) {
-            setQIndex(prev => prev - 1);
-            const prevResp = responses[qIndex - 1];
-            setSelectedOption(prevResp ? prevResp.selectedOption : null);
-            questionStartTime.current = Date.now();
+            navigateToQuestion(qIndex - 1);
         }
-    };
-
-    const navigateToQuestion = (index) => {
-        handleRecordResponse(!selectedOption);
-        setQIndex(index);
-        const nextResp = responses[index];
-        setSelectedOption(nextResp ? nextResp.selectedOption : null);
-        questionStartTime.current = Date.now();
     };
 
     const finalizeTest = async () => {
@@ -576,7 +438,7 @@ const QuadraticEquationsTest = () => {
                                         <div style={{ background: '#F0F9FF', padding: '1.5rem', borderRadius: '12px', border: '1px solid #E0F2FE' }}>
                                             <h4 style={{ color: '#0284C7', fontWeight: '800', marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.5px' }}>Solution:</h4>
                                             {(() => {
-                                                const steps = q.solution.split(/(?<=\.)\s+(?=[A-Z0-9\$])/);
+                                                const steps = q.solution.split(/(?<=\.)\s+(?=[A-Z0-9$])/);
                                                 if (steps.length <= 1) {
                                                     return <LatexText text={q.solution} />;
                                                 }
@@ -601,7 +463,6 @@ const QuadraticEquationsTest = () => {
             </div>
         );
     }
-
     return (
         <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <style>{BLUE_THEME_CSS}</style>
@@ -746,4 +607,4 @@ const QuadraticEquationsTest = () => {
     );
 };
 
-export default QuadraticEquationsTest;
+export default PolynomialsTest;

@@ -172,6 +172,17 @@ import Grade8RationalNumbersTest from './components/practice/class-8/rational-nu
 import MensurationTest from './components/practice/class-8/mensuration/MensurationTest';
 import FactorisationTest from './components/practice/class-8/factorisation/FactorisationTest';
 
+// Grade 8 Squares and Square Roots
+import IdentifyPerfectSquares from './components/practice/class-8/squares_and_square_roots/identify_perfect_squares';
+import PropertiesOfSquareNumbers from './components/practice/class-8/squares_and_square_roots/properties_of_square_numbers';
+import SquareUsingIdentityPatterns from './components/practice/class-8/squares_and_square_roots/square_using_identity_patterns';
+import PythagoreanTriplets from './components/practice/class-8/squares_and_square_roots/pythagorean_triplets';
+import ConceptOfSquareRoot from './components/practice/class-8/squares_and_square_roots/concept_of_square_root';
+import SquareRootPrimeFactorization from './components/practice/class-8/squares_and_square_roots/square_root_prime_factorization';
+import SquareRootLongDivision from './components/practice/class-8/squares_and_square_roots/square_root_long_division';
+import SquareRootOfDecimals from './components/practice/class-8/squares_and_square_roots/square_root_of_decimals';
+import SquaresAndSquareRootsTest from './components/practice/class-8/squares_and_square_roots/SquaresAndSquareRootsTest';
+
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
 import Grade1Numbers1to9 from './components/practice/grade-1/numbers-1-9';
@@ -233,6 +244,12 @@ import Pictographs from './components/practice/grade-6/DataHandlingAndPresentati
 import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation/BarGraphs';
 import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
 import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
+
+// Grade 6 Symmetry
+import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
+import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
+import OrderOfRotationalSymmetry6 from './components/practice/grade-6/symmetry/OrderOfRotationalSymmetry';
+import IntroToSymmetry6 from './components/practice/grade-6/symmetry/Introduction to Symmetry : Line of Symmetry';
 
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
@@ -315,6 +332,16 @@ import HCFLCMApplications from './components/practice/class-10/Real Numbers/HCFL
 import ProvingIrrationality from './components/practice/class-10/Real Numbers/ProvingIrrationality';
 import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
 import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
+
+// Class 10: Polynomials
+import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
+import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
+import GeometricalInterpretation from './components/practice/class-10/Polynomials/GeometricalInterpretation';
+import NumberFromGraphicalBehaviour from './components/practice/class-10/Polynomials/NumberFromGraphicalBehaviour';
+import RelationshipQuadratic from './components/practice/class-10/Polynomials/RelationshipQuadratic';
+import ConstructingQuadratic from './components/practice/class-10/Polynomials/ConstructingQuadratic';
+import RelationshipCubic from './components/practice/class-10/Polynomials/RelationshipCubic';
+import PolynomialsTest from './components/practice/class-10/Polynomials/PolynomialsTest';
 
 // Class 12 - Matrices Chapter
 import MatricesChapter from './components/practice/class-12/MatricesChapter';
@@ -955,6 +982,17 @@ function App() {
         <Route path="/senior/grade/8/rational-numbers/chapter-test" element={<ProtectedRoute redirectTo="/login"><Grade8RationalNumbersTest /></ProtectedRoute>} />
         <Route path="/senior/grade/8/mensuration/chapter-test" element={<ProtectedRoute redirectTo="/login"><MensurationTest /></ProtectedRoute>} />
         <Route path="/senior/grade/8/factorisation/chapter-test" element={<ProtectedRoute redirectTo="/login"><FactorisationTest /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/chapter-test" element={<ProtectedRoute redirectTo="/login"><SquaresAndSquareRootsTest /></ProtectedRoute>} />
+
+        {/* Grade 8 Squares and Square Roots */}
+        <Route path="/senior/grade/8/squares-and-square-roots/identify-perfect-squares" element={<ProtectedRoute redirectTo="/login"><IdentifyPerfectSquares /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/properties-of-square-numbers" element={<ProtectedRoute redirectTo="/login"><PropertiesOfSquareNumbers /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-using-identity-patterns" element={<ProtectedRoute redirectTo="/login"><SquareUsingIdentityPatterns /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/pythagorean-triplets" element={<ProtectedRoute redirectTo="/login"><PythagoreanTriplets /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/concept-of-square-root" element={<ProtectedRoute redirectTo="/login"><ConceptOfSquareRoot /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-root-prime-factorization" element={<ProtectedRoute redirectTo="/login"><SquareRootPrimeFactorization /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-root-long-division" element={<ProtectedRoute redirectTo="/login"><SquareRootLongDivision /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-root-of-decimals" element={<ProtectedRoute redirectTo="/login"><SquareRootOfDecimals /></ProtectedRoute>} />
 
         {/* Grade 1 Specialized Routes */}
         <Route path="/junior/grade/1/shapes-and-space" element={<ProtectedRoute redirectTo="/login"><Grade1ShapesAndSpace /></ProtectedRoute>} />
@@ -1001,6 +1039,12 @@ function App() {
         <Route path="/middle/grade/6/data-handling/bar-graphs" element={<BarGraphs />} />
         <Route path="/middle/grade/6/data-handling/drawing-a-bar-graph" element={<DrawingABarGraph />} />
         <Route path="/middle/grade/6/data-handling/figure-it-out" element={<FigureItOut />} />
+
+        {/* Grade 6 Symmetry */}
+        <Route path="/middle/grade/:grade/symmetry/intro" element={<IntroToSymmetry6 />} />
+        <Route path="/middle/grade/:grade/symmetry/reflection" element={<ReflectionInALine6 />} />
+        <Route path="/middle/grade/:grade/symmetry/rotational" element={<RotationalSymmetry6 />} />
+        <Route path="/middle/grade/:grade/symmetry/order-rotational" element={<OrderOfRotationalSymmetry6 />} />
         <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
         <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
         <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />
@@ -1205,6 +1249,17 @@ function App() {
         <Route path="/high/practice/1126" element={<DiscriminantAnalysis />} />
         <Route path="/high/practice/1127" element={<RealLifeApplications />} />
         <Route path="/high/practice/1128" element={<QuadraticEquationsTest />} />
+
+        {/* Class 10: Polynomials Routes */}
+        <Route path="/high/practice/1233" element={<TypesAndDegrees />} />
+        <Route path="/high/practice/1234" element={<EvaluatingAndIdentifying />} />
+        <Route path="/high/practice/1235" element={<GeometricalInterpretation />} />
+        <Route path="/high/practice/1236" element={<NumberFromGraphicalBehaviour />} />
+        <Route path="/high/practice/1237" element={<RelationshipQuadratic />} />
+        <Route path="/high/practice/1238" element={<ConstructingQuadratic />} />
+        <Route path="/high/practice/1239" element={<RelationshipCubic />} />
+        <Route path="/high/practice/1240" element={<PolynomialsTest />} />
+
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
         {/* Class 11 Biology */}

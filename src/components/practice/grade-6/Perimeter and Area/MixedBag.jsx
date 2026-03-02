@@ -4,7 +4,7 @@ import { Check, ChevronRight, X, ChevronLeft, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import './polynomials.css';
 
 const MixedBagPractice = () => {
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const MixedBagPractice = () => {
         const data = sessionStorage.getItem(key);
         return data !== null ? JSON.parse(data) : defaultValue;
     };
-    
+
     const storageKey = `practice_${window.location.pathname}`;
 
     const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
@@ -488,7 +488,7 @@ const MixedBagPractice = () => {
                                         </div>
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
                         </div>
