@@ -234,6 +234,12 @@ import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation
 import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
 import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
 
+// Grade 6 Symmetry
+import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
+import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
+import OrderOfRotationalSymmetry6 from './components/practice/grade-6/symmetry/OrderOfRotationalSymmetry';
+import IntroToSymmetry6 from './components/practice/grade-6/symmetry/Introduction to Symmetry : Line of Symmetry';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -1001,6 +1007,12 @@ function App() {
         <Route path="/middle/grade/6/data-handling/bar-graphs" element={<BarGraphs />} />
         <Route path="/middle/grade/6/data-handling/drawing-a-bar-graph" element={<DrawingABarGraph />} />
         <Route path="/middle/grade/6/data-handling/figure-it-out" element={<FigureItOut />} />
+
+        {/* Grade 6 Symmetry */}
+        <Route path="/middle/grade/:grade/symmetry/intro" element={<IntroToSymmetry6 />} />
+        <Route path="/middle/grade/:grade/symmetry/reflection" element={<ReflectionInALine6 />} />
+        <Route path="/middle/grade/:grade/symmetry/rotational" element={<RotationalSymmetry6 />} />
+        <Route path="/middle/grade/:grade/symmetry/order-rotational" element={<OrderOfRotationalSymmetry6 />} />
         <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
         <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
         <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />

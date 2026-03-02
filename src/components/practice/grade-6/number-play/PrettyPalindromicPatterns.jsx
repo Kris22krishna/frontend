@@ -9,7 +9,7 @@ import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import StickerExit from '../../../../StickerExit';
 import { FullScreenScratchpad } from '../../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import './polynomials.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -31,7 +31,7 @@ const PrettyPalindromicPatterns = () => {
         const data = sessionStorage.getItem(key);
         return data !== null ? JSON.parse(data) : defaultValue;
     };
-    
+
     const storageKey = `practice_${window.location.pathname}`;
 
     const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
@@ -486,10 +486,10 @@ const PrettyPalindromicPatterns = () => {
                                                     placeholder="Type your answer here..."
                                                     disabled={isSubmitted}
                                                     className={`w-full p-4 text-xl border-2 rounded-xl outline-none transition-all ${isSubmitted
-                                                            ? isCorrect
-                                                                ? "border-green-500 bg-green-50 text-green-700"
-                                                                : "border-red-500 bg-red-50 text-red-700"
-                                                            : "border-gray-200 focus:border-[#4FB7B3] focus:ring-2 focus:ring-[#4FB7B3]/20"
+                                                        ? isCorrect
+                                                            ? "border-green-500 bg-green-50 text-green-700"
+                                                            : "border-red-500 bg-red-50 text-red-700"
+                                                        : "border-gray-200 focus:border-[#4FB7B3] focus:ring-2 focus:ring-[#4FB7B3]/20"
                                                         }`}
                                                 />
                                                 {isSubmitted && !isCorrect && (
