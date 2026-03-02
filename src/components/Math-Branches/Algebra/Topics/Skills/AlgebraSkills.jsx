@@ -354,15 +354,15 @@ const SKILLS = [
         learn: {
             concept: 'Exponents are shorthand for repeated multiplication. These 9 laws are the "grammar rules" of algebra that let you simplify even the scariest expressions.',
             rules: [
-                { title: 'Product Law', f: 'xᵃ · xᵇ = xᵃ⁺ᵇ', d: 'When multiplying powers with the same base, ADD the exponents.', ex: 'x³ · x⁴ = x³⁺⁴ = x⁷', tip: 'Think: 3 copies + 4 copies = 7 copies total!' },
-                { title: 'Quotient Law', f: 'xᵃ / xᵇ = xᵃ⁻ᵇ', d: 'When dividing powers with the same base, SUBTRACT the bottom exponent from the top.', ex: 'y⁸ / y² = y⁸⁻² = y⁶', tip: 'You are "canceling out" matching variables from the top and bottom.' },
-                { title: 'Power Law', f: '(xᵃ)ᵇ = xᵃᵇ', d: 'A power of a power? MULTIPLY the exponents together.', ex: '(x²)³ = x²·³ = x⁶', tip: 'A group of powers being powered up grows very fast!' },
-                { title: 'Power of Product', f: '(xy)ᵃ = xᵃyᵃ', d: 'Every factor inside the parentheses gets the power outside.', ex: '(2x)³ = 2³x³ = 8x³', tip: 'Always remember to apply the power to the number (coefficient) too!' },
-                { title: 'Power of Quotient', f: '(x/y)ᵃ = xᵃ/yᵃ', d: 'The power applies to both the numerator (top) and denominator (bottom).', ex: '(x/3)² = x²/3² = x²/9', tip: 'Distribute the power to every part of the fraction.' },
-                { title: 'Zero Law', f: 'x⁰ = 1', d: 'Any non-zero base raised to the power of zero is ALWAYS 1.', ex: '525⁰ = 1', tip: 'It doesn\'t matter how big the number is; power 0 makes it 1!' },
-                { title: 'Identity Law', f: 'x¹ = x', d: 'Any base raised to the power of 1 remains the same.', ex: 'y¹ = y', tip: 'The exponent 1 is usually "invisible" in algebra.' },
-                { title: 'Negative Law', f: 'x⁻ⁿ = 1/xⁿ', d: 'A negative exponent means the "Reciprocal". It moves the base to the bottom.', ex: 'x⁻² = 1/x²', tip: 'Think of the minus sign as a ticket to cross the fraction line!' },
-                { title: 'Fractional Law', f: 'xᵃ/ᵇ = ᵇ√xᵃ', d: 'Fractional powers are secretly roots. The bottom number is the root index.', ex: 'x¹/² = √x', tip: 'Bottom = Root. Top = Power.' },
+                { title: 'Product Law', f: 'x^a \\cdot x^b = x^{a+b}', d: 'When multiplying powers with the same base, ADD the exponents.', ex: 'x^3 \\cdot x^4 = x^{3+4} = x^7', tip: 'Think: 3 copies + 4 copies = 7 copies total!' },
+                { title: 'Quotient Law', f: '\\frac{x^a}{x^b} = x^{a-b}', d: 'When dividing powers with the same base, SUBTRACT the bottom exponent from the top.', ex: '\\frac{y^8}{y^2} = y^{8-2} = y^6', tip: 'You are "canceling out" matching variables from the top and bottom.' },
+                { title: 'Power Law', f: '(x^a)^b = x^{ab}', d: 'A power of a power? MULTIPLY the exponents together.', ex: '(x^2)^3 = x^{2 \\cdot 3} = x^6', tip: 'A group of powers being powered up grows very fast!' },
+                { title: 'Power of Product', f: '(xy)^a = x^a y^a', d: 'Every factor inside the parentheses gets the power outside.', ex: '(2x)^3 = 2^3 x^3 = 8x^3', tip: 'Always remember to apply the power to the number (coefficient) too!' },
+                { title: 'Power of Quotient', f: '\\left(\\frac{x}{y}\\right)^a = \\frac{x^a}{y^a}', d: 'The power applies to both the numerator (top) and denominator (bottom).', ex: '\\left(\\frac{x}{3}\\right)^2 = \\frac{x^2}{3^2} = \\frac{x^2}{9}', tip: 'Distribute the power to every part of the fraction.' },
+                { title: 'Zero Law', f: 'x^0 = 1', d: 'Any non-zero base raised to the power of zero is ALWAYS 1.', ex: '525^0 = 1', tip: 'It doesn\'t matter how big the number is; power 0 makes it 1!' },
+                { title: 'Identity Law', f: 'x^1 = x', d: 'Any base raised to the power of 1 remains the same.', ex: 'y^1 = y', tip: 'The exponent 1 is usually "invisible" in algebra.' },
+                { title: 'Negative Law', f: 'x^{-n} = \\frac{1}{x^n}', d: 'A negative exponent means the "Reciprocal". It moves the base to the bottom.', ex: 'x^{-2} = \\frac{1}{x^2}', tip: 'Think of the minus sign as a ticket to cross the fraction line!' },
+                { title: 'Fractional Law', f: 'x^{\\frac{a}{b}} = \\sqrt[b]{x^a}', d: 'Fractional powers are secretly roots. The bottom number is the root index.', ex: 'x^{\\frac{1}{2}} = \\sqrt{x}', tip: 'Bottom = Root. Top = Power.' },
             ]
         }
     },
@@ -378,9 +378,9 @@ const SKILLS = [
         learn: {
             concept: 'Like terms are the mathematical equivalent of identical twins. To combine them, they must share the exact same variable part.',
             rules: [
-                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '3x + 4y stays as 3x + 4y', tip: 'You can\'t add apples and oranges!' },
-                { title: 'Power Match', f: 'x² + 2x² = 3x²', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: 'x² + x³ cannot be added', tip: 'Check the letters AND the tiny numbers above them.' },
-                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '5x² + 4x² = 9x² (not 9x⁴)', tip: 'You are counting how many of that "item" you have.' },
+                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '3x + 4y \\text{ stays as } 3x + 4y', tip: 'You can\'t add apples and oranges!' },
+                { title: 'Power Match', f: 'x^2 + 2x^2 = 3x^2', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: 'x^2 + x^3 \\text{ cannot be added}', tip: 'Check the letters AND the tiny numbers above them.' },
+                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '5x^2 + 4x^2 = 9x^2 \\text{ (not } 9x^4)', tip: 'You are counting how many of that "item" you have.' },
                 { title: 'Invisible Coeff.', f: 'x = 1x', d: 'If a variable has no number in front, its coefficient is secretly 1.', ex: 'x + 3x = 1x + 3x = 4x', tip: 'Don\'t forget the 1!' },
             ]
         }
@@ -398,9 +398,9 @@ const SKILLS = [
             concept: 'Simplifying an expression means writing it in its shortest, most efficient form by combining all possible terms.',
             rules: [
                 { title: 'Distribution', f: 'a(b + c) = ab + ac', d: 'Multiply the outside term by every term inside the parentheses.', ex: '3(x + 2) = 3x + 6', tip: 'Fairness rule: the term outside must visit everyone inside!' },
-                { title: 'Combo Order', f: 'Group → Combine', d: 'First, rewrite the expression by grouping all like terms together.', ex: '3x + 5 + 2x = 3x + 2x + 5 = 5x + 5', tip: 'Organizing your terms first prevents mistakes.' },
+                { title: 'Combo Order', f: '\\text{Group } \\rightarrow \\text{ Combine}', d: 'First, rewrite the expression by grouping all like terms together.', ex: '3x + 5 + 2x = 3x + 2x + 5 = 5x + 5', tip: 'Organizing your terms first prevents mistakes.' },
                 { title: 'Sign Safety', f: '-(x + y) = -x - y', d: 'A minus sign in front of a bracket flips the sign of EVERYTHING inside.', ex: '10 - (x + 3) = 10 - x - 3', tip: 'Treat that minus sign like a multiplier of -1.' },
-                { title: 'PEMDAS Rule', f: 'Order Matters', d: 'Always follow the standard order: Parentheses, Exponents, Mult/Div, Add/Sub.', ex: '2 + 3(x) is not 5x', tip: 'Multiplication comes before addition!' },
+                { title: 'PEMDAS Rule', f: '\\text{Order Matters}', d: 'Always follow the standard order: Parentheses, Exponents, Mult/Div, Add/Sub.', ex: '2 + 3(x) \\neq 5x', tip: 'Multiplication comes before addition!' },
             ]
         }
     },
@@ -416,10 +416,10 @@ const SKILLS = [
         learn: {
             concept: 'To solve an equation, you must find the value of the variable that makes the scale balance perfectly.',
             rules: [
-                { title: 'Golden Balance', f: 'LHS = RHS', d: 'Whatever you do to one side, you MUST do to the other side.', ex: 'If you add 5 to the left, add 5 to the right.', tip: 'The equals sign is sacred balance point.' },
-                { title: 'Inverses', f: '+ ⟷ - , · ⟷ /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: 'To move a +3, use -3. To move a multiplier of 2, divide by 2.', tip: 'Do the opposite to cross the bridge.' },
-                { title: 'Isolate Target', f: 'x = Result', d: 'Keep undoing operations until the variable (target) is all alone on one side.', ex: '2x = 10 → x = 5', tip: 'Goal: Leave x by itself!' },
-                { title: 'Two-Step rule', f: 'Move ± first', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 → 2x = 6 → x = 3', tip: 'Clean up the additions/subtractions first.' },
+                { title: 'Golden Balance', f: '\\text{LHS} = \\text{RHS}', d: 'Whatever you do to one side, you MUST do to the other side.', ex: '\\text{If you add 5 to the left, add 5 to the right.}', tip: 'The equals sign is sacred balance point.' },
+                { title: 'Inverses', f: '+ \\longleftrightarrow - \\text{ , } \\cdot \\longleftrightarrow /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: '\\text{To move a } +3\\text{, use } -3\\text{. To move a multiplier of 2, divide by 2.}', tip: 'Do the opposite to cross the bridge.' },
+                { title: 'Isolate Target', f: 'x = \\text{Result}', d: 'Keep undoing operations until the variable (target) is all alone on one side.', ex: '2x = 10 \\rightarrow x = 5', tip: 'Goal: Leave x by itself!' },
+                { title: 'Two-Step rule', f: '\\text{Move } \\pm \\text{ first}', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 \\rightarrow 2x = 6 \\rightarrow x = 3', tip: 'Clean up the additions/subtractions first.' },
             ]
         }
     },
@@ -435,10 +435,10 @@ const SKILLS = [
         learn: {
             concept: 'Changing the subject is like re-crowning a new king. You move all other terms away so the new variable stands on the throne.',
             rules: [
-                { title: 'The Target', f: 'Target = Formula', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: 'In v=u+at, make "a" the subject.', tip: 'Treat the target like a treasure to be uncovered.' },
-                { title: 'Strip away', f: 'Work Outwards', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at → v - u = at', tip: 'Peel the equation like an onion.' },
-                { title: 'Undo Roots', f: '√ ⟷ x²', d: 'To get rid of a square root, square both sides. To remove a power of 2, take the root.', ex: 'y = √x → y² = x', tip: 'Powers and roots are the ultimate opposites.' },
-                { title: 'Denominator', f: 'Multiply Up', d: 'If your target or part of its expression is in a fraction bottom, multiply it out.', ex: 'A/b = c → A = bc', tip: 'Get your variables onto one line as soon as possible.' },
+                { title: 'The Target', f: '\\text{Target} = \\text{Formula}', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: '\\text{In } v=u+at\\text{, make } a \\text{ the subject.}', tip: 'Treat the target like a treasure to be uncovered.' },
+                { title: 'Strip away', f: '\\text{Work Outwards}', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at \\rightarrow v - u = at', tip: 'Peel the equation like an onion.' },
+                { title: 'Undo Roots', f: '\\sqrt{\\phantom{x}} \\longleftrightarrow x^2', d: 'To get rid of a square root, square both sides. To remove a power of 2, take the root.', ex: 'y = \\sqrt{x} \\rightarrow y^2 = x', tip: 'Powers and roots are the ultimate opposites.' },
+                { title: 'Denominator', f: '\\text{Multiply Up}', d: 'If your target or part of its expression is in a fraction bottom, multiply it out.', ex: '\\frac{A}{b} = c \\rightarrow A = bc', tip: 'Get your variables onto one line as soon as possible.' },
             ]
         }
     },
@@ -454,7 +454,7 @@ export default function AlgebraSkills() {
 
     if (view !== 'list' && skill) {
         return (
-            <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', padding: '100px 0 60px' }}>
+            <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
                 <nav className="intro-nav">
                     <button className="intro-nav-back" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>← Back to Skills</button>
                     <div className="intro-nav-links">
@@ -463,7 +463,7 @@ export default function AlgebraSkills() {
                         <button className="intro-nav-link intro-nav-link--active">🎯 Skills</button>
                     </div>
                 </nav>
-                <div style={{ padding: '0 24px' }}>
+                <div style={{ padding: '40px 24px 0' }}>
                     {view === 'learn' ? (
                         <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '0 auto' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
@@ -482,21 +482,16 @@ export default function AlgebraSkills() {
                                         <button
                                             key={ri}
                                             onClick={() => setSelectedLearnIdx(ri)}
+                                            className={`alg-sidebar-btn ${selectedLearnIdx === ri ? 'active' : ''}`}
                                             style={{
-                                                display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12,
-                                                border: '1px solid', borderColor: selectedLearnIdx === ri ? skill.color : 'rgba(0,0,0,0.05)',
-                                                background: selectedLearnIdx === ri ? skill.color : '#fff',
-                                                color: selectedLearnIdx === ri ? '#fff' : 'var(--alg-text)',
-                                                transition: 'all 0.2s', cursor: 'pointer', textAlign: 'left'
+                                                '--skill-color': skill.color,
+                                                '--skill-color-15': `${skill.color}15`,
+                                                '--skill-color-40': `${skill.color}40`,
+                                                '--skill-color-05': `${skill.color}05`
                                             }}
                                         >
-                                            <div style={{
-                                                width: 24, height: 24, borderRadius: 6,
-                                                background: selectedLearnIdx === ri ? 'rgba(255,255,255,0.2)' : `${skill.color}15`,
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                fontSize: 14, fontWeight: 900, flexShrink: 0
-                                            }}>{ri + 1}</div>
-                                            <span style={{ fontWeight: 700, fontSize: 15 }}>{rule.title}</span>
+                                            <div className="alg-sidebar-btn-num">{ri + 1}</div>
+                                            <span className="alg-sidebar-btn-title">{rule.title}</span>
                                         </button>
                                     ))}
                                 </aside>
