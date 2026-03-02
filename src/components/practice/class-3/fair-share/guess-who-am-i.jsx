@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, X } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import LatexContent from '../../../LatexContent';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/fair-share.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -34,7 +34,7 @@ const generateMarbleSVG = (count, color = "#FF6B6B") => {
         );
     }
 
-    return `<svg viewBox="0 0 ${width} ${height}" width="${Math.min(width * 2, 100)}" height="${Math.min(height * 2, 80)}" style="display:inline-block;">${circles.join('')}</svg>`;
+    return `<svg viewBox="0 0 ${width} ${height}" width="${Math.min(width * 1.2, 60)}" height="${Math.min(height * 1.2, 45)}" style="display:inline-block; max-height: 5vh;">${circles.join('')}</svg>`;
 };
 
 const Constraints = {
@@ -49,6 +49,7 @@ const Constraints = {
 const FairShareGuesswho = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
+    const [showResult, setShowResult] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -63,6 +64,7 @@ const FairShareGuesswho = () => {
     // Skill Info
     const SKILL_ID = 9008;
     const SKILL_NAME = "Fair Share - Guess Who Am I";
+    const SHORT_SKILL_NAME = "Guess Who";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
 
@@ -154,21 +156,19 @@ const FairShareGuesswho = () => {
 
             // Construct text
             const questionText = `
-                <div class="text-xl mb-4 text-center">
-                    <p class="font-bold mb-2 text-[#31326F]">Who am I?</p>
-                    <ul class="text-left inline-block bg-blue-50 p-4 rounded-xl border-2 border-blue-100 list-disc pl-8">
-                        <li>I am <strong>${picked[0].text}</strong>.</li>
-                        <li>I am <strong>${picked[1].text}</strong>.</li>
+                <div class="text-xl mb-1 text-center">
+                    <p class="mb-1 text-[#31326F]">Who am I?</p>
+                    <ul class="text-left inline-block bg-blue-50 p-2 rounded-xl border-2 border-blue-100 list-disc pl-8">
+                        <li>I am ${picked[0].text}.</li>
+                        <li>I am ${picked[1].text}.</li>
                     </ul>
                 </div>
             `;
 
-            const solutionText = `
-                Let's check the clues for <strong>${target}</strong>:<br/>
-                1. Is ${target} ${picked[0].text}? <strong>Yes</strong> ✅<br/>
-                2. Is ${target} ${picked[1].text}? <strong>Yes</strong> ✅<br/>
-                <br/>
-                It fits both!
+            const solutionText = `<p class="mb-1">Let's check the clues for <strong>${target}</strong>:</p>
+                <div class="mb-1">1. Is ${target} ${picked[0].text}? <strong>Yes</strong> ✅</div>
+                <div class="mb-1">2. Is ${target} ${picked[1].text}? <strong>Yes</strong> ✅</div>
+                <p class="mt-1 font-semibold text-green-700">It fits both!</p>
             `;
 
             qData = {
@@ -186,6 +186,13 @@ const FairShareGuesswho = () => {
         setSelectedOption(null);
         setIsSubmitted(false);
         setIsCorrect(false);
+    };
+
+    const handlePrev = () => {
+        if (qIndex > 0) {
+            setQIndex(p => p - 1);
+            setShowExplanationModal(false);
+        }
     };
 
     const handleCheck = () => {
@@ -223,7 +230,7 @@ const FairShareGuesswho = () => {
             setShowExplanationModal(false);
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            navigate(-1);
+            setShowResult(true);
         }
     };
 
@@ -235,87 +242,112 @@ const FairShareGuesswho = () => {
 
     if (!currentQuestion) return <div>Loading...</div>;
 
+    
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
     return (
-        <div className="junior-practice-page fair-share-theme font-sans">
-            <header className="junior-practice-header flex justify-between items-center px-8">
-                <div className="header-left"></div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-xl shadow-lg">
-                        Questions {qIndex + 1} / {TOTAL_QUESTIONS}
+        <div className="junior-practice-page raksha-theme grey-selection-theme fair-share-practice-page font-sans">
+            <header className="junior-practice-header fair-share-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem', position: 'relative' }}>
+                <div className="header-left">
+                    <span className="skill-name-desktop text-[#31326F] font-normal text-lg sm:text-xl">{SKILL_NAME}</span>
+                    <span className="skill-name-mobile text-[#31326F] font-normal text-lg sm:text-xl">{SHORT_SKILL_NAME}</span>
+                </div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             <main className="practice-content-wrapper flex flex-col items-center justify-center p-4">
-                <div className="bg-white rounded-3xl shadow-xl p-6 border-4 border-[#E2E8F0] relative w-full max-w-2xl mb-20">
-                    <div className="question-header-modern">
-                        <LatexContent html={currentQuestion.text} />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 w-full">
-                        {shuffledOptions.map((opt, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => !isSubmitted && setSelectedOption(opt)}
-                                className={`
-                                    relative p-4 rounded-2xl border-4 transition-all duration-200 flex flex-col items-center gap-2 bg-white
-                                    option-btn-modern
-                                    ${selectedOption === opt ? 'selected' : ''}
-                                    ${isSubmitted && opt === currentQuestion.correctAnswer ? 'correct' : ''}
-                                    ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}
-                                `}
+                <div className="practice-board-container mt-6" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                    <div className="practice-left-col fair-share-left-col" style={{ width: '100%' }}>
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={qIndex}
+                                initial={{ x: 50, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -50, opacity: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                style={{ width: '100%' }}
                             >
-                                <div className="text-3xl font-black text-slate-700">{opt}</div>
-                                <div dangerouslySetInnerHTML={{
-                                    __html: generateMarbleSVG(opt,
-                                        ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"][idx % 4]
-                                    )
-                                }} />
-
-                                {isSubmitted && opt === currentQuestion.correctAnswer && (
-                                    <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
-                                        <Check size={16} strokeWidth={4} />
+                                <div className="question-card-modern flex flex-col justify-start w-full bg-white rounded-3xl sm: sm: sm: px-6 sm:px-10 pt-4 sm:pt-6 pb-6 sm:pb-10 shadow-lg" style={{ height: 'auto', minHeight: '100%' }}>
+                                    <div className="question-header-modern mb-2 w-full" style={{ flexShrink: 0 }}>
+                                        <h2 className="text-xl sm:text-2xl font-normal text-[#31326F] text-center w-full break-words">
+                                            <LatexContent html={currentQuestion.text} />
+                                        </h2>
                                     </div>
-                                )}
-                                {isSubmitted && selectedOption === opt && !isCorrect && (
-                                    <div className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1">
-                                        <X size={16} strokeWidth={4} />
+                                    <div className="interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto max-w-3xl mt-2">
+                                        <div className="options-grid-modern w-full grid grid-cols-2 gap-2 sm:gap-4">
+                                            {shuffledOptions.map((option, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => !isSubmitted && setSelectedOption(option)}
+                                                    disabled={isSubmitted}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && option !== currentQuestion.correctAnswer ? 'wrong' : ''}`}
+                                                >
+                                                    <div className="flex flex-col items-center gap-1 sm:gap-1">
+                                                        <LatexContent html={String(option)} className="text-lg sm:text-xl font-black text-slate-700" />
+                                                        <div dangerouslySetInnerHTML={{
+                                                            __html: generateMarbleSVG(option,
+                                                                ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"][idx % 4]
+                                                            )
+                                                        }} />
+                                                    </div>
+                                                    {isSubmitted && option === currentQuestion.correctAnswer && (
+                                                        <div className="absolute top-2 right-2 bg-green-500 text-white rounded-full p-1">
+                                                            <Check size={16} strokeWidth={4} />
+                                                        </div>
+                                                    )}
+                                                    {isSubmitted && selectedOption === option && !isCorrect && (
+                                                        <div className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1">
+                                                            <X size={16} strokeWidth={4} />
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {isSubmitted && isCorrect && (
+                                            <motion.div
+                                                initial={{ scale: 0.5, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                className="feedback-mini correct"
+                                                style={{ marginTop: '20px' }}
+                                            >
+                                                {feedbackMessage}
+                                            </motion.div>
+                                        )}
                                     </div>
-                                )}
-                            </button>
-                        ))}
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
-
-                    {isSubmitted && isCorrect && (
-                        <motion.div
-                            initial={{ scale: 0.5, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="mt-4 text-2xl font-bold text-green-600 bg-green-100 px-6 py-2 rounded-full"
-                        >
-                            {feedbackMessage}
-                        </motion.div>
-                    )}
                 </div>
             </main>
 
-            <footer className="junior-bottom-bar">
-                <div className="desktop-footer-controls w-full flex justify-between px-8 py-4">
-                    <button
-                        className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                        onClick={async () => {
-                            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                            navigate(-1);
-                        }}
-                    >
-                        <StickerExit size={20} className="hidden" />
-                        Exit
-                    </button>
-
+            <footer className="junior-bottom-bar" style={{ height: '70px', padding: '0 1rem' }}>
+                <div className="desktop-footer-controls">
+                    <div className="bottom-left">
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
+                    </div>
                     <div className="bottom-center">
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
@@ -323,65 +355,73 @@ const FairShareGuesswho = () => {
                             </button>
                         )}
                     </div>
-
-                    <div className="nav-buttons-group">
-                        {isSubmitted ? (
-                            <button className="nav-pill-next-btn bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full text-xl font-bold flex items-center gap-2 shadow-lg transition-all transform hover:scale-105" onClick={handleNext}>
-                                {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                    <>Next <ChevronRight size={28} strokeWidth={3} /></>
-                                ) : (
-                                    <>Done <Check size={28} strokeWidth={3} /></>
-                                )}
-                            </button>
-                        ) : (
+                    <div className="bottom-right">
+                        <div className="nav-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                             <button
-                                className="nav-pill-submit-btn bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-xl font-bold flex items-center gap-2 shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                                onClick={handleCheck}
-                                disabled={selectedOption === null}
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
                             >
-                                Submit <Check size={28} strokeWidth={3} />
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
                             </button>
-                        )}
+                            {isSubmitted ? (
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? (
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
+                                    ) : (
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
+                                    )}
+                                </button>
+                            ) : (
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={selectedOption === null}
+                                >
+                                    SUBMIT <Check size={24} strokeWidth={3} />
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
 
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
-
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
                         {isSubmitted && (
-                            <button className="bg-white text-[#00695C] border-2 border-[#00BFA5] p-2 rounded-lg font-bold flex items-center gap-1" onClick={() => setShowExplanationModal(true)}>
+                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
                                 <Eye size={18} /> Explain
                             </button>
                         )}
                     </div>
-
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrev}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
-                                <button className="nav-pill-next-btn bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full text-lg font-bold flex items-center gap-2" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={24} strokeWidth={3} /></>
-                                    ) : (
-                                        <>Done <Check size={24} strokeWidth={3} /></>
-                                    )}
+                                <button className="nav-pill-next-btn" onClick={handleNext}>
+                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
                                 <button
-                                    className="nav-pill-submit-btn bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full text-lg font-bold flex items-center gap-2 disabled:opacity-50"
+                                    className="nav-pill-submit-btn"
                                     onClick={handleCheck}
                                     disabled={selectedOption === null}
-                                >
-                                    Submit <Check size={24} strokeWidth={3} />
-                                </button>
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>
