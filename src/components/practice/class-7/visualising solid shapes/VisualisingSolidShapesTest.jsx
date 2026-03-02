@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/middle/class-7/Class7PracticeLayout.css';
 import mascotImg from '../../../../assets/mascot.png';
 
 const BLUE_THEME_CSS = `

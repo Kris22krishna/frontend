@@ -6,7 +6,7 @@ import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/middle/class-7/Class7PracticeLayout.css';
 
 const CORRECT_MESSAGES = [
     "✨ Amazing job! You got it! ✨",
