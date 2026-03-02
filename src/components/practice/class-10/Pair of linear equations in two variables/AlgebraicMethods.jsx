@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
+import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import PracticeReportModal from '../../PracticeReportModal';
+import '../TenthPracticeSession.css';
 
 const AlgebraicMethods = () => {
     const navigate = useNavigate();
@@ -15,6 +17,7 @@ const AlgebraicMethods = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
@@ -71,7 +74,7 @@ const AlgebraicMethods = () => {
             // MEDIUM 1: Standard
             newQuestions.push(createQuestion(3, `Solve by substitution: $x + 2y = -1$ and $2x - 3y = 12$.`, [`x=3, y=-2`, `x=2, y=3`, `x=-3, y=2`, `x=1, y=0`], `x=3, y=-2`, `From 1st: $x = -1 - 2y$. Subst to 2nd: $2(-1-2y) - 3y = 12 \\Rightarrow -2 - 4y - 3y = 12 \\Rightarrow -7y = 14$.`));
             // MEDIUM 2: Standard
-            newQuestions.push(createQuestion(4, `Solve: $7x - 15y = 2$ and $x + 2y = 3$.`, [`x=\\frac{49}{29}, y=\\frac{19}{29}`, `x=1, y=1`, `x=2, y=0`, `x=3, y=0`], `x=\\frac{49}{29}, y=\\frac{19}{29}`, `From 2nd: $x = 3 - 2y$. Subst: $7(3-2y) - 15y = 2 \\Rightarrow 21 - 14y - 15y = 2$.`));
+            newQuestions.push(createQuestion(4, `Solve: $7x - 15y = 2$ and $x + 2y = 3$.`, [`$x=\\dfrac{49}{29}, y=\\dfrac{19}{29}$`, `$x=1, y=1$`, `$x=2, y=0$`, `$x=3, y=0$`], `$x=\\dfrac{49}{29}, y=\\dfrac{19}{29}$`, `From 2nd: $x = 3 - 2y$. Subst: $7(3-2y) - 15y = 2 \\Rightarrow 21 - 14y - 15y = 2$.`));
 
             // HARD 1: Decimal or Roots
             newQuestions.push(createQuestion(5, `Solve: $\\sqrt{2}x + \\sqrt{3}y = 0$ and $\\sqrt{3}x - \\sqrt{8}y = 0$.`, [`x=0, y=0`, `x=1, y=1`, `x=2, y=3`, `x=sqrt(3), y=sqrt(2)`], `x=0, y=0`, `Homogeneous system with irrational coeffs. Only trivial solution (0,0).`));
@@ -90,7 +93,7 @@ const AlgebraicMethods = () => {
             newQuestions.push(createQuestion(4, `Jacob will be 3 times as old as his son in 5 years. 5 years ago, he was 7 times as old. Find present ages.`, [`Jacob 40, Son 10`, `Jacob 30, Son 10`, `Jacob 45, Son 15`, `Jacob 35, Son 5`], `Jacob 40, Son 10`, `$x+5 = 3(y+5)$, $x-5 = 7(y-5)$.`));
 
             // HARD 1: Fraction
-            newQuestions.push(createQuestion(5, `A fraction becomes $\\frac{9}{11}$ if 2 is added to both num & den. If 3 is added to both, it becomes $\\frac{5}{6}$. Find it.`, [`\\frac{7}{9}`, `\\frac{9}{7}`, `\\frac{3}{5}`, `\\frac{5}{3}`], `\\frac{7}{9}`, `$\\frac{x+2}{y+2}=\\frac{9}{11}$, $\\frac{x+3}{y+3}=\\frac{5}{6}$. Solve by sub.`));
+            newQuestions.push(createQuestion(5, `A fraction becomes $\\frac{9}{11}$ if 2 is added to both num & den. If 3 is added to both, it becomes $\\frac{5}{6}$. Find it.`, [`$\\frac{7}{9}$`, `$\\frac{9}{7}$`, `$\\frac{3}{5}$`, `$\\frac{5}{3}$`], `$\\frac{7}{9}$`, `$\\frac{x+2}{y+2}=\\frac{9}{11}$, $\\frac{x+3}{y+3}=\\frac{5}{6}$. Solve by sub.`));
         }
 
         // Skill 10054: Elimination (Numeric)
@@ -101,18 +104,18 @@ const AlgebraicMethods = () => {
             newQuestions.push(createQuestion(2, `Use elimination: $3x + 4y = 10$ and $2x + 4y = 6$.`, [`x=4, y=-0.5`, `x=2, y=1`, `x=4, y=1`, `x=4, y=2`], `x=4, y=-0.5`, `Subtract: $(3x-2x) = 10-6 \\Rightarrow x=4$. Subst back.`));
 
             // MEDIUM 1: Multiply One
-            newQuestions.push(createQuestion(3, `Solve: $3x - 5y = 4$ and $9x - 2y = 7$.`, [`x=\\frac{9}{13}, y=-\\frac{5}{13}`, `x=1, y=1`, `x=2, y=4`, `x=0, y=0`], `x=\\frac{9}{13}, y=-\\frac{5}{13}`, `Multiply 1st eq by 3: $9x-15y=12$. Subtract from 2nd.`));
+            newQuestions.push(createQuestion(3, `Solve: $3x - 5y = 4$ and $9x - 2y = 7$.`, [`$x=\\dfrac{9}{13}, y=-\\dfrac{5}{13}$`, `$x=1, y=1$`, `$x=2, y=4$`, `$x=0, y=0$`], `$x=\\dfrac{9}{13}, y=-\\dfrac{5}{13}$`, `Multiply 1st eq by 3: $9x-15y=12$. Subtract from 2nd.`));
             // MEDIUM 2: Multiply Both
             newQuestions.push(createQuestion(4, `Solve: $2x + 3y = 8$ and $4x + 6y = 7$.`, [`No solution`, `x=1, y=2`, `x=4, y=0`, `Infinite`], `No solution`, `Multiply 1st by 2: $4x+6y=16$. Contradicts $4x+6y=7$.`));
 
             // HARD 1: Variable in Denom
-            newQuestions.push(createQuestion(5, `Solve: $\\frac{2}{x} + \\frac{3}{y} = 13$ and $\\frac{5}{x} - \\frac{4}{y} = -2$.`, [`x=\\frac{1}{2}, y=\\frac{1}{3}`, `x=2, y=3`, `x=1, y=1`, `x=4, y=5`], `x=\\frac{1}{2}, y=\\frac{1}{3}`, `Let $u=\\frac{1}{x}, v=\\frac{1}{y}$. $2u+3v=13, 5u-4v=-2$. Solve for u,v then x,y.`));
+            newQuestions.push(createQuestion(5, `Solve: $\\dfrac{2}{x} + \\dfrac{3}{y} = 13$ and $\\dfrac{5}{x} - \\dfrac{4}{y} = -2$.`, [`$x=\\dfrac{1}{2}, y=\\dfrac{1}{3}$`, `$x=2, y=3$`, `$x=1, y=1$`, `$x=4, y=5$`], `$x=\\dfrac{1}{2}, y=\\dfrac{1}{3}$`, `Let $u=\\frac{1}{x}, v=\\frac{1}{y}$. $2u+3v=13, 5u-4v=-2$. Solve for u,v then x,y.`));
         }
 
         // Skill 10055: Elimination (Word Problems)
         else if (SKILL_ID === 10055) {
             // EASY 1: Sum/Diff
-            newQuestions.push(createQuestion(1, `If we add 1 to num and subtract 1 from den, a fraction reduces to 1. It becomes $\\frac{1}{2}$ if we add 1 to den. Find it.`, [`\\frac{3}{5}`, `\\frac{4}{5}`, `\\frac{2}{3}`, `\\frac{5}{7}`], `\\frac{3}{5}`, `$\\frac{x+1}{y-1}=1$, $\\frac{x}{y+1}=\\frac{1}{2}$.`));
+            newQuestions.push(createQuestion(1, `If we add 1 to num and subtract 1 from den, a fraction reduces to 1. It becomes $\\frac{1}{2}$ if we add 1 to den. Find it.`, [`$\\frac{3}{5}$`, `$\\frac{4}{5}$`, `$\\frac{2}{3}$`, `$\\frac{5}{7}$`], `$\\frac{3}{5}$`, `$\\frac{x+1}{y-1}=1$, $\\frac{x}{y+1}=\\frac{1}{2}$.`));
             // EASY 2: 2-Digit Number
             newQuestions.push(createQuestion(2, `Sum of digits of 2-digit number is 9. Also 9 times this number is twice the reversed number. Find it.`, [`18`, `81`, `27`, `72`], `18`, `$x+y=9, 9(10x+y) = 2(10y+x)$.`));
 
@@ -157,9 +160,12 @@ const AlgebraicMethods = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, [SKILL_ID]);
+    }, [SKILL_ID, showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -215,7 +221,7 @@ const AlgebraicMethods = () => {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val === true).length;
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 await api.createReport({
                     title: SKILL_NAME,
                     type: 'practice',
@@ -231,7 +237,7 @@ const AlgebraicMethods = () => {
                     user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
                 }).catch(console.error);
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -240,7 +246,10 @@ const AlgebraicMethods = () => {
 
     return (
         <div className="junior-practice-page" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>
+                    {SKILL_NAME}
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}
@@ -276,7 +285,7 @@ const AlgebraicMethods = () => {
                                         </button>
                                     ))}
                                     {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
+                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
                                             {feedbackMessage}
                                         </motion.div>
                                     )}
@@ -288,6 +297,16 @@ const AlgebraicMethods = () => {
             </main>
 
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
+
+            <PracticeReportModal 
+                isOpen={showReportModal} 
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }} 
+                onContinue={() => navigate(-1)} 
+            />
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
@@ -309,7 +328,7 @@ const AlgebraicMethods = () => {
                                 Prev
                             </button>
                             {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight /></button> :
+                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight />}</button> :
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check /></button>
                             }
                         </div>
@@ -334,7 +353,7 @@ const AlgebraicMethods = () => {
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}

@@ -227,7 +227,6 @@
 .question-text .katex {
     font-size: 1.15em !important;
     line-height: 1.2 !important;
-    font-family: KaTeX_Main, 'Times New Roman', serif !important;
     /* Enforce KaTeX fonts for proper alignment */
     text-shadow: none !important;
     /* Remove any text shadows from parent */

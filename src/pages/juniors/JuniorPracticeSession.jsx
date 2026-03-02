@@ -80,6 +80,16 @@ const JuniorPracticeSession = () => {
     const isTabActive = useRef(true);
     const practiceStartTimeRef = useRef(Date.now());
 
+    // Compute stats from answers — declared here so it's available before any useEffect that uses it
+    const stats = (() => {
+        let correct = 0;
+        const total = Object.keys(answers).length;
+        Object.values(answers).forEach(ans => {
+            if (ans.isCorrect) correct++;
+        });
+        return { correct, total: total || questions.length };
+    })();
+
     // Initial Session Creation
     const sessionCreatedForSkill = useRef(null);
 
@@ -404,15 +414,7 @@ const JuniorPracticeSession = () => {
         }
     };
 
-    // Compute stats from answers
-    const stats = (() => {
-        let correct = 0;
-        const total = Object.keys(answers).length;
-        Object.values(answers).forEach(ans => {
-            if (ans.isCorrect) correct++;
-        });
-        return { correct, total: total || questions.length };
-    })();
+    // stats is now computed above, near state declarations
 
     const handleSubmitSession = async () => {
         if (sessionId) await api.finishSession(sessionId).catch(console.error);

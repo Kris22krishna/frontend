@@ -6,7 +6,7 @@ import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import './polynomials.css';
 
 const RegularPolygonPractice = () => {
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ const RegularPolygonPractice = () => {
         const data = sessionStorage.getItem(key);
         return data !== null ? JSON.parse(data) : defaultValue;
     };
-    
+
     const storageKey = `practice_${window.location.pathname}`;
 
     const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));

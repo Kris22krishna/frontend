@@ -39,7 +39,7 @@ export function HomeGrades() {
     return (
         <section className="py-16 px-8 bg-gradient-to-br from-orange-50 via-blue-50 to-purple-50">
             <div className="max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Column 1: Grades 1-4 with Orange/Amber gradient */}
                     <div className="rounded-2xl p-8 bg-gradient-to-br from-orange-200 via-amber-200 to-orange-300 relative overflow-hidden">
                         <div className="space-y-4 relative z-10">
@@ -48,9 +48,7 @@ export function HomeGrades() {
                                     key={grade.id}
                                     onClick={() => handleGradeClick(grade.id)}
                                     className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-amber-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-orange-300/50 group flex items-center justify-between"
-                                    style={{
-                                        transform: 'translateZ(0)',
-                                    }}
+                                    style={{ transform: 'translateZ(0)' }}
                                 >
                                     <span className="text-gray-800 font-medium">{grade.label}</span>
                                     <span className="opacity-0 group-hover:opacity-100 transition-opacity text-orange-500 font-bold">→</span>
@@ -67,9 +65,7 @@ export function HomeGrades() {
                                     key={grade.id}
                                     onClick={() => handleGradeClick(grade.id)}
                                     className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-sky-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-blue-300/50 group flex items-center justify-between"
-                                    style={{
-                                        transform: 'translateZ(0)',
-                                    }}
+                                    style={{ transform: 'translateZ(0)' }}
                                 >
                                     <span className="text-gray-800 font-medium">{grade.label}</span>
                                     <span className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-500 font-bold">→</span>
@@ -85,15 +81,31 @@ export function HomeGrades() {
                                 <button
                                     key={grade.id}
                                     onClick={() => handleGradeClick(grade.id)}
-                                    className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-violet-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-purple-300/50 group flex items-center justify-between"
-                                    style={{
-                                        transform: 'translateZ(0)',
-                                    }}
+                                    className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-violet-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3x_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-purple-300/50 group flex items-center justify-between"
+                                    style={{ transform: 'translateZ(0)' }}
                                 >
                                     <span className="text-gray-800 font-medium">{grade.label}</span>
                                     <span className="opacity-0 group-hover:opacity-100 transition-opacity text-purple-500 font-bold">→</span>
                                 </button>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Column 4: Algebra */}
+                    <div className="rounded-2xl p-8 bg-gradient-to-br from-indigo-300 via-violet-300 to-indigo-400 relative overflow-hidden flex flex-col justify-center">
+                        <div className="space-y-4 relative z-10">
+                            <button
+                                id="algebra-btn"
+                                onClick={() => navigate('/algebra')}
+                                className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-indigo-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-indigo-400/50 group flex items-center justify-between"
+                                style={{ transform: 'translateZ(0)' }}
+                            >
+                                <div>
+                                    <span className="text-gray-800 font-semibold block">Algebra</span>
+                                    <span className="text-gray-500 text-xs">Variables, Equations & More</span>
+                                </div>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-indigo-600 font-bold text-lg">→</span>
+                            </button>
                         </div>
                     </div>
                 </div>

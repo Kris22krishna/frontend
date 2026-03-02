@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import PracticeReportModal from '../../PracticeReportModal';
+import '../TenthPracticeSession.css';
 
 const ConditionsForConsistency = () => {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ const ConditionsForConsistency = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [questions, setQuestions] = useState([]);
 
@@ -22,6 +24,7 @@ const ConditionsForConsistency = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const SKILL_ID = 10022; // Identify the number of solutions using algebraic conditions
+    const SKILL_NAME = "Algebraic Conditions for Consistency";
     const [answers, setAnswers] = useState({});
 
     const generateQuestions = () => {
@@ -36,9 +39,9 @@ const ConditionsForConsistency = () => {
         newQuestions.push(createQuestion(
             1,
             "The pair of linear equations has a unique solution if:",
-            [`$\\frac{a_1}{a_2}$ ≠ $\\frac{b_1}{b_2}$`, `$\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$`, `$\\frac{a_1}{a_2} = \\frac{b_1}{b_2}$ ≠ $\\frac{c_1}{c_2}$`, `$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} = \\frac{c_1}{c_2}$`],
-            `$\\frac{a_1}{a_2}$ ≠ $\\frac{b_1}{b_2}$`,
-            "For a unique solution (intersecting lines), the ratio of coefficients of x and y must not be equal."
+            [`$\\dfrac{a_1}{a_2} \\neq \\dfrac{b_1}{b_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} \\neq \\dfrac{c_1}{c_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} = \\dfrac{c_1}{c_2}$`],
+            `$\\dfrac{a_1}{a_2} \\neq \\dfrac{b_1}{b_2}$`,
+            "For a unique solution (intersecting lines), the ratio of coefficients of x and y must not be equal: $\\dfrac{a_1}{a_2} \\neq \\dfrac{b_1}{b_2}$."
         ));
 
         // EASY 2: Parallel lines (No solution)
@@ -57,7 +60,7 @@ const ConditionsForConsistency = () => {
             `Are the equations $x + 2y = 3$ and $${a}x + ${2 * a}y = ${3 * a}$ consistent?`,
             ["Yes, Dependent Consistent", "No, Inconsistent", "Yes, Unique Solution", "Cannot determine"],
             "Yes, Dependent Consistent",
-            `Ratios: $\\frac{1}{${a}} = \\frac{2}{${2 * a}} = \\frac{3}{${3 * a}}$. All equal. Infinite solutions (Dependent Consistent).`
+            `Ratios: $\\dfrac{1}{${a}} = \\dfrac{2}{${2 * a}} = \\dfrac{3}{${3 * a}}$. All equal. Infinite solutions (Dependent Consistent).`
         ));
 
         // MEDIUM 2: Find k for Unique
@@ -65,9 +68,9 @@ const ConditionsForConsistency = () => {
         newQuestions.push(createQuestion(
             4,
             `Find the value of $k$ for which $kx + 2y = 5$ and $3x + y = 1$ has a unique solution.`,
-            [`$k$ ≠ $6$`, `$k = 6$`, `$k$ ≠ $3$`, `$k = 0$`],
-            `$k$ ≠ $6$`,
-            `Unique solution condition: $\\frac{k}{3}$ ≠ $\\frac{2}{1} \\Rightarrow k$ ≠ $6$.`
+            [`$k \\neq 6$`, `$k = 6$`, `$k \\neq 3$`, `$k = 0$`],
+            `$k \\neq 6$`,
+            `Unique solution condition: $\\dfrac{k}{3} \\neq \\dfrac{2}{1} \\Rightarrow k \\neq 6$.`
         ));
 
         // HARD 1: Find k for Infinite Solutions (Coincident)
@@ -79,7 +82,7 @@ const ConditionsForConsistency = () => {
             `Find the value of $k$ for which the system has infinitely many solutions: $2x + 3y = 7$ and $(k-1)x + (k+2)y = 3k$.`,
             [`$k=7$`, `$k=3$`, `$k=5$`, `$k=1$`],
             `$k=7$`,
-            `$\\frac{2}{k-1} = \\frac{3}{k+2} = \\frac{7}{3k}$.<br/>Solve $\\frac{2}{k-1} = \\frac{3}{k+2} \\Rightarrow 2k+4=3k-3 \\Rightarrow k=7$.<br/>Check third ratio: $\\frac{7}{21} = \\frac{1}{3}$. Correct.`
+            `$\\dfrac{2}{k-1} = \\dfrac{3}{k+2} = \\dfrac{7}{3k}$.<br/>Solve $\\dfrac{2}{k-1} = \\dfrac{3}{k+2} \\Rightarrow 2k+4=3k-3 \\Rightarrow k=7$.<br/>Check third ratio: $\\dfrac{7}{21} = \\dfrac{1}{3}$. Correct.`
         ));
 
         return newQuestions;
@@ -98,9 +101,12 @@ const ConditionsForConsistency = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, []);
+    }, [showReportModal]);
 
     // Restore state when qIndex changes
     useEffect(() => {
@@ -166,7 +172,25 @@ const ConditionsForConsistency = () => {
             questionStartTime.current = Date.now();
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            navigate(-1);
+            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            if (userId) {
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                await api.createReport({
+                    title: SKILL_NAME,
+                    type: 'practice',
+                    score: (totalCorrect / questions.length) * 100,
+                    parameters: {
+                        skill_id: SKILL_ID,
+                        skill_name: SKILL_NAME,
+                        total_questions: questions.length,
+                        correct_answers: totalCorrect,
+                        timestamp: new Date().toISOString(),
+                        time_taken_seconds: timeElapsed
+                    },
+                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
+                }).catch(console.error);
+            }
+            setShowReportModal(true);
         }
     };
 
@@ -175,7 +199,10 @@ const ConditionsForConsistency = () => {
 
     return (
         <div className="junior-practice-page" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'flex-end', padding: '0 2rem', alignItems: 'center' }}>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', padding: '0 2rem', alignItems: 'center' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>
+                    {SKILL_NAME}
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}
@@ -191,30 +218,41 @@ const ConditionsForConsistency = () => {
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: "100%", minWidth: 0, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
                         <div className="question-card-modern" style={{ padding: "2rem", flex: "none", minHeight: "auto", height: "fit-content", display: "flex", flexDirection: "column", justifyContent: "flex-start", margin: "0" }}>
-                            <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "0.5rem" }}>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', color: '#2D3748' }}>
+                            <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "1rem" }}>
+                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.4rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible', color: '#2D3748' }}>
                                     <LatexText text={currentQuestion.text} />
                                 </h2>
                             </div>
                             <div className="interaction-area-modern" style={{ marginTop: "1.5rem", flex: "none" }}>
-                                <div className="options-grid-modern">
+                                <div className="options-grid-modern" style={{ gap: "1rem" }}>
                                     {currentQuestion.options.map((opt, i) => (
-                                        <button key={i} className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}`} style={{ fontWeight: '500' }} onClick={() => handleOptionSelect(opt)} disabled={isSubmitted}>
+                                        <button key={i} className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''} ${isSubmitted && opt === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === opt && !isCorrect ? 'wrong' : ''}`} style={{ fontWeight: '500', minHeight: '60px' }} onClick={() => handleOptionSelect(opt)} disabled={isSubmitted}>
                                             <LatexText text={opt} />
                                         </button>
                                     ))}
-                                    {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
-                                            {feedbackMessage}
-                                        </motion.div>
-                                    )}
                                 </div>
                             </div>
+                            {isSubmitted && isCorrect && (
+                                <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '1rem', textAlign: 'center', width: '100%', flexShrink: 0 }}>
+                                    {feedbackMessage}
+                                </motion.div>
+                            )}
                         </div>
                     </div>
                 </div>
             </main>
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
+            
+            <PracticeReportModal 
+                isOpen={showReportModal} 
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }} 
+                onContinue={() => navigate(-1)} 
+            />
+
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
@@ -235,7 +273,7 @@ const ConditionsForConsistency = () => {
                                 Prev
                             </button>
                             {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={goNext}>Next <ChevronRight /></button> :
+                                <button className="nav-pill-next-btn" onClick={goNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight />}</button> :
                                 <button className="nav-pill-submit-btn" onClick={checkAnswer} disabled={!selectedOption}>Submit <Check /></button>
                             }
                         </div>
@@ -260,9 +298,9 @@ const ConditionsForConsistency = () => {
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={goNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
-                            <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={checkAnswer} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}
                     </div>
                 </div>

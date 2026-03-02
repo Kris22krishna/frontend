@@ -18,6 +18,9 @@
 /* Ensure global box-sizing for this component's children if not already set globally */
 .junior-practice-page * {
     box-sizing: border-box;
+}
+
+.junior-practice-page {
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -198,18 +201,33 @@
 .question-card-modern {
     background: white;
     border-radius: 2.5rem;
-    padding: 2rem 2.5rem;
+    padding: 1.5rem 2rem;
+    /* Reduced from 3rem */
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     width: 100%;
-    height: auto;
+    min-height: 400px;
+    /* Reduced from 500px */
+    max-height: 100%;
+    /* Fit within wrapper */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
+    /* Changed from center to space-between */
     align-items: center;
     position: relative;
     z-index: 10;
     border: 4px solid #FFFFFF;
-    overflow: visible;
+    overflow-y: auto;
+    flex: 1;
+    /* Take available space */
+    min-height: 0;
+    /* Allow shrinking for scroll */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.question-card-modern::-webkit-scrollbar {
+    display: none;
 }
 
 /* Custom Scrollbar for Webkit */
@@ -237,8 +255,12 @@
     overflow-y: auto;
     /* Only the question text area scrolls */
     padding-right: 0.5rem;
-    scrollbar-width: thin;
-    scrollbar-color: #B2DFDB transparent;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.question-header-modern::-webkit-scrollbar {
+    display: none;
 }
 
 /* Custom Scrollbar for Question Text */
@@ -258,7 +280,6 @@
 /* ... existing styles ... */
 
 .question-text-modern {
-    font-family: 'Open Sans', sans-serif !important;
     font-size: clamp(1.2rem, 2.2vw, 2rem);
     font-weight: 400 !important;
     /* Non-bold */
@@ -303,8 +324,8 @@
 .options-grid-modern {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem;
-    /* Large gap for spreading out */
+    gap: 1rem;
+    /* Reduced from 1.5rem */
     width: 100%;
     max-width: 900px;
     /* Wider grid */
@@ -316,33 +337,29 @@
     background: white;
     border: 3px solid #E2E8F0;
     border-radius: 1.2rem;
-    padding: 0.5rem 1rem;
-    /* Increased padding */
-    /* Fluid font size for options */
-    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    padding: 0.75rem 1.25rem;
+    font-size: clamp(1rem, 1.6vw, 1.3rem);
     font-weight: 500;
     color: #4A5568;
     box-shadow: 0 4px 0 #CBD5E0;
     cursor: pointer;
     transition: all 0.1s;
     font-family: 'Open Sans', 'Nunito', sans-serif;
-    min-height: 100px;
-    /* Fixed min-height for symmetry */
+    min-height: 60px;
+    /* Reduced from 80px */
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-
-    /* Flex sizing for 2-column look */
     flex: 0 0 calc(50% - 0.5rem);
     width: auto;
 }
 
 .option-btn-modern:hover {
-    border-color: #00BFA5;
+    border-color: #94A3B8;
     transform: translateY(-2px);
-    background: #F0FDFA;
+    background: #F1F5F9;
 }
 
 .option-btn-modern:active {
@@ -358,13 +375,23 @@
 }
 
 .raksha-theme .option-btn-modern.selected {
-    border-color: #f59e0b;
-    background: #FEF3C7;
-    color: #92400E;
-    box-shadow: 0 4px 0 #D97706;
+    border-color: #94A3B8;
+    background: #E2E8F0;
+    color: #334155;
+    box-shadow: 0 4px 0 #64748B;
 }
 
 /* Grey Selection Theme (Override) */
+.grey-selection-theme .option-btn-modern {
+    border-color: #CBD5E0;
+}
+
+.grey-selection-theme .option-btn-modern:hover:not(:disabled) {
+    border-color: #94A3B8;
+    background: #F1F5F9;
+    transform: translateY(-2px);
+}
+
 .grey-selection-theme .option-btn-modern.selected {
     border-color: #94A3B8;
     background: #E2E8F0;
@@ -372,14 +399,24 @@
     box-shadow: 0 4px 0 #64748B;
 }
 
-/* Grey Theme Hover (Override Green) */
-.grey-selection-theme .option-btn-modern:hover:not(:disabled) {
-    border-color: #94A3B8;
-    background: #F1F5F9;
-    transform: translateY(-2px);
+/* After submit: correct/wrong always win regardless of selection state */
+.grey-selection-theme .option-btn-modern.correct,
+.grey-selection-theme .option-btn-modern.correct.selected {
+    background: #C8E6C9 !important;
+    border-color: #4CAF50 !important;
+    color: #1B5E20 !important;
+    box-shadow: 0 4px 0 #388E3C !important;
 }
 
-/* Base Correct/Wrong */
+.grey-selection-theme .option-btn-modern.wrong,
+.grey-selection-theme .option-btn-modern.wrong.selected {
+    background: #FFCDD2 !important;
+    border-color: #EF5350 !important;
+    color: #B71C1C !important;
+    box-shadow: 0 4px 0 #D32F2F !important;
+}
+
+/* Base Correct/Wrong — general */
 .fair-share-theme .option-btn-modern.selected {
     border-color: #7C3AED;
     background: #EDE9FE;
@@ -1224,12 +1261,10 @@
 
     .option-btn-modern {
         width: 100%;
-        /* Reset flex basis for column layout */
         flex: 0 0 auto;
-        min-height: 56px;
-        /* Touch target size */
-        padding: 0.8rem 1.2rem;
-        font-size: 1rem;
+        min-height: 62px;
+        padding: 0.9rem 1.4rem;
+        font-size: 1.05rem;
         border-radius: 1rem;
         background: white;
         border: 2px solid #E2E8F0;
@@ -1239,10 +1274,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        /* Center text */
         text-align: center;
         white-space: normal;
-        /* Allow wrapping */
         line-height: 1.3;
     }
 

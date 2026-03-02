@@ -458,7 +458,7 @@ const RepeatedAdditionToOneWhole = () => {
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
+                <div className="practice-board-container w-full max-w-5xl mx-auto" style={{ gridTemplateColumns: '1fr' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -492,12 +492,11 @@ const RepeatedAdditionToOneWhole = () => {
                                             ) : (
                                                 /* If asking for result, show N units */
                                                 <div className="flex flex-wrap justify-center gap-4">
-                                                    {Array.from({ length: Math.min(currentQuestion.count, 6) }).map((_, i) => (
+                                                    {Array.from({ length: currentQuestion.count }).map((_, i) => (
                                                         <div key={i} className="scale-75 sm:scale-100">
                                                             <UnitVisual size={currentQuestion.partSize} unit={currentQuestion.type.unit} type={currentQuestion.type} />
                                                         </div>
                                                     ))}
-                                                    {currentQuestion.count > 6 && <span className="text-2xl text-gray-400 font-bold self-center">...</span>}
                                                 </div>
                                             )}
                                         </div>
