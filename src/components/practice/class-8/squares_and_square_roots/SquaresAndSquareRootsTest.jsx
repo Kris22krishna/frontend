@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
-import '../../../../pages/juniors/grade3/raksha-bandhantest.css';
+import '../../../../pages/high/class8/SquaresAndSquareRoots.css';
 
 const SKILL_ID = 1255;
 const SKILL_NAME = "Chapter Test";
@@ -41,104 +41,7 @@ const generateQuestionData = () => {
     ];
 };
 
-const BLUE_THEME_CSS = `
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 400;
-        display: inline-block;
-    }
-    .status-correct { background: #DCFCE7; color: #166534; }
-    .status-wrong { background: #FEE2E2; color: #991B1B; }
-    .status-skipped { background: #FFF7ED; color: #C2410C; }
 
-    .solution-accordion {
-        border: 2px solid #E2E8F0;
-        border-radius: 16px;
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-        background: white;
-    }
-    .solution-header {
-        padding: 1rem;
-        background: #F8FAFC;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        list-style: none;
-    }
-    .solution-header::-webkit-details-marker {
-        display: none;
-    }
-    .solution-content {
-        padding: 1.5rem;
-        background: white;
-        border-top: 1px solid #E2E8F0;
-    }
-    .nav-pastel-btn {
-        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
-        transition: all 0.3s ease !important;
-        font-weight: 400 !important;
-        letter-spacing: 0.5px !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.6rem 1.2rem;
-        border-radius: 1.5rem;
-    }
-    .nav-pastel-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
-    }
-    .nav-pastel-btn:disabled {
-        background: #E2E8F0 !important;
-        color: #94A3B8 !important;
-        box-shadow: none !important;
-        cursor: not-allowed !important;
-    }
-
-    /* Mobile Palette styling */
-    @media (max-width: 1024px) {
-        .practice-board-container {
-            grid-template-columns: 1fr !important;
-            height: auto !important;
-            overflow-y: auto !important;
-        }
-        .question-palette-container {
-            width: 100% !important;
-            max-width: none !important;
-            height: auto !important;
-            max-height: none !important;
-            margin-top: 2rem;
-        }
-        .practice-content-wrapper {
-            overflow-y: auto !important;
-        }
-    }
-
-    /* Standardize Font Weight and Family */
-    .junior-practice-page * {
-        font-family: 'Open Sans', sans-serif !important;
-        font-weight: 400 !important;
-    }
-    .junior-practice-page .option-btn-modern {
-        font-weight: 400 !important;
-    }
-    .junior-practice-page .skill-name-label,
-    .junior-practice-page .timer-text,
-    .junior-practice-page .footer-pill-btn,
-    .junior-practice-page .nav-pill-submit-btn,
-    .junior-practice-page .nav-pill-next-btn,
-    .junior-practice-page .nav-pill-prev-btn {
-        font-weight: 400 !important;
-    }
-`;
 
 const SquaresAndSquareRootsTest = () => {
     const navigate = useNavigate();
@@ -290,7 +193,6 @@ const SquaresAndSquareRootsTest = () => {
 
         return (
             <div className="junior-practice-page grey-selection-theme result-page-wrapper" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
-                <style>{BLUE_THEME_CSS}</style>
                 <div className="exam-report-container">
                     <div className="results-hero-section flex flex-col items-center mb-8 mt-4">
                         <img src={mascotImg} alt="Happy Mascot" className="w-40 h-40 mb-2 drop-shadow-lg object-contain" />
@@ -406,10 +308,9 @@ const SquaresAndSquareRootsTest = () => {
     }
 
     return (
-        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <style>{BLUE_THEME_CSS}</style>
-            <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: '400', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <div className="junior-practice-page grey-selection-theme">
+            <header className="junior-practice-header">
+                <div className="skill-name-display">
                     {SKILL_NAME}
                 </div>
                 <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-normal text-xl shadow-lg">

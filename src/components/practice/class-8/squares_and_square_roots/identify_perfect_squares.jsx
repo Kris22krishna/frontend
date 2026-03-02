@@ -7,7 +7,7 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import Class8PracticeReportModal from '../Class8PracticeReportModal';
 import mascotImg from '../../../../assets/mascot.png';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/high/class8/SquaresAndSquareRoots.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -313,20 +313,6 @@ const IdentifyPerfectSquares = () => {
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <style>{`
-                .junior-practice-page * {
-                    font-family: 'Open Sans', sans-serif !important;
-                    font-weight: 400 !important;
-                }
-                .junior-practice-page .skill-name-label,
-                .junior-practice-page .timer-text,
-                .junior-practice-page .footer-pill-btn,
-                .junior-practice-page .nav-pill-submit-btn,
-                .junior-practice-page .nav-pill-next-btn,
-                .junior-practice-page .nav-pill-prev-btn {
-                    font-weight: 400 !important;
-                }
-            `}</style>
             <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
                 <div className="header-left">
                     <span className="text-[#31326F] font-normal text-lg sm:text-xl">Identify Perfect Squares</span>
