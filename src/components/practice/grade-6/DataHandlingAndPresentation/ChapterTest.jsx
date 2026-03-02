@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Trophy, Target, Clock, ArrowRight, X } from 'lucide-react';
+import { ChevronRight, Trophy, Target, Clock, ArrowRight, X, ChevronLeft, CheckCircle, XCircle, HelpCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -43,7 +43,8 @@ const ChapterTest = () => {
                     q = {
                         text: `${selected.q}`,
                         correctAnswer: selected.a,
-                        options: shuffle([selected.a, "Observation", "Pictograph", "Bar Graph"])
+                        options: shuffle([selected.a, "Observation", "Pictograph", "Bar Graph"]),
+                        explanation: `The correct answer is <strong>${selected.a}</strong>. ${selected.q === "What is a collection of numbers gathered to give some information?" ? "Data is a collection of facts, such as numbers, words, measurements, observations or just descriptions of things." : selected.q === "What are the marks '|||| /' used for?" ? "Tally marks are a quick way of keeping track of numbers in groups of five." : "Numerical data consists of numbers that represent counts or measurements."}`
                     };
                 } else if (type === 2) { // Interpreting Pictographs
                     const scale = rand(2, 5);
@@ -53,7 +54,8 @@ const ChapterTest = () => {
                     q = {
                         text: `In a pictograph, one symbol represents $${scale}$ $${item}$. How many $${item}$ are there if there are $${icons}$ symbols?`,
                         correctAnswer: `${total}`,
-                        options: shuffle([`${total}`, `${total + scale}`, `${icons}`, `${scale}`])
+                        options: shuffle([`${total}`, `${total + scale}`, `${icons}`, `${scale}`]),
+                        explanation: `Each symbol represents $${scale}$ $${item}$. Since there are $${icons}$ symbols, the total number of $${item}$ is $${icons} \\times ${scale} = ${total}$.`
                     };
                 } else if (type === 3) { // Bar Graph interpretation
                     const items = ["A", "B", "C", "D"];
@@ -62,7 +64,8 @@ const ChapterTest = () => {
                     q = {
                         text: `In a bar graph, bars for items A, B, C, and D have heights $${heights[0]}$, $${heights[1]}$, $${heights[2]}$, and $${heights[3]}$ units respectively. Which item has the maximum value?`,
                         correctAnswer: items[maxIdx],
-                        options: shuffle(items)
+                        options: shuffle(items),
+                        explanation: `Comparing the heights: $${heights.join(', ')}$. The highest value is $${heights[maxIdx]}$, which corresponds to item <strong>${items[maxIdx]}</strong>.`
                     };
                 } else { // Frequency calculation
                     const data = [];
@@ -77,7 +80,8 @@ const ChapterTest = () => {
                     q = {
                         text: `Given the data: $${data.join(', ')}$, what is the frequency of the number $${target}$?`,
                         correctAnswer: `${count}`,
-                        options: shuffle([`${count}`, `${count + 1}`, `${count - 1}`, `${len}`].filter(v => parseInt(v) >= 0 && v !== ""))
+                        options: shuffle([`${count}`, `${count + 1}`, `${count - 1}`, `${len}`].filter(v => parseInt(v) >= 0 && v !== "")),
+                        explanation: `Frequency is the number of times a value appears in a data set. Counting $${target}$ in [$${data.join(', ')}$], we find it appears <strong>${count}</strong> times.`
                     };
                 }
                 newQuestions.push(q);
@@ -106,51 +110,55 @@ const ChapterTest = () => {
     };
 
     const handleNext = async () => {
-        if (!selectedOption) return;
-
-        const currentQ = questions[currentQIndex];
-        const isCorrect = selectedOption === currentQ.correctAnswer;
-
         setUserAnswers(prev => ({ ...prev, [currentQIndex]: selectedOption }));
-        if (isCorrect) setScore(prev => prev + 1);
-
-        if (sessionId) {
-            api.recordAttempt({
-                session_id: sessionId,
-                skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                student_answer: selectedOption,
-                correct_answer: currentQ.correctAnswer,
-                is_correct: isCorrect,
-                time_spent_seconds: 0
-            }).catch(console.error);
-        }
 
         if (currentQIndex < TOTAL_QUESTIONS - 1) {
-            setCurrentQIndex(prev => prev + 1);
-            setSelectedOption(null);
+            const nextIndex = currentQIndex + 1;
+            setCurrentQIndex(nextIndex);
+            setSelectedOption(userAnswers[nextIndex] || null);
         } else {
-            finishTest(isCorrect);
+            finishTest(selectedOption);
+        }
+    };
+
+    const handlePrevious = () => {
+        if (currentQIndex > 0) {
+            const prevIndex = currentQIndex - 1;
+            setCurrentQIndex(prevIndex);
+            setSelectedOption(userAnswers[prevIndex] || null);
         }
     };
 
     const handleSkip = () => {
         if (currentQIndex < TOTAL_QUESTIONS - 1) {
-            setCurrentQIndex(prev => prev + 1);
-            setSelectedOption(null);
+            const nextIndex = currentQIndex + 1;
+            setCurrentQIndex(nextIndex);
+            setSelectedOption(userAnswers[nextIndex] || null);
         } else {
-            finishTest(false);
+            finishTest(null);
         }
     };
 
-    const finishTest = async (lastCorrect) => {
+    const finishTest = async (lastAnswer) => {
         setIsFinished(true);
         clearInterval(timerRef.current);
 
-        const finalCorrectCount = score + (lastCorrect ? 1 : 0);
+        const finalAnswers = { ...userAnswers };
+        if (lastAnswer !== undefined) {
+            finalAnswers[currentQIndex] = lastAnswer;
+        }
+
+        const finalCorrectCount = questions.reduce((count, q, idx) => {
+            if (finalAnswers[idx] === q.correctAnswer) return count + 1;
+            return count;
+        }, 0);
+
+        setScore(finalCorrectCount);
         const finalScore = Math.round((finalCorrectCount / TOTAL_QUESTIONS) * 100);
 
         if (sessionId) {
+            // Record final attempt if needed, or we can record all attempts at once here
+            // For now, let's just make sure the report is accurate
             await api.createReport({
                 user_id: parseInt(sessionStorage.getItem('userId') || localStorage.getItem('userId')),
                 title: SKILL_NAME,
@@ -173,29 +181,95 @@ const ChapterTest = () => {
 
     if (isFinished) {
         return (
-            <div className="test-result-overlay">
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card-standardized">
-                    <Trophy className="mx-auto text-yellow-500 mb-6" size={80} />
-                    <h1 className="text-4xl font-black text-[#1e1b4b] mb-2">Test Completed!</h1>
-                    <p className="text-gray-500 font-bold text-xl mb-8">{SKILL_NAME}</p>
+            <div className="test-result-overlay overflow-y-auto">
+                <div className="max-w-4xl w-full py-12">
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card-standardized mb-12">
+                        <Trophy className="mx-auto text-yellow-500 mb-6" size={80} />
+                        <h1 className="text-4xl font-black text-[#1e1b4b] mb-2">Test Completed!</h1>
+                        <p className="text-gray-500 font-bold text-xl mb-8">{SKILL_NAME}</p>
 
-                    <div className="result-stat-grid">
-                        <div className="stat-box score">
-                            <Target size={32} className="mx-auto mb-2" />
-                            <div className="text-3xl font-black">{score}/{TOTAL_QUESTIONS}</div>
-                            <div className="text-sm font-bold uppercase tracking-widest opacity-70">Correct Answers</div>
+                        <div className="result-stat-grid">
+                            <div className="stat-box score">
+                                <Target size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{score}/{TOTAL_QUESTIONS}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Correct Answers</div>
+                            </div>
+                            <div className="stat-box time">
+                                <Clock size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{formatTime(timeElapsed)}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Time Taken</div>
+                            </div>
                         </div>
-                        <div className="stat-box time">
-                            <Clock size={32} className="mx-auto mb-2" />
-                            <div className="text-3xl font-black">{formatTime(timeElapsed)}</div>
-                            <div className="text-sm font-bold uppercase tracking-widest opacity-70">Time Taken</div>
+
+                        <button onClick={() => navigate(-1)} className="back-to-syllabus-btn">
+                            Return to Syllabus <ArrowRight size={24} />
+                        </button>
+                    </motion.div>
+
+                    <div className="detailed-report-section">
+                        <h2 className="report-title">Question-wise Report</h2>
+                        <div className="report-questions-list">
+                            {questions.map((q, idx) => {
+                                const userAnswer = userAnswers[idx];
+                                const isCorrect = userAnswer === q.correctAnswer;
+                                const isSkipped = userAnswer === null || userAnswer === undefined;
+
+                                return (
+                                    <div key={idx} className="report-question-item">
+                                        <div className="report-question-header">
+                                            <span className="font-bold text-gray-400">Question {idx + 1}</span>
+                                            <span className={`question-status-badge ${isCorrect ? 'status-correct' : isSkipped ? 'status-skipped' : 'status-incorrect'}`}>
+                                                {isCorrect ? <><CheckCircle size={16} /> Correct</> : isSkipped ? <><HelpCircle size={16} /> Skipped</> : <><XCircle size={16} /> Incorrect</>}
+                                            </span>
+                                        </div>
+                                        <div className="report-question-text">
+                                            <LatexContent html={q.text} />
+                                        </div>
+                                        <div className="report-answers-grid">
+                                            <div className={`answer-comparison-box your-answer-box ${isCorrect ? 'correct-border' : isSkipped ? 'skipped-border' : 'incorrect-border'}`}>
+                                                <div className="answer-label">Your Answer</div>
+                                                <div className="answer-value">
+                                                    {isSkipped ? <span className="text-gray-400 font-normal italic">No answer provided</span> : <LatexContent html={userAnswer} />}
+                                                </div>
+                                            </div>
+                                            <div className="answer-comparison-box correct-answer-box">
+                                                <div className="answer-label">Correct Answer</div>
+                                                <div className="answer-value">
+                                                    <LatexContent html={q.correctAnswer} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="report-options-container">
+                                            <span className="report-options-label">Options Provided:</span>
+                                            <div className="report-options-list">
+                                                {q.options.map((opt, optIdx) => {
+                                                    const isOptCorrect = opt === q.correctAnswer;
+                                                    const isOptUserChoice = opt === userAnswer;
+                                                    return (
+                                                        <div key={optIdx} className={`report-option-item ${isOptCorrect ? 'is-correct' : ''} ${isOptUserChoice ? 'is-user-choice' : ''}`}>
+                                                            {isOptCorrect ? <CheckCircle size={14} /> : isOptUserChoice ? <XCircle size={14} /> : null}
+                                                            <LatexContent html={opt} />
+                                                            {isOptUserChoice && <span className="user-choice-marker">Your Choice</span>}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="report-explanation-box">
+                                            <div className="explanation-title">
+                                                <Info size={16} /> Explanation
+                                            </div>
+                                            <div className="explanation-content">
+                                                <LatexContent html={q.explanation} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-
-                    <button onClick={() => navigate(-1)} className="back-to-syllabus-btn">
-                        Return to Syllabus <ArrowRight size={24} />
-                    </button>
-                </motion.div>
+                </div>
             </div>
         );
     }
@@ -207,7 +281,7 @@ const ChapterTest = () => {
     return (
         <div className="chapter-test-page">
             <header className="chapter-test-header">
-                <div className="test-title">Chapter Test</div>
+                <div className="test-title">{SKILL_NAME.replace(" Chapter Test", "")}</div>
                 <div className="question-counter-badge">
                     Question {currentQIndex + 1} / {TOTAL_QUESTIONS}
                 </div>
@@ -250,15 +324,18 @@ const ChapterTest = () => {
                 </button>
 
                 <div className="test-nav-actions">
-                    <button className="skip-btn" onClick={handleSkip}>
-                        Skip <ChevronRight size={20} />
+                    <button
+                        className="prev-btn"
+                        onClick={handlePrevious}
+                        disabled={currentQIndex === 0}
+                    >
+                        <ChevronLeft size={20} /> Previous
                     </button>
                     <button
-                        className={`submit-test-btn ${selectedOption ? 'active' : ''}`}
+                        className={`submit-test-btn active`}
                         onClick={handleNext}
-                        disabled={!selectedOption}
                     >
-                        {currentQIndex < TOTAL_QUESTIONS - 1 ? 'SUBMIT' : 'FINISH'}
+                        {currentQIndex < TOTAL_QUESTIONS - 1 ? 'NEXT' : 'FINISH'}
                         <ChevronRight size={20} />
                     </button>
                 </div>

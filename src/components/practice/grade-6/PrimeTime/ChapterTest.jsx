@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Trophy, Target, Clock, ArrowRight, X, ChevronLeft } from 'lucide-react';
+import { ChevronRight, Trophy, Target, Clock, ArrowRight, X, ChevronLeft, CheckCircle, XCircle, HelpCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -40,7 +40,10 @@ const ChapterTest = () => {
                     q = {
                         text: `Is the number $${n}$ divisible by $${d}$?`,
                         correctAnswer: isDiv ? "Yes" : "No",
-                        options: shuffle(["Yes", "No"])
+                        options: shuffle(["Yes", "No"]),
+                        explanation: isDiv
+                            ? `The number $${n}$ is divisible by $${d}$ because $${n} \\div ${d} = ${n / d}$, leaving no remainder.`
+                            : `The number $${n}$ is not divisible by $${d}$ because $${n} \\div ${d}$ leaves a remainder of $${n % d}$.`
                     };
                 } else if (type === 2) { // Prime Factorization
                     const primes = [2, 3, 5, 7];
@@ -50,7 +53,8 @@ const ChapterTest = () => {
                     q = {
                         text: `What is the prime factorization of $${n}$?`,
                         correctAnswer: `$${Math.min(p1, p2)} \\times ${Math.max(p1, p2)}$`,
-                        options: shuffle([`$${Math.min(p1, p2)} \\times ${Math.max(p1, p2)}$`, `$1 \\times ${n}$`, `$${n / 2} \\times 2$`, `$${p1} + ${p2}$`].filter(o => o !== null))
+                        options: shuffle([`$${Math.min(p1, p2)} \\times ${Math.max(p1, p2)}$`, `$1 \\times ${n}$`, `$${n / 2} \\times 2$`, `$${p1} + ${p2}$`].filter(o => o !== null)),
+                        explanation: `Prime factorization is expressing a number as a product of prime numbers. $${Math.min(p1, p2)} \\times ${Math.max(p1, p2)} = ${n}$, and both are prime numbers.`
                     };
                 } else if (type === 3) { // HCF/LCM basics
                     const a = rand(2, 6) * 2;
@@ -60,7 +64,8 @@ const ChapterTest = () => {
                     q = {
                         text: `Find the HCF (Highest Common Factor) of $${a}$ and $${b}$.`,
                         correctAnswer: `${hcf}`,
-                        options: shuffle([`${hcf}`, `${hcf + 1}`, `${hcf * 2}`, `1`].filter((v, i, a) => a.indexOf(v) === i))
+                        options: shuffle([`${hcf}`, `${hcf + 1}`, `${hcf * 2}`, `1`].filter((v, i, a) => a.indexOf(v) === i)),
+                        explanation: `The Highest Common Factor is the largest number that divides both $${a}$ and $${b}$. The factors of $${a}$ are ${[...Array(a + 1).keys()].filter(i => a % i === 0).join(', ')} and factors of $${b}$ are ${[...Array(b + 1).keys()].filter(i => b % i === 0).join(', ')}. The largest common factor is <strong>${hcf}</strong>.`
                     };
                 } else { // LCM
                     const a = [4, 6, 8][rand(0, 2)];
@@ -70,7 +75,8 @@ const ChapterTest = () => {
                     q = {
                         text: `Find the LCM (Lowest Common Multiple) of $${a}$ and $${b}$.`,
                         correctAnswer: `${lcm}`,
-                        options: shuffle([`${lcm}`, `${lcm * 2}`, `${a + b}`, `${Math.max(a, b)}`])
+                        options: shuffle([`${lcm}`, `${lcm * 2}`, `${a + b}`, `${Math.max(a, b)}`]),
+                        explanation: `The Least Common Multiple is the smallest number that is a multiple of both $${a}$ and $${b}$. Multiples of $${a}$: ${[a, a * 2, a * 3, a * 4, a * 5].join(', ')}... Multiples of $${b}$: ${[b, b * 2, b * 3, b * 4, b * 5].join(', ')}... The smallest common multiple is <strong>${lcm}</strong>.`
                     };
                 }
                 newQuestions.push(q);
@@ -99,50 +105,40 @@ const ChapterTest = () => {
     };
 
     const handleNext = async () => {
-        if (!selectedOption) return;
-
-        const currentQ = questions[currentQIndex];
-        const isCorrect = selectedOption === currentQ.correctAnswer;
-
-        // Record answer locally
         setUserAnswers(prev => ({ ...prev, [currentQIndex]: selectedOption }));
-        if (isCorrect) setScore(prev => prev + 1);
-
-        // Record to DB as we go
-        if (sessionId) {
-            api.recordAttempt({
-                session_id: sessionId,
-                skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                student_answer: selectedOption,
-                correct_answer: currentQ.correctAnswer,
-                is_correct: isCorrect,
-                time_spent_seconds: 0 // Could track per question if needed
-            }).catch(console.error);
-        }
 
         if (currentQIndex < TOTAL_QUESTIONS - 1) {
-            setCurrentQIndex(prev => prev + 1);
-            setSelectedOption(null);
+            const nextIndex = currentQIndex + 1;
+            setCurrentQIndex(nextIndex);
+            setSelectedOption(userAnswers[nextIndex] || null);
         } else {
-            finishTest(isCorrect);
+            finishTest(selectedOption);
         }
     };
 
-    const handleSkip = () => {
-        if (currentQIndex < TOTAL_QUESTIONS - 1) {
-            setCurrentQIndex(prev => prev + 1);
-            setSelectedOption(null);
-        } else {
-            finishTest(false);
+    const handlePrevious = () => {
+        if (currentQIndex > 0) {
+            const prevIndex = currentQIndex - 1;
+            setCurrentQIndex(prevIndex);
+            setSelectedOption(userAnswers[prevIndex] || null);
         }
     };
 
-    const finishTest = async (lastCorrect) => {
+    const finishTest = async (lastAnswer) => {
         setIsFinished(true);
         clearInterval(timerRef.current);
 
-        const finalCorrectCount = score + (lastCorrect ? 1 : 0);
+        const finalAnswers = { ...userAnswers };
+        if (lastAnswer !== undefined) {
+            finalAnswers[currentQIndex] = lastAnswer;
+        }
+
+        const finalCorrectCount = questions.reduce((count, q, idx) => {
+            if (finalAnswers[idx] === q.correctAnswer) return count + 1;
+            return count;
+        }, 0);
+
+        setScore(finalCorrectCount);
         const finalScore = Math.round((finalCorrectCount / TOTAL_QUESTIONS) * 100);
 
         if (sessionId) {
@@ -168,29 +164,95 @@ const ChapterTest = () => {
 
     if (isFinished) {
         return (
-            <div className="test-result-overlay">
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card-standardized">
-                    <Trophy className="mx-auto text-yellow-500 mb-6" size={80} />
-                    <h1 className="text-4xl font-black text-[#1e1b4b] mb-2">Test Completed!</h1>
-                    <p className="text-gray-500 font-bold text-xl mb-8">{SKILL_NAME}</p>
+            <div className="test-result-overlay overflow-y-auto">
+                <div className="max-w-4xl w-full py-12">
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card-standardized mb-12">
+                        <Trophy className="mx-auto text-yellow-500 mb-6" size={80} />
+                        <h1 className="text-4xl font-black text-[#1e1b4b] mb-2">Test Completed!</h1>
+                        <p className="text-gray-500 font-bold text-xl mb-8">{SKILL_NAME}</p>
 
-                    <div className="result-stat-grid">
-                        <div className="stat-box score">
-                            <Target size={32} className="mx-auto mb-2" />
-                            <div className="text-3xl font-black">{score}/{TOTAL_QUESTIONS}</div>
-                            <div className="text-sm font-bold uppercase tracking-widest opacity-70">Correct Answers</div>
+                        <div className="result-stat-grid">
+                            <div className="stat-box score">
+                                <Target size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{score}/{TOTAL_QUESTIONS}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Correct Answers</div>
+                            </div>
+                            <div className="stat-box time">
+                                <Clock size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{formatTime(timeElapsed)}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Time Taken</div>
+                            </div>
                         </div>
-                        <div className="stat-box time">
-                            <Clock size={32} className="mx-auto mb-2" />
-                            <div className="text-3xl font-black">{formatTime(timeElapsed)}</div>
-                            <div className="text-sm font-bold uppercase tracking-widest opacity-70">Time Taken</div>
+
+                        <button onClick={() => navigate(-1)} className="back-to-syllabus-btn">
+                            Return to Syllabus <ArrowRight size={24} />
+                        </button>
+                    </motion.div>
+
+                    <div className="detailed-report-section">
+                        <h2 className="report-title">Question-wise Report</h2>
+                        <div className="report-questions-list">
+                            {questions.map((q, idx) => {
+                                const userAnswer = userAnswers[idx];
+                                const isCorrect = userAnswer === q.correctAnswer;
+                                const isSkipped = userAnswer === null || userAnswer === undefined;
+
+                                return (
+                                    <div key={idx} className="report-question-item">
+                                        <div className="report-question-header">
+                                            <span className="font-bold text-gray-400">Question {idx + 1}</span>
+                                            <span className={`question-status-badge ${isCorrect ? 'status-correct' : isSkipped ? 'status-skipped' : 'status-incorrect'}`}>
+                                                {isCorrect ? <><CheckCircle size={16} /> Correct</> : isSkipped ? <><HelpCircle size={16} /> Skipped</> : <><XCircle size={16} /> Incorrect</>}
+                                            </span>
+                                        </div>
+                                        <div className="report-question-text">
+                                            <LatexContent html={q.text} />
+                                        </div>
+                                        <div className="report-answers-grid">
+                                            <div className={`answer-comparison-box your-answer-box ${isCorrect ? 'correct-border' : isSkipped ? 'skipped-border' : 'incorrect-border'}`}>
+                                                <div className="answer-label">Your Answer</div>
+                                                <div className="answer-value">
+                                                    {isSkipped ? <span className="text-gray-400 font-normal italic">No answer provided</span> : <LatexContent html={userAnswer} />}
+                                                </div>
+                                            </div>
+                                            <div className="answer-comparison-box correct-answer-box">
+                                                <div className="answer-label">Correct Answer</div>
+                                                <div className="answer-value">
+                                                    <LatexContent html={q.correctAnswer} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="report-options-container">
+                                            <span className="report-options-label">Options Provided:</span>
+                                            <div className="report-options-list">
+                                                {q.options.map((opt, optIdx) => {
+                                                    const isOptCorrect = opt === q.correctAnswer;
+                                                    const isOptUserChoice = opt === userAnswer;
+                                                    return (
+                                                        <div key={optIdx} className={`report-option-item ${isOptCorrect ? 'is-correct' : ''} ${isOptUserChoice ? 'is-user-choice' : ''}`}>
+                                                            {isOptCorrect ? <CheckCircle size={14} /> : isOptUserChoice ? <XCircle size={14} /> : null}
+                                                            <LatexContent html={opt} />
+                                                            {isOptUserChoice && <span className="user-choice-marker">Your Choice</span>}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="report-explanation-box">
+                                            <div className="explanation-title">
+                                                <Info size={16} /> Explanation
+                                            </div>
+                                            <div className="explanation-content">
+                                                <LatexContent html={q.explanation} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-
-                    <button onClick={() => navigate(-1)} className="back-to-syllabus-btn">
-                        Return to Syllabus <ArrowRight size={24} />
-                    </button>
-                </motion.div>
+                </div>
             </div>
         );
     }
@@ -202,7 +264,7 @@ const ChapterTest = () => {
     return (
         <div className="chapter-test-page">
             <header className="chapter-test-header">
-                <div className="test-title">Chapter Test</div>
+                <div className="test-title">{SKILL_NAME.replace(" Chapter Test", "")}</div>
                 <div className="question-counter-badge">
                     Question {currentQIndex + 1} / {TOTAL_QUESTIONS}
                 </div>
@@ -245,15 +307,18 @@ const ChapterTest = () => {
                 </button>
 
                 <div className="test-nav-actions">
-                    <button className="skip-btn" onClick={handleSkip}>
-                        Skip <ChevronRight size={20} />
+                    <button
+                        className="prev-btn"
+                        onClick={handlePrevious}
+                        disabled={currentQIndex === 0}
+                    >
+                        <ChevronLeft size={20} /> Previous
                     </button>
                     <button
-                        className={`submit-test-btn ${selectedOption ? 'active' : ''}`}
+                        className={`submit-test-btn active`}
                         onClick={handleNext}
-                        disabled={!selectedOption}
                     >
-                        {currentQIndex < TOTAL_QUESTIONS - 1 ? 'SUBMIT' : 'FINISH'}
+                        {currentQIndex < TOTAL_QUESTIONS - 1 ? 'NEXT' : 'FINISH'}
                         <ChevronRight size={20} />
                     </button>
                 </div>

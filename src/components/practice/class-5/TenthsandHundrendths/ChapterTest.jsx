@@ -1,23 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, X, Eye, ChevronRight, ChevronLeft, Trophy, Target, Clock, ArrowRight } from 'lucide-react';
+import { ChevronRight, Trophy, Target, Clock, ArrowRight, X, ChevronLeft, CheckCircle, XCircle, HelpCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import mascotImg from '../../../../assets/mascot.png';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../grade-6/ChapterTestStandard.css';
 
-const CORRECT_MESSAGES = [
-    "✨ Amazing job! You got it! ✨",
-    "🌟 Brilliant! Keep it up! 🌟",
-    "🎉 Correct! You're a math-star! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
-    "🌈 Perfect! Well done! 🌈",
-    "🎊 Great job! Moving on... 🎊",
-    "💎 Spot on! Excellent! 💎"
-];
 
 const TOTAL_QUESTIONS = 20;
 const SKILL_ID = 5001;
@@ -28,15 +16,11 @@ const ChapterTest = () => {
     const [questions, setQuestions] = useState([]);
     const [currentQIndex, setCurrentQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isCorrect, setIsCorrect] = useState(false);
-    const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
-    const [feedbackMessage, setFeedbackMessage] = useState("");
-    const [score, setScore] = useState(0);
-    const [isFinished, setIsFinished] = useState(false);
     const [userAnswers, setUserAnswers] = useState({});
+    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [isFinished, setIsFinished] = useState(false);
     const [sessionId, setSessionId] = useState(null);
+    const [score, setScore] = useState(0);
 
     const timerRef = useRef(null);
 
@@ -55,30 +39,30 @@ const ChapterTest = () => {
                     const num = rand(1, den - 1);
                     const dec = (num / den).toFixed(den === 10 ? 1 : 2);
                     q = {
-                        text: `<div class='question-container'><p>Write the fraction $\\frac{${num}}{${den}}$ as a decimal.</p></div>`,
+                        text: `Write the fraction $\\frac{${num}}{${den}}$ as a decimal.`,
                         correctAnswer: `${dec}`,
-                        solution: `$\\frac{${num}}{${den}} = ${dec}$. One zero in denominator means one decimal place, two zeros means two.`,
-                        options: shuffle([`${dec}`, `${(num / 10).toFixed(1)}`, `${(num / 1000).toFixed(3)}`, `${num}.0`].filter((v, i, a) => a.indexOf(v) === i))
+                        options: shuffle([`${dec}`, `${(num / 10).toFixed(1)}`, `${(num / 1000).toFixed(3)}`, `${num}.0`].filter((v, i, a) => a.indexOf(v) === i)),
+                        explanation: `To convert a fraction with denominator 10, 100, etc., to a decimal, count the number of zeros in the denominator. $\\frac{${num}}{${den}}$ has ${den === 10 ? 'one zero' : 'two zeros'}, so we place the decimal point ${den === 10 ? 'one place' : 'two places'} from the right: <strong>${dec}</strong>.`
                     };
                 } else if (type === 2) { // Place Value
                     const d1 = rand(1, 9);
                     const d2 = rand(1, 9);
                     const n = parseFloat(`${d1}.${d2}`);
                     q = {
-                        text: `<div class='question-container'><p>In the number $${n}$, what is the value of the digit $${d2}$?</p></div>`,
+                        text: `In the number $${n}$, what is the value of the digit $${d2}$?`,
                         correctAnswer: `Tenths`,
-                        solution: `The first digit after the decimal point is in the Tenths place.`,
-                        options: shuffle([`Tenths`, `Hundredths`, `Ones`, `Tens`])
+                        options: shuffle([`Tenths`, `Hundredths`, `Ones`, `Tens`]),
+                        explanation: `The first digit to the right of the decimal point is the <strong>Tenths</strong> place. In $${n}$, $${d2}$ is the first digit after the decimal.`
                     };
                 } else { // Comparison
                     const v1 = (rand(1, 50) / 100).toFixed(2);
                     const v2 = (rand(1, 50) / 100).toFixed(2);
-                    const isGreater = v1 > v2;
+                    const isGreater = parseFloat(v1) > parseFloat(v2);
                     q = {
-                        text: `<div class='question-container'><p>Is $${v1}$ greater than $${v2}$?</p></div>`,
+                        text: `Is $${v1}$ greater than $${v2}$?`,
                         correctAnswer: isGreater ? "Yes" : "No",
-                        solution: `$${v1}$ is ${isGreater ? "greater" : "smaller"} than $${v2}$. Compare place by place.`,
-                        options: shuffle(["Yes", "No"])
+                        options: shuffle(["Yes", "No"]),
+                        explanation: `$${v1}$ is ${isGreater ? "greater" : "smaller"} than $${v2}$. To compare decimals, compare their digits from left to right, starting with the whole number part.`
                     };
                 }
                 newQuestions.push(q);
@@ -102,52 +86,35 @@ const ChapterTest = () => {
         return () => clearInterval(timerRef.current);
     }, []);
 
-    const handleOptionSelect = (option) => {
-        if (isSubmitted) return;
-        setSelectedOption(option);
-    };
-
-    const handleCheck = () => {
-        const currentQ = questions[currentQIndex];
-        const correct = selectedOption === currentQ.correctAnswer;
-        setIsCorrect(correct);
-        setIsSubmitted(true);
-        setFeedbackMessage(correct ? CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)] : "Let's see the step-by-step solution.");
-
-        if (correct) setScore(prev => prev + 1);
+    const handleNext = async () => {
         setUserAnswers(prev => ({ ...prev, [currentQIndex]: selectedOption }));
 
-        if (sessionId) {
-            api.recordAttempt(sessionId, {
-                question_text: currentQ.text,
-                user_answer: selectedOption,
-                correct_answer: currentQ.correctAnswer,
-                is_correct: correct,
-                time_taken: 0
-            }).catch(console.error);
-        }
-    };
-
-    const handleNext = () => {
         if (currentQIndex < TOTAL_QUESTIONS - 1) {
-            setCurrentQIndex(prev => prev + 1);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setFeedbackMessage("");
+            const nextIndex = currentQIndex + 1;
+            setCurrentQIndex(nextIndex);
+            setSelectedOption(userAnswers[nextIndex] || null);
         } else {
-            finishTest();
+            finishTest(selectedOption);
         }
     };
 
-    const finishTest = async () => {
+    const finishTest = async (lastAnswer) => {
         setIsFinished(true);
         clearInterval(timerRef.current);
+
+        const finalUserAnswers = { ...userAnswers, [currentQIndex]: lastAnswer };
+        let finalScore = 0;
+        questions.forEach((q, idx) => {
+            if (finalUserAnswers[idx] === q.correctAnswer) finalScore++;
+        });
+        setScore(finalScore);
+
         if (sessionId) {
-            const finalScore = Math.round((score / TOTAL_QUESTIONS) * 100);
+            const scorePercentage = Math.round((finalScore / TOTAL_QUESTIONS) * 100);
             await api.createReport(sessionId, {
                 total_questions: TOTAL_QUESTIONS,
-                correct_answers: score,
-                score: finalScore,
+                correct_answers: finalScore,
+                score: scorePercentage,
                 time_taken: timeElapsed
             }).catch(console.error);
             await api.finishSession(sessionId).catch(console.error);
@@ -162,28 +129,94 @@ const ChapterTest = () => {
 
     if (isFinished) {
         return (
-            <div className="junior-practice-page result-view">
-                <div className="result-container">
-                    <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card">
-                        <Trophy className="mx-auto text-yellow-500 mb-4" size={80} />
-                        <h1 className="text-3xl font-black text-[#31326F] mb-2">Test Completed!</h1>
-                        <p className="text-gray-500 mb-6 font-bold text-xl">{SKILL_NAME}</p>
-                        <div className="grid grid-cols-2 gap-4 mb-8">
-                            <div className="bg-indigo-50 p-6 rounded-3xl border-2 border-indigo-100 text-center">
-                                <Target className="text-indigo-500 mb-2 mx-auto" size={32} />
-                                <div className="text-3xl font-black text-indigo-700">{score}/{TOTAL_QUESTIONS}</div>
-                                <div className="text-indigo-400 font-bold uppercase text-xs tracking-wider">Score</div>
+            <div className="test-result-overlay overflow-y-auto">
+                <div className="max-w-4xl w-full py-12">
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card-standardized mb-12">
+                        <Trophy className="mx-auto text-yellow-500 mb-6" size={80} />
+                        <h1 className="text-4xl font-black text-[#1e1b4b] mb-2">Test Completed!</h1>
+                        <p className="text-gray-500 font-bold text-xl mb-8">{SKILL_NAME}</p>
+
+                        <div className="result-stat-grid">
+                            <div className="stat-box score">
+                                <Target size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{score}/{TOTAL_QUESTIONS}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Correct Answers</div>
                             </div>
-                            <div className="bg-emerald-50 p-6 rounded-3xl border-2 border-emerald-100 text-center">
-                                <Clock className="text-emerald-500 mb-2 mx-auto" size={32} />
-                                <div className="text-3xl font-black text-emerald-700">{formatTime(timeElapsed)}</div>
-                                <div className="text-indigo-400 font-bold uppercase text-xs tracking-wider">Time Taken</div>
+                            <div className="stat-box time">
+                                <Clock size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{formatTime(timeElapsed)}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Time Taken</div>
                             </div>
                         </div>
-                        <button onClick={() => navigate(-1)} className="w-full bg-[#4FB7B3] text-white py-4 rounded-2xl font-black text-xl shadow-lg hover:bg-[#3da39f] transition-all flex items-center justify-center gap-3">
-                            Back to Syllabus <ArrowRight size={24} />
+
+                        <button onClick={() => navigate(-1)} className="back-to-syllabus-btn">
+                            Return to Syllabus <ArrowRight size={24} />
                         </button>
                     </motion.div>
+
+                    <div className="detailed-report-section">
+                        <h2 className="report-title">Question-wise Report</h2>
+                        <div className="report-questions-list">
+                            {questions.map((q, idx) => {
+                                const userAnswer = userAnswers[idx];
+                                const isCorrect = userAnswer === q.correctAnswer;
+                                const isSkipped = userAnswer === null || userAnswer === undefined;
+
+                                return (
+                                    <div key={idx} className="report-question-item">
+                                        <div className="report-question-header">
+                                            <span className="font-bold text-gray-400">Question {idx + 1}</span>
+                                            <span className={`question-status-badge ${isCorrect ? 'status-correct' : isSkipped ? 'status-skipped' : 'status-incorrect'}`}>
+                                                {isCorrect ? <><CheckCircle size={16} /> Correct</> : isSkipped ? <><HelpCircle size={16} /> Skipped</> : <><XCircle size={16} /> Incorrect</>}
+                                            </span>
+                                        </div>
+                                        <div className="report-question-text">
+                                            <LatexContent html={q.text} />
+                                        </div>
+                                        <div className="report-answers-grid">
+                                            <div className={`answer-comparison-box your-answer-box ${isCorrect ? 'correct-border' : isSkipped ? 'skipped-border' : 'incorrect-border'}`}>
+                                                <div className="answer-label">Your Answer</div>
+                                                <div className="answer-value">
+                                                    {isSkipped ? <span className="text-gray-400 font-normal italic">No answer provided</span> : <LatexContent html={userAnswer} />}
+                                                </div>
+                                            </div>
+                                            <div className="answer-comparison-box correct-answer-box">
+                                                <div className="answer-label">Correct Answer</div>
+                                                <div className="answer-value">
+                                                    <LatexContent html={q.correctAnswer} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="report-options-container">
+                                            <span className="report-options-label">Options Provided:</span>
+                                            <div className="report-options-list">
+                                                {q.options.map((opt, optIdx) => {
+                                                    const isOptCorrect = opt === q.correctAnswer;
+                                                    const isOptUserChoice = opt === userAnswer;
+                                                    return (
+                                                        <div key={optIdx} className={`report-option-item ${isOptCorrect ? 'is-correct' : ''} ${isOptUserChoice ? 'is-user-choice' : ''}`}>
+                                                            {isOptCorrect ? <CheckCircle size={14} /> : isOptUserChoice ? <XCircle size={14} /> : null}
+                                                            <LatexContent html={opt} />
+                                                            {isOptUserChoice && <span className="user-choice-marker">Your Choice</span>}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="report-explanation-box">
+                                            <div className="explanation-title">
+                                                <Info size={16} /> Explanation
+                                            </div>
+                                            <div className="explanation-content">
+                                                <LatexContent html={q.explanation} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -191,91 +224,80 @@ const ChapterTest = () => {
 
     if (questions.length === 0) return <div className="junior-practice-page flex items-center justify-center">Loading Questions...</div>;
 
-    const currentQuestion = questions[currentQIndex];
+    const handlePrevious = () => {
+        if (currentQIndex > 0) {
+            const prevIndex = currentQIndex - 1;
+            setCurrentQIndex(prevIndex);
+            setSelectedOption(userAnswers[prevIndex] || null);
+        }
+    };
 
     return (
         <div className="junior-practice-page">
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] font-bold text-lg sm:text-xl">Chapter Test</span>
+                    <span className="chapter-name-display">{SKILL_NAME}</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                <div className="header-center">
+                    <div className="question-counter-badge">
                         Question {currentQIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
-                        Time: {formatTime(timeElapsed)}
+                    <div className="timer-display">
+                        <Clock size={20} /> {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             <main className="junior-practice-main">
-                <div className="flex flex-col lg:flex-row gap-8 w-full max-w-7xl mx-auto items-start">
-                    <div className="flex-1 w-full order-2 lg:order-1">
-                        <AnimatePresence mode="wait">
-                            <motion.div key={currentQIndex} initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="junior-question-card">
-                                <div className="question-text">
-                                    <LatexContent html={currentQuestion.text} />
-                                </div>
-                                <div className="options-grid-modern">
-                                    {currentQuestion.options.map((option, idx) => {
-                                        let statusClass = "";
-                                        if (isSubmitted) {
-                                            if (option === currentQuestion.correctAnswer) statusClass = "correct";
-                                            else if (selectedOption === option) statusClass = "wrong";
-                                        } else if (selectedOption === option) {
-                                            statusClass = "selected";
-                                        }
-                                        return (
-                                            <button key={idx} className={`option-btn-modern ${statusClass}`} onClick={() => handleOptionSelect(option)} disabled={isSubmitted}>
-                                                <LatexContent html={option} />
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                                {isSubmitted && isCorrect && (
-                                    <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct mt-6">
-                                        <div className="flex items-center gap-3">
-                                            <img src={mascotImg} alt="Mascot" className="w-12 h-12 object-contain" />
-                                            <span className="font-bold text-emerald-700">{feedbackMessage}</span>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-                </div>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={currentQIndex}
+                        initial={{ x: 20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -20, opacity: 0 }}
+                        className="junior-question-card"
+                    >
+                        <div className="question-text">
+                            <LatexContent html={questions[currentQIndex].text} />
+                        </div>
+                        <div className="options-grid-modern">
+                            {questions[currentQIndex].options.map((option, idx) => (
+                                <button
+                                    key={idx}
+                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                    onClick={() => setSelectedOption(option)}
+                                >
+                                    <LatexContent html={option} />
+                                </button>
+                            ))}
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
             </main>
 
             <footer className="junior-bottom-bar">
-                <div className="desktop-footer-controls">
-                    <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>
-                            <X size={20} /> Quit Test
-                        </button>
-                    </div>
-                    <div className="bottom-center">
-                        <div className="flex gap-2">
-                            {Array.from({ length: TOTAL_QUESTIONS }).map((_, i) => (
-                                <div key={i} className={`w-3 h-3 rounded-full transition-all ${i === currentQIndex ? 'bg-[#4FB7B3] scale-125' : userAnswers[i] ? (questions[i].correctAnswer === userAnswers[i] ? 'bg-emerald-400' : 'bg-red-400') : 'bg-gray-200'}`} />
-                            )).slice(Math.max(0, currentQIndex - 4), Math.min(TOTAL_QUESTIONS, currentQIndex + 5))}
-                        </div>
-                    </div>
-                    <div className="bottom-right">
-                        <div className="nav-buttons-group">
-                            {!isSubmitted ? (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Check Answer <Check size={28} strokeWidth={3} />
-                                </button>
-                            ) : (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {currentQIndex < TOTAL_QUESTIONS - 1 ? "Next Question" : "Finish Test"} <ChevronRight size={28} strokeWidth={3} />
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                <div className="bottom-left">
+                    <button className="quit-practice-btn" onClick={() => navigate(-1)}>
+                        <X size={20} /> Quit Test
+                    </button>
+                </div>
+                <div className="bottom-right">
+                    <button
+                        className="prev-question-btn"
+                        onClick={handlePrevious}
+                        disabled={currentQIndex === 0}
+                    >
+                        <ChevronLeft size={20} /> Previous
+                    </button>
+                    <button
+                        className={`submit-test-btn active`}
+                        onClick={handleNext}
+                    >
+                        {currentQIndex < TOTAL_QUESTIONS - 1 ? 'NEXT' : 'FINISH'}
+                        <ChevronRight size={20} />
+                    </button>
                 </div>
             </footer>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Trophy, Target, Clock, ArrowRight, X } from 'lucide-react';
+import { ChevronRight, Trophy, Target, Clock, ArrowRight, X, ChevronLeft, CheckCircle, XCircle, HelpCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -44,7 +44,10 @@ const ChapterTest = () => {
                     q = {
                         text: `Find the ${isArea ? 'area' : 'perimeter'} of a rectangle with length $${l}$ ${unit} and width $${w}$ ${unit}.`,
                         correctAnswer: `$${ans}$ ${unitLabel}`,
-                        options: shuffle([`$${ans}$ ${unitLabel}`, `$${ans + 2}$ ${unitLabel}`, `$${ans * 2}$ ${unitLabel}`, `$${Math.abs(ans - 5)}$ ${unitLabel}`])
+                        options: shuffle([`$${ans}$ ${unitLabel}`, `$${ans + 2}$ ${unitLabel}`, `$${ans * 2}$ ${unitLabel}`, `$${Math.abs(ans - 5)}$ ${unitLabel}`]),
+                        explanation: isArea
+                            ? `Area of a rectangle = length $\\times$ width. $${l} \\times ${w} = ${ans}$ ${unitLabel}.`
+                            : `Perimeter of a rectangle = $2 \\times$ (length + width). $2 \\times (${l} + ${w}) = 2 \\times ${l + w} = ${ans}$ ${unitLabel}.`
                     };
                 } else if (type === 2) {
                     const s = rand(4, 12);
@@ -55,7 +58,10 @@ const ChapterTest = () => {
                     q = {
                         text: `Find the ${isArea ? 'area' : 'perimeter'} of a square with side $${s}$ cm.`,
                         correctAnswer: `$${ans}$ ${unitLabel}`,
-                        options: shuffle([`$${ans}$ ${unitLabel}`, `$${ans + 4}$ ${unitLabel}`, `$${s * 2}$ ${unitLabel}`, `$${ans - 2}$ ${unitLabel}`])
+                        options: shuffle([`$${ans}$ ${unitLabel}`, `$${ans + 4}$ ${unitLabel}`, `$${s * 2}$ ${unitLabel}`, `$${ans - 2}$ ${unitLabel}`]),
+                        explanation: isArea
+                            ? `Area of a square = side $\\times$ side. $${s} \\times ${s} = ${ans}$ ${unitLabel}.`
+                            : `Perimeter of a square = $4 \\times$ side. $4 \\times ${s} = ${ans}$ ${unitLabel}.`
                     };
                 } else if (type === 3) {
                     const b = rand(6, 14);
@@ -65,7 +71,8 @@ const ChapterTest = () => {
                     q = {
                         text: `Find the area of a triangle with base $${b}$ cm and height $${h}$ cm.`,
                         correctAnswer: `$${area}$ cm²`,
-                        options: shuffle([`$${area}$ cm²`, `$${area * 2}$ cm²`, `$${b + h}$ cm²`, `$${area - 1}$ cm²`])
+                        options: shuffle([`$${area}$ cm²`, `$${area * 2}$ cm²`, `$${b + h}$ cm²`, `$${area - 1}$ cm²`]),
+                        explanation: `Area of a triangle = $\\frac{1}{2} \\times$ base $\\times$ height. $\\frac{1}{2} \\times ${b} \\times ${h} = ${area}$ cm².`
                     };
                 } else {
                     const p = rand(20, 60);
@@ -73,7 +80,8 @@ const ChapterTest = () => {
                     q = {
                         text: `The perimeter of a square is $${p}$ cm. Find its side length.`,
                         correctAnswer: `$${side}$ cm`,
-                        options: shuffle([`$${side}$ cm`, `$${side + 2}$ cm`, `$${side * 2}$ cm`, `$${Math.floor(side)}$ cm`])
+                        options: shuffle([`$${side}$ cm`, `$${side + 2}$ cm`, `$${side * 2}$ cm`, `$${Math.floor(side)}$ cm`]),
+                        explanation: `Side of a square = Perimeter $\\div$ 4. $${p} \\div 4 = ${side}$ cm.`
                     };
                 }
                 newQuestions.push(q);
@@ -102,48 +110,40 @@ const ChapterTest = () => {
     };
 
     const handleNext = async () => {
-        if (!selectedOption) return;
-
-        const currentQ = questions[currentQIndex];
-        const isCorrect = selectedOption === currentQ.correctAnswer;
-
         setUserAnswers(prev => ({ ...prev, [currentQIndex]: selectedOption }));
-        if (isCorrect) setScore(prev => prev + 1);
-
-        if (sessionId) {
-            api.recordAttempt({
-                session_id: sessionId,
-                skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                student_answer: selectedOption,
-                correct_answer: currentQ.correctAnswer,
-                is_correct: isCorrect,
-                time_spent_seconds: 0
-            }).catch(console.error);
-        }
 
         if (currentQIndex < TOTAL_QUESTIONS - 1) {
-            setCurrentQIndex(prev => prev + 1);
-            setSelectedOption(null);
+            const nextIndex = currentQIndex + 1;
+            setCurrentQIndex(nextIndex);
+            setSelectedOption(userAnswers[nextIndex] || null);
         } else {
-            finishTest(isCorrect);
+            finishTest(selectedOption);
         }
     };
 
-    const handleSkip = () => {
-        if (currentQIndex < TOTAL_QUESTIONS - 1) {
-            setCurrentQIndex(prev => prev + 1);
-            setSelectedOption(null);
-        } else {
-            finishTest(false);
+    const handlePrevious = () => {
+        if (currentQIndex > 0) {
+            const prevIndex = currentQIndex - 1;
+            setCurrentQIndex(prevIndex);
+            setSelectedOption(userAnswers[prevIndex] || null);
         }
     };
 
-    const finishTest = async (lastCorrect) => {
+    const finishTest = async (lastAnswer) => {
         setIsFinished(true);
         clearInterval(timerRef.current);
 
-        const finalCorrectCount = score + (lastCorrect ? 1 : 0);
+        const finalAnswers = { ...userAnswers };
+        if (lastAnswer !== undefined) {
+            finalAnswers[currentQIndex] = lastAnswer;
+        }
+
+        const finalCorrectCount = questions.reduce((count, q, idx) => {
+            if (finalAnswers[idx] === q.correctAnswer) return count + 1;
+            return count;
+        }, 0);
+
+        setScore(finalCorrectCount);
         const finalScore = Math.round((finalCorrectCount / TOTAL_QUESTIONS) * 100);
 
         if (sessionId) {
@@ -169,29 +169,95 @@ const ChapterTest = () => {
 
     if (isFinished) {
         return (
-            <div className="test-result-overlay">
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card-standardized">
-                    <Trophy className="mx-auto text-yellow-500 mb-6" size={80} />
-                    <h1 className="text-4xl font-black text-[#1e1b4b] mb-2">Test Completed!</h1>
-                    <p className="text-gray-500 font-bold text-xl mb-8">{SKILL_NAME}</p>
+            <div className="test-result-overlay overflow-y-auto">
+                <div className="max-w-4xl w-full py-12">
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="result-card-standardized mb-12">
+                        <Trophy className="mx-auto text-yellow-500 mb-6" size={80} />
+                        <h1 className="text-4xl font-black text-[#1e1b4b] mb-2">Test Completed!</h1>
+                        <p className="text-gray-500 font-bold text-xl mb-8">{SKILL_NAME}</p>
 
-                    <div className="result-stat-grid">
-                        <div className="stat-box score">
-                            <Target size={32} className="mx-auto mb-2" />
-                            <div className="text-3xl font-black">{score}/{TOTAL_QUESTIONS}</div>
-                            <div className="text-sm font-bold uppercase tracking-widest opacity-70">Correct Answers</div>
+                        <div className="result-stat-grid">
+                            <div className="stat-box score">
+                                <Target size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{score}/{TOTAL_QUESTIONS}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Correct Answers</div>
+                            </div>
+                            <div className="stat-box time">
+                                <Clock size={32} className="mx-auto mb-2" />
+                                <div className="text-3xl font-black">{formatTime(timeElapsed)}</div>
+                                <div className="text-sm font-bold uppercase tracking-widest opacity-70">Time Taken</div>
+                            </div>
                         </div>
-                        <div className="stat-box time">
-                            <Clock size={32} className="mx-auto mb-2" />
-                            <div className="text-3xl font-black">{formatTime(timeElapsed)}</div>
-                            <div className="text-sm font-bold uppercase tracking-widest opacity-70">Time Taken</div>
+
+                        <button onClick={() => navigate(-1)} className="back-to-syllabus-btn">
+                            Return to Syllabus <ArrowRight size={24} />
+                        </button>
+                    </motion.div>
+
+                    <div className="detailed-report-section">
+                        <h2 className="report-title">Question-wise Report</h2>
+                        <div className="report-questions-list">
+                            {questions.map((q, idx) => {
+                                const userAnswer = userAnswers[idx];
+                                const isCorrect = userAnswer === q.correctAnswer;
+                                const isSkipped = userAnswer === null || userAnswer === undefined;
+
+                                return (
+                                    <div key={idx} className="report-question-item">
+                                        <div className="report-question-header">
+                                            <span className="font-bold text-gray-400">Question {idx + 1}</span>
+                                            <span className={`question-status-badge ${isCorrect ? 'status-correct' : isSkipped ? 'status-skipped' : 'status-incorrect'}`}>
+                                                {isCorrect ? <><CheckCircle size={16} /> Correct</> : isSkipped ? <><HelpCircle size={16} /> Skipped</> : <><XCircle size={16} /> Incorrect</>}
+                                            </span>
+                                        </div>
+                                        <div className="report-question-text">
+                                            <LatexContent html={q.text} />
+                                        </div>
+                                        <div className="report-answers-grid">
+                                            <div className={`answer-comparison-box your-answer-box ${isCorrect ? 'correct-border' : isSkipped ? 'skipped-border' : 'incorrect-border'}`}>
+                                                <div className="answer-label">Your Answer</div>
+                                                <div className="answer-value">
+                                                    {isSkipped ? <span className="text-gray-400 font-normal italic">No answer provided</span> : <LatexContent html={userAnswer} />}
+                                                </div>
+                                            </div>
+                                            <div className="answer-comparison-box correct-answer-box">
+                                                <div className="answer-label">Correct Answer</div>
+                                                <div className="answer-value">
+                                                    <LatexContent html={q.correctAnswer} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="report-options-container">
+                                            <span className="report-options-label">Options Provided:</span>
+                                            <div className="report-options-list">
+                                                {q.options.map((opt, optIdx) => {
+                                                    const isOptCorrect = opt === q.correctAnswer;
+                                                    const isOptUserChoice = opt === userAnswer;
+                                                    return (
+                                                        <div key={optIdx} className={`report-option-item ${isOptCorrect ? 'is-correct' : ''} ${isOptUserChoice ? 'is-user-choice' : ''}`}>
+                                                            {isOptCorrect ? <CheckCircle size={14} /> : isOptUserChoice ? <XCircle size={14} /> : null}
+                                                            <LatexContent html={opt} />
+                                                            {isOptUserChoice && <span className="user-choice-marker">Your Choice</span>}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                        <div className="report-explanation-box">
+                                            <div className="explanation-title">
+                                                <Info size={16} /> Explanation
+                                            </div>
+                                            <div className="explanation-content">
+                                                <LatexContent html={q.explanation} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-
-                    <button onClick={() => navigate(-1)} className="back-to-syllabus-btn">
-                        Return to Syllabus <ArrowRight size={24} />
-                    </button>
-                </motion.div>
+                </div>
             </div>
         );
     }
@@ -203,7 +269,7 @@ const ChapterTest = () => {
     return (
         <div className="chapter-test-page">
             <header className="chapter-test-header">
-                <div className="test-title">Chapter Test</div>
+                <div className="test-title">{SKILL_NAME.replace(" Chapter Test", "")}</div>
                 <div className="question-counter-badge">
                     Question {currentQIndex + 1} / {TOTAL_QUESTIONS}
                 </div>
@@ -246,15 +312,18 @@ const ChapterTest = () => {
                 </button>
 
                 <div className="test-nav-actions">
-                    <button className="skip-btn" onClick={handleSkip}>
-                        Skip <ChevronRight size={20} />
+                    <button
+                        className="prev-btn"
+                        onClick={handlePrevious}
+                        disabled={currentQIndex === 0}
+                    >
+                        <ChevronLeft size={20} /> Previous
                     </button>
                     <button
-                        className={`submit-test-btn ${selectedOption ? 'active' : ''}`}
+                        className={`submit-test-btn active`}
                         onClick={handleNext}
-                        disabled={!selectedOption}
                     >
-                        {currentQIndex < TOTAL_QUESTIONS - 1 ? 'SUBMIT' : 'FINISH'}
+                        {currentQIndex < TOTAL_QUESTIONS - 1 ? 'NEXT' : 'FINISH'}
                         <ChevronRight size={20} />
                     </button>
                 </div>
