@@ -26,6 +26,10 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import IntroductionToGraphs from './components/practice/class-8/introduction_to_graphs/IntroductionToGraphs';
+import GraphsIntro5W1H from './components/practice/class-8/introduction_to_graphs/Topics/5W1H/GraphsIntro5W1H';
+import GraphsTerminology from './components/practice/class-8/introduction_to_graphs/Topics/Terminology/GraphsTerminology';
+import GraphsSkills from './components/practice/class-8/introduction_to_graphs/Topics/Skills/GraphsSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -452,6 +456,11 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          {/* Grade 8: Introduction to Graphs Chapter Pages */}
+          <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/terminology" element={<ProtectedRoute redirectTo="/login"><GraphsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/skills" element={<ProtectedRoute redirectTo="/login"><GraphsSkills /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
