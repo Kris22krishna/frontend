@@ -6,7 +6,8 @@ import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
-import './polynomials.css';
+import mascotImg from '../../../../assets/mascot.png';
+import "../../../../pages/juniors/JuniorPracticeSession.css";
 
 const RegularPolygonPractice = () => {
     const navigate = useNavigate();
@@ -182,17 +183,17 @@ const RegularPolygonPractice = () => {
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             {/* Header */}
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] text-lg sm:text-xl">Regular Polygon</span>
+                    <span className="chapter-title">Perimeter and Area: Regular Polygon</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                <div className="header-center">
+                    <div className="question-counter">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
+                    <div className="timer-display">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -202,34 +203,29 @@ const RegularPolygonPractice = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem' }}>
-                            <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
-                                <div className="text-center space-y-2 w-full">
-                                    <h2 className="text-2xl text-[#31326F]">
-                                        Find the <span className="font-normal">Perimeter</span> of this shape.
-                                    </h2>
-                                    <p className="text-gray-400 text-lg">
-                                        {getPolygonName(numSides)}
-                                    </p>
-                                </div>
+                        <div className="question-card-modern">
+                            <div className="question-header-modern">
+                                <h2 className="question-text-modern">
+                                    Find the <span className="font-semibold text-[#4FB7B3]">Perimeter</span> of this shape
+                                </h2>
+                                <p className="text-gray-400 text-lg">
+                                    {getPolygonName(numSides)}
+                                </p>
                             </div>
 
-                            {/* Visualization */}
-                            <div className="flex-1 flex items-center justify-center w-full py-2 mb-4 min-h-0">
+                            <div className="flex-1 flex items-center justify-center w-full py-6 min-h-[200px]">
                                 <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-                                    <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-xl filter">
+                                    <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-xl">
                                         {(() => {
                                             const cx = 100, cy = 100, r = 80;
                                             const points = [];
                                             for (let i = 0; i < numSides; i++) {
                                                 const angle = (Math.PI / 2) + (i * 2 * Math.PI / numSides);
                                                 const x = cx + r * Math.cos(angle);
-                                                const y = cy - r * Math.sin(angle); // Subtract because SVG y goes down
+                                                const y = cy - r * Math.sin(angle);
                                                 points.push(`${x},${y}`);
                                             }
 
-                                            // Calculate midpoint of the first side (top right usually) to place label
-                                            // Or essentially any side. Let's pick the side between point 0 and 1
                                             const p0 = points[0].split(',').map(Number);
                                             const p1 = points[1].split(',').map(Number);
                                             const mx = (p0[0] + p1[0]) / 2;
@@ -239,29 +235,14 @@ const RegularPolygonPractice = () => {
                                                 <g>
                                                     <polygon
                                                         points={points.join(' ')}
-                                                        fill="rgba(244, 113, 181, 0.05)"
+                                                        fill="rgba(79, 183, 179, 0.1)"
                                                         stroke="#31326F"
                                                         strokeWidth="3"
                                                         strokeLinejoin="round"
                                                     />
-                                                    {/* Side Length Label */}
                                                     <g>
-                                                        <rect
-                                                            x={mx - 24}
-                                                            y={my - 14}
-                                                            width="48"
-                                                            height="28"
-                                                            rx="6"
-                                                            fill="white"
-                                                            className="drop-shadow-sm"
-                                                        />
-                                                        <text
-                                                            x={mx}
-                                                            y={my}
-                                                            textAnchor="middle"
-                                                            dominantBaseline="middle"
-                                                            className="text-lg fill-[#31326F]"
-                                                        >
+                                                        <rect x={mx - 24} y={my - 14} width="48" height="28" rx="6" fill="white" className="shadow-sm" />
+                                                        <text x={mx} y={my} textAnchor="middle" dominantBaseline="middle" className="text-lg font-medium fill-[#31326F]">
                                                             {sideLength}
                                                         </text>
                                                     </g>
@@ -272,50 +253,35 @@ const RegularPolygonPractice = () => {
                                 </div>
                             </div>
 
-                            {/* Input Area */}
-                            <div className="interaction-area-modern w-full max-w-md mx-auto">
-                                <div className="flex flex-col items-center gap-4 w-full">
-                                    {!isSubmitted ? (
-                                        <>
-                                            <div className="relative w-full">
-                                                <input
-                                                    type="number"
-                                                    value={userAnswer}
-                                                    onChange={(e) => setUserAnswer(e.target.value)}
-                                                    placeholder="Enter perimeter"
-                                                    className={`w-full text-center text-3xl py-6 rounded-2xl border-2 transition-all placeholder:text-gray-300 ${!isSubmitted ? "bg-indigo-50/50 border-transparent focus:border-[#3B82F6] focus:bg-white text-[#31326F]" : isCorrect ? "bg-green-100 border-green-500 text-green-700" : "bg-red-100 border-red-500 text-red-700"}`}
-                                                    autoFocus
-                                                    onKeyDown={(e) => e.key === 'Enter' && userAnswer && handleCheck()}
-                                                />
-                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
-                                                    cm
-                                                </div>
-                                            </div>
-                                        </>
-                                    ) : (
+                            <div className="interaction-area-modern">
+                                <div className="input-container-modern max-w-sm mx-auto">
+                                    <div className="relative group">
+                                        <input
+                                            type="number"
+                                            value={userAnswer}
+                                            onChange={(e) => {
+                                                if (!isSubmitted) setUserAnswer(e.target.value);
+                                            }}
+                                            disabled={isSubmitted}
+                                            className={`input-field-modern ${isSubmitted ? (isCorrect ? 'correct' : 'wrong') : ''}`}
+                                            placeholder="Enter your answer"
+                                            onKeyDown={(e) => e.key === 'Enter' && userAnswer && !isSubmitted && handleCheck()}
+                                        />
+                                        <div className="unit-label-modern">
+                                            cm
+                                        </div>
+                                    </div>
+
+                                    {isSubmitted && isCorrect && (
                                         <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className={`w-full p-4 rounded-xl text-center border-2 mt-4 ${isCorrect ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
-                                            <p className={`text-xl ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
-                                                {isCorrect ? "Correct! 🎉" : "Not quite right"}
-                                            </p>
-                                            {isCorrect && (
-                                                <p className="text-green-600 mt-1">{feedbackMessage}</p>
-                                            )}
-                                            {!isCorrect && (
-                                                <div className="flex flex-col items-center gap-2 mt-2">
-                                                    <p className="text-sm text-red-600">
-                                                        Perimeter = Sides × Length = {numSides} × {sideLength} = {numSides * sideLength}
-                                                    </p>
-                                                    <button
-                                                        onClick={() => setShowExplanation(true)}
-                                                        className="px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 transition-colors flex items-center gap-2"
-                                                    >
-                                                        <Eye size={16} /> View Solution
-                                                    </button>
-                                                </div>
-                                            )}
+                                            initial={{ scale: 0.5, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            className="feedback-mini correct"
+                                        >
+                                            <img src={mascotImg} alt="Mascot" className="mascot-feedback" />
+                                            <div className="feedback-content">
+                                                {feedbackMessage}
+                                            </div>
                                         </motion.div>
                                     )}
                                 </div>

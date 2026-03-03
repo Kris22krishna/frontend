@@ -4,7 +4,8 @@ import { Check, ChevronRight, X, ChevronLeft, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
-import './polynomials.css';
+import mascotImg from '../../../../assets/mascot.png';
+import "../../../../pages/juniors/JuniorPracticeSession.css";
 
 const TrianglePractice = () => {
     const navigate = useNavigate();
@@ -192,17 +193,17 @@ const TrianglePractice = () => {
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] text-lg sm:text-xl">Triangle</span>
+                    <span className="chapter-title">Perimeter and Area: Triangle</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                <div className="header-center">
+                    <div className="question-counter">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
+                    <div className="timer-display">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -211,17 +212,15 @@ const TrianglePractice = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem' }}>
-                            <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
-                                <div className="text-center space-y-2 w-full">
-                                    <h2 className="text-2xl text-[#31326F]">
-                                        Find the <span className="font-normal">{mode === 'area' ? 'Area' : 'Perimeter'}</span> of the triangle
-                                    </h2>
-                                </div>
+                        <div className="question-card-modern">
+                            <div className="question-header-modern">
+                                <h2 className="question-text-modern">
+                                    Find the <span className="font-semibold text-[#4FB7B3]">{mode === 'area' ? 'Area' : 'Perimeter'}</span> of the triangle
+                                </h2>
                             </div>
 
-                            <div className="flex-1 flex items-center justify-center w-full py-2 mb-4 min-h-0">
-                                <svg viewBox="0 0 300 300" className="w-full h-full max-h-[180px] max-w-[340px] drop-shadow-lg" style={{ objectFit: 'contain' }}>
+                            <div className="flex-1 flex items-center justify-center w-full py-6 min-h-[200px]">
+                                <svg viewBox="0 0 300 300" className="w-full h-full max-h-[220px] max-w-[340px] drop-shadow-xl" style={{ objectFit: 'contain' }}>
                                     {(() => {
                                         const p1 = { x: 150, y: 50 };
                                         const p2 = { x: 50, y: 250 };
@@ -231,7 +230,7 @@ const TrianglePractice = () => {
                                             <g>
                                                 <polygon
                                                     points={`${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`}
-                                                    fill={mode === 'area' ? "rgba(244, 113, 181, 0.1)" : "white"}
+                                                    fill={mode === 'area' ? "rgba(79, 183, 179, 0.1)" : "white"}
                                                     stroke="#31326F" strokeWidth="3"
                                                 />
                                                 {mode === 'area' && (
@@ -239,32 +238,32 @@ const TrianglePractice = () => {
                                                         <line x1={p1.x} y1={p1.y} x2={p1.x} y2={p3.y} stroke="#31326F" strokeWidth="2" strokeDasharray="5,5" />
                                                         <path d={`M${p1.x},${p3.y} L${p1.x + 10},${p3.y} L${p1.x + 10},${p3.y - 10} L${p1.x},${p3.y - 10}`} fill="none" stroke="#31326F" strokeWidth="2" />
                                                         <g>
-                                                            <rect x={p1.x + 2} y={(p1.y + p3.y) / 2 - 10} width="80" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                            <text x={p1.x + 10} y={(p1.y + p3.y) / 2} dominantBaseline="middle" className="text-lg fill-[#31326F]">h = {height}</text>
+                                                            <rect x={p1.x + 5} y={(p1.y + p3.y) / 2 - 14} width="80" height="28" rx="6" fill="white" fillOpacity="0.9" className="shadow-sm" />
+                                                            <text x={p1.x + 12} y={(p1.y + p3.y) / 2} dominantBaseline="middle" className="text-lg font-medium fill-[#31326F]">h = {height}</text>
                                                         </g>
                                                         <g>
-                                                            <rect x={(p2.x + p3.x) / 2 - 40} y={p3.y + 15} width="80" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                            <text x={(p2.x + p3.x) / 2} y={p3.y + 25} textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">b = {base}</text>
+                                                            <rect x={(p2.x + p3.x) / 2 - 40} y={p3.y + 15} width="80" height="28" rx="6" fill="white" fillOpacity="0.9" className="shadow-sm" />
+                                                            <text x={(p2.x + p3.x) / 2} y={p3.y + 29} textAnchor="middle" dominantBaseline="middle" className="text-lg font-medium fill-[#31326F]">b = {base}</text>
                                                         </g>
                                                     </>
                                                 )}
                                                 {mode === 'perimeter' && (
                                                     <>
                                                         <g>
-                                                            <rect x={(p1.x + p2.x) / 2 - 40} y={(p1.y + p2.y) / 2 - 12} width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                            <text x={(p1.x + p2.x) / 2 - 20} y={(p1.y + p2.y) / 2} textAnchor="end" dominantBaseline="middle" className="text-lg fill-[#31326F]">{sides[0]}</text>
+                                                            <rect x={(p1.x + p2.x) / 2 - 50} y={(p1.y + p2.y) / 2 - 14} width="60" height="28" rx="6" fill="white" fillOpacity="0.9" className="shadow-sm" />
+                                                            <text x={(p1.x + p2.x) / 2 - 20} y={(p1.y + p2.y) / 2} textAnchor="end" dominantBaseline="middle" className="text-lg font-medium fill-[#31326F]">{sides[0]}</text>
                                                         </g>
                                                         <g>
-                                                            <rect x={(p2.x + p3.x) / 2 - 30} y={p3.y + 15} width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                            <text x={(p2.x + p3.x) / 2} y={p3.y + 25} textAnchor="middle" dominantBaseline="middle" className="text-lg fill-[#31326F]">{sides[1]}</text>
+                                                            <rect x={(p2.x + p3.x) / 2 - 30} y={p3.y + 15} width="60" height="28" rx="6" fill="white" fillOpacity="0.9" className="shadow-sm" />
+                                                            <text x={(p2.x + p3.x) / 2} y={p3.y + 29} textAnchor="middle" dominantBaseline="middle" className="text-lg font-medium fill-[#31326F]">{sides[1]}</text>
                                                         </g>
                                                         <g>
-                                                            <rect x={(p1.x + p3.x) / 2 + 5} y={(p1.y + p3.y) / 2 - 12} width="60" height="24" rx="4" fill="white" fillOpacity="0.8" />
-                                                            <text x={(p1.x + p3.x) / 2 + 20} y={(p1.y + p3.y) / 2} textAnchor="start" dominantBaseline="middle" className="text-lg fill-[#31326F]">{sides[2]}</text>
+                                                            <rect x={(p1.x + p3.x) / 2 + 5} y={(p1.y + p3.y) / 2 - 14} width="60" height="28" rx="6" fill="white" fillOpacity="0.9" className="shadow-sm" />
+                                                            <text x={(p1.x + p3.x) / 2 + 35} y={(p1.y + p3.y) / 2} textAnchor="start" dominantBaseline="middle" className="text-lg font-medium fill-[#31326F]">{sides[2]}</text>
                                                         </g>
                                                         <polygon
                                                             points={`${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`}
-                                                            fill="none" stroke="#F471B5" strokeWidth="4" strokeDasharray="10,5"
+                                                            fill="none" stroke="#4FB7B3" strokeWidth="4" strokeDasharray="10,5"
                                                             className="animate-pulse"
                                                         />
                                                     </>
@@ -275,9 +274,9 @@ const TrianglePractice = () => {
                                 </svg>
                             </div>
 
-                            <div className="interaction-area-modern w-full max-w-md mx-auto">
-                                <div className="flex flex-col items-center gap-4 w-full">
-                                    <div className="relative w-full">
+                            <div className="interaction-area-modern">
+                                <div className="input-container-modern max-w-sm mx-auto">
+                                    <div className="relative group">
                                         <input
                                             type="number"
                                             value={userAnswer}
@@ -285,16 +284,27 @@ const TrianglePractice = () => {
                                                 if (!isSubmitted) setUserAnswer(e.target.value);
                                             }}
                                             disabled={isSubmitted}
-                                            className={`w-full text-center text-3xl py-6 rounded-2xl border-2 transition-all placeholder:text-gray-300 ${!isSubmitted ? "bg-indigo-50/50 border-transparent focus:border-[#3B82F6] focus:bg-white text-[#31326F]" : isCorrect ? "bg-green-100 border-green-500 text-green-700" : "bg-red-100 border-red-500 text-red-700"}`}
-                                            placeholder="?"
+                                            className={`input-field-modern ${isSubmitted ? (isCorrect ? 'correct' : 'wrong') : ''}`}
+                                            placeholder="Enter your answer"
                                             onKeyDown={(e) => e.key === 'Enter' && userAnswer && !isSubmitted && handleCheck()}
                                         />
-                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+                                        <div className="unit-label-modern">
                                             {mode === 'area' ? 'cm²' : 'cm'}
                                         </div>
                                     </div>
 
-
+                                    {isSubmitted && isCorrect && (
+                                        <motion.div
+                                            initial={{ scale: 0.5, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            className="feedback-mini correct"
+                                        >
+                                            <img src={mascotImg} alt="Mascot" className="mascot-feedback" />
+                                            <div className="feedback-content">
+                                                {feedbackMessage}
+                                            </div>
+                                        </motion.div>
+                                    )}
                                 </div>
                             </div>
                         </div>

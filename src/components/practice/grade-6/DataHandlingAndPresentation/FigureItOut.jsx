@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
-import './polynomials.css';
+import mascotImg from '../../../../assets/mascot.png';
+import "../../../../pages/juniors/JuniorPracticeSession.css";
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -428,18 +429,18 @@ const FigureItOut = () => {
     if (!currentQuestion) return <div>Loading...</div>;
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+        <div className="junior-practice-page">
+            <header className="junior-practice-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Data Handling: Figure It Out</span>
+                    <span className="chapter-title">{SKILL_NAME}</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-x l shadow-lg whitespace-nowrap">
+                <div className="header-center">
+                    <div className="question-counter">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
+                    <div className="timer-display">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -463,45 +464,35 @@ const FigureItOut = () => {
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className={`flex flex-col ${currentQuestion.chart ? 'md:flex-row' : ''} w-full items-start justify-center gap-6 lg:gap-10 mt-4`}>
+                                    <div className="interaction-area-modern">
                                         {currentQuestion.chart && (
-                                            <div className="chart-container flex-1 w-full max-w-xl flex flex-col items-center justify-start">
+                                            <div className="chart-container flex-1 w-full max-w-xl flex justify-center mb-6">
                                                 <LatexContent block={true} html={currentQuestion.chart} />
                                             </div>
                                         )}
-                                        <div className={`interaction-area-modern flex-1 w-full flex flex-col items-center mx-auto ${currentQuestion.chart ? 'max-w-sm' : 'max-w-3xl mt-6'}`}>
-                                            <div className={`options-grid-modern w-full ${currentQuestion.chart ? 'flex flex-col gap-3' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}`}>
-                                                {shuffledOptions.map((option, idx) => (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                        disabled={isSubmitted}
-                                                        className={`rounded-xl border-2 font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center w-full ${currentQuestion.chart ? 'p-3 text-base min-h-[48px]' : 'p-4 text-lg min-h-[60px]'}
-                                                        ${isSubmitted
-                                                                ? option === currentQuestion.correctAnswer
-                                                                    ? 'bg-green-100 border-green-500 text-green-700'
-                                                                    : selectedOption === option
-                                                                        ? 'bg-red-100 border-red-500 text-red-700'
-                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                                : selectedOption === option
-                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                            }
-                                                    `}
-                                                    >
-                                                        <LatexContent html={option} />
-                                                    </button>
-                                                ))}
-                                            </div>
-
+                                        <div className="options-grid-modern">
+                                            {shuffledOptions.map((option, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                                        } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
+                                                        }`}
+                                                    onClick={() => handleOptionSelect(option)}
+                                                    disabled={isSubmitted}
+                                                >
+                                                    <LatexContent html={option} />
+                                                </button>
+                                            ))}
                                             {isSubmitted && isCorrect && (
                                                 <motion.div
                                                     initial={{ scale: 0.5, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
                                                     className="feedback-mini correct"
-                                                    style={{ marginTop: '20px' }}
                                                 >
-                                                    {feedbackMessage}
+                                                    <img src={mascotImg} alt="Mascot" className="mascot-feedback" />
+                                                    <div className="feedback-content">
+                                                        {feedbackMessage}
+                                                    </div>
                                                 </motion.div>
                                             )}
                                         </div>

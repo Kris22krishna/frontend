@@ -26,6 +26,10 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import IntegersHub from './components/Math-Branches/Integers/IntegersHub';
+import IntegersIntro from './components/Math-Branches/Integers/Topics/Introduction/IntegersIntro';
+import IntegersTerminology from './components/Math-Branches/Integers/Topics/Terminology/IntegersTerminology';
+import IntegersSkills from './components/Math-Branches/Integers/Topics/Skills/IntegersSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -165,6 +169,9 @@ import FactorsOfFormXplusAXplusB from './components/practice/class-8/factorisati
 import DivisionMonomialByMonomial from './components/practice/class-8/factorisation/division_monomial_by_monomial';
 import DivisionPolynomialByMonomial from './components/practice/class-8/factorisation/division_polynomial_by_monomial';
 import DivisionPolynomialByPolynomial from './components/practice/class-8/factorisation/division_polynomial_by_polynomial';
+import DivisibilityTests from './components/practice/grade-6/PrimeTime/DivisibilityTests';
+import CommonMultiplesAndCommonFactors from './components/practice/grade-6/PrimeTime/CommonMultiplesAndCommonFactors';
+import PrimeFactorisation6 from './components/practice/grade-6/PrimeTime/PrimeFactorisation';
 
 // Grade 8 Chapter Tests
 import ExponentsAndPowersTest from './components/practice/class-8/exponents and powers/ExponentsAndPowersTest';
@@ -239,6 +246,13 @@ import ReflectionInALine6 from './components/practice/grade-6/symmetry/Reflectio
 import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
 import OrderOfRotationalSymmetry6 from './components/practice/grade-6/symmetry/OrderOfRotationalSymmetry';
 import IntroToSymmetry6 from './components/practice/grade-6/symmetry/Introduction to Symmetry : Line of Symmetry';
+// Grade 6 - The Other Side of Zero
+import ComparingIntegers from './components/practice/grade-6/the-other-side-of-zero/ComparingIntegers';
+import AbsoluteValue from './components/practice/grade-6/the-other-side-of-zero/AbsoluteValue';
+import AdditionOfIntegers from './components/practice/grade-6/the-other-side-of-zero/AdditionOfIntegers';
+import SubtractionOfIntegers from './components/practice/grade-6/the-other-side-of-zero/SubtractionOfIntegers';
+import WordProblemsIntegers from './components/practice/grade-6/the-other-side-of-zero/WordProblemsIntegers';
+import NumberLineRepresentation from './components/practice/grade-6/the-other-side-of-zero/NumberLineRepresentation';
 
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
@@ -447,6 +461,11 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+
+          <Route path="integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />
+          <Route path="integers/introduction" element={<ProtectedRoute redirectTo="/login"><IntegersIntro /></ProtectedRoute>} />
+          <Route path="integers/terminology" element={<ProtectedRoute redirectTo="/login"><IntegersTerminology /></ProtectedRoute>} />
+          <Route path="integers/skills" element={<ProtectedRoute redirectTo="/login"><IntegersSkills /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
@@ -997,6 +1016,15 @@ function App() {
         <Route path="/middle/grade/6/patterns-math/intro" element={<VisualisingNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/relations" element={<RelationsAmongNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/shapes" element={<PatternsInShapes />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/integers" element={<IntegersHub />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/introduction" element={<IntegersIntro />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/terminology" element={<IntegersTerminology />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/skills" element={<IntegersSkills />} />
+
+        {/* Grade 6 Prime Time */}
+        <Route path="/middle/grade/6/prime-time/divisibility" element={<DivisibilityTests />} />
+        <Route path="/middle/grade/6/prime-time/common-multiples" element={<CommonMultiplesAndCommonFactors />} />
+        <Route path="/middle/grade/6/prime-time/prime-factorisation" element={<PrimeFactorisation6 />} />
 
         <Route path="/middle/grade/6/number-play/numbers-things" element={<NumbersCanTellUsThings />} />
         <Route path="/middle/grade/6/number-play/supercells" element={<Supercells />} />
@@ -1255,6 +1283,13 @@ function App() {
         <Route path="/senior/grade/12/matrices/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><MatrixTransposeTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test" element={<ProtectedRoute redirectTo="/login"><MatricesChapterTest /></ProtectedRoute>} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/comparing-integers" element={<ComparingIntegers />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/absolute-value" element={<AbsoluteValue />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/addition-of-integers" element={<AdditionOfIntegers />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/subtraction-of-integers" element={<SubtractionOfIntegers />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/word-problems" element={<WordProblemsIntegers />} />
+        <Route path="/middle/grade/6/the-other-side-of-zero/number-line-representation" element={<NumberLineRepresentation />} />
+
       </Routes>
     </Router>
   );

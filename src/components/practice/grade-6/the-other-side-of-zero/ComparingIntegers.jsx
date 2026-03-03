@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, X, RefreshCw } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, X, Target } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -11,18 +11,17 @@ import "../../../../pages/juniors/JuniorPracticeSession.css";
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
-    "✨ Amazing job! You found the pattern! ✨",
-    "🌟 Brilliant! You're visualizing it perfectly! 🌟",
-    "🎉 Correct! You're a sequence star! 🎉",
-    "✨ Fantastic work! ✨",
-    "🚀 Super! You're on fire! 🚀",
+    "✨ Fantastic! You're an Integer Pro! ✨",
+    "🌟 Brilliant! You see the order! 🌟",
+    "🎉 Correct! Higher is greater! 🎉",
+    "✨ Amazing work! ✨",
+    "🚀 Super! You're unstoppable! 🚀",
     "🌈 Perfect! Well done! 🌈",
     "🎊 Great job! Moving on... 🎊",
     "💎 Spot on! Excellent! 💎"
 ];
 
-const RelationsAmongNumberSequences = () => {
-    const { grade } = useParams();
+const ComparingIntegers = () => {
     const navigate = useNavigate();
     const getSessionData = (key, defaultValue) => {
         const data = sessionStorage.getItem(key);
@@ -42,17 +41,25 @@ const RelationsAmongNumberSequences = () => {
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
 
-    // Logging states
     const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6202; // ID for Relations Among Number Sequences
-    const SKILL_NAME = "Pattern in Mathematics - Relations Among Sequences";
 
+    const SKILL_ID = 1072;
+    const SKILL_NAME = "Comparing Integers";
     const TOTAL_QUESTIONS = 10;
-    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
 
+    const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
+
+    useEffect(() => {
+        sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+        sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
+        sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+        sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+        if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
+    }, [qIndex, history, answers, sessionId]);
 
     const clearProgress = () => {
         sessionStorage.removeItem(`${storageKey}_qIndex`);
@@ -63,7 +70,6 @@ const RelationsAmongNumberSequences = () => {
     };
 
     useEffect(() => {
-        // Create Session
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
@@ -101,175 +107,107 @@ const RelationsAmongNumberSequences = () => {
             setIsSubmitted(data.isSubmitted);
             setIsCorrect(data.isCorrect);
             setFeedbackMessage(data.feedbackMessage || "");
-        } else if (!answers[qIndex]) {
+        } else {
             generateQuestion(qIndex);
         }
     }, [qIndex]);
 
     const generateQuestion = (index) => {
-        const questionTypes = ["odd_sum_square", "up_down_sum", "triangular_sum", "powers_of_2"];
-        const type = questionTypes[index % 4];
+        const types = ["greater_less", "number_line_pos", "ascending_descending", "real_world_comp"];
+        const type = types[index % types.length];
 
-        let questionText = "";
+        let qText = "";
+        let correct = "";
         let explanation = "";
-        let correctAnswer = "";
         let options = [];
+        let uniqueId = "";
 
-        if (type === "odd_sum_square") {
-            // Sum of first n odd numbers = n^2
-            const n = randomInt(3, 7);
-            const sum = n * n;
-            correctAnswer = sum.toString();
+        if (type === "greater_less") {
+            const a = randomInt(-20, 20);
+            const b = randomInt(-20, 20);
+            if (a === b) return generateQuestion(index);
 
-            // Construct sequence: 1 + 3 + 5 + ...
-            const oddNums = [];
-            for (let i = 0; i < n; i++) oddNums.push(2 * i + 1);
-            const sequenceStr = oddNums.join(" + ");
+            qText = `Which symbol correctly compares $${a}$ and $${b}$? <br/><br/> $${a} \\square ${b}$`;
+            correct = a > b ? ">" : "<";
+            options = [">", "<", "=", "None"];
+            explanation = `On the number line, $${Math.max(a, b)}$ is to the right of $${Math.min(a, b)}$. Therefore, $${Math.max(a, b)} > ${Math.min(a, b)}$.`;
+            uniqueId = `comp_${a}_${b}`;
+        } else if (type === "number_line_pos") {
+            const pos = randomInt(-10, 10);
+            const dir = randomInt(0, 1) === 0 ? "right" : "left";
+            const steps = randomInt(1, 5);
+            const result = dir === "right" ? pos + steps : pos - steps;
 
-            questionText = `
-                <div class='question-container'>
-                    <p>Observe the pattern of adding odd numbers:</p>
-                    <p>$$1 = 1^2$$</p>
-                    <p>$$1 + 3 = 4 = 2^2$$</p>
-                    <p>$$1 + 3 + 5 = 9 = 3^2$$</p>
-                    <p><strong>What is the sum of:</strong></p>
-                    <p>$$${sequenceStr} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `The sum of the first $n$ odd numbers is $n^2$.<br/>Here, there are $${n}$ odd numbers.<br/>Sum = $${n}^2 = ${n} \\times ${n} = ${sum}$.`;
-
-            options = [
-                correctAnswer,
-                (sum - 2).toString(),
-                (sum + 2).toString(),
-                (n * (n + 1)).toString()
-            ];
-
-        } else if (type === "up_down_sum") {
-            // 1 + 2 + ... + n + ... + 1 = n^2
-            const n = randomInt(4, 8);
-            const sum = n * n;
-            correctAnswer = sum.toString();
-
-            const terms = [];
-            for (let i = 1; i <= n; i++) terms.push(i);
-            for (let i = n - 1; i >= 1; i--) terms.push(i);
-            const sequenceStr = terms.join(" + ");
-
-            questionText = `
-                <div class='question-container'>
-                    <p>Look at this addition pattern:</p>
-                    <p>$$1 + 2 + 1 = 4 = 2^2$$</p>
-                    <p>$$1 + 2 + 3 + 2 + 1 = 9 = 3^2$$</p>
-                    <p><strong>Find the sum:</strong></p>
-                    <p>$$${sequenceStr} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `The sum of numbers from $1$ to $n$ and back to $1$ is $n^2$.<br/>The peak number is $${n}$.<br/>Sum = $${n}^2 = ${sum}$.`;
-
-            options = [
-                correctAnswer,
-                (sum - n).toString(),
-                (sum + n).toString(),
-                (sum + 1).toString()
-            ];
-
-        } else if (type === "triangular_sum") {
-            // Sum of two consecutive triangular numbers = square number
-            // T_n + T_{n+1} = (n+1)^2
-            const n = randomInt(2, 5); // Base index
-            const t1 = (n * (n + 1)) / 2;
-            const t2 = ((n + 1) * (n + 2)) / 2;
-            const sum = t1 + t2; // Should be (n+1)^2
-            correctAnswer = sum.toString();
-
-            questionText = `
-                <div class='question-container'>
-                    <p>Triangular numbers are: $1, 3, 6, 10, 15, \\dots$</p>
-                    <p>Adding consecutive triangular numbers gives a square number.</p>
-                    <p>For example: $1 + 3 = 4 = 2^2$.</p>
-                    <p><strong>What is sum of the ${n}^{\\text{th}} and ${(n + 1)}^{\\text{th}} triangular numbers?</strong></p>
-                    <p>$$${t1} + ${t2} = \\,?$$</p>
-                </div>
-            `;
-            explanation = `Adding consecutive triangular numbers gives a square number.<br/>$${t1} + ${t2} = ${sum}$.<br/>Notice that $${sum} = ${(n + 1)}^2$.`;
-
-            options = [
-                correctAnswer,
-                (sum + 2).toString(),
-                (sum - 3).toString(),
-                (t2 * 2).toString()
-            ];
-
-        } else {
-            // Powers of 2
-            const startPower = randomInt(1, 4);
-            const terms = [];
-            for (let i = 0; i < 4; i++) {
-                terms.push(Math.pow(2, startPower + i));
+            qText = `On a number line, which number is $${steps}$ units to the **${dir}** of $${pos}$?`;
+            correct = `$${result}$`;
+            options = [`$${result}$`, `$${pos}$`, `$${pos + steps}$`, `$${pos - steps}$`].map(o => o.toString());
+            // Filter unique options as some might be same
+            options = [...new Set(options)];
+            explanation = `Moving **${dir}** on a number line means ${dir === "right" ? "adding" : "subtracting"}. <br/> $${pos} ${dir === "right" ? "+" : "-"} ${steps} = ${result}$.`;
+            uniqueId = `nbpos_${pos}_${dir}_${steps}`;
+        } else if (type === "ascending_descending") {
+            const nums = [];
+            while (nums.length < 3) {
+                const r = randomInt(-15, 15);
+                if (!nums.includes(r)) nums.push(r);
             }
-            const displayedTerms = terms.slice(0, 3);
-            const nextTerm = terms[3];
-            correctAnswer = nextTerm.toString();
+            const orderType = randomInt(0, 1) === 0 ? "ascending" : "descending";
+            const sorted = [...nums].sort((a, b) => orderType === "ascending" ? a - b : b - a);
 
-            questionText = `
-                <div class='question-container'>
-                    <p>Observe the pattern of powers of 2:</p>
-                    <p>$$${displayedTerms.join(", ")}, \\dots$$</p>
-                    <p><strong>What is the next number?</strong></p>
-                </div>
-            `;
-            explanation = `Each number is multiplied by 2.<br/>$${displayedTerms[2]} \\times 2 = ${nextTerm}$.`;
+            qText = `Arrange the following integers in **${orderType}** order: <br/> $${nums.join(", ")}$`;
+            correct = sorted.map(n => `$${n}$`).join(", ");
 
-            options = [
-                correctAnswer,
-                (nextTerm + 2).toString(),
-                (displayedTerms[2] + 4).toString(),
-                (displayedTerms[2] * 3).toString()
-            ];
+            const wrong1 = [...nums].sort((a, b) => orderType === "ascending" ? b - a : a - b).map(n => `$${n}$`).join(", ");
+            const wrong2 = [...nums].map(n => `$${n}$`).join(", "); // original
+            const wrong3 = [nums[1], nums[0], nums[2]].map(n => `$${n}$`).join(", ");
+
+            options = [correct, wrong1, wrong2, wrong3];
+            explanation = `**${orderType.charAt(0).toUpperCase() + orderType.slice(1)}** order means going from ${orderType === "ascending" ? "smallest to largest" : "largest to smallest"}. <br/> On a number line: $${[...nums].sort((a, b) => a - b).join(" < ")}$`;
+            uniqueId = `order_${nums.join("_")}_${orderType}`;
+        } else {
+            const temp1 = randomInt(-10, 10);
+            const temp2 = randomInt(-10, 10);
+            if (temp1 === temp2) return generateQuestion(index);
+
+            qText = `City A has a temperature of $${temp1}°C$ and City B has $${temp2}°C$. Which city is **colder**?`;
+            correct = temp1 < temp2 ? "City A" : "City B";
+            options = ["City A", "City B", "Both same", "Cannot tell"];
+            explanation = `Colder means a lower temperature. Since $${Math.min(temp1, temp2)} < ${Math.max(temp1, temp2)}$, the city with $${Math.min(temp1, temp2)}°C$ is colder.`;
+            uniqueId = `temp_${temp1}_${temp2}`;
         }
 
-        // Shuffle options and ensure uniqueness
-        let uniqueOptions = [...new Set(options)];
-        while (uniqueOptions.length < 4) {
-            uniqueOptions.push((parseInt(uniqueOptions[0]) + Math.floor(Math.random() * 10) + 1).toString());
-            uniqueOptions = [...new Set(uniqueOptions)];
-        }
+        const shuffled = [...new Set(options)].sort(() => Math.random() - 0.5);
 
-        setShuffledOptions([...uniqueOptions].sort(() => Math.random() - 0.5));
         const newQuestion = {
-            text: questionText,
-            correctAnswer: correctAnswer,
-            solution: explanation
+            text: qText,
+            correctAnswer: correct,
+            solution: explanation,
+            type: 'mcq',
+            options: shuffled
         };
 
         setCurrentQuestion(newQuestion);
+        setShuffledOptions(shuffled);
         setSelectedOption(null);
         setIsSubmitted(false);
         setIsCorrect(false);
+        setFeedbackMessage("");
 
         setHistory(prev => ({
             ...prev,
             [index]: {
                 question: newQuestion,
-                options: uniqueOptions,
+                options: shuffled,
                 selectedOption: null,
                 isSubmitted: false,
-                isCorrect: false,
-                feedbackMessage: ""
+                isCorrect: false
             }
         }));
     };
 
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    };
-
-    const recordQuestionAttempt = async (question, selected, isCorrect) => {
+    const recordAttempt = async (isCorrect, selected) => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (!userId) return;
+        if (!userId || !sessionId) return;
 
         let timeSpent = accumulatedTime.current;
         if (isTabActive.current) {
@@ -282,34 +220,28 @@ const RelationsAmongNumberSequences = () => {
                 user_id: parseInt(userId, 10),
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                template_id: null,
-                difficulty_level: 'Medium',
-                question_text: String(question.text || ''),
-                correct_answer: String(question.correctAnswer || ''),
-                student_answer: String(selected || ''),
+                question_text: currentQuestion.text,
+                correct_answer: currentQuestion.correctAnswer,
+                student_answer: selected,
                 is_correct: isCorrect,
-                solution_text: String(question.solution || ''),
-                time_spent_seconds: seconds >= 0 ? seconds : 0
+                solution_text: currentQuestion.solution,
+                time_spent_seconds: seconds
             });
-        } catch (e) {
-            console.error("Failed to record attempt", e);
+        } catch (err) {
+            console.error("Failed to record attempt", err);
         }
     };
 
     const handleCheck = () => {
-        if (!selectedOption || !currentQuestion) return;
+        if (!selectedOption || isSubmitted) return;
         const isRight = selectedOption === currentQuestion.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
+        const msg = isRight ? CORRECT_MESSAGES[randomInt(0, CORRECT_MESSAGES.length - 1)] : "";
+        setFeedbackMessage(msg);
 
-        const feedbackMsg = isRight ? CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)] : "";
-
-        if (isRight) {
-            setFeedbackMessage(feedbackMsg);
-        } else {
-            setShowExplanationModal(true);
-        }
+        if (!isRight) setShowExplanationModal(true);
 
         setHistory(prev => ({
             ...prev,
@@ -318,80 +250,61 @@ const RelationsAmongNumberSequences = () => {
                 selectedOption: selectedOption,
                 isSubmitted: true,
                 isCorrect: isRight,
-                feedbackMessage: feedbackMsg
+                feedbackMessage: msg
             }
         }));
 
-        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
-    };
-
-    const handlePrevious = () => {
-        if (qIndex > 0) {
-            setQIndex(prev => prev - 1);
-            setShowExplanationModal(false);
-        }
+        recordAttempt(isRight, selectedOption);
     };
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
-            setShowExplanationModal(false);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            if (sessionId) {
-                await api.finishSession(sessionId).catch(console.error);
-            }
-
+            if (sessionId) await api.finishSession(sessionId).catch(console.error);
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val === true).length;
-                try {
-                    await api.createReport({
-                        title: SKILL_NAME,
-                        type: 'practice',
-                        score: (totalCorrect / TOTAL_QUESTIONS) * 100,
-                        parameters: {
-                            skill_id: SKILL_ID,
-                            skill_name: SKILL_NAME,
-                            total_questions: TOTAL_QUESTIONS,
-                            correct_answers: totalCorrect,
-                            timestamp: new Date().toISOString(),
-                            time_taken_seconds: timeElapsed
-                        },
-                        user_id: parseInt(userId, 10)
-                    });
-                } catch (err) {
-                    console.error("Failed to create report", err);
-                }
+                const correctCount = Object.values(answers).filter(v => v === true).length;
+                await api.createReport({
+                    title: SKILL_NAME,
+                    type: 'practice',
+                    score: (correctCount / TOTAL_QUESTIONS) * 100,
+                    parameters: {
+                        total_questions: TOTAL_QUESTIONS,
+                        correct_answers: correctCount,
+                        time_taken_seconds: timeElapsed
+                    },
+                    user_id: parseInt(userId, 10)
+                }).catch(console.error);
             }
-            clearProgress(); navigate(-1);
+            clearProgress();
+            navigate('/middle/grade/6/the-other-side-of-zero/skills');
         }
     };
 
-    const handleOptionSelect = (option) => {
-        if (isSubmitted) return;
-        setSelectedOption(option);
+    const formatTime = (s) => {
+        const mins = Math.floor(s / 60);
+        const secs = s % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    if (!currentQuestion) return <div>Loading...</div>;
+    if (!currentQuestion) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header">
                 <div className="header-left">
-                    <span className="chapter-title">Patterns in Mathematics: {SKILL_NAME.split(' - ')[1]}</span>
+                    <span className="text-[#31326F] font-normal text-lg sm:text-xl">Comparing Integers</span>
                 </div>
-                <div className="header-center">
-                    <div className="question-counter">
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="timer-display">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -421,7 +334,7 @@ const RelationsAmongNumberSequences = () => {
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
-                                                    onClick={() => !isSubmitted && handleOptionSelect(option)}
+                                                    onClick={() => !isSubmitted && setSelectedOption(option)}
                                                     disabled={isSubmitted}
                                                     className={`option-button-modern ${isSubmitted
                                                         ? option === currentQuestion.correctAnswer
@@ -444,10 +357,11 @@ const RelationsAmongNumberSequences = () => {
                                                 initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="feedback-mini correct"
+                                                style={{ marginTop: '24px' }}
                                             >
-                                                <img src={mascotImg} alt="Mascot" className="mascot-feedback" />
-                                                <div className="feedback-content">
-                                                    {feedbackMessage}
+                                                <div className="flex items-center gap-3">
+                                                    <img src={mascotImg} alt="Mascot" className="w-12 h-12 object-contain" />
+                                                    <span>{feedbackMessage}</span>
                                                 </div>
                                             </motion.div>
                                         )}
@@ -475,7 +389,7 @@ const RelationsAmongNumberSequences = () => {
                             className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg"
                             onClick={async () => {
                                 if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                clearProgress(); navigate(-1);
+                                clearProgress(); navigate('/middle/grade/6/the-other-side-of-zero/skills');
                             }}
                         >
                             Exit
@@ -492,7 +406,7 @@ const RelationsAmongNumberSequences = () => {
                         <div className="nav-buttons-group">
                             <button
                                 className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-                                onClick={handlePrevious}
+                                onClick={() => qIndex > 0 && setQIndex(qIndex - 1)}
                                 disabled={qIndex === 0}
                                 style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
                             >
@@ -518,58 +432,9 @@ const RelationsAmongNumberSequences = () => {
                         </div>
                     </div>
                 </div>
-
-                <div className="mobile-footer-controls">
-                    <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                clearProgress(); navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
-                        {isSubmitted && (
-                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={18} /> Explain
-                            </button>
-                        )}
-                    </div>
-                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
-                        <div className="nav-buttons-group">
-                            <button
-                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-                                onClick={handlePrevious}
-                                disabled={qIndex === 0}
-                                style={{
-                                    opacity: qIndex === 0 ? 0.5 : 1,
-                                    padding: '8px 12px',
-                                    marginRight: '8px',
-                                    backgroundColor: '#eef2ff',
-                                    color: '#31326F',
-                                    minWidth: 'auto'
-                                }}
-                            >
-                                <ChevronLeft size={24} strokeWidth={3} /> PREV
-                            </button>
-                            {isSubmitted ? (
-                                <button className="nav-pill-next-btn" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
-                                </button>
-                            ) : (
-                                <button
-                                    className="nav-pill-submit-btn"
-                                    onClick={handleCheck}
-                                    disabled={!selectedOption}
-                                >SUBMIT</button>
-                            )}
-                        </div>
-                    </div>
-                </div>
             </footer>
         </div>
     );
 };
 
-export default RelationsAmongNumberSequences;
+export default ComparingIntegers;

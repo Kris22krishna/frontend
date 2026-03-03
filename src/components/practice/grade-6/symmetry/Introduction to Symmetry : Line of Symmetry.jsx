@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
-import './polynomials.css';
+import mascotImg from '../../../../assets/mascot.png';
+import "../../../../pages/juniors/JuniorPracticeSession.css";
 
 const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, totalCount, onContinue }) => {
     if (!isOpen) return null;
@@ -437,43 +438,36 @@ const IntroductionToSymmetryLineOfSymmetry = () => {
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="flex flex-col md:flex-row w-full items-center justify-center gap-6 lg:gap-10 mt-4">
+                                    <div className="interaction-area-modern">
                                         {currentQuestion.chart && (
-                                            <div className="chart-container flex-1 w-full max-w-xl flex justify-center">
+                                            <div className="chart-container flex-1 w-full max-w-xl flex justify-center mb-6">
                                                 <LatexContent block={true} html={currentQuestion.chart} />
                                             </div>
                                         )}
-                                        <div className="interaction-area-modern flex-1 w-full max-sm flex flex-col items-center">
-                                            <div className="options-grid-modern flex flex-col gap-3 w-full">
-                                                {shuffledOptions.map((option, idx) => (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={() => !isSubmitted && handleOptionSelect(option)}
-                                                        disabled={isSubmitted}
-                                                        className={`p-3 rounded-xl border-2 text-base font-normal transition-all transform hover:scale-[1.01] flex items-center justify-center min-h-[48px] w-full
-                                                            ${isSubmitted
-                                                                ? option === currentQuestion.correctAnswer
-                                                                    ? 'bg-green-100 border-green-500 text-green-700'
-                                                                    : selectedOption === option
-                                                                        ? 'bg-red-100 border-red-500 text-red-700'
-                                                                        : 'bg-gray-50 border-gray-200 text-gray-400'
-                                                                : selectedOption === option
-                                                                    ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                            }
-                                                        `}
-                                                    >
-                                                        <LatexContent html={option} />
-                                                    </button>
-                                                ))}
-                                            </div>
+                                        <div className="options-grid-modern">
+                                            {shuffledOptions.map((option, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                                        } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
+                                                        }`}
+                                                    onClick={() => handleOptionSelect(option)}
+                                                    disabled={isSubmitted}
+                                                >
+                                                    <LatexContent html={option} />
+                                                </button>
+                                            ))}
                                             {isSubmitted && isCorrect && (
                                                 <motion.div
                                                     initial={{ scale: 0.5, opacity: 0 }}
                                                     animate={{ scale: 1, opacity: 1 }}
-                                                    className="feedback-mini correct mt-6 w-full text-center p-3 rounded-lg font-normal bg-green-100 text-green-700"
+                                                    className="feedback-mini correct"
+                                                    style={{ marginTop: '20px' }}
                                                 >
-                                                    {feedbackMessage}
+                                                    <div className="flex items-center gap-3">
+                                                        <img src={mascotImg} alt="Mascot" className="w-12 h-12 object-contain" />
+                                                        <span>{feedbackMessage}</span>
+                                                    </div>
                                                 </motion.div>
                                             )}
                                         </div>

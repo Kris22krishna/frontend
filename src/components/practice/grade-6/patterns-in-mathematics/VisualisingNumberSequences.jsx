@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, X, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
-import './polynomials.css';
+import mascotImg from '../../../../assets/mascot.png';
+import "../../../../pages/juniors/JuniorPracticeSession.css";
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -388,17 +389,17 @@ const VisualisingNumberSequences = () => {
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] text-lg sm:text-xl">{SKILL_NAME.split(' - ')[1]}</span>
+                    <span className="chapter-title">Patterns in Mathematics: {SKILL_NAME.split(' - ')[1]}</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                <div className="header-center">
+                    <div className="question-counter">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
+                    <div className="timer-display">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -416,12 +417,13 @@ const VisualisingNumberSequences = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
+                                <div className="question-card-modern">
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                        <h2 className="question-text-modern">
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
+
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
@@ -429,31 +431,32 @@ const VisualisingNumberSequences = () => {
                                                     key={idx}
                                                     onClick={() => !isSubmitted && handleOptionSelect(option)}
                                                     disabled={isSubmitted}
-                                                    className={`p-4 rounded-xl border-2 text-lg transition-all transform hover:scale-102
-                                                        ${isSubmitted
-                                                            ? option === currentQuestion.correctAnswer
-                                                                ? 'bg-green-100 border-green-500 text-green-700'
-                                                                : selectedOption === option
-                                                                    ? 'bg-red-100 border-red-500 text-red-700'
-                                                                    : 'bg-gray-50 border-gray-200 text-gray-400'
+                                                    className={`option-button-modern ${isSubmitted
+                                                        ? option === currentQuestion.correctAnswer
+                                                            ? 'correct'
                                                             : selectedOption === option
-                                                                ? 'bg-indigo-50 border-[#4FB7B3] text-[#31326F] shadow-md'
-                                                                : 'bg-white border-gray-200 text-gray-600 hover:border-[#4FB7B3] hover:shadow-sm'
-                                                        }
-                                                    `}
+                                                                ? 'wrong'
+                                                                : 'disabled'
+                                                        : selectedOption === option
+                                                            ? 'selected'
+                                                            : ''
+                                                        }`}
                                                 >
                                                     <LatexContent html={option} />
                                                 </button>
                                             ))}
                                         </div>
+
                                         {isSubmitted && isCorrect && (
                                             <motion.div
                                                 initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
                                             >
-                                                {feedbackMessage}
+                                                <img src={mascotImg} alt="Mascot" className="mascot-feedback" />
+                                                <div className="feedback-content">
+                                                    {feedbackMessage}
+                                                </div>
                                             </motion.div>
                                         )}
                                     </div>
@@ -495,6 +498,14 @@ const VisualisingNumberSequences = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: "10px" }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
@@ -504,7 +515,11 @@ const VisualisingNumberSequences = () => {
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >
                                     SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
                             )}
@@ -531,12 +546,31 @@ const VisualisingNumberSequences = () => {
                     </div>
                     <div className="mobile-footer-right" style={{ width: 'auto' }}>
                         <div className="nav-buttons-group">
+                            <button
+                                className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={handlePrevious}
+                                disabled={qIndex === 0}
+                                style={{
+                                    opacity: qIndex === 0 ? 0.5 : 1,
+                                    padding: '8px 12px',
+                                    marginRight: '8px',
+                                    backgroundColor: '#eef2ff',
+                                    color: '#31326F',
+                                    minWidth: 'auto'
+                                }}
+                            >
+                                <ChevronLeft size={24} strokeWidth={3} /> PREV
+                            </button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
+                                <button
+                                    className="nav-pill-submit-btn"
+                                    onClick={handleCheck}
+                                    disabled={!selectedOption}
+                                >SUBMIT</button>
                             )}
                         </div>
                     </div>

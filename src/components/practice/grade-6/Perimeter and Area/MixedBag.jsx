@@ -4,7 +4,8 @@ import { Check, ChevronRight, X, ChevronLeft, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
-import './polynomials.css';
+import mascotImg from '../../../../assets/mascot.png';
+import "../../../../pages/juniors/JuniorPracticeSession.css";
 
 const MixedBagPractice = () => {
     const navigate = useNavigate();
@@ -432,17 +433,17 @@ const MixedBagPractice = () => {
 
     return (
         <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+            <header className="junior-practice-header">
                 <div className="header-left">
-                    <span className="text-[#31326F] text-lg sm:text-xl">Mixed Bag</span>
+                    <span className="chapter-title">Perimeter and Area: Mixed Bag</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                <div className="header-center">
+                    <div className="question-counter">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] text-lg shadow-md flex items-center gap-2">
+                    <div className="timer-display">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -451,17 +452,15 @@ const MixedBagPractice = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem' }}>
-                            <div className="question-header-modern" style={{ marginBottom: '2rem' }}>
-                                <div className="text-center space-y-2 w-full">
-                                    <h2 className="text-2xl text-[#31326F] capitalize">
-                                        {getTitle()}
-                                    </h2>
-                                </div>
+                        <div className="question-card-modern">
+                            <div className="question-header-modern">
+                                <h2 className="question-text-modern">
+                                    {getTitle()}
+                                </h2>
                             </div>
 
-                            <div className="flex-1 flex items-center justify-center w-full py-2 mb-4 min-h-0">
-                                <div className="w-full h-full max-h-[180px] max-w-[340px] flex items-center justify-center drop-shadow-lg" style={{ objectFit: 'contain' }}>
+                            <div className="flex-1 flex items-center justify-center w-full py-6 min-h-[200px]">
+                                <div className="w-full h-full max-h-[220px] max-w-[340px] flex items-center justify-center drop-shadow-xl">
                                     {questionType === 'rectangle' && renderRectangle()}
                                     {questionType === 'square' && renderSquare()}
                                     {questionType === 'triangle' && renderTriangle()}
@@ -469,9 +468,9 @@ const MixedBagPractice = () => {
                                 </div>
                             </div>
 
-                            <div className="interaction-area-modern w-full max-w-md mx-auto">
-                                <div className="flex flex-col items-center gap-4 w-full">
-                                    <div className="relative w-full">
+                            <div className="interaction-area-modern">
+                                <div className="input-container-modern max-w-sm mx-auto">
+                                    <div className="relative group">
                                         <input
                                             type="number"
                                             value={userAnswer}
@@ -479,16 +478,27 @@ const MixedBagPractice = () => {
                                                 if (!isSubmitted) setUserAnswer(e.target.value);
                                             }}
                                             disabled={isSubmitted}
-                                            className={`w-full text-center text-3xl py-6 rounded-2xl border-2 transition-all placeholder:text-gray-300 ${!isSubmitted ? "bg-indigo-50/50 border-transparent focus:border-[#3B82F6] focus:bg-white text-[#31326F]" : isCorrect ? "bg-green-100 border-green-500 text-green-700" : "bg-red-100 border-red-500 text-red-700"}`}
-                                            placeholder="?"
+                                            className={`input-field-modern ${isSubmitted ? (isCorrect ? 'correct' : 'wrong') : ''}`}
+                                            placeholder="Enter your answer"
                                             onKeyDown={(e) => e.key === 'Enter' && userAnswer && !isSubmitted && handleCheck()}
                                         />
-                                        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
+                                        <div className="unit-label-modern">
                                             {questionData.mode === 'area' ? 'cm²' : 'cm'}
                                         </div>
                                     </div>
 
-
+                                    {isSubmitted && isCorrect && (
+                                        <motion.div
+                                            initial={{ scale: 0.5, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            className="feedback-mini correct"
+                                        >
+                                            <img src={mascotImg} alt="Mascot" className="mascot-feedback" />
+                                            <div className="feedback-content">
+                                                {feedbackMessage}
+                                            </div>
+                                        </motion.div>
+                                    )}
                                 </div>
                             </div>
                         </div>

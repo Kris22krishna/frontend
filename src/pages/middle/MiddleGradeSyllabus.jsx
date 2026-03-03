@@ -35,6 +35,7 @@ const getTopicIcon = (topicName) => {
     if (lower.includes('fraction') || lower.includes('decimal')) return <Grid size={24} />;
     if (lower.includes('measurement')) return <Compass size={24} />;
     if (lower.includes('volume') || lower.includes('3d')) return <Cuboid size={24} />;
+    if (lower.includes('the other side of zero')) return <Zap size={24} />;
     return <Layers size={24} />; // Default
 };
 
@@ -162,6 +163,11 @@ const MiddleGradeSyllabus = () => {
                     navigate(`/middle/grade/${grade}/symmetry/rotational`);
                     return;
                 }
+            }
+
+            if (lowerTopic.includes('the other side of zero')) {
+                navigate(`/middle/grade/${grade}/the-other-side-of-zero/integers`);
+                return;
             }
 
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
@@ -552,7 +558,7 @@ const MiddleGradeSyllabus = () => {
 
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
-        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling"].some(t => topicName.includes(t))) return acc;
+        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "the other side of zero", "prime time"].some(t => topicName.includes(t))) return acc;
         if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area") return acc;
         if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
 
@@ -1036,6 +1042,23 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'sym-refl-6', skill_name: 'Reflection in a Line', topic: 'Symmetry' },
                 { skill_id: 'sym-rot-6', skill_name: 'Rotational Symmetry', topic: 'Symmetry' },
                 { skill_id: 'sym-order-6', skill_name: 'Order of Rotational Symmetry', topic: 'Symmetry' }
+            ]
+        };
+        skillsByTopic['The Other Side of Zero'] = {
+            'Main': [
+                { skill_id: 'comparing-6', skill_name: 'Comparing Integers', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/comparing-integers' },
+                { skill_id: 'absolute-6', skill_name: 'Absolute Value', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/absolute-value' },
+                { skill_id: 'addition-6', skill_name: 'Addition of Integers', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/addition-of-integers' },
+                { skill_id: 'subtraction-6', skill_name: 'Subtraction of Integers', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/subtraction-of-integers' },
+                { skill_id: 'word-problems-6', skill_name: 'Word Problems', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/word-problems' },
+                { skill_id: 'numberline-6', skill_name: 'Number Line', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/number-line-representation' }
+            ]
+        };
+        skillsByTopic['Prime Time'] = {
+            'Main': [
+                { skill_id: 'divisibility-6', skill_name: 'Divisibility Tests', topic: 'Prime Time', path: '/middle/grade/6/prime-time/divisibility' },
+                { skill_id: 'multiples-factors-6', skill_name: 'Common Multiples and Factors', topic: 'Prime Time', path: '/middle/grade/6/prime-time/common-multiples' },
+                { skill_id: 'prime-factorisation-6', skill_name: 'Prime Factorisation', topic: 'Prime Time', path: '/middle/grade/6/prime-time/prime-factorisation' }
             ]
         };
     }
