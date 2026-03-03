@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../../../Math-Branches/Algebra/algebra.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { LatexText } from '../../../../../LatexText';
 import {
   orderQuestions, orderAssessment,
   typesQuestions, typesAssessment,
@@ -204,10 +205,10 @@ const SKILLS = [
     learn: {
       concept: 'Understanding order is the first step to working with matrices. Every matrix is described by its rows × columns dimensions.',
       rules: [
-        { title: 'Order Convention', f: 'm × n', d: 'A matrix with m rows and n columns has order m × n. Rows always come first.', ex: 'A 2×3 matrix has 2 rows and 3 columns', tip: 'RC = Rows × Columns (like Remote Control)!' },
-        { title: 'Element Notation', f: 'a_{ij}', d: 'Element aᵢⱼ is in row i and column j. The first subscript is always the row.', ex: 'a₂₃ means row 2, column 3', tip: 'Think "Row then Column" — always in that order!' },
-        { title: 'Total Elements', f: 'm × n', d: 'A matrix of order m × n has exactly m × n elements.', ex: 'A 3×4 matrix has 12 elements', tip: 'Just multiply rows by columns!' },
-        { title: 'Possible Orders', f: 'Factor pairs', d: 'A number of elements can have multiple possible orders based on factor pairs.', ex: '12 elements: 1×12, 2×6, 3×4, 4×3, 6×2, 12×1', tip: 'List all factor pairs of the total to find all possible orders.' },
+        { title: 'Order Convention', f: 'm \\times n', d: 'A matrix with m rows and n columns has order m × n. Rows always come first.', ex: 'A $2\\times3$ matrix has 2 rows and 3 columns', tip: 'RC = Rows × Columns (like Remote Control)!' },
+        { title: 'Element Notation', f: 'a_{ij}', d: 'Element aᵢⱼ is in row i and column j. The first subscript is always the row.', ex: '$a_{23}$ means row 2, column 3', tip: 'Think "Row then Column" — always in that order!' },
+        { title: 'Total Elements', f: 'm \\times n', d: 'A matrix of order m × n has exactly m × n elements.', ex: 'A $3\\times4$ matrix has 12 elements', tip: 'Just multiply rows by columns!' },
+        { title: 'Possible Orders', f: '\\text{Factor pairs}', d: 'A number of elements can have multiple possible orders based on factor pairs.', ex: '12 elements: $1\\times12, 2\\times6, 3\\times4, 4\\times3, 6\\times2, 12\\times1$', tip: 'List all factor pairs of the total to find all possible orders.' },
       ]
     }
   },
@@ -218,11 +219,11 @@ const SKILLS = [
     learn: {
       concept: 'Matrices come in many types based on their structure and the arrangement of their elements.',
       rules: [
-        { title: 'Square Matrix', f: 'n × n', d: 'A matrix where rows equals columns. Only square matrices can have determinants and inverses.', ex: '[[1,2],[3,4]] is 2×2 square', tip: 'Equal dimensions = square, like a perfect square shape!' },
-        { title: 'Diagonal Matrix', f: 'a_{ij} = 0, i ≠ j', d: 'A square matrix where all off-diagonal elements are zero.', ex: '[[5,0],[0,3]] is diagonal', tip: 'Everything off the diagonal is wiped to zero!' },
-        { title: 'Identity Matrix', f: 'I_n', d: 'A diagonal matrix with all 1s on the diagonal. The multiplicative identity for matrices.', ex: 'I₂ = [[1,0],[0,1]]', tip: 'The "1" of matrix world — multiplying by it changes nothing!' },
-        { title: 'Symmetric Matrix', f: 'A = Aᵀ', d: 'A matrix equal to its transpose. It is symmetric about the main diagonal.', ex: '[[1,2],[2,3]] is symmetric', tip: 'Mirror image across the diagonal!' },
-        { title: 'Skew-Symmetric', f: 'A = -Aᵀ', d: 'A matrix that equals the negative of its transpose. All diagonal elements must be 0.', ex: '[[0,2],[-2,0]] is skew-symmetric', tip: 'Diagonal = 0, and signs flip across the diagonal!' },
+        { title: 'Square Matrix', f: 'n \\times n', d: 'A matrix where rows equals columns. Only square matrices can have determinants and inverses.', ex: '$\\begin{bmatrix}1&2\\\\3&4\\end{bmatrix}$ is a $2\\times2$ square matrix', tip: 'Equal dimensions = square, like a perfect square shape!' },
+        { title: 'Diagonal Matrix', f: 'a_{ij} = 0, i \\neq j', d: 'A square matrix where all off-diagonal elements are zero.', ex: '$\\begin{bmatrix}5&0\\\\0&3\\end{bmatrix}$ is a diagonal matrix', tip: 'Everything off the diagonal is wiped to zero!' },
+        { title: 'Identity Matrix', f: 'I_n', d: 'A diagonal matrix with all 1s on the diagonal. The multiplicative identity for matrices.', ex: '$I_2 = \\begin{bmatrix}1&0\\\\0&1\\end{bmatrix}$', tip: 'The "1" of matrix world — multiplying by it changes nothing!' },
+        { title: 'Symmetric Matrix', f: 'A = A^T', d: 'A matrix equal to its transpose. It is symmetric about the main diagonal.', ex: '$\\begin{bmatrix}1&2\\\\2&3\\end{bmatrix}$ is symmetric', tip: 'Mirror image across the diagonal!' },
+        { title: 'Skew-Symmetric', f: 'A = -A^T', d: 'A matrix that equals the negative of its transpose. All diagonal elements must be 0.', ex: '$\\begin{bmatrix}0&2\\\\-2&0\\end{bmatrix}$ is skew-symmetric', tip: 'Diagonal = 0, and signs flip across the diagonal!' },
       ]
     }
   },
@@ -233,10 +234,10 @@ const SKILLS = [
     learn: {
       concept: 'Matrix addition and scalar multiplication are element-wise operations — simple but with important rules about matching orders.',
       rules: [
-        { title: 'Same Order Rule', f: 'A + B defined iff same order', d: 'You can only add/subtract matrices that have the exact same dimensions.', ex: '2×3 + 2×3 ✓, 2×3 + 3×2 ✗', tip: 'Always check order first!' },
-        { title: 'Element-wise Add', f: '(A+B)_{ij} = a_{ij} + b_{ij}', d: 'Add corresponding elements in the same position.', ex: '[[1,2]] + [[3,4]] = [[4,6]]', tip: 'Match positions and add!' },
-        { title: 'Scalar Multiply', f: '(kA)_{ij} = k · a_{ij}', d: 'Multiply every element by the scalar k.', ex: '3 × [[1,2]] = [[3,6]]', tip: 'The scalar visits every single element!' },
-        { title: 'Properties', f: 'Commutative & Associative', d: 'A+B = B+A and (A+B)+C = A+(B+C). Zero matrix is the additive identity.', ex: 'A + O = A', tip: 'Addition is friendly — order doesn\'t matter!' },
+        { title: 'Same Order Rule', f: 'A + B \\text{ defined iff same order}', d: 'You can only add/subtract matrices that have the exact same dimensions.', ex: '$2\\times3 + 2\\times3 \\checkmark$, $2\\times3 + 3\\times2 \\times$', tip: 'Always check order first!' },
+        { title: 'Element-wise Add', f: '(A+B)_{ij} = a_{ij} + b_{ij}', d: 'Add corresponding elements in the same position.', ex: '$\\begin{bmatrix}1&2\\end{bmatrix} + \\begin{bmatrix}3&4\\end{bmatrix} = \\begin{bmatrix}4&6\\end{bmatrix}$', tip: 'Match positions and add!' },
+        { title: 'Scalar Multiply', f: '(kA)_{ij} = k \\cdot a_{ij}', d: 'Multiply every element by the scalar k.', ex: '$3 \\times \\begin{bmatrix}1&2\\end{bmatrix} = \\begin{bmatrix}3&6\\end{bmatrix}$', tip: 'The scalar visits every single element!' },
+        { title: 'Properties', f: '\\text{Commutative \\& Associative}', d: 'A+B = B+A and (A+B)+C = A+(B+C). Zero matrix is the additive identity.', ex: '$A + O = A$', tip: 'Addition is friendly — order doesn\'t matter!' },
       ]
     }
   },
@@ -247,10 +248,10 @@ const SKILLS = [
     learn: {
       concept: 'Matrix multiplication combines rows of the first matrix with columns of the second using dot products. Order matters!',
       rules: [
-        { title: 'Dimension Rule', f: 'A_{m×n} · B_{n×p} = C_{m×p}', d: 'Inner dimensions must match. Result has outer dimensions.', ex: 'A₂ₓ₃ · B₃ₓ₄ = C₂ₓ₄', tip: 'Inner match, outer = result!' },
-        { title: 'Dot Product', f: 'c_{ij} = Σ a_{ik}b_{kj}', d: 'Each element is the dot product of a row from A and a column from B.', ex: 'Row [1,2,3] · Col [4,5,6] = 1·4+2·5+3·6 = 32', tip: 'Multiply matching pairs, then sum!' },
-        { title: 'Non-Commutative', f: 'AB ≠ BA', d: 'Matrix multiplication is NOT commutative. Order matters!', ex: 'AB and BA usually give different results', tip: 'Never swap the order unless proven equal!' },
-        { title: 'Associative', f: 'A(BC) = (AB)C', d: 'Grouping doesn\'t matter, but order does.', ex: 'You can compute BC first or AB first', tip: 'Group however you like, just keep the sequence!' },
+        { title: 'Dimension Rule', f: 'A_{m\\times n} \\cdot B_{n\\times p} = C_{m\\times p}', d: 'Inner dimensions must match. Result has outer dimensions.', ex: '$A_{2\\times3} \\cdot B_{3\\times4} = C_{2\\times4}$', tip: 'Inner match, outer = result!' },
+        { title: 'Dot Product', f: 'c_{ij} = \\sum a_{ik}b_{kj}', d: 'Each element is the dot product of a row from A and a column from B.', ex: '$\\text{Row } \\begin{bmatrix}1&2&3\\end{bmatrix} \\cdot \\text{Col } \\begin{bmatrix}4\\\\5\\\\6\\end{bmatrix} = 1\\times4+2\\times5+3\\times6 = 32$', tip: 'Multiply matching pairs, then sum!' },
+        { title: 'Non-Commutative', f: 'AB \\neq BA', d: 'Matrix multiplication is NOT commutative. Order matters!', ex: '$AB$ and $BA$ usually give different results', tip: 'Never swap the order unless proven equal!' },
+        { title: 'Associative', f: 'A(BC) = (AB)C', d: 'Grouping doesn\'t matter, but order does.', ex: '$\\text{You can compute } BC \\text{ first or } AB \\text{ first}$', tip: 'Group however you like, just keep the sequence!' },
       ]
     }
   },
@@ -261,10 +262,10 @@ const SKILLS = [
     learn: {
       concept: 'The transpose flips a matrix over its main diagonal, swapping rows and columns. It has elegant properties.',
       rules: [
-        { title: 'Basic Transpose', f: '(Aᵀ)_{ij} = a_{ji}', d: 'Rows become columns and columns become rows.', ex: '[[1,2],[3,4]]ᵀ = [[1,3],[2,4]]', tip: 'Flip over the diagonal!' },
-        { title: 'Double Transpose', f: '(Aᵀ)ᵀ = A', d: 'Transposing twice gives back the original matrix.', ex: 'Flip twice = back to start', tip: 'Two flips cancel out!' },
-        { title: 'Product Transpose', f: '(AB)ᵀ = BᵀAᵀ', d: 'Reverse the order and transpose each factor.', ex: '(ABC)ᵀ = CᵀBᵀAᵀ', tip: 'Shoe-sock rule: last on, first off!' },
-        { title: 'Decomposition', f: 'A = ½(A+Aᵀ) + ½(A-Aᵀ)', d: 'Any square matrix = symmetric part + skew-symmetric part.', ex: 'Works for every square matrix!', tip: 'Split any matrix into a symmetric + skew-symmetric pair!' },
+        { title: 'Basic Transpose', f: '(A^T)_{ij} = a_{ji}', d: 'Rows become columns and columns become rows.', ex: '$\\begin{bmatrix}1&2\\end{bmatrix}^T = \\begin{bmatrix}1\\\\2\\end{bmatrix}$', tip: 'Flip over the diagonal!' },
+        { title: 'Double Transpose', f: '(A^T)^T = A', d: 'Transposing twice gives back the original matrix.', ex: '$\\text{Flip twice} = \\text{back to start}$', tip: 'Two flips cancel out!' },
+        { title: 'Product Transpose', f: '(AB)^T = B^TA^T', d: 'Reverse the order and transpose each factor.', ex: '$(ABC)^T = C^TB^TA^T$', tip: 'Shoe-sock rule: last on, first off!' },
+        { title: 'Decomposition', f: 'A = \\frac{1}{2}(A+A^T) + \\frac{1}{2}(A-A^T)', d: 'Any square matrix = symmetric part + skew-symmetric part.', ex: '$\\text{Works for every square matrix!}$', tip: 'Split any matrix into a symmetric + skew-symmetric pair!' },
       ]
     }
   },
@@ -275,10 +276,10 @@ const SKILLS = [
     learn: {
       concept: 'A matrix inverse "undoes" multiplication. Only square matrices with non-zero determinants are invertible.',
       rules: [
-        { title: 'Existence', f: '|A| ≠ 0 ⟹ A⁻¹ exists', d: 'A square matrix is invertible if and only if its determinant is non-zero.', ex: '|A| = 5 → A is invertible', tip: 'Always check the determinant first!' },
-        { title: 'Definition', f: 'AA⁻¹ = A⁻¹A = I', d: 'The inverse undoes multiplication, yielding the identity matrix.', ex: 'A × A⁻¹ = I', tip: 'Like multiplying by 1/x to get 1!' },
-        { title: 'Product Inverse', f: '(AB)⁻¹ = B⁻¹A⁻¹', d: 'Inverse of a product reverses the order (shoe-sock rule again).', ex: 'Undo B first, then undo A', tip: 'Same reversal pattern as transpose!' },
-        { title: 'Transpose-Inverse', f: '(Aᵀ)⁻¹ = (A⁻¹)ᵀ', d: 'Transpose and inverse operations commute — you can do them in any order.', ex: 'Transpose first or invert first — same result', tip: 'These two operations are best friends!' },
+        { title: 'Existence', f: '|A| \\neq 0 \\implies A^{-1} \\text{ exists}', d: 'A square matrix is invertible if and only if its determinant is non-zero.', ex: '$|A| = 5 \\implies A \\text{ is invertible}$', tip: 'Always check the determinant first!' },
+        { title: 'Definition', f: 'AA^{-1} = A^{-1}A = I', d: 'The inverse undoes multiplication, yielding the identity matrix.', ex: '$A \\cdot A^{-1} = I$', tip: 'Like multiplying by 1/x to get 1!' },
+        { title: 'Product Inverse', f: '(AB)^{-1} = B^{-1}A^{-1}', d: 'Inverse of a product reverses the order (shoe-sock rule again).', ex: '$\\text{Undo } B \\text{ first, then undo } A$', tip: 'Same reversal pattern as transpose!' },
+        { title: 'Transpose-Inverse', f: '(A^T)^{-1} = (A^{-1})^T', d: 'Transpose and inverse operations commute — you can do them in any order.', ex: '$\\text{Transpose first or invert first} = \\text{same result}$', tip: 'These two operations are best friends!' },
       ]
     }
   },
@@ -376,7 +377,9 @@ export default function MatricesSkills() {
                       <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>Practical Example</h4>
                       <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
                         <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)' }}>
-                          <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$$${skill.learn.rules[selectedLearnIdx].ex}$$`} />
+                          <span style={{ fontSize: 17, color: 'var(--alg-text)', display: 'block' }}>
+                            <LatexText text={skill.learn.rules[selectedLearnIdx].ex} />
+                          </span>
                         </div>
                       </div>
                     </div>
