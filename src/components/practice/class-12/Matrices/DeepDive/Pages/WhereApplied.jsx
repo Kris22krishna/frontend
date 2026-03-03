@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Network, Lock, ChevronRight } from 'lucide-react';
-import { LatexText } from '../../../LatexText';
-import QuizEngine from '../components/QuizEngine';
+import { LatexText } from '../../../../../LatexText';
+import QuizEngine from '../../Shared/QuizEngine';
 
 const APPLICATIONS = [
     {
@@ -228,3 +228,6 @@ const WhereApplied = () => {
 };
 
 export default WhereApplied;
+
+
+

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Shuffle, Key, Calculator, BookOpen, ChevronRight, BrainCircuit } from 'lucide-react';
-import { LatexText } from '../../../LatexText';
-import MatrixGrid from '../components/MatrixGrid';
-import QuizEngine from '../components/QuizEngine';
+import { LatexText } from '../../../../../LatexText';
+import MatrixGrid from '../../Shared/MatrixGrid';
+import QuizEngine from '../../Shared/QuizEngine';
 
 /* ─── Section data ─── */
 const CONCEPTS = [
@@ -297,7 +297,7 @@ const InvertibleMatrices = () => {
                 {/* Navigation */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 20 }}>
                     <button
-                        onClick={() => navigate('/senior/grade/12/matrices/where-applied')}
+                        onClick={() => navigate('/senior/grade/12/matrices/deep-dive/where-applied')}
                         style={{
                             background: '#F1F5F9', color: '#475569', border: '1px solid #E2E8F0', padding: '16px 24px',
                             borderRadius: 12, fontSize: '1rem', fontWeight: 600, cursor: 'pointer',
@@ -323,3 +323,6 @@ const InvertibleMatrices = () => {
 };
 
 export default InvertibleMatrices;
+
+
+

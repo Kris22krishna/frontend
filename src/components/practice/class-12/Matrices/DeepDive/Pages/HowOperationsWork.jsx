@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LatexText } from '../../../LatexText';
-import MatrixGrid from '../components/MatrixGrid';
-import DotProductAnimator from '../components/DotProductAnimator';
-import QuizEngine from '../components/QuizEngine';
+import { LatexText } from '../../../../../LatexText';
+import MatrixGrid from '../../Shared/MatrixGrid';
+import DotProductAnimator from '../../Shared/DotProductAnimator';
+import QuizEngine from '../../Shared/QuizEngine';
 
 /* ─── Collapsible section ─── */
 const Section = ({ title, children, defaultOpen = true }) => {
@@ -530,3 +530,6 @@ const HowOperationsWork = () => {
 };
 
 export default HowOperationsWork;
+
+
+

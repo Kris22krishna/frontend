@@ -2,9 +2,9 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LatexText } from '../../../LatexText';
-import MatrixGrid from '../components/MatrixGrid';
-import QuizEngine from '../components/QuizEngine';
+import { LatexText } from '../../../../../LatexText';
+import MatrixGrid from '../../Shared/MatrixGrid';
+import QuizEngine from '../../Shared/QuizEngine';
 
 /* ─── Types gallery data ─── */
 const MATRIX_TYPES = [
@@ -544,3 +544,6 @@ const WhatIsMatrix = () => {
 };
 
 export default WhatIsMatrix;
+
+
+

@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { api } from '../../../../services/api';
-import { LatexText } from '../../../LatexText';
-import ExplanationModal from '../../../ExplanationModal';
-import InteractiveMatrixBuilder from '../components/InteractiveMatrixBuilder';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import { api } from '../../../../../../services/api';
+import { LatexText } from '../../../../../LatexText';
+import ExplanationModal from '../../../../../ExplanationModal';
+import InteractiveMatrixBuilder from '../../Shared/InteractiveMatrixBuilder';
+import '../../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const SKILL_ID = 12217;
 const SKILL_NAME = 'Matrices — Topic 6: Invertible Matrices';
@@ -85,3 +85,5 @@ const InvertibleMatricesTest = () => {
 };
 
 export default InvertibleMatricesTest;
+
+
