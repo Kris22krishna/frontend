@@ -188,6 +188,20 @@ export const TOPIC_CONFIGS = {
             // Strategies
             { id: "1199", name: "Smart Shortcuts", route: "smart-shortcuts" },
             { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" }
+        ],
+        'Fun with Symmetry': [
+            { id: "1201", name: "Identify Line of Symmetry", route: "identify-line-of-symmetry" },
+            { id: "1202", name: "Draw Line of Symmetry", route: "draw-line-of-symmetry" },
+            { id: "1203", name: "Paper Fold Symmetry", route: "paper-fold-symmetry" },
+            { id: "1204", name: "Mirror Image Shapes", route: "mirror-image-shapes" },
+            { id: "1205", name: "Complete Half Design", route: "complete-half-design" },
+            { id: "1206", name: "Symmetry on Dot Grid", route: "symmetry-on-dot-grid" },
+            { id: "1207", name: "Lines of Symmetry in Polygons", route: "lines-of-symmetry-in-polygons" },
+            { id: "1208", name: "Mirror Symmetric Characters", route: "mirror-symmetric-numbers-letters" },
+            { id: "1209", name: "Identify Repeating Tile", route: "identify-repeating-tile" },
+            { id: "1210", name: "Create Tiling Without Gaps", route: "create-tiling-without-gaps" },
+            { id: "1211", name: "Classify Symmetrical Objects", route: "classify-symmetrical-objects" },
+            { id: "1212", name: "Chapter Test", route: "chapter-test" }
         ]
     }
 };

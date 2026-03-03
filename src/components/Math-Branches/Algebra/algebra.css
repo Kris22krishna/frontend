@@ -653,99 +653,98 @@
 
 /* ── SKILLS ──────────────────────────────────────────── */
 .alg-skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 950px;
+  margin: 30px auto;
 }
 
 .alg-skill-card {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 24px;
   background: #fff;
-  border: 1px solid var(--alg-border);
-  border-radius: var(--alg-rlg);
-  padding: 16px 24px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: var(--alg-sh);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  padding: 24px 32px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
 .alg-skill-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--alg-shlg);
-  border-color: var(--alg-teal);
-}
-
-.alg-skill-card-header {
-  padding: 22px 24px 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: linear-gradient(135deg, #f0fdfa, #eff6ff);
+  transform: translateX(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  border-color: var(--skill-color);
 }
 
 .alg-skill-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 26px;
   flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
 }
 
-.alg-skill-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--alg-text);
-}
-
-.alg-skill-sub {
-  font-size: 13px;
-  color: var(--alg-muted);
-  margin-top: 2px;
-}
-
-.alg-skill-info {
+.alg-skill-content {
+  flex: 1;
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.alg-skill-text-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
 }
 
 .alg-skill-actions {
   display: flex;
-  gap: 10px;
-}
-
-.alg-skill-card-body {
-  padding: 16px 24px 22px;
-}
-
-.alg-skill-desc {
-  font-size: 14px;
-  color: var(--alg-muted);
-  line-height: 1.65;
-  margin-bottom: 16px;
-}
-
-.alg-skill-btn {
-  display: inline-flex;
+  gap: 14px;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+}
+
+/* Button Styles */
+.alg-skill-btn-outline {
+  padding: 9px 24px;
   border-radius: 100px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  background: linear-gradient(135deg, #0891b2, #06b6d4);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.28);
+  transition: all 0.2s;
+  background: #fff !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.1) !important;
+  color: #0f172a !important;
+}
+
+.alg-skill-btn-outline:hover {
+  background: #f8fafc !important;
+  border-color: #64748b !important;
+  transform: translateY(-2px);
+}
+
+.alg-skill-btn-filled {
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: var(--skill-color) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px var(--skill-color-30);
+}
+
+.alg-skill-btn-filled:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 25px var(--skill-color-40);
 }
 
 .alg-skill-btn:hover {
