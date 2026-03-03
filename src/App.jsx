@@ -26,6 +26,10 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import TickingClocks from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/TickingClocks';
+import TickingClocksIntro5W1H from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/Topics/5W1H/TickingClocksIntro5W1H';
+import TickingClocksTerminology from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/Topics/Terminology/TickingClocksTerminology';
+import TickingClocksSkills from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/Topics/Skills/TickingClocksSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -456,6 +460,10 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="ticking-clocks" element={<ProtectedRoute redirectTo="/login"><TickingClocks /></ProtectedRoute>} />
+          <Route path="ticking-clocks/introduction" element={<ProtectedRoute redirectTo="/login"><TickingClocksIntro5W1H /></ProtectedRoute>} />
+          <Route path="ticking-clocks/terminology" element={<ProtectedRoute redirectTo="/login"><TickingClocksTerminology /></ProtectedRoute>} />
+          <Route path="ticking-clocks/skills" element={<ProtectedRoute redirectTo="/login"><TickingClocksSkills /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
