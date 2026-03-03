@@ -249,7 +249,7 @@ import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentati
 import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
 import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
 import OrderOfRotationalSymmetry6 from './components/practice/grade-6/symmetry/OrderOfRotationalSymmetry';
-import IntroToSymmetry6 from './components/practice/grade-6/symmetry/Introduction to Symmetry : Line of Symmetry';
+import IntroToSymmetry6 from './components/practice/grade-6/symmetry/line-of-symmetry';
 
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
