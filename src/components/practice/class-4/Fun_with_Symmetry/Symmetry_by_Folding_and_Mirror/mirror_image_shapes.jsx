@@ -4,6 +4,7 @@ import { Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import ExplanationModal from '../../../../ExplanationModal';
+import FunWithSymmetryReportModal from '../FunWithSymmetryReportModal';
 import '../FunWithSymmetry.css';
 
 const CORRECT_MESSAGES = [
@@ -263,37 +264,18 @@ const MirrorImageShapes = () => {
     if (showResults) {
         const score = Object.values(answers).filter(a => a.isCorrect).length;
         const total = TOTAL_QUESTIONS;
-        const percentage = Math.round((score / total) * 100);
 
         return (
-            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-                <header className="junior-practice-header results-header relative flex justify-center items-center">
-                    <button onClick={() => navigate(-1)} className="absolute top-8 right-8 px-6 py-3 bg-white/20 hover:bg-white/30 text-[#31326F] rounded-2xl font-bold text-lg transition-all flex items-center gap-2 z-50 border-2 border-[#31326F]/30 shadow-md backdrop-blur-sm"><X size={24} /> Back</button>
-                    <div className="title-area"><h1 className="text-3xl font-bold text-[#31326F] pt-8">Mirror Result</h1></div>
-                </header>
-                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4 pt-4">
-                    <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-normal text-[#31326F] mb-2">Practice Complete! 🎉</h2>
-                        <div className="stars-container flex gap-4 my-6">
-                            {[1, 2, 3].map(i => (
-                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
-                                    <Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} />
-                                </motion.div>
-                            ))}
-                        </div>
-                        <div className="results-stats-grid grid grid-cols-2 gap-4 w-full max-w-lg mb-8">
-                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0F7FA] text-center">
-                                <span className="block text-xs font-bold uppercase tracking-widest text-[#0097A7] mb-1">Score</span>
-                                <span className="text-4xl font-black text-[#31326F]">{score}/{total}</span>
-                            </div>
-                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0F7FA] text-center">
-                                <span className="block text-xs font-bold uppercase tracking-widest text-[#0097A7] mb-1">Time</span>
-                                <span className="text-4xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
-                            </div>
-                        </div>
-                        <button className="px-12 py-4 rounded-2xl bg-[#0097A7] text-white font-bold text-xl shadow-lg hover:bg-[#00838F] transition-all flex border-b-4 border-[#006064] active:border-b-0 active:translate-y-1" onClick={() => navigate(-1)}>Back to Topics</button>
-                    </div>
-                </main>
+            <div className="junior-practice-page symmetry-theme" style={{ fontFamily: '"Open Sans", sans-serif', minHeight: '100vh' }}>
+                <FunWithSymmetryReportModal
+                    isOpen={showResults}
+                    stats={{
+                        timeTaken: formatTime(timeElapsed),
+                        correctAnswers: score,
+                        totalQuestions: total
+                    }}
+                    onContinue={() => navigate(-1)}
+                />
             </div>
         );
     }

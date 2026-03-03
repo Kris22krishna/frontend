@@ -200,7 +200,8 @@ export const TOPIC_CONFIGS = {
             { id: "1208", name: "Mirror Symmetric Characters", route: "mirror-symmetric-numbers-letters" },
             { id: "1209", name: "Identify Repeating Tile", route: "identify-repeating-tile" },
             { id: "1210", name: "Create Tiling Without Gaps", route: "create-tiling-without-gaps" },
-            { id: "1211", name: "Classify Symmetrical Objects", route: "classify-symmetrical-objects" }
+            { id: "1211", name: "Classify Symmetrical Objects", route: "classify-symmetrical-objects" },
+            { id: "1212", name: "Chapter Test", route: "chapter-test" }
         ]
     }
 };

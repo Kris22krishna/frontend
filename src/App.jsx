@@ -402,6 +402,7 @@ import MirrorSymmetricNumbersLetters from './components/practice/class-4/Fun_wit
 import IdentifyRepeatingTile from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/identify_repeating_tile';
 import CreateTilingWithoutGaps from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/create_tiling_without_gaps';
 import ClassifySymmetricalObjects from './components/practice/class-4/Fun_with_Symmetry/Real_Life_Symmetry/classify_symmetrical_objects';
+import FunWithSymmetryTest from './components/practice/class-4/Fun_with_Symmetry/FunWithSymmetryTest';
 
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
@@ -717,10 +718,21 @@ function App() {
             <ChapterTest />
           </ProtectedRoute>
         } />
-        {/* Fallback for spaces in URL */}
         <Route path="/junior/grade/:grade/the cleanest village/chapter test" element={
           <ProtectedRoute redirectTo="/login">
             <ChapterTest />
+          </ProtectedRoute>
+        } />
+
+        {/* Fun with Symmetry Routes */}
+        <Route path="/junior/grade/:grade/fun-with-symmetry/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FunWithSymmetryTest />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun with symmetry/chapter test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FunWithSymmetryTest />
           </ProtectedRoute>
         } />
 

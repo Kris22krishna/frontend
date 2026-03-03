@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { X, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import ExplanationModal from '../../../../ExplanationModal';
+import FunWithSymmetryReportModal from '../FunWithSymmetryReportModal';
 import '../FunWithSymmetry.css';
 
 const CORRECT_MESSAGES = [
@@ -13,6 +14,236 @@ const CORRECT_MESSAGES = [
     "✨ Fantastic visualization! ✨",
     "🚀 Super! You're a folding expert! 🚀"
 ];
+
+const SHAPE_TYPES = ['circle', 'square', 'diamond'];
+const PAPER_COLORS = ["#f8b4b4", "#fef3c7", "#ecfccb", "#d1fae5", "#cffafe", "#e0e7ff", "#f3e8ff", "#fce7f3", "#f8fafc"];
+
+const getPunchString = (punches) => {
+    return punches.map(p => `${p.type}-${p.x}-${p.y}`).sort().join('|');
+};
+
+const applyMirror = (punches, mx, my) => {
+    let result = [...punches];
+    if (mx) {
+        const mirrored = result.map(p => ({ ...p, x: 100 - p.x }));
+        result = [...result, ...mirrored];
+    }
+    if (my) {
+        const mirrored = result.map(p => ({ ...p, y: 100 - p.y }));
+        result = [...result, ...mirrored];
+    }
+    const unique = [];
+    const seen = new Set();
+    result.forEach(p => {
+        const key = `${p.type}-${p.x}-${p.y}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            unique.push(p);
+        }
+    });
+    return unique;
+};
+
+const applyTranslate = (punches, tx, ty) => {
+    let result = [...punches];
+    if (tx) {
+        const moved = result.map(p => ({ ...p, x: p.x + 50 }));
+        result = [...result, ...moved];
+    }
+    if (ty) {
+        const moved = result.map(p => ({ ...p, y: p.y + 50 }));
+        result = [...result, ...moved];
+    }
+    const unique = [];
+    const seen = new Set();
+    result.forEach(p => {
+        const key = `${p.type}-${p.x}-${p.y}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            unique.push(p);
+        }
+    });
+    return unique;
+};
+
+const generateQuestions = () => {
+    const questions = [];
+    const usedCombinations = new Set();
+
+    for (let i = 0; i < 10; i++) {
+        let difficulty = 'easy';
+        if (i >= 3 && i < 6) difficulty = 'medium';
+        if (i >= 6) difficulty = 'hard';
+
+        const isHard = difficulty === 'hard';
+        const foldType = isHard ? 'quarter' : 'half';
+        const paperColor = PAPER_COLORS[i % PAPER_COLORS.length];
+
+        const possibleSlots = isHard ? [
+            { x: 25, y: 25 }, { x: 50, y: 50 }, { x: 25, y: 50 }, { x: 50, y: 25 }, { x: 0, y: 0 }, { x: 20, y: 20 }
+        ] : [
+            { x: 25, y: 25 }, { x: 25, y: 75 }, { x: 50, y: 50 }, { x: 50, y: 30 }, { x: 50, y: 70 }, { x: 25, y: 50 }, { x: 0, y: 50 }, { x: 10, y: 10 }
+        ];
+
+        let basePunches = [];
+        let attempts = 0;
+
+        while (attempts < 50) {
+            let numPunches = 1; // Default for easy (1 punch)
+            if (difficulty === 'medium') numPunches = 2; // Medium gets 2 punches on half fold
+            if (difficulty === 'hard') numPunches = (Math.random() > 0.5 ? 2 : 1); // Hard gets 1 or 2 punches on quarter fold
+
+            let shuffledSlots = [...possibleSlots].sort(() => 0.5 - Math.random());
+            let selectedSlots = shuffledSlots.slice(0, numPunches);
+
+            basePunches = selectedSlots.map(slot => ({
+                x: slot.x,
+                y: slot.y,
+                size: Math.floor(Math.random() * 2) === 0 ? 16 : 22,
+                type: SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)]
+            }));
+
+            const comboString = getPunchString(basePunches) + '-' + foldType;
+            if (!usedCombinations.has(comboString)) {
+                usedCombinations.add(comboString);
+                break;
+            }
+            attempts++;
+        }
+
+        const correctPunches = applyMirror(basePunches, true, isHard);
+        const correctStr = getPunchString(correctPunches);
+
+        const distractorPool = [];
+        if (!isHard) {
+            distractorPool.push(applyMirror(basePunches, false, false));
+            distractorPool.push(applyMirror(basePunches, false, true));
+            distractorPool.push(applyMirror(basePunches, true, true));
+            distractorPool.push(applyTranslate(basePunches, true, false));
+            distractorPool.push(applyTranslate(basePunches, false, true));
+            distractorPool.push(applyTranslate(basePunches, true, true));
+        } else {
+            distractorPool.push(applyMirror(basePunches, true, false));
+            distractorPool.push(applyMirror(basePunches, false, true));
+            distractorPool.push(applyMirror(basePunches, false, false));
+            distractorPool.push(applyTranslate(basePunches, true, true));
+            distractorPool.push(applyTranslate(basePunches, true, false));
+            distractorPool.push(applyTranslate(basePunches, false, true));
+        }
+
+        let finalDistractors = [];
+        let seenStrings = new Set([correctStr]);
+
+        distractorPool.sort(() => 0.5 - Math.random());
+        for (let d of distractorPool) {
+            const str = getPunchString(d);
+            if (!seenStrings.has(str)) {
+                seenStrings.add(str);
+                finalDistractors.push(d);
+            }
+            if (finalDistractors.length === 3) break;
+        }
+
+        let fallbackAttempts = 0;
+        while (finalDistractors.length < 3 && fallbackAttempts < 20) {
+            const fallbackPunches = [];
+            const times = isHard ? 4 : 2;
+            for (let k = 0; k < times; k++) {
+                fallbackPunches.push({
+                    x: Math.floor(Math.random() * 5) * 20 + 10,
+                    y: Math.floor(Math.random() * 5) * 20 + 10,
+                    size: 20,
+                    type: SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)]
+                });
+            }
+            const fbUnique = applyMirror(fallbackPunches, false, false);
+            const str = getPunchString(fbUnique);
+            if (!seenStrings.has(str)) {
+                seenStrings.add(str);
+                finalDistractors.push(fbUnique);
+            }
+            fallbackAttempts++;
+        }
+
+        const optionsArrays = [...finalDistractors, correctPunches];
+        optionsArrays.sort(() => 0.5 - Math.random());
+        const correctIndex = optionsArrays.findIndex(opt => getPunchString(opt) === correctStr);
+
+        questions.push({
+            type: foldType,
+            basePunches,
+            options: optionsArrays,
+            correctIndex,
+            paperColor,
+            solution: isHard
+                ? "For a quarter fold (folded twice), any cuts made will be duplicated symmetrically across both the middle vertical and horizontal fold lines."
+                : "For a half fold (folded once), the cut is duplicated symmetrically across the middle fold line like a perfect mirror."
+        });
+    }
+    return questions;
+};
+
+const PunchedPaper = ({ punches, isFolded, foldType, paperColor }) => {
+    const baseId = useId().replace(/[^a-zA-Z0-9]/g, '');
+    const maskId = 'mask-' + baseId;
+
+    let viewBox = "0 0 100 100";
+    if (isFolded) {
+        if (foldType === 'half') viewBox = "0 0 50 100";
+        if (foldType === 'quarter') viewBox = "0 0 50 50";
+    }
+
+    return (
+        <svg viewBox={viewBox} className="w-full h-full drop-shadow-md transition-all duration-300">
+            <defs>
+                <mask id={maskId}>
+                    <rect x="0" y="0" width="100" height="100" fill="white" />
+                    {punches.map((p, idx) => {
+                        if (p.type === 'circle') return <circle key={idx} cx={p.x} cy={p.y} r={p.size / 2} fill="black" />
+                        if (p.type === 'square') return <rect key={idx} x={p.x - p.size / 2} y={p.y - p.size / 2} width={p.size} height={p.size} fill="black" rx="2" />
+                        if (p.type === 'diamond') return <rect key={idx} x={p.x - p.size / 2} y={p.y - p.size / 2} width={p.size} height={p.size} fill="black" rx="1" transform={`rotate(45 ${p.x} ${p.y})`} />
+                        return null;
+                    })}
+                </mask>
+            </defs>
+
+            <rect
+                x="0" y="0"
+                width={isFolded ? 50 : 100}
+                height={isFolded && foldType === 'quarter' ? 50 : 100}
+                rx="2"
+                fill={paperColor || "#f8fafc"}
+                mask={`url(#${maskId})`}
+                stroke="#64748b"
+                strokeWidth="1.5"
+            />
+
+            {!isFolded && (
+                <g opacity="0.4" stroke="#475569" strokeWidth="1.5" strokeDasharray="4 4" fill="none">
+                    {foldType === 'half' && <line x1="50" y1="0" x2="50" y2="100" />}
+                    {foldType === 'quarter' && (
+                        <>
+                            <line x1="50" y1="0" x2="50" y2="100" />
+                            <line x1="0" y1="50" x2="100" y2="50" />
+                        </>
+                    )}
+                </g>
+            )}
+
+            {isFolded && (
+                <g stroke="#334155" strokeWidth="2.5" strokeDasharray="4 4" fill="none">
+                    {foldType === 'half' && <line x1="50" y1="0" x2="50" y2="100" />}
+                    {foldType === 'quarter' && (
+                        <>
+                            <line x1="50" y1="0" x2="50" y2="50" />
+                            <line x1="0" y1="50" x2="50" y2="50" />
+                        </>
+                    )}
+                </g>
+            )}
+        </svg>
+    )
+}
 
 const PaperFoldSymmetry = () => {
     const navigate = useNavigate();
@@ -36,202 +267,6 @@ const PaperFoldSymmetry = () => {
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
-
-    // ----------------------------------------------------------------------
-    // SVGs for the Question (Folded/Punched) and the Options (Unfolded)
-    // ----------------------------------------------------------------------
-    const FoldedState = ({ bgClass, children }) => (
-        <div className={`relative w-24 h-24 md:w-32 md:h-32 ${bgClass} rounded-br-2xl border-l-[4px] border-dashed border-gray-400 border-t-[4px] shadow-lg flex justify-center items-center overflow-hidden`}>
-            {children}
-            <div className="absolute top-1 left-1 md:top-2 md:left-2 text-[10px] md:text-xs font-bold text-gray-500 bg-white/50 px-1 py-0.5 md:px-2 md:py-1 rounded-full pointer-events-none">Folded in Half</div>
-        </div>
-    );
-
-    const FoldedQuarterState = ({ bgClass, children }) => (
-        <div className={`relative w-24 h-24 md:w-32 md:h-32 ${bgClass} rounded-br-2xl border-l-[4px] border-t-[4px] border-dashed border-gray-400 shadow-lg flex justify-center items-center overflow-hidden`}>
-            {children}
-            <div className="absolute top-1 left-1 text-[10px] md:text-xs font-bold text-gray-500 bg-white/50 px-1 py-0.5 md:px-2 md:py-1 rounded-full pointer-events-none text-center leading-tight">Folded<br />Twice</div>
-        </div>
-    );
-
-    const UnfoldedSquare = ({ children }) => (
-        <div className="relative w-20 h-20 md:w-28 md:h-28 bg-white rounded-xl md:rounded-2xl border-2 border-gray-300 shadow-sm flex items-center justify-center pointer-events-none overflow-hidden hover:bg-gray-50 transition-colors">
-            {/* Outline of original folds for context */}
-            <div className="absolute w-[2px] h-full bg-gray-200/50 left-1/2 -translate-x-1/2 pointer-events-none" />
-            <div className="absolute h-[2px] w-full bg-gray-200/50 top-1/2 -translate-y-1/2 pointer-events-none" />
-            {children}
-        </div>
-    );
-
-    const generateQuestions = () => {
-        const questions = [];
-        const colorPalette = [
-            { bg: 'bg-red-500', text: 'text-red-500' },
-            { bg: 'bg-blue-500', text: 'text-blue-500' },
-            { bg: 'bg-green-500', text: 'text-green-500' },
-            { bg: 'bg-purple-500', text: 'text-purple-500' },
-            { bg: 'bg-orange-500', text: 'text-orange-500' },
-            { bg: 'bg-pink-500', text: 'text-pink-500' },
-            { bg: 'bg-yellow-500', text: 'text-yellow-500' },
-            { bg: 'bg-indigo-500', text: 'text-indigo-500' },
-            { bg: 'bg-cyan-500', text: 'text-cyan-500' },
-            { bg: 'bg-rose-500', text: 'text-rose-500' }
-        ];
-
-        for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-            const isHard = i >= 6; // Q0-Q5 are easy/half-fold, Q6-Q9 are hard/quarter-fold
-            const color = colorPalette[i % colorPalette.length];
-            const type = isHard ? 'quarter' : 'half';
-
-            let visual = null;
-            let options = [];
-            let correctIndex = 0;
-            let solution = "";
-
-            if (!isHard) {
-                // HALF FOLD: 6 unique patterns (i = 0 to 5)
-                if (i === 0) {
-                    // Hole in bottom-right corner
-                    visual = <div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} />;
-                    options = [
-                        <div key="O0"><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 left-2`} /></div>,
-                        <div key="O1"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 left-2`} /></div>,
-                        <div key="O2"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 left-2`} /></div>,
-                        <div key="O3"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 left-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 left-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "When you fold a paper in half once and punch a hole near the bottom corner, opening it creates two matching holes at the bottom corners.";
-                } else if (i === 1) {
-                    // Half hole on the left folded edge
-                    visual = <div className={`w-10 h-16 rounded-full ${color.bg} absolute top-1/2 -translate-y-1/2 -left-4`} />;
-                    options = [
-                        <div key="O0"><div className={`w-12 h-16 rounded-full ${color.bg} absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2`} /></div>,
-                        <div key="O1"><div className={`w-6 h-12 rounded-full ${color.bg} absolute top-1/2 -translate-y-1/2 -left-4`} /><div className={`w-6 h-12 rounded-full ${color.bg} absolute top-1/2 -translate-y-1/2 -right-4`} /></div>,
-                        <div key="O2"><div className={`w-12 h-16 rounded-full ${color.bg} absolute top-2 left-1/2 -translate-x-1/2`} /></div>,
-                        <div key="O3"><div className={`w-8 h-12 rounded-full ${color.bg} absolute top-2 left-1/2 -translate-x-1/2`} /><div className={`w-8 h-12 rounded-full ${color.bg} absolute bottom-2 left-1/2 -translate-x-1/2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "If you cut a half-circle on the folded edge, unfolding the paper makes one complete circle right in the center.";
-                } else if (i === 2) {
-                    // Half holes on top and bottom
-                    visual = (
-                        <>
-                            <div className={`w-8 h-8 rounded-full ${color.bg} absolute -top-4 left-1/2 -translate-x-1/2`} />
-                            <div className={`w-8 h-8 rounded-full ${color.bg} absolute -bottom-4 left-1/2 -translate-x-1/2`} />
-                        </>
-                    );
-                    options = [
-                        <div key="O0"><div className={`w-8 h-8 rounded-full ${color.bg} absolute -top-4 left-1/4 -translate-x-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute -top-4 right-1/4 translate-x-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute -bottom-4 left-1/4 -translate-x-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute -bottom-4 right-1/4 translate-x-1/2`} /></div>,
-                        <div key="O1"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 left-4`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 right-4`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 left-4`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 right-4`} /></div>,
-                        <div key="O2"><div className={`w-16 h-16 rounded-full ${color.bg} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`} /></div>,
-                        <div key="O3"><div className={`w-8 h-8 rounded-full ${color.bg} absolute -left-4 top-1/4 -translate-y-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute -left-4 bottom-1/4 translate-y-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute -right-4 top-1/4 -translate-y-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute -right-4 bottom-1/4 translate-y-1/2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "Cutting half-holes on the top and bottom edge of a folded paper will unfold to show matching half-holes on both sides of the edges.";
-                } else if (i === 3) {
-                    // Hole in top-right corner
-                    visual = <div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 right-2`} />;
-                    options = [
-                        <div key="O0"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 left-2`} /></div>,
-                        <div key="O1"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} /></div>,
-                        <div key="O2"><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 left-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} /></div>,
-                        <div key="O3"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-1/2 left-4 -translate-y-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-1/2 right-4 -translate-y-1/2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "The hole on the top right will flip exactly over to the top left when opened.";
-                } else if (i === 4) {
-                    // Square cut in the center of the fold
-                    visual = <div className={`w-8 h-12 ${color.bg} absolute top-1/2 -translate-y-1/2 -left-4 rounded-r-md`} />;
-                    options = [
-                        <div key="O0"><div className={`w-16 h-12 ${color.bg} absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-md`} /></div>,
-                        <div key="O1"><div className={`w-8 h-12 ${color.bg} absolute top-1/2 -translate-y-1/2 -right-4 rounded-l-md`} /><div className={`w-8 h-12 ${color.bg} absolute top-1/2 -translate-y-1/2 -left-4 rounded-r-md`} /></div>,
-                        <div key="O2"><div className={`w-12 h-16 ${color.bg} absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-md`} /></div>,
-                        <div key="O3"><div className={`w-10 h-10 ${color.bg} absolute top-4 left-1/2 -translate-x-1/2 rounded-md`} /><div className={`w-10 h-10 ${color.bg} absolute bottom-4 left-1/2 -translate-x-1/2 rounded-md`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "Cutting a rectangle on the folded edge makes a wider rectangle exactly in the center.";
-                } else if (i === 5) {
-                    // Two small holes on the right edge
-                    visual = (
-                        <>
-                            <div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 right-2`} />
-                            <div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 right-2`} />
-                        </>
-                    );
-                    options = [
-                        <div key="O0"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 left-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 left-2`} /></div>,
-                        <div key="O1"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 right-2`} /></div>,
-                        <div key="O2"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 left-1/4 -translate-x-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-4 right-1/4 translate-x-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 left-1/4 -translate-x-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-4 right-1/4 translate-x-1/2`} /></div>,
-                        <div key="O3"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-1/2 right-2 -translate-y-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-1/2 left-2 -translate-y-1/2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "Two holes on the right side will mirror to two holes on the left side, giving us 4 holes total near the outer edges.";
-                }
-            } else {
-                // QUARTER FOLD: 4 unique patterns (i = 6 to 9)
-                if (i === 6) {
-                    // Hole in center tip (top left)
-                    visual = <div className={`w-12 h-12 rounded-full ${color.bg} absolute -top-6 -left-6`} />;
-                    options = [
-                        <div key="O0"><div className={`w-16 h-16 rounded-full ${color.bg} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`} /></div>,
-                        <div key="O1"><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-2 left-2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute bottom-2 left-2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute bottom-2 right-2`} /></div>,
-                        <div key="O2"><div className={`w-12 h-12 rounded-full ${color.bg} absolute -top-6 -left-6`} /><div className={`w-12 h-12 rounded-full ${color.bg} absolute -top-6 -right-6`} /><div className={`w-12 h-12 rounded-full ${color.bg} absolute -bottom-6 -left-6`} /><div className={`w-12 h-12 rounded-full ${color.bg} absolute -bottom-6 -right-6`} /></div>,
-                        <div key="O3"><div className={`w-10 h-10 rounded-full ${color.bg} absolute top-1/2 left-4 -translate-y-1/2`} /><div className={`w-10 h-10 rounded-full ${color.bg} absolute top-1/2 right-4 -translate-y-1/2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "Cutting the tip where all folds meet forms one huge circle exactly in the center of the unfolded paper.";
-                } else if (i === 7) {
-                    // Hole in the outer corner
-                    visual = <div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} />;
-                    options = [
-                        <div key="O0"><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 left-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-2 left-2`} /></div>,
-                        <div key="O1"><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-1/4 left-3/4 -translate-x-1/2 -translate-y-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-3/4 left-1/4 -translate-x-1/2 -translate-y-1/2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute top-3/4 left-3/4 -translate-x-1/2 -translate-y-1/2`} /></div>,
-                        <div key="O2"><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} /><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 left-2`} /></div>,
-                        <div key="O3"><div className={`w-6 h-6 rounded-full ${color.bg} absolute bottom-2 right-2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "When you fold a paper twice, punching a hole in the free corner duplicates to all four outer corners.";
-                } else if (i === 8) {
-                    // Square cutout on the inner straight edge
-                    visual = <div className={`w-8 h-8 ${color.bg} absolute top-1/2 -translate-y-1/2 -left-4 rotate-45`} />;
-                    options = [
-                        <div key="O0"><div className={`w-12 h-12 ${color.bg} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-45`} /></div>,
-                        <div key="O1"><div className={`w-8 h-8 ${color.bg} absolute top-1/2 -translate-y-1/2 -left-4 rotate-45`} /><div className={`w-8 h-8 ${color.bg} absolute top-1/2 -translate-y-1/2 -right-4 rotate-45`} /></div>,
-                        <div key="O2"><div className={`w-8 h-8 ${color.bg} absolute top-4 left-4 rotate-45`} /><div className={`w-8 h-8 ${color.bg} absolute top-4 right-4 rotate-45`} /><div className={`w-8 h-8 ${color.bg} absolute bottom-4 left-4 rotate-45`} /><div className={`w-8 h-8 ${color.bg} absolute bottom-4 right-4 rotate-45`} /></div>,
-                        <div key="O3"><div className={`w-8 h-8 ${color.bg} absolute top-1/2 left-4 -translate-y-1/2 rotate-45`} /><div className={`w-8 h-8 ${color.bg} absolute top-1/2 right-4 -translate-y-1/2 rotate-45`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "If you cut a triangle on the inner edge of a quarter-fold, unfolding it forms a large diamond exactly in the center.";
-                } else if (i === 9) {
-                    // Hole in the middle of the quarter
-                    visual = <div className={`w-8 h-8 rounded-full ${color.bg} absolute top-2 left-2`} />;
-                    options = [
-                        <div key="O0"><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-2 left-2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-2 right-2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute bottom-2 left-2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute bottom-2 right-2`} /></div>,
-                        <div key="O1"><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-1/2 left-4 -translate-y-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-1/2 right-4 -translate-y-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-4 left-1/2 -translate-x-1/2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute bottom-4 left-1/2 -translate-x-1/2`} /></div>,
-                        <div key="O2"><div className={`w-12 h-12 rounded-full ${color.bg} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`} /></div>,
-                        <div key="O3"><div className={`w-8 h-8 rounded-full ${color.bg} absolute top-2 left-2`} /><div className={`w-8 h-8 rounded-full ${color.bg} absolute bottom-2 right-2`} /></div>
-                    ];
-                    correctIndex = 0;
-                    solution = "A single hole inside the quarter fold duplicates symmetrically to the exact matching spots of all 4 quarters.";
-                }
-            }
-
-            // Shuffle options slightly to vary actual chosen option
-            const shuffledOptionsInfo = options.map((opt, idx) => ({ opt, isCorrect: idx === correctIndex })).sort(() => 0.5 - Math.random());
-            const finalOptions = shuffledOptionsInfo.map(i => i.opt);
-            const finalCorrectIndex = shuffledOptionsInfo.findIndex(i => i.isCorrect);
-
-            questions.push({
-                type,
-                questionVisual: visual,
-                options: finalOptions,
-                correctIndex: finalCorrectIndex,
-                solution
-            });
-        }
-        return questions;
-    };
-
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -357,37 +392,18 @@ const PaperFoldSymmetry = () => {
     if (showResults) {
         const score = Object.values(answers).filter(a => a.isCorrect).length;
         const total = TOTAL_QUESTIONS;
-        const percentage = Math.round((score / total) * 100);
 
         return (
-            <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-                <header className="junior-practice-header results-header relative flex justify-center items-center">
-                    <button onClick={() => navigate(-1)} className="absolute top-8 right-8 px-6 py-3 bg-white/20 hover:bg-white/30 text-[#31326F] rounded-2xl font-bold text-lg transition-all flex items-center gap-2 z-50 border-2 border-[#31326F]/30 shadow-md backdrop-blur-sm"><X size={24} /> Back</button>
-                    <div className="title-area"><h1 className="text-3xl font-bold text-[#31326F] pt-8">Fold & Match Result</h1></div>
-                </header>
-                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4 pt-4">
-                    <div className="results-hero-section flex flex-col items-center mb-8">
-                        <h2 className="text-4xl font-normal text-[#31326F] mb-2">Practice Complete! 🎉</h2>
-                        <div className="stars-container flex gap-4 my-6">
-                            {[1, 2, 3].map(i => (
-                                <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.2 }} className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}>
-                                    <Star size={60} fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"} color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"} />
-                                </motion.div>
-                            ))}
-                        </div>
-                        <div className="results-stats-grid grid grid-cols-2 gap-4 w-full max-w-lg mb-8">
-                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0F7FA] text-center">
-                                <span className="block text-xs font-bold uppercase tracking-widest text-[#0097A7] mb-1">Score</span>
-                                <span className="text-4xl font-black text-[#31326F]">{score}/{total}</span>
-                            </div>
-                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0F7FA] text-center">
-                                <span className="block text-xs font-bold uppercase tracking-widest text-[#0097A7] mb-1">Time</span>
-                                <span className="text-4xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
-                            </div>
-                        </div>
-                        <button className="px-12 py-4 rounded-2xl bg-[#0097A7] text-white font-bold text-xl shadow-lg hover:bg-[#00838F] transition-all flex border-b-4 border-[#006064] active:border-b-0 active:translate-y-1" onClick={() => navigate(-1)}>Back to Topics</button>
-                    </div>
-                </main>
+            <div className="junior-practice-page symmetry-theme" style={{ fontFamily: '"Open Sans", sans-serif', minHeight: '100vh' }}>
+                <FunWithSymmetryReportModal
+                    isOpen={showResults}
+                    stats={{
+                        timeTaken: formatTime(timeElapsed),
+                        correctAnswers: score,
+                        totalQuestions: total
+                    }}
+                    onContinue={() => navigate(-1)}
+                />
             </div>
         );
     }
@@ -418,26 +434,27 @@ const PaperFoldSymmetry = () => {
                     <div className="w-full flex flex-col md:flex-row justify-center items-center gap-8 h-full">
 
                         {/* Interactive Area - FOLDED */}
-                        <div className="w-full md:w-1/2 flex flex-col items-center justify-center gap-2">
+                        <div className="w-full md:w-1/2 flex flex-col items-center justify-center gap-4">
                             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest bg-gray-100 px-4 py-1 rounded-full shadow-sm">Folded</h3>
-                            <div className="bg-slate-50 border-[6px] border-slate-200 rounded-3xl p-4 md:p-6 shadow-md shadow-gray-200 relative scale-90 md:scale-100">
-                                {currentQuestion.type === 'half' ? (
-                                    <FoldedState bgClass="bg-white">{currentQuestion.questionVisual}</FoldedState>
-                                ) : (
-                                    <FoldedQuarterState bgClass="bg-white">{currentQuestion.questionVisual}</FoldedQuarterState>
-                                )}
+                            <div className="bg-slate-50 border-[6px] border-slate-200 rounded-[2.5rem] p-6 shadow-md shadow-gray-200 relative">
+                                <div className="absolute -top-4 -left-4 text-[10px] md:text-xs font-bold text-white bg-[#0097A7] px-3 py-1.5 rounded-full shadow-md z-10 uppercase tracking-wider">
+                                    {currentQuestion.type === 'half' ? 'Folded in Half' : 'Folded Twice'}
+                                </div>
+                                <div className={`relative flex justify-center items-center fill-stone-700 ${currentQuestion.type === 'half' ? 'w-16 h-32 md:w-24 md:h-48' : 'w-24 h-24 md:w-36 md:h-36'}`}>
+                                    <PunchedPaper punches={currentQuestion.basePunches} isFolded={true} foldType={currentQuestion.type} paperColor={currentQuestion.paperColor} />
+                                </div>
                             </div>
                         </div>
 
                         {/* Unfolded Options */}
-                        <div className="w-full md:w-1/2 flex flex-col items-center justify-center gap-2">
+                        <div className="w-full md:w-1/2 flex flex-col items-center justify-center gap-4">
                             <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest bg-gray-100 px-4 py-1 rounded-full shadow-sm">Choose Unfolded</h3>
-                            <div className="grid grid-cols-2 md:grid-cols-2 gap-2 md:gap-4 overflow-x-auto p-2 w-full max-w-[18rem] md:max-w-[16rem] justify-center items-center">
+                            <div className="grid grid-cols-2 gap-4 w-full max-w-[20rem] md:max-w-[24rem] justify-center items-center">
                                 {currentQuestion.options.map((opt, i) => {
                                     const isOptSelected = selectedOption === i;
                                     const isCorrectOpt = currentQuestion.correctIndex === i;
 
-                                    let btnStyle = 'border-gray-200 hover:border-[#0097A7] hover:scale-105';
+                                    let btnStyle = 'border-gray-200 hover:border-[#0097A7] cursor-pointer hover:scale-105';
                                     if (!isSubmitted && isOptSelected) {
                                         btnStyle = 'border-[#0097A7] bg-[#E0F7FA] scale-105 shadow-md shadow-[#0097A7]/20';
                                     } else if (isSubmitted && isCorrectOpt) {
@@ -445,7 +462,7 @@ const PaperFoldSymmetry = () => {
                                     } else if (isSubmitted && isOptSelected && !isCorrect) {
                                         btnStyle = 'border-red-500 bg-red-50 shadow-md shadow-red-500/20';
                                     } else if (isSubmitted) {
-                                        btnStyle = 'border-gray-100 opacity-50';
+                                        btnStyle = 'border-gray-100 opacity-60 cursor-not-allowed';
                                     }
 
                                     return (
@@ -453,9 +470,11 @@ const PaperFoldSymmetry = () => {
                                             key={i}
                                             disabled={isSubmitted}
                                             onClick={() => handleAnswer(i)}
-                                            className={`p-1 md:p-2 rounded-2xl md:rounded-[2rem] border-4 transition-all flex justify-center items-center shrink-0 ${btnStyle}`}
+                                            className={`p-2 rounded-2xl md:rounded-3xl border-4 transition-all flex flex-col items-center justify-center bg-white ${btnStyle}`}
                                         >
-                                            <UnfoldedSquare>{opt}</UnfoldedSquare>
+                                            <div className="w-20 h-20 md:w-28 md:h-28 m-1 flex items-center justify-center drop-shadow-sm pointer-events-none">
+                                                <PunchedPaper punches={opt} isFolded={false} foldType={currentQuestion.type} paperColor={currentQuestion.paperColor} />
+                                            </div>
                                         </button>
                                     );
                                 })}
