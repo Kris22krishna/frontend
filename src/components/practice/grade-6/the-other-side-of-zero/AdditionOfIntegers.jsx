@@ -1,13 +1,77 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, Plus } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, Plus, HelpCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
 import "../../../../pages/juniors/JuniorPracticeSession.css";
+import "./theOtherSideOfZero.css";
+const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
+    if (!isOpen) return null;
+    const answeredCount = correctCount + wrongCount;
+    const unansweredCount = Math.max(0, totalCount - answeredCount - skippedCount);
 
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center"
+            >
+                <h2 className="text-3xl font-black text-[#31326F] mb-4">Practice Complete!</h2>
+                <div className="text-5xl mb-6">🎊</div>
+
+                <div className="grid grid-cols-1 gap-3 mb-8 text-left">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border-2 border-gray-100">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm">
+                            <span className="text-lg">🕒</span> Time Taken:
+                        </div>
+                        <span className="text-lg font-black text-[#31326F]">{timeTaken}</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-green-50 rounded-2xl border-2 border-green-100">
+                            <div className="flex items-center gap-2 text-green-600 font-bold text-xs mb-1">
+                                <Check className="w-4 h-4" /> Correct
+                            </div>
+                            <span className="text-xl font-black text-green-600">{correctCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-red-50 rounded-2xl border-2 border-red-100">
+                            <div className="flex items-center gap-2 text-red-500 font-bold text-xs mb-1">
+                                <X className="w-4 h-4" /> Wrong
+                            </div>
+                            <span className="text-xl font-black text-red-500">{wrongCount}</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-blue-50 rounded-2xl border-2 border-blue-100">
+                            <div className="flex items-center gap-2 text-blue-600 font-bold text-xs mb-1">
+                                <HelpCircle className="w-4 h-4" /> Skipped
+                            </div>
+                            <span className="text-xl font-black text-blue-600">{skippedCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-gray-50 rounded-2xl border-2 border-gray-200">
+                            <div className="flex items-center gap-2 text-gray-500 font-bold text-xs mb-1">
+                                <ChevronRight className="w-4 h-4" /> Left
+                            </div>
+                            <span className="text-xl font-black text-gray-600">{unansweredCount}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    onClick={onContinue}
+                    className="w-full bg-[#31326F] text-white py-4 rounded-2xl font-black text-xl hover:bg-[#31326F]/90 transition-all shadow-lg active:scale-95"
+                >
+                    Keep Going!
+                </button>
+            </motion.div>
+        </div>
+    );
+};
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
@@ -34,6 +98,7 @@ const AdditionOfIntegers = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showSummaryModal, setShowSummaryModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
@@ -49,11 +114,14 @@ const AdditionOfIntegers = () => {
     const TOTAL_QUESTIONS = 10;
 
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
+    const [skippedQuestions, setSkippedQuestions] = useState(() => new Set(getSessionData(`${storageKey}_skipped`, [])));
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
 
     useEffect(() => {
         sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
         sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
         sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+        sessionStorage.setItem(`${storageKey}_skipped`, JSON.stringify(Array.from(skippedQuestions)));
         sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
         if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
     }, [qIndex, history, answers, sessionId]);
@@ -109,7 +177,9 @@ const AdditionOfIntegers = () => {
         }
     }, [qIndex]);
 
-    const generateQuestion = (index) => {
+    const generateQuestion = (index, retryCount = 0) => {
+        if (retryCount > 10) setUsedQuestions(new Set());
+
         const types = ["same_signs", "different_signs", "additive_inverse_sum", "number_line_add"];
         const type = types[index % types.length];
 
@@ -117,6 +187,7 @@ const AdditionOfIntegers = () => {
         let correct = "";
         let explanation = "";
         let options = [];
+        let uniqueId = "";
 
         if (type === "same_signs") {
             const sign = randomInt(0, 1) === 0 ? 1 : -1;
@@ -125,36 +196,52 @@ const AdditionOfIntegers = () => {
             const res = a + b;
             qText = `Add the following integers: <br/><br/> $(${a}) + (${b}) = \\text{?}$`;
             correct = `$${res}$`;
-            options = [`$${res}$`, `$${Math.abs(res)}$`, `$${Math.abs(a) - Math.abs(b)}$`, `$0$`];
-            explanation = `Both numbers have the **same sign** (${sign > 0 ? "positive" : "negative"}). <br/> Add their absolute values: $${Math.abs(a)} + ${Math.abs(b)} = ${Math.abs(res)}$. <br/> Keep the sign: **${res}**.`;
+            const optSet = new Set([correct, `$${Math.abs(res)}$`, `$${Math.abs(a) - Math.abs(b)}$`, `$0$`]);
+            while (optSet.size < 4) optSet.add(`$${res + randomInt(-10, 10)}$`);
+            options = Array.from(optSet);
+            explanation = `Both numbers have the same sign (${sign > 0 ? "positive" : "negative"}). <br/> Add their absolute values: $${Math.abs(a)} + ${Math.abs(b)} = ${Math.abs(res)}$. <br/> Keep the sign: ${res}.`;
+            uniqueId = `add_same_${a}_${b}`;
         } else if (type === "different_signs") {
             const a = randomInt(5, 20);
             const b = -randomInt(5, 20);
             const res = a + b;
-            if (res === 0) return generateQuestion(index);
+            if (res === 0) return generateQuestion(index, retryCount + 1);
 
             qText = `Add the following integers: <br/><br/> $(${a}) + (${b}) = \\text{?}$`;
             correct = `$${res}$`;
-            options = [`$${res}$`, `$${a + Math.abs(b)}$`, `$${-res}$`, `$0$`];
-            explanation = `The numbers have **different signs**. <br/> Subtract the smaller absolute value from the larger: $${Math.max(Math.abs(a), Math.abs(b))} - ${Math.min(Math.abs(a), Math.abs(b))} = ${Math.abs(res)}$. <br/> Keep the sign of the number with the larger absolute value: **${res}**.`;
+            const optSet = new Set([correct, `$${a + Math.abs(b)}$`, `$${-res}$`, `$0$`]);
+            while (optSet.size < 4) optSet.add(`$${res + randomInt(-10, 10)}$`);
+            options = Array.from(optSet);
+            explanation = `The numbers have different signs. <br/> Subtract the smaller absolute value from the larger: $${Math.max(Math.abs(a), Math.abs(b))} - ${Math.min(Math.abs(a), Math.abs(b))} = ${Math.abs(res)}$. <br/> Keep the sign of the number with the larger absolute value: ${res}.`;
+            uniqueId = `add_diff_${a}_${b}`;
         } else if (type === "additive_inverse_sum") {
             const a = randomInt(-30, 30);
-            if (a === 0) return generateQuestion(index);
+            if (a === 0) return generateQuestion(index, retryCount + 1);
             qText = `What is the result of adding $${a}$ and its additive inverse? <br/><br/> $(${a}) + (${-a}) = \\text{?}$`;
             correct = `$0$`;
-            options = [`$0$`, `$${a}$`, `$${-a}$`, `$${2 * a}$`];
-            explanation = `The sum of any integer and its additive inverse (opposite) is always **zero**.`;
+            const optSet = new Set([correct, `$${a}$`, `$${-a}$`, `$${2 * a}$`]);
+            while (optSet.size < 4) optSet.add(`$${randomInt(-10, 10)}$`);
+            options = Array.from(optSet);
+            explanation = `The sum of any integer and its additive inverse (opposite) is always zero.`;
+            uniqueId = `add_inv_${a}`;
         } else {
             const start = randomInt(-5, 5);
             const move = randomInt(-5, 5);
+            if (move === 0) return generateQuestion(index, retryCount + 1);
             const result = start + move;
-            qText = `Starting at $${start}$ on the number line, move $${Math.abs(move)}$ units to the **${move > 0 ? "right" : "left"}**. Where do you land?`;
+            qText = `Starting at $${start}$ on the number line, move $${Math.abs(move)}$ units to the ${move > 0 ? "right" : "left"}. Where do you land?`;
             correct = `$${result}$`;
-            options = [`$${result}$`, `$${start}$`, `$${start - move}$`, `$${-result}$`];
-            explanation = `Moving **right** means addition (+). Moving **left** means subtraction (-). <br/> $ ${start} ${move > 0 ? "+" : "-"} ${Math.abs(move)} = ${result} $.`;
+            const optSet = new Set([correct, `$${start}$`, `$${start - move}$`, `$${-result}$`]);
+            while (optSet.size < 4) optSet.add(`$${result + randomInt(-5, 5)}$`);
+            options = Array.from(optSet);
+            explanation = `Moving right means addition (+). Moving left means subtraction (-). <br/> $ ${start} ${move > 0 ? "+" : "-"} ${Math.abs(move)} = ${result} $.`;
+            uniqueId = `add_line_${start}_${move}`;
         }
 
-        const shuffled = [...new Set(options)].sort(() => Math.random() - 0.5);
+        if (usedQuestions.has(uniqueId) && retryCount < 10) return generateQuestion(index, retryCount + 1);
+        setUsedQuestions(prev => new Set(prev).add(uniqueId));
+
+        const shuffled = [...options].sort(() => Math.random() - 0.5);
 
         const newQuestion = {
             text: qText,
@@ -224,26 +311,41 @@ const AdditionOfIntegers = () => {
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const correctCount = Object.values(answers).filter(v => v === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (correctCount / TOTAL_QUESTIONS) * 100,
-                    parameters: {
-                        total_questions: TOTAL_QUESTIONS,
-                        correct_answers: correctCount,
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: parseInt(userId, 10)
-                }).catch(console.error);
-            }
-            clearProgress();
-            navigate('/middle/grade/6/the-other-side-of-zero/skills');
+            setShowSummaryModal(true);
         }
+    };
+
+    const handleSkip = () => {
+        if (isSubmitted) return;
+        setSkippedQuestions(prev => new Set(prev).add(qIndex));
+        handleNext();
+    };
+
+    const handleFinalContinue = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId) {
+            const correctCount = Object.values(answers).filter(v => v === true).length;
+            await api.createReport({
+                title: SKILL_NAME,
+                type: 'practice',
+                score: (correctCount / TOTAL_QUESTIONS) * 100,
+                parameters: {
+                    total_questions: TOTAL_QUESTIONS,
+                    correct_answers: correctCount,
+                    time_taken_seconds: timeElapsed
+                },
+                user_id: parseInt(userId, 10)
+            }).catch(console.error);
+        }
+        clearProgress();
+        navigate('/middle/grade/6/the-other-side-of-zero/skills');
     };
 
     if (!currentQuestion) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -254,12 +356,20 @@ const AdditionOfIntegers = () => {
                 <div className="header-left">
                     <span className="text-[#31326F] font-normal text-lg sm:text-xl">Addition of Integers</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max" style={{ zIndex: 110 }}>
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-                <div className="header-right">
+                <div className="header-right flex items-center gap-3">
+                    {!isSubmitted && (
+                        <button
+                            className="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-xl font-bold hover:bg-gray-200 transition-colors text-sm"
+                            onClick={handleSkip}
+                        >
+                            Skip
+                        </button>
+                    )}
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}
                     </div>
@@ -292,7 +402,7 @@ const AdditionOfIntegers = () => {
                                                     key={idx}
                                                     onClick={() => !isSubmitted && setSelectedOption(option)}
                                                     disabled={isSubmitted}
-                                                    className={`option-button-modern ${isSubmitted
+                                                    className={`option-btn-modern ${isSubmitted
                                                         ? option === currentQuestion.correctAnswer
                                                             ? 'correct'
                                                             : selectedOption === option
@@ -328,6 +438,16 @@ const AdditionOfIntegers = () => {
                     </div>
                 </div>
             </main>
+
+            <PracticeSummaryModal
+                isOpen={showSummaryModal}
+                timeTaken={formatTime(timeElapsed)}
+                correctCount={Object.values(answers).filter(v => v === true).length}
+                wrongCount={Object.values(answers).filter(v => v === false).length}
+                skippedCount={skippedQuestions.size}
+                totalCount={TOTAL_QUESTIONS}
+                onContinue={handleFinalContinue}
+            />
 
             <ExplanationModal
                 isOpen={showExplanationModal}

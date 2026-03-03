@@ -1,13 +1,77 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, BookOpen } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, BookOpen, HelpCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
 import "../../../../pages/juniors/JuniorPracticeSession.css";
+import "./theOtherSideOfZero.css";
+const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
+    if (!isOpen) return null;
+    const answeredCount = correctCount + wrongCount;
+    const unansweredCount = Math.max(0, totalCount - answeredCount - skippedCount);
 
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center"
+            >
+                <h2 className="text-3xl font-black text-[#31326F] mb-4">Practice Complete!</h2>
+                <div className="text-5xl mb-6">🎊</div>
+
+                <div className="grid grid-cols-1 gap-3 mb-8 text-left">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border-2 border-gray-100">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm">
+                            <span className="text-lg">🕒</span> Time Taken:
+                        </div>
+                        <span className="text-lg font-black text-[#31326F]">{timeTaken}</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-green-50 rounded-2xl border-2 border-green-100">
+                            <div className="flex items-center gap-2 text-green-600 font-bold text-xs mb-1">
+                                <Check className="w-4 h-4" /> Correct
+                            </div>
+                            <span className="text-xl font-black text-green-600">{correctCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-red-50 rounded-2xl border-2 border-red-100">
+                            <div className="flex items-center gap-2 text-red-500 font-bold text-xs mb-1">
+                                <X className="w-4 h-4" /> Wrong
+                            </div>
+                            <span className="text-xl font-black text-red-500">{wrongCount}</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-blue-50 rounded-2xl border-2 border-blue-100">
+                            <div className="flex items-center gap-2 text-blue-600 font-bold text-xs mb-1">
+                                <HelpCircle className="w-4 h-4" /> Skipped
+                            </div>
+                            <span className="text-xl font-black text-blue-600">{skippedCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-gray-50 rounded-2xl border-2 border-gray-200">
+                            <div className="flex items-center gap-2 text-gray-500 font-bold text-xs mb-1">
+                                <ChevronRight className="w-4 h-4" /> Left
+                            </div>
+                            <span className="text-xl font-black text-gray-600">{unansweredCount}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    onClick={onContinue}
+                    className="w-full bg-[#31326F] text-white py-4 rounded-2xl font-black text-xl hover:bg-[#31326F]/90 transition-all shadow-lg active:scale-95"
+                >
+                    Keep Going!
+                </button>
+            </motion.div>
+        </div>
+    );
+};
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
@@ -34,6 +98,7 @@ const WordProblemsIntegers = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showSummaryModal, setShowSummaryModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
@@ -50,10 +115,13 @@ const WordProblemsIntegers = () => {
 
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
 
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
+
     useEffect(() => {
         sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
         sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
         sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+        sessionStorage.setItem(`${storageKey}_skipped`, JSON.stringify(Array.from(skippedQuestions)));
         sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
         if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
     }, [qIndex, history, answers, sessionId]);
@@ -109,7 +177,9 @@ const WordProblemsIntegers = () => {
         }
     }, [qIndex]);
 
-    const generateQuestion = (index) => {
+    const generateQuestion = (index, retryCount = 0) => {
+        if (retryCount > 10) setUsedQuestions(new Set());
+
         const types = ["temperature", "elevation", "finance", "elevator"];
         const type = types[index % types.length];
 
@@ -117,25 +187,32 @@ const WordProblemsIntegers = () => {
         let correct = "";
         let explanation = "";
         let options = [];
+        let uniqueId = "";
 
         if (type === "temperature") {
             const start = randomInt(-10, 20);
             const change = randomInt(-15, 15);
-            if (change === 0) return generateQuestion(index);
+            if (change === 0) return generateQuestion(index, retryCount + 1);
             const result = start + change;
             qText = `The temperature in a city was $${start}°C$ in the morning. By evening, it ${change > 0 ? 'rose' : 'dropped'} by $${Math.abs(change)}°C$. What is the final temperature?`;
             correct = `$${result}°C$`;
-            options = [`$${result}°C$`, `$${start + Math.abs(change)}°C$`, `$${start - Math.abs(change)}°C$`, `$${Math.abs(result)}°C$`];
+            const optSet = new Set([correct, `$${start + Math.abs(change)}°C$`, `$${start - Math.abs(change)}°C$`, `$${Math.abs(result)}°C$`]);
+            while (optSet.size < 4) optSet.add(`$${result + randomInt(-5, 5)}°C$`);
+            options = Array.from(optSet);
             explanation = `Starting temperature = $${start}°C$. <br/> ${change > 0 ? "Rose" : "Dropped"} by $${Math.abs(change)}°C$ means ${change > 0 ? "adding" : "subtracting"} $${Math.abs(change)}$. <br/> $ ${start} + (${change}) = ${result} $.`;
+            uniqueId = `word_temp_${start}_${change}`;
         } else if (type === "elevation") {
             const ground = 0;
             const pos = randomInt(50, 500);
             const word = randomInt(0, 1) === 0 ? "above" : "below";
             const result = word === "above" ? pos : -pos;
-            qText = `An airplane is flying at an altitude of $${pos}$ meters **${word}** sea level. Represent this elevation as an integer.`;
+            qText = `An airplane is flying at an altitude of $${pos}$ meters ${word} sea level. Represent this elevation as an integer.`;
             correct = `$${result}$`;
-            options = [`$${result}$`, `$${Math.abs(result)}$`, `$${-result}$`, `$0$`];
-            explanation = `Sea level is considered **zero ($0$)**. <br/> Heights **above** sea level are positive (+), and depths **below** sea level are negative (-).`;
+            const optSet = new Set([correct, `$${Math.abs(result)}$`, `$${-result}$`, `$0$`]);
+            while (optSet.size < 4) optSet.add(`$${result + randomInt(-100, 100)}$`);
+            options = Array.from(optSet);
+            explanation = `Sea level is considered zero ($0$). <br/> Heights above sea level are positive (+), and depths below sea level are negative (-).`;
+            uniqueId = `word_elev_${pos}_${word}`;
         } else if (type === "finance") {
             const start = randomInt(100, 1000);
             const dep = randomInt(50, 500);
@@ -143,20 +220,29 @@ const WordProblemsIntegers = () => {
             const res = start + dep - wit;
             qText = `Rohan had $₹${start}$ in his bank account. He deposited $₹${dep}$ and then withdrew $₹${wit}$. What is his final balance?`;
             correct = `$₹${res}$`;
-            options = [`$₹${res}$`, `$₹${start + dep + wit}$`, `$₹${start - dep - wit}$`, `$₹${res + 100}$`];
+            const optSet = new Set([correct, `$₹${start + dep + wit}$`, `$₹${start - dep - wit}$`, `$₹${res + 100}$`]);
+            while (optSet.size < 4) optSet.add(`$₹${res + randomInt(-100, 100)}$`);
+            options = Array.from(optSet);
             explanation = `Start: $${start}$. <br/> Deposit (+) $${dep}$. <br/> Withdrawal (-) $${wit}$. <br/> $ ${start} + ${dep} - ${wit} = ${res} $.`;
+            uniqueId = `word_fin_${start}_${dep}_${wit}`;
         } else {
             const start = randomInt(-2, 10);
             const move = randomInt(-5, 5);
-            if (move === 0) return generateQuestion(index);
+            if (move === 0) return generateQuestion(index, retryCount + 1);
             const res = start + move;
-            qText = `An elevator starts at floor $${start}$. It moves $${Math.abs(move)}$ floors **${move > 0 ? 'up' : 'down'}**. Which floor is it on now?`;
+            qText = `An elevator starts at floor $${start}$. It moves $${Math.abs(move)}$ floors ${move > 0 ? 'up' : 'down'}. Which floor is it on now?`;
             correct = `Floor ${res}`;
-            options = [`Floor ${res}`, `Floor ${start + Math.abs(move)}`, `Floor ${start - Math.abs(move)}`, `Floor 0`];
-            explanation = `Starting floor: $${start}$. <br/> Moving **${move > 0 ? 'up' : 'down'}** means ${move > 0 ? 'adding' : 'subtracting'} $${Math.abs(move)}$. <br/> $ ${start} + (${move}) = ${res} $.`;
+            const optSet = new Set([correct, `Floor ${start + Math.abs(move)}`, `Floor ${start - Math.abs(move)}`, `Floor 0`]);
+            while (optSet.size < 4) optSet.add(`Floor ${res + randomInt(-2, 2)}`);
+            options = Array.from(optSet);
+            explanation = `Starting floor: $${start}$. <br/> Moving ${move > 0 ? 'up' : 'down'} means ${move > 0 ? 'adding' : 'subtracting'} $${Math.abs(move)}$. <br/> $ ${start} + (${move}) = ${res} $.`;
+            uniqueId = `word_elev2_${start}_${move}`;
         }
 
-        const shuffled = [...new Set(options)].sort(() => Math.random() - 0.5);
+        if (usedQuestions.has(uniqueId) && retryCount < 10) return generateQuestion(index, retryCount + 1);
+        setUsedQuestions(prev => new Set(prev).add(uniqueId));
+
+        const shuffled = [...options].sort(() => Math.random() - 0.5);
 
         const newQuestion = {
             text: qText,
@@ -225,25 +311,47 @@ const WordProblemsIntegers = () => {
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const correctCount = Object.values(answers).filter(v => v === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (correctCount / TOTAL_QUESTIONS) * 100,
-                    parameters: {
-                        total_questions: TOTAL_QUESTIONS,
-                        correct_answers: correctCount,
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: parseInt(userId, 10)
-                }).catch(console.error);
-            }
-            clearProgress(); navigate('/middle/grade/6/the-other-side-of-zero/skills');
+            setShowSummaryModal(true);
         }
+    };
+
+    const handleSkip = () => {
+        if (isSubmitted) return;
+        setSkippedQuestions(prev => new Set(prev).add(qIndex));
+        handleNext();
+    };
+
+    const handleFinalContinue = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId) {
+            const correctCount = Object.values(answers).filter(v => v === true).length;
+            await api.createReport({
+                title: SKILL_NAME,
+                type: 'practice',
+                score: (correctCount / TOTAL_QUESTIONS) * 100,
+                parameters: {
+                    total_questions: TOTAL_QUESTIONS,
+                    correct_answers: correctCount,
+                    time_taken_seconds: timeElapsed
+                },
+                user_id: parseInt(userId, 10)
+            }).catch(console.error);
+        }
+        clearProgress();
+        navigate('/middle/grade/6/the-other-side-of-zero/skills');
+    };
+
+    const formatTime = (s) => {
+        const mins = Math.floor(s / 60);
+        const secs = s % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     if (!currentQuestion) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -254,14 +362,22 @@ const WordProblemsIntegers = () => {
                 <div className="header-left">
                     <span className="text-[#31326F] font-normal text-lg sm:text-xl">Word Problems</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max" style={{ zIndex: 110 }}>
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-                <div className="header-right">
+                <div className="header-right flex items-center gap-3">
+                    {!isSubmitted && (
+                        <button
+                            className="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-xl font-bold hover:bg-gray-200 transition-colors text-sm"
+                            onClick={handleSkip}
+                        >
+                            Skip
+                        </button>
+                    )}
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
-                        {Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}
+                        {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
@@ -292,7 +408,7 @@ const WordProblemsIntegers = () => {
                                                     key={idx}
                                                     onClick={() => !isSubmitted && setSelectedOption(option)}
                                                     disabled={isSubmitted}
-                                                    className={`option-button-modern ${isSubmitted
+                                                    className={`option-btn-modern ${isSubmitted
                                                         ? option === currentQuestion.correctAnswer
                                                             ? 'correct'
                                                             : selectedOption === option
@@ -328,6 +444,16 @@ const WordProblemsIntegers = () => {
                     </div>
                 </div>
             </main>
+
+            <PracticeSummaryModal
+                isOpen={showSummaryModal}
+                timeTaken={formatTime(timeElapsed)}
+                correctCount={Object.values(answers).filter(v => v === true).length}
+                wrongCount={Object.values(answers).filter(v => v === false).length}
+                skippedCount={skippedQuestions.size}
+                totalCount={TOTAL_QUESTIONS}
+                onContinue={handleFinalContinue}
+            />
 
             <ExplanationModal
                 isOpen={showExplanationModal}

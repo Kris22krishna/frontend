@@ -1,13 +1,77 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, Gem } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, Gem, HelpCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
 import "../../../../pages/juniors/JuniorPracticeSession.css";
+import "./theOtherSideOfZero.css";
+const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
+    if (!isOpen) return null;
+    const answeredCount = correctCount + wrongCount;
+    const unansweredCount = Math.max(0, totalCount - answeredCount - skippedCount);
 
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center"
+            >
+                <h2 className="text-3xl font-black text-[#31326F] mb-4">Practice Complete!</h2>
+                <div className="text-5xl mb-6">🎊</div>
+
+                <div className="grid grid-cols-1 gap-3 mb-8 text-left">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border-2 border-gray-100">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm">
+                            <span className="text-lg">🕒</span> Time Taken:
+                        </div>
+                        <span className="text-lg font-black text-[#31326F]">{timeTaken}</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-green-50 rounded-2xl border-2 border-green-100">
+                            <div className="flex items-center gap-2 text-green-600 font-bold text-xs mb-1">
+                                <Check className="w-4 h-4" /> Correct
+                            </div>
+                            <span className="text-xl font-black text-green-600">{correctCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-red-50 rounded-2xl border-2 border-red-100">
+                            <div className="flex items-center gap-2 text-red-500 font-bold text-xs mb-1">
+                                <X className="w-4 h-4" /> Wrong
+                            </div>
+                            <span className="text-xl font-black text-red-500">{wrongCount}</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-blue-50 rounded-2xl border-2 border-blue-100">
+                            <div className="flex items-center gap-2 text-blue-600 font-bold text-xs mb-1">
+                                <HelpCircle className="w-4 h-4" /> Skipped
+                            </div>
+                            <span className="text-xl font-black text-blue-600">{skippedCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-gray-50 rounded-2xl border-2 border-gray-200">
+                            <div className="flex items-center gap-2 text-gray-500 font-bold text-xs mb-1">
+                                <ChevronRight className="w-4 h-4" /> Left
+                            </div>
+                            <span className="text-xl font-black text-gray-600">{unansweredCount}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    onClick={onContinue}
+                    className="w-full bg-[#31326F] text-white py-4 rounded-2xl font-black text-xl hover:bg-[#31326F]/90 transition-all shadow-lg active:scale-95"
+                >
+                    Keep Going!
+                </button>
+            </motion.div>
+        </div>
+    );
+};
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
@@ -34,6 +98,7 @@ const AbsoluteValue = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showSummaryModal, setShowSummaryModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
@@ -49,11 +114,14 @@ const AbsoluteValue = () => {
     const TOTAL_QUESTIONS = 10;
 
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
+    const [skippedQuestions, setSkippedQuestions] = useState(() => new Set(getSessionData(`${storageKey}_skipped`, [])));
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
 
     useEffect(() => {
         sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
         sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
         sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+        sessionStorage.setItem(`${storageKey}_skipped`, JSON.stringify(Array.from(skippedQuestions)));
         sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
         if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
     }, [qIndex, history, answers, sessionId]);
@@ -109,7 +177,9 @@ const AbsoluteValue = () => {
         }
     }, [qIndex]);
 
-    const generateQuestion = (index) => {
+    const generateQuestion = (index, retryCount = 0) => {
+        if (retryCount > 10) setUsedQuestions(new Set());
+
         const types = ["basic_absolute", "calc_absolute", "distance_zero", "compare_absolute"];
         const type = types[index % types.length];
 
@@ -117,41 +187,57 @@ const AbsoluteValue = () => {
         let correct = "";
         let explanation = "";
         let options = [];
+        let uniqueId = "";
 
         if (type === "basic_absolute") {
             const val = randomInt(-50, 50);
             qText = `What is the absolute value of $${val}$? <br/><br/> $|${val}| = \\text{?}$`;
             correct = `$${Math.abs(val)}$`;
-            options = [`$${Math.abs(val)}$`, `$${val}$`, `$${-val}$`, `$0$`];
+            const optSet = new Set([correct, `$${val}$`, `$${-val}$`, `$0$`]);
+            while (optSet.size < 4) optSet.add(`$${randomInt(1, 60)}$`);
+            options = Array.from(optSet);
             explanation = `Absolute value $|x|$ is the distance of $x$ from zero. Distance is always positive or zero. $|${val}| = ${Math.abs(val)}$.`;
+            uniqueId = `abs_basic_${val}`;
         } else if (type === "calc_absolute") {
             const a = randomInt(-10, 10);
             const b = randomInt(-10, 10);
             const res = Math.abs(a) + Math.abs(b);
             qText = `Find the value of: <br/><br/> $|${a}| + |${b}|$`;
             correct = `$${res}$`;
-            options = [`$${res}$`, `$${a + b}$`, `$${Math.abs(a + b)}$`, `$${Math.abs(a - b)}$`];
+            const optSet = new Set([correct, `$${a + b}$`, `$${Math.abs(a + b)}$`, `$${Math.abs(a - b)}$`]);
+            while (optSet.size < 4) optSet.add(`$${res + randomInt(1, 5)}$`);
+            options = Array.from(optSet);
             explanation = `$|${a}| = ${Math.abs(a)}$ and $|${b}| = ${Math.abs(b)}$. <br/> $ ${Math.abs(a)} + ${Math.abs(b)} = ${res} $.`;
+            uniqueId = `abs_calc_${a}_${b}`;
         } else if (type === "distance_zero") {
             const a = randomInt(-20, 20);
             qText = `How many units away is $${a}$ from zero on the number line?`;
             correct = `${Math.abs(a)} units`;
-            options = [`${Math.abs(a)} units`, `${a} units`, `${a + 1} units`, "0 units"];
+            const optSet = new Set([correct, `${a} units`, `${a + 1} units`, "0 units"]);
+            while (optSet.size < 4) optSet.add(`${Math.abs(a) + randomInt(1, 10)} units`);
+            options = Array.from(optSet);
             explanation = `The distance of a number from zero is its absolute value. Distance is never negative.`;
+            uniqueId = `abs_dist_${a}`;
         } else {
             const a = randomInt(-15, 15);
             const b = randomInt(-15, 15);
-            if (Math.abs(a) === Math.abs(b)) return generateQuestion(index);
+            if (Math.abs(a) === Math.abs(b)) return generateQuestion(index, retryCount + 1);
 
             qText = `Which is greater? <br/><br/> $|${a}|$ or $|${b}|$`;
-            correct = Math.abs(a) > Math.abs(b) ? `$|${a}|$` : `$|${b}|$`;
-            options = [`$|${a}|$, because $|${a}| = ${Math.abs(a)}$`, `$|${b}|$, because $|${b}| = ${Math.abs(b)}$`, "Both are equal", "Cannot tell"];
-            // Extract core labels for correct match
-            correct = Math.abs(a) > Math.abs(b) ? options[0] : options[1];
+            const opt1 = `$|${a}|$, because $|${a}| = ${Math.abs(a)}$`;
+            const opt2 = `$|${b}|$, because $|${b}| = ${Math.abs(b)}$`;
+            const opt3 = "Both are equal";
+            const opt4 = "Cannot tell";
+            options = [opt1, opt2, opt3, opt4];
+            correct = Math.abs(a) > Math.abs(b) ? opt1 : opt2;
             explanation = `$|${a}| = ${Math.abs(a)}$ and $|${b}| = ${Math.abs(b)}$. Since $${Math.max(Math.abs(a), Math.abs(b))} > ${Math.min(Math.abs(a), Math.abs(b))}$, the answer is ${Math.abs(a) > Math.abs(b) ? `$|${a}|$` : `$|${b}|$`}.`;
+            uniqueId = `abs_comp_${a}_${b}`;
         }
 
-        const shuffled = [...new Set(options)].sort(() => Math.random() - 0.5);
+        if (usedQuestions.has(uniqueId) && retryCount < 10) return generateQuestion(index, retryCount + 1);
+        setUsedQuestions(prev => new Set(prev).add(uniqueId));
+
+        const shuffled = [...options].sort(() => Math.random() - 0.5);
 
         const newQuestion = {
             text: qText,
@@ -222,25 +308,35 @@ const AbsoluteValue = () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const correctCount = Object.values(answers).filter(v => v === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (correctCount / TOTAL_QUESTIONS) * 100,
-                    parameters: {
-                        total_questions: TOTAL_QUESTIONS,
-                        correct_answers: correctCount,
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: parseInt(userId, 10)
-                }).catch(console.error);
-            }
-            clearProgress();
-            navigate('/middle/grade/6/the-other-side-of-zero/skills');
+            setShowSummaryModal(true);
         }
+    };
+
+    const handleSkip = () => {
+        if (isSubmitted) return;
+        setSkippedQuestions(prev => new Set(prev).add(qIndex));
+        handleNext();
+    };
+
+    const handleFinalContinue = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId) {
+            const correctCount = Object.values(answers).filter(v => v === true).length;
+            await api.createReport({
+                title: SKILL_NAME,
+                type: 'practice',
+                score: (correctCount / TOTAL_QUESTIONS) * 100,
+                parameters: {
+                    total_questions: TOTAL_QUESTIONS,
+                    correct_answers: correctCount,
+                    time_taken_seconds: timeElapsed
+                },
+                user_id: parseInt(userId, 10)
+            }).catch(console.error);
+        }
+        clearProgress();
+        navigate('/middle/grade/6/the-other-side-of-zero/skills');
     };
 
     const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
@@ -253,12 +349,20 @@ const AbsoluteValue = () => {
                 <div className="header-left">
                     <span className="text-[#31326F] font-normal text-lg sm:text-xl">Absolute Value</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max" style={{ zIndex: 110 }}>
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-                <div className="header-right">
+                <div className="header-right flex items-center gap-3">
+                    {!isSubmitted && (
+                        <button
+                            className="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-xl font-bold hover:bg-gray-200 transition-colors text-sm"
+                            onClick={handleSkip}
+                        >
+                            Skip
+                        </button>
+                    )}
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
@@ -291,7 +395,7 @@ const AbsoluteValue = () => {
                                                     key={idx}
                                                     onClick={() => !isSubmitted && setSelectedOption(option)}
                                                     disabled={isSubmitted}
-                                                    className={`option-button-modern ${isSubmitted
+                                                    className={`option-btn-modern ${isSubmitted
                                                         ? option === currentQuestion.correctAnswer
                                                             ? 'correct'
                                                             : selectedOption === option

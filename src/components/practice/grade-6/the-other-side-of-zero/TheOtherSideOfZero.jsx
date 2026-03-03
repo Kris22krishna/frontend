@@ -7,46 +7,66 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
 import "../../../../pages/juniors/JuniorPracticeSession.css";
-const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, totalCount, onContinue }) => {
+import "./theOtherSideOfZero.css";
+const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
     if (!isOpen) return null;
+    const answeredCount = correctCount + wrongCount;
+    const unansweredCount = Math.max(0, totalCount - answeredCount - skippedCount);
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
             <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center"
+                className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center"
             >
                 <h2 className="text-3xl font-black text-[#31326F] mb-4">Practice Complete!</h2>
                 <div className="text-5xl mb-6">🎊</div>
 
-                <div className="space-y-4 mb-8">
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border-2 border-gray-100">
-                        <div className="flex items-center gap-3 text-gray-500 font-bold">
-                            <span className="text-xl">🕒</span> Time Taken:
+                <div className="grid grid-cols-1 gap-3 mb-8 text-left">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border-2 border-gray-100">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm">
+                            <span className="text-lg">🕒</span> Time Taken:
                         </div>
-                        <span className="text-xl font-black text-[#31326F]">{timeTaken}</span>
+                        <span className="text-lg font-black text-[#31326F]">{timeTaken}</span>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 bg-green-50 rounded-2xl border-2 border-green-100">
-                        <div className="flex items-center gap-3 text-green-600 font-bold">
-                            <Check className="w-6 h-6" /> Correct Answers:
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-green-50 rounded-2xl border-2 border-green-100">
+                            <div className="flex items-center gap-2 text-green-600 font-bold text-xs mb-1">
+                                <Check className="w-4 h-4" /> Correct
+                            </div>
+                            <span className="text-xl font-black text-green-600">{correctCount}</span>
                         </div>
-                        <span className="text-xl font-black text-green-600">{correctCount} / {totalCount}</span>
+                        <div className="flex flex-col p-3 bg-red-50 rounded-2xl border-2 border-red-100">
+                            <div className="flex items-center gap-2 text-red-500 font-bold text-xs mb-1">
+                                <X className="w-4 h-4" /> Wrong
+                            </div>
+                            <span className="text-xl font-black text-red-500">{wrongCount}</span>
+                        </div>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 bg-red-50 rounded-2xl border-2 border-red-100">
-                        <div className="flex items-center gap-3 text-red-500 font-bold">
-                            <X className="w-6 h-6" /> Wrong Answers:
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-blue-50 rounded-2xl border-2 border-blue-100">
+                            <div className="flex items-center gap-2 text-blue-600 font-bold text-xs mb-1">
+                                <HelpCircle className="w-4 h-4" /> Skipped
+                            </div>
+                            <span className="text-xl font-black text-blue-600">{skippedCount}</span>
                         </div>
-                        <span className="text-xl font-black text-red-500">{totalCount - correctCount} / {totalCount}</span>
+                        <div className="flex flex-col p-3 bg-gray-50 rounded-2xl border-2 border-gray-200">
+                            <div className="flex items-center gap-2 text-gray-500 font-bold text-xs mb-1">
+                                <ChevronRight className="w-4 h-4" /> Left
+                            </div>
+                            <span className="text-xl font-black text-gray-600">{unansweredCount}</span>
+                        </div>
                     </div>
                 </div>
 
                 <button
                     onClick={onContinue}
-                    className="w-full py-4 bg-[#31326F] text-white rounded-2xl font-black text-xl shadow-lg hover:bg-[#31326F]/90 transition-all active:scale-95"
+                    className="w-full bg-[#31326F] text-white py-4 rounded-2xl font-black text-xl hover:bg-[#31326F]/90 transition-all shadow-lg active:scale-95"
                 >
-                    Continue
+                    Keep Going!
                 </button>
             </motion.div>
         </div>
@@ -89,11 +109,14 @@ const TheOtherSideOfZero = () => {
     const TOTAL_QUESTIONS = 20;
 
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
+    const [skippedQuestions, setSkippedQuestions] = useState(() => new Set(getSessionData(`${storageKey}_skipped`, [])));
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
 
     useEffect(() => {
         sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
         sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
         sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+        sessionStorage.setItem(`${storageKey}_skipped`, JSON.stringify(Array.from(skippedQuestions)));
         sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
         if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
     }, [qIndex, history, answers, sessionId]);
@@ -152,7 +175,9 @@ const TheOtherSideOfZero = () => {
         }
     }, [qIndex, section]);
 
-    const generateQuestion = (index) => {
+    const generateQuestion = (index, retryCount = 0) => {
+        if (retryCount > 10) setUsedQuestions(new Set());
+
         const types = [
             "addition_movement",
             "additive_inverse",
@@ -168,7 +193,7 @@ const TheOtherSideOfZero = () => {
         let correct = "";
         let explanation = "";
         let options = [];
-        let chart = "";
+        let uniqueId = "";
 
         if (type === "addition_movement") {
             const start = randomInt(-5, 5);
@@ -183,9 +208,10 @@ const TheOtherSideOfZero = () => {
                 `${-result > 0 ? '+' : ''}${-result}`
             ];
             explanation = `Start at $${start}$. Moving $${move}$ means adding $${move}$. $${start} + (${move}) = ${result}$.`;
+            uniqueId = `oth_add_${start}_${move}`;
         } else if (type === "additive_inverse") {
             const num = randomInt(-15, 15);
-            if (num === 0) return generateQuestion(index);
+            if (num === 0) return generateQuestion(index, retryCount + 1);
             qText = `What is the additive inverse of $${num > 0 ? '+' : ''}${num}$?`;
             correct = `${-num > 0 ? '+' : ''}${-num}`;
             options = [
@@ -195,10 +221,11 @@ const TheOtherSideOfZero = () => {
                 "1"
             ];
             explanation = `The additive inverse of a number is what you add to it to get zero. For $${num}$, it is $${-num}$ because $${num} + (${-num}) = 0$.`;
+            uniqueId = `oth_inv_${num}`;
         } else if (type === "comparison") {
             const a = randomInt(-10, 10);
             const b = randomInt(-10, 10);
-            if (a === b) return generateQuestion(index);
+            if (a === b) return generateQuestion(index, retryCount + 1);
             qText = `Which comparison is correct for $${a > 0 ? '+' : ''}${a}$ and $${b > 0 ? '+' : ''}${b}$?`;
             correct = a < b ? `${a} < ${b}` : `${a} > ${b}`;
             options = [
@@ -208,6 +235,7 @@ const TheOtherSideOfZero = () => {
                 "None of these"
             ];
             explanation = `On a vertical building model, higher floors are greater. Floor $${Math.max(a, b)}$ is higher than floor $${Math.min(a, b)}$.`;
+            uniqueId = `oth_comp_${a}_${b}`;
         } else if (type === "subtraction_movement") {
             const target = randomInt(-5, 5);
             const start = randomInt(-5, 5);
@@ -221,6 +249,7 @@ const TheOtherSideOfZero = () => {
                 "0"
             ];
             explanation = `Movement = Target Floor - Starting Floor. $${target} - (${start}) = ${move}$.`;
+            uniqueId = `oth_sub_${start}_${target}`;
         } else if (type === "mine_model") {
             const depth = randomInt(10, 50);
             const change = randomInt(-10, 10);
@@ -229,6 +258,7 @@ const TheOtherSideOfZero = () => {
             correct = `${result}`;
             options = [`${result}`, `${-depth - change}`, `${depth + change}`, `${-depth}`];
             explanation = `The elevator starts at $-${depth}$. Moving $${change}$ means adding $${change}$. $-${depth} + (${change}) = ${result}$.`;
+            uniqueId = `oth_mine_${depth}_${change}`;
         } else if (type === "number_line") {
             const pos = randomInt(-5, 5);
             const dir = randomInt(0, 1) === 0 ? "left" : "right";
@@ -238,17 +268,20 @@ const TheOtherSideOfZero = () => {
             correct = `${result}`;
             options = [`${result}`, `${pos}`, `${pos + steps}`, `${pos - steps}`];
             explanation = `Moving right on a number line is addition (+). Moving left is subtraction (-). $${pos} ${dir === 'right' ? '+' : '-'} ${steps} = ${result}$.`;
+            uniqueId = `oth_line_${pos}_${dir}_${steps}`;
         }
 
-        const uniqueOptions = Array.from(new Set(options));
-        while (uniqueOptions.length < 4) {
-            uniqueOptions.push(`${randomInt(-20, 20)}`);
+        if (usedQuestions.has(uniqueId) && retryCount < 10) return generateQuestion(index, retryCount + 1);
+        setUsedQuestions(prev => new Set(prev).add(uniqueId));
+
+        const optSet = new Set(options);
+        while (optSet.size < 4) {
+            optSet.add(`${randomInt(-20, 20)}${type === "addition_movement" || type === "subtraction_movement" ? '' : ''}`);
         }
-        const shuffled = uniqueOptions.sort(() => Math.random() - 0.5);
+        const shuffled = Array.from(optSet).sort(() => Math.random() - 0.5);
 
         const newQuestion = {
             text: qText,
-            chart: chart,
             correctAnswer: correct,
             solution: explanation,
             type: 'mcq',
@@ -306,6 +339,12 @@ const TheOtherSideOfZero = () => {
         } else {
             setShowSummaryModal(true);
         }
+    };
+
+    const handleSkip = () => {
+        if (isSubmitted) return;
+        setSkippedQuestions(prev => new Set(prev).add(qIndex));
+        handleNext();
     };
 
     const handleFinalContinue = async () => {
@@ -518,12 +557,20 @@ const TheOtherSideOfZero = () => {
                 <div className="header-left">
                     <span className="chapter-title">The Other Side of Zero: Integers</span>
                 </div>
-                <div className="header-center">
+                <div className="header-center" style={{ zIndex: 110 }}>
                     <div className="question-counter">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-                <div className="header-right">
+                <div className="header-right flex items-center gap-3">
+                    {!isSubmitted && (
+                        <button
+                            className="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-xl font-bold hover:bg-gray-200 transition-colors text-sm"
+                            onClick={handleSkip}
+                        >
+                            Skip
+                        </button>
+                    )}
                     <div className="timer-display">
                         {formatTime(timeElapsed)}
                     </div>
@@ -554,7 +601,7 @@ const TheOtherSideOfZero = () => {
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
-                                                    className={`option-button-modern ${selectedOption === option ? 'selected' : ''}`}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -574,6 +621,8 @@ const TheOtherSideOfZero = () => {
                 isOpen={showSummaryModal}
                 timeTaken={formatTime(timeElapsed)}
                 correctCount={Object.values(answers).filter(v => v === true).length}
+                wrongCount={Object.values(answers).filter(v => v === false).length}
+                skippedCount={skippedQuestions.size}
                 totalCount={TOTAL_QUESTIONS}
                 onContinue={handleFinalContinue}
             />

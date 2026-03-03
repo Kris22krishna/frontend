@@ -1,13 +1,77 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, Calculator } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, Calculator, HelpCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
 import "../../../../pages/juniors/JuniorPracticeSession.css";
+import "./theOtherSideOfZero.css";
+const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
+    if (!isOpen) return null;
+    const answeredCount = correctCount + wrongCount;
+    const unansweredCount = Math.max(0, totalCount - answeredCount - skippedCount);
 
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center"
+            >
+                <h2 className="text-3xl font-black text-[#31326F] mb-4">Practice Complete!</h2>
+                <div className="text-5xl mb-6">🎊</div>
+
+                <div className="grid grid-cols-1 gap-3 mb-8 text-left">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-2xl border-2 border-gray-100">
+                        <div className="flex items-center gap-3 text-gray-500 font-bold text-sm">
+                            <span className="text-lg">🕒</span> Time Taken:
+                        </div>
+                        <span className="text-lg font-black text-[#31326F]">{timeTaken}</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-green-50 rounded-2xl border-2 border-green-100">
+                            <div className="flex items-center gap-2 text-green-600 font-bold text-xs mb-1">
+                                <Check className="w-4 h-4" /> Correct
+                            </div>
+                            <span className="text-xl font-black text-green-600">{correctCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-red-50 rounded-2xl border-2 border-red-100">
+                            <div className="flex items-center gap-2 text-red-500 font-bold text-xs mb-1">
+                                <X className="w-4 h-4" /> Wrong
+                            </div>
+                            <span className="text-xl font-black text-red-500">{wrongCount}</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="flex flex-col p-3 bg-blue-50 rounded-2xl border-2 border-blue-100">
+                            <div className="flex items-center gap-2 text-blue-600 font-bold text-xs mb-1">
+                                <HelpCircle className="w-4 h-4" /> Skipped
+                            </div>
+                            <span className="text-xl font-black text-blue-600">{skippedCount}</span>
+                        </div>
+                        <div className="flex flex-col p-3 bg-gray-50 rounded-2xl border-2 border-gray-200">
+                            <div className="flex items-center gap-2 text-gray-500 font-bold text-xs mb-1">
+                                <ChevronRight className="w-4 h-4" /> Left
+                            </div>
+                            <span className="text-xl font-black text-gray-600">{unansweredCount}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    onClick={onContinue}
+                    className="w-full bg-[#31326F] text-white py-4 rounded-2xl font-black text-xl hover:bg-[#31326F]/90 transition-all shadow-lg active:scale-95"
+                >
+                    Keep Going!
+                </button>
+            </motion.div>
+        </div>
+    );
+};
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
@@ -34,6 +98,7 @@ const SubtractionOfIntegers = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [showSummaryModal, setShowSummaryModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
@@ -50,10 +115,13 @@ const SubtractionOfIntegers = () => {
 
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
 
+    const [usedQuestions, setUsedQuestions] = useState(new Set());
+
     useEffect(() => {
         sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
         sessionStorage.setItem(`${storageKey}_history`, JSON.stringify(history));
         sessionStorage.setItem(`${storageKey}_answers`, JSON.stringify(answers));
+        sessionStorage.setItem(`${storageKey}_skipped`, JSON.stringify(Array.from(skippedQuestions)));
         sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
         if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
     }, [qIndex, history, answers, sessionId]);
@@ -109,7 +177,9 @@ const SubtractionOfIntegers = () => {
         }
     }, [qIndex]);
 
-    const generateQuestion = (index) => {
+    const generateQuestion = (index, retryCount = 0) => {
+        if (retryCount > 10) setUsedQuestions(new Set());
+
         const types = ["basic_subtract", "subtract_negative", "subtract_positive", "find_difference"];
         const type = types[index % types.length];
 
@@ -117,6 +187,7 @@ const SubtractionOfIntegers = () => {
         let correct = "";
         let explanation = "";
         let options = [];
+        let uniqueId = "";
 
         if (type === "basic_subtract") {
             const a = randomInt(10, 20);
@@ -124,36 +195,51 @@ const SubtractionOfIntegers = () => {
             const res = a - b;
             qText = `Subtract: <br/><br/> $${a} - ${b} = \\text{?}$`;
             correct = `$${res}$`;
-            options = [`$${res}$`, `$${a + b}$`, `$${b - a}$`, `$0$`];
+            const optSet = new Set([correct, `$${a + b}$`, `$${b - a}$`, `$0$`]);
+            while (optSet.size < 4) optSet.add(`$${res + randomInt(-5, 5)}$`);
+            options = Array.from(optSet);
             explanation = `This is a standard subtraction. $${a} - ${b} = ${res}$.`;
+            uniqueId = `sub_basic_${a}_${b}`;
         } else if (type === "subtract_negative") {
             const a = randomInt(-10, 10);
             const b = randomInt(1, 10);
             const res = a + b;
             qText = `Subtract a negative integer: <br/><br/> $${a} - (-${b}) = \\text{?}$`;
             correct = `$${res}$`;
-            options = [`$${res}$`, `$${a - b}$`, `$${-res}$`, `$${b - a}$`];
-            explanation = `To subtract an integer, **add its additive inverse**. <br/> $ ${a} - (-${b}) $ becomes $ ${a} + ${b} = ${res} $.`;
+            const optSet = new Set([correct, `$${a - b}$`, `$${-res}$`, `$${b - a}$`]);
+            while (optSet.size < 4) optSet.add(`$${res + randomInt(-5, 5)}$`);
+            options = Array.from(optSet);
+            explanation = `To subtract an integer, add its additive inverse. <br/> $ ${a} - (-${b}) $ becomes $ ${a} + ${b} = ${res} $.`;
+            uniqueId = `sub_neg_${a}_${b}`;
         } else if (type === "subtract_positive") {
             const a = randomInt(1, 10);
             const b = randomInt(11, 20);
             const res = a - b;
             qText = `Subtract a larger positive integer from a smaller one: <br/><br/> $${a} - ${b} = \\text{?}$`;
             correct = `$${res}$`;
-            options = [`$${res}$`, `$${Math.abs(res)}$`, `$${a + b}$`, `$0$`];
+            const optSet = new Set([correct, `$${Math.abs(res)}$`, `$${a + b}$`, `$0$`]);
+            while (optSet.size < 4) optSet.add(`$${res + randomInt(-5, 5)}$`);
+            options = Array.from(optSet);
             explanation = `Subtracting $${b}$ is the same as adding its opposite, $-${b}$. <br/> $ ${a} + (-${b}) = ${res} $.`;
+            uniqueId = `sub_pos_${a}_${b}`;
         } else {
             const a = randomInt(-10, 10);
             const b = randomInt(-10, 10);
-            if (a === b) return generateQuestion(index);
+            if (a === b) return generateQuestion(index, retryCount + 1);
             const res = a - b;
             qText = `Find the value of: <br/><br/> $(${a}) - (${b > 0 ? '+' : ''}${b}) = \\text{?}$`;
             correct = `$${res}$`;
-            options = [`$${res}$`, `$${a + b}$`, `$${-res}$`, `$${Math.abs(res)}$`];
+            const optSet = new Set([correct, `$${a + b}$`, `$${-res}$`, `$${Math.abs(res)}$`]);
+            while (optSet.size < 4) optSet.add(`$${res + randomInt(-5, 5)}$`);
+            options = Array.from(optSet);
             explanation = `Add the opposite of $${b}$, which is $${-b}$. <br/> $ ${a} + (${-b}) = ${res} $.`;
+            uniqueId = `sub_diff_${a}_${b}`;
         }
 
-        const shuffled = [...new Set(options)].sort(() => Math.random() - 0.5);
+        if (usedQuestions.has(uniqueId) && retryCount < 10) return generateQuestion(index, retryCount + 1);
+        setUsedQuestions(prev => new Set(prev).add(uniqueId));
+
+        const shuffled = [...options].sort(() => Math.random() - 0.5);
 
         const newQuestion = {
             text: qText,
@@ -222,25 +308,47 @@ const SubtractionOfIntegers = () => {
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
+            setSelectedOption(null);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            accumulatedTime.current = 0;
+            questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const correctCount = Object.values(answers).filter(v => v === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (correctCount / TOTAL_QUESTIONS) * 100,
-                    parameters: {
-                        total_questions: TOTAL_QUESTIONS,
-                        correct_answers: correctCount,
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: parseInt(userId, 10)
-                }).catch(console.error);
-            }
-            clearProgress(); navigate('/middle/grade/6/the-other-side-of-zero/skills');
+            setShowSummaryModal(true);
         }
+    };
+
+    const handleSkip = () => {
+        if (isSubmitted) return;
+        setSkippedQuestions(prev => new Set(prev).add(qIndex));
+        handleNext();
+    };
+
+    const handleFinalContinue = async () => {
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId) {
+            const correctCount = Object.values(answers).filter(v => v === true).length;
+            await api.createReport({
+                title: SKILL_NAME,
+                type: 'practice',
+                score: (correctCount / TOTAL_QUESTIONS) * 100,
+                parameters: {
+                    total_questions: TOTAL_QUESTIONS,
+                    correct_answers: correctCount,
+                    time_taken_seconds: timeElapsed
+                },
+                user_id: parseInt(userId, 10)
+            }).catch(console.error);
+        }
+        clearProgress();
+        navigate('/middle/grade/6/the-other-side-of-zero/skills');
+    };
+
+    const formatTime = (s) => {
+        const mins = Math.floor(s / 60);
+        const secs = s % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     if (!currentQuestion) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -251,14 +359,22 @@ const SubtractionOfIntegers = () => {
                 <div className="header-left">
                     <span className="text-[#31326F] font-normal text-lg sm:text-xl">Subtraction of Integers</span>
                 </div>
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max" style={{ zIndex: 110 }}>
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-                <div className="header-right">
+                <div className="header-right flex items-center gap-3">
+                    {!isSubmitted && (
+                        <button
+                            className="bg-gray-100 text-gray-600 px-4 py-1.5 rounded-xl font-bold hover:bg-gray-200 transition-colors text-sm"
+                            onClick={handleSkip}
+                        >
+                            Skip
+                        </button>
+                    )}
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
-                        {Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}
+                        {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
@@ -289,7 +405,7 @@ const SubtractionOfIntegers = () => {
                                                     key={idx}
                                                     onClick={() => !isSubmitted && setSelectedOption(option)}
                                                     disabled={isSubmitted}
-                                                    className={`option-button-modern ${isSubmitted
+                                                    className={`option-btn-modern ${isSubmitted
                                                         ? option === currentQuestion.correctAnswer
                                                             ? 'correct'
                                                             : selectedOption === option
@@ -325,6 +441,16 @@ const SubtractionOfIntegers = () => {
                     </div>
                 </div>
             </main>
+
+            <PracticeSummaryModal
+                isOpen={showSummaryModal}
+                timeTaken={formatTime(timeElapsed)}
+                correctCount={Object.values(answers).filter(v => v === true).length}
+                wrongCount={Object.values(answers).filter(v => v === false).length}
+                skippedCount={skippedQuestions.size}
+                totalCount={TOTAL_QUESTIONS}
+                onContinue={handleFinalContinue}
+            />
 
             <ExplanationModal
                 isOpen={showExplanationModal}
