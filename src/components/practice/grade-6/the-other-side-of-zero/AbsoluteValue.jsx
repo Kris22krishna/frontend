@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, Gem, HelpCircle, X } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, Gem, CircleHelp as HelpCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
-import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import mascotImg from '../../../../assets/mascot.png';
-import "../../../../pages/juniors/JuniorPracticeSession.css";
+import { api } from '@/services/api';
+import LatexContent from '@/components/LatexContent';
+import ExplanationModal from '@/components/ExplanationModal';
+import mascotImg from '@/assets/mascot.png';
+import "@/pages/juniors/JuniorPracticeSession.css";
 import "./theOtherSideOfZero.css";
 const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
     if (!isOpen) return null;

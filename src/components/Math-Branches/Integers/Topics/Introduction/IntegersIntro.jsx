@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Sparkles, BookOpen, Target, HelpCircle, Users, Calendar, MapPin, Rocket, Crosshair } from 'lucide-react';
+import { ChevronDown, Sparkles, BookOpen, Target, CircleHelp as HelpCircle, Users, Calendar, MapPin, Rocket, Crosshair } from 'lucide-react';
 import '../../integers.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '@/components/MathRenderer';
 
 const cards5W1H = [
     {

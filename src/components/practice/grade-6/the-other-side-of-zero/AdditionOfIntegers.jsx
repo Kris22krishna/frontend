@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, Plus, HelpCircle, X } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, Plus, CircleHelp as HelpCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
-import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import mascotImg from '../../../../assets/mascot.png';
-import "../../../../pages/juniors/JuniorPracticeSession.css";
+import { api } from '@/services/api';
+import LatexContent from '@/components/LatexContent';
+import ExplanationModal from '@/components/ExplanationModal';
+import mascotImg from '@/assets/mascot.png';
+import "@/pages/juniors/JuniorPracticeSession.css";
 import "./theOtherSideOfZero.css";
 const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
     if (!isOpen) return null;
@@ -348,6 +348,12 @@ const AdditionOfIntegers = () => {
         navigate('/middle/grade/6/the-other-side-of-zero/skills');
     };
 
+    const formatTime = (s) => {
+        const mins = Math.floor(s / 60);
+        const secs = s % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
     if (!currentQuestion) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
 
     return (
@@ -371,7 +377,7 @@ const AdditionOfIntegers = () => {
                         </button>
                     )}
                     <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
-                        {Math.floor(timeElapsed / 60)}:{(timeElapsed % 60).toString().padStart(2, '0')}
+                        {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>

@@ -59,7 +59,6 @@ const Navbar = () => {
         <nav className={`navbar ${isTransparent ? 'navbar-transparent' : ''}`}>
             <div className="navbar-content">
                 <Link to="/" className="logo">
-                    {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
                     <span>Skill100.ai</span>
                 </Link>
 

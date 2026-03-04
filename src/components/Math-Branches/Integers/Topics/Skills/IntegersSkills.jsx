@@ -9,8 +9,8 @@ import {
     Play,
     Book,
     Award,
-    CheckCircle2,
-    XCircle,
+    CircleCheck as CheckCircle2,
+    CircleX as XCircle,
     ArrowRight,
     Info,
     Gem,
@@ -18,7 +18,7 @@ import {
     Calculator
 } from 'lucide-react';
 import '../../integers.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '@/components/MathRenderer';
 
 // ─── DATA ──────────────────────────────────────────────────────────────────
 const SKILLS_DATA = [

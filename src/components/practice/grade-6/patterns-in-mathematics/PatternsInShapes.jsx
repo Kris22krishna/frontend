@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, X, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
-import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import mascotImg from '../../../../assets/mascot.png';
-import "../../../../pages/juniors/JuniorPracticeSession.css";
+import { api } from '@/services/api';
+import LatexContent from '@/components/LatexContent';
+import ExplanationModal from '@/components/ExplanationModal';
+import mascotImg from '@/assets/mascot.png';
+import "@/pages/juniors/JuniorPracticeSession.css";
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 

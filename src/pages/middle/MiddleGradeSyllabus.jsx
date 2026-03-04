@@ -166,7 +166,7 @@ const MiddleGradeSyllabus = () => {
             }
 
             if (lowerTopic.includes('the other side of zero')) {
-                navigate(`/middle/grade/${grade}/the-other-side-of-zero/integers`);
+                navigate(`/integers`);
                 return;
             }
 
@@ -1002,7 +1002,8 @@ const MiddleGradeSyllabus = () => {
 
 
     // Manual Override for Grade 6 Perimeter and Area
-    if (parseInt(grade.replace('grade', '')) === 6) {
+    const gradeNum = parseInt(grade.replace(/\D/g, ''));
+    if (gradeNum === 6) {
         skillsByTopic['Perimeter and Area'] = {
             'Main': [
                 { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
@@ -1045,7 +1046,7 @@ const MiddleGradeSyllabus = () => {
             ]
         };
         skillsByTopic['The Other Side of Zero'] = {
-            'Main': [
+            'Skills': [
                 { skill_id: 'comparing-6', skill_name: 'Comparing Integers', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/comparing-integers' },
                 { skill_id: 'absolute-6', skill_name: 'Absolute Value', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/absolute-value' },
                 { skill_id: 'addition-6', skill_name: 'Addition of Integers', topic: 'The Other Side of Zero', path: '/middle/grade/6/the-other-side-of-zero/addition-of-integers' },
@@ -1101,6 +1102,36 @@ const MiddleGradeSyllabus = () => {
                 <div className="middle-masonry-grid">
                     {Object.entries(skillsByTopic).map(([topic, subTopics], index) => {
                         const accentColor = getAccentColor(index);
+                        const lowerTopic = topic.toLowerCase();
+
+                        // Define hero cards mapping
+                        const heroCards = {
+                            'the other side of zero': {
+                                title: 'The Other Side of Zero',
+                                subtitle: 'Integers, Negatives & More',
+                                path: '/integers',
+                                background: 'linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%)'
+                            }
+                        };
+
+                        const heroKey = Object.keys(heroCards).find(key => lowerTopic.includes(key));
+                        const heroConfig = heroKey ? heroCards[heroKey] : null;
+
+                        if (heroConfig) {
+                            return (
+                                <div
+                                    key={topic}
+                                    className="middle-topic-card is-hero"
+                                    style={{ background: heroConfig.background }}
+                                    onClick={() => navigate(heroConfig.path)}
+                                >
+                                    <div className="hero-inner-card">
+                                        <div className="hero-title">{heroConfig.title}</div>
+                                        <div className="hero-subtitle">{heroConfig.subtitle}</div>
+                                    </div>
+                                </div>
+                            );
+                        }
 
                         // Define fixed order for sub-topics
                         const subTopicOrder = ["Pattern Recognition", "Number properties", "Logical Reasoning", "Multiplication", "Division", "Decimals", "Area", "Perimeter", "Area-Perimeter Relationship", "Volume Measurement", "Mass Measurement", "Measurement Based Reasoning", "Skill Application Problems", "Chapter Test"];
@@ -1125,7 +1156,7 @@ const MiddleGradeSyllabus = () => {
                                     {orderedSubTopics.map(([subTopic, topicSkills]) => {
                                         const isExpanded = expandedSubTopics[`${topic}-${subTopic}`];
                                         const isMain = subTopic === 'Main';
-                                        const isDirectButton = subTopic === 'Skill Application Problems' || subTopic === 'Area-Perimeter Relationship';
+                                        const isDirectButton = subTopic === 'Skill Application Problems' || subTopic === 'Area-Perimeter Relationship' || subTopic === 'Skills';
 
                                         return (
                                             <div key={subTopic} className={`subtopic-group ${isExpanded ? 'is-expanded' : ''} ${isMain ? 'is-main' : ''} ${isDirectButton ? 'is-direct' : ''}`}>

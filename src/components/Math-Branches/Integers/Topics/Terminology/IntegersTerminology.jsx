@@ -17,7 +17,7 @@ import {
     Zap
 } from 'lucide-react';
 import '../../integers.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '@/components/MathRenderer';
 
 const TERM_DATA = {
     lexicon: [

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, BookOpen, HelpCircle, X } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, BookOpen, CircleHelp as HelpCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
-import LatexContent from '../../../LatexContent';
-import ExplanationModal from '../../../ExplanationModal';
-import mascotImg from '../../../../assets/mascot.png';
-import "../../../../pages/juniors/JuniorPracticeSession.css";
+import { api } from '@/services/api';
+import LatexContent from '@/components/LatexContent';
+import ExplanationModal from '@/components/ExplanationModal';
+import mascotImg from '@/assets/mascot.png';
+import "@/pages/juniors/JuniorPracticeSession.css";
 import "./theOtherSideOfZero.css";
 const PracticeSummaryModal = ({ isOpen, timeTaken, correctCount, wrongCount, skippedCount, totalCount, onContinue }) => {
     if (!isOpen) return null;
@@ -114,7 +114,7 @@ const WordProblemsIntegers = () => {
     const TOTAL_QUESTIONS = 10;
 
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
-
+    const [skippedQuestions, setSkippedQuestions] = useState(() => new Set(getSessionData(`${storageKey}_skipped`, [])));
     const [usedQuestions, setUsedQuestions] = useState(new Set());
 
     useEffect(() => {

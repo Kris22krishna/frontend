@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, Pencil, X, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../../services/api';
-import Whiteboard from '../../../../Whiteboard';
-import LatexContent from '../../../../LatexContent';
-import ExplanationModal from '../../../../ExplanationModal';
-import StickerExit from '../../../../StickerExit';
-import { FullScreenScratchpad } from '../../../../FullScreenScratchpad';
+import { api } from '../../../../services/api';
+import Whiteboard from '../../../Whiteboard';
+import LatexContent from '../../../LatexContent';
+import ExplanationModal from '../../../ExplanationModal';
+import StickerExit from '../../../StickerExit';
+import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import mascotImg from '../../../../assets/mascot.png';
 import "../../../../pages/juniors/JuniorPracticeSession.css";
 
