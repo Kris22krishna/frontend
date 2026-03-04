@@ -1,310 +1,176 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
-
-const BLUE_THEME_CSS = `
-    .option-btn-modern.selected {
-        border-color: #3B82F6 !important;
-        background-color: #EFF6FF !important;
-        color: #1E40AF !important;
-        box-shadow: 0 4px 0 #2563EB !important;
-    }
-    .option-btn-modern {
-        min-height: 65px;
-        min-width: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem 1rem !important;
-        text-align: center;
-        font-size: 0.95rem;
-    }
-    .grey-selection-theme {
-        --selected-border: #3B82F6;
-        --selected-bg: #EFF6FF;
-    }
-    .exam-report-container {
-        max-width: 900px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    }
-    .report-stat-card {
-        padding: 1.5rem;
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        transition: transform 0.2s;
-    }
-    .report-stat-card:hover {
-        transform: translateY(-5px);
-    }
-    .solution-accordion {
-        border: 2px solid #FEF08A;
-        border-radius: 16px;
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-        background: white;
-    }
-    .solution-header {
-        padding: 1rem;
-        background: #F8FAFC;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-    }
-    .solution-content {
-        padding: 1.5rem;
-        background: white;
-        border-top: 1px solid #E2E8F0;
-    }
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-    .status-correct { background: #DCFCE7; color: #166534; }
-    .status-wrong { background: #FEE2E2; color: #991B1B; }
-    .status-skipped { background: #F1F5F9; color: #475569; }
-
-    .nav-pastel-btn {
-        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
-        transition: all 0.3s ease !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.5px !important;
-    }
-    .nav-pastel-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
-        background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
-    }
-    .nav-pastel-btn:disabled {
-        background: #E2E8F0 !important;
-        color: #94A3B8 !important;
-        box-shadow: none !important;
-        transform: none !important;
-        cursor: not-allowed !important;
-    }
-
-    /* Mobile Responsiveness for Practice Session Layout */
-    @media (max-width: 1024px) {
-        .practice-board-container {
-            grid-template-columns: 1fr !important;
-            justify-items: center !important;
-            margin-bottom: 2rem !important;
-        }
-        .practice-left-col {
-            width: 100% !important;
-            max-width: 600px !important;
-            margin: 0 auto !important;
-        }
-        .question-palette-container {
-            width: 100% !important;
-            max-width: 500px !important;
-            margin: 2rem auto 0 auto !important;
-            max-height: none !important;
-            height: auto !important;
-        }
-        .options-grid-modern {
-            grid-template-columns: 1fr !important;
-            justify-items: center !important;
-        }
-        .practice-content-wrapper {
-            padding-bottom: 80px !important;
-        }
-        .option-btn-modern {
-            min-height: 55px;
-            font-size: 0.9rem;
-            min-width: unset !important;
-            width: 100% !important;
-            max-width: 350px !important;
-            margin: 0 auto !important;
-        }
-    }
-    @media (max-width: 640px) {
-        .junior-practice-header {
-            padding: 0 1rem !important;
-        }
-        .practice-content-wrapper {
-            padding: 1rem 1rem 80px 1rem !important;
-        }
-        .question-card-modern {
-            padding: 1.5rem !important;
-        }
-        .question-text-modern {
-            font-size: 1.1rem !important;
-        }
-    }
-`;
+import '../../../../pages/high/class8/Grade8ChapterTests.css';
 
 const SKILL_ID = 1226;
 const SKILL_NAME = "Mensuration - Chapter Test";
+const TOTAL_QUESTIONS = 20;
 
 const MensurationTest = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+
+    const storageKey = `test_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
+    const [responses, setResponses] = useState(() => getSessionData(`${storageKey}_responses`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [isTestOver, setIsTestOver] = useState(false);
-    const [responses, setResponses] = useState({});
 
     const questionStartTime = useRef(Date.now());
-    const [sessionId, setSessionId] = useState(null);
+    const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const [questions, setQuestions] = useState([]);
 
     const generateQuestions = () => {
         const pool = [
             {
                 id: 1,
-                text: "The area of a rhombus is $240\\text{ cm}^2$ and one of the diagonals is $16\\text{ cm}$. Find the other diagonal.",
-                options: ["$30\\text{ cm}$", "$25\\text{ cm}$", "$20\\text{ cm}$", "$40\\text{ cm}$"],
-                correctAnswer: "$30\\text{ cm}$",
-                solution: "Area $= \\frac{1}{2} d_1 d_2 \\Rightarrow 240 = \\frac{1}{2} \\times 16 \\times d_2 \\Rightarrow d_2 = \\frac{240}{8} = 30\\text{ cm}$."
+                text: "The area of a trapezium with parallel sides $a$ and $b$ and height $h$ is",
+                options: ["$\\frac{1}{2}(a+b)h$", "$ab h$", "$(a+b)h$", "$\\frac{1}{2}abh$"],
+                correctAnswer: "$\\frac{1}{2}(a+b)h$",
+                solution: "The standard formula for area of a trapezium is $\\frac{1}{2} \\times$ (sum of parallel sides) $\\times$ height."
             },
             {
                 id: 2,
-                text: "The total surface area of a cube is $600\\text{ cm}^2$. The length of its edge is:",
-                options: ["$10\\text{ cm}$", "$20\\text{ cm}$", "$8\\text{ cm}$", "$12\\text{ cm}$"],
-                correctAnswer: "$10\\text{ cm}$",
-                solution: "TSA $= 6a^2 \Rightarrow 6a^2 = 600 \Rightarrow a^2 = 100 \Rightarrow a = 10\\text{ cm}$."
+                text: "Area of a rhombus whose diagonals are $d_1$ and $d_2$ is",
+                options: ["$\\frac{1}{2} d_1 d_2$", "$d_1 d_2$", "$2 d_1 d_2$", "$\\frac{1}{4} d_1 d_2$"],
+                correctAnswer: "$\\frac{1}{2} d_1 d_2$",
+                solution: "Area of a rhombus is half the product of its diagonals."
             },
             {
                 id: 3,
-                text: "What is the area of a trapezium whose parallel sides are $10\\text{ cm}$ and $12\\text{ cm}$ and height is $4\\text{ cm}$?",
-                options: ["$44\\text{ cm}^2$", "$88\\text{ cm}^2$", "$48\\text{ cm}^2$", "$40\\text{ cm}^2$"],
-                correctAnswer: "$44\\text{ cm}^2$",
-                solution: "Area $= \\frac{1}{2}(a+b)h = \\frac{1}{2}(10+12) \\times 4 = 22 \\times 2 = 44\\text{ cm}^2$."
+                text: "The surface area of a cube of side $a$ is",
+                options: ["$6a^2$", "$4a^2$", "$a^2$", "$a^3$"],
+                correctAnswer: "$6a^2$",
+                solution: "A cube has $6$ faces, each of area $a^2$. So total surface area is $6a^2$."
             },
             {
                 id: 4,
-                text: "If the radius of a cylinder is $r$ and its height is $h$, then the volume of the cylinder is:",
-                options: ["$\\pi r^2 h$", "$2\\pi r h$", "$2\\pi r(r+h)$", "$\\pi r h^2$"],
+                text: "The volume of a cylinder with radius $r$ and height $h$ is",
+                options: ["$\\pi r^2 h$", "$2\\pi r h$", "$\\pi r h$", "$\\frac{1}{3} \\pi r^2 h$"],
                 correctAnswer: "$\\pi r^2 h$",
-                solution: "The formula for the volume of a cylinder is $\\pi r^2 h$."
+                solution: "The volume of a cylinder is base area $\\times$ height = $\\pi r^2 \\times h$."
             },
             {
                 id: 5,
-                text: "How many small cubes of side $2\\text{ cm}$ can be put in a cubical box of side $6\\text{ cm}$?",
-                options: ["$27$", "$9$", "$12$", "$18$"],
-                correctAnswer: "$27$",
-                solution: "Volume of big cube $= 6^3 = 216$. Volume of small cube $= 2^3 = 8$. Number of cubes $= 216 / 8 = 27$."
+                text: "The lateral surface area of a cuboid of length $l$, breadth $b$ and height $h$ is",
+                options: ["$2h(l+b)$", "$2(lb+bh+hl)$", "$lbh$", "$l+b+h$"],
+                correctAnswer: "$2h(l+b)$",
+                solution: "Literal surface area means area of $4$ walls: $2(l \\times h) + 2(b \\times h) = 2h(l+b)$."
             },
             {
                 id: 6,
-                text: "A cuboid has dimensions $4\\text{ cm} \\times 3\\text{ cm} \\times 2\\text{ cm}$. Its total surface area is:",
-                options: ["$52\\text{ cm}^2$", "$24\\text{ cm}^2$", "$48\\text{ cm}^2$", "$56\\text{ cm}^2$"],
-                correctAnswer: "$52\\text{ cm}^2$",
-                solution: "TSA $= 2(lb + bh + hl) = 2(12 + 6 + 8) = 2(26) = 52\\text{ cm}^2$."
+                text: "Find the area of a rhombus whose diagonals are $10$ cm and $8.2$ cm.",
+                options: ["$41 \\text{ cm}^2$", "$82 \\text{ cm}^2$", "$20 \\text{ cm}^2$", "$16.4 \\text{ cm}^2$"],
+                correctAnswer: "$41 \\text{ cm}^2$",
+                solution: "Area $= \\frac{1}{2} \\times 10 \\times 8.2 = 5 \\times 8.2 = 41 \\text{ cm}^2$."
             },
             {
                 id: 7,
-                text: "A rectangular piece of paper $11\\text{ cm} \\times 4\\text{ cm}$ is folded without overlapping to make a cylinder of height $4\\text{ cm}$. Find its volume.",
-                options: ["$38.5\\text{ cm}^3$", "$44\\text{ cm}^3$", "$36\\text{ cm}^3$", "$22\\text{ cm}^3$"],
-                correctAnswer: "$38.5\\text{ cm}^3$",
-                solution: "The length becomes the circumference. $2\\pi r = 11 \Rightarrow 2 \\times \\frac{22}{7} \\times r = 11 \Rightarrow r = \\frac{7}{4}$. Volume $= \\pi r^2 h = \\frac{22}{7} \\times \\frac{7}{4} \\times \\frac{7}{4} \\times 4 = 38.5\\text{ cm}^3$."
+                text: "The volume of a cube is $64 \\text{ cm}^3$. Its side is",
+                options: ["$4$ cm", "$8$ cm", "$16$ cm", "$6$ cm"],
+                correctAnswer: "$4$ cm",
+                solution: "Volume $= a^3 = 64 \\Rightarrow a = \\sqrt[3]{64} = 4$ cm."
             },
             {
                 id: 8,
-                text: "The volume of a cube is $1000\\text{ cm}^3$. Find its total surface area.",
-                options: ["$600\\text{ cm}^2$", "$400\\text{ cm}^2$", "$100\\text{ cm}^2$", "$800\\text{ cm}^2$"],
-                correctAnswer: "$600\\text{ cm}^2$",
-                solution: "$a^3 = 1000 \Rightarrow a = 10$. TSA $= 6a^2 = 6(100) = 600\\text{ cm}^2$."
+                text: "$1$ Litre is equal to",
+                options: ["$1000 \\text{ cm}^3$", "$100 \\text{ cm}^3$", "$10000 \\text{ cm}^3$", "$10 \\text{ cm}^3$"],
+                correctAnswer: "$1000 \\text{ cm}^3$",
+                solution: "By definition of capacity, $1$ L $= 1000 \\text{ cm}^3$."
             },
             {
                 id: 9,
-                text: "A cylinder's radius is halved and height is doubled. What will be its new volume compared to the original?",
-                options: ["Half", "Same", "Double", "One-fourth"],
-                correctAnswer: "Half",
-                solution: "New Volume $= \\pi (r/2)^2 (2h) = \\pi (r^2/4) \\cdot 2h = \\frac{1}{2} \\pi r^2 h$. Thus it is half."
+                text: "The area of a parallelogram with base $b$ and height $h$ is",
+                options: ["$bh$", "$\\frac{1}{2}bh$", "$2bh$", "$b+h$"],
+                correctAnswer: "$bh$",
+                solution: "Area of a parallelogram is base $\\times$ corresponding altitude (height)."
             },
             {
                 id: 10,
-                text: "If length, breadth and height of a cuboid are in the ratio $1:2:3$ and its total surface area is $88\\text{ cm}^2$, find its volume.",
-                options: ["$48\\text{ cm}^3$", "$64\\text{ cm}^3$", "$24\\text{ cm}^3$", "$16\\text{ cm}^3$"],
-                correctAnswer: "$48\\text{ cm}^3$",
-                solution: "Let dimensions be $x, 2x, 3x$. TSA $= 2(2x^2 + 6x^2 + 3x^2) = 2(11x^2) = 22x^2 = 88 \\Rightarrow x^2 = 4 \\Rightarrow x=2$. Volume $= x \\times 2x \\times 3x = 6x^3 = 6(8) = 48\\text{ cm}^3$."
+                text: "Total surface area of a cylinder of radius $r$ and height $h$ is",
+                options: ["$2\\pi r(r+h)$", "$2\\pi r h$", "$\\pi r^2 h$", "$\\pi r(r+h)$"],
+                correctAnswer: "$2\\pi r(r+h)$",
+                solution: "Total SA = Curved Area + $2 \\times$ Base Area = $2\\pi rh + 2\\pi r^2 = 2\\pi r(h+r)$."
             },
             {
                 id: 11,
-                text: "If the length of a diagonal of a square is $10\\sqrt{2}\\text{ cm}$, find its area.",
-                options: ["$100\\text{ cm}^2$", "$200\\text{ cm}^2$", "$50\\text{ cm}^2$", "$150\\text{ cm}^2$"],
-                correctAnswer: "$100\\text{ cm}^2$",
-                solution: "Side of square $a = \\frac{d}{\\sqrt{2}} = 10$. Area $= a^2 = 100\\text{ cm}^2$."
+                text: "If the base of a triangle is $14$ cm and height is $7$ cm, its area is",
+                options: ["$49 \\text{ cm}^2$", "$98 \\text{ cm}^2$", "$21 \\text{ cm}^2$", "$100 \\text{ cm}^2$"],
+                correctAnswer: "$49 \\text{ cm}^2$",
+                solution: "Area $= \\frac{1}{2} \\times b \\times h = \\frac{1}{2} \\times 14 \\times 7 = 7 \\times 7 = 49 \\text{ cm}^2$."
             },
             {
                 id: 12,
-                text: "The area of a rhombus is $120\\text{ cm}^2$ and one of the diagonals is $24\\text{ cm}$. Find the perimeter of the rhombus.",
-                options: ["$52\\text{ cm}$", "$40\\text{ cm}$", "$60\\text{ cm}$", "$48\\text{ cm}$"],
-                correctAnswer: "$52\\text{ cm}$",
-                solution: "Area $= \\frac{1}{2} d_1 d_2 \\Rightarrow 120 = \\frac{1}{2} \\times 24 \\times d_2 \\Rightarrow d_2 = 10\\text{ cm}$. The diagonals bisect at right angles. Half diagonals are $12$ and $5$. Side $= \\sqrt{12^2 + 5^2} = \\sqrt{169} = 13$, Perimeter $= 4 \\times 13 = 52\\text{ cm}$."
+                text: "The area of a circle with radius $r$ is",
+                options: ["$\\pi r^2$", "$2\\pi r$", "$2\\pi r^2$", "$\\pi d$"],
+                correctAnswer: "$\\pi r^2$",
+                solution: "The formula for the area of a circle is $\\pi r^2$."
             },
             {
                 id: 13,
-                text: "Volume of a cylinder with radius $7\\text{ cm}$ and height $10\\text{ cm}$ is:",
-                options: ["$1540\\text{ cm}^3$", "$154\\text{ cm}^3$", "$770\\text{ cm}^3$", "$3080\\text{ cm}^3$"],
-                correctAnswer: "$1540\\text{ cm}^3$",
-                solution: "$V = \\pi r^2 h = \\frac{22}{7} \\times 7^2 \\times 10 = 22 \\times 7 \\times 10 = 1540\\text{ cm}^3$."
+                text: "How many faces does a cuboid have?",
+                options: ["$6$", "$4$", "$8$", "$12$"],
+                correctAnswer: "$6$",
+                solution: "A cuboid has $6$ rectangular faces."
             },
             {
                 id: 14,
-                text: "How many litres of water can a cuboidal tank of dimensions $2\\text{ m} \\times 1.5\\text{ m} \\times 1\\text{ m}$ hold?",
-                options: ["$3000\\text{ L}$", "$300\\text{ L}$", "$30\\text{ L}$", "$30000\\text{ L}$"],
-                correctAnswer: "$3000\\text{ L}$",
-                solution: "Volume $= 2 \\times 1.5 \\times 1 = 3\\text{ m}^3$. Since $1\\text{ m}^3 = 1000\\text{ L}$, capacity $= 3000\\text{ L}$."
+                text: "The area of a square is $144 \\text{ cm}^2$. Its perimeter is",
+                options: ["$48$ cm", "$12$ cm", "$24$ cm", "$36$ cm"],
+                correctAnswer: "$48$ cm",
+                solution: "Side $= \\sqrt{144} = 12$ cm. Perimeter $= 4 \\times 12 = 48$ cm."
             },
             {
                 id: 15,
-                text: "The lateral surface area of a cube is $256\\text{ m}^2$. The volume of the cube is",
-                options: ["$512\\text{ m}^3$", "$64\\text{ m}^3$", "$216\\text{ m}^3$", "$256\\text{ m}^3$"],
-                correctAnswer: "$512\\text{ m}^3$",
-                solution: "LSA $= 4a^2 = 256 \\Rightarrow a^2 = 64 \\Rightarrow a = 8\\text{ m}$. Volume $= a^3 = 8^3 = 512\\text{ m}^3$."
+                text: "Find the volume of a cuboid of dimensions $5$ cm $\\times 3$ cm $\\times 2$ cm.",
+                options: ["$30 \\text{ cm}^3$", "$60 \\text{ cm}^3$", "$10 \\text{ cm}^3$", "$15 \\text{ cm}^3$"],
+                correctAnswer: "$30 \\text{ cm}^3$",
+                solution: "Volume $= l \\times b \\times h = 5 \\times 3 \\times 2 = 30 \\text{ cm}^3$."
             },
             {
                 id: 16,
-                text: "What is the area of a parallelogram with base $15\\text{ cm}$ and height $8\\text{ cm}$?",
-                options: ["$120\\text{ cm}^2$", "$60\\text{ cm}^2$", "$240\\text{ cm}^2$", "$30\\text{ cm}^2$"],
-                correctAnswer: "$120\\text{ cm}^2$",
-                solution: "Area $= \\text{base} \\times \\text{height} = 15 \\times 8 = 120\\text{ cm}^2$."
+                text: "The sum of the areas of all the faces of a 3D figure is called its",
+                options: ["Total Surface Area", "Lateral Surface Area", "Volume", "Perimeter"],
+                correctAnswer: "Total Surface Area",
+                solution: "By definition, the total surface area is the sum of areas of all faces."
             },
             {
                 id: 17,
-                text: "Number of edges in a cube is",
-                options: ["$12$", "$8$", "$6$", "$4$"],
-                correctAnswer: "$12$",
-                solution: "A cube has $6$ faces, $8$ vertices, and $12$ edges."
+                text: "A rectangular park is $60$ m long and $40$ m wide. The area of the park is",
+                options: ["$2400 \\text{ m}^2$", "$100 \\text{ m}^2$", "$200 \\text{ m}^2$", "$240 \\text{ m}^2$"],
+                correctAnswer: "$2400 \\text{ m}^2$",
+                solution: "Area $= length \\times width = 60 \\times 40 = 2400 \\text{ m}^2$."
             },
             {
                 id: 18,
-                text: "The surface area of a cuboid is $2(lb + bh + hl)$. What is its lateral surface area?",
-                options: ["$2h(l+b)$", "$2l(b+h)$", "$2b(l+h)$", "$lb$"],
-                correctAnswer: "$2h(l+b)$",
-                solution: "LSA excludes the top and bottom faces ($lb$), so LSA $= 2(bh + hl) = 2h(l+b)$."
+                text: "The side of a rhombus is $5$ cm and its altitude is $4.8$ cm. Its area is",
+                options: ["$24 \\text{ cm}^2$", "$20 \\text{ cm}^2$", "$10 \\text{ cm}^2$", "$48 \\text{ cm}^2$"],
+                correctAnswer: "$24 \\text{ cm}^2$",
+                solution: "Rhombus is a parallelogram. Area $= base \\times height = 5 \\times 4.8 = 24 \\text{ cm}^2$."
             },
             {
                 id: 19,
-                text: "The ratio of the volumes of two cylinders with equal radii but heights in the ratio $1:2$ is",
-                options: ["$1:2$", "$1:4$", "$2:1$", "$4:1$"],
-                correctAnswer: "$1:2$",
-                solution: "$V_1 / V_2 = (\\pi r^2 h_1) / (\\pi r^2 h_2) = h_1 / h_2 = 1 / 2$."
+                text: "A cylindrical tank has capacity $154 \\text{ m}^3$ and radius $7$ m. Find its height.",
+                options: ["$1$ m", "$2$ m", "$7$ m", "$11$ m"],
+                correctAnswer: "$1$ m",
+                solution: "Volume $= \\pi r^2 h = \\frac{22}{7} \\times 7 \\times 7 \\times h = 154 \\Rightarrow 154h = 154 \\Rightarrow h = 1$ m."
             },
             {
                 id: 20,
-                text: "The curved surface area of a cylinder of height $14\\text{ cm}$ is $88\\text{ cm}^2$. Find the diameter of the base.",
-                options: ["$2\\text{ cm}$", "$1\\text{ cm}$", "$4\\text{ cm}$", "$7\\text{ cm}$"],
-                correctAnswer: "$2\\text{ cm}$",
-                solution: "CSA $= 2\\pi r h = 88 \\Rightarrow 2 \\times \\frac{22}{7} \\times r \\times 14 = 88 \\Rightarrow 88r = 88 \\Rightarrow r = 1\\text{ cm}$. Diameter $= 2r = 2\\text{ cm}$."
+                text: "Diagonal of a square of side $a$ is",
+                options: ["$\\sqrt{2}a$", "$2a$", "$a^2$", "$\\frac{a}{\\sqrt{2}}$"],
+                correctAnswer: "$\\sqrt{2}a$",
+                solution: "By Pythagoras theorem in a square: $d^2 = a^2 + a^2 = 2a^2 \\Rightarrow d = \\sqrt{2}a$."
             }
         ];
         return pool.sort(() => Math.random() - 0.5);
@@ -314,12 +180,28 @@ const MensurationTest = () => {
         setQuestions(generateQuestions());
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            api.createPracticeSession(uid, SKILL_ID).then(sess => {
+        if (!isNaN(uid) && !sessionId) {
+            api.createPracticeSession(uid, SKILL_ID, 'test').then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
     }, []);
+
+    useEffect(() => {
+        if (responses && qIndex !== undefined) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_responses`, JSON.stringify(responses));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
+        }
+    }, [qIndex, responses, timeElapsed, sessionId]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_responses`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
 
     useEffect(() => {
         if (isTestOver) return;
@@ -328,6 +210,7 @@ const MensurationTest = () => {
     }, [isTestOver]);
 
     const handleRecordResponse = () => {
+        if (!questions[qIndex]) return;
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
         const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
@@ -349,13 +232,11 @@ const MensurationTest = () => {
                 user_id: uid,
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                template_id: null,
-                difficulty_level: 'Medium',
-                question_text: String(currentQ.text || ''),
-                correct_answer: String(currentQ.correctAnswer || ''),
-                student_answer: String(isSkipped ? "SKIPPED" : (selectedOption || '')),
+                question_text: currentQ.text,
+                correct_answer: currentQ.correctAnswer,
+                student_answer: isSkipped ? "SKIPPED" : selectedOption,
                 is_correct: isSkipped ? false : isCorrect,
-                solution_text: String(currentQ.solution || ''),
+                solution_text: currentQ.solution,
                 time_spent_seconds: timeSpent
             };
             api.recordAttempt(attemptData).catch(console.error);
@@ -368,7 +249,6 @@ const MensurationTest = () => {
         setSelectedOption(responses[targetIndex]?.selectedOption || null);
         questionStartTime.current = Date.now();
     };
-
 
     const handleNext = () => {
         if (qIndex < questions.length - 1) {
@@ -397,7 +277,7 @@ const MensurationTest = () => {
             const skippedCount = questions.length - correctCount - wrongCount;
             await api.createReport({
                 title: SKILL_NAME,
-                type: 'practice',
+                type: 'test',
                 score: (correctCount / questions.length) * 100,
                 parameters: {
                     skill_id: SKILL_ID,
@@ -409,6 +289,7 @@ const MensurationTest = () => {
                 user_id: uid
             }).catch(console.error);
         }
+        clearProgress();
     };
 
     const formatTime = (seconds) => {
@@ -425,34 +306,33 @@ const MensurationTest = () => {
         const skipped = questions.length - correct - wrong;
 
         return (
-            <div className="junior-practice-page grey-selection-theme p-4 md:p-8" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
-                <style>{BLUE_THEME_CSS}</style>
-                <div className="exam-report-container mx-auto p-4 md:p-8 my-4 md:my-8">
-                    <div className="results-hero-section flex flex-col items-center mb-6 md:mb-8 mt-4 text-center">
-                        <img src={mascotImg} alt="Happy Mascot" className="w-32 h-32 md:w-40 md:h-40 mb-2 drop-shadow-lg object-contain" />
-                        <h1 className="text-3xl md:text-5xl font-black text-[#31326F] mb-2 tracking-tight">Test Report</h1>
-                        <p className="text-[#64748B] text-base md:text-xl font-medium mb-6 md:mb-8 px-2">How you performed in <span className="font-bold block md:inline">{SKILL_NAME}</span></p>
+            <div className="junior-practice-page grey-selection-theme result-page-wrapper" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
+                <div className="exam-report-container">
+                    <div className="results-hero-section flex flex-col items-center mb-8 mt-4 text-center">
+                        <img src={mascotImg} alt="Happy Mascot" className="w-40 h-40 mb-2 drop-shadow-lg object-contain" />
+                        <h1 className="text-5xl font-normal text-[#31326F] mb-2 tracking-tight">Test Report</h1>
+                        <p className="text-[#64748B] text-xl font-normal mb-8 px-4">How you performed in <span className="font-normal">{SKILL_NAME}</span></p>
 
-                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-5xl">
-                            <div className="stat-card bg-[#EFF6FF] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-5xl">
+                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
+                                <span className="text-4xl font-normal text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
                             </div>
-                            <div className="stat-card bg-[#F0FDF4] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DCFCE7] text-center flex flex-col items-center justify-center">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#14532D]">{correct}</span>
+                            <div className="stat-card bg-[#F0FDF4] p-6 rounded-3xl shadow-sm border-2 border-[#DCFCE7] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
+                                <span className="text-4xl font-normal text-[#14532D]">{correct}</span>
                             </div>
-                            <div className="stat-card bg-[#FEF2F2] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#FEE2E2] text-center flex flex-col items-center justify-center col-span-1">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#7F1D1D]">{wrong}</span>
+                            <div className="stat-card bg-[#FEF2F2] p-6 rounded-3xl shadow-sm border-2 border-[#FEE2E2] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
+                                <span className="text-4xl font-normal text-[#7F1D1D]">{wrong}</span>
                             </div>
-                            <div className="stat-card bg-[#F8FAFC] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#E2E8F0] text-center flex flex-col items-center justify-center col-span-1">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#64748B] mb-1">Skipped</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#334155]">{skipped}</span>
+                            <div className="stat-card bg-[#F8FAFC] p-6 rounded-3xl shadow-sm border-2 border-[#E2E8F0] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#64748B] mb-1">Skipped</span>
+                                <span className="text-4xl font-normal text-[#334155]">{skipped}</span>
                             </div>
-                            <div className="stat-card bg-[#EFF6FF] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center col-span-2 md:col-span-1">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Total Time</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{formatTime(timeElapsed)}</span>
+                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#3B82F6] mb-1">Total Time</span>
+                                <span className="text-4xl font-normal text-[#1E3A8A]">{formatTime(timeElapsed)}</span>
                             </div>
                         </div>
                     </div>
@@ -529,22 +409,7 @@ const MensurationTest = () => {
 
                                         <div style={{ background: '#F0F9FF', padding: '1.5rem', borderRadius: '12px', border: '1px solid #E0F2FE' }}>
                                             <h4 style={{ color: '#0284C7', fontWeight: '800', marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.5px' }}>Solution:</h4>
-                                            {(() => {
-                                                const steps = q.solution.split(/(?<=\\.)\\s+(?=[A-Z0-9$])/);
-                                                if (steps.length <= 1) {
-                                                    return <LatexText text={q.solution} />;
-                                                }
-                                                return (
-                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                                        {steps.map((stepStr, sIdx) => (
-                                                            <div key={sIdx} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                                                                <span style={{ fontWeight: '800', color: '#0F172A', fontSize: '0.9rem' }}>Step {sIdx + 1}:</span>
-                                                                <span style={{ color: '#334155', lineHeight: '1.6' }}><LatexText text={stepStr.trim()} /></span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                );
-                                            })()}
+                                            <LatexText text={q.solution} />
                                         </div>
                                     </div>
                                 </details>
@@ -556,52 +421,61 @@ const MensurationTest = () => {
         );
     }
     return (
-        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <style>{BLUE_THEME_CSS}</style>
-            <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+            <header className="junior-practice-header">
+                <div className="skill-name-display">
                     {SKILL_NAME}
                 </div>
-                <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-black text-xl shadow-lg">
+                <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-normal text-xl shadow-lg">
                     {qIndex + 1} / {questions.length}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#3B82F6]/30 text-[#1E40AF] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#3B82F6]/30 text-[#1E40AF] font-normal text-lg shadow-md flex items-center gap-2">
                         <Clock size={20} /> {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
-            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 140px 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: '60px' }}>
+            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 1rem 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0 }}>
 
-                    {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' , justifyContent: 'flex-start' }}>
-                            <div className="question-header-modern"  style={{  flexShrink: 0, marginBottom: "1rem" }}>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
-                                    <LatexText text={questions[qIndex].text} />
-                                </h2>
-                            </div>
-                            <div className="interaction-area-modern" style={{  display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
-                                <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
-                                    {questions[qIndex].options.map((option, idx) => (
-                                        <button
-                                            key={idx}
-                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
-                                            onClick={() => setSelectedOption(option)}
-                                        >
-                                            <LatexText text={option} />
-                                        </button>
-                                    ))}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={qIndex}
+                                initial={{ x: 20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -20, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                            >
+                                <div className="question-card-modern test-card-layout" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                                    <div className="question-header-modern" style={{ overflow: 'hidden' }}>
+                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '400', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
+                                            <LatexText text={questions[qIndex].text} />
+                                        </h2>
+                                    </div>
+                                    <div className="interaction-area-modern" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                        <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                                            {questions[qIndex].options.map((option, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                                    onClick={() => setSelectedOption(option)}
+                                                    style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: '400' }}
+                                                >
+                                                    <LatexText text={option} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
 
-                    {/* Right Column: Question Palette */}
                     <div className="question-palette-container" style={{ width: '300px', background: 'white', padding: '1.5rem', borderRadius: '24px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: 'calc(100vh - 220px)' }}>
-                        <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#1E293B', marginBottom: '1rem', textAlign: 'center', flexShrink: 0 }}>Question Palette</h3>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: '400', color: '#1E293B', marginBottom: '1rem', textAlign: 'center', flexShrink: 0 }}>Question Palette</h3>
                         <div className="palette-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.4rem', flex: 1, alignContent: 'start' }}>
                             {questions.map((_, idx) => {
                                 const isCurrent = qIndex === idx;
@@ -632,7 +506,7 @@ const MensurationTest = () => {
                                         onClick={() => navigateToQuestion(idx)}
                                         style={{
                                             height: '36px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            borderRadius: '6px', fontWeight: '700', fontSize: '0.85rem',
+                                            borderRadius: '6px', fontWeight: '400', fontSize: '0.85rem',
                                             cursor: 'pointer', transition: 'all 0.2s',
                                             background: btnBg, color: btnColor, border: btnBorder, padding: '0'
                                         }}
@@ -657,7 +531,7 @@ const MensurationTest = () => {
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate(-1)}>Exit Test</button>
+                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal" onClick={() => { clearProgress(); navigate(-1); }}>Exit Test</button>
                     </div>
                     <div className="bottom-right">
                         <div style={{ display: 'flex', gap: '1.5rem' }}>

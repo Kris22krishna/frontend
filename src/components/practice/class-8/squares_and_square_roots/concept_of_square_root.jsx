@@ -454,7 +454,24 @@ const ConceptOfSquareRoot = () => {
                     correctAnswers: Object.values(answers).filter(val => val === true).length,
                     totalQuestions: TOTAL_QUESTIONS
                 }}
-                onContinue={() => {
+                onPracticeAgain={() => {
+                    clearProgress();
+                    setQIndex(0);
+                    setHistory({});
+                    setAnswers({});
+                    setTimeElapsed(0);
+                    setSelectedOption(null);
+                    setIsSubmitted(false);
+                    setIsCorrect(false);
+                    setShowReportModal(false);
+
+                    const prepared = generateQuestionData().map(q => ({
+                        ...q,
+                        options: [...q.options].sort(() => Math.random() - 0.5)
+                    }));
+                    setQuestions(prepared);
+                }}
+                onBackToSkills={() => {
                     clearProgress();
                     navigate(-1);
                 }}

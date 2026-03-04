@@ -26,6 +26,10 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import IntroductionToGraphs from './components/practice/class-8/introduction_to_graphs/IntroductionToGraphs';
+import GraphsIntro5W1H from './components/practice/class-8/introduction_to_graphs/Topics/5W1H/GraphsIntro5W1H';
+import GraphsTerminology from './components/practice/class-8/introduction_to_graphs/Topics/Terminology/GraphsTerminology';
+import GraphsSkills from './components/practice/class-8/introduction_to_graphs/Topics/Skills/GraphsSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -87,6 +91,7 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+// House-of-Hundreds-II
 import DrawTiles from './components/practice/class-3/House-of-Hundreds-II/Draw-tiles';
 import NeighbouringNumbers from './components/practice/class-3/House-of-Hundreds-II/neighbouring-numbers';
 import HelpCranesOnNumberLine from './components/practice/class-3/House-of-Hundreds-II/Help-cranes-on-number-line';
@@ -100,6 +105,21 @@ import RakshaBandhanTest from './components/practice/class-3/Raksha-Bandhan/Raks
 import FairShareTest from './components/practice/class-3/fair-share/FairShareTest';
 import FunAtClassPartyTest from './components/practice/class-3/Fun-at-class-party/FunAtClassPartyTest';
 import HouseOfHundredsIITest from './components/practice/class-3/House-of-Hundreds-II/HouseOfHundredsIITest';
+
+// Grade 4 - Elephants, Tigers, and Leopards
+import AdditionChartPatterns from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/addition_chart_patterns';
+import JungleNimGame from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/nim_game_add_1_or_2';
+import ReverseTwoDigitAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/reverse_two_digit_addition';
+import ForestRestorationAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/four_digit_addition_with_regrouping';
+import JungleGatheringAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/multi_number_addition';
+import EstimateFirstAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/estimation_before_addition';
+import FourDigitSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Subtraction/four_digit_subtraction_with_regrouping';
+import HiddenPathDifference from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/find_missing_difference';
+import EstimateFirstSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Subtraction/estimation_before_subtraction';
+import BalanceScaleComparison from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/more_or_less_find_unknown';
+import QuickCompare from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/compare_without_calculating';
+import SmartShortcuts from './components/practice/class-4/Elephants_Tigers_and_Leopards/Mental_Math_Strategies/near_hundred_add_subtract';
+import CompensationStrategy from './components/practice/class-4/Elephants_Tigers_and_Leopards/Mental_Math_Strategies/compensation_strategy_questions';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -511,6 +531,11 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          {/* Grade 8: Introduction to Graphs Chapter Pages */}
+          <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/terminology" element={<ProtectedRoute redirectTo="/login"><GraphsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/skills" element={<ProtectedRoute redirectTo="/login"><GraphsSkills /></ProtectedRoute>} />
           {/* Class 12: Matrices — unified structure (inside MainLayout for navbar/footer) */}
           <Route path="senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesHub /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/introduction" element={<ProtectedRoute redirectTo="/login"><MatricesIntro5W1H /></ProtectedRoute>} />
@@ -615,6 +640,72 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Grade 4 - Elephants, Tigers, and Leopards */}
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/nim-game-strategy" element={
+          <ProtectedRoute redirectTo="/login">
+            <JungleNimGame />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/number-grid-patterns" element={
+          <ProtectedRoute redirectTo="/login">
+            <AdditionChartPatterns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/magic-mirror-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <ReverseTwoDigitAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/forest-restoration-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <ForestRestorationAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/journey-sums" element={
+          <ProtectedRoute redirectTo="/login">
+            <JungleGatheringAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/estimation-before-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <EstimateFirstAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/river-crossing-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <FourDigitSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/hidden-path-difference" element={
+          <ProtectedRoute redirectTo="/login">
+            <HiddenPathDifference />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/estimation-before-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <EstimateFirstSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/balance-scale-estimation" element={
+          <ProtectedRoute redirectTo="/login">
+            <BalanceScaleComparison />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/quick-compare" element={
+          <ProtectedRoute redirectTo="/login">
+            <QuickCompare />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/smart-shortcuts" element={
+          <ProtectedRoute redirectTo="/login">
+            <SmartShortcuts />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/elephants-tigers-and-leopards/compensation-strategy" element={
+          <ProtectedRoute redirectTo="/login">
+            <CompensationStrategy />
+          </ProtectedRoute>
+        } />
         <Route path="/junior/grade/:grade/house-of-hundreds-ii/draw-tiles" element={
           <ProtectedRoute redirectTo="/login">
             <DrawTiles />
