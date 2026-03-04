@@ -1,0 +1,47 @@
+/* Grade 7 Specific Explanation Modal Styles */
+
+.explanation-mascot-panel {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.explanation-mascot-image {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.18));
+}
+
+@media (min-width: 1024px) {
+    .explanation-mascot-image {
+        width: 9rem;
+        height: 9rem;
+    }
+}
+
+.explanation-mascot-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 1.25rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(79, 183, 179, 0.3);
+    text-align: center;
+    max-width: 100%;
+}
+
+.explanation-mascot-tag span {
+    color: #31326F;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+@media (min-width: 1024px) {
+    .explanation-mascot-tag span {
+        font-size: 1rem;
+    }
+}

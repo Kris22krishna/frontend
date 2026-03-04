@@ -58,7 +58,8 @@ const SeniorGradeSyllabus = () => {
                     setSkills([]);
                 } else if (grade === '12') {
                     setSkills([
-                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' }
+                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' },
+                        { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' }
                     ]);
                 } else if (grade === '10') {
                     setSkills([
@@ -106,7 +107,17 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1125, skill_name: 'Understanding the Nature of Roots', topic: 'Quadratic Equations', subtopic: 'Understanding Roots and Their Nature' },
                         { skill_id: 1126, skill_name: 'Finding Roots Using the Discriminant', topic: 'Quadratic Equations', subtopic: 'Using the Discriminant to Analyse Roots' },
                         { skill_id: 1127, skill_name: 'Real-Life Applications of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
-                        { skill_id: 1128, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' }
+                        { skill_id: 1128, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' },
+
+                        // Polynomials
+                        { skill_id: 1233, skill_name: 'Understanding Polynomials and Their Degrees', topic: 'Polynomials', subtopic: 'Understanding Types and Degrees of Polynomials' },
+                        { skill_id: 1234, skill_name: 'Evaluating Polynomials and Identifying Zeroes', topic: 'Polynomials', subtopic: 'Evaluating Polynomials and Identifying Zeroes' },
+                        { skill_id: 1235, skill_name: 'Geometrical Interpretation of Zeroes', topic: 'Polynomials', subtopic: 'Geometrical Interpretation of Zeroes' },
+                        { skill_id: 1236, skill_name: 'Number of Zeroes from Graphical Behaviour', topic: 'Polynomials', subtopic: 'Number of Zeroes from Graphical Behaviour' },
+                        { skill_id: 1237, skill_name: 'Relationship Between Zeroes and Coefficients (Quadratic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Quadratic)' },
+                        { skill_id: 1238, skill_name: 'Constructing Quadratic Polynomials from Given Conditions', topic: 'Polynomials', subtopic: 'Constructing Quadratic Polynomials from Given Conditions' },
+                        { skill_id: 1239, skill_name: 'Relationship Between Zeroes and Coefficients (Cubic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Cubic)' },
+                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
