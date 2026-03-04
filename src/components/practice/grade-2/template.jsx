@@ -47,7 +47,7 @@ const Grade2Template = () => {
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId ? skillId.endsWith('4') || skillId.endsWith('5') || skillId.endsWith('TEST') || skillId === '205' : false; // adjust test logic based on skill ID if needed
-    const totalQuestions = isTest ? 15 : 5;
+    const totalQuestions = isTest ? 10 : 5;
 
     // State matching Grade 1 template
     const [qIndex, setQIndex] = useState(0);
@@ -61,6 +61,7 @@ const Grade2Template = () => {
     const [sessionId, setSessionId] = useState(null);
     const [userInput, setUserInput] = useState('');
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
     // ---------------------------------------------------------
     // 3) Update Topic Info resolution for Grade 2
@@ -212,8 +213,10 @@ const Grade2Template = () => {
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
+            setIsAutoAdvancing(true);
             setTimeout(() => {
                 handleNext();
+                setIsAutoAdvancing(false);
             }, 800);
         }
     };
@@ -538,7 +541,7 @@ const Grade2Template = () => {
                                     Next <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}

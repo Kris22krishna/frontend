@@ -113,7 +113,7 @@ const Grade2WhatIsLong = () => {
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId ? skillId.includes('TEST') : false;
-    const totalQuestions = isTest ? 15 : 5;
+    const totalQuestions = isTest ? 10 : 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -125,6 +125,7 @@ const Grade2WhatIsLong = () => {
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
     const getTopicInfo = () => {
         const grade2Config = TOPIC_CONFIGS['2'];
@@ -199,27 +200,43 @@ const Grade2WhatIsLong = () => {
             { emoji: '📖', name: 'Book' }
         ];
 
+        // Shuffle arrays to ensure variety and uniqueness
+        const shuffledRound = [...roundObjects].sort(() => 0.5 - Math.random());
+        const shuffledNonRound = [...nonRoundObjects].sort(() => 0.5 - Math.random());
+
+        // For a 5 question session, we want exactly 3 round and 2 non-round objects
+        const targetTypes = [];
         for (let i = 0; i < totalQuestions; i++) {
-            const showRound = Math.random() > 0.5;
-            if (showRound) {
-                const target = roundObjects[Math.floor(Math.random() * roundObjects.length)];
+            if (i < 3) { // First 3 are round
+                targetTypes.push({ isRound: true, item: shuffledRound[i % shuffledRound.length] });
+            } else { // Next 2 are non-round
+                targetTypes.push({ isRound: false, item: shuffledNonRound[(i - 3) % shuffledNonRound.length] });
+            }
+        }
+
+        // Shuffle the types so the order of round/non-round questions is random
+        const shuffledTargets = targetTypes.sort(() => 0.5 - Math.random());
+
+        for (let i = 0; i < totalQuestions; i++) {
+            const { isRound, item } = shuffledTargets[i];
+
+            if (isRound) {
                 questions.push({
                     text: `Is this a ROUND object? 🔵`,
                     options: ['Yes', 'No'],
                     correct: 'Yes',
                     type: 'emoji',
-                    visualData: { emoji: target.emoji, isRound: true },
-                    explanation: `Objects like a ${target.name} are round.`
+                    visualData: { emoji: item.emoji, isRound: true },
+                    explanation: `Objects like a ${item.name} are round.`
                 });
             } else {
-                const target = nonRoundObjects[Math.floor(Math.random() * nonRoundObjects.length)];
                 questions.push({
                     text: `Is this a ROUND object? 🔵`,
                     options: ['Yes', 'No'],
                     correct: 'No',
                     type: 'emoji',
-                    visualData: { emoji: target.emoji, isRound: false },
-                    explanation: `Objects like a ${target.name} are not round.`
+                    visualData: { emoji: item.emoji, isRound: false },
+                    explanation: `Objects like a ${item.name} are not round.`
                 });
             }
         }
@@ -231,11 +248,20 @@ const Grade2WhatIsLong = () => {
         if (selectedSkill === '1002') return generateLengthQuestions();
         if (selectedSkill === '1003') return generateRoundQuestions();
 
-        // MIXED For Test or Default
-        const q1 = generateShapeQuestions().slice(0, 5);
-        const q2 = generateLengthQuestions().slice(0, 5);
-        const q3 = generateRoundQuestions().slice(0, 5);
-        return [...q1, ...q2, ...q3].sort(() => 0.5 - Math.random()).slice(0, totalQuestions);
+        // MIXED For Test — generate extra, deduplicate, then slice
+        const pool = [
+            ...generateShapeQuestions(),
+            ...generateLengthQuestions(),
+            ...generateRoundQuestions()
+        ].sort(() => 0.5 - Math.random());
+        const seen = new Set();
+        const unique = pool.filter(q => {
+            const key = q.text + '||' + q.correct;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+        return unique.slice(0, totalQuestions);
     };
 
     useEffect(() => {
@@ -344,8 +370,10 @@ const Grade2WhatIsLong = () => {
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
+            setIsAutoAdvancing(true);
             setTimeout(() => {
                 handleNext();
+                setIsAutoAdvancing(false);
             }, 800);
         }
     };
@@ -647,7 +675,7 @@ const Grade2WhatIsLong = () => {
                                     Next <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}

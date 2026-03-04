@@ -53,7 +53,7 @@ const Grade2Patterns = () => {
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId ? skillId.includes('TEST') : false;
-    const totalQuestions = isTest ? 15 : 5;
+    const totalQuestions = isTest ? 10 : 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -65,6 +65,7 @@ const Grade2Patterns = () => {
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
     const getTopicInfo = () => {
         const grade2Config = TOPIC_CONFIGS['2'];
@@ -251,8 +252,10 @@ const Grade2Patterns = () => {
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
+            setIsAutoAdvancing(true);
             setTimeout(() => {
                 handleNext();
+                setIsAutoAdvancing(false);
             }, 800);
         }
     };
@@ -554,7 +557,7 @@ const Grade2Patterns = () => {
                                     Next <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}

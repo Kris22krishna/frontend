@@ -35,49 +35,50 @@ const DynamicVisual = ({ type, data }) => {
         );
     }
 
-    if (type === 'estimate') {
-        const { objectType } = data;
-        const renderSVG = (objType) => {
-            switch (objType) {
-                case 'School Bag': return (
-                    <svg width="120" height="150" viewBox="0 0 80 100">
-                        <rect x="10" y="20" width="60" height="70" rx="10" fill="#4A90E2" stroke="#2171C1" strokeWidth="2" />
-                        <rect x="20" y="35" width="40" height="30" rx="5" fill="#2171C1" />
-                        <path d="M25 20 Q40 5 55 20" fill="none" stroke="#2171C1" strokeWidth="4" />
-                    </svg>
-                );
-                case 'Pencil Box': return (
-                    <svg width="150" height="60" viewBox="0 0 100 40">
-                        <rect x="10" y="10" width="80" height="20" rx="4" fill="#67C23A" stroke="#4B9E27" strokeWidth="2" />
-                        <circle cx="20" cy="20" r="2" fill="white" />
-                        <circle cx="80" cy="20" r="2" fill="white" />
-                    </svg>
-                );
-                case 'Water Bottle': return (
-                    <svg width="60" height="150" viewBox="0 0 40 100">
-                        <rect x="10" y="30" width="20" height="60" rx="5" fill="#E6A23C" />
-                        <rect x="12" y="15" width="16" height="15" rx="2" fill="#E6A23C" />
-                        <path d="M10 30 Q20 20 30 30" fill="#E6A23C" />
-                    </svg>
-                );
-                case 'Tiffin': return (
-                    <svg width="120" height="90" viewBox="0 0 80 60">
-                        <rect x="10" y="20" width="60" height="35" rx="5" fill="#F56C6C" />
-                        <rect x="10" y="15" width="60" height="10" rx="2" fill="#D84E4E" />
-                        <rect x="30" y="15" width="20" height="5" fill="#999" />
-                    </svg>
-                );
-                default: return null;
-            }
-        };
+    if (type === 'weight-compare') {
+        const { w1, w2, obj1, obj2 } = data;
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '50px', width: '100%', padding: '40px', background: 'white', borderRadius: '30px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
+                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
+                    {obj1 && (
+                        <>
+                            <div style={{ fontSize: '70px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}>
+                                {obj1.emoji}
+                            </div>
+                            <span style={{ fontWeight: 900, color: '#31326F', fontSize: '1.2rem' }}>{obj1.name}</span>
+                        </>
+                    )}
+                    <div style={{ padding: '15px 30px', background: '#e2e8f0', borderRadius: '15px', color: '#1e293b', fontSize: '1.5rem', fontWeight: 900, borderBottom: '6px solid #cbd5e1' }}>
+                        {w1} kg
+                    </div>
+                </motion.div>
+                <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem', color: '#94a3b8', fontWeight: 900 }}>VS</div>
+                <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ delay: 0.2 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
+                    {obj2 && (
+                        <>
+                            <div style={{ fontSize: '70px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}>
+                                {obj2.emoji}
+                            </div>
+                            <span style={{ fontWeight: 900, color: '#31326F', fontSize: '1.2rem' }}>{obj2.name}</span>
+                        </>
+                    )}
+                    <div style={{ padding: '15px 30px', background: '#e2e8f0', borderRadius: '15px', color: '#1e293b', fontSize: '1.5rem', fontWeight: 900, borderBottom: '6px solid #cbd5e1' }}>
+                        {w2} kg
+                    </div>
+                </motion.div>
+            </div>
+        );
+    }
 
+    if (type === 'estimate') {
+        const { objectType, emoji } = data;
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', padding: '40px', background: '#fff7ed', borderRadius: '30px', border: '3px solid #ffedd5' }}>
                 <motion.div
                     initial={{ rotate: -5 }} animate={{ rotate: 5 }} transition={{ repeat: Infinity, repeatType: 'reverse', duration: 2 }}
-                    style={{ filter: 'drop-shadow(0 15px 15px rgba(251, 146, 60, 0.2))' }}
+                    style={{ filter: 'drop-shadow(0 15px 15px rgba(251, 146, 60, 0.2))', fontSize: '80px' }}
                 >
-                    {renderSVG(objectType)}
+                    {emoji}
                 </motion.div>
             </div>
         );
@@ -94,7 +95,7 @@ const Grade2HowMuchCanYouCarry = () => {
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId ? skillId.includes('TEST') : false;
-    const totalQuestions = isTest ? 15 : 5;
+    const totalQuestions = isTest ? 10 : 5;
 
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
@@ -106,6 +107,7 @@ const Grade2HowMuchCanYouCarry = () => {
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
     const getTopicInfo = () => {
         const grade2Config = TOPIC_CONFIGS['2'];
@@ -120,7 +122,57 @@ const Grade2HowMuchCanYouCarry = () => {
 
     const { topicName, skillName } = getTopicInfo();
 
-    const generateComparingQuestions = () => {
+    const generateComparingWeightsQuestions = () => {
+        const questions = [];
+        const groceries = [
+            { name: 'Rice Sack', emoji: '🌾' },
+            { name: 'Sugar Bag', emoji: '🍚' },
+            { name: 'Wheat Sack', emoji: '🍞' },
+            { name: 'Jaggery Bag', emoji: '🍬' },
+            { name: 'Salt Packet', emoji: '🧂' },
+            { name: 'Dal Bag', emoji: '🍲' }
+        ];
+
+        // Generate all 15 unique combinations of 2 items
+        let pairs = [];
+        for (let i = 0; i < groceries.length; i++) {
+            for (let j = i + 1; j < groceries.length; j++) {
+                pairs.push({ item1: groceries[i], item2: groceries[j] });
+            }
+        }
+
+        // Shuffle the unique combinations
+        pairs = pairs.sort(() => 0.5 - Math.random());
+
+        // Ensure 3 heavier and 2 lighter (or 2 heavier and 3 lighter) for perfect balance
+        const numHeavier = Math.random() > 0.5 ? Math.floor(totalQuestions / 2) : Math.ceil(totalQuestions / 2);
+        const heavierFlags = Array(totalQuestions).fill(false).fill(true, 0, numHeavier).sort(() => Math.random() - 0.5);
+
+        for (let i = 0; i < totalQuestions; i++) {
+            const pair = pairs[i % pairs.length];
+            const isSwapped = Math.random() > 0.5;
+            let g1 = isSwapped ? pair.item2 : pair.item1;
+            let g2 = isSwapped ? pair.item1 : pair.item2;
+
+            const w1 = Math.floor(Math.random() * 20) + 5;
+            let w2 = Math.floor(Math.random() * 20) + 5;
+            while (w1 === w2) w2 = Math.floor(Math.random() * 20) + 5;
+
+            const askingHeavier = heavierFlags[i];
+
+            questions.push({
+                text: askingHeavier ? `Which bag is HEAVIER? ⚖️` : `Which bag is LIGHTER? ⚖️`,
+                options: [`${g1.name} (${w1} kg)`, `${g2.name} (${w2} kg)`].sort(() => 0.5 - Math.random()),
+                correct: askingHeavier ? (w1 > w2 ? `${g1.name} (${w1} kg)` : `${g2.name} (${w2} kg)`) : (w1 < w2 ? `${g1.name} (${w1} kg)` : `${g2.name} (${w2} kg)`),
+                type: 'weight-compare',
+                visualData: { w1, w2, obj1: g1, obj2: g2 },
+                explanation: askingHeavier ? `${Math.max(w1, w2)}kg is a bigger number than ${Math.min(w1, w2)}kg, so it is heavier.` : `${Math.min(w1, w2)}kg is a smaller number than ${Math.max(w1, w2)}kg, so it is lighter.`
+            });
+        }
+        return questions;
+    };
+
+    const generateHeavierLighterQuestions = () => {
         const questions = [];
         const pairs = [
             { h: { name: 'Elephant', emoji: '🐘', w: 1000 }, l: { name: 'Mouse', emoji: '🐭', w: 1 } },
@@ -133,9 +185,13 @@ const Grade2HowMuchCanYouCarry = () => {
 
         const shuffledPairs = [...pairs].sort(() => Math.random() - 0.5);
 
+        // Ensure 3 heavier and 2 lighter (or 2 heavier and 3 lighter) for perfect balance
+        const numHeavier = Math.random() > 0.5 ? Math.floor(totalQuestions / 2) : Math.ceil(totalQuestions / 2);
+        const heavierFlags = Array(totalQuestions).fill(false).fill(true, 0, numHeavier).sort(() => Math.random() - 0.5);
+
         for (let i = 0; i < totalQuestions; i++) {
             const pair = shuffledPairs[i % shuffledPairs.length];
-            const askingHeavier = Math.random() > 0.5;
+            const askingHeavier = heavierFlags[i];
 
             const isReverse = Math.random() > 0.5;
             const objA = isReverse ? pair.l : pair.h;
@@ -155,36 +211,61 @@ const Grade2HowMuchCanYouCarry = () => {
 
     const generateEstimatingQuestions = () => {
         const scenarios = [
-            { obj: 'School Bag', heaviness: 'Heavy', hint: 'It has many books inside!' },
-            { obj: 'Pencil Box', heaviness: 'Light', hint: 'It only holds pens and pencils.' },
-            { obj: 'Water Bottle', heaviness: 'Heavy', hint: 'It is full of water!' },
-            { obj: 'Tiffin', heaviness: 'Heavy', hint: 'Full of yummy food!' }
-        ];
+            { obj: 'School Bag', heaviness: 'Heavy', hint: 'It has many books inside!', emoji: '🎒' },
+            { obj: 'Pencil Box', heaviness: 'Light', hint: 'It only holds pens and pencils.', emoji: '✏️' },
+            { obj: 'Water Bottle', heaviness: 'Heavy', hint: 'It is full of water!', emoji: '💧' },
+            { obj: 'Tiffin Box', heaviness: 'Heavy', hint: 'Full of yummy food!', emoji: '🍱' },
+            { obj: 'Eraser', heaviness: 'Light', hint: 'It is small and easy to hold.', emoji: '🧽' },
+            { obj: 'Textbook', heaviness: 'Heavy', hint: 'It has thick pages and feels solid.', emoji: '📓' },
+            { obj: 'Crayon', heaviness: 'Light', hint: 'It is very small and thin.', emoji: '🖍️' },
+            { obj: 'Laptop', heaviness: 'Heavy', hint: 'A machine with battery and screen.', emoji: '💻' },
+            { obj: 'Paper Sheet', heaviness: 'Light', hint: 'It floats in the wind!', emoji: '📄' },
+            { obj: 'Teacher Desk', heaviness: 'Heavy', hint: 'You cannot move it easily.', emoji: '🪑' },
+            { obj: 'Chalk', heaviness: 'Light', hint: 'It breaks easily and feels weightless.', emoji: '🤍' },
+            { obj: 'Chair', heaviness: 'Heavy', hint: 'Furniture made of wood or metal.', emoji: '🪑' },
+            { obj: 'Ruler', heaviness: 'Light', hint: 'A thin strip of plastic or wood.', emoji: '📏' },
+            { obj: 'Dustbin', heaviness: 'Heavy', hint: 'Holds a lot of trash.', emoji: '🗑️' },
+            { obj: 'Paintbrush', heaviness: 'Light', hint: 'Thin and easy to hold.', emoji: '🖌️' }
+        ].sort(() => 0.5 - Math.random());
 
         const questions = [];
         for (let i = 0; i < totalQuestions; i++) {
             const scenario = scenarios[i % scenarios.length];
+            // Fix grammar: "a Eraser" -> "an Eraser"
+            const article = /^[aeiou]/i.test(scenario.obj) ? 'an' : 'a';
+
             questions.push({
-                text: `Is a ${scenario.obj} usually HEAVY or LIGHT? 🎒`,
+                text: `Is ${article} ${scenario.obj} usually HEAVY or LIGHT? ${scenario.emoji}`,
                 options: ['Heavy', 'Light'],
                 correct: scenario.heaviness,
                 type: 'estimate',
-                visualData: { objectType: scenario.obj },
+                visualData: { objectType: scenario.obj, emoji: scenario.emoji },
                 hint: scenario.hint,
-                explanation: `A ${scenario.obj} often feels ${scenario.heaviness.toLowerCase()} because of what it holds.`
+                explanation: `${article.charAt(0).toUpperCase() + article.slice(1)} ${scenario.obj} often feels ${scenario.heaviness.toLowerCase()} because of what it holds or what it is made of.`
             });
         }
         return questions;
     };
 
     const generateQuestions = (selectedSkill) => {
-        if (selectedSkill === '1007' || selectedSkill === '1008') return generateComparingQuestions();
+        if (selectedSkill === '1007') return generateComparingWeightsQuestions();
+        if (selectedSkill === '1008') return generateHeavierLighterQuestions();
         if (selectedSkill === '1009') return generateEstimatingQuestions();
 
-        // MIXED For Test or Default
-        const q1 = generateComparingQuestions().slice(0, 10);
-        const q2 = generateEstimatingQuestions().slice(0, 5);
-        return [...q1, ...q2].sort(() => 0.5 - Math.random()).slice(0, totalQuestions);
+        // MIXED For Test — generate extra, deduplicate, then slice
+        const pool = [
+            ...generateComparingWeightsQuestions(),
+            ...generateHeavierLighterQuestions(),
+            ...generateEstimatingQuestions()
+        ].sort(() => 0.5 - Math.random());
+        const seen = new Set();
+        const unique = pool.filter(q => {
+            const key = q.text + '||' + q.correct;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+        return unique.slice(0, totalQuestions);
     };
 
     useEffect(() => {
@@ -293,8 +374,10 @@ const Grade2HowMuchCanYouCarry = () => {
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
+            setIsAutoAdvancing(true);
             setTimeout(() => {
                 handleNext();
+                setIsAutoAdvancing(false);
             }, 800);
         }
     };
@@ -599,7 +682,7 @@ const Grade2HowMuchCanYouCarry = () => {
                                     Next <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}
@@ -620,4 +703,36 @@ const Grade2HowMuchCanYouCarry = () => {
     );
 };
 
-export default Grade2HowMuchCanYouCarry;
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null, errorInfo: null };
+    }
+    static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+    }
+    componentDidCatch(error, errorInfo) {
+        this.setState({ errorInfo });
+        console.error("Component Error Caught:", error, errorInfo);
+    }
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div style={{ padding: '20px', background: 'red', color: 'white', overflow: 'auto' }}>
+                    <h2>Something went wrong in this component:</h2>
+                    <pre style={{ whiteSpace: 'pre-wrap' }}>{this.state.error && this.state.error.toString()}</pre>
+                    <pre style={{ whiteSpace: 'pre-wrap' }}>{this.state.errorInfo && this.state.errorInfo.componentStack}</pre>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+}
+
+const ExportComponent = () => (
+    <ErrorBoundary>
+        <Grade2HowMuchCanYouCarry />
+    </ErrorBoundary>
+);
+
+export default ExportComponent;
