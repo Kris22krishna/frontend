@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceDot } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceDot, ReferenceLine } from 'recharts';
 
 export const PatientTemperatureChart = () => {
     const data = [
@@ -99,7 +99,7 @@ export const OriginHighlightChart = ({ height = 220 }) => {
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={[{ x: 0, y: 0 }, { x: 5, y: 5 }]}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" domain={[0, 5]} />
+                    <XAxis type="number" dataKey="x" domain={[0, 5]} />
                     <YAxis type="number" domain={[0, 5]} />
                     <ReferenceDot x={0} y={0} r={10} fill="#d97706" stroke="#fff" strokeWidth={3} label={{ value: 'ORIGIN (0,0)', position: 'top', fill: '#d97706', fontWeight: 900, fontSize: 14 }} />
                     <Line type="monotone" dataKey="y" stroke="transparent" dot={false} />
@@ -115,12 +115,12 @@ export const OrderedPairHighlightChart = ({ height = 220 }) => {
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={[{ x: 0, y: 0 }, { x: 5, y: 5 }]}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" domain={[0, 5]} />
+                    <XAxis type="number" dataKey="x" domain={[0, 5]} />
                     <YAxis type="number" domain={[0, 5]} />
                     <ReferenceDot x={3} y={4} r={8} fill="#dc2626" stroke="#fff" strokeWidth={3} label={{ value: '(3, 4)', position: 'top', fill: '#dc2626', fontWeight: 900, fontSize: 16 }} />
                     {/* Visual guidelines */}
-                    <Line type="linear" data={[{ x: 3, y: 0 }, { x: 3, y: 4 }]} dataKey="y" stroke="#dc2626" strokeDasharray="5 5" dot={false} />
-                    <Line type="linear" data={[{ x: 0, y: 4 }, { x: 3, y: 4 }]} dataKey="x" stroke="#dc2626" strokeDasharray="5 5" dot={false} />
+                    <ReferenceLine segment={[{ x: 3, y: 0 }, { x: 3, y: 4 }]} stroke="#dc2626" strokeDasharray="5 5" />
+                    <ReferenceLine segment={[{ x: 0, y: 4 }, { x: 3, y: 4 }]} stroke="#dc2626" strokeDasharray="5 5" />
                     <Line type="monotone" dataKey="y" stroke="transparent" dot={false} />
                 </LineChart>
             </ResponsiveContainer>
@@ -135,7 +135,7 @@ export const ScaleHighlightChart = ({ height = 220 }) => {
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={[{ x: 0, y: 0 }, { x: 5, y: 50 }]}>
                     <CartesianGrid strokeDasharray="10 10" stroke="#0f766e30" />
-                    <XAxis type="number" domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} tick={{ fill: '#0f766e', fontWeight: 800 }} />
+                    <XAxis type="number" dataKey="x" domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} tick={{ fill: '#0f766e', fontWeight: 800 }} />
                     <YAxis type="number" domain={[0, 50]} ticks={[0, 10, 20, 30, 40, 50]} tick={{ fill: '#0f766e', fontWeight: 800 }} />
                 </LineChart>
             </ResponsiveContainer>

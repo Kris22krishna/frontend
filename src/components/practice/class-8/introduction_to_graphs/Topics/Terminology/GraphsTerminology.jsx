@@ -48,7 +48,7 @@ const TERMS = [
         icon: '📍',
         color: '#dc2626',
         def: 'A set of two numbers written as (x, y) that locates a specific point on the coordinate plane. The first number is the x-coordinate, the second is the y-coordinate.',
-        example: '(3, 7) means: move 3 units along X-axis, then 7 units up the Y-axis.',
+        example: '(3, 4) means: move 3 units along X-axis, then 4 units up the Y-axis.',
         realWorld: 'GPS coordinates like (latitude, longitude) that pinpoint a location on a map.',
         chart: OrderedPairHighlightChart,
     },
