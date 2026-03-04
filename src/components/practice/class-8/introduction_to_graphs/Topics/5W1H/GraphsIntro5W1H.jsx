@@ -135,26 +135,23 @@ export default function GraphsIntro5W1H() {
 
             {/* ── HERO BANNER ───────────────────────────── */}
             <div style={{
-                background: 'linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%)',
-                borderBottom: '1px solid #e2e8f0',
-                padding: '96px 24px 36px',
-                textAlign: 'center'
+                background: 'linear-gradient(90deg, #0c4a6e 0%, #4f46e5 100%)',
+                padding: '16px 24px',
+                textAlign: 'center',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
             }}>
 
                 <h1 style={{
-                    fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-                    fontWeight: 900, color: '#0f172a', margin: '0 0 10px'
+                    fontFamily: 'Outfit, sans-serif', fontSize: '24px',
+                    fontWeight: 900, color: '#ffffff', margin: '0 0 4px'
                 }}>
-                    The 6 Big Questions About{' '}
-                    <span style={{
-                        background: 'linear-gradient(90deg,#059669,#0891b2)',
-                        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-                    }}>
-                        Line Graphs
+                    Discover Graphs Through{' '}
+                    <span style={{ color: '#fde047' }}>
+                        6 Big Questions
                     </span>
                 </h1>
-                <p style={{ color: '#64748b', fontSize: 16, maxWidth: 520, margin: '0 auto' }}>
-                    Click any card to explore. Build a complete picture of what line graphs are and why they matter.
+                <p style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: 13, margin: 0, fontWeight: 500 }}>
+                    Tap each card to explore ✨
                 </p>
             </div>
 

@@ -249,21 +249,16 @@ export default function GraphsTerminology() {
                 </div>
             </nav>
 
-            {/* ── HERO ────────────────────────────────── */}
-            <div style={{ background: 'linear-gradient(135deg, #ecfdf5 0%, #eff6ff 100%)', borderBottom: '1px solid #e2e8f0', padding: '120px 24px 40px', textAlign: 'center' }}>
-                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 12px' }}>
-                    The Language of{' '}
-                    <span style={{ background: 'linear-gradient(90deg,#059669,#0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                        Line Graphs
-                    </span>
+            {/* ── HEADER ────────────────────────────────── */}
+            <div style={{ padding: '10px 12px 10px', textAlign: 'center' }}>
+                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px' }}>
+                    Line Graphs <span style={{ color: '#4f46e5' }}>Vocabulary</span>
                 </h1>
-                <p style={{ color: '#64748b', fontSize: 16, maxWidth: 540, margin: '0 auto' }}>
-                    Master 6 key terms and 2 foundational ideas. Then test yourself in the quiz.
-                </p>
+              
             </div>
 
             {/* ── TABS ────────────────────────────────── */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap', padding: '24px 24px 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap', padding: '0 12px 12px' }}>
                 {TABS.map(t => (
                     <button key={t.id} onClick={() => setTab(t.id)}
                         className={`grph-tab${tab === t.id ? ' active' : ''}`}>
@@ -275,9 +270,7 @@ export default function GraphsTerminology() {
             {/* ── TAB: KEY TERMS ──────────────────────── */}
             {tab === 'terms' && (
                 <div className="grph-section">
-                    <h2 className="grph-section-title">6 Key Terms — <span>Line Graphs</span></h2>
-                    <p className="grph-section-subtitle">Click any term to read the detailed definition and example.</p>
-
+                  
                     <div className="grph-learn-grid">
                         {/* Sidebar */}
                         <aside className="grph-learn-sidebar">
@@ -340,9 +333,7 @@ export default function GraphsTerminology() {
             {/* ── TAB: KEY IDEAS ──────────────────────── */}
             {tab === 'ideas' && (
                 <div className="grph-section">
-                    <h2 className="grph-section-title">2 Key Ideas — <span>NCERT Ch. 15</span></h2>
-                    <p className="grph-section-subtitle">Two foundational concepts directly from NCERT Grade 8.</p>
-
+                 
                     {/* Idea selector */}
                     <div style={{ display: 'flex', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
                         {KEY_IDEAS.map((idea, idx) => (
@@ -419,8 +410,7 @@ export default function GraphsTerminology() {
             {/* ── TAB: QUIZ ───────────────────────────── */}
             {tab === 'quiz' && (
                 <div className="grph-section">
-                    <h2 className="grph-section-title" style={{ textAlign: 'center', marginBottom: 8 }}>Vocabulary <span>Quiz</span></h2>
-                    <p className="grph-section-subtitle" style={{ textAlign: 'center', marginBottom: 36 }}>10 questions testing your understanding of line graph terminology.</p>
+                    
                     <QuizEngine onBack={() => setTab('terms')} />
                 </div>
             )}

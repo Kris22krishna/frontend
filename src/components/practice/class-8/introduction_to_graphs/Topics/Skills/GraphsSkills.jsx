@@ -92,7 +92,7 @@ export default function GraphsSkills() {
                     </div>
                 </nav>
 
-                <div style={{ padding: '40px 24px 0' }}>
+                <div style={{ padding: '20px 24px 0' }}>
                     {view === 'learn' ? (
                         <div className="grph-lexicon-container" style={{ maxWidth: 1100, margin: '0 auto' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
@@ -212,11 +212,10 @@ export default function GraphsSkills() {
                 </div>
             </nav>
 
-            <div className="grph-lexicon-container" style={{ maxWidth: 1100, margin: '80px auto 40px', padding: '0 24px' }}>
+            <div className="grph-lexicon-container" style={{ maxWidth: 1100, margin: '30px auto 40px', padding: '0 24px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 32 }}>
-                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.1rem', fontWeight: 900, color: '#0f172a', margin: '0 0 6px' }}>
-                        Line Graphs{' '}
-                        <span style={{ background: 'linear-gradient(135deg, #059669, #0891b2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Skills</span>
+                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.4rem', fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>
+                        Line Graphs <span style={{ color: '#00afb9' }}>Skills</span>
                     </h1>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', letterSpacing: 0.5 }}>
                         Learn, practice 20 dynamic questions, and assess with 10 timed questions per skill.

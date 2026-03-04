@@ -58,9 +58,9 @@ export default function IntroductionToGraphs() {
                 <button
                     onClick={() => navigate('/senior/grade/8')}
                     style={{
-                        position: 'absolute', top: 32, left: 32,
+                        position: 'absolute', top: 16, left: 32,
                         display: 'inline-flex', alignItems: 'center', gap: 6,
-                        padding: '8px 16px', borderRadius: 50,
+                        padding: '8px 6px', borderRadius: 50,
                         background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
                         border: '1px solid rgba(255,255,255,0.3)', color: '#fff',
                         fontSize: 13, fontWeight: 700, cursor: 'pointer', zIndex: 10
@@ -77,8 +77,7 @@ export default function IntroductionToGraphs() {
                     </h1>
 
                     <p className="grph-main-sub">
-                        Learn to read, draw, and interpret line graphs — the language of trends,
-                        patterns, and change over time. From temperature charts to speed-distance graphs.
+                        Learn to read, draw, and interpret line graphs.
                     </p>
 
                     {/* Stats grid only */}
