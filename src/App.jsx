@@ -184,15 +184,16 @@ import Grade1Numbers21to50 from './components/practice/grade-1/numbers-21-50';
 import Grade1DataHandling from './components/practice/grade-1/data-handling';
 import Grade1Patterns from './components/practice/grade-1/patterns';
 import Grade1Numbers51to100 from './components/practice/grade-1/numbers-51-100';
-import IdentifyingShapes from './components/practice/class-2/what-is-long,what-is-round/identifying_shapes';
-import ComparingLengths from './components/practice/class-2/what-is-long,what-is-round/comparing_lengths';
-import RecognizingRoundObjects from './components/practice/class-2/what-is-long,what-is-round/recognizing_round_objects';
-import ComparingWeights from './components/practice/class-2/c-203/how-much-can-you-carry/ComparingWeights';
-import HeavierLighter from './components/practice/class-2/c-203/how-much-can-you-carry/HeavierLighter';
-import EstimatingWeight from './components/practice/class-2/c-203/how-much-can-you-carry/EstimatingWeight';
+import IdentifyingShapes from './components/practice/class-2/What is Long What is Round/identifying_shapes';
+import ComparingLengths from './components/practice/class-2/What is Long What is Round/comparing_lengths';
+import RecognizingRoundObjects from './components/practice/class-2/What is Long What is Round/recognizing_round_objects';
+import ComparingWeights from './components/practice/class-2/How Much Can You Carry/ComparingWeights';
+import HeavierLighter from './components/practice/class-2/How Much Can You Carry/HeavierLighter';
+import EstimatingWeight from './components/practice/class-2/How Much Can You Carry/EstimatingWeight';
 import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
 import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
 import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
+import Grade2Patterns from './components/practice/class-2/Patterns/Patterns';
 import NumbersUpTo100 from './components/practice/class-2/Counting in Tens/numbers_up_to_100';
 import PlaceValueTensOnes from './components/practice/class-2/Counting in Tens/place_value_tens_ones';
 import ExpandedForm from './components/practice/class-2/Counting in Tens/expanded_form';
@@ -981,6 +982,9 @@ function App() {
         <Route path="/junior/grade/2/counting-in-tens/place-value-tens-ones" element={<ProtectedRoute redirectTo="/login"><PlaceValueTensOnes /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-tens/expanded-form" element={<ProtectedRoute redirectTo="/login"><ExpandedForm /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-tens/comparing-numbers" element={<ProtectedRoute redirectTo="/login"><ComparingNumbers /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/patterns/number-patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/patterns/shape-patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/patterns/identifying-completing-patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />

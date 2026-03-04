@@ -92,6 +92,11 @@ export const TOPIC_CONFIGS = {
             { id: "1011", name: "Place value (Tens and Ones)", route: "place-value-tens-ones" },
             { id: "1012", name: "Expanded form", route: "expanded-form" },
             { id: "1013", name: "Comparing numbers", route: "comparing-numbers" }
+        ],
+        'Patterns': [
+            { id: "1014", name: "Number patterns", route: "number-patterns" },
+            { id: "1015", name: "Shape patterns", route: "shape-patterns" },
+            { id: "1016", name: "Identifying and completing patterns", route: "identifying-completing-patterns" }
         ]
     },
     '3': {
