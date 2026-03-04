@@ -26,6 +26,11 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import SurfaceAreasAndVolumes from './components/practice/class-10/SurfaceAreasAndVolumes/SurfaceAreasAndVolumes';
+import SurfaceVolumesIntro from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/5W1H/Intro5W1H';
+import SurfaceVolumesTerminology from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Terminology/Terminology';
+import SurfaceVolumesSkills from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Skills/Skills';
+
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -451,6 +456,19 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+
+          {/* Surface Areas and Volumes Routes */}
+          <Route path="surface-areas-and-volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
+          {/* Fallback for spaces in URL */}
+          <Route path="surface areas and volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
