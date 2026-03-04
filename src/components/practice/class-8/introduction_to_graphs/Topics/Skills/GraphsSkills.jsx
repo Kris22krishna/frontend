@@ -222,14 +222,14 @@ export default function GraphsSkills() {
     if (view !== 'list' && skill) {
         return (
             <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', padding: '100px 0 60px' }}>
-                <nav className="intro-nav">
-                    <button className="intro-nav-back" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>
+                <nav className="grph-nav">
+                    <button className="grph-nav-back" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>
                         ← Back to Skills
                     </button>
-                    <div className="intro-nav-links">
-                        <button className="intro-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/introduction')}>🌟 Intro</button>
-                        <button className="intro-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/terminology')}>📖 Terminology</button>
-                        <button className="intro-nav-link intro-nav-link--active">🎯 Skills</button>
+                    <div className="grph-nav-links">
+                        <button className="grph-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/introduction')}>🌟 Intro</button>
+                        <button className="grph-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/terminology')}>📖 Terminology</button>
+                        <button className="grph-nav-link grph-nav-link--active">🎯 Skills</button>
                     </div>
                 </nav>
 
@@ -326,14 +326,14 @@ export default function GraphsSkills() {
     // ── SKILLS LIST ──────────────────────────────────────────────────────────
     return (
         <div className="skills-page">
-            <nav className="intro-nav">
-                <button className="intro-nav-back" onClick={() => navigate('/senior/grade/8/introduction-to-graphs')}>
+            <nav className="grph-nav">
+                <button className="grph-nav-back" onClick={() => navigate('/senior/grade/8/introduction-to-graphs')}>
                     ← Back to Graphs
                 </button>
-                <div className="intro-nav-links">
-                    <button className="intro-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/introduction')}>🌟 Introduction</button>
-                    <button className="intro-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/terminology')}>📖 Terminology</button>
-                    <button className="intro-nav-link intro-nav-link--active">🎯 Skills</button>
+                <div className="grph-nav-links">
+                    <button className="grph-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/introduction')}>🌟 Introduction</button>
+                    <button className="grph-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/terminology')}>📖 Terminology</button>
+                    <button className="grph-nav-link grph-nav-link--active">🎯 Skills</button>
                 </div>
             </nav>
 

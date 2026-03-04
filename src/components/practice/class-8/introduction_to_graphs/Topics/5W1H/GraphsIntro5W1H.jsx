@@ -118,16 +118,16 @@ export default function GraphsIntro5W1H() {
     return (
         <div className="grph-page">
             {/* ── TOP NAV ───────────────────────────────── */}
-            <nav className="intro-nav">
-                <button className="intro-nav-back" onClick={() => navigate('/senior/grade/8/introduction-to-graphs')}>
+            <nav className="grph-nav">
+                <button className="grph-nav-back" onClick={() => navigate('/senior/grade/8/introduction-to-graphs')}>
                     ← Back to Graphs
                 </button>
-                <div className="intro-nav-links">
-                    <button className="intro-nav-link intro-nav-link--active">🌟 Introduction</button>
-                    <button className="intro-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/terminology')}>
+                <div className="grph-nav-links">
+                    <button className="grph-nav-link grph-nav-link--active">🌟 Introduction</button>
+                    <button className="grph-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/terminology')}>
                         📖 Terminology
                     </button>
-                    <button className="intro-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/skills')}>
+                    <button className="grph-nav-link" onClick={() => navigate('/senior/grade/8/introduction-to-graphs/skills')}>
                         🎯 Skills
                     </button>
                 </div>
