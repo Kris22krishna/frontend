@@ -73,30 +73,30 @@ export const TOPIC_CONFIGS = {
     },
     '2': {
         'What is Long, What is Round?': [
-            { id: "1001", name: "Identifying shapes (2D shapes)", route: "identifying-shapes" },
-            { id: "1002", name: "Comparing lengths", route: "comparing-lengths" },
-            { id: "1003", name: "Recognizing round objects", route: "recognizing-round-objects" }
+            { id: "1001", name: "Identifying shapes (2D shapes)", route: "what-is-long-what-is-round" },
+            { id: "1002", name: "Comparing lengths", route: "what-is-long-what-is-round" },
+            { id: "1003", name: "Recognizing round objects", route: "what-is-long-what-is-round" }
         ],
         'How Much Can You Carry?': [
-            { id: "1007", name: "Comparing weights", route: "comparing-weights" },
-            { id: "1008", name: "Heavier/lighter", route: "heavier-lighter" },
-            { id: "1009", name: "Estimating weight", route: "estimating-weight" }
+            { id: "1007", name: "Comparing weights", route: "how-much-can-you-carry" },
+            { id: "1008", name: "Heavier/lighter", route: "how-much-can-you-carry" },
+            { id: "1009", name: "Estimating weight", route: "how-much-can-you-carry" }
         ],
         'Counting in Groups': [
-            { id: "1004", name: "Counting in pairs", route: "counting-in-pairs" },
-            { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "skip-counting" },
-            { id: "1006", name: "Introduction to multiplication as repeated addition", route: "repeated-addition" }
+            { id: "1004", name: "Counting in pairs", route: "counting-in-groups" },
+            { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "counting-in-groups" },
+            { id: "1006", name: "Introduction to multiplication as repeated addition", route: "counting-in-groups" }
         ],
         'Counting in Tens': [
-            { id: "1010", name: "Numbers up to 100", route: "numbers-up-to-100" },
-            { id: "1011", name: "Place value (Tens and Ones)", route: "place-value-tens-ones" },
-            { id: "1012", name: "Expanded form", route: "expanded-form" },
-            { id: "1013", name: "Comparing numbers", route: "comparing-numbers" }
+            { id: "1010", name: "Numbers up to 100", route: "counting-in-tens" },
+            { id: "1011", name: "Place value (Tens and Ones)", route: "counting-in-tens" },
+            { id: "1012", name: "Expanded form", route: "counting-in-tens" },
+            { id: "1013", name: "Comparing numbers", route: "counting-in-tens" }
         ],
         'Patterns': [
-            { id: "1014", name: "Number patterns", route: "number-patterns" },
-            { id: "1015", name: "Shape patterns", route: "shape-patterns" },
-            { id: "1016", name: "Identifying and completing patterns", route: "identifying-completing-patterns" }
+            { id: "1014", name: "Number patterns", route: "patterns" },
+            { id: "1015", name: "Shape patterns", route: "patterns" },
+            { id: "1016", name: "Identifying and completing patterns", route: "patterns" }
         ]
     },
     '3': {

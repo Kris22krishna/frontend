@@ -184,20 +184,11 @@ import Grade1Numbers21to50 from './components/practice/grade-1/numbers-21-50';
 import Grade1DataHandling from './components/practice/grade-1/data-handling';
 import Grade1Patterns from './components/practice/grade-1/patterns';
 import Grade1Numbers51to100 from './components/practice/grade-1/numbers-51-100';
-import IdentifyingShapes from './components/practice/class-2/What is Long What is Round/identifying_shapes';
-import ComparingLengths from './components/practice/class-2/What is Long What is Round/comparing_lengths';
-import RecognizingRoundObjects from './components/practice/class-2/What is Long What is Round/recognizing_round_objects';
-import ComparingWeights from './components/practice/class-2/How Much Can You Carry/ComparingWeights';
-import HeavierLighter from './components/practice/class-2/How Much Can You Carry/HeavierLighter';
-import EstimatingWeight from './components/practice/class-2/How Much Can You Carry/EstimatingWeight';
-import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
-import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
-import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
-import Grade2Patterns from './components/practice/class-2/Patterns/Patterns';
-import NumbersUpTo100 from './components/practice/class-2/Counting in Tens/numbers_up_to_100';
-import PlaceValueTensOnes from './components/practice/class-2/Counting in Tens/place_value_tens_ones';
-import ExpandedForm from './components/practice/class-2/Counting in Tens/expanded_form';
-import ComparingNumbers from './components/practice/class-2/Counting in Tens/comparing_numbers';
+import Grade2WhatIsLongWhatIsRound from './components/practice/grade-2/what-is-long-what-is-round/what-is-long-what-is-round';
+import Grade2HowMuchCanYouCarry from './components/practice/grade-2/how-much-can-you-carry/how-much-can-you-carry';
+import Grade2CountingInGroups from './components/practice/grade-2/counting-in-groups/counting-in-groups';
+import Grade2CountingInTens from './components/practice/grade-2/counting-in-tens/counting-in-tens';
+import Grade2Patterns from './components/practice/grade-2/patterns/patterns';
 
 // Grade 5: Can you see the Pattern?
 import PatternIdentification from './components/practice/class-5/CanyouseethePattern/PatternRecognition/pattern-identification';
@@ -969,22 +960,11 @@ function App() {
         <Route path="/junior/grade/1/data-handling" element={<ProtectedRoute redirectTo="/login"><Grade1DataHandling /></ProtectedRoute>} />
         <Route path="/junior/grade/1/patterns" element={<ProtectedRoute redirectTo="/login"><Grade1Patterns /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-51-to-100" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers51to100 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/identifying-shapes" element={<ProtectedRoute redirectTo="/login"><IdentifyingShapes /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/comparing-lengths" element={<ProtectedRoute redirectTo="/login"><ComparingLengths /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/recognizing-round-objects" element={<ProtectedRoute redirectTo="/login"><RecognizingRoundObjects /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/comparing-weights" element={<ProtectedRoute redirectTo="/login"><ComparingWeights /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/heavier-lighter" element={<ProtectedRoute redirectTo="/login"><HeavierLighter /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/estimating-weight" element={<ProtectedRoute redirectTo="/login"><EstimatingWeight /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/counting-in-pairs" element={<ProtectedRoute redirectTo="/login"><CountingInPairs /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/skip-counting" element={<ProtectedRoute redirectTo="/login"><SkipCounting /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/repeated-addition" element={<ProtectedRoute redirectTo="/login"><RepeatedAdditionClass2 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/numbers-up-to-100" element={<ProtectedRoute redirectTo="/login"><NumbersUpTo100 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/place-value-tens-ones" element={<ProtectedRoute redirectTo="/login"><PlaceValueTensOnes /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/expanded-form" element={<ProtectedRoute redirectTo="/login"><ExpandedForm /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/comparing-numbers" element={<ProtectedRoute redirectTo="/login"><ComparingNumbers /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/patterns/number-patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/patterns/shape-patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/patterns/identifying-completing-patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/what-is-long-what-is-round" element={<ProtectedRoute redirectTo="/login"><Grade2WhatIsLongWhatIsRound /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/how-much-can-you-carry" element={<ProtectedRoute redirectTo="/login"><Grade2HowMuchCanYouCarry /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInGroups /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-tens" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInTens /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
