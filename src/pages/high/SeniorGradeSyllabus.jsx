@@ -506,6 +506,18 @@ const SeniorGradeSyllabus = () => {
                 path: '/senior/grade/8/squares-and-square-roots/chapter-test'
             }
         ];
+
+        // Introduction to Graphs (NCERT Ch. 15 — Grade 8)
+        skillsByTopic['Introduction to Graphs'] = [
+            {
+                skill_id: 'local-8-graphs-landing',
+                skill_name: 'Introduction to Graphs Chapter',
+                topic: 'Introduction to Graphs',
+                subtopic: 'Line Graphs & Applications',
+                isLocal: true,
+                path: '/senior/grade/8/introduction-to-graphs'
+            }
+        ];
     }
 
     const topics = Object.keys(skillsByTopic);

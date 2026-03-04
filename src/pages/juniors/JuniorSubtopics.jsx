@@ -176,7 +176,7 @@ const JuniorSubtopics = () => {
                     const topicSlug = decodedTopic.toLowerCase()
                         .replace(/\s+/g, '-')
                         .replace(/[?,]/g, ''); // what-is-long-round
-                    navigate(`/junior/grade/2/${topicSlug}/${skill.route}?skillId=${subtopic.id}`);
+                    navigate(`/junior/grade/2/${topicSlug}?skillId=${subtopic.id}`);
                     return;
                 }
             }
@@ -238,7 +238,7 @@ const JuniorSubtopics = () => {
                         const topicSlug = decodedTopic.toLowerCase()
                             .replace(/\s+/g, '-')
                             .replace(/[?,]/g, '');
-                        navigate(`/junior/grade/2/${topicSlug}/${skill.route}?skillId=${subtopic.id}`);
+                        navigate(`/junior/grade/2/${topicSlug}?skillId=${subtopic.id}`);
                         setPendingSubtopic(null);
                         return;
                     }

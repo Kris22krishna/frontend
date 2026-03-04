@@ -13,7 +13,93 @@ import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
 import '../../../pages/juniors/class-1/Grade1Practice.css';
 
+const NumberLine = ({ n1, n2, color1, color2 }) => {
+    const totalTicks = 10;
+    const width = 600;
+    const height = 150;
+    const padding = 50;
+    const tickSpacing = (width - 2 * padding) / totalTicks;
+
+    const getX = (val) => padding + val * tickSpacing;
+    const baseY = 100;
+
+    // First jump from 0 to n1
+    const arc1 = `M ${getX(0)} ${baseY} Q ${(getX(0) + getX(n1)) / 2} ${baseY - 70} ${getX(n1)} ${baseY}`;
+
+    // Small jumps for n2
+    const arcs2 = [];
+    for (let i = 0; i < n2; i++) {
+        const start = n1 + i;
+        const end = n1 + i + 1;
+        arcs2.push(`M ${getX(start)} ${baseY} Q ${(getX(start) + getX(end)) / 2} ${baseY - 30} ${getX(end)} ${baseY}`);
+    }
+
+    return (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="number-line-visual" style={{ width: '100%', overflow: 'visible' }}>
+            <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', maxWidth: '600px', filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.05))' }}>
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568" />
+                    </marker>
+                </defs>
+
+                {/* Main Line with Arrow */}
+                <line x1={padding - 30} y1={baseY} x2={width - padding + 30} y2={baseY} stroke="#cbd5e0" strokeWidth="3" strokeLinecap="round" />
+                <path d={`M ${width - padding + 30} ${baseY} L ${width - padding + 40} ${baseY}`} stroke="#cbd5e0" strokeWidth="3" markerEnd="url(#arrowhead)" />
+
+                {/* Ticks and Numbers */}
+                {Array.from({ length: totalTicks + 1 }).map((_, i) => (
+                    <g key={i}>
+                        <line x1={getX(i)} y1={baseY - 8} x2={getX(i)} y2={baseY + 8} stroke="#4a5568" strokeWidth="2" />
+                        <text x={getX(i)} y={baseY + 28} textAnchor="middle" fontSize="14" fill="#64748b" fontWeight="700">{i}</text>
+                    </g>
+                ))}
+
+                {/* First Jump Animation */}
+                {n1 > 0 && (
+                    <>
+                        <motion.path
+                            d={arc1}
+                            fill="none"
+                            stroke={color1}
+                            strokeWidth="4"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                        />
+                        <motion.circle
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.8 }}
+                            cx={getX(n1)} cy={baseY} r="5" fill={color1}
+                        />
+                    </>
+                )}
+
+                {/* Second Jumps (n2) */}
+                {arcs2.map((d, i) => (
+                    <motion.path
+                        key={i}
+                        d={d}
+                        fill="none"
+                        stroke={color2}
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.4, delay: 0.8 + i * 0.3 }}
+                    />
+                ))}
+            </svg>
+        </motion.div>
+    );
+};
+
 const DynamicVisual = ({ type, data }) => {
+    if (type === 'numberline') {
+        return <NumberLine {...data} />;
+    }
     if (type === 'visual') {
         const { n1, n2, color1, color2 } = data;
         return (
@@ -86,7 +172,11 @@ const Addition = () => {
     const { topicName, skillName } = getTopicInfo();
     const generateQuestions = (selectedSkill) => {
         const questions = [];
-        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'].sort(() => 0.5 - Math.random());
+
+        // Pre-shuffled pools for uniqueness (mostly used in practice, but good for test variety too)
+        const visualPairs = [[1, 2], [2, 1], [3, 2], [2, 3], [4, 1], [1, 4], [3, 3], [5, 2], [2, 5], [4, 3]].sort(() => 0.5 - Math.random());
+        const numericPairs = [[6, 2], [3, 5], [4, 4], [7, 1], [2, 7], [1, 8], [5, 4], [3, 6], [2, 2], [9, 0]].sort(() => 0.5 - Math.random());
 
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
@@ -95,21 +185,21 @@ const Addition = () => {
 
             let typeToGen = 'visual';
             if (isTest) {
-                if (i < 5) typeToGen = 'visual';
-                else if (i < 9) typeToGen = 'numeric';
+                // Balanced test: 3 Visual, 3 Numeric, 3 Number Line, 1 Zero
+                if (i < 3) typeToGen = 'visual';
+                else if (i < 6) typeToGen = 'numeric';
+                else if (i < 9) typeToGen = 'numberline';
                 else typeToGen = 'zero';
             } else {
                 if (selectedSkill === '301' || !selectedSkill) typeToGen = 'visual';
                 else if (selectedSkill === '302') typeToGen = 'numeric';
-                else if (selectedSkill === '303') typeToGen = 'zero';
+                else if (skillId === '303') typeToGen = 'numberline';
             }
 
             if (typeToGen === 'visual') {
-                // Visual Addition
                 let n1, n2;
                 if (isTest) {
-                    const pairs = [[2, 3], [4, 1], [3, 2], [1, 4], [5, 2]];
-                    [n1, n2] = pairs[i % pairs.length];
+                    [n1, n2] = visualPairs[i % visualPairs.length];
                 } else {
                     n1 = Math.floor(Math.random() * 5) + 1;
                     n2 = Math.floor(Math.random() * 4) + 1;
@@ -124,11 +214,9 @@ const Addition = () => {
                     solution: `${n1} + ${n2} = ${n1 + n2}`
                 };
             } else if (typeToGen === 'numeric') {
-                // Numeric
                 let n1, n2;
                 if (isTest) {
-                    const pairs = [[6, 2], [3, 5], [4, 4], [7, 1]];
-                    [n1, n2] = pairs[(i - 5) % pairs.length];
+                    [n1, n2] = numericPairs[i % numericPairs.length];
                 } else {
                     n1 = Math.floor(Math.random() * 9) + 1;
                     n2 = Math.floor(Math.random() * (10 - n1));
@@ -142,26 +230,40 @@ const Addition = () => {
                     explanation: `Starting from ${n1}, if we count forward ${n2} times, we reach ${n1 + n2}.`,
                     solution: `${n1} + ${n2} = ${n1 + n2}`
                 };
-            } else if (typeToGen === 'zero') {
-                // Zero
-                let n;
-                if (isTest) {
-                    n = 6;
+            } else if (typeToGen === 'numberline' || typeToGen === 'zero') {
+                let n1, n2;
+                if (typeToGen === 'numberline') {
+                    if (isTest) {
+                        n1 = Math.floor(Math.random() * 6) + 1;
+                        n2 = Math.floor(Math.random() * (10 - n1)) + 1;
+                    } else {
+                        n1 = Math.floor(Math.random() * 6) + 1;
+                        n2 = Math.floor(Math.random() * (10 - n1)) + 1;
+                    }
+                    question = {
+                        text: `Use the number line to find: ${n1} + ${n2}`,
+                        options: [n1 + n2, n1 + n2 + 1, Math.max(0, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                        correct: n1 + n2,
+                        type: 'numberline',
+                        visualData: { n1, n2, color1, color2 },
+                        explanation: `Starting at ${n1}, we take ${n2} hops forward on the number line to reach ${n1 + n2}.`,
+                        solution: `${n1} + ${n2} = ${n1 + n2}`
+                    };
                 } else {
-                    n = Math.floor(Math.random() * 9) + 1;
+                    const val = Math.floor(Math.random() * 9) + 1;
+                    const withZeroFirst = Math.random() > 0.5;
+                    const z1 = withZeroFirst ? 0 : val;
+                    const z2 = withZeroFirst ? val : 0;
+                    question = {
+                        text: `Add zero to the number! ✨`,
+                        options: [val, 0, val + 1].sort(() => 0.5 - Math.random()),
+                        correct: val,
+                        type: 'numeric',
+                        visualData: { n1: z1, n2: z2, color1, color2 },
+                        explanation: `Adding zero to any number doesn't change it. So ${z1} + ${z2} is still ${val}.`,
+                        solution: `${z1} + ${z2} = ${val}`
+                    };
                 }
-                const withZeroFirst = isTest ? (i % 2 === 0) : Math.random() > 0.5;
-                const n1 = withZeroFirst ? 0 : n;
-                const n2 = withZeroFirst ? n : 0;
-                question = {
-                    text: `Add zero to the number! ✨`,
-                    options: [n, 0, n + 1].sort(() => 0.5 - Math.random()),
-                    correct: n,
-                    type: 'numeric',
-                    visualData: { n1, n2, color1, color2 },
-                    explanation: `Adding zero to any number doesn't change it. So ${n1} + ${n2} is still ${n}.`,
-                    solution: `${n1} + ${n2} = ${n}`
-                };
             } else {
                 question = { text: "Add them up!", options: ["2"], correct: "2", type: "numeric", visualData: { n1: 1, n2: 1, color1, color2 }, explanation: "Simple addition!" };
             }

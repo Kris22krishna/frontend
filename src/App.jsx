@@ -26,6 +26,10 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import IntroductionToGraphs from './components/practice/class-8/introduction_to_graphs/IntroductionToGraphs';
+import GraphsIntro5W1H from './components/practice/class-8/introduction_to_graphs/Topics/5W1H/GraphsIntro5W1H';
+import GraphsTerminology from './components/practice/class-8/introduction_to_graphs/Topics/Terminology/GraphsTerminology';
+import GraphsSkills from './components/practice/class-8/introduction_to_graphs/Topics/Skills/GraphsSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -87,6 +91,7 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+// House-of-Hundreds-II
 import DrawTiles from './components/practice/class-3/House-of-Hundreds-II/Draw-tiles';
 import NeighbouringNumbers from './components/practice/class-3/House-of-Hundreds-II/neighbouring-numbers';
 import HelpCranesOnNumberLine from './components/practice/class-3/House-of-Hundreds-II/Help-cranes-on-number-line';
@@ -195,19 +200,20 @@ import Grade1Numbers21to50 from './components/practice/grade-1/numbers-21-50';
 import Grade1DataHandling from './components/practice/grade-1/data-handling';
 import Grade1Patterns from './components/practice/grade-1/patterns';
 import Grade1Numbers51to100 from './components/practice/grade-1/numbers-51-100';
-import IdentifyingShapes from './components/practice/class-2/what-is-long,what-is-round/identifying_shapes';
-import ComparingLengths from './components/practice/class-2/what-is-long,what-is-round/comparing_lengths';
-import RecognizingRoundObjects from './components/practice/class-2/what-is-long,what-is-round/recognizing_round_objects';
-import ComparingWeights from './components/practice/class-2/c-203/how-much-can-you-carry/ComparingWeights';
-import HeavierLighter from './components/practice/class-2/c-203/how-much-can-you-carry/HeavierLighter';
-import EstimatingWeight from './components/practice/class-2/c-203/how-much-can-you-carry/EstimatingWeight';
-import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
-import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
-import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
-import NumbersUpTo100 from './components/practice/class-2/Counting in Tens/numbers_up_to_100';
-import PlaceValueTensOnes from './components/practice/class-2/Counting in Tens/place_value_tens_ones';
-import ExpandedForm from './components/practice/class-2/Counting in Tens/expanded_form';
-import ComparingNumbers from './components/practice/class-2/Counting in Tens/comparing_numbers';
+import Grade2WhatIsLongWhatIsRound from './components/practice/grade-2/what-is-long-what-is-round/what-is-long-what-is-round';
+import Grade2HowMuchCanYouCarry from './components/practice/grade-2/how-much-can-you-carry/how-much-can-you-carry';
+import Grade2CountingInGroups from './components/practice/grade-2/counting-in-groups/counting-in-groups';
+import Grade2CountingInTens from './components/practice/grade-2/counting-in-tens/counting-in-tens';
+import Grade2Patterns from './components/practice/grade-2/patterns/patterns';
+import Grade2Footprints from './components/practice/grade-2/footprints/footprints';
+import Grade2JugsAndMugs from './components/practice/grade-2/jugs-and-mugs/jugs-and-mugs';
+import Grade2TensAndOnes from './components/practice/grade-2/tens-and-ones/tens-and-ones';
+import Grade2MyFunday from './components/practice/grade-2/my-funday/my-funday';
+import Grade2AddOurPoints from './components/practice/grade-2/add-our-points/add-our-points';
+import Grade2LinesAndLines from './components/practice/grade-2/lines-and-lines/lines-and-lines';
+import Grade2GiveAndTake from './components/practice/grade-2/give-and-take/give-and-take';
+import Grade2TheLongestStep from './components/practice/grade-2/the-longest-step/the-longest-step';
+import Grade2BirdsComeBirdsGo from './components/practice/grade-2/birds-come-birds-go/birds-come-birds-go';
 
 // Grade 5: Can you see the Pattern?
 import PatternIdentification from './components/practice/class-5/CanyouseethePattern/PatternRecognition/pattern-identification';
@@ -429,6 +435,21 @@ import RepeatedAdditionToOneWhole from './components/practice/class-4/Weigh_It_P
 import CompareWeightsAndCapacities from './components/practice/class-4/Weigh_It_Pour_It/Comparison_of_Quantities/compare_weights_and_capacities';
 import WeightAndCapacityWordProblems from './components/practice/class-4/Weigh_It_Pour_It/Mixed_Measurement_Word_Problems/weight_and_capacity_word_problems';
 
+// Grade 4 - Elephants, Tigers, and Leopards
+import JungleNimGame from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/nim_game_add_1_or_2';
+import AdditionChartPatterns from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/addition_chart_patterns';
+import MagicMirrorAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/reverse_two_digit_addition';
+import ForestRestorationAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/four_digit_addition_with_regrouping';
+import JungleGatheringAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/multi_number_addition';
+import EstimateFirstAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/estimation_before_addition';
+import RiverCrossingSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/four_digit_subtraction_with_regrouping';
+import HiddenPathDifference from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/find_missing_difference';
+import EstimateFirstSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Subtraction/estimation_before_subtraction';
+import BalanceScaleComparison from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/more_or_less_find_unknown';
+import QuickCompare from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/compare_without_calculating';
+import SmartShortcuts from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/near_hundred_add_subtract';
+import CompensationStrategy from './components/practice/class-4/Elephants_Tigers_and_Leopards/Mental_Math_Strategies/compensation_strategy_questions';
+
 // Grade 4 - Fun with Symmetry
 import IdentifyLineOfSymmetry from './components/practice/class-4/Fun_with_Symmetry/Line_Symmetry/identify_line_of_symmetry';
 import DrawLineOfSymmetry from './components/practice/class-4/Fun_with_Symmetry/Line_Symmetry/draw_line_of_symmetry';
@@ -495,6 +516,11 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          {/* Grade 8: Introduction to Graphs Chapter Pages */}
+          <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/terminology" element={<ProtectedRoute redirectTo="/login"><GraphsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/skills" element={<ProtectedRoute redirectTo="/login"><GraphsSkills /></ProtectedRoute>} />
           {/* Class 12: Matrices — unified structure (inside MainLayout for navbar/footer) */}
           <Route path="senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesHub /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/introduction" element={<ProtectedRoute redirectTo="/login"><MatricesIntro5W1H /></ProtectedRoute>} />
@@ -790,6 +816,73 @@ function App() {
         <Route path="/junior/grade/:grade/the cleanest village/chapter test" element={
           <ProtectedRoute redirectTo="/login">
             <ChapterTest />
+          </ProtectedRoute>
+        } />
+
+        {/* Elephants, Tigers, and Leopards Routes */}
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/nim-game-strategy" element={
+          <ProtectedRoute redirectTo="/login">
+            <JungleNimGame />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/number-grid-patterns" element={
+          <ProtectedRoute redirectTo="/login">
+            <AdditionChartPatterns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/magic-mirror-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <MagicMirrorAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/forest-restoration-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <ForestRestorationAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/journey-sums" element={
+          <ProtectedRoute redirectTo="/login">
+            <JungleGatheringAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/estimation-before-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <EstimateFirstAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/river-crossing-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <RiverCrossingSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/hidden-path-difference" element={
+          <ProtectedRoute redirectTo="/login">
+            <HiddenPathDifference />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/estimation-before-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <EstimateFirstSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/balance-scale-estimation" element={
+          <ProtectedRoute redirectTo="/login">
+            <BalanceScaleComparison />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/quick-compare" element={
+          <ProtectedRoute redirectTo="/login">
+            <QuickCompare />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/smart-shortcuts" element={
+          <ProtectedRoute redirectTo="/login">
+            <SmartShortcuts />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/compensation-strategy" element={
+          <ProtectedRoute redirectTo="/login">
+            <CompensationStrategy />
           </ProtectedRoute>
         } />
 
@@ -1131,19 +1224,20 @@ function App() {
         <Route path="/junior/grade/1/data-handling" element={<ProtectedRoute redirectTo="/login"><Grade1DataHandling /></ProtectedRoute>} />
         <Route path="/junior/grade/1/patterns" element={<ProtectedRoute redirectTo="/login"><Grade1Patterns /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-51-to-100" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers51to100 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/identifying-shapes" element={<ProtectedRoute redirectTo="/login"><IdentifyingShapes /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/comparing-lengths" element={<ProtectedRoute redirectTo="/login"><ComparingLengths /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/recognizing-round-objects" element={<ProtectedRoute redirectTo="/login"><RecognizingRoundObjects /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/comparing-weights" element={<ProtectedRoute redirectTo="/login"><ComparingWeights /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/heavier-lighter" element={<ProtectedRoute redirectTo="/login"><HeavierLighter /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/estimating-weight" element={<ProtectedRoute redirectTo="/login"><EstimatingWeight /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/counting-in-pairs" element={<ProtectedRoute redirectTo="/login"><CountingInPairs /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/skip-counting" element={<ProtectedRoute redirectTo="/login"><SkipCounting /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/repeated-addition" element={<ProtectedRoute redirectTo="/login"><RepeatedAdditionClass2 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/numbers-up-to-100" element={<ProtectedRoute redirectTo="/login"><NumbersUpTo100 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/place-value-tens-ones" element={<ProtectedRoute redirectTo="/login"><PlaceValueTensOnes /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/expanded-form" element={<ProtectedRoute redirectTo="/login"><ExpandedForm /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/comparing-numbers" element={<ProtectedRoute redirectTo="/login"><ComparingNumbers /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/what-is-long-what-is-round" element={<ProtectedRoute redirectTo="/login"><Grade2WhatIsLongWhatIsRound /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/how-much-can-you-carry" element={<ProtectedRoute redirectTo="/login"><Grade2HowMuchCanYouCarry /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInGroups /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-tens" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInTens /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/footprints" element={<ProtectedRoute redirectTo="/login"><Grade2Footprints /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/jugs-and-mugs" element={<ProtectedRoute redirectTo="/login"><Grade2JugsAndMugs /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/tens-and-ones" element={<ProtectedRoute redirectTo="/login"><Grade2TensAndOnes /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/my-funday" element={<ProtectedRoute redirectTo="/login"><Grade2MyFunday /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/add-our-points" element={<ProtectedRoute redirectTo="/login"><Grade2AddOurPoints /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/lines-and-lines" element={<ProtectedRoute redirectTo="/login"><Grade2LinesAndLines /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/give-and-take" element={<ProtectedRoute redirectTo="/login"><Grade2GiveAndTake /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/the-longest-step" element={<ProtectedRoute redirectTo="/login"><Grade2TheLongestStep /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/birds-come-birds-go" element={<ProtectedRoute redirectTo="/login"><Grade2BirdsComeBirdsGo /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
