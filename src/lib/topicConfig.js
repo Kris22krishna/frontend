@@ -1,7 +1,7 @@
 export const TOPIC_CONFIGS = {
     '1': {
         'Shapes and Space': [
-            { id: "101", name: "Identifying basic shapes (circle, square, triangle, rectangle)", route: "shapes-and-space" },
+            { id: "101", name: "Identifying basic shapes (circle, square, triangle, rectangle, oval)", route: "shapes-and-space" },
             { id: "102", name: "Understanding positions (top, bottom, inside, outside, near, far)", route: "shapes-and-space" },
             { id: "103", name: "Comparing sizes (big/small, long/short, tall/short)", route: "shapes-and-space" },
             { id: "104", name: "Chapter Test - Shapes and Space", route: "shapes-and-space" }
