@@ -1,7 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Sparkles, BookOpen, Target, ChevronRight } from 'lucide-react';
 import './integers.css';
 
 const MODULES = [
@@ -9,42 +7,42 @@ const MODULES = [
         id: 'introduction',
         path: '/middle/grade/6/the-other-side-of-zero/introduction',
         label: 'Introduction',
-        icon: <Sparkles />,
+        emoji: '🌟',
         tagline: '5W1H Exploration',
         desc: '6 Big Questions about Integers — What, Why, Who, When, Where and How.',
-        gradFrom: '#4f46e5',
-        gradTo: '#7c3aed',
-        shadow: 'rgba(79, 70, 229, 0.4)',
+        gradFrom: '#0891b2',
+        gradTo: '#06b6d4',
+        shadow: 'rgba(6,182,212,0.4)',
     },
     {
         id: 'terminology',
         path: '/middle/grade/6/the-other-side-of-zero/terminology',
         label: 'Terminology',
-        icon: <BookOpen />,
+        emoji: '📖',
         tagline: 'Key Concepts & Models',
         desc: 'Master the language of Integers — Positive, Negative, Zero, and the Building Model.',
-        gradFrom: '#0d9488',
-        gradTo: '#10b981',
-        shadow: 'rgba(13, 148, 136, 0.4)',
+        gradFrom: '#7c3aed',
+        gradTo: '#a855f7',
+        shadow: 'rgba(168,85,247,0.4)',
     },
     {
         id: 'skills',
         path: '/middle/grade/6/the-other-side-of-zero/skills',
         label: 'Skills',
-        icon: <Target />,
+        emoji: '🎯',
         tagline: 'Practice & Mastery',
         desc: 'Core skills for absolute mastery of signed numbers and their operations.',
-        gradFrom: '#e11d48',
-        gradTo: '#f43f5e',
-        shadow: 'rgba(225, 29, 72, 0.4)',
+        gradFrom: '#0369a1',
+        gradTo: '#3b82f6',
+        shadow: 'rgba(59,130,246,0.4)',
     },
 ];
 
 const STATS = [
-    { val: '6', label: 'Big Questions' },
-    { val: '4', label: 'Models' },
-    { val: '5', label: 'Skills' },
-    { val: '50+', label: 'Practice Qs' },
+    { val: '6', label: 'Big Questions', color: '#0891b2' },
+    { val: '4', label: 'Models', color: '#7c3aed' },
+    { val: '5', label: 'Skills', color: '#059669' },
+    { val: '50+', label: 'Practice Qs', color: '#b45309' },
 ];
 
 export default function IntegersHub() {
@@ -52,101 +50,90 @@ export default function IntegersHub() {
 
     return (
         <div className="int-fullpage">
+
             {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
-            <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="int-left"
-            >
+            <div className="int-left">
+                {/* Decorative circles */}
                 <div className="int-deco int-deco-a" />
                 <div className="int-deco int-deco-b" />
+                <div className="int-deco int-deco-c" />
 
                 <div className="int-left-content">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="int-main-title"
-                    >
+                    <h1 className="int-main-title">
                         Master<br />
                         <span className="int-title-accent">Integers</span>
-                    </motion.h1>
+                    </h1>
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="int-main-sub"
-                    >
+                    <p className="int-main-sub">
                         Explore the "other side of zero". From the depths of mines
                         to the heights of skyscrapers, discover how numbers
                         work in every direction.
-                    </motion.p>
+                    </p>
 
+                    {/* Stats grid */}
                     <div className="int-stats-grid">
                         {STATS.map((s, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.4 + i * 0.1 }}
-                                className="int-stat"
-                            >
-                                <span className="int-stat-num">{s.val}</span>
+                            <div className="int-stat" key={i}>
+                                <span
+                                    className="int-stat-num"
+                                    style={{ color: s.color }}
+                                >
+                                    {s.val}
+                                </span>
                                 <span className="int-stat-lbl">{s.label}</span>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>
-            </motion.div>
+            </div>
 
             {/* ══ RIGHT PANEL — Topic Cards ═══════════════════ */}
             <div className="int-right">
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="int-right-eyebrow"
-                >
-                    Choose a topic to explore
-                </motion.p>
-
+                <p className="int-right-eyebrow">Choose a topic to explore</p>
                 <div className="int-cards-col">
-                    {MODULES.map((mod, idx) => (
-                        <motion.button
+                    {MODULES.map(mod => (
+                        <button
                             key={mod.id}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.6 + idx * 0.1 }}
                             className="int-card-btn"
                             onClick={() => navigate(mod.path)}
                         >
+                            {/* Gradient left strip */}
                             <div
                                 className="int-card-strip"
                                 style={{ background: `linear-gradient(180deg, ${mod.gradFrom}, ${mod.gradTo})` }}
                             />
 
+                            {/* Icon */}
                             <div
                                 className="int-card-icon"
                                 style={{
                                     background: `linear-gradient(135deg, ${mod.gradFrom}, ${mod.gradTo})`,
-                                    boxShadow: `0 8px 24px ${mod.shadow}`,
-                                    color: '#fff'
+                                    boxShadow: `0 6px 20px ${mod.shadow}`,
                                 }}
                             >
-                                {mod.icon}
+                                {mod.emoji}
                             </div>
 
+                            {/* Text */}
                             <div className="int-card-text">
-                                <div className="int-card-tagline" style={{ color: mod.gradFrom }}>{mod.tagline}</div>
-                                <div className="int-card-label">{mod.label}</div>
+                                <div
+                                    className="int-card-label"
+                                    style={{ color: mod.gradFrom }}
+                                >
+                                    {mod.label}
+                                </div>
+                                <div className="int-card-tagline">{mod.tagline}</div>
                                 <div className="int-card-desc">{mod.desc}</div>
                             </div>
 
-                            <div className="int-card-chevron" style={{ color: mod.gradFrom }}>
-                                <ChevronRight size={32} />
+                            {/* Arrow */}
+                            <div
+                                className="int-card-chevron"
+                                style={{ color: mod.gradFrom }}
+                            >
+                                ›
                             </div>
-                        </motion.button>
+                        </button>
                     ))}
                 </div>
             </div>
