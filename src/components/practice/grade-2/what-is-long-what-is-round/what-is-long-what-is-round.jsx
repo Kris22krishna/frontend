@@ -1,151 +1,118 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
+import { Timer, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
-
-const NumberLine = ({ n1, n2, color1, color2 }) => {
-    const totalTicks = 10;
-    const width = 600;
-    const height = 150;
-    const padding = 50;
-    const tickSpacing = (width - 2 * padding) / totalTicks;
-
-    const getX = (val) => padding + val * tickSpacing;
-    const baseY = 100;
-
-    // First jump from 0 to n1
-    const arc1 = `M ${getX(0)} ${baseY} Q ${(getX(0) + getX(n1)) / 2} ${baseY - 70} ${getX(n1)} ${baseY}`;
-
-    // Small jumps for n2
-    const arcs2 = [];
-    for (let i = 0; i < n2; i++) {
-        const start = n1 + i;
-        const end = n1 + i + 1;
-        arcs2.push(`M ${getX(start)} ${baseY} Q ${(getX(start) + getX(end)) / 2} ${baseY - 30} ${getX(end)} ${baseY}`);
-    }
-
-    return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="number-line-visual" style={{ width: '100%', overflow: 'visible' }}>
-            <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', maxWidth: '600px', filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.05))' }}>
-                <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568" />
-                    </marker>
-                </defs>
-
-                {/* Main Line with Arrow */}
-                <line x1={padding - 30} y1={baseY} x2={width - padding + 30} y2={baseY} stroke="#cbd5e0" strokeWidth="3" strokeLinecap="round" />
-                <path d={`M ${width - padding + 30} ${baseY} L ${width - padding + 40} ${baseY}`} stroke="#cbd5e0" strokeWidth="3" markerEnd="url(#arrowhead)" />
-
-                {/* Ticks and Numbers */}
-                {Array.from({ length: totalTicks + 1 }).map((_, i) => (
-                    <g key={i}>
-                        <line x1={getX(i)} y1={baseY - 8} x2={getX(i)} y2={baseY + 8} stroke="#4a5568" strokeWidth="2" />
-                        <text x={getX(i)} y={baseY + 28} textAnchor="middle" fontSize="14" fill="#64748b" fontWeight="700">{i}</text>
-                    </g>
-                ))}
-
-                {/* First Jump Animation */}
-                {n1 > 0 && (
-                    <>
-                        <motion.path
-                            d={arc1}
-                            fill="none"
-                            stroke={color1}
-                            strokeWidth="4"
-                            strokeLinecap="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                        />
-                        <motion.circle
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.8 }}
-                            cx={getX(n1)} cy={baseY} r="5" fill={color1}
-                        />
-                    </>
-                )}
-
-                {/* Second Jumps (n2) */}
-                {arcs2.map((d, i) => (
-                    <motion.path
-                        key={i}
-                        d={d}
-                        fill="none"
-                        stroke={color2}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.4, delay: 0.8 + i * 0.3 }}
-                    />
-                ))}
-            </svg>
-        </motion.div>
-    );
-};
+import { useAuth } from '../../../../contexts/AuthContext';
+import { api } from '../../../../services/api';
+import Navbar from '../../../Navbar';
+import { TOPIC_CONFIGS } from '../../../../lib/topicConfig';
+import { LatexText } from '../../../LatexText';
+import ExplanationModal from '../../../ExplanationModal';
+import StickerExit from '../../../StickerExit';
+import mascotImg from '../../../../assets/mascot.png';
+import avatarImg from '../../../../assets/avatar.png';
+import '../../../../pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
-    if (type === 'numberline') {
-        return <NumberLine {...data} />;
-    }
-    if (type === 'visual') {
-        const { n1, n2, color1, color2 } = data;
+    if (type === 'shape') {
+        const { shape, color } = data;
         return (
-            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="g1-addition-visual">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(5px, 3vw, 20px)', justifyContent: 'center' }}>
-                    <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '15px', borderRadius: '25px' }}>
-                        <svg width="100%" height="100%" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
-                            {Array.from({ length: n1 }).map((_, i) => (
-                                <circle key={i} cx={(i % 3) * 30 + 20} cy={Math.floor(i / 3) * 30 + 20} r="12" fill={color1} />
-                            ))}
-                        </svg>
-                    </div>
-                    <div style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', fontWeight: 400, color: '#CBD5E0' }}>+</div>
-                    <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '15px', borderRadius: '25px' }}>
-                        <svg width="100%" height="100%" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
-                            {Array.from({ length: n2 }).map((_, i) => (
-                                <circle key={i} cx={(i % 3) * 30 + 20} cy={Math.floor(i / 3) * 30 + 20} r="12" fill={color2} />
-                            ))}
-                        </svg>
-                    </div>
-                </div>
+            <motion.div initial={{ scale: 0.5, rotate: -10 }} animate={{ scale: 1, rotate: 0 }} className="g1-visual-item flex justify-center w-full">
+                <svg width="100%" height="auto" style={{ maxWidth: '300px', maxHeight: '300px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} viewBox="0 0 100 100">
+                    {shape === 'circle' && <circle cx="50" cy="50" r="42" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" rx="15" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" rx="12" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'oval' && <ellipse cx="50" cy="50" rx="45" ry="30" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                </svg>
             </motion.div>
         );
     }
-    if (type === 'numeric' || type === 'word') {
-        const { n1, n2, color1, color2 } = data;
+
+    if (type === 'length') {
+        const { aLength, bLength, objectType } = data;
+        const renderObject = (width, color, type, label) => {
+            return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', width: '100%' }}>
+                    <div style={{ fontWeight: '900', color: color, fontSize: '1.5rem', minWidth: '30px' }}>{label}</div>
+                    <div className="g1-visual-item" style={{ flexGrow: 1, height: '60px', position: 'relative', background: '#f8fafc', borderRadius: '10px', padding: '10px', border: '1px dashed #cbd5e1' }}>
+                        <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${width}%` }}
+                            transition={{ type: 'spring', damping: 15, stiffness: 100 }}
+                            style={{ height: '100%', position: 'relative' }}
+                        >
+                            {type === 'pencil' && (
+                                <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                    <path d="M0,5 L85,5 L95,10 L85,15 L0,15 Z" fill={color} />
+                                    <path d="M85,5 L95,10 L85,15 Z" fill="#FFDBAC" />
+                                    <path d="M92,8 L95,10 L92,12 Z" fill="#333" />
+                                    <rect x="0" y="5" width="15" height="10" fill="#FFADAD" rx="2" />
+                                    <rect x="15" y="5" width="2" height="10" fill="rgba(0,0,0,0.1)" />
+                                </svg>
+                            )}
+                            {type === 'bat' && (
+                                <svg width="100%" height="100%" viewBox="0 0 100 25" preserveAspectRatio="none">
+                                    <rect x="0" y="8" width="30" height="9" rx="2" fill="#8B4513" />
+                                    <path d="M30,5 L95,2 L100,5 L100,20 L95,23 L30,20 Z" fill="#DEB887" stroke="#8B4513" strokeWidth="0.5" />
+                                    <rect x="0" y="9" width="15" height="7" fill="#4A90E2" rx="1" />
+                                </svg>
+                            )}
+                            {type === 'snake' && (
+                                <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                    <path d="M0,10 Q10,5 20,10 T40,10 T60,10 T80,10 T100,10" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+                                    <circle cx="100" cy="10" r="3" fill={color} />
+                                    <circle cx="101" cy="9" r="0.5" fill="black" />
+                                </svg>
+                            )}
+                            {type === 'ruler' && (
+                                <svg width="100%" height="100%" viewBox="0 0 100 15" preserveAspectRatio="none">
+                                    <rect x="0" y="2" width="100" height="11" fill="#FFD93D" stroke="#B8860B" strokeWidth="0.5" />
+                                    {[...Array(20)].map((_, i) => (
+                                        <line key={i} x1={i * 5} y1="2" x2={i * 5} y2={i % 5 === 0 ? 8 : 5} stroke="#B8860B" strokeWidth="0.5" />
+                                    ))}
+                                </svg>
+                            )}
+                        </motion.div>
+                    </div>
+                </div>
+            );
+        };
         return (
-            <div className="g1-numeric-card" style={{ display: 'flex', gap: 'clamp(5px, 3vw, 20px)', alignItems: 'center', justifyContent: 'center' }}>
-                <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="g1-num-box" style={{ background: color1 + '20', color: color1 }}>{n1}</motion.div>
-                <div style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 400, color: '#CBD5E0' }}>+</div>
-                <motion.div initial={{ y: 20 }} animate={{ y: 0, transition: { delay: 0.1 } }} className="g1-num-box" style={{ background: color2 + '20', color: color2 }}>{n2}</motion.div>
-                <div style={{ fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 400, color: '#CBD5E0' }}>=</div>
-                <div className="g1-num-box" style={{ background: '#f0f0f0', border: '3px solid #cbd5e0', color: '#cbd5e0' }}>?</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', padding: '10px' }}>
+                <div style={{ fontSize: '0.9rem', color: '#64748b', textAlign: 'center', marginBottom: '10px', fontWeight: 'bold' }}>
+                    📏 Align objects at the start to compare!
+                </div>
+                {renderObject(aLength, '#4ECDC4', objectType, 'A')}
+                {renderObject(bLength, '#FF6B6B', objectType, 'B')}
             </div>
         );
     }
+
+    if (type === 'emoji') {
+        const { emoji } = data;
+        return (
+            <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                style={{ fontSize: '6rem', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px', width: '100%' }}
+            >
+                {emoji}
+            </motion.div>
+        );
+    }
+
     return null;
 };
 
-const Addition = () => {
+const Grade2WhatIsLong = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
-    const isTest = skillId === '304';
+    const isTest = skillId ? (skillId.includes('TEST') || skillId.startsWith('11')) : false;
     const totalQuestions = isTest ? 10 : 5;
 
     const [qIndex, setQIndex] = useState(0);
@@ -157,119 +124,144 @@ const Addition = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
-
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
     const getTopicInfo = () => {
-        const grade1Config = TOPIC_CONFIGS['1'];
-        for (const [topicName, skills] of Object.entries(grade1Config)) {
+        const grade2Config = TOPIC_CONFIGS['2'];
+        if (!grade2Config) return { topicName: 'Practice', skillName: 'Mathematics' };
+
+        for (const [topicName, skills] of Object.entries(grade2Config)) {
             const skill = skills.find(s => s.id === skillId);
             if (skill) return { topicName, skillName: skill.name };
         }
-        return { topicName: 'Addition', skillName: 'Mathematics' };
+        return { topicName: 'What is Long, What is Round?', skillName: 'Practice' };
     };
 
     const { topicName, skillName } = getTopicInfo();
-    const generateQuestions = (selectedSkill) => {
-        const questions = [];
-        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'].sort(() => 0.5 - Math.random());
 
-        // Pre-shuffled pools for uniqueness (mostly used in practice, but good for test variety too)
-        const visualPairs = [[1, 2], [2, 1], [3, 2], [2, 3], [4, 1], [1, 4], [3, 3], [5, 2], [2, 5], [4, 3]].sort(() => 0.5 - Math.random());
-        const numericPairs = [[6, 2], [3, 5], [4, 4], [7, 1], [2, 7], [1, 8], [5, 4], [3, 6], [2, 2], [9, 0]].sort(() => 0.5 - Math.random());
+    const generateShapeQuestions = () => {
+        const questions = [];
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+        const shapes = ['circle', 'square', 'triangle', 'rectangle', 'oval'];
+        const shuffledTargets = [...shapes].sort(() => 0.5 - Math.random());
 
         for (let i = 0; i < totalQuestions; i++) {
-            let question = {};
-            const color1 = colors[i % colors.length];
-            const color2 = colors[(i + 1) % colors.length];
-
-            let typeToGen = 'visual';
-            if (isTest) {
-                // Balanced test: 3 Visual, 3 Numeric, 3 Number Line, 1 Zero
-                if (i < 3) typeToGen = 'visual';
-                else if (i < 6) typeToGen = 'numeric';
-                else if (i < 9) typeToGen = 'numberline';
-                else typeToGen = 'zero';
-            } else {
-                if (selectedSkill === '301' || !selectedSkill) typeToGen = 'visual';
-                else if (selectedSkill === '302') typeToGen = 'numeric';
-                else if (skillId === '303') typeToGen = 'numberline';
-            }
-
-            if (typeToGen === 'visual') {
-                let n1, n2;
-                if (isTest) {
-                    [n1, n2] = visualPairs[i % visualPairs.length];
-                } else {
-                    n1 = Math.floor(Math.random() * 5) + 1;
-                    n2 = Math.floor(Math.random() * 4) + 1;
-                }
-                question = {
-                    text: `Count all the circles together! 🍭`,
-                    options: [n1 + n2, (n1 + n2 + 1) % 11 || 1, Math.max(1, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
-                    correct: n1 + n2,
-                    type: 'visual',
-                    visualData: { n1, n2, color1, color2 },
-                    explanation: `We have ${n1} circles and ${n2} more circles. Counting them all gives us ${n1 + n2}.`,
-                    solution: `${n1} + ${n2} = ${n1 + n2}`
-                };
-            } else if (typeToGen === 'numeric') {
-                let n1, n2;
-                if (isTest) {
-                    [n1, n2] = numericPairs[i % numericPairs.length];
-                } else {
-                    n1 = Math.floor(Math.random() * 9) + 1;
-                    n2 = Math.floor(Math.random() * (10 - n1));
-                }
-                question = {
-                    text: `What is ${n1} plus ${n2}? ➕`,
-                    options: [n1 + n2, n1 + n2 + 2, Math.max(0, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
-                    correct: n1 + n2,
-                    type: 'numeric',
-                    visualData: { n1, n2, color1, color2 },
-                    explanation: `Starting from ${n1}, if we count forward ${n2} times, we reach ${n1 + n2}.`,
-                    solution: `${n1} + ${n2} = ${n1 + n2}`
-                };
-            } else if (typeToGen === 'numberline' || typeToGen === 'zero') {
-                let n1, n2;
-                if (typeToGen === 'numberline') {
-                    if (isTest) {
-                        n1 = Math.floor(Math.random() * 6) + 1;
-                        n2 = Math.floor(Math.random() * (10 - n1)) + 1;
-                    } else {
-                        n1 = Math.floor(Math.random() * 6) + 1;
-                        n2 = Math.floor(Math.random() * (10 - n1)) + 1;
-                    }
-                    question = {
-                        text: `Use the number line to find: ${n1} + ${n2}`,
-                        options: [n1 + n2, n1 + n2 + 1, Math.max(0, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
-                        correct: n1 + n2,
-                        type: 'numberline',
-                        visualData: { n1, n2, color1, color2 },
-                        explanation: `Starting at ${n1}, we take ${n2} hops forward on the number line to reach ${n1 + n2}.`,
-                        solution: `${n1} + ${n2} = ${n1 + n2}`
-                    };
-                } else {
-                    const val = Math.floor(Math.random() * 9) + 1;
-                    const withZeroFirst = Math.random() > 0.5;
-                    const z1 = withZeroFirst ? 0 : val;
-                    const z2 = withZeroFirst ? val : 0;
-                    question = {
-                        text: `Add zero to the number! ✨`,
-                        options: [val, 0, val + 1].sort(() => 0.5 - Math.random()),
-                        correct: val,
-                        type: 'numeric',
-                        visualData: { n1: z1, n2: z2, color1, color2 },
-                        explanation: `Adding zero to any number doesn't change it. So ${z1} + ${z2} is still ${val}.`,
-                        solution: `${z1} + ${z2} = ${val}`
-                    };
-                }
-            } else {
-                question = { text: "Add them up!", options: ["2"], correct: "2", type: "numeric", visualData: { n1: 1, n2: 1, color1, color2 }, explanation: "Simple addition!" };
-            }
-            questions.push(question);
+            const target = shuffledTargets[i % shapes.length];
+            const otherOptions = shapes.filter(s => s !== target);
+            questions.push({
+                text: `Identify this 2D shape! 🎨`,
+                options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
+                correct: target,
+                type: 'shape',
+                visualData: { shape: target, color: colors[i % colors.length] },
+                explanation: `This object has the properties of a ${target}.`
+            });
         }
         return questions;
+    };
+
+    const generateLengthQuestions = () => {
+        const questions = [];
+        const objectTypes = ['pencil', 'bat', 'snake', 'ruler'];
+        for (let i = 0; i < totalQuestions; i++) {
+            const isALonger = Math.random() > 0.5;
+            const aLen = isALonger ? 85 : 45;
+            const bLen = isALonger ? 45 : 85;
+            const longerQ = Math.random() > 0.5;
+            const objectType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
+
+            questions.push({
+                text: longerQ ? `Which one is LONGER? 📏` : `Which one is SHORTER? 📐`,
+                options: ['A', 'B'],
+                correct: longerQ ? (isALonger ? 'A' : 'B') : (isALonger ? 'B' : 'A'),
+                type: 'length',
+                visualData: { aLength: aLen, bLength: bLen, objectType },
+                explanation: longerQ ? `The object that stretches further is longer.` : `The object that covers less distance is shorter.`
+            });
+        }
+        return questions;
+    };
+
+    const generateRoundQuestions = () => {
+        const questions = [];
+        const roundObjects = [
+            { emoji: '⚽', name: 'Ball' },
+            { emoji: '🎡', name: 'Wheel' },
+            { emoji: '🪙', name: 'Coin' },
+            { emoji: '🍊', name: 'Orange' },
+            { emoji: '📀', name: 'CD' }
+        ];
+        const nonRoundObjects = [
+            { emoji: '📦', name: 'Box' },
+            { emoji: '📐', name: 'Ruler' },
+            { emoji: '🧱', name: 'Brick' },
+            { emoji: '📱', name: 'Phone' },
+            { emoji: '📖', name: 'Book' }
+        ];
+
+        // Shuffle arrays to ensure variety and uniqueness
+        const shuffledRound = [...roundObjects].sort(() => 0.5 - Math.random());
+        const shuffledNonRound = [...nonRoundObjects].sort(() => 0.5 - Math.random());
+
+        // For a 5 question session, we want exactly 3 round and 2 non-round objects
+        const targetTypes = [];
+        for (let i = 0; i < totalQuestions; i++) {
+            if (i < 3) { // First 3 are round
+                targetTypes.push({ isRound: true, item: shuffledRound[i % shuffledRound.length] });
+            } else { // Next 2 are non-round
+                targetTypes.push({ isRound: false, item: shuffledNonRound[(i - 3) % shuffledNonRound.length] });
+            }
+        }
+
+        // Shuffle the types so the order of round/non-round questions is random
+        const shuffledTargets = targetTypes.sort(() => 0.5 - Math.random());
+
+        for (let i = 0; i < totalQuestions; i++) {
+            const { isRound, item } = shuffledTargets[i];
+
+            if (isRound) {
+                questions.push({
+                    text: `Is this a ROUND object? 🔵`,
+                    options: ['Yes', 'No'],
+                    correct: 'Yes',
+                    type: 'emoji',
+                    visualData: { emoji: item.emoji, isRound: true },
+                    explanation: `Objects like a ${item.name} are round.`
+                });
+            } else {
+                questions.push({
+                    text: `Is this a ROUND object? 🔵`,
+                    options: ['Yes', 'No'],
+                    correct: 'No',
+                    type: 'emoji',
+                    visualData: { emoji: item.emoji, isRound: false },
+                    explanation: `Objects like a ${item.name} are not round.`
+                });
+            }
+        }
+        return questions;
+    };
+
+    const generateQuestions = (selectedSkill) => {
+        if (selectedSkill === '1001') return generateShapeQuestions();
+        if (selectedSkill === '1002') return generateLengthQuestions();
+        if (selectedSkill === '1003') return generateRoundQuestions();
+
+        // MIXED For Test — generate extra, deduplicate, then slice
+        const pool = [
+            ...generateShapeQuestions(),
+            ...generateLengthQuestions(),
+            ...generateRoundQuestions()
+        ].sort(() => 0.5 - Math.random());
+        const seen = new Set();
+        const unique = pool.filter(q => {
+            const key = q.text + '||' + q.correct;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+        return unique.slice(0, totalQuestions);
     };
 
     useEffect(() => {
@@ -279,7 +271,8 @@ const Addition = () => {
             const qs = generateQuestions(skillId);
             setSessionQuestions(qs);
             try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 301);
+                const parsedSkillId = parseInt(skillId) || 0;
+                const session = await api.createPracticeSession(userId, parsedSkillId);
                 setSessionId(session?.session_id);
             } catch (e) { console.error(e); }
         };
@@ -316,7 +309,7 @@ const Addition = () => {
         } catch (e) {
             console.error("Error finishing session:", e);
         }
-        navigate('/junior/grade/1');
+        navigate('/junior/grade/2');
     };
 
     const handleOptionSelect = (option) => {
@@ -324,18 +317,18 @@ const Addition = () => {
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
 
         setIsAnswered(true);
         const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
+
+        // Auto-log
         try {
             const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
             const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
+            const skId = typeof skillId !== 'undefined' ? skillId : '0';
             const currentTimer = typeof timer !== 'undefined' ? timer : 0;
 
             if (uid && sessionId) {
@@ -356,7 +349,6 @@ const Addition = () => {
         } catch (err) {
             console.error("Auto-log error:", err);
         }
-        // -----------------------------
 
         if (isCorrect) {
             setScore(s => s + 1);
@@ -375,13 +367,13 @@ const Addition = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
-            // Give a tiny delay so they see the option highlight green
+            setIsAutoAdvancing(true);
             setTimeout(() => {
                 handleNext();
+                setIsAutoAdvancing(false);
             }, 800);
         }
     };
@@ -588,7 +580,7 @@ const Addition = () => {
                         <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>
                             <RefreshCw size={24} /> Start New Quest
                         </button>
-                        <button className="action-btn-large back-topics-btn" onClick={() => navigate('/junior/grade/1')}>
+                        <button className="action-btn-large back-topics-btn" onClick={() => navigate('/junior/grade/2')}>
                             <FileText size={24} /> Back to Topics
                         </button>
                     </div>
@@ -609,6 +601,7 @@ const Addition = () => {
 
             <div className="g1-practice-container">
                 <div className="g1-header-nav">
+
                     <div className="g1-timer-badge">
                         <Timer size={18} />
                         {formatTime(timer)}
@@ -623,26 +616,8 @@ const Addition = () => {
                         </span>
                     </div>
 
-                    {isTest && (
-                        <button
-                            className="g1-skip-btn"
-                            onClick={handleSkip}
-                            disabled={isAnswered}
-                            style={{
-                                marginLeft: '10px',
-                                background: '#EDF2F7',
-                                color: '#4A5568',
-                                padding: '8px 15px',
-                                borderRadius: '15px',
-                                fontWeight: 400,
-                                fontSize: '0.9rem',
-                                border: 'none',
-                                cursor: isAnswered ? 'not-allowed' : 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '5px'
-                            }}
-                        >
+                    {isTest && !isAnswered && (
+                        <button className="g1-skip-btn" onClick={handleSkip} style={{ marginLeft: '15px' }}>
                             Skip Quest ⏭️
                         </button>
                     )}
@@ -669,22 +644,20 @@ const Addition = () => {
                                 {currentQ.options.map((opt, i) => (
                                     <button
                                         key={i}
-                                        className={`g1-option-btn 
-                                            ${selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
+                                        className={`g1-option-btn
+                                            ${selectedOption === opt.toString() || selectedOption === opt ? (isTest ? 'selected-test' : (isAnswered ? (opt === currentQ.correct ? 'selected-correct' : 'selected-wrong') : 'selected-test')) : ''}
                                             ${!isTest && isAnswered && opt === currentQ.correct ? 'revealed-correct' : ''}
                                         `}
                                         onClick={() => handleOptionSelect(opt)}
                                         disabled={isAnswered}
                                     >
-                                        <LatexText text={opt.toString()} />
+                                        <LatexText text={opt.toString().charAt(0).toUpperCase() + opt.toString().slice(1)} />
                                     </button>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-
-                    {/* --- INJECTED FOOTER V2 --- */}
                     <div className="g1-navigation-footer">
                         <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>
                             <ChevronLeft size={24} /> Prev
@@ -702,7 +675,7 @@ const Addition = () => {
                                     Next <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}
@@ -716,7 +689,6 @@ const Addition = () => {
                 isCorrect={answers[qIndex]?.isCorrect}
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
-                solution={currentQ.solution}
                 onClose={() => setShowExplanationModal(false)}
                 onNext={() => setShowExplanationModal(false)}
             />
@@ -724,4 +696,4 @@ const Addition = () => {
     );
 };
 
-export default Addition;
+export default Grade2WhatIsLong;
