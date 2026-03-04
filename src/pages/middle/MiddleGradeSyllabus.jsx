@@ -205,6 +205,14 @@ const MiddleGradeSyllabus = () => {
                             path: '/middle/grade/7/comparing-quantities/percentage'
                         },
                         {
+                            skill_id: 'local-integers-chapter',
+                            skill_name: 'Integers: Interactive Chapter',
+                            topic: 'Integers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/integers'
+                        },
+                        {
                             skill_id: 'local-use-percent',
                             skill_name: 'Use of Percentages',
                             topic: 'Comparing Quantities',
@@ -553,8 +561,8 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling"].some(t => topicName.includes(t))) return acc;
-        if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area") return acc;
-        if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
+        if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area") return acc;
+        if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
 
 
 
