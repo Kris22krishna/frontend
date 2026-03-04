@@ -189,6 +189,15 @@ import Grade2HowMuchCanYouCarry from './components/practice/grade-2/how-much-can
 import Grade2CountingInGroups from './components/practice/grade-2/counting-in-groups/counting-in-groups';
 import Grade2CountingInTens from './components/practice/grade-2/counting-in-tens/counting-in-tens';
 import Grade2Patterns from './components/practice/grade-2/patterns/patterns';
+import Grade2Footprints from './components/practice/grade-2/footprints/footprints';
+import Grade2JugsAndMugs from './components/practice/grade-2/jugs-and-mugs/jugs-and-mugs';
+import Grade2TensAndOnes from './components/practice/grade-2/tens-and-ones/tens-and-ones';
+import Grade2MyFunday from './components/practice/grade-2/my-funday/my-funday';
+import Grade2AddOurPoints from './components/practice/grade-2/add-our-points/add-our-points';
+import Grade2LinesAndLines from './components/practice/grade-2/lines-and-lines/lines-and-lines';
+import Grade2GiveAndTake from './components/practice/grade-2/give-and-take/give-and-take';
+import Grade2TheLongestStep from './components/practice/grade-2/the-longest-step/the-longest-step';
+import Grade2BirdsComeBirdsGo from './components/practice/grade-2/birds-come-birds-go/birds-come-birds-go';
 
 // Grade 5: Can you see the Pattern?
 import PatternIdentification from './components/practice/class-5/CanyouseethePattern/PatternRecognition/pattern-identification';
@@ -965,6 +974,15 @@ function App() {
         <Route path="/junior/grade/2/counting-in-groups" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInGroups /></ProtectedRoute>} />
         <Route path="/junior/grade/2/counting-in-tens" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInTens /></ProtectedRoute>} />
         <Route path="/junior/grade/2/patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/footprints" element={<ProtectedRoute redirectTo="/login"><Grade2Footprints /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/jugs-and-mugs" element={<ProtectedRoute redirectTo="/login"><Grade2JugsAndMugs /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/tens-and-ones" element={<ProtectedRoute redirectTo="/login"><Grade2TensAndOnes /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/my-funday" element={<ProtectedRoute redirectTo="/login"><Grade2MyFunday /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/add-our-points" element={<ProtectedRoute redirectTo="/login"><Grade2AddOurPoints /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/lines-and-lines" element={<ProtectedRoute redirectTo="/login"><Grade2LinesAndLines /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/give-and-take" element={<ProtectedRoute redirectTo="/login"><Grade2GiveAndTake /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/the-longest-step" element={<ProtectedRoute redirectTo="/login"><Grade2TheLongestStep /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/birds-come-birds-go" element={<ProtectedRoute redirectTo="/login"><Grade2BirdsComeBirdsGo /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />

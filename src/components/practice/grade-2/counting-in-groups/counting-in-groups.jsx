@@ -112,7 +112,7 @@ const Grade2CountingInGroups = () => {
 
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
-    const isTest = skillId ? skillId.includes('TEST') : false;
+    const isTest = skillId ? (skillId.includes('TEST') || skillId.startsWith('11')) : false;
     const totalQuestions = isTest ? 10 : 5;
 
     const [qIndex, setQIndex] = useState(0);
