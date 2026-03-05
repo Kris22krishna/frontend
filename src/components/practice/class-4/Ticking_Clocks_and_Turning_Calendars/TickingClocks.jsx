@@ -95,7 +95,7 @@ export default function TickingClocks() {
                     onMouseOut={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'; e.currentTarget.style.transform = 'none'; }}
                 >
                     <Home size={16} />
-                    Back Home
+                    Back
                 </button>
                 <p className="tc-right-eyebrow">Choose a topic to explore</p>
                 <div className="tc-cards-col">
