@@ -26,6 +26,11 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import SurfaceAreasAndVolumes from './components/practice/class-10/SurfaceAreasAndVolumes/SurfaceAreasAndVolumes';
+import SurfaceVolumesIntro from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/5W1H/Intro5W1H';
+import SurfaceVolumesTerminology from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Terminology/Terminology';
+import SurfaceVolumesSkills from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Skills/Skills';
+
 import IntroductionToGraphs from './components/practice/class-8/introduction_to_graphs/IntroductionToGraphs';
 import GraphsIntro5W1H from './components/practice/class-8/introduction_to_graphs/Topics/5W1H/GraphsIntro5W1H';
 import GraphsTerminology from './components/practice/class-8/introduction_to_graphs/Topics/Terminology/GraphsTerminology';
@@ -516,6 +521,19 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+
+          {/* Surface Areas and Volumes Routes */}
+          <Route path="surface-areas-and-volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
+          {/* Fallback for spaces in URL */}
+          <Route path="surface areas and volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
           {/* Grade 8: Introduction to Graphs Chapter Pages */}
           <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />
