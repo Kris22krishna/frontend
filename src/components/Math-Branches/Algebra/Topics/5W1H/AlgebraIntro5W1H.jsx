@@ -2,69 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../algebra.css';
 import MathRenderer from '../../../../MathRenderer';
-
-const cards5W1H = [
-    {
-        q: 'WHAT',
-        label: 'What is Algebra?',
-        icon: '🔍',
-        gradFrom: '#0891b2',
-        gradTo: '#06b6d4',
-        shadow: 'rgba(6,182,212,0.35)',
-        content: `Algebra is the language of patterns and unknowns. Imagine you have a mystery box 📦 — you don't know what's inside, but you know it's 3 more than 5. So the number inside the box = 8 . In Algebra, we use letters like x, y, or n to represent those mystery numbers. It's like cracking a secret code every time you solve an equation!`,
-        fact: '💡 The word "Algebra" comes from the Arabic word "al-jabr" meaning "reunion of broken parts."',
-    },
-    {
-        q: 'WHO',
-        label: 'Who uses Algebra?',
-        icon: '👥',
-        gradFrom: '#059669',
-        gradTo: '#10b981',
-        shadow: 'rgba(16,185,129,0.35)',
-        content: `Everyone! Doctors calculate medicine doses. Engineers design bridges. Game developers program characters. Bankers balance accounts. Even chefs double a recipe — that's Algebra! You already use it when you split a pizza equally or figure out how many more coins you need.`,
-        fact: '💡 NASA engineers use Algebra to calculate rocket trajectories to Mars!',
-    },
-    {
-        q: 'WHEN',
-        label: 'When did Algebra begin?',
-        icon: '📅',
-        gradFrom: '#b45309',
-        gradTo: '#f59e0b',
-        shadow: 'rgba(245,158,11,0.35)',
-        content: `Algebra has been around for over 4,000 years! Ancient Babylonians were solving equations on clay tablets in 2000 BCE. A Persian mathematician Al-Khwarizmi wrote the first Algebra book around 820 AD. You're learning a subject with a 4,000-year-old superpower!`,
-        fact: '💡 Al-Khwarizmi\'s name gave us the word "algorithm" — the backbone of all computer programs!',
-    },
-    {
-        q: 'WHERE',
-        label: 'Where do we see Algebra?',
-        icon: '🌍',
-        gradFrom: '#be185d',
-        gradTo: '#ec4899',
-        shadow: 'rgba(236,72,153,0.35)',
-        content: `Algebra is everywhere! In your phone's GPS calculating the shortest path. In movies where CGI artists create 3D characters. In music apps that compress sound files. In shopping when apps calculate discounts. Algebra is the invisible math powering the modern world!`,
-        fact: '💡 Every time you use Google Maps, thousands of algebraic equations run in milliseconds!',
-    },
-    {
-        q: 'WHY',
-        label: 'Why should I learn Algebra?',
-        icon: '🚀',
-        gradFrom: '#7c3aed',
-        gradTo: '#a855f7',
-        shadow: 'rgba(168,85,247,0.35)',
-        content: `Algebra trains your brain to think logically and solve problems step-by-step — a skill valuable in ANY career. It builds the foundation for all higher mathematics. More importantly, it teaches you that every complex problem can be broken into simple, solvable steps!`,
-        fact: '💡 Studies show that students who master Algebra earn 60% more during their lifetime!',
-    },
-    {
-        q: 'HOW',
-        label: 'How do I learn Algebra?',
-        icon: '🎯',
-        gradFrom: '#0369a1',
-        gradTo: '#3b82f6',
-        shadow: 'rgba(59,130,246,0.35)',
-        content: `Start with the building blocks: understand variables and expressions. Then learn how to simplify and combine like terms. Next, practice solving equations — it's like balancing a see-saw! Master one skill before moving to the next. Practice a little each day!`,
-        fact: '💡 Learning Algebra is like learning a language — the more you practice, the more fluent you become!',
-    },
-];
+import { cards5W1H } from './AlgebraIntroData';
 
 /* ─── Single card ─────────────────────────────────── */
 function W1HCard({ card }) {
