@@ -467,6 +467,9 @@ import IdentifyRepeatingTile from './components/practice/class-4/Fun_with_Symmet
 import CreateTilingWithoutGaps from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/create_tiling_without_gaps';
 import ClassifySymmetricalObjects from './components/practice/class-4/Fun_with_Symmetry/Real_Life_Symmetry/classify_symmetrical_objects';
 import FunWithSymmetryTest from './components/practice/class-4/Fun_with_Symmetry/FunWithSymmetryTest';
+import ElephantsTest from './components/practice/class-4/Elephants_Tigers_and_Leopards/ElephantsTest';
+import EqualGroupsTest from './components/practice/class-4/Equal_Groups/EqualGroupsTest';
+import WeighItPourItTest from './components/practice/class-4/Weigh_It_Pour_It/WeighItPourItTest';
 
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
@@ -894,6 +897,13 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Elephants, Tigers, and Leopards Chapter Test */}
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ElephantsTest />
+          </ProtectedRoute>
+        } />
+
         {/* Fun with Symmetry Routes */}
         <Route path="/junior/grade/:grade/fun-with-symmetry/chapter-test" element={
           <ProtectedRoute redirectTo="/login">
@@ -997,6 +1007,14 @@ function App() {
             <CreateYourOwnEqualGroups />
           </ProtectedRoute>
         } />
+
+        {/* Equal Groups Chapter Test */}
+        <Route path="/junior/grade/:grade/equal-groups/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualGroupsTest />
+          </ProtectedRoute>
+        } />
+
         {/* Weigh It, Pour It Routes */}
         <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
           <ProtectedRoute redirectTo="/login">
@@ -1036,6 +1054,13 @@ function App() {
         <Route path="/junior/grade/:grade/weigh-it-pour-it/weight-and-capacity-word-problems" element={
           <ProtectedRoute redirectTo="/login">
             <WeightAndCapacityWordProblems />
+          </ProtectedRoute>
+        } />
+
+        {/* Weigh It, Pour It Chapter Test */}
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <WeighItPourItTest />
           </ProtectedRoute>
         } />
 
