@@ -30,6 +30,15 @@ const MensurationTest = () => {
     const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const [questions, setQuestions] = useState([]);
 
+    const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
+
     const generateQuestions = () => {
         const pool = [
             {
@@ -173,7 +182,27 @@ const MensurationTest = () => {
                 solution: "By Pythagoras theorem in a square: $d^2 = a^2 + a^2 = 2a^2 \\Rightarrow d = \\sqrt{2}a$."
             }
         ];
-        return pool.sort(() => Math.random() - 0.5);
+
+        return pool.map(q => {
+            const hasAllOfAbove = q.options.includes("All of the above") || q.options.includes("All of these");
+            const hasNoneOfAbove = q.options.includes("None of these") || q.options.includes("None of the above");
+
+            let optionsToShuffle = [...q.options];
+
+            if (hasAllOfAbove) {
+                optionsToShuffle = optionsToShuffle.filter(o => !["All of the above", "All of these"].includes(o));
+            }
+            if (hasNoneOfAbove) {
+                optionsToShuffle = optionsToShuffle.filter(o => !["None of these", "None of the above"].includes(o));
+            }
+
+            let shuffled = shuffleArray(optionsToShuffle);
+
+            if (hasAllOfAbove) shuffled.push(q.options.find(o => ["All of the above", "All of these"].includes(o)));
+            if (hasNoneOfAbove) shuffled.push(q.options.find(o => ["None of these", "None of the above"].includes(o)));
+
+            return { ...q, options: shuffled };
+        }).sort(() => Math.random() - 0.5);
     };
 
     useEffect(() => {

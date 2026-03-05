@@ -30,6 +30,15 @@ const FactorisationTest = () => {
     const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const [questions, setQuestions] = useState([]);
 
+    const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
+
     const generateQuestions = () => {
         const pool = [
             {
@@ -173,7 +182,28 @@ const FactorisationTest = () => {
                 solution: "$p(pq - r^2) - 1(pq - r^2) = (pq - r^2)(p - 1)$."
             }
         ];
-        return pool.sort(() => Math.random() - 0.5);
+
+        return pool.map(q => {
+            const hasAllOfAbove = q.options.includes("All of the above");
+            const hasNoneOfAbove = q.options.includes("None of these") || q.options.includes("None of the above");
+
+            let fixedOptions = [];
+            let optionsToShuffle = [...q.options];
+
+            if (hasAllOfAbove) {
+                optionsToShuffle = optionsToShuffle.filter(o => o !== "All of the above");
+            }
+            if (hasNoneOfAbove) {
+                optionsToShuffle = optionsToShuffle.filter(o => !["None of these", "None of the above"].includes(o));
+            }
+
+            let shuffled = shuffleArray(optionsToShuffle);
+
+            if (hasAllOfAbove) shuffled.push("All of the above");
+            if (hasNoneOfAbove) shuffled.push(q.options.find(o => ["None of these", "None of the above"].includes(o)));
+
+            return { ...q, options: shuffled };
+        }).sort(() => Math.random() - 0.5);
     };
 
     useEffect(() => {

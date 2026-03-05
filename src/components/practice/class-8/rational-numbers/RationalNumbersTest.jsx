@@ -30,6 +30,15 @@ const RationalNumbersTest = () => {
     const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const [questions, setQuestions] = useState([]);
 
+    const shuffleArray = (array) => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
+
     const generateQuestions = () => {
         const pool = [
             {
@@ -173,7 +182,32 @@ const RationalNumbersTest = () => {
                 solution: "For any rational number $x$, its additive inverse is $-x$. Their sum is $x + (-x) = 0$."
             }
         ];
-        return pool.sort(() => Math.random() - 0.5);
+
+        return pool.map(q => {
+            const hasAllOfAbove = q.options.includes("All of the above") || q.options.includes("All of these");
+            const hasNoneOfAbove = q.options.includes("None of these") || q.options.includes("None of the above");
+            const hasBothBC = q.options.includes("Both B and C");
+
+            let optionsToShuffle = [...q.options];
+
+            if (hasAllOfAbove) {
+                optionsToShuffle = optionsToShuffle.filter(o => !["All of the above", "All of these"].includes(o));
+            }
+            if (hasNoneOfAbove) {
+                optionsToShuffle = optionsToShuffle.filter(o => !["None of these", "None of the above"].includes(o));
+            }
+            if (hasBothBC) {
+                optionsToShuffle = optionsToShuffle.filter(o => o !== "Both B and C");
+            }
+
+            let shuffled = shuffleArray(optionsToShuffle);
+
+            if (hasBothBC) shuffled.push("Both B and C");
+            if (hasAllOfAbove) shuffled.push(q.options.find(o => ["All of the above", "All of these"].includes(o)));
+            if (hasNoneOfAbove) shuffled.push(q.options.find(o => ["None of these", "None of the above"].includes(o)));
+
+            return { ...q, options: shuffled };
+        }).sort(() => Math.random() - 0.5);
     };
 
     useEffect(() => {
