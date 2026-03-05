@@ -214,9 +214,7 @@
     justify-content: space-between;
     /* Changed from center to space-between */
     align-items: center;
-    /* Center content horizontally */
     position: relative;
-    z-index: 10;
     z-index: 10;
     border: 4px solid #FFFFFF;
     overflow-y: auto;
@@ -457,13 +455,24 @@
 
 /* Feedback Mini */
 .feedback-mini {
-    margin-top: 1rem;
     font-size: 1.2rem;
     font-weight: 800;
-    padding: 0.5rem 1.5rem;
+    padding: 0.75rem 2rem;
     border-radius: 1rem;
     animation: popIn 0.3s ease-out;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: fit-content;
+}
+
+/* Center encouragement pill across both grid columns */
+.options-grid-modern .feedback-mini {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin: 1rem auto 0;
 }
 
 .feedback-mini.correct {

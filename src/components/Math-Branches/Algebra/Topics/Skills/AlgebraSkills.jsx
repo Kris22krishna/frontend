@@ -2,447 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../algebra.css';
 import MathRenderer from '../../../../MathRenderer';
-
-// ─── Shared Quiz Engine ────────────────────────────────────────────────────
-function QuizEngine({ questions, title, onBack, color }) {
-    const [current, setCurrent] = useState(0);
-    const [selected, setSelected] = useState(null);
-    const [answered, setAnswered] = useState(false);
-    const [score, setScore] = useState(0);
-    const [finished, setFinished] = useState(false);
-
-    const q = questions[current];
-    const progress = ((current + (finished ? 1 : 0)) / questions.length) * 100;
-
-    const handleSelect = (optIdx) => {
-        if (answered) return;
-        setSelected(optIdx);
-        setAnswered(true);
-        if (optIdx === q.correct) setScore(s => s + 1);
-    };
-
-    const handleNext = () => {
-        if (current + 1 >= questions.length) {
-            setFinished(true);
-        } else {
-            setCurrent(c => c + 1);
-            setSelected(null);
-            setAnswered(false);
-        }
-    };
-
-    if (finished) {
-        const pct = Math.round((score / questions.length) * 100);
-        let msg = pct >= 90 ? '🏆 Mastered!' : pct >= 75 ? '🌟 Great Job!' : pct >= 50 ? '👍 Keep it up!' : '💪 Keep Learning!';
-        let msgSub = pct >= 90 ? 'You have excellent control over this topic!' : 'Review the concepts and try again for 100%.';
-
-        return (
-            <div className="alg-quiz-finished" style={{ textAlign: 'center', padding: '40px 0' }}>
-                <div className="alg-quiz-score-circle" style={{
-                    width: 140, height: 140, borderRadius: '50%',
-                    background: `conic-gradient(${color} ${pct * 3.6}deg, #f1f5f9 0deg)`,
-                    margin: '0 auto 24px',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                    border: '8px solid #fff'
-                }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: 'var(--alg-text)', lineHeight: 1 }}>{score}</div>
-                        <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>out of {questions.length}</div>
-                    </div>
-                </div>
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: 'var(--alg-text)', margin: '0 0 8px' }}>{msg}</h2>
-                <p style={{ color: 'var(--alg-muted)', fontSize: 15, margin: '0 0 32px' }}>{msgSub}</p>
-                <div className="alg-quiz-finished-actions" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button
-                        className="alg-btn-primary"
-                        onClick={() => { setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}
-                        style={{ padding: '12px 24px', background: color }}
-                    >
-                        Try Again
-                    </button>
-                    <button
-                        className="alg-btn-secondary"
-                        onClick={onBack}
-                        style={{ padding: '12px 24px' }}
-                    >
-                        Return to Skills
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="alg-quiz-active alg-quiz-container">
-            {/* Header */}
-            <div style={{ marginBottom: 28 }}>
-                <div className="alg-score-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 12 }}>
-                    <div>
-                        <div style={{ fontSize: 11, fontWeight: 800, color: color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>Skill Verification</div>
-                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: 'var(--alg-text)', margin: 0 }}>{title}</h3>
-                    </div>
-                    <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>
-                        Question <span style={{ color: color }}>{current + 1}</span> / {questions.length}
-                    </div>
-                </div>
-                <div style={{ background: '#f1f5f9', borderRadius: 10, height: 6, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${progress}%`, background: color, borderRadius: 10, transition: 'width 0.4s ease' }} />
-                </div>
-            </div>
-
-            {/* Question Card */}
-            <div className="alg-quiz-card" style={{
-                background: '#fff',
-                borderRadius: 20, padding: '32px 36px',
-                marginBottom: 20,
-                boxShadow: '0 12px 30px rgba(0,0,0,0.03)',
-                border: '1px solid rgba(0,0,0,0.05)'
-            }}>
-                <div style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 6,
-                    background: `${color}15`, padding: '4px 12px', borderRadius: 8,
-                    fontSize: 12, fontWeight: 800, color: color, marginBottom: 16
-                }}>
-                    <span>QUESTION</span> {current + 1}
-                </div>
-                <div className="alg-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: 'var(--alg-text)', lineHeight: 1.6, marginBottom: 24 }}>
-                    {q.question}
-                </div>
-                {q.math && (
-                    <div style={{
-                        background: '#f8fafc', border: `1px solid ${color}20`,
-                        borderRadius: 12, padding: '16px', marginBottom: 24,
-                        fontSize: 24, color: color, textAlign: 'center', fontWeight: 700
-                    }}>
-                        <MathRenderer text={q.math.includes('$') ? q.math : `$$${q.math}$$`} />
-                    </div>
-                )}
-
-                {/* Options */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
-                    {q.options.map((opt, oi) => {
-                        let borderColor = 'rgba(0,0,0,0.04)';
-                        let bgColor = '#fff';
-                        let textColor = 'var(--alg-text)';
-                        let dotColor = '#f1f5f9';
-
-                        if (answered) {
-                            if (oi === q.correct) {
-                                borderColor = 'var(--alg-teal)';
-                                bgColor = 'rgba(16,185,129,0.05)';
-                                textColor = 'var(--alg-teal)';
-                                dotColor = 'var(--alg-teal)';
-                            }
-                            else if (oi === selected) {
-                                borderColor = 'var(--alg-red)';
-                                bgColor = 'rgba(239,68,68,0.05)';
-                                textColor = 'var(--alg-red)';
-                                dotColor = 'var(--alg-red)';
-                            }
-                        } else if (selected === oi) {
-                            borderColor = color;
-                            bgColor = `${color}05`;
-                            dotColor = color;
-                        }
-
-                        return (
-                            <button
-                                key={oi}
-                                onClick={() => handleSelect(oi)}
-                                disabled={answered}
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: 12,
-                                    padding: '14px 16px', borderRadius: 12,
-                                    border: `2.5px solid ${borderColor}`,
-                                    background: bgColor, cursor: answered ? 'default' : 'pointer',
-                                    fontSize: 15, color: textColor, textAlign: 'left',
-                                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    fontWeight: selected === oi ? 700 : 500,
-                                    boxShadow: selected === oi && !answered ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
-                                }}
-                            >
-                                <div style={{
-                                    width: 10, height: 10, borderRadius: '50%', background: dotColor, flexShrink: 0,
-                                    transition: 'all 0.2s'
-                                }} />
-                                <span style={{ fontSize: '1.1rem' }}>
-                                    <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* Explanation */}
-                {answered && (
-                    <div style={{
-                        marginTop: 24, padding: '16px 20px', borderRadius: 12,
-                        background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)',
-                        color: 'var(--alg-muted)', fontSize: 13.5, lineHeight: 1.6
-                    }}>
-                        <strong style={{ color: 'var(--alg-blue)' }}>💡 Explanation: </strong>
-                        <MathRenderer text={q.explanation} />
-                    </div>
-                )}
-            </div>
-
-            {/* Actions */}
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button
-                    onClick={handleNext}
-                    disabled={!answered}
-                    className="alg-btn-primary"
-                    style={{
-                        padding: '12px 40px',
-                        background: answered ? color : '#f1f5f9',
-                        color: answered ? '#fff' : '#94a3b8',
-                        cursor: answered ? 'pointer' : 'not-allowed',
-                        border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 800,
-                        boxShadow: answered ? `0 8px 20px ${color}30` : 'none'
-                    }}
-                >
-                    {current + 1 >= questions.length ? 'See Final Score' : 'Next Question'}
-                </button>
-            </div>
-        </div>
-    );
-}
-
-// ─── QUESTIONS & DATA ──────────────────────────────────────────────────────
-const exponentQuestions = [
-    { question: 'What is the value of x³ × x⁴?', math: 'x³ × x⁴ = ?', options: ['x⁷', 'x¹²', 'x', 'x⁻¹'], correct: 0, explanation: 'When multiplying terms with the same base, ADD the exponents: 3 + 4 = 7, so x³ × x⁴ = x⁷.' },
-    { question: 'Simplify: a⁵ ÷ a²', math: 'a⁵ ÷ a² = ?', options: ['a³', 'a⁷', 'a¹⁰', 'a⁻³'], correct: 0, explanation: 'When dividing terms with the same base, SUBTRACT the exponents: 5 − 2 = 3, so a⁵ ÷ a² = a³.' },
-    { question: 'What is (x²)³?', math: '(x²)³ = ?', options: ['x⁵', 'x⁶', 'x⁸', 'x²'], correct: 1, explanation: 'Power of a power rule: MULTIPLY the exponents. 2 × 3 = 6, so (x²)³ = x⁶.' },
-    { question: 'What is any number raised to the power of zero?', math: 'x⁰ = ?', options: ['0', '1', 'x', 'undefined'], correct: 1, explanation: 'Any non-zero number raised to the power 0 equals 1. x⁰ = 1 (for x ≠ 0).' },
-    { question: 'Simplify: (2x)³', math: '(2x)³ = ?', options: ['2x³', '6x³', '8x³', '2x'], correct: 2, explanation: 'Raise each factor to the power: 2³ = 8 and x³. So (2x)³ = 8x³.' },
-    { question: 'What is x⁻² equal to?', math: 'x⁻² = ?', options: ['−x²', '1/x²', '−1/x²', 'x²'], correct: 1, explanation: 'Negative exponents mean reciprocal: x⁻² = 1/x². The base flips to the denominator.' },
-    { question: 'Simplify: y² × y³ × y', math: 'y² × y³ × y = ?', options: ['y⁵', 'y⁶', 'y⁷', 'y⁸'], correct: 1, explanation: 'Add all exponents: 2 + 3 + 1 = 6, so the result is y⁶.' },
-    { question: 'Simplify: (x³)⁰', math: '(x³)⁰ = ?', options: ['x³', '0', '1', '3x'], correct: 2, explanation: 'Any expression (non-zero) raised to the power 0 = 1. So (x³)⁰ = 1.' },
-    { question: 'Simplify: a⁴ × b⁴', math: 'a⁴ × b⁴ = ?', options: ['ab⁴', '(ab)⁴', 'a⁸b⁴', 'a⁴b⁸'], correct: 1, explanation: 'When different bases have the same power: a⁴ × b⁴ = (ab)⁴.' },
-    { question: 'Simplify: m⁶ ÷ m⁶', math: 'm⁶ ÷ m⁶ = ?', options: ['m⁰', '1', '0', 'm⁶'], correct: 1, explanation: 'Subtracting equal exponents gives 0: m⁶ ÷ m⁶ = m⁰ = 1.' },
-];
-
-const exponentAssessment = [
-    { question: 'Which law applies when you multiply powers with the same base?', math: 'xᵃ × xᵇ = ?', options: ['x^(a+b)', 'x^(a×b)', 'x^(a-b)', 'x^(a÷b)'], correct: 0, explanation: 'Product of Powers Law: add the exponents when multiplying same base.' },
-    { question: 'What is (3²)³?', math: '(3²)³ = ?', options: ['3⁵', '3⁶', '27', '729²'], correct: 1, explanation: '(3²)³ = 3^(2×3) = 3⁶ = 729.' },
-    { question: 'Simplify: p⁸ ÷ p³', math: 'p⁸ ÷ p³ = ?', options: ['p⁵', 'p¹¹', 'p²⁴', 'p⁻⁵'], correct: 0, explanation: 'Quotient of powers: subtract exponents = 8 − 3 = 5.' },
-    { question: 'What does x⁻³ equal?', math: 'x⁻³ = ?', options: ['−x³', '1/x³', 'x³', '−1/x³'], correct: 1, explanation: 'Negative exponent means reciprocal: x⁻³ = 1/x³.' },
-    { question: 'What is (4ab)⁰?', math: '(4ab)⁰ = ?', options: ['4ab', '0', '1', '4'], correct: 2, explanation: 'Anything to the power 0 = 1 (as long as base ≠ 0).' },
-    { question: 'Simplify: 2³ × 2⁴', math: '2³ × 2⁴ = ?', options: ['2⁷', '2¹²', '4⁷', '128'], correct: 0, explanation: 'Same base: 2³ × 2⁴ = 2^(3+4) = 2⁷.' },
-    { question: 'Simplify: (xy)³', math: '(xy)³ = ?', options: ['xy³', 'x³y', 'x³y³', 'xy'], correct: 2, explanation: 'Power of a product: (xy)³ = x³ × y³ = x³y³.' },
-    { question: 'What is (a²)⁴ × a²?', math: '(a²)⁴ × a² = ?', options: ['a⁸', 'a¹⁰', 'a⁶', 'a¹²'], correct: 1, explanation: '(a²)⁴ = a⁸, then a⁸ × a² = a^(8+2) = a¹⁰.' },
-    { question: 'Simplify: (2x²)³', math: '(2x²)³ = ?', options: ['6x⁵', '8x⁶', '2x⁶', '6x⁶'], correct: 1, explanation: '2³ = 8, (x²)³ = x⁶. So (2x²)³ = 8x⁶.' },
-    { question: 'Which is NOT a valid simplification of n⁵ ÷ n⁵?', math: 'n⁵ ÷ n⁵ = ?', options: ['n⁰', '1', '0', 'n⁵/n⁵'], correct: 2, explanation: 'n⁵/n⁵ = n⁰ = 1. The answer is NOT 0.' },
-];
-
-const likeTermsQuestions = [
-    { question: 'Which pair are LIKE terms?', options: ['3x and 3y', '5x² and 5x', '4ab and −ab', '7 and 7y'], correct: 2, explanation: '4ab and −ab have the same variables (a and b) raised to the same powers. They are like terms!' },
-    { question: 'Which pair are UNLIKE terms?', options: ['6m and −2m', '3x² and 7x²', '5ab and 2ab', '4p and 3q'], correct: 3, explanation: '4p and 3q have DIFFERENT variables (p vs q), making them unlike terms.' },
-    { question: 'Identify the like terms in: 3x, 5y, −2x, 7z', options: ['3x and 5y', '3x and −2x', '5y and 7z', 'All are like'], correct: 1, explanation: '3x and −2x both have variable x with power 1. They are like terms.' },
-    { question: 'Are 5x² and 5x like terms?', options: ['Yes — same variable', 'No — different powers', 'Yes — same coefficient', 'Depends on x'], correct: 1, explanation: 'Though both have x, their powers differ (2 vs 1). Like terms need SAME variable AND SAME power.' },
-    { question: 'Which group contains only like terms?', options: ['3x, 5x², 7x³', '2ab, −5ab, 8ab', '4x, 4y, 4z', '3, 3x, 3x²'], correct: 1, explanation: '2ab, −5ab, 8ab all have the same variables (a and b) with the same powers — they are all like terms!' },
-    { question: 'Simplify: 3x + 5x', math: '3x + 5x = ?', options: ['15x', '8x', '8x²', '35x'], correct: 1, explanation: '3x + 5x = (3+5)x = 8x. Add coefficients, keep variable.' },
-    { question: 'Simplify: 7y² − 3y²', math: '7y² − 3y² = ?', options: ['4', '4y', '4y²', '4y⁴'], correct: 2, explanation: '7y² − 3y² = (7−3)y² = 4y². Subtract coefficients, keep variable and power.' },
-    { question: 'Can 4x and 4x² be added directly?', options: ['Yes, result is 8x', 'Yes, result is 8x²', 'No, they are unlike terms', 'Yes, result is 8x³'], correct: 2, explanation: 'Different powers (1 and 2) make them unlike terms — they CANNOT be added.' },
-    { question: 'How many like terms does 5a² − 3b + 2a² + b have?', options: ['None', '2 sets', '1 set', 'All are like'], correct: 1, explanation: '5a² and 2a² are like, −3b and b are like — two pairs/sets of like terms.' },
-    { question: 'Simplify: 6m − 4m + 2m', math: '6m − 4m + 2m = ?', options: ['4m', '12m', '0m', '8m'], correct: 0, explanation: '6 − 4 + 2 = 4, so 6m − 4m + 2m = 4m.' },
-];
-
-const likeTermsAssessment = [
-    { question: 'Which are like terms?', options: ['x³ and x²', '2xy and 3xy', '4x and 4', '5x and 5y'], correct: 1, explanation: '2xy and 3xy have identical variable parts (xy), so they are like terms.' },
-    { question: 'Simplify: 9n − 5n + n', math: '9n − 5n + n = ?', options: ['5n', '4n', '3n', '15n'], correct: 0, explanation: '9 − 5 + 1 = 5, so the result is 5n.' },
-    { question: 'Identify all like terms in: 5x², 3x, 7x², 2y, −x', options: ['5x² and 3x', '5x² and 7x²; 3x and −x', '3x and 2y', '5x² and −x'], correct: 1, explanation: '5x² and 7x² share power 2; 3x and −x share power 1. Two sets of like terms.' },
-    { question: 'Which expression is fully simplified?', options: ['3x + 5x + 2y', '8x + 2y', '10xy', '2x + 5 + y'], correct: 1, explanation: '3x + 5x = 8x (combined), plus 2y (cannot combine). So 8x + 2y is simplest.' },
-    { question: 'What is the coefficient of x² in: 4x² − 7 + 2x − 4x²?', options: ['4', '−4', '0', '2'], correct: 2, explanation: '4x² − 4x² = 0x² = 0. The coefficient of x² is 0.' },
-    { question: 'Are 3abc and −2abc like terms?', options: ['No — different signs', 'No — different letters', 'Yes — same variable part', 'Cannot determine'], correct: 2, explanation: 'Sign doesn\'t matter for "like terms" classification. Both have same variables abc.' },
-    { question: 'Simplify: a + 2a + 3a + 4a', math: 'a + 2a + 3a + 4a = ?', options: ['24a', '10a', '12a', '9a'], correct: 1, explanation: '1 + 2 + 3 + 4 = 10. Result is 10a.' },
-    { question: 'How many unlike-term pairs in: 3x, 7y, 4x, 2z?', options: ['1', '2', '3', '0'], correct: 2, explanation: '3x/7y, 3x/2z, 7y/2z (plus 4x/7y, 4x/2z) — multiple unlike pairs exist.' },
-    { question: 'Simplify: 5x² + 3x − 2x² − x', math: '5x² + 3x − 2x² − x = ?', options: ['3x² + 2x', '7x² + 4x', '3x² − 2x', '3x² + 4x'], correct: 0, explanation: '5x² − 2x² = 3x² and 3x − x = 2x. Result: 3x² + 2x.' },
-    { question: 'Which statement is FALSE?', options: ['5x and −5x are like terms', '3y² and 3y are unlike terms', 'abc and cba are like terms', '4x and 4y are like terms'], correct: 3, explanation: '4x and 4y have DIFFERENT variables — they are unlike terms. This is false.' },
-];
-
-const expressionQuestions = [
-    { question: 'Add the expressions: (3x + 5) + (2x − 3)', math: '(3x + 5) + (2x − 3)', options: ['5x + 2', '5x + 8', '5x − 2', '5x + 3'], correct: 0, explanation: 'Add like terms: (3x + 2x) + (5 − 3) = 5x + 2.' },
-    { question: 'Subtract: (7x + 4) − (3x + 1)', math: '(7x + 4) − (3x + 1)', options: ['4x + 3', '4x + 5', '10x + 5', '4x + 3'], correct: 0, explanation: 'Distribute the minus: 7x + 4 − 3x − 1 = (7x−3x) + (4−1) = 4x + 3.' },
-    { question: 'Multiply: 3x(2x + 5)', math: '3x(2x + 5)', options: ['6x + 15', '6x² + 15x', '6x² + 15', '5x² + 15x'], correct: 1, explanation: 'Distribute: 3x × 2x = 6x² and 3x × 5 = 15x. Result: 6x² + 15x.' },
-    { question: 'Simplify: (2x + 3)(x − 4)', math: '(2x + 3)(x − 4)', options: ['2x² − 5x − 12', '2x² + 5x − 12', '2x² − 5x + 12', '2x² − 8x − 12'], correct: 0, explanation: 'FOIL: 2x·x + 2x·(−4) + 3·x + 3·(−4) = 2x² − 8x + 3x − 12 = 2x² − 5x − 12.' },
-    { question: 'Divide: 6x² ÷ 2x', math: '6x² ÷ 2x', options: ['3x', '3x²', '6x', '12x'], correct: 0, explanation: '6÷2 = 3, x²÷x = x. Result: 3x.' },
-    { question: 'Simplify: (x + 2) + (x + 2) + (x + 2)', math: '(x+2) + (x+2) + (x+2)', options: ['x + 6', '3x + 6', '3x + 2', '3x + 9'], correct: 1, explanation: '3 × (x + 2) = 3x + 6. Multiply each part by 3.' },
-    { question: 'Subtract: (4a² + 3a + 5) − (2a² + a − 2)', math: '(4a² + 3a + 5) − (2a² + a − 2)', options: ['2a² + 2a + 7', '2a² + 4a + 7', '6a² + 4a + 3', '2a² + 2a + 3'], correct: 0, explanation: 'Subtract each term: (4−2)a² + (3−1)a + (5−(−2)) = 2a² + 2a + 7.' },
-    { question: 'Multiply: −2y(3y − 4)', math: '−2y(3y − 4)', options: ['−6y² + 8y', '−6y² − 8y', '6y² − 8y', '−6y + 8y'], correct: 0, explanation: '−2y × 3y = −6y² and −2y × (−4) = +8y. Result: −6y² + 8y.' },
-    { question: 'Divide: 12a³b² ÷ 4ab', math: '12a³b² ÷ 4ab', options: ['3a²b', '8a²b', '3a²b²', '3ab'], correct: 0, explanation: '12÷4=3, a³÷a=a², b²÷b=b. Result: 3a²b.' },
-    { question: 'Add: (5x² − 3x + 1) + (−2x² + 4x − 6)', math: '(5x² − 3x + 1) + (−2x² + 4x − 6)', options: ['3x² + x − 5', '3x² − x − 5', '7x² − x + 7', '3x² + x + 5'], correct: 0, explanation: '(5−2)x² + (−3+4)x + (1−6) = 3x² + x − 5.' },
-];
-
-const expressionAssessment = [
-    { question: 'Simplify: (6y + 4) + (−2y + 3)', math: '(6y + 4) + (−2y + 3)', options: ['4y + 7', '8y + 7', '4y + 1', '4y − 7'], correct: 0, explanation: '(6y − 2y) + (4 + 3) = 4y + 7.' },
-    { question: 'Multiply: 4a(a − 3)', math: '4a(a − 3)', options: ['4a² − 12a', '4a² − 12', '4a − 12a', '4a² + 12a'], correct: 0, explanation: '4a × a = 4a² and 4a × (−3) = −12a. Result: 4a² − 12a.' },
-    { question: 'Divide: 15x²y ÷ 5xy', math: '15x²y ÷ 5xy', options: ['3x', '3xy', '3y', '10x'], correct: 0, explanation: '15÷5=3, x²÷x=x, y÷y=1. Result: 3x.' },
-    { question: 'Subtract: (8n² − n) − (3n² + 4n)', math: '(8n² − n) − (3n² + 4n)', options: ['5n² − 5n', '5n² + 5n', '5n² − 3n', '11n² − 5n'], correct: 0, explanation: '(8−3)n² + (−1−4)n = 5n² − 5n.' },
-    { question: 'Expand: (x + 3)(x + 5)', math: '(x + 3)(x + 5)', options: ['x² + 15', 'x² + 8x + 15', 'x² + 8x + 8', 'x² + 15x + 8'], correct: 1, explanation: 'FOIL: x² + 5x + 3x + 15 = x² + 8x + 15.' },
-    { question: 'Simplify: 3(2x + 1) − 2(x − 4)', math: '3(2x + 1) − 2(x − 4)', options: ['4x + 11', '4x − 11', '8x + 11', '4x + 3'], correct: 0, explanation: '6x + 3 − 2x + 8 = 4x + 11.' },
-    { question: 'Expand: 2x(x + 3) + 3(x − 2)', math: '2x(x + 3) + 3(x − 2)', options: ['2x² + 9x − 6', '2x² + 3x − 6', '2x² + 6x + 3', '5x(x+1)−6'], correct: 0, explanation: '2x² + 6x + 3x − 6 = 2x² + 9x − 6.' },
-    { question: 'Divide: 9x³ ÷ 3x²', math: '9x³ ÷ 3x²', options: ['3x', '6x', '3x²', '3'], correct: 0, explanation: '9÷3=3, x³÷x²=x. Result: 3x.' },
-    { question: 'What is the difference of: (p² + 4p − 3) and (p² − 2p + 1)?', math: '(p² + 4p − 3) − (p² − 2p + 1)', options: ['6p − 4', '2p² + 2p − 2', '6p + 4', '2p − 4'], correct: 0, explanation: '(1−1)p² + (4−(−2))p + (−3−1) = 0 + 6p − 4 = 6p − 4.' },
-    { question: 'Expand and simplify: (a + b)² = ?', math: '(a + b)²', options: ['a² + b²', 'a² + ab + b²', 'a² + 2ab + b²', '2a + 2b'], correct: 2, explanation: '(a+b)² = (a+b)(a+b) = a² + 2ab + b². This is a key identity!' },
-];
-
-const equationQuestions = [
-    { question: 'Solve: x + 7 = 15', math: 'x + 7 = 15', options: ['x = 8', 'x = 22', 'x = 7', 'x = 105'], correct: 0, explanation: 'Subtract 7 from both sides: x = 15 − 7 = 8.' },
-    { question: 'Solve: 3x = 21', math: '3x = 21', options: ['x = 7', 'x = 63', 'x = 18', 'x = 8'], correct: 0, explanation: 'Divide both sides by 3: x = 21 ÷ 3 = 7.' },
-    { question: 'Solve: 2x − 5 = 11', math: '2x − 5 = 11', options: ['x = 3', 'x = 8', 'x = 6', 'x = 16'], correct: 1, explanation: 'Add 5: 2x = 16. Divide by 2: x = 8.' },
-    { question: 'Solve: x/4 = 5', math: 'x/4 = 5', options: ['x = 20', 'x = 1.25', 'x = 9', 'x = 5'], correct: 0, explanation: 'Multiply both sides by 4: x = 5 × 4 = 20.' },
-    { question: 'Solve: 4x + 2 = 18', math: '4x + 2 = 18', options: ['x = 4', 'x = 5', 'x = 3', 'x = 6'], correct: 0, explanation: 'Subtract 2: 4x = 16. Divide by 4: x = 4.' },
-    { question: 'Solve the system: x + y = 10, x − y = 2', math: 'x + y = 10  and  x − y = 2', options: ['x=6, y=4', 'x=5, y=5', 'x=4, y=6', 'x=8, y=2'], correct: 0, explanation: 'Adding equations: 2x = 12 → x = 6. Then y = 10 − 6 = 4.' },
-    { question: 'Solve: 2x + y = 7 and x = 2', math: '2x + y = 7, x = 2', options: ['y = 3', 'y = 5', 'y = 11', 'y = 2'], correct: 0, explanation: 'Substitute x = 2: 2(2) + y = 7 → 4 + y = 7 → y = 3.' },
-    { question: 'Solve the quadratic: x² = 9', math: 'x² = 9', options: ['x = 3 only', 'x = 9', 'x = ±3', 'x = ±9'], correct: 2, explanation: 'Taking square root of both sides: x = ±√9 = ±3.' },
-    { question: 'Solve: x² − 5x + 6 = 0', math: 'x² − 5x + 6 = 0', options: ['x = 2 or x = 3', 'x = −2 or x = −3', 'x = 1 or x = 6', 'x = 5 or x = 1'], correct: 0, explanation: 'Factorise: (x−2)(x−3) = 0, so x = 2 or x = 3.' },
-    { question: 'Solve: x² + x − 6 = 0', math: 'x² + x − 6 = 0', options: ['x = 2 or x = −3', 'x = −2 or x = 3', 'x = 1 or x = −6', 'x = 2 or x = 3'], correct: 0, explanation: 'Factorise: (x+3)(x−2) = 0, so x = −3 or x = 2. Rearranged: x = 2 or x = −3.' },
-];
-
-const equationAssessment = [
-    { question: 'Solve: n − 13 = 5', math: 'n − 13 = 5', options: ['n = 18', 'n = 8', 'n = −8', 'n = 65'], correct: 0, explanation: 'Add 13 to both sides: n = 18.' },
-    { question: 'Solve: 5y = 45', math: '5y = 45', options: ['y = 9', 'y = 225', 'y = 40', 'y = 5'], correct: 0, explanation: 'Divide by 5: y = 9.' },
-    { question: 'Solve: 3x + 4 = 22', math: '3x + 4 = 22', options: ['x = 6', 'x = 8.67', 'x = 5', 'x = 26/3'], correct: 0, explanation: '3x = 18 → x = 6.' },
-    { question: 'Use substitution: y = 2x, x + y = 9. Find x.', math: 'y = 2x, x + y = 9', options: ['x = 3', 'x = 4', 'x = 4.5', 'x = 6'], correct: 0, explanation: 'x + 2x = 9 → 3x = 9 → x = 3.' },
-    { question: 'Solve: 2x + 3y = 12 and x = 3', math: '2x + 3y = 12, x = 3', options: ['y = 2', 'y = 3', 'y = 6', 'y = 1'], correct: 0, explanation: '6 + 3y = 12 → 3y = 6 → y = 2.' },
-    { question: 'Solve the quadratic: x² − 7x + 12 = 0', math: 'x² − 7x + 12 = 0', options: ['x = 3 or x = 4', 'x = −3 or x = −4', 'x = 1 or x = 12', 'x = 6 or x = 2'], correct: 0, explanation: 'Factorise: (x−3)(x−4) = 0 → x = 3 or x = 4.' },
-    { question: 'A number doubled plus 4 equals 20. Find the number.', options: ['8', '12', '10', '6'], correct: 0, explanation: '2x + 4 = 20 → 2x = 16 → x = 8.' },
-    { question: 'Solve: 4x − 2 = 3x + 5', math: '4x − 2 = 3x + 5', options: ['x = 7', 'x = 3', 'x = −3', 'x = 1'], correct: 0, explanation: '4x − 3x = 5 + 2 → x = 7.' },
-    { question: 'What are the roots of x² − 4 = 0?', math: 'x² − 4 = 0', options: ['x = ±2', 'x = 4', 'x = 2 only', 'x = ±4'], correct: 0, explanation: 'x² = 4 → x = ±2.' },
-    { question: 'Solve: x/3 + 2 = 5', math: 'x/3 + 2 = 5', options: ['x = 9', 'x = 3', 'x = 21', 'x = 1'], correct: 0, explanation: 'x/3 = 3 → x = 9.' },
-];
-
-const subjectQuestions = [
-    { question: 'Make x the subject: y = x + 5', math: 'y = x + 5  →  x = ?', options: ['x = y − 5', 'x = y + 5', 'x = 5 − y', 'x = y/5'], correct: 0, explanation: 'Subtract 5 from both sides: x = y − 5.' },
-    { question: 'Make x the subject: y = 3x', math: 'y = 3x  →  x = ?', options: ['x = y + 3', 'x = y − 3', 'x = y/3', 'x = 3y'], correct: 2, explanation: 'Divide both sides by 3: x = y/3.' },
-    { question: 'Make r the subject of the area formula: A = πr²', math: 'A = πr²  →  r = ?', options: ['r = A/π', 'r = √(A/π)', 'r = √(Aπ)', 'r = A²/π'], correct: 1, explanation: 'Divide by π: r² = A/π. Take square root: r = √(A/π).' },
-    { question: 'Make b the subject: P = 2(l + b)', math: 'P = 2(l + b)  →  b = ?', options: ['b = P/2 − l', 'b = P − 2l', 'b = 2P − l', 'b = P + l'], correct: 0, explanation: 'Divide by 2: P/2 = l + b. Then b = P/2 − l.' },
-    { question: 'Make v the subject: s = ut + ½at²', math: 's = ut + ½at²  →  u = ?', options: ['u = s/t + ½at', 'u = (s − ½at²)/t', 'u = s − at', 'u = s/t − a'], correct: 1, explanation: 'Subtract ½at²: ut = s − ½at². Divide by t: u = (s − ½at²)/t.' },
-    { question: 'Make y the subject: 3x + 2y = 12', math: '3x + 2y = 12  →  y = ?', options: ['y = (12 − 3x)/2', 'y = 12 − 3x', 'y = 3x − 12', 'y = 12 + 3x'], correct: 0, explanation: '2y = 12 − 3x → y = (12 − 3x)/2.' },
-    { question: 'Make h the subject: V = lbh', math: 'V = lbh  →  h = ?', options: ['h = V × lb', 'h = V/lb', 'h = V − lb', 'h = lb/V'], correct: 1, explanation: 'Divide both sides by lb: h = V/lb.' },
-    { question: 'Make C the subject: F = (9/5)C + 32', math: 'F = (9/5)C + 32  →  C = ?', options: ['C = (F − 32) × 5/9', 'C = (F + 32) × 9/5', 'C = 5F/9 − 32', 'C = F − 32'], correct: 0, explanation: 'F − 32 = (9/5)C → C = (F − 32) × 5/9.' },
-    { question: 'Make a the subject: v = u + at', math: 'v = u + at  →  a = ?', options: ['a = (v − u)t', 'a = (v − u)/t', 'a = v − u', 'a = vt − u'], correct: 1, explanation: 'v − u = at → a = (v − u)/t.' },
-    { question: 'Make x the subject: y = (x + 2)/(x − 1)', math: 'y = (x + 2)/(x − 1)  →  x = ?', options: ['x = (2 + y)/(y − 1)', 'x = (y − 2)/(y + 1)', 'x = (2 − y)', 'x = y + 3'], correct: 0, explanation: 'y(x−1) = x+2 → yx − y = x + 2 → yx − x = y + 2 → x(y−1) = y+2 → x = (y+2)/(y−1).' },
-];
-
-const subjectAssessment = [
-    { question: 'Make m the subject: E = mc²', math: 'E = mc²  →  m = ?', options: ['m = E/c²', 'm = Ec²', 'm = E − c²', 'm = E × c'], correct: 0, explanation: 'Divide both sides by c²: m = E/c².' },
-    { question: 'Make x the subject: 5x − 3y = 10', math: '5x − 3y = 10  →  x = ?', options: ['x = (10 + 3y)/5', 'x = (10 − 3y)/5', 'x = 2 + 3y', 'x = 5(10 − 3y)'], correct: 0, explanation: '5x = 10 + 3y → x = (10 + 3y)/5.' },
-    { question: 'Make t the subject: s = ½gt²', math: 's = ½gt²  →  t = ?', options: ['t = √(2s/g)', 't = 2s/g', 't = √(s/g)', 't = s/2g'], correct: 0, explanation: 'gt² = 2s → t² = 2s/g → t = √(2s/g).' },
-    { question: 'If A = (h/2)(a + b), make h the subject', math: 'A = (h/2)(a + b)  →  h = ?', options: ['h = 2A/(a+b)', 'h = A(a+b)/2', 'h = 2A − (a+b)', 'h = A/2(a+b)'], correct: 0, explanation: '2A = h(a+b) → h = 2A/(a+b).' },
-    { question: 'Make n the subject: S = n/2 × (a + l)', math: 'S = n/2 × (a+l)  →  n = ?', options: ['n = 2S/(a+l)', 'n = S(a+l)/2', 'n = 2S − (a+l)', 'n = (a+l)/2S'], correct: 0, explanation: '2S = n(a+l) → n = 2S/(a+l).' },
-    { question: 'Make y the subject: ax + by = c', math: 'ax + by = c  →  y = ?', options: ['y = (c − ax)/b', 'y = c − ax', 'y = (c + ax)/b', 'y = c/b − a'], correct: 0, explanation: 'by = c − ax → y = (c − ax)/b.' },
-    { question: 'What operation undoes squaring when changing subject?', options: ['Halving', 'Square root', 'Squaring again', 'Multiplying'], correct: 1, explanation: 'To undo x², take the square root: √(x²) = x (for x ≥ 0).' },
-    { question: 'Make x subject: y = √(x + 4)', math: 'y = √(x + 4)  →  x = ?', options: ['x = y² − 4', 'x = y + 4', 'x = y² + 4', 'x = √y − 4'], correct: 0, explanation: 'Square both sides: y² = x + 4 → x = y² − 4.' },
-    { question: 'Make l the subject: T = 2π√(l/g)', math: 'T = 2π√(l/g)  →  l = ?', options: ['l = gT²/4π²', 'l = 4π²T/g', 'l = gT/2π', 'l = T²g/2π'], correct: 0, explanation: 'T/2π = √(l/g) → T²/4π² = l/g → l = gT²/4π².' },
-    { question: 'Make r the subject: C = 2πr', math: 'C = 2πr  →  r = ?', options: ['r = C/2π', 'r = 2πC', 'r = C − 2π', 'r = C²/2π'], correct: 0, explanation: 'Divide by 2π: r = C/(2π).' },
-];
-
-// ─── SKILLS DATA ───────────────────────────────────────────────────────────
-const SKILLS = [
-    {
-        id: 'exponents',
-        title: 'Laws of Exponents',
-        subtitle: 'Skill 1 · Simplifying Terms',
-        icon: '⚡',
-        color: '#6366f1',
-        desc: 'Product, power, and zero laws to simplify expressions.',
-        practice: exponentQuestions,
-        assessment: exponentAssessment,
-        learn: {
-            concept: 'Exponents are shorthand for repeated multiplication. These 9 laws are the "grammar rules" of algebra that let you simplify even the scariest expressions.',
-            rules: [
-                { title: 'Product Law', f: 'xᵃ · xᵇ = xᵃ⁺ᵇ', d: 'When multiplying powers with the same base, ADD the exponents.', ex: 'x³ · x⁴ = x³⁺⁴ = x⁷', tip: 'Think: 3 copies + 4 copies = 7 copies total!' },
-                { title: 'Quotient Law', f: 'xᵃ / xᵇ = xᵃ⁻ᵇ', d: 'When dividing powers with the same base, SUBTRACT the bottom exponent from the top.', ex: 'y⁸ / y² = y⁸⁻² = y⁶', tip: 'You are "canceling out" matching variables from the top and bottom.' },
-                { title: 'Power Law', f: '(xᵃ)ᵇ = xᵃᵇ', d: 'A power of a power? MULTIPLY the exponents together.', ex: '(x²)³ = x²·³ = x⁶', tip: 'A group of powers being powered up grows very fast!' },
-                { title: 'Power of Product', f: '(xy)ᵃ = xᵃyᵃ', d: 'Every factor inside the parentheses gets the power outside.', ex: '(2x)³ = 2³x³ = 8x³', tip: 'Always remember to apply the power to the number (coefficient) too!' },
-                { title: 'Power of Quotient', f: '(x/y)ᵃ = xᵃ/yᵃ', d: 'The power applies to both the numerator (top) and denominator (bottom).', ex: '(x/3)² = x²/3² = x²/9', tip: 'Distribute the power to every part of the fraction.' },
-                { title: 'Zero Law', f: 'x⁰ = 1', d: 'Any non-zero base raised to the power of zero is ALWAYS 1.', ex: '525⁰ = 1', tip: 'It doesn\'t matter how big the number is; power 0 makes it 1!' },
-                { title: 'Identity Law', f: 'x¹ = x', d: 'Any base raised to the power of 1 remains the same.', ex: 'y¹ = y', tip: 'The exponent 1 is usually "invisible" in algebra.' },
-                { title: 'Negative Law', f: 'x⁻ⁿ = 1/xⁿ', d: 'A negative exponent means the "Reciprocal". It moves the base to the bottom.', ex: 'x⁻² = 1/x²', tip: 'Think of the minus sign as a ticket to cross the fraction line!' },
-                { title: 'Fractional Law', f: 'xᵃ/ᵇ = ᵇ√xᵃ', d: 'Fractional powers are secretly roots. The bottom number is the root index.', ex: 'x¹/² = √x', tip: 'Bottom = Root. Top = Power.' },
-            ]
-        }
-    },
-    {
-        id: 'liketerms',
-        title: 'Like & Unlike Terms',
-        subtitle: 'Skill 2 · Mastery',
-        icon: '🤝',
-        color: '#0891b2',
-        desc: 'Combine matching variables and powers accurately.',
-        practice: likeTermsQuestions,
-        assessment: likeTermsAssessment,
-        learn: {
-            concept: 'Like terms are the mathematical equivalent of identical twins. To combine them, they must share the exact same variable part.',
-            rules: [
-                { title: 'Variable Match', f: '3x + 5x = 8x', d: 'Terms must have the SAME variable letters to be combined.', ex: '3x + 4y stays as 3x + 4y', tip: 'You can\'t add apples and oranges!' },
-                { title: 'Power Match', f: 'x² + 2x² = 3x²', d: 'Even if the letters match, the powers must also match EXACTLY.', ex: 'x² + x³ cannot be added', tip: 'Check the letters AND the tiny numbers above them.' },
-                { title: 'Coefficient rule', f: '7a - 2a = 5a', d: 'Only add/subtract the coefficients (numbers in front). Keep the letters the same.', ex: '5x² + 4x² = 9x² (not 9x⁴)', tip: 'You are counting how many of that "item" you have.' },
-                { title: 'Invisible Coeff.', f: 'x = 1x', d: 'If a variable has no number in front, its coefficient is secretly 1.', ex: 'x + 3x = 1x + 3x = 4x', tip: 'Don\'t forget the 1!' },
-            ]
-        }
-    },
-    {
-        id: 'expressions',
-        title: 'Simplifying Expressions',
-        subtitle: 'Skill 3 · Mastery',
-        icon: '📝',
-        color: '#f59e0b',
-        desc: 'Solve multi-part algebraic phrases with ease.',
-        practice: expressionQuestions,
-        assessment: expressionAssessment,
-        learn: {
-            concept: 'Simplifying an expression means writing it in its shortest, most efficient form by combining all possible terms.',
-            rules: [
-                { title: 'Distribution', f: 'a(b + c) = ab + ac', d: 'Multiply the outside term by every term inside the parentheses.', ex: '3(x + 2) = 3x + 6', tip: 'Fairness rule: the term outside must visit everyone inside!' },
-                { title: 'Combo Order', f: 'Group → Combine', d: 'First, rewrite the expression by grouping all like terms together.', ex: '3x + 5 + 2x = 3x + 2x + 5 = 5x + 5', tip: 'Organizing your terms first prevents mistakes.' },
-                { title: 'Sign Safety', f: '-(x + y) = -x - y', d: 'A minus sign in front of a bracket flips the sign of EVERYTHING inside.', ex: '10 - (x + 3) = 10 - x - 3', tip: 'Treat that minus sign like a multiplier of -1.' },
-                { title: 'PEMDAS Rule', f: 'Order Matters', d: 'Always follow the standard order: Parentheses, Exponents, Mult/Div, Add/Sub.', ex: '2 + 3(x) is not 5x', tip: 'Multiplication comes before addition!' },
-            ]
-        }
-    },
-    {
-        id: 'equations',
-        title: 'Solving Equations',
-        subtitle: 'Skill 4 · Mastery',
-        icon: '⚖️',
-        color: '#ec4899',
-        desc: 'Isolate variables in linear and quadratic problems.',
-        practice: equationQuestions,
-        assessment: equationAssessment,
-        learn: {
-            concept: 'To solve an equation, you must find the value of the variable that makes the scale balance perfectly.',
-            rules: [
-                { title: 'Golden Balance', f: 'LHS = RHS', d: 'Whatever you do to one side, you MUST do to the other side.', ex: 'If you add 5 to the left, add 5 to the right.', tip: 'The equals sign is sacred balance point.' },
-                { title: 'Inverses', f: '+ ⟷ - , · ⟷ /', d: 'Use the opposite operation to "undo" numbers and move them.', ex: 'To move a +3, use -3. To move a multiplier of 2, divide by 2.', tip: 'Do the opposite to cross the bridge.' },
-                { title: 'Isolate Target', f: 'x = Result', d: 'Keep undoing operations until the variable (target) is all alone on one side.', ex: '2x = 10 → x = 5', tip: 'Goal: Leave x by itself!' },
-                { title: 'Two-Step rule', f: 'Move ± first', d: 'Usually, you should move stand-alone numbers (±) before you divide the coefficient.', ex: '2x + 4 = 10 → 2x = 6 → x = 3', tip: 'Clean up the additions/subtractions first.' },
-            ]
-        }
-    },
-    {
-        id: 'subject',
-        title: 'Changing the Subject',
-        subtitle: 'Skill 5 · Mastery',
-        icon: '🔄',
-        color: '#7c3aed',
-        desc: 'Rearrange formulas to solve for any variable.',
-        practice: subjectQuestions,
-        assessment: subjectAssessment,
-        learn: {
-            concept: 'Changing the subject is like re-crowning a new king. You move all other terms away so the new variable stands on the throne.',
-            rules: [
-                { title: 'The Target', f: 'Target = Formula', d: 'Identify the variable you want to isolate. That is your "New Subject".', ex: 'In v=u+at, make "a" the subject.', tip: 'Treat the target like a treasure to be uncovered.' },
-                { title: 'Strip away', f: 'Work Outwards', d: 'Start moving terms that are furthest away from your target variable first.', ex: 'v = u + at → v - u = at', tip: 'Peel the equation like an onion.' },
-                { title: 'Undo Roots', f: '√ ⟷ x²', d: 'To get rid of a square root, square both sides. To remove a power of 2, take the root.', ex: 'y = √x → y² = x', tip: 'Powers and roots are the ultimate opposites.' },
-                { title: 'Denominator', f: 'Multiply Up', d: 'If your target or part of its expression is in a fraction bottom, multiply it out.', ex: 'A/b = c → A = bc', tip: 'Get your variables onto one line as soon as possible.' },
-            ]
-        }
-    },
-];
+import QuizEngine from './Engines/QuizEngine';
+import AssessmentEngine from './Engines/AssessmentEngine';
+import CategorizedPracticeEngine from './Engines/CategorizedPracticeEngine';
+import { SKILLS } from './AlgebraSkillsData';
 
 export default function AlgebraSkills() {
     const navigate = useNavigate();
@@ -454,7 +17,7 @@ export default function AlgebraSkills() {
 
     if (view !== 'list' && skill) {
         return (
-            <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', padding: '100px 0 60px' }}>
+            <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
                 <nav className="intro-nav">
                     <button className="intro-nav-back" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>← Back to Skills</button>
                     <div className="intro-nav-links">
@@ -463,9 +26,9 @@ export default function AlgebraSkills() {
                         <button className="intro-nav-link intro-nav-link--active">🎯 Skills</button>
                     </div>
                 </nav>
-                <div style={{ padding: '0 24px' }}>
+                <div style={{ padding: '40px 24px 0' }}>
                     {view === 'learn' ? (
-                        <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '0 auto' }}>
+                        <div className="alg-lexicon-container">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
                                 <div style={{ width: 44, height: 44, borderRadius: 12, background: `${skill.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>{skill.icon}</div>
                                 <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.5rem', fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>Learn: {skill.title}</h1>
@@ -473,39 +36,27 @@ export default function AlgebraSkills() {
 
                             <div className="alg-learn-grid">
                                 {/* Side Selector */}
-                                <aside className="alg-learn-sidebar" style={{
-                                    background: 'rgba(255,255,255,0.7)', padding: '12px', borderRadius: 20,
-                                    border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8,
-                                    maxHeight: '65vh', overflowY: 'auto'
-                                }}>
+                                <aside className="alg-learn-sidebar">
                                     {skill.learn.rules.map((rule, ri) => (
                                         <button
                                             key={ri}
                                             onClick={() => setSelectedLearnIdx(ri)}
+                                            className={`alg-sidebar-btn ${selectedLearnIdx === ri ? 'active' : ''}`}
                                             style={{
-                                                display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12,
-                                                border: '1px solid', borderColor: selectedLearnIdx === ri ? skill.color : 'rgba(0,0,0,0.05)',
-                                                background: selectedLearnIdx === ri ? skill.color : '#fff',
-                                                color: selectedLearnIdx === ri ? '#fff' : 'var(--alg-text)',
-                                                transition: 'all 0.2s', cursor: 'pointer', textAlign: 'left'
+                                                '--skill-color': skill.color,
+                                                '--skill-color-15': `${skill.color}15`,
+                                                '--skill-color-40': `${skill.color}40`,
+                                                '--skill-color-05': `${skill.color}05`
                                             }}
                                         >
-                                            <div style={{
-                                                width: 24, height: 24, borderRadius: 6,
-                                                background: selectedLearnIdx === ri ? 'rgba(255,255,255,0.2)' : `${skill.color}15`,
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                fontSize: 14, fontWeight: 900, flexShrink: 0
-                                            }}>{ri + 1}</div>
-                                            <span style={{ fontWeight: 700, fontSize: 15 }}>{rule.title}</span>
+                                            <div className="alg-sidebar-btn-num">{ri + 1}</div>
+                                            <span className="alg-sidebar-btn-title">{rule.title}</span>
                                         </button>
                                     ))}
                                 </aside>
 
                                 {/* Detailed Window */}
-                                <main className="details-window-anim alg-details-window" key={selectedLearnIdx} style={{
-                                    background: '#fff', borderRadius: 20, padding: '24px 32px', border: `2px solid ${skill.color}15`,
-                                    boxShadow: '0 8px 30px rgba(0,0,0,0.03)', minHeight: 400
-                                }}>
+                                <main className="details-window-anim alg-details-window" key={selectedLearnIdx}>
                                     <div className="alg-learn-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                                         <div>
                                             <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>{skill.learn.rules[selectedLearnIdx].title}</h3>
@@ -517,19 +68,21 @@ export default function AlgebraSkills() {
                                     {/* Core Formula Box */}
                                     <div style={{ background: `${skill.color}05`, padding: '24px', borderRadius: 20, border: `2px solid ${skill.color}15`, marginBottom: 32, textAlign: 'center' }}>
                                         <div className="formula-text" style={{ fontSize: 42, fontWeight: 800, color: skill.color }}>
-                                            <MathRenderer text={`$$${skill.learn.rules[selectedLearnIdx].f}$$`} />
+                                            <MathRenderer text={`$$${skill.learn.rules[selectedLearnIdx].f} $$`} />
                                         </div>
                                     </div>
 
-                                    <div className="alg-rule-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                                    <div className="alg-rule-split">
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>Explanation</h4>
-                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>{skill.learn.rules[selectedLearnIdx].d}</p>
+                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
+                                                <MathRenderer text={skill.learn.rules[selectedLearnIdx].d} />
+                                            </p>
 
                                             <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: '16px', borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
                                                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
                                                     <span style={{ fontWeight: 800, color: 'var(--alg-teal)' }}>🛡️ Survival Tip: </span>
-                                                    {skill.learn.rules[selectedLearnIdx].tip}
+                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].tip} />
                                                 </p>
                                             </div>
                                         </div>
@@ -537,7 +90,7 @@ export default function AlgebraSkills() {
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>Practical Example</h4>
                                             <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
                                                 <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)' }}>
-                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$$${skill.learn.rules[selectedLearnIdx].ex}$$`} />
+                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$${skill.learn.rules[selectedLearnIdx].ex}$`} />
                                                 </div>
                                             </div>
                                         </div>
@@ -546,20 +99,31 @@ export default function AlgebraSkills() {
                                     {/* Action Footnotes */}
                                     <div className="alg-learn-footer" style={{ marginTop: 40, display: 'flex', gap: 16 }}>
                                         <button className="alg-btn-primary" onClick={() => setView('practice')} style={{ padding: '14px 32px', background: skill.color, fontSize: 15 }}>Mastered this? Try Practice →</button>
-                                        <button className="alg-btn-secondary" onClick={() => {
-                                            const nextIdx = (selectedLearnIdx + 1) % skill.learn.rules.length;
-                                            setSelectedLearnIdx(nextIdx);
-                                        }} style={{ padding: '14px 32px', fontSize: 15 }}>Next: {skill.learn.rules[(selectedLearnIdx + 1) % skill.learn.rules.length].title}</button>
+                                        <button className="alg-btn-secondary" onClick={() => setView('assessment')} style={{ padding: '14px 32px', fontSize: 15 }}>Take Full Assessment</button>
                                     </div>
                                 </main>
                             </div>
                         </div>
+                    ) : view === 'practice' ? (
+                        skill.practiceCategories ? (
+                            <CategorizedPracticeEngine
+                                skill={skill}
+                                onBack={() => setView('list')}
+                            />
+                        ) : (
+                            <QuizEngine
+                                questions={skill.practice}
+                                title={`Practice: ${skill.title}`}
+                                color={skill.color}
+                                onBack={() => setView('list')}
+                            />
+                        )
                     ) : (
-                        <QuizEngine
-                            questions={view === 'practice' ? skill.practice : skill.assessment}
-                            title={`${view === 'practice' ? 'Practice' : 'Assessment'}: ${skill.title}`}
-                            onBack={() => setView('list')}
+                        <AssessmentEngine
+                            questions={skill.assessment}
+                            title={skill.title}
                             color={skill.color}
+                            onBack={() => setView('list')}
                         />
                     )}
                 </div>
@@ -568,108 +132,62 @@ export default function AlgebraSkills() {
     }
 
     return (
-        <div className="skills-page">
-            {/* ── TOP NAV BAR ──────────────────────────────── */}
+        <div className="skills-page" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
             <nav className="intro-nav">
-                <button
-                    className="intro-nav-back"
-                    onClick={() => navigate('/algebra')}
-                >
-                    ← Back to Algebra
-                </button>
-
+                <button className="intro-nav-back" onClick={() => navigate('/algebra')}>← Back to Algebra</button>
                 <div className="intro-nav-links">
-                    <button
-                        className="intro-nav-link"
-                        onClick={() => navigate('/algebra/introduction')}
-                    >
-                        🌟 Introduction
-                    </button>
-                    <button
-                        className="intro-nav-link"
-                        onClick={() => navigate('/algebra/terminology')}
-                    >
-                        📖 Terminology
-                    </button>
-                    <button
-                        className="intro-nav-link intro-nav-link--active"
-                        onClick={() => navigate('/algebra/skills')}
-                    >
-                        🎯 Skills
-                    </button>
+                    <button className="intro-nav-link" onClick={() => navigate('/algebra/introduction')}>🌟 Intro</button>
+                    <button className="intro-nav-link" onClick={() => navigate('/algebra/terminology')}>📖 Terminology</button>
+                    <button className="intro-nav-link intro-nav-link--active">🎯 Skills</button>
                 </div>
             </nav>
 
             {/* ── MAIN CONTENT ──────────────────────────────── */}
-            <div className="alg-lexicon-container" style={{ maxWidth: 1100, margin: '80px auto 40px', padding: '0 24px' }}>
+            <div className="alg-lexicon-container" style={{ padding: '20px 24px 80px' }}>
 
-                {/* Compact Heading Line */}
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    marginBottom: 32
-                }}>
-                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.1rem', fontWeight: 900, color: 'var(--alg-text)', margin: '0 0 6px' }}>
-                        Algebra <span style={{ background: 'linear-gradient(135deg, var(--alg-teal), var(--alg-indigo))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Skills</span>
+                {/* Centered Heading */}
+                <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.8rem', fontWeight: 900, color: 'var(--alg-text)', margin: '0 0 8px' }}>
+                        Algebra <span style={{ background: 'linear-gradient(135deg, var(--alg-blue), var(--alg-teal))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Skills</span>
                     </h1>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--alg-muted)', letterSpacing: 0.5 }}>
+                    <p style={{ color: 'var(--alg-muted)', fontWeight: 600, fontSize: 16, margin: 0 }}>
                         Step up from concepts to mastery with targeted practice.
-                    </div>
+                    </p>
                 </div>
 
-                {/* Vertical Skills List */}
-                <div className="alg-skills-list">
-                    {SKILLS.map((skill, idx) => (
-                        <div key={skill.id} className="alg-skill-card">
-                            {/* Skill Info */}
-                            <div className="alg-skill-info">
-                                <div className="alg-skill-icon" style={{ background: `${skill.color}15` }}>
-                                    {skill.icon}
-                                </div>
-                                <div>
-                                    <div style={{ fontSize: 10, fontWeight: 800, color: skill.color, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>
-                                        {skill.subtitle}
-                                    </div>
-                                    <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: 'var(--alg-text)' }}>{skill.title}</h3>
-                                    <p style={{ margin: 0, fontSize: 12, color: 'var(--alg-muted)' }}>{skill.desc}</p>
-                                </div>
+                <div className="alg-skills-grid">
+                    {SKILLS.map((s, i) => (
+                        <div key={s.id} className="alg-skill-card" style={{ '--skill-color': s.color }}>
+                            <div className="alg-skill-icon" style={{ background: `${s.color}10`, color: s.color }}>
+                                {s.icon}
                             </div>
 
-                            {/* Action Buttons */}
+                            <div className="alg-skill-content">
+                                <div className="alg-skill-text-stack">
+                                    <span style={{ fontSize: 11, fontWeight: 900, color: s.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{s.subtitle}</span>
+                                    <h3 style={{ fontSize: 22, fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>{s.title}</h3>
+                                </div>
+                                <p style={{ fontSize: 14, color: 'var(--alg-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{s.desc}</p>
+                            </div>
+
                             <div className="alg-skill-actions">
-                                <button
-                                    onClick={() => { setActiveSkill(idx); setView('learn'); }}
-                                    className="alg-btn-secondary"
-                                    style={{ padding: '8px 16px', fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap', border: '1.5px solid rgba(0,0,0,0.1)' }}
-                                >
-                                    Learn
-                                </button>
-                                <button
-                                    onClick={() => { setActiveSkill(idx); setView('practice'); }}
-                                    className="alg-btn-secondary"
-                                    style={{ padding: '8px 16px', fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap' }}
-                                >
-                                    Practice
-                                </button>
-                                <button
-                                    onClick={() => { setActiveSkill(idx); setView('assessment'); }}
-                                    className="alg-btn-primary"
-                                    style={{ padding: '8px 16px', fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap', background: skill.color }}
-                                >
-                                    Assess
-                                </button>
+                                <button className="alg-skill-btn-outline" onClick={() => { setActiveSkill(i); setView('learn'); }}>Learn</button>
+                                <button className="alg-skill-btn-outline" onClick={() => { setActiveSkill(i); setView('practice'); }}>Practice</button>
+                                <button className="alg-skill-btn-filled" onClick={() => { setActiveSkill(i); setView('assessment'); }}>Assess</button>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* Final Motivation */}
-                <div style={{ marginTop: 40, textAlign: 'center' }}>
-                    <p style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 600 }}>
-                        Done with all? You're officially an <span style={{ color: 'var(--alg-indigo)' }}>Algebra Pro!</span> 🏅
-                    </p>
+                <div style={{
+                    marginTop: 60, padding: 32, borderRadius: 24,
+                    background: 'linear-gradient(135deg, #0d9488, #0891b2)',
+                    color: '#fff', textAlign: 'center', boxShadow: '0 15px 40px rgba(13,148,136,0.15)'
+                }}>
+                    <div style={{ fontSize: 32, marginBottom: 12 }}>🚀</div>
+                    <h3 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px' }}>Ready for More?</h3>
+                    <p style={{ opacity: 0.9, marginBottom: 24, maxWidth: 500, margin: '0 auto 24px' }}>Continue practicing to unlock advanced topics and master the world of Algebra!</p>
+                    <button className="alg-btn-primary" style={{ background: 'white', color: 'var(--alg-teal)', fontWeight: 800, padding: '12px 32px' }} onClick={() => navigate('/algebra')}>Dashboard</button>
                 </div>
             </div>
         </div>

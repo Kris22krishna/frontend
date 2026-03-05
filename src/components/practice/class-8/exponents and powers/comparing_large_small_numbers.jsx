@@ -6,6 +6,7 @@ import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
+import Class8PracticeReportModal from '../Class8PracticeReportModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
@@ -35,6 +36,7 @@ const ComparingLargeSmallNumbers = () => {
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showReportModal, setShowReportModal] = useState(false);
 
     // Logging states
     const [sessionId, setSessionId] = useState(null);
@@ -469,7 +471,7 @@ const ComparingLargeSmallNumbers = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -530,13 +532,13 @@ const ComparingLargeSmallNumbers = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' , justifyContent: 'flex-start' }}>
-                                    <div className="question-header-modern"  style={{  flexShrink: 0, marginBottom: "1rem" }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem', justifyContent: 'flex-start' }}>
+                                    <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "1rem" }}>
                                         <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern" style={{ marginTop: '1rem', flex: "none" }} style={{ marginTop: '1rem', flex: "none" }}>
+                                    <div className="interaction-area-modern" style={{ marginTop: '1rem', flex: "none" }}>
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
@@ -557,7 +559,7 @@ const ComparingLargeSmallNumbers = () => {
                                                 initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="feedback-mini correct"
-                                                style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}
+                                                style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}
                                             >
                                                 {feedbackMessage}
                                             </motion.div>
@@ -577,6 +579,26 @@ const ComparingLargeSmallNumbers = () => {
                 explanation={currentQuestion.solution}
                 onClose={() => setShowExplanationModal(false)}
                 onNext={() => setShowExplanationModal(false)}
+            />
+
+            <Class8PracticeReportModal
+                isOpen={showReportModal}
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val === true).length,
+                    totalQuestions: TOTAL_QUESTIONS
+                }}
+                onPracticeAgain={() => {
+                    setQIndex(0);
+                    setAnswers({});
+                    setTimeElapsed(0);
+                    setSelectedOption(null);
+                    setIsSubmitted(false);
+                    setIsCorrect(false);
+                    setShowReportModal(false);
+                    history.current = {};
+                }}
+                onBackToSkills={() => navigate(-1)}
             />
 
             <footer className="junior-bottom-bar">

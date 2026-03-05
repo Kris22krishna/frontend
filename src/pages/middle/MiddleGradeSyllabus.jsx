@@ -145,6 +145,25 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('symmetry')) {
+                if (lowerSkillName.includes('intro')) {
+                    navigate(`/middle/grade/${grade}/symmetry/intro`);
+                    return;
+                }
+                if (lowerSkillName.includes('reflection')) {
+                    navigate(`/middle/grade/${grade}/symmetry/reflection`);
+                    return;
+                }
+                if (lowerSkillName.includes('order')) {
+                    navigate(`/middle/grade/${grade}/symmetry/order-rotational`);
+                    return;
+                }
+                if (lowerSkillName.includes('rotational')) {
+                    navigate(`/middle/grade/${grade}/symmetry/rotational`);
+                    return;
+                }
+            }
+
             navigate(`/middle/practice/${skill.skill_id}`, { state: { grade: grade } });
         }
     };
@@ -1009,6 +1028,14 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'drawing-bar-graph-6', skill_name: 'Drawing a Bar Graph', topic: 'Data Handling and Presentation' },
                 { skill_id: 'bar-graphs-6', skill_name: 'Bar Graphs', topic: 'Data Handling and Presentation' },
                 { skill_id: 'figure-it-out-6', skill_name: 'Figure It Out', topic: 'Data Handling and Presentation' }
+            ]
+        };
+        skillsByTopic['Symmetry'] = {
+            'Main': [
+                { skill_id: 'sym-intro-6', skill_name: 'Introduction to Symmetry', topic: 'Symmetry' },
+                { skill_id: 'sym-refl-6', skill_name: 'Reflection in a Line', topic: 'Symmetry' },
+                { skill_id: 'sym-rot-6', skill_name: 'Rotational Symmetry', topic: 'Symmetry' },
+                { skill_id: 'sym-order-6', skill_name: 'Order of Rotational Symmetry', topic: 'Symmetry' }
             ]
         };
     }
