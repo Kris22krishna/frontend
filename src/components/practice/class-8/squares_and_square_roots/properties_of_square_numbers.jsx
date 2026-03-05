@@ -401,7 +401,23 @@ const PropertiesOfSquareNumbers = () => {
                     correctAnswers: Object.values(answers).filter(val => val.isCorrect).length,
                     totalQuestions: TOTAL_QUESTIONS
                 }}
-                onContinue={() => {
+                onPracticeAgain={() => {
+                    clearProgress();
+                    setQIndex(0);
+                    setAnswers({});
+                    setTimeElapsed(0);
+                    setSelectedOption(null);
+                    setIsSubmitted(false);
+                    setIsCorrect(false);
+                    setShowReportModal(false);
+
+                    const prepared = generateQuestionData().map(q => ({
+                        ...q,
+                        options: [...q.options].sort(() => Math.random() - 0.5)
+                    }));
+                    setQuestions(prepared);
+                }}
+                onBackToSkills={() => {
                     clearProgress();
                     navigate(-1);
                 }}

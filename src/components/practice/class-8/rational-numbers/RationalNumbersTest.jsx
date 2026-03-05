@@ -1,167 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
-
-const BLUE_THEME_CSS = `
-    .option-btn-modern.selected {
-        border-color: #3B82F6 !important;
-        background-color: #EFF6FF !important;
-        color: #1E40AF !important;
-        box-shadow: 0 4px 0 #2563EB !important;
-    }
-    .option-btn-modern {
-        min-height: 65px;
-        min-width: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem 1rem !important;
-        text-align: center;
-        font-size: 0.95rem;
-    }
-    .grey-selection-theme {
-        --selected-border: #3B82F6;
-        --selected-bg: #EFF6FF;
-    }
-    .exam-report-container {
-        max-width: 900px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    }
-    .report-stat-card {
-        padding: 1.5rem;
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        transition: transform 0.2s;
-    }
-    .report-stat-card:hover {
-        transform: translateY(-5px);
-    }
-    .solution-accordion {
-        border: 2px solid #FEF08A;
-        border-radius: 16px;
-        margin-bottom: 1.5rem;
-        overflow: hidden;
-        background: white;
-    }
-    .solution-header {
-        padding: 1rem;
-        background: #F8FAFC;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-    }
-    .solution-content {
-        padding: 1.5rem;
-        background: white;
-        border-top: 1px solid #E2E8F0;
-    }
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-    .status-correct { background: #DCFCE7; color: #166534; }
-    .status-wrong { background: #FEE2E2; color: #991B1B; }
-    .status-skipped { background: #F1F5F9; color: #475569; }
-
-    .nav-pastel-btn {
-        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
-        transition: all 0.3s ease !important;
-        font-weight: 800 !important;
-        letter-spacing: 0.5px !important;
-    }
-    .nav-pastel-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
-        background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
-    }
-    .nav-pastel-btn:disabled {
-        background: #E2E8F0 !important;
-        color: #94A3B8 !important;
-        box-shadow: none !important;
-        transform: none !important;
-        cursor: not-allowed !important;
-    }
-
-    /* Mobile Responsiveness for Practice Session Layout */
-    @media (max-width: 1024px) {
-        .practice-board-container {
-            grid-template-columns: 1fr !important;
-            justify-items: center !important;
-            margin-bottom: 2rem !important;
-        }
-        .practice-left-col {
-            width: 100% !important;
-            max-width: 600px !important;
-            margin: 0 auto !important;
-        }
-        .question-palette-container {
-            width: 100% !important;
-            max-width: 500px !important;
-            margin: 2rem auto 0 auto !important;
-            max-height: none !important;
-            height: auto !important;
-        }
-        .options-grid-modern {
-            grid-template-columns: 1fr !important;
-            justify-items: center !important;
-        }
-        .practice-content-wrapper {
-            padding-bottom: 80px !important;
-        }
-        .option-btn-modern {
-            min-height: 55px;
-            font-size: 0.9rem;
-            min-width: unset !important;
-            width: 100% !important;
-            max-width: 350px !important;
-            margin: 0 auto !important;
-        }
-    }
-    @media (max-width: 640px) {
-        .junior-practice-header {
-            padding: 0 1rem !important;
-        }
-        .practice-content-wrapper {
-            padding: 1rem 1rem 80px 1rem !important;
-        }
-        .question-card-modern {
-            padding: 1.5rem !important;
-        }
-        .question-text-modern {
-            font-size: 1.1rem !important;
-        }
-    }
-`;
+import '../../../../pages/high/class8/Grade8ChapterTests.css';
 
 const SKILL_ID = 1225;
 const SKILL_NAME = "Rational Numbers - Chapter Test";
+const TOTAL_QUESTIONS = 20;
 
 const RationalNumbersTest = () => {
     const navigate = useNavigate();
-    const [qIndex, setQIndex] = useState(0);
+    const getSessionData = (key, defaultValue) => {
+        const data = sessionStorage.getItem(key);
+        return data !== null ? JSON.parse(data) : defaultValue;
+    };
+
+    const storageKey = `test_${window.location.pathname}`;
+
+    const [qIndex, setQIndex] = useState(() => getSessionData(`${storageKey}_qIndex`, 0));
+    const [responses, setResponses] = useState(() => getSessionData(`${storageKey}_responses`, {}));
     const [selectedOption, setSelectedOption] = useState(null);
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [timeElapsed, setTimeElapsed] = useState(() => getSessionData(`${storageKey}_timeElapsed`, 0));
     const [isTestOver, setIsTestOver] = useState(false);
-    const [responses, setResponses] = useState({});
 
     const questionStartTime = useRef(Date.now());
-    const [sessionId, setSessionId] = useState(null);
+    const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const [questions, setQuestions] = useState([]);
 
     const generateQuestions = () => {
@@ -314,12 +180,28 @@ const RationalNumbersTest = () => {
         setQuestions(generateQuestions());
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            api.createPracticeSession(uid, SKILL_ID).then(sess => {
+        if (!isNaN(uid) && !sessionId) {
+            api.createPracticeSession(uid, SKILL_ID, 'test').then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
     }, []);
+
+    useEffect(() => {
+        if (responses && qIndex !== undefined) {
+            sessionStorage.setItem(`${storageKey}_qIndex`, JSON.stringify(qIndex));
+            sessionStorage.setItem(`${storageKey}_responses`, JSON.stringify(responses));
+            sessionStorage.setItem(`${storageKey}_timeElapsed`, JSON.stringify(timeElapsed));
+            if (sessionId) sessionStorage.setItem(`${storageKey}_sessionId`, JSON.stringify(sessionId));
+        }
+    }, [qIndex, responses, timeElapsed, sessionId]);
+
+    const clearProgress = () => {
+        sessionStorage.removeItem(`${storageKey}_qIndex`);
+        sessionStorage.removeItem(`${storageKey}_responses`);
+        sessionStorage.removeItem(`${storageKey}_timeElapsed`);
+        sessionStorage.removeItem(`${storageKey}_sessionId`);
+    };
 
     useEffect(() => {
         if (isTestOver) return;
@@ -328,6 +210,7 @@ const RationalNumbersTest = () => {
     }, [isTestOver]);
 
     const handleRecordResponse = () => {
+        if (!questions[qIndex]) return;
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
         const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
@@ -349,13 +232,11 @@ const RationalNumbersTest = () => {
                 user_id: uid,
                 session_id: sessionId,
                 skill_id: SKILL_ID,
-                template_id: null,
-                difficulty_level: 'Medium',
-                question_text: String(currentQ.text || ''),
-                correct_answer: String(currentQ.correctAnswer || ''),
-                student_answer: String(isSkipped ? "SKIPPED" : (selectedOption || '')),
+                question_text: currentQ.text,
+                correct_answer: currentQ.correctAnswer,
+                student_answer: isSkipped ? "SKIPPED" : selectedOption,
                 is_correct: isSkipped ? false : isCorrect,
-                solution_text: String(currentQ.solution || ''),
+                solution_text: currentQ.solution,
                 time_spent_seconds: timeSpent
             };
             api.recordAttempt(attemptData).catch(console.error);
@@ -396,7 +277,7 @@ const RationalNumbersTest = () => {
             const skippedCount = questions.length - correctCount - wrongCount;
             await api.createReport({
                 title: SKILL_NAME,
-                type: 'practice',
+                type: 'test',
                 score: (correctCount / questions.length) * 100,
                 parameters: {
                     skill_id: SKILL_ID,
@@ -408,6 +289,7 @@ const RationalNumbersTest = () => {
                 user_id: uid
             }).catch(console.error);
         }
+        clearProgress();
     };
 
     const formatTime = (seconds) => {
@@ -424,34 +306,33 @@ const RationalNumbersTest = () => {
         const skipped = questions.length - correct - wrong;
 
         return (
-            <div className="junior-practice-page grey-selection-theme p-4 md:p-8" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
-                <style>{BLUE_THEME_CSS}</style>
-                <div className="exam-report-container mx-auto p-4 md:p-8 my-4 md:my-8">
-                    <div className="results-hero-section flex flex-col items-center mb-6 md:mb-8 mt-4 text-center">
-                        <img src={mascotImg} alt="Happy Mascot" className="w-32 h-32 md:w-40 md:h-40 mb-2 drop-shadow-lg object-contain" />
-                        <h1 className="text-3xl md:text-5xl font-black text-[#31326F] mb-2 tracking-tight">Test Report</h1>
-                        <p className="text-[#64748B] text-base md:text-xl font-medium mb-6 md:mb-8 px-2">How you performed in <span className="font-bold block md:inline">{SKILL_NAME}</span></p>
+            <div className="junior-practice-page grey-selection-theme result-page-wrapper" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
+                <div className="exam-report-container">
+                    <div className="results-hero-section flex flex-col items-center mb-8 mt-4 text-center">
+                        <img src={mascotImg} alt="Happy Mascot" className="w-40 h-40 mb-2 drop-shadow-lg object-contain" />
+                        <h1 className="text-5xl font-normal text-[#31326F] mb-2 tracking-tight">Test Report</h1>
+                        <p className="text-[#64748B] text-xl font-normal mb-8 px-4">How you performed in <span className="font-normal">{SKILL_NAME}</span></p>
 
-                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-5xl">
-                            <div className="stat-card bg-[#EFF6FF] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-5xl">
+                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
+                                <span className="text-4xl font-normal text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
                             </div>
-                            <div className="stat-card bg-[#F0FDF4] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DCFCE7] text-center flex flex-col items-center justify-center">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#14532D]">{correct}</span>
+                            <div className="stat-card bg-[#F0FDF4] p-6 rounded-3xl shadow-sm border-2 border-[#DCFCE7] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
+                                <span className="text-4xl font-normal text-[#14532D]">{correct}</span>
                             </div>
-                            <div className="stat-card bg-[#FEF2F2] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#FEE2E2] text-center flex flex-col items-center justify-center col-span-1">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#7F1D1D]">{wrong}</span>
+                            <div className="stat-card bg-[#FEF2F2] p-6 rounded-3xl shadow-sm border-2 border-[#FEE2E2] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
+                                <span className="text-4xl font-normal text-[#7F1D1D]">{wrong}</span>
                             </div>
-                            <div className="stat-card bg-[#F8FAFC] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#E2E8F0] text-center flex flex-col items-center justify-center col-span-1">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#64748B] mb-1">Skipped</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#334155]">{skipped}</span>
+                            <div className="stat-card bg-[#F8FAFC] p-6 rounded-3xl shadow-sm border-2 border-[#E2E8F0] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#64748B] mb-1">Skipped</span>
+                                <span className="text-4xl font-normal text-[#334155]">{skipped}</span>
                             </div>
-                            <div className="stat-card bg-[#EFF6FF] p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center col-span-2 md:col-span-1">
-                                <span className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Total Time</span>
-                                <span className="text-2xl md:text-4xl font-black text-[#1E3A8A]">{formatTime(timeElapsed)}</span>
+                            <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
+                                <span className="block text-xs font-normal uppercase tracking-widest text-[#3B82F6] mb-1">Total Time</span>
+                                <span className="text-4xl font-normal text-[#1E3A8A]">{formatTime(timeElapsed)}</span>
                             </div>
                         </div>
                     </div>
@@ -528,22 +409,7 @@ const RationalNumbersTest = () => {
 
                                         <div style={{ background: '#F0F9FF', padding: '1.5rem', borderRadius: '12px', border: '1px solid #E0F2FE' }}>
                                             <h4 style={{ color: '#0284C7', fontWeight: '800', marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.5px' }}>Solution:</h4>
-                                            {(() => {
-                                                const steps = q.solution.split(/(?<=\\.)\\s+(?=[A-Z0-9$])/);
-                                                if (steps.length <= 1) {
-                                                    return <LatexText text={q.solution} />;
-                                                }
-                                                return (
-                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                                                        {steps.map((stepStr, sIdx) => (
-                                                            <div key={sIdx} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                                                                <span style={{ fontWeight: '800', color: '#0F172A', fontSize: '0.9rem' }}>Step {sIdx + 1}:</span>
-                                                                <span style={{ color: '#334155', lineHeight: '1.6' }}><LatexText text={stepStr.trim()} /></span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                );
-                                            })()}
+                                            <LatexText text={q.solution} />
                                         </div>
                                     </div>
                                 </details>
@@ -555,52 +421,61 @@ const RationalNumbersTest = () => {
         );
     }
     return (
-        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <style>{BLUE_THEME_CSS}</style>
-            <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
+            <header className="junior-practice-header">
+                <div className="skill-name-display">
                     {SKILL_NAME}
                 </div>
-                <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-black text-xl shadow-lg">
+                <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-normal text-xl shadow-lg">
                     {qIndex + 1} / {questions.length}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#3B82F6]/30 text-[#1E40AF] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#3B82F6]/30 text-[#1E40AF] font-normal text-lg shadow-md flex items-center gap-2">
                         <Clock size={20} /> {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
-            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 140px 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: '60px' }}>
+            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 1rem 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0 }}>
 
-                    {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible' , justifyContent: 'flex-start' }}>
-                            <div className="question-header-modern"  style={{  flexShrink: 0, marginBottom: "1rem" }}>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
-                                    <LatexText text={questions[qIndex].text} />
-                                </h2>
-                            </div>
-                            <div className="interaction-area-modern" style={{  display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
-                                <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
-                                    {questions[qIndex].options.map((option, idx) => (
-                                        <button
-                                            key={idx}
-                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
-                                            onClick={() => setSelectedOption(option)}
-                                        >
-                                            <LatexText text={option} />
-                                        </button>
-                                    ))}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={qIndex}
+                                initial={{ x: 20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: -20, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                            >
+                                <div className="question-card-modern test-card-layout" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                                    <div className="question-header-modern" style={{ overflow: 'hidden' }}>
+                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '400', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
+                                            <LatexText text={questions[qIndex].text} />
+                                        </h2>
+                                    </div>
+                                    <div className="interaction-area-modern" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                        <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                                            {questions[qIndex].options.map((option, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                                    onClick={() => setSelectedOption(option)}
+                                                    style={{ fontFamily: '"Open Sans", sans-serif', fontWeight: '400' }}
+                                                >
+                                                    <LatexText text={option} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
 
-                    {/* Right Column: Question Palette */}
                     <div className="question-palette-container" style={{ width: '300px', background: 'white', padding: '1.5rem', borderRadius: '24px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: 'calc(100vh - 220px)' }}>
-                        <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#1E293B', marginBottom: '1rem', textAlign: 'center', flexShrink: 0 }}>Question Palette</h3>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: '400', color: '#1E293B', marginBottom: '1rem', textAlign: 'center', flexShrink: 0 }}>Question Palette</h3>
                         <div className="palette-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.4rem', flex: 1, alignContent: 'start' }}>
                             {questions.map((_, idx) => {
                                 const isCurrent = qIndex === idx;
@@ -631,7 +506,7 @@ const RationalNumbersTest = () => {
                                         onClick={() => navigateToQuestion(idx)}
                                         style={{
                                             height: '36px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            borderRadius: '6px', fontWeight: '700', fontSize: '0.85rem',
+                                            borderRadius: '6px', fontWeight: '400', fontSize: '0.85rem',
                                             cursor: 'pointer', transition: 'all 0.2s',
                                             background: btnBg, color: btnColor, border: btnBorder, padding: '0'
                                         }}
@@ -656,7 +531,7 @@ const RationalNumbersTest = () => {
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate(-1)}>Exit Test</button>
+                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-normal" onClick={() => { clearProgress(); navigate(-1); }}>Exit Test</button>
                     </div>
                     <div className="bottom-right">
                         <div style={{ display: 'flex', gap: '1.5rem' }}>

@@ -2,7 +2,7 @@ import React from 'react';
 import { CheckCircle2, XCircle, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Class8PracticeReportModal = ({ isOpen, stats, onContinue }) => {
+const Class8PracticeReportModal = ({ isOpen, stats, onPracticeAgain, onBackToSkills }) => {
     if (!isOpen) return null;
 
     const { timeTaken, correctAnswers, totalQuestions } = stats;
@@ -11,7 +11,7 @@ const Class8PracticeReportModal = ({ isOpen, stats, onContinue }) => {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+                <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 text-[#31326F]">
                     <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -51,13 +51,22 @@ const Class8PracticeReportModal = ({ isOpen, stats, onContinue }) => {
                             </div>
                         </div>
 
-                        <button
-                            onClick={onContinue}
-                            className="w-full py-4 bg-gradient-to-r from-[#3B82F6] to-[#2563EB] text-white rounded-2xl font-normal text-xl shadow-[0_4px_15px_rgba(59,130,246,0.4)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.6)] transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
-                            style={{ fontWeight: 400 }}
-                        >
-                            Continue
-                        </button>
+                        <div className="flex flex-col gap-3 w-full">
+                            <button
+                                onClick={onPracticeAgain}
+                                className="w-full py-4 bg-gradient-to-r from-[#3B82F6] to-[#2563EB] text-white rounded-2xl font-normal text-xl shadow-[0_4px_15px_rgba(59,130,246,0.4)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.6)] transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                                style={{ fontWeight: 400 }}
+                            >
+                                Practice Again
+                            </button>
+                            <button
+                                onClick={onBackToSkills}
+                                className="w-full py-4 bg-white text-[#3B82F6] border-2 border-[#3B82F6] rounded-2xl font-normal text-xl hover:bg-blue-50 transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                                style={{ fontWeight: 400 }}
+                            >
+                                Back to Skills
+                            </button>
+                        </div>
                     </motion.div>
                 </div>
             )}
@@ -66,3 +75,4 @@ const Class8PracticeReportModal = ({ isOpen, stats, onContinue }) => {
 };
 
 export default Class8PracticeReportModal;
+

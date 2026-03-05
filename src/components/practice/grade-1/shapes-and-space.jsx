@@ -13,6 +13,46 @@ import mascotImg from '../../../assets/mascot.png';
 import avatarImg from '../../../assets/avatar.png';
 import '../../../pages/juniors/class-1/Grade1Practice.css';
 
+const SizeVisual = ({ data }) => {
+    const { aSize, bSize, orientation = 'vertical' } = data;
+    const isHorizontal = orientation === 'horizontal';
+
+    return (
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="size-visual" style={{ border: 'none', background: 'transparent', display: 'flex', gap: '30px', alignItems: 'flex-end', justifyContent: 'center', height: '140px' }}>
+            <div style={{ display: 'flex', flexDirection: isHorizontal ? 'column' : 'row', gap: '20px', alignItems: isHorizontal ? 'flex-start' : 'flex-end' }}>
+                <div style={{ display: 'flex', flexDirection: isHorizontal ? 'row' : 'column', alignItems: 'center', gap: '8px' }}>
+                    <motion.div
+                        initial={isHorizontal ? { width: 0 } : { height: 0 }}
+                        animate={isHorizontal ? { width: aSize } : { height: aSize }}
+                        style={{
+                            width: isHorizontal ? `${aSize}px` : '40px',
+                            height: isHorizontal ? '40px' : `${aSize}px`,
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            borderRadius: '12px',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                        }}
+                    />
+                    <span style={{ fontWeight: 'bold', color: '#4A5568' }}>A</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: isHorizontal ? 'row' : 'column', alignItems: 'center', gap: '8px' }}>
+                    <motion.div
+                        initial={isHorizontal ? { width: 0 } : { height: 0 }}
+                        animate={isHorizontal ? { width: bSize } : { height: bSize }}
+                        style={{
+                            width: isHorizontal ? `${bSize}px` : '40px',
+                            height: isHorizontal ? '40px' : `${bSize}px`,
+                            background: 'linear-gradient(135deg, #FAD961 0%, #F76B1C 100%)',
+                            borderRadius: '12px',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                        }}
+                    />
+                    <span style={{ fontWeight: 'bold', color: '#4A5568' }}>B</span>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
+
 const DynamicVisual = ({ type, data }) => {
     if (type === 'shape') {
         const { shape, color } = data;
@@ -27,6 +67,7 @@ const DynamicVisual = ({ type, data }) => {
                     {shape === 'square' && <rect x="8" y="8" width="84" height="84" fill={color} />}
                     {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} />}
                     {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" fill={color} />}
+                    {shape === 'oval' && <ellipse cx="50" cy="50" rx="45" ry="30" fill={color} />}
                 </svg>
             </motion.div>
         );
@@ -35,15 +76,14 @@ const DynamicVisual = ({ type, data }) => {
         const { pos } = data;
         return (
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{ border: "none" }}>
-                <svg width="100%" height="100%" style={{ maxWidth: '280px' }} viewBox="0 0 200 120">
-                    <rect x="50" y="40" width="100" height="70" rx="10" fill="white" stroke="none" />
-                    <text x="100" y="85" textAnchor="middle" fill="#A0AEC0" fontSize="14" fontWeight="400">BOX</text>
+                <svg width="100%" height="100%" style={{ maxWidth: '300px' }} viewBox="0 0 220 120">
+                    <rect x="50" y="40" width="100" height="70" rx="10" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="2" />
+                    <text x="100" y="85" textAnchor="middle" fill="#64748B" fontSize="14" fontWeight="600">BOX</text>
                     {pos === 'top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
                     {pos === 'bottom' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="95" r="18" fill="url(#ballGradient)" />}
                     {pos === 'inside' && <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx="100" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'outside' && <motion.circle initial={{ x: -20 }} animate={{ x: 0 }} cx="30" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'near' && <circle cx="170" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'far' && <circle cx="280" cy="75" r="8" fill="url(#ballGradient)" opacity="0.5" />}
+                    {pos === 'outside' && <motion.circle initial={{ x: -20 }} animate={{ x: 0 }} cx="25" cy="75" r="18" fill="url(#ballGradient)" />}
+                    {pos === 'far' && <motion.circle initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} cx="205" cy="35" r="10" fill="url(#ballGradient)" />}
                     <defs>
                         <radialGradient id="ballGradient">
                             <stop offset="0%" stopColor="#FFD54F" />
@@ -55,25 +95,7 @@ const DynamicVisual = ({ type, data }) => {
         );
     }
     if (type === 'size') {
-        const { aSize, bSize, itemType } = data;
-        return (
-            <div style={{ display: 'flex', gap: 'clamp(20px, 10vw, 80px)', alignItems: 'flex-end', justifyContent: 'center' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <motion.div
-                        initial={{ height: 0 }} animate={{ height: aSize }}
-                        style={{ width: 'clamp(40px, 15vw, 80px)', background: 'linear-gradient(to top, #4ECDC4, #A5F3EB)', borderRadius: '15px 15px 0 0', border: '5px solid white', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
-                    />
-                    <div style={{ marginTop: '15px', fontWeight: '400', color: '#4ECDC4', fontSize: '1.5rem' }}>A</div>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                    <motion.div
-                        initial={{ height: 0 }} animate={{ height: bSize }}
-                        style={{ width: 'clamp(40px, 15vw, 80px)', background: 'linear-gradient(to top, #FF6B6B, #FFADAD)', borderRadius: '15px 15px 0 0', border: '5px solid white', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}
-                    />
-                    <div style={{ marginTop: '15px', fontWeight: '400', color: '#FF6B6B', fontSize: '1.5rem' }}>B</div>
-                </div>
-            </div>
-        );
+        return <SizeVisual data={data} />;
     }
     return null;
 };
@@ -95,6 +117,10 @@ const ShapesAndSpace = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
+    const qIndexRef = React.useRef(0);
+    const nextTimeoutRef = React.useRef(null);
+    const [isTransitioning, setIsTransitioning] = React.useState(false);
+    useEffect(() => { qIndexRef.current = qIndex; }, [qIndex]);
 
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
@@ -110,7 +136,25 @@ const ShapesAndSpace = () => {
     const { topicName, skillName } = getTopicInfo();
     const generateQuestions = (selectedSkill) => {
         const questions = [];
-        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'].sort(() => 0.5 - Math.random());
+
+        // Pre-shuffled pools for 100% uniqueness per session
+        const shapesPool = ['circle', 'square', 'triangle', 'rectangle', 'oval'].sort(() => 0.5 - Math.random());
+        const posPool = [
+            { q: 'Where is the yellow ball? 🎾', a: 'top' },
+            { q: 'Is the ball inside or outside the box? 📦', a: 'inside' },
+            { q: 'Where is the ball located? 📍', a: 'bottom' },
+            { q: 'Where can you see the ball? 👀', a: 'outside' },
+            { q: 'Look closely, where is the ball? 🔍', a: 'far' }
+        ].sort(() => 0.5 - Math.random());
+        const sizePool = [
+            { q: 'Which bar is HIGHER?', a: 'A', aSize: 120, bSize: 60, orient: 'vertical', exp: 'Bar A has a greater height than Bar B.' },
+            { q: 'Which bar is SMALLER?', a: 'B', aSize: 100, bSize: 40, orient: 'vertical', exp: 'Bar B is significantly shorter than Bar A.' },
+            { q: 'Which bar is BIGGER?', a: 'A', aSize: 130, bSize: 70, orient: 'vertical', exp: 'Bar A is the larger one among the two.' },
+            { q: 'Which bar is LONGER?', a: 'A', aSize: 160, bSize: 80, orient: 'horizontal', exp: 'Bar A extends much further horizontally.' },
+            { q: 'Which bar is SHORTER?', a: 'B', aSize: 150, bSize: 60, orient: 'horizontal', exp: 'Bar B is not as long as Bar A.' },
+            { q: 'Which one is TALLER?', a: 'A', aSize: 130, bSize: 50, orient: 'vertical', exp: 'Looking at the vertical height, A is taller.' }
+        ].sort(() => 0.5 - Math.random());
 
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
@@ -130,65 +174,36 @@ const ShapesAndSpace = () => {
             }
 
             if (typeToGen === 'shape') {
-                // Identifying shapes
-                const shapes = ['circle', 'square', 'triangle', 'rectangle'];
-                let target;
-                if (isTest) {
-                    target = shapes[i % shapes.length];
-                } else {
-                    target = shapes[Math.floor(Math.random() * shapes.length)];
-                }
-                const otherOptions = shapes.filter(s => s !== target);
+                const target = shapesPool[i % shapesPool.length];
+                const otherOptions = shapesPool.filter(s => s !== target);
                 question = {
                     text: `What shape is this? 🔍`,
                     options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
                     correct: target,
                     type: 'shape',
                     visualData: { shape: target, color: colors[i % colors.length] },
-                    explanation: `This object has the characteristics of a ${target.toUpperCase()}.`
+                    explanation: `This object has the characteristics of ${target === 'oval' ? 'an' : 'a'} ${target.toUpperCase()}.`
                 };
             } else if (typeToGen === 'position') {
-                // Understanding positions
-                const posTypes = [
-                    { q: 'Where is the yellow ball? 🎾', a: 'top' },
-                    { q: 'Is the ball inside or outside the box? 📦', a: 'inside' },
-                    { q: 'Where is the ball located? 📍', a: 'bottom' },
-                    { q: 'Where can you see the ball? 👀', a: 'outside' }
-                ];
-                let item;
-                if (isTest) {
-                    item = posTypes[(i - 4) % posTypes.length];
-                } else {
-                    item = posTypes[Math.floor(Math.random() * posTypes.length)];
-                }
+                const item = posPool[i % posPool.length];
+                const pool = ['top', 'bottom', 'inside', 'outside', 'far'];
+                const otherOptions = pool.filter(p => p !== item.a);
                 question = {
                     text: item.q,
-                    options: ['top', 'bottom', 'inside', 'outside'].sort(() => 0.5 - Math.random()),
+                    options: [item.a, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random()),
                     correct: item.a,
                     type: 'position',
                     visualData: { pos: item.a },
                     explanation: `The ball is positioned at the ${item.a.toUpperCase()} in this visual representation.`
                 };
             } else if (typeToGen === 'size') {
-                // Comparing sizes
-                const sizeQuestions = [
-                    { q: 'Which bar is HIGHER?', a: 'A', aSize: 180, bSize: 80, exp: 'Bar A is taller than Bar B.' },
-                    { q: 'Which one is SMALLER?', a: 'B', aSize: 160, bSize: 40, exp: 'Bar B has a smaller height than Bar A.' },
-                    { q: 'Which bar is SHORTER?', a: 'B', aSize: 140, bSize: 70, exp: 'Bar B is not as long/tall as Bar A.' },
-                    { q: 'Pick the LONGER one!', a: 'A', aSize: 170, bSize: 90, exp: 'Bar A extends further than Bar B.' }
-                ];
-                let item;
-                if (isTest) {
-                    item = sizeQuestions[(i - 7) % sizeQuestions.length];
-                } else {
-                    item = sizeQuestions[Math.floor(Math.random() * sizeQuestions.length)];
-                }
+                const item = sizePool[i % sizePool.length];
                 question = {
                     text: item.q,
                     options: ['A', 'B'],
                     correct: item.a,
                     type: 'size',
-                    visualData: { aSize: item.aSize, bSize: item.bSize },
+                    visualData: { aSize: item.aSize, bSize: item.bSize, orientation: item.orient },
                     explanation: item.exp
                 };
             } else {
@@ -202,6 +217,13 @@ const ShapesAndSpace = () => {
 
     useEffect(() => {
         const init = async () => {
+            setQIndex(0);
+            setScore(0);
+            setShowResults(false);
+            setAnswers({});
+            setIsAnswered(false);
+            setSelectedOption(null);
+
             const userId = user?.user_id || user?.id;
             if (!userId) return;
             const qs = generateQuestions(skillId);
@@ -234,6 +256,7 @@ const ShapesAndSpace = () => {
             setSelectedOption(null);
             setIsAnswered(false);
         }
+        setIsTransitioning(false);
     }, [qIndex, answers]);
 
     const handleExit = async () => {
@@ -263,7 +286,7 @@ const ShapesAndSpace = () => {
         try {
             const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
             const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
+            const skId = typeof skillId !== 'undefined' ? skillId : '0';
             const currentTimer = typeof timer !== 'undefined' ? timer : 0;
 
             if (uid && sessionId) {
@@ -307,16 +330,28 @@ const ShapesAndSpace = () => {
         if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
+            // Clear any existing timeout just in case
+            if (nextTimeoutRef.current) clearTimeout(nextTimeoutRef.current);
             // Give a tiny delay so they see the option highlight green
-            setTimeout(() => {
+            nextTimeoutRef.current = setTimeout(() => {
                 handleNext();
             }, 800);
         }
     };
 
     const handleNext = async () => {
-        if (qIndex < totalQuestions - 1) {
-            setQIndex(v => v + 1);
+        if (showResults || isTransitioning) return;
+
+        // Clear any pending auto-advance timeout
+        if (nextTimeoutRef.current) {
+            clearTimeout(nextTimeoutRef.current);
+            nextTimeoutRef.current = null;
+        }
+
+        const currentIndex = qIndexRef.current;
+        if (currentIndex < totalQuestions - 1) {
+            setIsTransitioning(true);
+            setQIndex(prev => prev + 1);
         } else {
             setShowResults(true);
             try {
@@ -526,6 +561,7 @@ const ShapesAndSpace = () => {
     }
 
     const currentQ = sessionQuestions[qIndex];
+    if (!currentQ) return null;
 
     return (
         <div className="grade1-practice-page">
@@ -566,7 +602,7 @@ const ShapesAndSpace = () => {
 
                     <div className="g1-content-split">
                         <div className="g1-visual-area" style={{ border: "none", background: "transparent" }}>
-                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                            <DynamicVisual key={qIndex} type={currentQ.type} data={currentQ.visualData} />
                         </div>
 
                         <div className="g1-quiz-side">
@@ -621,7 +657,10 @@ const ShapesAndSpace = () => {
                 correctAnswer={typeof currentQ.correct === 'string' ? currentQ.correct.charAt(0).toUpperCase() + currentQ.correct.slice(1) : currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
             />
         </div>
     );

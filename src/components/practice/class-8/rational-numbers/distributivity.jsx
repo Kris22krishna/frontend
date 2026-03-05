@@ -6,6 +6,7 @@ import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
+import Class8PracticeReportModal from '../Class8PracticeReportModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
@@ -35,6 +36,7 @@ const DistributivityComponent = () => {
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showReportModal, setShowReportModal] = useState(false);
 
     // Logging states
     const [sessionId, setSessionId] = useState(null);
@@ -45,7 +47,7 @@ const DistributivityComponent = () => {
     const SKILL_ID = 8009; // Grade 8 - Rational Numbers - Distributivity
     const SKILL_NAME = "Rational Numbers - Distributivity";
 
-    const TOTAL_QUESTIONS = 5;
+    const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
 
     useEffect(() => {
@@ -110,7 +112,8 @@ const DistributivityComponent = () => {
                 qData = questionHard1();
                 break;
             default:
-                qData = questionEasy1();
+                const fallbacks = [questionEasy1, questionEasy2, questionMedium1, questionMedium2, questionHard1];
+                qData = fallbacks[Math.floor(Math.random() * fallbacks.length)]();
         }
 
         const newShuffledOptions = [...qData.options].sort(() => Math.random() - 0.5);
@@ -338,7 +341,7 @@ const DistributivityComponent = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -398,13 +401,13 @@ const DistributivityComponent = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' , justifyContent: 'flex-start' }}>
-                                    <div className="question-header-modern"  style={{  flexShrink: 0, marginBottom: "1rem" }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem', justifyContent: 'flex-start' }}>
+                                    <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "1rem" }}>
                                         <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern" style={{ marginTop: '1rem', flex: "none" }} style={{ marginTop: '1rem', flex: "none" }}>
+                                    <div className="interaction-area-modern" style={{ marginTop: '1rem', flex: "none" }}>
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
@@ -425,7 +428,7 @@ const DistributivityComponent = () => {
                                                 initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="feedback-mini correct"
-                                                style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}
+                                                style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}
                                             >
                                                 {feedbackMessage}
                                             </motion.div>
@@ -445,6 +448,26 @@ const DistributivityComponent = () => {
                 explanation={currentQuestion.solution}
                 onClose={() => setShowExplanationModal(false)}
                 onNext={() => setShowExplanationModal(false)}
+            />
+
+            <Class8PracticeReportModal
+                isOpen={showReportModal}
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val === true).length,
+                    totalQuestions: TOTAL_QUESTIONS
+                }}
+                onPracticeAgain={() => {
+                    setQIndex(0);
+                    setAnswers({});
+                    setTimeElapsed(0);
+                    setSelectedOption(null);
+                    setIsSubmitted(false);
+                    setIsCorrect(false);
+                    setShowReportModal(false);
+                    history.current = {};
+                }}
+                onBackToSkills={() => navigate(-1)}
             />
 
             <footer className="junior-bottom-bar">

@@ -23,4 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-chapter_creation_template.md
+chapter-creation-template.md
+
+# Rules
+rules.md
