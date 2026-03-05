@@ -12,16 +12,26 @@ const shuffle = (array) => {
 export const generateLinesAndAnglesQuestions = (topicId, count = 10) => {
     let pool = [];
     switch (topicId) {
-        case 'intro': pool = generateIntroPool(); break;
-        case 'lsr': pool = generateLSRPool(); break;
-        case 'lt': pool = generateLTPool(); break;
-        case 'at': pool = generateATPool(); break;
-        case 'aa': pool = generateAAPool(); break;
-        case 'lp': pool = generateLPPool(); break;
-        case 'vo': pool = generateVOPool(); break;
-        case 'trans': pool = generateTransPool(); break;
-        case 'ap': pool = generateAPPool(); break;
-        case 'rl': pool = generateRLPool(); break;
+        case 'intro':
+        case 'introduction': pool = generateIntroPool(); break;
+        case 'lsr':
+        case 'line-segment-ray': pool = generateLSRPool(); break;
+        case 'lt':
+        case 'line-types': pool = generateLTPool(); break;
+        case 'at':
+        case 'angle-types': pool = generateATPool(); break;
+        case 'aa':
+        case 'adjacent-angles': pool = generateAAPool(); break;
+        case 'lp':
+        case 'linear-pair': pool = generateLPPool(); break;
+        case 'vo':
+        case 'vertically-opposite': pool = generateVOPool(); break;
+        case 'trans':
+        case 'transversal-angles': pool = generateTransPool(); break;
+        case 'ap':
+        case 'angles-at-point': pool = generateAPPool(); break;
+        case 'rl':
+        case 'real-life-examples': pool = generateRLPool(); break;
         default: pool = generateIntroPool();
     }
 
@@ -197,21 +207,21 @@ const generateRLPool = () => [
 ];
 
 export const SKILL_LEARN_DATA = {
-    intro: {
+    introduction: {
         concept: "Geometry starts with simple building blocks: Points, Lines, and Angles.",
         rules: [
             { title: "The Point", f: ".", d: "A point is a location with no dimension. Point A is a dot.", ex: "Vertex of an angle is a point.", tip: "Think of it as a GPS coordinate!" },
             { title: "The Line", f: "\\leftrightarrow", d: "A line extends infinitely in both directions.", ex: "Line AB", tip: "It has no ends!" }
         ]
     },
-    lsr: {
+    'line-segment-ray': {
         concept: "Different types of straight paths have different names based on their endpoints.",
         rules: [
             { title: "Line Segment", f: "A \\rule{1cm}{0.4pt} B", d: "A part of a line with two endpoints. It has a fixed length.", ex: "Edge of a ruler.", tip: "You can measure a segment!" },
             { title: "Ray", f: "A \\rightarrow", d: "Starts at one point and goes forever in one direction.", ex: "Flashlight beam.", tip: "It has one starting point!" }
         ]
     },
-    lt: {
+    'line-types': {
         concept: "Lines can interact in three main ways.",
         rules: [
             { title: "Parallel Lines", f: "L_1 \\parallel L_2", d: "Lines that never meet, no matter how long they grow.", ex: "Railway tracks.", tip: "They stay 'socially distanced' forever!" },
@@ -219,7 +229,7 @@ export const SKILL_LEARN_DATA = {
             { title: "Perpendicular", f: "\\perp", d: "Lines that cross at a perfect $90^{\\circ}$ angle.", ex: "Corner of a paper.", tip: "Think of the letter 'L' or 'T'." }
         ]
     },
-    at: {
+    'angle-types': {
         concept: "Angles are classified by their measurement in degrees.",
         rules: [
             { title: "Acute Angle", f: "< 90^\\circ", d: "Smaller than a right angle ($0 < \\theta < 90$).", ex: "Slice of pizza.", tip: "Think of it as 'a-cute' (small) angle!" },
@@ -227,38 +237,38 @@ export const SKILL_LEARN_DATA = {
             { title: "Right Angle", f: "= 90^\\circ", d: "Exactly $90$ degrees. Formed by vertical and horizontal lines.", ex: "Wall meeting a floor.", tip: "Look for the small square symbol." }
         ]
     },
-    aa: {
+    'adjacent-angles': {
         concept: "Adjacent angles are side-by-side neighbors.",
         rules: [
             { title: "The Rules of Adjacency", f: "\\text{Common Vertex + Arm}", d: "They share a vertex and an arm, but no interior space.", ex: "Adjacent slices in a pie.", tip: "Neighbors share a wall!" }
         ]
     },
-    lp: {
+    'linear-pair': {
         concept: "A linear pair forms a straight line.",
         rules: [
             { title: "Linear Pair Rule", f: "\\angle 1 + \\angle 2 = 180^\\circ", d: "Two adjacent angles that form a straight line.", ex: "Angles on a flat table.", tip: "They are always supplementary!" }
         ]
     },
-    vo: {
+    'vertically-opposite': {
         concept: "Intersection creates equal opposite angles.",
         rules: [
             { title: "X Rule", f: "VO_1 = VO_2", d: "Angles opposite the vertex in an intersection are equal.", ex: "Scissors blades and handles.", tip: "Look for the 'X' shape!" }
         ]
     },
-    trans: {
+    'transversal-angles': {
         concept: "A transversal creates multiple equal angle pairs across parallel lines.",
         rules: [
             { title: "Corresponding", f: "F-\\text{shape}", d: "Angles in the same position are equal.", ex: "Angles on stairs.", tip: "Look for the letter 'F'." },
             { title: "Alternate Interior", f: "Z-\\text{shape}", d: "Inner angles on opposite sides are equal.", ex: "The joints in a zigzag.", tip: "Look for the letter 'Z'." }
         ]
     },
-    ap: {
+    'angles-at-point': {
         concept: "A point is the center of a full rotation.",
         rules: [
             { title: "Full Circle", f: "\\Sigma \\angle = 360^\\circ", d: "All angles around a central point add up to a full circle.", ex: "Clock face.", tip: "Think of a spinner!" }
         ]
     },
-    rl: {
+    'real-life-examples': {
         concept: "Geometry is everywhere in our daily life.",
         rules: [
             { title: "Spotting Angles", f: "\\text{World} \\rightarrow \\text{Geometry}", d: "From maps to architecture, lines and angles define structures.", ex: "Bridges, house roofs.", tip: "Look for shapes in your room!" }

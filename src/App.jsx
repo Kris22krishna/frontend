@@ -485,22 +485,12 @@ function App() {
           <Route path="integers/terminology" element={<ProtectedRoute redirectTo="/login"><IntegersTerminology /></ProtectedRoute>} />
           <Route path="integers/skills" element={<ProtectedRoute redirectTo="/login"><IntegersSkills /></ProtectedRoute>} />
 
-          {/* Grade 6 - Lines and Angles */}
-          <Route path="middle/grade/6/lines-and-angles/hub" element={<LinesAndAnglesHub />} />
-          <Route path="middle/grade/6/lines-and-angles/introduction-hub" element={<LinesAndAnglesIntro />} />
+          {/* Lines and Angles */}
+          <Route path="middle/grade/6/lines-and-angles" element={<LinesAndAngles />} />
+          <Route path="middle/grade/6/lines-and-angles/introduction" element={<LinesAndAnglesIntro5W1H />} />
           <Route path="middle/grade/6/lines-and-angles/terminology" element={<LinesAndAnglesTerminology />} />
-          <Route path="middle/grade/6/lines-and-angles/skills" element={<LinesAndAnglesSkillsSelection />} />
-
-          <Route path="middle/grade/6/lines-and-angles/introduction" element={<Introduction />} />
-          <Route path="middle/grade/6/lines-and-angles/line-segment-ray" element={<LineSegmentRay />} />
-          <Route path="middle/grade/6/lines-and-angles/line-types" element={<LineTypes />} />
-          <Route path="middle/grade/6/lines-and-angles/angle-types" element={<AngleTypes />} />
-          <Route path="middle/grade/6/lines-and-angles/adjacent-angles" element={<AdjacentAngles />} />
-          <Route path="middle/grade/6/lines-and-angles/linear-pair" element={<LinearPair />} />
-          <Route path="middle/grade/6/lines-and-angles/vertically-opposite" element={<VerticallyOpposite />} />
-          <Route path="middle/grade/6/lines-and-angles/transversal-angles" element={<TransversalAngles />} />
-          <Route path="middle/grade/6/lines-and-angles/angles-at-point" element={<AnglesAtPoint />} />
-          <Route path="middle/grade/6/lines-and-angles/real-life-examples" element={<RealLifeExamples />} />
+          <Route path="middle/grade/6/lines-and-angles/skills" element={<LinesAndAnglesSkills />} />
+          <Route path="middle/grade/6/lines-and-angles/:topic" element={<LinesAndAnglesTopicProxy />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />

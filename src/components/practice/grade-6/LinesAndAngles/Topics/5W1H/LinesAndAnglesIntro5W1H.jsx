@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../linesAndAnglesHub.css';
-import MathRenderer from '@/components/MathRenderer';
+import '../../LinesAndAngles.css';
+import MathRenderer from '../../../../../MathRenderer';
+import { ChevronRight, ArrowLeft } from 'lucide-react';
 
 const cards5W1H = [
     {
@@ -127,58 +128,42 @@ function W1HCard({ card }) {
     );
 }
 
-export default function LinesAndAnglesIntro() {
+export default function LinesAndAnglesIntro5W1H() {
     const navigate = useNavigate();
 
     return (
         <div className="intro-page">
-            <nav className="intro-nav">
+            <nav className="matrices-chapter-header" style={{ padding: '20px 40px', background: '#fff', borderBottom: '1px solid #E2E8F0' }}>
                 <button
-                    className="intro-nav-back"
-                    onClick={() => navigate('/middle/grade/6/lines-and-angles/hub')}
+                    className="matrices-back-btn"
+                    onClick={() => navigate('/middle/grade/6/lines-and-angles')}
                 >
-                    ← Back to Lines & Angles
+                    <ArrowLeft size={18} /> Back to Chapter
                 </button>
-                <div className="intro-nav-links">
-                    <button
-                        className="intro-nav-link intro-nav-link--active"
-                        onClick={() => navigate('/middle/grade/6/lines-and-angles/introduction-hub')}
-                    >
-                        🌟 Introduction
-                    </button>
-                    <button
-                        className="intro-nav-link"
-                        onClick={() => navigate('/middle/grade/6/lines-and-angles/terminology')}
-                    >
-                        📖 Terminology
-                    </button>
-                    <button
-                        className="intro-nav-link"
-                        onClick={() => navigate('/middle/grade/6/lines-and-angles/skills')}
-                    >
-                        🎯 Skills
-                    </button>
-                </div>
+                <h1 style={{ fontSize: '1.2rem', margin: 0 }}>Fundamental Concept</h1>
             </nav>
-            <div className="intro-hero" style={{ padding: '16px 24px 20px' }}>
-                <div className="intro-hero-deco intro-hero-deco-a" />
-                <div className="intro-hero-deco intro-hero-deco-b" />
-                <div className="intro-hero-inner">
-                    <h1 className="intro-hero-title">
-                        Discover Geometry Through <span className="intro-hero-highlight">6 Big Questions</span>
-                    </h1>
-                    <p className="intro-hero-sub">Tap each card to explore ✨</p>
-                </div>
+            <div className="intro-hero" style={{ padding: '40px 24px', textAlign: 'center' }}>
+                <h1 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#1E293B', marginBottom: 16 }}>
+                    Discover Lines and Angles Through <span style={{ color: '#4F46E5' }}>6 Big Questions</span>
+                </h1>
+                <p style={{ fontSize: '1.2rem', color: '#64748B' }}>Tap each card to explore ✨</p>
             </div>
-            <div className="intro-content" style={{ padding: '10px 24px 20px' }}>
-                <div className="intro-grid">
+            <div className="intro-content" style={{ padding: '10px 24px 60px', maxWidth: 1000, margin: '0 auto' }}>
+                <div className="intro-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
                     {cards5W1H.map((card, idx) => (
                         <W1HCard key={idx} card={card} />
                     ))}
                 </div>
-                <div className="intro-cta-strip">
-                    <p className="intro-cta-sub" style={{ margin: 0 }}>Ready to master the terminology?</p>
-                    <button className="intro-cta-btn" onClick={() => navigate('/middle/grade/6/lines-and-angles/terminology')}>Terminology →</button>
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                    <p style={{ fontSize: '1.1rem', color: '#64748B', marginBottom: 16 }}>Ready to master the terminology?</p>
+                    <button
+                        onClick={() => navigate('/middle/grade/6/lines-and-angles/terminology')}
+                        style={{
+                            padding: '14px 32px', background: '#4F46E5', color: '#fff', border: 'none', borderRadius: 12, fontWeight: 800, cursor: 'pointer', fontSize: '1.1rem', boxShadow: '0 4px 14px rgba(79, 70, 229, 0.4)'
+                        }}
+                    >
+                        Terminology & Rules →
+                    </button>
                 </div>
             </div>
         </div>

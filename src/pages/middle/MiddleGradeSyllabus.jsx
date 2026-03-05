@@ -1129,6 +1129,13 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: 'prime-factorisation-6', skill_name: 'Prime Factorisation', topic: 'Prime Time', path: '/middle/grade/6/prime-time/prime-factorisation' }
             ]
         };
+        skillsByTopic['Lines and Angles'] = {
+            'Skills': [
+                { skill_id: '6101', skill_name: 'Introduction', topic: 'Lines and Angles', path: '/middle/grade/6/lines-and-angles/introduction' },
+                { skill_id: '6102', skill_name: 'Terminology', topic: 'Lines and Angles', path: '/middle/grade/6/lines-and-angles/terminology' },
+                { skill_id: '6103', skill_name: 'Skills & Practice', topic: 'Lines and Angles', path: '/middle/grade/6/lines-and-angles/skills' }
+            ]
+        };
     }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
