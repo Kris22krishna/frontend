@@ -254,6 +254,24 @@ import SubtractionOfIntegers from './components/practice/grade-6/the-other-side-
 import WordProblemsIntegers from './components/practice/grade-6/the-other-side-of-zero/WordProblemsIntegers';
 import NumberLineRepresentation from './components/practice/grade-6/the-other-side-of-zero/NumberLineRepresentation';
 
+// Grade 6 Lines and Angles
+import Introduction from './components/practice/grade-6/Lines and Angles/Introduction';
+import LineSegmentRay from './components/practice/grade-6/Lines and Angles/LineSegmentRay';
+import LineTypes from './components/practice/grade-6/Lines and Angles/LineTypes';
+import AngleTypes from './components/practice/grade-6/Lines and Angles/AngleTypes';
+import AdjacentAngles from './components/practice/grade-6/Lines and Angles/AdjacentAngles';
+import LinearPair from './components/practice/grade-6/Lines and Angles/LinearPair';
+import VerticallyOpposite from './components/practice/grade-6/Lines and Angles/VerticallyOpposite';
+import TransversalAngles from './components/practice/grade-6/Lines and Angles/TransversalAngles';
+import AnglesAtPoint from './components/practice/grade-6/Lines and Angles/AnglesAtPoint';
+import RealLifeExamples from './components/practice/grade-6/Lines and Angles/RealLifeExamples';
+
+// Lines and Angles Hub Components
+import LinesAndAnglesHub from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesHub';
+import LinesAndAnglesIntro from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesIntro';
+import LinesAndAnglesTerminology from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesTerminology';
+import LinesAndAnglesSkillsSelection from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesSkills';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -466,6 +484,23 @@ function App() {
           <Route path="integers/introduction" element={<ProtectedRoute redirectTo="/login"><IntegersIntro /></ProtectedRoute>} />
           <Route path="integers/terminology" element={<ProtectedRoute redirectTo="/login"><IntegersTerminology /></ProtectedRoute>} />
           <Route path="integers/skills" element={<ProtectedRoute redirectTo="/login"><IntegersSkills /></ProtectedRoute>} />
+
+          {/* Grade 6 - Lines and Angles */}
+          <Route path="middle/grade/6/lines-and-angles/hub" element={<LinesAndAnglesHub />} />
+          <Route path="middle/grade/6/lines-and-angles/introduction-hub" element={<LinesAndAnglesIntro />} />
+          <Route path="middle/grade/6/lines-and-angles/terminology" element={<LinesAndAnglesTerminology />} />
+          <Route path="middle/grade/6/lines-and-angles/skills" element={<LinesAndAnglesSkillsSelection />} />
+
+          <Route path="middle/grade/6/lines-and-angles/introduction" element={<Introduction />} />
+          <Route path="middle/grade/6/lines-and-angles/line-segment-ray" element={<LineSegmentRay />} />
+          <Route path="middle/grade/6/lines-and-angles/line-types" element={<LineTypes />} />
+          <Route path="middle/grade/6/lines-and-angles/angle-types" element={<AngleTypes />} />
+          <Route path="middle/grade/6/lines-and-angles/adjacent-angles" element={<AdjacentAngles />} />
+          <Route path="middle/grade/6/lines-and-angles/linear-pair" element={<LinearPair />} />
+          <Route path="middle/grade/6/lines-and-angles/vertically-opposite" element={<VerticallyOpposite />} />
+          <Route path="middle/grade/6/lines-and-angles/transversal-angles" element={<TransversalAngles />} />
+          <Route path="middle/grade/6/lines-and-angles/angles-at-point" element={<AnglesAtPoint />} />
+          <Route path="middle/grade/6/lines-and-angles/real-life-examples" element={<RealLifeExamples />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />

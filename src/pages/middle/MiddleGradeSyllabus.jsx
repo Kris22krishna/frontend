@@ -165,8 +165,59 @@ const MiddleGradeSyllabus = () => {
                 }
             }
 
+            if (lowerTopic.includes('lines and angles')) {
+                if (lowerSkillName.includes('intro')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/introduction`);
+                    return;
+                }
+                if (lowerSkillName.includes('segment')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/line-segment-ray`);
+                    return;
+                }
+                if (lowerSkillName.includes('types of lines')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/line-types`);
+                    return;
+                }
+                if (lowerSkillName.includes('types of angles')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/angle-types`);
+                    return;
+                }
+                if (lowerSkillName.includes('adjacent')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/adjacent-angles`);
+                    return;
+                }
+                if (lowerSkillName.includes('linear pair')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/linear-pair`);
+                    return;
+                }
+                if (lowerSkillName.includes('vertically opposite')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/vertically-opposite`);
+                    return;
+                }
+                if (lowerSkillName.includes('transversal')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/transversal-angles`);
+                    return;
+                }
+                if (lowerSkillName.includes('at a point')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/angles-at-point`);
+                    return;
+                }
+                if (lowerSkillName.includes('real life')) {
+                    navigate(`/middle/grade/${grade}/lines-and-angles/real-life-examples`);
+                    return;
+                }
+                // Default to Hub for any other skill in this topic
+                navigate(`/middle/grade/${grade}/lines-and-angles/hub`);
+                return;
+            }
+
             if (lowerTopic.includes('the other side of zero')) {
-                navigate(`/integers`);
+                navigate(`/middle/grade/6/the-other-side-of-zero/integers`);
+                return;
+            }
+
+            if (lowerTopic.includes('lines and angles')) {
+                navigate(`/middle/grade/6/lines-and-angles/hub`);
                 return;
             }
 
@@ -198,6 +249,22 @@ const MiddleGradeSyllabus = () => {
                 const gradeNum = grade.replace('grade', '');
                 const response = await api.getSkills(gradeNum);
                 let fetched = response || [];
+
+                if (gradeNum === '6') {
+                    fetched = [
+                        ...fetched,
+                        { skill_id: '2001', skill_name: 'Introduction to Lines and Angles', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/introduction' },
+                        { skill_id: '2002', skill_name: 'Line, Line Segment and Ray', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/line-segment-ray' },
+                        { skill_id: '2003', skill_name: 'Types of Lines', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/line-types' },
+                        { skill_id: '2004', skill_name: 'Types of Angles', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/angle-types' },
+                        { skill_id: '2005', skill_name: 'Adjacent Angles', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/adjacent-angles' },
+                        { skill_id: '2006', skill_name: 'Linear Pair of Angles', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/linear-pair' },
+                        { skill_id: '2007', skill_name: 'Vertically Opposite Angles', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/vertically-opposite' },
+                        { skill_id: '2008', skill_name: 'Angles formed by a Transversal', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/transversal-angles' },
+                        { skill_id: '2009', skill_name: 'Angles at a Point', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/angles-at-point' },
+                        { skill_id: '2010', skill_name: 'Real Life Examples', topic: 'Lines and Angles', sub_topic: 'Main', isLocal: true, path: '/middle/grade/6/lines-and-angles/real-life-examples' }
+                    ];
+                }
 
                 if (gradeNum === '7') {
                     fetched = [
@@ -558,7 +625,7 @@ const MiddleGradeSyllabus = () => {
 
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
-        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "the other side of zero", "prime time"].some(t => topicName.includes(t))) return acc;
+        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "the other side of zero", "prime time", "lines and angles"].some(t => topicName.includes(t))) return acc;
         if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area") return acc;
         if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
 
@@ -1109,8 +1176,14 @@ const MiddleGradeSyllabus = () => {
                             'the other side of zero': {
                                 title: 'The Other Side of Zero',
                                 subtitle: 'Integers, Negatives & More',
-                                path: '/integers',
+                                path: '/middle/grade/6/the-other-side-of-zero/integers',
                                 background: 'linear-gradient(135deg, #a5b4fc 0%, #818cf8 100%)'
+                            },
+                            'lines and angles': {
+                                title: 'Lines and Angles',
+                                subtitle: 'Geometry, Lines & Measurements',
+                                path: '/middle/grade/6/lines-and-angles/hub',
+                                background: 'linear-gradient(135deg, #9333ea 0%, #7c3aed 100%)'
                             }
                         };
 
