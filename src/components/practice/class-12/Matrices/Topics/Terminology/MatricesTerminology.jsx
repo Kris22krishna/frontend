@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Matrices.css";
 import MathRenderer from "../../../../../MathRenderer";
@@ -305,6 +305,10 @@ const VOCAB_QUIZ = [
 
 export default function MatricesTerminology() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Tabs state
   const [activeTab, setActiveTab] = useState("terms");

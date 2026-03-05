@@ -1,26 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
 import {
-  fundamentalsQuestions,
-  fundamentalsAssessment,
-  propertiesQuestions,
-  propertiesAssessment,
-  areaQuestions,
-  areaAssessment,
-  minorCofactorQuestions,
-  minorCofactorAssessment,
-  adjointInverseQuestions,
-  adjointInverseAssessment,
-  applicationsQuestions,
-  applicationsAssessment,
+  generateFundamentalsQuestions,
+  generateFundamentalsAssessment,
+  generatePropertiesQuestions,
+  generatePropertiesAssessment,
+  generateAreaQuestions,
+  generateAreaAssessment,
+  generateMinorCofactorQuestions,
+  generateMinorCofactorAssessment,
+  generateAdjointInverseQuestions,
+  generateAdjointInverseAssessment,
+  generateApplicationsQuestions,
+  generateApplicationsAssessment,
 } from "./determinantQuestions";
 
 import QuizEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine";
 import AssessmentEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine";
-import CategorizedPracticeEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/CategorizedPracticeEngine";
+
 
 
 // ─── SKILLS DATA ───────────────────────────────────────────────────────────
@@ -32,8 +32,8 @@ const SKILLS = [
     icon: "🔢",
     color: "#6366f1",
     desc: "Evaluate 2×2 and 3×3 determinants, understand the expansion method.",
-    practice: fundamentalsQuestions,
-    assessment: fundamentalsAssessment,
+    practice: generateFundamentalsQuestions,
+    assessment: generateFundamentalsAssessment,
     learn: {
       concept:
         "A determinant is a scalar value uniquely associated with every square matrix. It reveals invertibility, scaling, and solvability.",
@@ -76,8 +76,8 @@ const SKILLS = [
     icon: "📐",
     color: "#0891b2",
     desc: "Master scalar multiplication, product rule, row operations, and more.",
-    practice: propertiesQuestions,
-    assessment: propertiesAssessment,
+    practice: generatePropertiesQuestions,
+    assessment: generatePropertiesAssessment,
     learn: {
       concept:
         "Determinants have elegant properties that simplify computation and reveal matrix behavior.",
@@ -120,8 +120,8 @@ const SKILLS = [
     icon: "📐",
     color: "#f59e0b",
     desc: "Compute triangle area, test collinearity, and derive line equations using determinants.",
-    practice: areaQuestions,
-    assessment: areaAssessment,
+    practice: generateAreaQuestions,
+    assessment: generateAreaAssessment,
     learn: {
       concept:
         "Determinants connect algebra to geometry — they compute areas, test collinearity, and give line equations.",
@@ -157,8 +157,8 @@ const SKILLS = [
     icon: "✂️",
     color: "#ec4899",
     desc: "Find minors, cofactors, and understand the zero-sum property.",
-    practice: minorCofactorQuestions,
-    assessment: minorCofactorAssessment,
+    practice: generateMinorCofactorQuestions,
+    assessment: generateMinorCofactorAssessment,
     learn: {
       concept:
         "Minors and cofactors are the building blocks of determinant expansion and the adjoint matrix.",
@@ -201,8 +201,8 @@ const SKILLS = [
     icon: "🔓",
     color: "#7c3aed",
     desc: "Compute adjoint, find inverse using the adjoint method, and verify properties.",
-    practice: adjointInverseQuestions,
-    assessment: adjointInverseAssessment,
+    practice: generateAdjointInverseQuestions,
+    assessment: generateAdjointInverseAssessment,
     learn: {
       concept:
         "The adjoint matrix is the bridge between a matrix and its inverse. Master this to solve any invertible system.",
@@ -245,8 +245,8 @@ const SKILLS = [
     icon: "⚡",
     color: "#059669",
     desc: "Solve linear systems using determinants, test consistency, apply Cramer's Rule.",
-    practice: applicationsQuestions,
-    assessment: applicationsAssessment,
+    practice: generateApplicationsQuestions,
+    assessment: generateApplicationsAssessment,
     learn: {
       concept:
         "Determinants are the key to solving systems of linear equations, determining consistency, and applying Cramer's Rule.",
@@ -288,6 +288,11 @@ const SKILLS = [
 export default function DeterminantsSkills() {
   const navigate = useNavigate();
   const [view, setView] = useState("list");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [activeSkill, setActiveSkill] = useState(null);
   const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
@@ -649,12 +654,18 @@ export default function DeterminantsSkills() {
                 </main>
               </div>
             </div>
-          ) : (
+          ) : view === "practice" ? (
             <QuizEngine
-              questions={
-                view === "practice" ? skill.practice : skill.assessment
-              }
-              title={`${view === "practice" ? "Practice" : "Assessment"}: ${skill.title}`}
+              questions={skill.practice}
+              title={`Practice: ${skill.title}`}
+              onBack={() => setView("list")}
+              color={skill.color}
+              prefix="det"
+            />
+          ) : (
+            <AssessmentEngine
+              questions={skill.assessment}
+              title={`Assessment: ${skill.title}`}
               onBack={() => setView("list")}
               color={skill.color}
               prefix="det"

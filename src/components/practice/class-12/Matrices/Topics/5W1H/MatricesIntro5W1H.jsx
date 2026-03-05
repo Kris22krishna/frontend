@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Matrices.css";
 import MathRenderer from "../../../../../MathRenderer";
@@ -149,6 +149,10 @@ function W1HCard({ card }) {
 /* ─── Main page ───────────────────────────────────── */
 export default function MatricesIntro5W1H() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="mat-intro-page">

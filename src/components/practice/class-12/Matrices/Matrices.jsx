@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import "./Matrices.css";
 
 const MODULES = [
@@ -50,7 +51,44 @@ export default function Matrices() {
   const navigate = useNavigate();
 
   return (
-    <div className="mat-fullpage">
+    <div className="mat-fullpage" style={{ position: "relative" }}>
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/senior/grade/12")}
+        style={{
+          position: "absolute",
+          top: "24px",
+          left: "24px",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          background: "rgba(255, 255, 255, 0.9)",
+          color: "#1E293B",
+          border: "1px solid #E2E8F0",
+          padding: "8px 16px",
+          borderRadius: "12px",
+          fontWeight: "600",
+          fontSize: "0.9rem",
+          cursor: "pointer",
+          zIndex: 50,
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          backdropFilter: "blur(12px)",
+          transition: "all 0.2s ease"
+        }}
+        onMouseOver={(e) => {
+          e.currentTarget.style.background = "#fff";
+          e.currentTarget.style.transform = "translateY(-1px)";
+          e.currentTarget.style.boxShadow = "0 6px 8px -1px rgba(0, 0, 0, 0.15)";
+        }}
+        onMouseOut={(e) => {
+          e.currentTarget.style.background = "rgba(255, 255, 255, 0.9)";
+          e.currentTarget.style.transform = "translateY(0)";
+          e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
+        }}
+      >
+        <ArrowLeft size={18} /> Back to Grade 12
+      </button>
+
       {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
       <div className="mat-left">
         {/* Decorative circles */}

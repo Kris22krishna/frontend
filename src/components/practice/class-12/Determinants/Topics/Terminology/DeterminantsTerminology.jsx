@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
@@ -286,6 +286,11 @@ const VOCAB_QUIZ = [
 
 export default function DeterminantsTerminology() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [activeTab, setActiveTab] = useState("terms");
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [selectedRuleIdx, setSelectedRuleIdx] = useState(0);

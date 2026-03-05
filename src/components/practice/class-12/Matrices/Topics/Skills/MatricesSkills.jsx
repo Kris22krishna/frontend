@@ -1,26 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Matrices.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
 import {
-  orderQuestions,
-  orderAssessment,
-  typesQuestions,
-  typesAssessment,
-  operationsQuestions,
-  operationsAssessment,
-  multiplicationQuestions,
-  multiplicationAssessment,
-  transposeQuestions,
-  transposeAssessment,
-  inverseQuestions,
-  inverseAssessment,
+  generateOrderQuestions,
+  generateOrderAssessment,
+  generateTypesQuestions,
+  generateTypesAssessment,
+  generateOperationsQuestions,
+  generateOperationsAssessment,
+  generateMultiplicationQuestions,
+  generateMultiplicationAssessment,
+  generateTransposeQuestions,
+  generateTransposeAssessment,
+  generateInverseQuestions,
+  generateInverseAssessment,
 } from "./matrixQuestions";
 
 import QuizEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine";
 import AssessmentEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine";
-import CategorizedPracticeEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/CategorizedPracticeEngine";
+
+
 
 
 // ─── SKILLS DATA ───────────────────────────────────────────────────────────
@@ -32,8 +33,8 @@ const SKILLS = [
     icon: "📏",
     color: "#6366f1",
     desc: "Identify rows, columns, elements, and order of any matrix.",
-    practice: orderQuestions,
-    assessment: orderAssessment,
+    practice: generateOrderQuestions,
+    assessment: generateOrderAssessment,
     learn: {
       concept:
         "Understanding order is the first step to working with matrices. Every matrix is described by its rows × columns dimensions.",
@@ -76,8 +77,8 @@ const SKILLS = [
     icon: "⬜",
     color: "#0891b2",
     desc: "Classify matrices: square, diagonal, identity, symmetric, and more.",
-    practice: typesQuestions,
-    assessment: typesAssessment,
+    practice: generateTypesQuestions,
+    assessment: generateTypesAssessment,
     learn: {
       concept:
         "Matrices come in many types based on their structure and the arrangement of their elements.",
@@ -127,8 +128,8 @@ const SKILLS = [
     icon: "➕",
     color: "#f59e0b",
     desc: "Add, subtract, and scale matrices element-wise.",
-    practice: operationsQuestions,
-    assessment: operationsAssessment,
+    practice: generateOperationsQuestions,
+    assessment: generateOperationsAssessment,
     learn: {
       concept:
         "Matrix addition and scalar multiplication are element-wise operations — simple but with important rules about matching orders.",
@@ -171,8 +172,8 @@ const SKILLS = [
     icon: "✖️",
     color: "#ec4899",
     desc: "Multiply matrices using dot products of rows and columns.",
-    practice: multiplicationQuestions,
-    assessment: multiplicationAssessment,
+    practice: generateMultiplicationQuestions,
+    assessment: generateMultiplicationAssessment,
     learn: {
       concept:
         "Matrix multiplication combines rows of the first matrix with columns of the second using dot products. Order matters!",
@@ -215,8 +216,8 @@ const SKILLS = [
     icon: "🔄",
     color: "#7c3aed",
     desc: "Master transpose operations, symmetric and skew-symmetric decomposition.",
-    practice: transposeQuestions,
-    assessment: transposeAssessment,
+    practice: generateTransposeQuestions,
+    assessment: generateTransposeAssessment,
     learn: {
       concept:
         "The transpose flips a matrix over its main diagonal, swapping rows and columns. It has elegant properties.",
@@ -259,8 +260,8 @@ const SKILLS = [
     icon: "🔓",
     color: "#059669",
     desc: "Determine invertibility, properties of matrix inverses.",
-    practice: inverseQuestions,
-    assessment: inverseAssessment,
+    practice: generateInverseQuestions,
+    assessment: generateInverseAssessment,
     learn: {
       concept:
         'A matrix inverse "undoes" multiplication. Only square matrices with non-zero determinants are invertible.',
@@ -302,6 +303,11 @@ const SKILLS = [
 export default function MatricesSkills() {
   const navigate = useNavigate();
   const [view, setView] = useState("list");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [activeSkill, setActiveSkill] = useState(null);
   const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
@@ -664,12 +670,18 @@ export default function MatricesSkills() {
                 </main>
               </div>
             </div>
-          ) : (
+          ) : view === "practice" ? (
             <QuizEngine
-              questions={
-                view === "practice" ? skill.practice : skill.assessment
-              }
-              title={`${view === "practice" ? "Practice" : "Assessment"}: ${skill.title}`}
+              questions={skill.practice}
+              title={`Practice: ${skill.title}`}
+              onBack={() => setView("list")}
+              color={skill.color}
+              prefix="mat"
+            />
+          ) : (
+            <AssessmentEngine
+              questions={skill.assessment}
+              title={`Assessment: ${skill.title}`}
               onBack={() => setView("list")}
               color={skill.color}
               prefix="mat"
