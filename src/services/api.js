@@ -183,6 +183,13 @@ export const api = {
         return handleResponse(response);
     },
 
+    getStudentDashboardAnalytics: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/student/dashboard-analytics`, {
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
     // --- Skills ---
     getSkills: async (grade) => {
         const params = new URLSearchParams();
