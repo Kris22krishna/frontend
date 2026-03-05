@@ -83,9 +83,9 @@ const KEY_IDEAS = [
         rules: [
             { title: 'What is a Linear Graph?', f: 'y = mx + c → Straight line', d: 'A linear graph is a straight-line graph. When two quantities are in a linear relationship (like y = 2x or y = x + 3), their graph is always a straight line.', ex: 'y = 3x gives points: (0,0), (1,3), (2,6), (3,9) — connect them to get a straight line.', tip: 'Always plot at least 3 points to confirm the line is straight.', chart: LinearGraphChart },
             { title: 'Plotting from a Table', f: 'Table of values → Graph', d: 'Create a table of (x, y) values from the equation, plot each ordered pair on the grid, and join them with a straight line.', ex: 'For y = 2x: (0,0), (1,2), (2,4), (3,6) — plot and join.', tip: 'Choose simple values for x (like 0, 1, 2, 3) to make calculations easy.', chart: CoordinateGridChart },
-            { title: 'Distance–Time Relationship', f: 'Distance ∝ Time (constant speed)', d: 'When an object moves at constant speed, distance and time are directly proportional: d = s × t. This produces a straight-line graph through the origin.', ex: 'Car at 60 km/h: after 1h → 60 km, 2h → 120 km, 3h → 180 km. Straight line!', tip: 'Steeper slope = faster speed. A horizontal line means the object is stopped.', chart: LinearGraphChart },
-            { title: 'Perimeter of Squares', f: 'P = 4 × side', d: 'Perimeter of a square grows linearly with its side length. Plotting P vs. side gives a straight line showing the linear relationship.', ex: 'Side 1 → P = 4, Side 2 → P = 8, Side 3 → P = 12. Straight line graph!', tip: 'The slope of the line equals 4 (the multiplying factor).', chart: LinearGraphChart },
-            { title: 'Reading the Slope (Steepness)', f: 'Steeper = Faster rate of change', d: 'The steepness (slope) of a linear graph tells you the rate of change. A steeper line means the quantity changes more quickly per unit on the X-axis.', ex: 'y = 4x rises faster than y = 2x — both start at origin but y = 4x climbs more steeply.', tip: 'Compare two linear graphs on the same grid to see which increases faster.', chart: LinearGraphChart },
+            { title: 'Quantity vs Cost', f: 'Cost = Price × Quantity', d: 'When the price per unit is fixed, cost and quantity are in direct proportion. The graph of Cost vs. Quantity is a straight line through the origin. The slope equals the price per unit.', ex: 'Apples at ₹5 each: 1→₹5, 2→₹10, 3→₹15, 4→₹20, 5→₹25. Connect the points — a perfect straight line!', tip: 'Steeper line = higher price per unit. Two products on the same axes — the steeper line is more expensive.', chart: LinearGraphChart },
+            { title: 'Simple Interest vs Principal', f: 'SI = (P × R × T) ÷ 100', d: 'For a fixed rate and time, Simple Interest is directly proportional to the Principal. Plotting SI vs. Principal gives a straight line through the origin.', ex: 'At 8% for 1 year: ₹1000→₹80, ₹2000→₹160, ₹3000→₹240, ₹4000→₹320. Straight line through origin!', tip: 'The graph always passes through (0, 0) — ₹0 deposited earns ₹0 interest. Slope = Rate × Time ÷ 100.', chart: LinearGraphChart },
+            { title: 'Time and Distance', f: 'Distance = Speed × Time', d: 'When speed is constant, distance and time are directly proportional. The graph of Distance vs. Time is a straight line. The slope of the line equals the speed.', ex: 'Car at 40 km/h: 1hr→40km, 2hr→80km, 3hr→120km, 4hr→160km. Straight line, slope = 40.', tip: 'Steeper slope = faster speed. A flat (horizontal) line means the object has stopped moving.', chart: LinearGraphChart },
         ],
     },
 ];
@@ -254,7 +254,7 @@ export default function GraphsTerminology() {
                 <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px' }}>
                     Line Graphs <span style={{ color: '#4f46e5' }}>Vocabulary</span>
                 </h1>
-              
+
             </div>
 
             {/* ── TABS ────────────────────────────────── */}
@@ -270,7 +270,7 @@ export default function GraphsTerminology() {
             {/* ── TAB: KEY TERMS ──────────────────────── */}
             {tab === 'terms' && (
                 <div className="grph-section">
-                  
+
                     <div className="grph-learn-grid">
                         {/* Sidebar */}
                         <aside className="grph-learn-sidebar">
@@ -333,7 +333,7 @@ export default function GraphsTerminology() {
             {/* ── TAB: KEY IDEAS ──────────────────────── */}
             {tab === 'ideas' && (
                 <div className="grph-section">
-                 
+
                     {/* Idea selector */}
                     <div style={{ display: 'flex', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
                         {KEY_IDEAS.map((idea, idx) => (
@@ -410,7 +410,7 @@ export default function GraphsTerminology() {
             {/* ── TAB: QUIZ ───────────────────────────── */}
             {tab === 'quiz' && (
                 <div className="grph-section">
-                    
+
                     <QuizEngine onBack={() => setTab('terms')} />
                 </div>
             )}

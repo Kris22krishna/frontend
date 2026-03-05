@@ -235,6 +235,42 @@ function genXIntercept() {
     };
 }
 
+function genQuantityCost() {
+    const price = rand(3, 12);
+    const qty = rand(3, 8);
+    const cost = price * qty;
+    return {
+        question: `Each notebook costs ₹${price}. Using C = ${price}q, what is the total cost of ${qty} notebooks?`,
+        options: [`₹${cost - price}`, `₹${cost}`, `₹${cost + price}`, `₹${price + qty}`],
+        correct: 1,
+        explanation: `C = ${price} × ${qty} = ₹${cost}. The Cost–Quantity graph is a straight line with slope = ₹${price} per notebook.`
+    };
+}
+
+function genSimpleInterest() {
+    const principal = rand(1, 8) * 500;
+    const rate = rand(5, 15);
+    const si = Math.round((principal * rate) / 100);
+    return {
+        question: `Find the Simple Interest on ₹${principal} at ${rate}% per annum for 1 year. (SI = P × R × T ÷ 100)`,
+        options: [`₹${si - rate}`, `₹${si}`, `₹${si + rate}`, `₹${principal / 10}`],
+        correct: 1,
+        explanation: `SI = ${principal} × ${rate} × 1 ÷ 100 = ₹${si}. Plotting SI vs. Principal at a fixed rate gives a straight line through origin.`
+    };
+}
+
+function genTimeDistanceNew() {
+    const speed = rand(20, 60);
+    const time = rand(2, 5);
+    const dist = speed * time;
+    return {
+        question: `A cyclist rides at ${speed} km/h. How far does she travel in ${time} hours? (d = ${speed}t)`,
+        options: [`${dist - speed} km`, `${dist} km`, `${dist + speed} km`, `${speed + time} km`],
+        correct: 1,
+        explanation: `d = ${speed} × ${time} = ${dist} km. The Distance–Time graph is a straight line with slope = speed = ${speed} km/h.`
+    };
+}
+
 // ─── STATIC QUESTION BANKS ────────────────────────────────────────────────────
 // Fixed conceptual questions that don't need dynamic numbers
 
@@ -257,19 +293,21 @@ const lineGraphStaticAssessment = [
 ];
 
 const linearGraphStaticPractice = [
-    { question: 'The graph of y = x is a straight line that passes through:', options: ['(1,0) and (0,1)', 'Origin (0,0) and (2,2)', '(1,2) and (2,1)', '(0,1) and (1,0)'], correct: 1, explanation: 'y = x means every y-value equals x. (0,0), (1,1), (2,2) all lie on this line.' },
-    { question: 'A car travels at constant speed. Its distance-time graph is:', options: ['A curve', 'A horizontal line', 'A straight line through the origin', 'A vertical line'], correct: 2, explanation: 'Constant speed means d = speed × t — a linear equation. Its graph is a straight line through the origin.' },
-    { question: 'Why does a steeper line on a distance-time graph indicate faster speed?', options: ['Steeper means more distance per unit of time', 'Steeper means the car started earlier', 'Steeper means the car is slowing down', 'Steeper means fewer stops'], correct: 0, explanation: 'Slope = distance ÷ time = speed. A steeper slope = more distance per time = faster speed.' },
-    { question: 'Two quantities are in direct proportion if their graph is:', options: ['A curve through origin', 'A straight line through the origin', 'Any straight line', 'A horizontal line'], correct: 1, explanation: 'Direct proportion means y = kx. This always gives a straight line through the origin (0,0).' },
-    { question: 'For the perimeter graph P = 4s, what is the gradient (slope) of the line?', options: ['1', '2', '4', 's'], correct: 2, explanation: 'P = 4s is in the form y = mx where m = 4. The slope is 4.' },
-    { question: 'To plot y = x + 2, which THREE points would you use?', options: ['(0,0), (1,1), (2,2)', '(0,2), (1,3), (2,4)', '(0,1), (1,2), (2,3)', '(2,0), (3,1), (4,2)'], correct: 1, explanation: 'y = x + 2: x=0→y=2, x=1→y=3, x=2→y=4. Points: (0,2), (1,3), (2,4).' },
-    { question: 'Which equation produces a LINEAR graph (straight line)?', options: ['y = x²', 'y = 1/x', 'y = 4x + 1', 'y = x³'], correct: 2, explanation: 'y = 4x + 1 is linear (highest power of x is 1). Its graph is a straight line.' },
+    { question: 'The graph of Cost vs. Quantity (at a fixed price per unit) is:', options: ['A parabola', 'A straight line through the origin', 'A curve that bends upward', 'A horizontal flat line'], correct: 1, explanation: 'Cost = Price × Quantity is a direct proportion. Its graph is always a straight line through the origin (0,0).' },
+    { question: 'For a fixed rate and time, the graph of Simple Interest vs. Principal is:', options: ['A curve', 'A horizontal line', 'A straight line through the origin', 'A vertical line'], correct: 2, explanation: 'SI = (P × R × T) ÷ 100. With fixed R and T, SI ∝ Principal — so the graph is a straight line through the origin.' },
+    { question: 'A steeper line on a Distance–Time graph means:', options: ['The object has stopped', 'Slower speed', 'Faster speed', 'The object is going backwards'], correct: 2, explanation: 'Slope of a Distance–Time graph = speed. A steeper slope = more distance per unit time = faster speed.' },
+    { question: 'Does the Cost–Quantity graph pass through the origin? Why?', options: ['No — cost is always positive', 'Yes — because 0 items costs ₹0', 'No — it starts at the price of 1 item', 'Yes — only for cheap items'], correct: 1, explanation: 'At quantity = 0, cost = 0. So (0, 0) is always on the graph — it passes through the origin.' },
+    { question: 'Which equation produces a LINEAR graph (straight line)?', options: ['y = x²', 'y = 1/x', 'y = 4x', 'y = x³'], correct: 2, explanation: 'y = 4x is a linear equation (highest power of x is 1). Its graph is always a straight line.' },
+    { question: 'For SI = 0.08 × P (8% for 1 year), what does the slope 0.08 represent?', options: ['The principal amount', 'Interest earned per ₹1 of principal', 'The total time', 'The rate squared'], correct: 1, explanation: 'Slope = SI ÷ P = Rate × Time ÷ 100 = 0.08. For every ₹1 deposited, ₹0.08 interest is earned.' },
+    { question: 'To plot the Distance–Time graph for a car at 40 km/h, which points are correct?', options: ['(0,0), (1,20), (2,40)', '(0,0), (1,40), (2,80), (3,120)', '(40,1), (80,2), (120,3)', '(0,40), (1,80), (2,120)'], correct: 1, explanation: 'd = 40t. At t=0: d=0, t=1: d=40, t=2: d=80, t=3: d=120. Origin (0,0) is included because at time 0, distance = 0.' },
 ];
 
 const linearGraphStaticAssessment = [
-    { question: 'The perimeter-side graph for equilateral triangles is P = 3s. For squares it is P = 4s. What changes?', options: ['The line starts at a different point', 'The slope increases from 3 to 4 — the square line is steeper', 'The line becomes curved', 'P decreases for same s'], correct: 1, explanation: 'P = 3s has slope 3; P = 4s has slope 4. The square line is steeper.' },
-    { question: 'A horizontal line on a distance-time graph means:', options: ['Fast constant speed', 'Object is moving backwards', 'Object has stopped (distance not changing)', 'Object is accelerating'], correct: 2, explanation: 'Horizontal line = zero slope = zero speed. The object is stationary.' },
-    { question: 'If y = kx passes through the origin, what must always be true?', options: ['k must equal 1', 'The graph is a straight line through (0,0)', 'y always equals x', 'k must be positive'], correct: 1, explanation: 'Any equation y = kx produces a straight line through the origin, regardless of the value of k.' },
+    { question: 'A Cost–Quantity graph for apples (₹5 each) is drawn. The cost of 3.5 apples from the graph is approximately:', options: ['₹15', '₹17.50', '₹20', '₹12.50'], correct: 1, explanation: 'At x = 3.5 apples on the graph: y = 5 × 3.5 = ₹17.50. Find 3.5 on X-axis → go up to line → read Y-axis.' },
+    { question: 'An interest graph shows Deposit (X) vs SI (Y) at 8% for 1 year. What is the SI for a deposit of ₹2500?', options: ['₹160', '₹200', '₹240', '₹220'], correct: 1, explanation: 'SI = 2500 × 8 ÷ 100 = ₹200. ₹2500 is midway between ₹2000 and ₹3000 on the graph, so SI reads ₹200.' },
+    { question: 'A Distance–Time graph for a car at 40 km/h is drawn. How far did the car travel between hour 1 and hour 3?', options: ['40 km', '80 km', '120 km', '160 km'], correct: 1, explanation: 'At hour 1: 40 km. At hour 3: 120 km. Distance covered = 120 − 40 = 80 km.' },
+    { question: 'The cost graph of Brand A (₹8/unit) is steeper than Brand B (₹5/unit). What does this show?', options: ['Brand A is cheaper', 'Brand B is more expensive per unit', 'Brand A costs more per unit — its cost rises faster', 'Both cost the same total'], correct: 2, explanation: 'A steeper slope on a Cost–Quantity graph = higher price per unit. Brand A (₹8/unit) is more expensive per item.' },
+    { question: 'On an interest-vs-principal graph, does the line pass through the origin?', options: ['No — interest starts from the rate amount', 'Yes — ₹0 principal earns ₹0 interest', 'No — it starts from the time value', 'Only if the rate is 0%'], correct: 1, explanation: 'SI = (0 × R × T) ÷ 100 = 0. When principal is ₹0, SI = ₹0. The graph passes through (0, 0).' },
 ];
 
 // ─── BUILD FULL QUESTION POOLS ────────────────────────────────────────────────
@@ -310,27 +348,24 @@ export function buildLineGraphAssessmentPool() {
 export function buildLinearGraphPracticePool() {
     return [
         ...linearGraphStaticPractice,
-        genLinearYValue(), genLinearYValue(), genLinearYValue(),
-        genDistanceTime(), genDistanceTime(), genDistanceTime(),
-        genPerimeterSquare(), genPerimeterSquare(),
+        genQuantityCost(), genQuantityCost(), genQuantityCost(),
+        genSimpleInterest(), genSimpleInterest(), genSimpleInterest(),
+        genTimeDistanceNew(), genTimeDistanceNew(), genTimeDistanceNew(),
+        genLinearYValue(), genLinearYValue(),
         genFindK(), genFindK(),
-        genSlopeCompare(), genSlopeCompare(),
+        genSlopeCompare(),
         genDirectProportion(),
-        genWaterTank(), genWaterTank(),
-        genXIntercept(), genXIntercept(),
     ];
 }
 
 export function buildLinearGraphAssessmentPool() {
     return [
         ...linearGraphStaticAssessment,
-        genLinearYValue(), genLinearYValue(),
-        genDistanceTime(), genDistanceTime(),
-        genPerimeterSquare(),
-        genFindK(), genFindK(),
+        genQuantityCost(), genQuantityCost(),
+        genSimpleInterest(), genSimpleInterest(),
+        genTimeDistanceNew(), genTimeDistanceNew(),
+        genLinearYValue(),
+        genFindK(),
         genSlopeCompare(),
-        genWaterTank(),
-        genXIntercept(),
-        genDirectProportion(),
     ];
 }
