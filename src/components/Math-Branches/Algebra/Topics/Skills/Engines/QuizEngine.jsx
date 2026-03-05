@@ -147,6 +147,9 @@ export default function QuizEngine({ questions, title, onBack, color, prefix = '
                             <img src={q.image} alt="Problem Illustration" style={{ width: '100%', height: 'auto', display: 'block' }} />
                         </div>
                     )}
+                    {q.svg && (
+                        <div style={{ marginBottom: 20, textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: q.svg }} />
+                    )}
                     <MathRenderer text={q.question} />
                 </div>
 

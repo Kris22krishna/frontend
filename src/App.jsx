@@ -307,6 +307,13 @@ import FractionsAndDecimalsSkills from './components/practice/class-7/FractionsA
 import FractionsAndDecimalsEasyTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsEasyTest';
 import FractionsAndDecimalsMediumTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsMediumTest';
 import FractionsAndDecimalsHardTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsHardTest';
+import DataHandlingHub from './components/practice/class-7/DataHandling/DataHandling';
+import DataHandlingIntro5W1H from './components/practice/class-7/DataHandling/Topics/5W1H/DataHandlingIntro5W1H';
+import DataHandlingTerminology from './components/practice/class-7/DataHandling/Topics/Terminology/DataHandlingTerminology';
+import DataHandlingSkills from './components/practice/class-7/DataHandling/Topics/Skills/DataHandlingSkills';
+import DataHandlingEasyTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingEasyTest';
+import DataHandlingMediumTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingMediumTest';
+import DataHandlingHardTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingHardTest';
 import Formation from './components/practice/class-7/algebraic expressions/Formation';
 import TermsFactors from './components/practice/class-7/algebraic expressions/TermsFactors';
 import Coefficients from './components/practice/class-7/algebraic expressions/Coefficients';
@@ -586,6 +593,13 @@ function App() {
           <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsEasyTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsMediumTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHardTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DataHandlingEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DataHandlingMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DataHandlingHardTest /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />

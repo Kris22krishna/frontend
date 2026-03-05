@@ -156,6 +156,9 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
                         <span>QUESTION</span> {current + 1}
                     </div>
                     <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text)`, lineHeight: 1.6, marginBottom: 24 }}>
+                        {q.svg && (
+                            <div style={{ marginBottom: 16, textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: q.svg }} />
+                        )}
                         <MathRenderer text={q.question} />
                     </div>
 

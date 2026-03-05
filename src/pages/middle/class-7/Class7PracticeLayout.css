@@ -123,25 +123,25 @@
 .practice-board-container {
     display: grid;
     /* Desktop: 2 columns (Question | Scratchpad) */
-    grid-template-columns: minmax(0, 1fr) 300px;
-    grid-template-rows: 1fr;
+    grid-template-rows: auto;
+    /* Use auto to prevent row stretching */
     gap: 1.5rem;
     width: 100%;
     max-width: 1400px;
-    height: 100%;
     padding: 0 1rem;
-    align-items: stretch;
-    /* Stretch columns to fill height */
+    align-items: flex-start;
+    /* Keep everything at the top */
 }
 
 /* Left Column */
 .practice-left-col {
     position: relative;
-    height: 100%;
     overflow: hidden;
     /* Contain the scrollable card */
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 /* Right Column - Desktop */
@@ -210,6 +210,7 @@
     z-index: 10;
     border: 4px solid #FFFFFF;
     overflow: visible;
+    margin-top: 1rem;
 }
 
 /* Custom Scrollbar for Webkit */
@@ -263,15 +264,27 @@
     font-weight: 400 !important;
     /* Non-bold */
     color: #2D3748;
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.4;
+    /* Reduced line height */
+    margin: 0 !important;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
+    /* Changed from center to top alignment */
     justify-content: center;
     gap: 0.8rem;
     overflow: visible;
     text-align: center;
+}
+
+/* Remove default margins from any injected p or div tags */
+.question-text-modern p,
+.question-text-modern div,
+.question-text-modern h1,
+.question-text-modern h2,
+.question-text-modern h3 {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* ... */
@@ -303,8 +316,8 @@
 .options-grid-modern {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem;
-    /* Large gap for spreading out */
+    gap: 1.5rem;
+    /* Reduced gap */
     width: 100%;
     max-width: 900px;
     /* Wider grid */
@@ -1497,8 +1510,6 @@
         flex: 0 1 auto;
         /* Ensure it doesn't get too tall but allows content */
         max-height: none;
-        min-height: 50vh;
-        /* Occupy at least 50% screen */
     }
 
     /* Option Button Scaling Rule: Wide buttons */
