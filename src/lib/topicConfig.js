@@ -92,7 +92,8 @@ export const TOPIC_CONFIGS = {
             { id: "FS-05", name: "Chapter Test" }
         ],
         'Filling and Lifting': [
-            { id: "FL-01", name: "Measuring with Litres" }
+            { id: "FL-01", name: "Measuring with Litres" },
+            { id: "FL-02", name: "Weight Hunt" }
         ]
     },
     '4': {

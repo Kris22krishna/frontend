@@ -232,6 +232,7 @@ import FairShareChapterTest from './components/practice/class-3/fair-share/Chapt
 
 // Grade 3 - Filling and Lifting
 import Measuring from './components/practice/class-3/Filling-and-Lifting/Measuring';
+import WeightHunt from './components/practice/class-3/Filling-and-Lifting/Weight-Hunt';
 
 // Grade 4 - The Cleanest Village
 import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
@@ -343,6 +344,12 @@ function App() {
         <Route path="/junior/grade/:grade/filling-and-lifting/measuring" element={
           <ProtectedRoute redirectTo="/login">
             <Measuring />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/filling-and-lifting/weight-hunt" element={
+          <ProtectedRoute redirectTo="/login">
+            <WeightHunt />
           </ProtectedRoute>
         } />
 
