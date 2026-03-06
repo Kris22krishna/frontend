@@ -49,8 +49,9 @@ const LoginPage = () => {
         }
 
         // If multiple roles are available, show role selection modal
+        console.log("Checking if roles exists:", response.roles, response.roles?.length);
         if (response.roles && response.roles.length > 1) {
-            console.log("Multiple roles detected:", response.roles);
+            console.log("Multiple roles detected! Setting modal state for:", response.roles);
             setResultNeededRole({
                 ...response,
                 availableRoles: response.roles
@@ -58,9 +59,15 @@ const LoginPage = () => {
             return;
         }
 
+        // Trigger context refresh now that we know we don't need a modal
+        console.log("No multiple roles. Dispatching auth-change and redirecting normally.");
+        window.dispatchEvent(new Event('auth-change'));
+
         // Redirect based on role
         const userType = response.role || response.user_type || 'student'; // Fallback
         console.log("Detected User Type:", userType);
+
+        sessionStorage.setItem('activeRole', userType);
 
         if (userType === 'student') {
             const grade = response.grade || response.class_name;
@@ -132,6 +139,8 @@ const LoginPage = () => {
                 availableRoles: null
             };
             setResultNeededRole(null);
+            sessionStorage.setItem('activeRole', selectedRole);
+            window.dispatchEvent(new Event('auth-change'));
             handleLoginSuccess(updatedResponse);
             return;
         }

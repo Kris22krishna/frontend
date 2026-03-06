@@ -12,6 +12,14 @@ export function AuthProvider({ children }) {
         try {
             const userData = await api.getMe();
             if (userData) {
+                // Determine active role from session storage if valid, else default to primary
+                const activeRole = sessionStorage.getItem('activeRole');
+                if (activeRole && userData.roles && userData.roles.includes(activeRole)) {
+                    userData.role = activeRole;
+                } else if (userData.role) {
+                    sessionStorage.setItem('activeRole', userData.role);
+                }
+
                 setUser(userData);
                 setIsAuthenticated(true);
                 // Sync non-sensitive items to sessionStorage for legacy components that might read them directly
@@ -24,6 +32,7 @@ export function AuthProvider({ children }) {
                 sessionStorage.removeItem('userType');
                 sessionStorage.removeItem('firstName');
                 sessionStorage.removeItem('userId');
+                sessionStorage.removeItem('activeRole');
             }
         } catch (error) {
             console.error("AuthContext Check Failed:", error);
@@ -38,6 +47,7 @@ export function AuthProvider({ children }) {
                 sessionStorage.removeItem('userType');
                 sessionStorage.removeItem('firstName');
                 sessionStorage.removeItem('userId');
+                sessionStorage.removeItem('activeRole');
                 sessionStorage.removeItem('access_token'); // Also ensure token is gone if 401
             }
         } finally {

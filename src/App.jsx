@@ -1383,7 +1383,7 @@ function App() {
         </Route>
 
         <Route path="/guest-dashboard" element={<GuestDashboard />} />
-        <Route path="/mentor-dashboard" element={<MentorDashboard />} />
+        <Route path="/mentor-dashboard" element={<ProtectedRoute redirectTo="/login"><MentorDashboard /></ProtectedRoute>} />
 
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/uploader-login" element={<UploaderLogin />} />
