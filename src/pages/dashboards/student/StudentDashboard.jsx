@@ -145,7 +145,7 @@ const StudentDashboard = () => {
 
     // Chart Data Preparation
     const chartData = (chapter_time || []).map(c => ({
-        name: c.chapter_name.length > 15 ? c.chapter_name.substring(0, 15) + '...' : c.chapter_name,
+        name: c.chapter_name.length > 9 ? c.chapter_name.substring(0, 9) + '..' : c.chapter_name,
         full_name: c.chapter_name,
         minutes: Math.round(c.time_spent / 60)
     }));
@@ -250,9 +250,7 @@ const StudentDashboard = () => {
                                             dataKey="name"
                                             axisLine={false}
                                             tickLine={false}
-                                            tick={{ fill: '#64748b', fontSize: 11 }}
-                                            angle={-45}
-                                            textAnchor="end"
+                                            tick={{ fill: '#475569', fontSize: 11, fontWeight: 'bold' }}
                                             interval={0}
                                         />
                                         <YAxis
