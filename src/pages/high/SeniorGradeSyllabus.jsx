@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 
 import SEO from '../../components/common/SEO';
+import { getGradePageSEO, DEFAULT_OG_IMAGE } from '../../lib/seoConfig';
 import { BookOpen, ChevronRight, Hash, Activity, X, Grid, Layout } from 'lucide-react';
 import { LatexText } from '../../components/LatexText';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
@@ -12,6 +13,7 @@ import './SeniorGradeSyllabus.css';
 
 const SeniorGradeSyllabus = () => {
     const { grade } = useParams();
+    const gradeSEO = getGradePageSEO('senior', grade);
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const [skills, setSkills] = useState([]);
@@ -560,7 +562,14 @@ const SeniorGradeSyllabus = () => {
         ];
         return (
             <div className="senior-syllabus-page">
-                <SEO title="Grade 11 — Choose Your Subject" description="Pick a subject to start practising Grade 11 topics." />
+                <SEO
+                    title={gradeSEO.title}
+                    description={gradeSEO.description}
+                    keywords={gradeSEO.keywords}
+                    canonical={gradeSEO.canonical}
+                    image={DEFAULT_OG_IMAGE}
+                    structuredData={gradeSEO.structuredData}
+                />
                 <header className="senior-header-container">
                     <div className="header-inner">
                         <nav className="breadcrumb">
@@ -597,7 +606,13 @@ const SeniorGradeSyllabus = () => {
     if (!skills || skills.length === 0 || topics.length === 0) {
         return (
             <div className="senior-syllabus-page">
-                <SEO title={`Grade ${grade} Mathematics`} description="Grade syllabus" />
+                <SEO
+                    title={gradeSEO.title}
+                    description={gradeSEO.description}
+                    keywords={gradeSEO.keywords}
+                    canonical={gradeSEO.canonical}
+                    image={DEFAULT_OG_IMAGE}
+                />
                 <div style={{ padding: '100px 20px', textAlign: 'center' }}>
                     <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📚</div>
                     <h2 style={{ color: '#1e293b', marginBottom: '10px' }}>No Content Available</h2>
@@ -612,7 +627,14 @@ const SeniorGradeSyllabus = () => {
 
     return (
         <div className="senior-syllabus-page">
-            <SEO title={`Grade ${grade} Mathematics - Advanced Curriculum`} description={`Master Grade ${grade} math skills.`} />
+            <SEO
+                title={gradeSEO.title}
+                description={gradeSEO.description}
+                keywords={gradeSEO.keywords}
+                canonical={gradeSEO.canonical}
+                image={DEFAULT_OG_IMAGE}
+                structuredData={gradeSEO.structuredData}
+            />
 
             {/* Header / Breadcrumbs */}
             <header className="senior-header-container">

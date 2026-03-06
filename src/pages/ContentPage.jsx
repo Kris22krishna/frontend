@@ -6,6 +6,7 @@ import {
     Star, Sparkles, Brain, Lightbulb, Rocket
 } from 'lucide-react';
 import SEO from '../components/common/SEO';
+import { SEO_CONFIG, DEFAULT_OG_IMAGE } from '../lib/seoConfig';
 import Navbar from '../components/Navbar';
 import '../styles/LearnPage.css';
 
@@ -47,7 +48,14 @@ const ContentPage = ({ topic }) => {
     if (topic === 'learn-to-learn') {
         return (
             <div className="learn-page">
-                <SEO title="Learn to Learn | skill100" description="Discover topics and master mathematics with smart learning techniques." />
+                <SEO
+                    title={SEO_CONFIG.learnToLearn.title}
+                    description={SEO_CONFIG.learnToLearn.description}
+                    keywords={SEO_CONFIG.learnToLearn.keywords}
+                    canonical={SEO_CONFIG.learnToLearn.canonical}
+                    image={DEFAULT_OG_IMAGE}
+                    structuredData={SEO_CONFIG.learnToLearn.structuredData}
+                />
                 <Navbar />
 
                 {/* Learning Tips */}
@@ -118,7 +126,13 @@ const ContentPage = ({ topic }) => {
 
     return (
         <div style={{ padding: '2rem', textAlign: 'center' }}>
-            <SEO title={`${data.title} - skill100`} description={data.desc} />
+            <SEO
+                title={SEO_CONFIG[topic] ? SEO_CONFIG[topic].title : `${data.title} - skill100.ai`}
+                description={SEO_CONFIG[topic] ? SEO_CONFIG[topic].description : data.desc}
+                keywords={SEO_CONFIG[topic]?.keywords}
+                canonical={SEO_CONFIG[topic]?.canonical}
+                image={DEFAULT_OG_IMAGE}
+            />
             <h1>{data.title}</h1>
             <p>{data.desc}</p>
         </div>

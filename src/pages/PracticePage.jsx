@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Star, Zap, Trophy, Sparkles, BookOpen, Target, Award } from 'lucide-react';
 import SEO from '../components/common/SEO';
+import { SEO_CONFIG } from '../lib/seoConfig';
 import Navbar from '../components/Navbar';
 import '../styles/Practice.css';
 
@@ -136,7 +137,12 @@ const PracticePage = () => {
 
     return (
         <div className="practice-page">
-            <SEO title="Practice Math | skill100.ai" description="Choose your grade level and start practicing math with interactive exercises." />
+            <SEO
+                title={SEO_CONFIG.practice.title}
+                description={SEO_CONFIG.practice.description}
+                keywords={SEO_CONFIG.practice.keywords}
+                canonical={SEO_CONFIG.practice.canonical}
+            />
             <Navbar />
 
             {/* Header Section */}

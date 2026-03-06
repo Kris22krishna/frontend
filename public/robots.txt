@@ -1,0 +1,46 @@
+# skill100.ai - Educational Platform for Grades 1-12
+# https://skill100.ai
+
+User-agent: *
+
+# Public educational content
+Allow: /
+Allow: /learn-to-learn
+Allow: /math
+Allow: /practice
+Allow: /ai
+Allow: /rapid-math
+Allow: /internship
+Allow: /junior/grade/
+Allow: /middle/grade/
+Allow: /senior/grade/
+Allow: /math/grade/
+Allow: /login
+Allow: /register
+
+# Protected and internal routes
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /student-dashboard
+Disallow: /teacher-dashboard
+Disallow: /teacher-dashboard/*
+Disallow: /parent-dashboard
+Disallow: /parent-dashboard/*
+Disallow: /guest-dashboard
+Disallow: /mentor-dashboard
+Disallow: /uploader-dashboard
+Disallow: /uploader-login
+Disallow: /assessment-uploader-dashboard
+Disallow: /assessment-uploader-login
+Disallow: /assessment-access
+Disallow: /assessment-runner
+Disallow: /assessment-student-dashboard
+Disallow: /admin-login
+Disallow: /dynamic-questions-dashboard
+Disallow: /api/*
+
+# Sitemap
+Sitemap: https://skill100.ai/sitemap.xml
+
+# Crawl rate
+Crawl-delay: 1

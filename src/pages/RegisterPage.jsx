@@ -3,6 +3,8 @@ import '../styles/AuthStyles.css';
 import { ArrowLeft, Sparkles, BarChart3, Atom } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import RegistrationForm from '../components/auth/RegistrationForm';
+import SEO from '../components/common/SEO';
+import { SEO_CONFIG } from '../lib/seoConfig';
 
 const RegisterPage = () => {
     const [role, setRole] = React.useState('student');
@@ -20,6 +22,12 @@ const RegisterPage = () => {
 
     return (
         <div className="auth-page">
+            <SEO
+                title={SEO_CONFIG.register.title}
+                description={SEO_CONFIG.register.description}
+                keywords={SEO_CONFIG.register.keywords}
+                canonical={SEO_CONFIG.register.canonical}
+            />
             {/* Left Section - Decoration */}
             <div className="auth-hero-section">
                 <div className="auth-hero-content">

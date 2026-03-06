@@ -4,6 +4,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { api } from '../../services/api';
 import SEO from '../../components/common/SEO';
+import { getGradePageSEO, DEFAULT_OG_IMAGE } from '../../lib/seoConfig';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import {
     Grid, Layers, Triangle, Zap, Calculator, PieChart,
@@ -48,6 +49,7 @@ const MiddleGradeSyllabus = () => {
     const { grade } = useParams();
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
+    const gradeSEO = getGradePageSEO('middle', grade);
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -1054,7 +1056,14 @@ const MiddleGradeSyllabus = () => {
 
     return (
         <div className="middle-syllabus-page">
-            <SEO title={`Class ${grade.replace('grade', '')} Maths - skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
+            <SEO
+                title={gradeSEO.title}
+                description={gradeSEO.description}
+                keywords={gradeSEO.keywords}
+                canonical={gradeSEO.canonical}
+                image={DEFAULT_OG_IMAGE}
+                structuredData={gradeSEO.structuredData}
+            />
 
             <div className="middle-container">
                 <div className="middle-nav-controls">

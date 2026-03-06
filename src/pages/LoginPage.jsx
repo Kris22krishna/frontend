@@ -4,6 +4,8 @@ import { ArrowLeft, Sparkles, BarChart3, Atom } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/auth';
 import { trackLogin, setUserId } from '@/lib/gtag';
+import SEO from '../components/common/SEO';
+import { SEO_CONFIG } from '../lib/seoConfig';
 
 const LoginPage = () => {
     const [identifier, setIdentifier] = useState('');
@@ -159,6 +161,12 @@ const LoginPage = () => {
 
     return (
         <div className="auth-page">
+            <SEO
+                title={SEO_CONFIG.login.title}
+                description={SEO_CONFIG.login.description}
+                keywords={SEO_CONFIG.login.keywords}
+                canonical={SEO_CONFIG.login.canonical}
+            />
             {/* Left Section - Decoration */}
             <div className="auth-hero-section">
                 <div className="auth-hero-content">
