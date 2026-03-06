@@ -69,6 +69,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
             return;
         }
+        if (subtopic.id === "GT-01") {
+            navigate(`/junior/grade/${grade}/give-and-take/add-and-subtract`);
+            return;
+        }
         if (subtopic.id === "HH2-01") {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             return;

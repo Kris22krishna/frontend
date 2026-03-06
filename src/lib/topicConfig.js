@@ -111,6 +111,9 @@ export const TOPIC_CONFIGS = {
             { id: "FCP-01", name: "Longer & Shorter Strings", route: "longer-shorter" },
             { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" }
         ],
+        'Give and Take': [
+            { id: "GT-01", name: "Add and Subtract", route: "add-and-subtract" }
+        ],
         'House of Hundreds II': [
             { id: "HH2-01", name: "Draw tiles" },
             { id: "HH2-02", name: "Neighbouring numbers" },
