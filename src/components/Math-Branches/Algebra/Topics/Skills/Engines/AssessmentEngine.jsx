@@ -81,7 +81,7 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
         return (
             <div className={`${prefix}-quiz-finished`} style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: `var(--${prefix}-text)` }}>Assessment Complete</h2>
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: `var(--${prefix}-text, #1e293b)` }}>Assessment Complete</h2>
                     <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questionSet.length}</div>
                     <div style={{ fontSize: 18, color: `var(--${prefix}-muted)`, fontWeight: 600 }}>Score: {pct}%</div>
                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20 }}>
@@ -103,7 +103,7 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
                     </div>
                 </div>
 
-                <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: `var(--${prefix}-text)` }}>Summary Report</h3>
+                <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: `var(--${prefix}-text, #1e293b)` }}>Summary Report</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     {questionSet.map((question, i) => {
                         const isCorrect = answers[i] === question.correct;
@@ -117,7 +117,7 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
                                 background: isCorrect ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)'
                             }}>
                                 <div style={{ fontWeight: 800, marginBottom: 8, color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>Question {i + 1} - {isCorrect ? 'Correct' : 'Incorrect'}</div>
-                                <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 16, marginBottom: 16, color: `var(--${prefix}-text)`, fontWeight: 600 }}>
+                                <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 16, marginBottom: 16, color: `var(--${prefix}-text, #1e293b)`, fontWeight: 600 }}>
                                     <MathRenderer text={question.question} />
                                 </div>
                                 <div className={`${prefix}-summary-split`}>
@@ -142,9 +142,29 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
         <div className={`${prefix}-quiz-active ${prefix}-assessment-layout`}>
             {/* Left Main Question Area */}
             <div style={{ flex: 1 }} ref={topRef}>
-                <div className={`${prefix}-score-header`}>
-                    <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Assessment</div>
-                    <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, margin: 0, color: `var(--${prefix}-text)` }}>{title}</h3>
+                <div className={`${prefix}-score-header`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                        <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Assessment</div>
+                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, margin: 0, color: `var(--${prefix}-text, #1e293b)` }}>{title}</h3>
+                    </div>
+                    <button
+                        onClick={() => {
+                            if (window.confirm("Are you sure you want to exit? Your progress will be lost.")) {
+                                onBack();
+                            }
+                        }}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: '6px',
+                            background: '#fee2e2', color: '#ef4444',
+                            border: '1px solid #fca5a5', padding: '6px 14px',
+                            borderRadius: '8px', fontSize: '14px', fontWeight: '700',
+                            cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(239,68,68,0.1)'
+                        }}
+                        onMouseOver={(e) => { e.currentTarget.style.background = '#fecaca'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(239,68,68,0.15)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(239,68,68,0.1)'; }}
+                    >
+                        ✕ Exit
+                    </button>
                 </div>
 
                 <div className={`${prefix}-quiz-card`}>
@@ -155,7 +175,7 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
                     }}>
                         <span>QUESTION</span> {current + 1}
                     </div>
-                    <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text)`, lineHeight: 1.6, marginBottom: 24 }}>
+                    <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text, #1e293b)`, lineHeight: 1.6, marginBottom: 24 }}>
                         {q.svg && (
                             <div style={{ marginBottom: 16, textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: q.svg }} />
                         )}
@@ -175,7 +195,7 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
                                         border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
                                         background: isSelected ? `${color}05` : '#fff',
                                         cursor: 'pointer', fontSize: 15, textAlign: 'left',
-                                        transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: `var(--${prefix}-text)`
+                                        transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: `var(--${prefix}-text, #1e293b)`
                                     }}
                                 >
                                     <div style={{

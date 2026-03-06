@@ -256,10 +256,10 @@ export default function DataHandlingSkills() {
             <div className="dh-page" style={{ minHeight: "100vh" }}>
                 <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 24px" }}>
                     <button onClick={() => setMode(null)} className="dh-back-btn">← Back to Skills</button>
-                    <h2 style={{ fontFamily: "Outfit, sans-serif", fontSize: 32, fontWeight: 900, margin: "0 0 8px" }}>
+                    <h2 style={{ fontFamily: "Outfit, sans-serif", fontSize: 32, fontWeight: 900, margin: "0 0 8px", color: "var(--dh-text, #0f172a)" }}>
                         <span style={{ color: skill.color }}>{skill.icon}</span> {skill.title}
                     </h2>
-                    <p style={{ color: "var(--dh-muted)", fontSize: 16, marginBottom: 32 }}>{skill.learn.concept}</p>
+                    <p style={{ color: "var(--dh-muted, #64748b)", fontSize: 16, marginBottom: 32 }}>{skill.learn.concept}</p>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                         {skill.learn.rules.map((rule, i) => (
@@ -268,7 +268,7 @@ export default function DataHandlingSkills() {
                                 <div style={{ background: `${skill.color}08`, borderRadius: 12, padding: "14px 18px", marginBottom: 12, fontFamily: "'JetBrains Mono', monospace", fontSize: 16, textAlign: "center" }}>
                                     <MathRenderer text={`$${rule.f}$`} />
                                 </div>
-                                <p style={{ margin: "0 0 10px", lineHeight: 1.7, color: "var(--dh-text)" }}>
+                                <p style={{ margin: "0 0 10px", lineHeight: 1.7, color: "var(--dh-text, #0f172a)" }}>
                                     <MathRenderer text={rule.d} />
                                 </p>
                                 <div style={{ background: "#f8fafc", padding: "12px 16px", borderRadius: 10, marginBottom: 10, border: "1px solid #e2e8f0" }}>
@@ -320,10 +320,10 @@ export default function DataHandlingSkills() {
                             </div>
                             <div className="dh-skill-content">
                                 <div className="dh-skill-text-stack">
-                                    <div style={{ fontFamily: "Outfit, sans-serif", fontSize: 18, fontWeight: 800, color: "var(--dh-text)" }}>{sk.title}</div>
+                                    <div style={{ fontFamily: "Outfit, sans-serif", fontSize: 18, fontWeight: 800, color: "var(--dh-text, #0f172a)" }}>{sk.title}</div>
                                     <div style={{ fontSize: 12, fontWeight: 700, color: sk.color, textTransform: "uppercase", letterSpacing: 1 }}>{sk.subtitle}</div>
                                 </div>
-                                <div style={{ fontSize: 14, color: "var(--dh-muted)", lineHeight: 1.5, marginBottom: 12 }}>{sk.desc}</div>
+                                <div style={{ fontSize: 14, color: "var(--dh-muted, #64748b)", lineHeight: 1.5, marginBottom: 12 }}>{sk.desc}</div>
                                 <div className="dh-skill-actions">
                                     <button className="dh-skill-btn-outline" onClick={(e) => { e.stopPropagation(); setActiveSkillIdx(i); setMode("learn"); }}>📖 Learn</button>
                                     <button className="dh-skill-btn-outline" onClick={(e) => { e.stopPropagation(); setActiveSkillIdx(i); setMode("practice"); }}>▶ Practice</button>

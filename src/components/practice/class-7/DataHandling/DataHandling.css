@@ -1957,6 +1957,25 @@
   margin: 0 auto;
 }
 
+/* Overrides to prevent Assessment page scrolling */
+.dh-assessment-layout .dh-quiz-card {
+  padding: 20px 24px !important;
+  margin-bottom: 12px !important;
+}
+
+.dh-assessment-layout .dh-quiz-question-text {
+  margin-bottom: 12px !important;
+}
+
+.dh-assessment-layout .dh-quiz-question-text svg {
+  max-height: 180px !important;
+  width: auto !important;
+}
+
+.dh-assessment-layout .dh-quiz-card button {
+  padding: 8px 12px !important;
+}
+
 /* Quiz Container (Main content centered) */
 .dh-quiz-container {
   max-width: 900px;
@@ -2205,4 +2224,3 @@
     font-size: 16px !important;
   }
 }
-

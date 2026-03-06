@@ -113,14 +113,30 @@ export default function QuizEngine({ questions, title, onBack, color, prefix = '
         <div className={`${prefix}-quiz-active ${prefix}-quiz-container`}>
             {/* Header */}
             <div style={{ marginBottom: 20 }}>
-                <div className={`${prefix}-score-header`}>
+                <div className={`${prefix}-score-header`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
                         <div style={{ fontSize: 11, fontWeight: 800, color: color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>Skill Verification</div>
-                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: `var(--${prefix}-text)`, margin: 0 }}>{title}</h3>
+                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: `var(--${prefix}-text, #1e293b)`, margin: 0 }}>{title}</h3>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 13, color: color, fontWeight: 800, marginBottom: 4, background: `${color}15`, padding: '4px 10px', borderRadius: 8, display: 'inline-block' }}>
-                            ⏱️ {formatTime(timeTaken)}
+                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{ fontSize: 13, color: color, fontWeight: 800, background: `${color}15`, padding: '4px 10px', borderRadius: 8, display: 'inline-block' }}>
+                                ⏱️ {formatTime(timeTaken)}
+                            </div>
+                            <button
+                                onClick={onBack}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '6px',
+                                    background: '#fee2e2', color: '#ef4444',
+                                    border: '1px solid #fca5a5', padding: '4px 12px',
+                                    borderRadius: '8px', fontSize: '13px', fontWeight: '700',
+                                    cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(239,68,68,0.1)'
+                                }}
+                                onMouseOver={(e) => { e.currentTarget.style.background = '#fecaca'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(239,68,68,0.15)'; }}
+                                onMouseOut={(e) => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(239,68,68,0.1)'; }}
+                            >
+                                ✕ Exit
+                            </button>
                         </div>
                         <div style={{ fontSize: 13, color: `var(--${prefix}-muted)`, fontWeight: 700 }}>
                             Question <span style={{ color: color }}>{current + 1}</span> / {questionSet.length}
@@ -141,7 +157,7 @@ export default function QuizEngine({ questions, title, onBack, color, prefix = '
                 }}>
                     <span>QUESTION</span> {current + 1}
                 </div>
-                <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text)`, lineHeight: 1.6, marginBottom: 24 }}>
+                <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text, #1e293b)`, lineHeight: 1.6, marginBottom: 24 }}>
                     {q.image && (
                         <div style={{ marginBottom: 20, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                             <img src={q.image} alt="Problem Illustration" style={{ width: '100%', height: 'auto', display: 'block' }} />
