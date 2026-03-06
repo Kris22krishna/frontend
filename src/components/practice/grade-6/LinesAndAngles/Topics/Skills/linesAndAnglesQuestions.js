@@ -86,34 +86,34 @@ const generateLSRPool = () => [
 const generateLTPool = () => [
     { question: "Lines that are always the same distance apart and never meet are:", options: ["Intersecting", "Parallel", "Perpendicular", "Skew"], correct: 1, explanation: "Parallel lines stay apart forever." },
     { question: "Lines that cross each other at exactly one point are:", options: ["Parallel", "Intersecting", "Collinear", "Longitudinal"], correct: 1, explanation: "Intersecting lines 'share' a point." },
-    { question: "Lines intersecting at $90^\\circ$ are:", options: ["Parallel", "Perpendicular", "Symmetric", "Horizontal"], correct: 1, explanation: "Perpendicular lines form right angles." },
+    { question: "Lines intersecting at 90° are:", options: ["Parallel", "Perpendicular", "Symmetric", "Horizontal"], correct: 1, explanation: "Perpendicular lines form right angles." },
     { question: "The common point of two intersecting lines is called the:", options: ["Center", "Origin", "Point of Intersection", "Vertex"], correct: 2, explanation: "It's the specific point where they cross." },
     { question: "Railway tracks are an example of:", options: ["Intersecting Lines", "Parallel Lines", "Perpendicular Lines", "Curved Lines"], correct: 1, explanation: "Tracks never meet." },
     { question: "The letter 'X' represents:", options: ["Parallel Lines", "Intersecting Lines", "Perpendicular Lines", "Horizontal Lines"], correct: 1, explanation: "The two bars cross in the middle." },
-    { question: "The letter 'L' represents:", options: ["Parallel Lines", "Intersecting Lines", "Perpendicular Lines", "Curved Lines"], correct: 2, explanation: "Vertical and horizontal arms meet at $90^\\circ$." },
+    { question: "The letter 'L' represents:", options: ["Parallel Lines", "Intersecting Lines", "Perpendicular Lines", "Curved Lines"], correct: 2, explanation: "Vertical and horizontal arms meet at 90°." },
     { question: "How many points of intersection can two straight lines have?", options: ["0 or 1", "Exactly 2", "Infinite", "0, 1, or Infinite"], correct: 3, explanation: "They don't meet (parallel), meet once, or are the same line (overlap)." },
-    { question: "A horizontal and vertical line are always:", options: ["Parallel", "Perpendicular", "Coincident", "Skew"], correct: 1, explanation: "They meet at a $90$-degree angle." },
+    { question: "A horizontal and vertical line are always:", options: ["Parallel", "Perpendicular", "Coincident", "Skew"], correct: 1, explanation: "They meet at a 90° angle." },
     { question: "If two lines in a plane don't intersect, they MUST be:", options: ["Perpendicular", "Skew", "Parallel", "Curved"], correct: 2, explanation: "In a 2D plane, if they don't cross, they are parallel." },
     { question: "The symbol $\\parallel$ denotes:", options: ["Intersection", "Equality", "Parallelism", "Perpendicularity"], correct: 2, explanation: "Two vertical bars mean parallel." },
     { question: "The symbol $\\perp$ denotes:", options: ["Parallel", "Perpendicular", "Angle", "Triangle"], correct: 1, explanation: "An upside-down 'T' means perpendicular." },
-    { question: "Adjacent edges of a notebook are:", options: ["Parallel", "Perpendicular", "Circular", "None"], correct: 1, explanation: "Pages are rectangular, meeting at $90^\\circ$ corners." },
+    { question: "Adjacent edges of a notebook are:", options: ["Parallel", "Perpendicular", "Circular", "None"], correct: 1, explanation: "Pages are rectangular, meeting at 90° corners." },
     { question: "Opposite edges of a rectangular door are:", options: ["Parallel", "Perpendicular", "Intersecting", "Reflex"], correct: 0, explanation: "Opposite sides never meet." },
     { question: "Lines that meet at more than one point are:", options: ["Intersecting", "Parallel", "Coincident (Overlapping)", "Diagonal"], correct: 2, explanation: "If they share two points, they are the same line." }
 ];
 
 const generateATPool = () => [
-    { question: "An angle less than $90^\\circ$ is:", options: ["Right", "Obtuse", "Acute", "Reflex"], correct: 2, explanation: "Acute angles are sharp and small." },
-    { question: "An angle between $90^\\circ$ and $180^\\circ$ is:", options: ["Acute", "Obtuse", "Straight", "Right"], correct: 1, explanation: "Obtuse angles are wide." },
-    { question: "An angle of exactly $90^\\circ$ is:", options: ["Acute", "Right", "Straight", "Complete"], correct: 1, explanation: "Right angles form square corners." },
-    { question: "An angle of exactly $180^\\circ$ is:", options: ["Obtuse", "Straight", "Reflex", "Right"], correct: 1, explanation: "Straight angles look like a flat line." },
-    { question: "An angle greater than $180^\\circ$ but less than $360^\\circ$ is:", options: ["Reflex", "Straight", "Obtuse", "Acute"], correct: 0, explanation: "Reflex angles bend backwards." },
-    { question: "An angle of exactly $360^\\circ$ is a:", options: ["Zero Angle", "Right Angle", "Complete Angle", "Straight Angle"], correct: 2, explanation: "A full rotation is a complete angle." },
-    { question: "If an angle is $145^\\circ$, it is:", options: ["Acute", "Obtuse", "Reflex", "Right"], correct: 1, explanation: "Between $90$ and $180$ is obtuse." },
-    { question: "If an angle is $35^\\circ$, it is:", options: ["Acute", "Obtuse", "Reflex", "Straight"], correct: 0, explanation: "Less than $90$ is acute." },
-    { question: "If an angle is $210^\\circ$, it is:", options: ["Obtuse", "Straight", "Reflex", "Acute"], correct: 2, explanation: "Between $180$ and $360$ is reflex." },
-    { question: "Two right angles put together make a:", options: ["Acute Angle", "Obtuse Angle", "Straight Angle", "Complete Angle"], correct: 2, explanation: "$90 + 90 = 180$, which is a straight angle." },
-    { question: "Four right angles make a:", options: ["Straight Angle", "Reflex Angle", "Complete Angle", "Acute Angle"], correct: 2, explanation: "$4 \\times 90 = 360$, a full circle." },
-    { question: "A half-complete angle measures:", options: ["$90^\\circ$", "$180^\\circ$", "$45^\\circ$", "$120^\\circ$"], correct: 1, explanation: "Half of $360$ is $180$." },
+    { question: "An angle less than 90° is:", options: ["Right", "Obtuse", "Acute", "Reflex"], correct: 2, explanation: "Acute angles are sharp and small." },
+    { question: "An angle between 90° and 180° is:", options: ["Acute", "Obtuse", "Straight", "Right"], correct: 1, explanation: "Obtuse angles are wide." },
+    { question: "An angle of exactly 90° is:", options: ["Acute", "Right", "Straight", "Complete"], correct: 1, explanation: "Right angles form square corners." },
+    { question: "An angle of exactly 180° is:", options: ["Obtuse", "Straight", "Reflex", "Right"], correct: 1, explanation: "Straight angles look like a flat line." },
+    { question: "An angle greater than 180° but less than 360° is:", options: ["Reflex", "Straight", "Obtuse", "Acute"], correct: 0, explanation: "Reflex angles bend backwards." },
+    { question: "An angle of exactly 360° is a:", options: ["Zero Angle", "Right Angle", "Complete Angle", "Straight Angle"], correct: 2, explanation: "A full rotation is a complete angle." },
+    { question: "If an angle is 145°, it is:", options: ["Acute", "Obtuse", "Reflex", "Right"], correct: 1, explanation: "Between 90 and 180 is obtuse." },
+    { question: "If an angle is 35°, it is:", options: ["Acute", "Obtuse", "Reflex", "Straight"], correct: 0, explanation: "Less than 90 is acute." },
+    { question: "If an angle is 210°, it is:", options: ["Obtuse", "Straight", "Reflex", "Acute"], correct: 2, explanation: "Between 180 and 360 is reflex." },
+    { question: "Two right angles put together make a:", options: ["Acute Angle", "Obtuse Angle", "Straight Angle", "Complete Angle"], correct: 2, explanation: "90 + 90 = 180, which is a straight angle." },
+    { question: "Four right angles make a:", options: ["Straight Angle", "Reflex Angle", "Complete Angle", "Acute Angle"], correct: 2, explanation: "4 × 90 = 360, a full circle." },
+    { question: "A half-complete angle measures:", options: ["90°", "180°", "45°", "120°"], correct: 1, explanation: "Half of 360 is 180." },
     { question: "An angle formed at 6:00 on a clock is:", options: ["Right", "Obtuse", "Straight", "Acute"], correct: 2, explanation: "Hands at 12 and 6 form a straight line." },
     { question: "An angle formed at 3:00 on a clock is:", options: ["Right", "Acute", "Straight", "Obtuse"], correct: 0, explanation: "Hands at 12 and 3 form a $90$-degree corner." },
     { question: "Which angle is like an open book sitting flat on a table?", options: ["Acute", "Right", "Straight", "Reflex"], correct: 2, explanation: "Flat surfaces form $180$-degree angles." }
@@ -135,16 +135,28 @@ const generateAAPool = () => [
 const generateLPPool = () => {
     const list = [];
     [30, 45, 60, 90, 110, 135, 150].forEach(val => {
+        let opt1 = 180 - val;
+        let opt3 = 90 - val;
+        if (opt3 <= 0) opt3 = val + 45; // Avoid zero or negative angles
+        let opt4 = 360 - val;
+
+        // Ensure uniqueness
+        if (opt1 === val) opt1 += 10;
+        if (opt3 === val || opt3 === opt1) opt3 += 15;
+        if (opt4 === val || opt4 === opt1 || opt4 === opt3) opt4 -= 15;
+
+        // The correct answer is always at index 0 in the generated array (which gets shuffled later)
+        // Correct answer for LP is 180 - val
         list.push({
-            question: `In a linear pair, if one angle is $${val}^\\circ$, what is the measure of the other?`,
-            options: [`$${180 - val}^\\circ$`, `$${val}^\\circ$`, `$${90 - val}^\\circ$`, `$${360 - val}^\\circ$`],
+            question: `In a linear pair, if one angle is ${val}°, what is the measure of the other?`,
+            options: [`${180 - val}°`, `${val === 90 ? 100 : val}°`, `${opt3}°`, `${opt4}°`],
             correct: 0,
-            explanation: `Supplementary angles in a linear pair add up to $180^\\circ$. $180 - ${val} = ${180 - val}$.`
+            explanation: `Supplementary angles in a linear pair add up to 180°. 180 - ${val} = ${180 - val}.`
         });
     });
-    list.push({ question: "The sum of angles in a linear pair is always:", options: ["$90^\\circ$", "$180^\\circ$", "$360^\\circ$", "$270^\\circ$"], correct: 1, explanation: "Linear pairs form a straight line ($180^\\circ$)." });
-    list.push({ question: "Angles in a linear pair are always:", options: ["Complementary", "Supplementary", "Vertical", "Right"], correct: 1, explanation: "Supplementary means they add to $180^\\circ$." });
-    list.push({ question: "If both angles in a linear pair are equal, each measure is:", options: ["$45^\\circ$", "$90^\\circ$", "$180^\\circ$", "$360^\\circ$"], correct: 1, explanation: "Half of $180$ is $90$." });
+    list.push({ question: "The sum of angles in a linear pair is always:", options: ["90°", "180°", "360°", "270°"], correct: 1, explanation: "Linear pairs form a straight line (180°)." });
+    list.push({ question: "Angles in a linear pair are always:", options: ["Complementary", "Supplementary", "Vertical", "Right"], correct: 1, explanation: "Supplementary means they add to 180°." });
+    list.push({ question: "If both angles in a linear pair are equal, each measure is:", options: ["45°", "90°", "180°", "360°"], correct: 1, explanation: "Half of 180 is 90." });
     list.push({ question: "A linear pair consists of how many angles?", options: ["One", "Two", "Three", "Four"], correct: 1, explanation: "A 'pair' means two." });
     return list;
 };
@@ -155,11 +167,22 @@ const generateVOPool = () => {
         { question: "Vertical angles share a common ______ but no common arm.", options: ["Area", "Vertex", "Measurement", "Line"], correct: 1, explanation: "They meet at the point of intersection." }
     ];
     [40, 75, 115, 90].forEach(val => {
+        let opt0 = 180 - val;
+        let opt2 = 90 - val;
+        if (opt2 <= 0) opt2 = val + 35;
+        let opt3 = 360 - val;
+
+        // Ensure uniqueness
+        if (opt0 === val) opt0 += 15;
+        if (opt2 === val || opt2 === opt0) opt2 += 25;
+        if (opt3 === val || opt3 === opt0 || opt3 === opt2) opt3 -= 25;
+
+        // Correct answer for VO is `val` (index 1)
         list.push({
-            question: `If one angle in a vertically opposite pair is $${val}^\\circ$, the other is:`,
-            options: [`$${180 - val}^\\circ$`, `$${val}^\\circ$`, `$${90 - val}^\\circ$`, `$${360 - val}^\\circ$`],
+            question: `If one angle in a vertically opposite pair is ${val}°, the other is:`,
+            options: [`${opt0}°`, `${val}°`, `${opt2}°`, `${opt3}°`],
             correct: 1,
-            explanation: `Vertical angles are equal. So if one is $${val}^\\circ$, the other must be $${val}^\\circ$.`
+            explanation: `Vertical angles are equal. So if one is ${val}°, the other must be ${val}°.`
         });
     });
     return list;
@@ -178,18 +201,28 @@ const generateTransPool = () => [
 
 const generateAPPool = () => {
     const list = [
-        { question: "The sum of all angles around a single point is:", options: ["$90^\\circ$", "$180^\\circ$", "$270^\\circ$", "$360^\\circ$"], correct: 3, explanation: "A full circle is $360$ degrees." }
+        { question: "The sum of all angles around a single point is:", options: ["90°", "180°", "270°", "360°"], correct: 3, explanation: "A full circle is 360 degrees." }
     ];
     for (let i = 0; i < 5; i++) {
         const v1 = 50 + i * 20;
         const v2 = 60 + i * 15;
         const v3 = 70 + i * 10;
         const res = 360 - v1 - v2 - v3;
+
+        let wrong1 = res + 20;
+        let wrong2 = 180 - v1;
+        let wrong3 = res - 10;
+
+        // Ensure no duplicates by slightly adjusting if they match `res` or each other
+        if (wrong1 === res) wrong1 += 5;
+        if (wrong2 === res || wrong2 === wrong1) wrong2 += 15;
+        if (wrong3 === res || wrong3 === wrong1 || wrong3 === wrong2) wrong3 -= 15;
+
         list.push({
-            question: `Four angles meet at a point. If three are $${v1}^\\circ$, $${v2}^\\circ$, and $${v3}^\\circ$, the fourth is:`,
-            options: [`$${res}^\\circ$`, `$${res + 20}^\\circ$`, `$${180 - v1}^\\circ$`, `$${res - 10}^\\circ$`],
+            question: `Four angles meet at a point. If three are ${v1}°, ${v2}°, and ${v3}°, the fourth is:`,
+            options: [`${res}°`, `${wrong1}°`, `${wrong2}°`, `${wrong3}°`],
             correct: 0,
-            explanation: `Total sum is $360^\\circ$. $360 - (${v1} + ${v2} + ${v3}) = ${res}$.`
+            explanation: `Total sum is 360°. 360 - (${v1} + ${v2} + ${v3}) = ${res}.`
         });
     }
     return list;

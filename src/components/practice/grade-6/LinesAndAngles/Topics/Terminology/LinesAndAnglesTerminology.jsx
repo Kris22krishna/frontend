@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../LinesAndAngles.css';
-import MathRenderer from '../../../../../MathRenderer';
+import MathRenderer from '@/components/MathRenderer';
 import { ArrowLeft } from 'lucide-react';
 
 const TERMS = [

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
 import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
 import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
 import MultiplicationPracticeMultiple from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_multiple_numbers';
@@ -255,22 +255,10 @@ import WordProblemsIntegers from './components/practice/grade-6/the-other-side-o
 import NumberLineRepresentation from './components/practice/grade-6/the-other-side-of-zero/NumberLineRepresentation';
 
 // Grade 6 Lines and Angles
-import Introduction from './components/practice/grade-6/Lines and Angles/Introduction';
-import LineSegmentRay from './components/practice/grade-6/Lines and Angles/LineSegmentRay';
-import LineTypes from './components/practice/grade-6/Lines and Angles/LineTypes';
-import AngleTypes from './components/practice/grade-6/Lines and Angles/AngleTypes';
-import AdjacentAngles from './components/practice/grade-6/Lines and Angles/AdjacentAngles';
-import LinearPair from './components/practice/grade-6/Lines and Angles/LinearPair';
-import VerticallyOpposite from './components/practice/grade-6/Lines and Angles/VerticallyOpposite';
-import TransversalAngles from './components/practice/grade-6/Lines and Angles/TransversalAngles';
-import AnglesAtPoint from './components/practice/grade-6/Lines and Angles/AnglesAtPoint';
-import RealLifeExamples from './components/practice/grade-6/Lines and Angles/RealLifeExamples';
-
-// Lines and Angles Hub Components
-import LinesAndAnglesHub from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesHub';
-import LinesAndAnglesIntro from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesIntro';
-import LinesAndAnglesTerminology from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesTerminology';
-import LinesAndAnglesSkillsSelection from './components/practice/grade-6/Lines and Angles/Hub/LinesAndAnglesSkills';
+import LinesAndAngles from './components/practice/grade-6/LinesAndAngles/LinesAndAngles';
+import LinesAndAnglesIntro5W1H from './components/practice/grade-6/LinesAndAngles/Topics/5W1H/LinesAndAnglesIntro5W1H';
+import LinesAndAnglesTerminology from './components/practice/grade-6/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
+import LinesAndAnglesSkills from './components/practice/grade-6/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
 
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
@@ -441,6 +429,11 @@ const ComingSoon = () => (
   </div>
 );
 
+const LinesAndAnglesTopicProxy = () => {
+  const { topic } = useParams();
+  return <LinesAndAnglesTopic topicId={topic} />;
+};
+
 function App() {
   // Initialize GA4 tracking
   useEffect(() => {
@@ -487,10 +480,10 @@ function App() {
 
           {/* Lines and Angles */}
           <Route path="middle/grade/6/lines-and-angles" element={<LinesAndAngles />} />
+          <Route path="middle/grade/6/lines-and-angles/hub" element={<LinesAndAngles />} />
           <Route path="middle/grade/6/lines-and-angles/introduction" element={<LinesAndAnglesIntro5W1H />} />
           <Route path="middle/grade/6/lines-and-angles/terminology" element={<LinesAndAnglesTerminology />} />
           <Route path="middle/grade/6/lines-and-angles/skills" element={<LinesAndAnglesSkills />} />
-          <Route path="middle/grade/6/lines-and-angles/:topic" element={<LinesAndAnglesTopicProxy />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />

@@ -1,6 +1,6 @@
 import React from 'react';
-import ChapterTest from '../../../../../ChapterTest';
-import { generateLinesAndAnglesQuestions } from '../Topics/Skills/linesAndAnglesQuestions';
+// import ChapterTest from '../../../../../ChapterTest';
+import { generateLinesAndAnglesQuestions } from '@/components/practice/grade-6/LinesAndAngles/Topics/Skills/linesAndAnglesQuestions';
 
 export default function LinesAndAnglesEasyTest() {
     // We can pull questions from various topics. For easy test let's pick basic ones.
@@ -14,12 +14,16 @@ export default function LinesAndAnglesEasyTest() {
         .slice(0, 10);
 
     return (
-        <ChapterTest
-            questions={allQuestions}
-            chapterName="Lines and Angles"
-            testLevel="Easy"
-            skillId={6201}
-            backPath="/middle/grade/6/lines-and-angles"
-        />
+        <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50">
+            <h1 className="text-3xl font-bold">Easy Test</h1>
+            <p className="mt-4 text-slate-500">Coming soon</p>
+        </div>
+        // <ChapterTest
+        //     questions={allQuestions}
+        //     chapterName="Lines and Angles"
+        //     testLevel="Easy"
+        //     skillId={6201}
+        //     backPath="/middle/grade/6/lines-and-angles"
+        // />
     );
 }
