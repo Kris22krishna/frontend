@@ -16,6 +16,7 @@
   --alg-border: #e2e8f0;
   --alg-success: #10b981;
   --alg-wrong: #ef4444;
+  --alg-red: #ef4444;
   --alg-r: 14px;
   --alg-rlg: 20px;
   --alg-sh: 0 4px 20px rgba(0, 0, 0, 0.09);
@@ -652,84 +653,98 @@
 
 /* ── SKILLS ──────────────────────────────────────────── */
 .alg-skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 950px;
+  margin: 30px auto;
 }
 
 .alg-skill-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
   background: #fff;
-  border: 1px solid var(--alg-border);
-  border-radius: var(--alg-rlg);
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: var(--alg-sh);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  padding: 24px 32px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
 .alg-skill-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--alg-shlg);
-  border-color: var(--alg-teal);
-}
-
-.alg-skill-card-header {
-  padding: 22px 24px 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: linear-gradient(135deg, #f0fdfa, #eff6ff);
+  transform: translateX(10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  border-color: var(--skill-color);
 }
 
 .alg-skill-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 26px;
   flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
 }
 
-.alg-skill-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--alg-text);
+.alg-skill-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.alg-skill-sub {
-  font-size: 13px;
-  color: var(--alg-muted);
-  margin-top: 2px;
+.alg-skill-text-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 4px;
 }
 
-.alg-skill-card-body {
-  padding: 16px 24px 22px;
-}
-
-.alg-skill-desc {
-  font-size: 14px;
-  color: var(--alg-muted);
-  line-height: 1.65;
-  margin-bottom: 16px;
-}
-
-.alg-skill-btn {
-  display: inline-flex;
+.alg-skill-actions {
+  display: flex;
+  gap: 14px;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+}
+
+/* Button Styles */
+.alg-skill-btn-outline {
+  padding: 9px 24px;
   border-radius: 100px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: none;
-  background: linear-gradient(135deg, #0891b2, #06b6d4);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.28);
+  transition: all 0.2s;
+  background: #fff !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.1) !important;
+  color: #0f172a !important;
+}
+
+.alg-skill-btn-outline:hover {
+  background: #f8fafc !important;
+  border-color: #64748b !important;
+  transform: translateY(-2px);
+}
+
+.alg-skill-btn-filled {
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: var(--skill-color) !important;
+  border: none !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px var(--skill-color-30);
+}
+
+.alg-skill-btn-filled:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 25px var(--skill-color-40);
 }
 
 .alg-skill-btn:hover {
@@ -1821,5 +1836,372 @@
 
   .alg-quiz-finished-actions button {
     width: 100%;
+  }
+}
+
+/* ── SIDEBAR BUTTONS FOR SKILLS/LEARN ────────────────── */
+
+.alg-sidebar-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: #fff;
+  color: var(--alg-text);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-align: left;
+}
+
+.alg-sidebar-btn:hover:not(.active) {
+  background: var(--skill-color-15);
+  border-color: var(--skill-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--skill-color-40);
+}
+
+.alg-sidebar-btn.active {
+  background: var(--skill-color);
+  border-color: var(--skill-color);
+  color: #fff;
+  box-shadow: 0 4px 15px var(--skill-color-40);
+}
+
+.alg-sidebar-btn-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--skill-color-15);
+  color: var(--skill-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  flex-shrink: 0;
+  transition: all 0.25s;
+}
+
+.alg-sidebar-btn:hover:not(.active) .alg-sidebar-btn-num {
+  background: #fff;
+  color: var(--skill-color);
+}
+
+.alg-sidebar-btn.active .alg-sidebar-btn-num {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.alg-sidebar-btn-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* ── ALGEBRA SKILLS RESPONSIVE UTILITIES ───────────────── */
+
+/* Main Containers */
+.alg-lexicon-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Nav Bar */
+.intro-nav {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.intro-nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+/* Learn Grid (Sidebar + Main) */
+.alg-learn-grid {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) 1fr;
+  gap: 24px;
+  margin: 0 auto;
+}
+
+/* Rule Detail Layout (Left/Right Split) */
+.alg-rule-split {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Practice Categories Layout */
+.alg-practice-layout {
+  display: grid !important;
+  grid-template-columns: minmax(200px, 280px) 1fr !important;
+  gap: 24px;
+  margin: 0 24px;
+}
+
+/* Assessment Grid Layout */
+.alg-assessment-layout {
+  display: flex !important;
+  gap: 24px !important;
+  align-items: flex-start;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Quiz Container (Main content centered) */
+.alg-quiz-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Learn Sidebar - Refined */
+.alg-learn-sidebar {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 65vh;
+  overflow-y: auto;
+  align-self: start;
+  scrollbar-width: thin;
+}
+
+/* Details Window */
+.alg-details-window {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+  min-height: 400px;
+  border: 2px solid var(--skill-color-15);
+}
+
+/* Assessment Palette */
+.alg-assessment-palette {
+  width: 280px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+/* Quiz Card */
+.alg-quiz-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 36px;
+  margin-bottom: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Score Header */
+.alg-score-header {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+/* Summary Report Styles */
+.alg-summary-split {
+  display: flex;
+  gap: 20px;
+  font-size: 15px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.alg-summary-item {
+  flex: 1;
+}
+
+.alg-summary-item.user-ans {
+  border-left: 2px solid rgba(0, 0, 0, 0.04);
+  padding-left: 20px;
+}
+
+@media (max-width: 600px) {
+  .alg-summary-split {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .alg-summary-item.user-ans {
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    padding-left: 0;
+    padding-top: 16px;
+  }
+}
+
+/* ── MOBILE MEDIA QUERIES ─────────────────────────── */
+
+@media (max-width: 991px) {
+  .alg-assessment-layout {
+    flex-direction: column !important;
+    padding: 0 16px;
+  }
+
+  .alg-assessment-layout>div {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .intro-nav {
+    flex-direction: column;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .intro-nav-links {
+    width: 100%;
+    justify-content: center;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .intro-nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .intro-nav-links button {
+    flex-shrink: 0;
+  }
+
+  .alg-learn-grid,
+  .alg-practice-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    margin: 0 12px !important;
+  }
+
+  /* Horizontal scrolling categories/rules on mobile */
+  .alg-learn-sidebar {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    max-height: none !important;
+    padding: 12px !important;
+    gap: 10px !important;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    background: #fff !important;
+    border-bottom: 2px solid #e2e8f0;
+    border-radius: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin: 0 -12px 16px -12px !important;
+  }
+
+  .alg-learn-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .alg-sidebar-btn {
+    flex-shrink: 0 !important;
+    min-width: fit-content;
+  }
+
+  .alg-score-header {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center;
+    gap: 16px !important;
+  }
+
+  .alg-score-header>div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .alg-rule-split {
+    grid-template-columns: 1fr !important;
+  }
+
+  .alg-details-window {
+    padding: 24px 20px !important;
+  }
+
+  .alg-learn-header-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .alg-learn-footer {
+    flex-direction: column;
+  }
+
+  .alg-learn-footer button {
+    width: 100% !important;
+  }
+
+  .alg-skill-card {
+    flex-direction: column !important;
+    padding: 20px !important;
+    height: auto !important;
+  }
+
+  .alg-skill-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .alg-skill-icon {
+    margin: 0 auto 12px !important;
+  }
+
+  .alg-skill-actions {
+    width: 100%;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .alg-skill-actions button {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .alg-quiz-card {
+    padding: 24px 16px !important;
+  }
+
+  .alg-quiz-score-circle {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .alg-quiz-finished h2 {
+    font-size: 24px !important;
+  }
+
+  .alg-quiz-question-text {
+    font-size: 16px !important;
   }
 }

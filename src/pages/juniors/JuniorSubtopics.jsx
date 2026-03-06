@@ -142,6 +142,9 @@ const JuniorSubtopics = () => {
                     } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
                         navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
                         return;
+                    } else if (decodedTopic === "Fun with Symmetry") {
+                        navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
+                        return;
                     }
                 }
             }
@@ -254,6 +257,8 @@ const JuniorSubtopics = () => {
                                 navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
                             } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
                                 navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
+                            } else if (decodedTopic === "Fun with Symmetry") {
+                                navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
                             }
                             setPendingSubtopic(null);
                             return;

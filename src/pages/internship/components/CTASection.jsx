@@ -33,7 +33,7 @@ const CTASection = ({ onRegisterClick }) => {
                             onClick={onRegisterClick}
                             className="px-10 py-4 rounded-lg font-bold text-white bg-gradient-to-r from-orange-500 to-red-600 hover:brightness-110 transition-all shadow-lg shadow-orange-500/20 text-lg"
                         >
-                            Register Now — ₹100 Only
+                            Register Now
                         </button>
                     </div>
 
