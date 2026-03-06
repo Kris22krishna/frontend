@@ -1,176 +1,528 @@
-// DeterminantsSkills — Question Data (imported by DeterminantsSkills.jsx)
+// DeterminantsSkills — Dynamic Question Generators
+// Each export is a FUNCTION that returns a fresh array of 10 questions with randomized numbers.
 
-export const fundamentalsQuestions = [
-    { question: 'What is the determinant of a 2×2 matrix [[a,b],[c,d]]?', options: ['ab − cd', 'ad − bc', 'ac − bd', 'a + d'], correct: 1, explanation: 'For 2×2: |A| = ad − bc.' },
-    { question: 'Find: |4 3; 2 1|', options: ['-2', '2', '10', '5'], correct: 0, explanation: '4×1 − 3×2 = 4 − 6 = −2.' },
-    { question: 'If determinant = 0, matrix is:', options: ['Invertible', 'Singular', 'Identity', 'Orthogonal'], correct: 1, explanation: 'A zero determinant means the matrix is singular (non-invertible).' },
-    { question: 'Determinant is defined only for:', options: ['Any matrix', 'Square matrices', 'Rectangular matrices', 'Diagonal matrices'], correct: 1, explanation: 'Determinants are only defined for square matrices.' },
-    { question: 'Find: |7 1; 5 2|', options: ['9', '14', '3', '11'], correct: 0, explanation: '7×2 − 1×5 = 14 − 5 = 9.' },
-    { question: 'Find: |3 4; 6 8|', options: ['0', '24', '−24', '48'], correct: 0, explanation: '3×8 − 4×6 = 24 − 24 = 0.' },
-    { question: 'If |A| ≠ 0, matrix A is:', options: ['Singular', 'Non-singular', 'Zero matrix', 'Undefined'], correct: 1, explanation: 'Non-zero determinant means non-singular (invertible).' },
-    { question: 'The determinant of I₂ (2×2 identity) is:', options: ['0', '1', '2', '−1'], correct: 1, explanation: '|I₂| = 1×1 − 0×0 = 1.' },
-    { question: 'Find value of k: |1 k; 2 4| = 0', options: ['2', '4', '1', '8'], correct: 0, explanation: '1×4 − k×2 = 0 → 4 − 2k = 0 → k = 2.' },
-    { question: 'Determinant of a zero matrix is:', options: ['1', '0', 'Undefined', '−1'], correct: 1, explanation: 'All elements are 0, so determinant is 0.' },
-];
-export const fundamentalsAssessment = [
-    { question: 'Evaluate: |5 2; 3 4|', options: ['14', '26', '7', '−14'], correct: 0, explanation: '5×4 − 2×3 = 20 − 6 = 14.' },
-    { question: 'Find k if |k 3; 2 6| = 0', options: ['1', '2', '3', '0'], correct: 0, explanation: '6k − 6 = 0 → k = 1.' },
-    { question: 'If |A| = −4 and |B| = 7, find |AB|', options: ['−28', '3', '28', '−3'], correct: 0, explanation: '|AB| = |A| × |B| = −4 × 7 = −28.' },
-    { question: '|A| = 5 for a 3×3 matrix. |adj A| = ?', options: ['25', '5', '125', '1'], correct: 0, explanation: '|adj A| = |A|^(n−1) = 5² = 25.' },
-    { question: 'Determinant of |1 0 0; 0 1 0; 0 0 1| is:', options: ['0', '1', '3', '−1'], correct: 1, explanation: 'Identity matrix determinant is always 1.' },
-    { question: 'If |A| = −2, find |2A| for 2×2 matrix:', options: ['−4', '−8', '4', '8'], correct: 1, explanation: '|kA| = k²|A| for 2×2. |2A| = 4 × (−2) = −8.' },
-    { question: 'If |A| = 5 and |B| = −3, find |AB|:', options: ['−15', '15', '2', '8'], correct: 0, explanation: '|AB| = |A||B| = 5 × (−3) = −15.' },
-    { question: 'Determinant of triangular matrix equals:', options: ['Sum of all elements', 'Product of diagonal elements', 'Sum of diagonal', '0'], correct: 1, explanation: 'For triangular matrices, determinant = product of diagonal entries.' },
-    { question: 'If two rows are identical, |A| = ?', options: ['1', '−1', '0', 'Undefined'], correct: 2, explanation: 'Identical rows always give determinant = 0.' },
-    { question: 'Using determinant, solve: x+y=3, 2x+y=5:', options: ['x=2, y=1', 'x=1, y=2', 'x=3, y=0', 'x=0, y=3'], correct: 0, explanation: '|A|=1−2=−1. x=(3−5)/(−1)=2, y=(5−6)/(−1)=1.' },
-];
+const R = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const NZ = (min, max) => { let n = 0; while (n === 0) n = R(min, max); return n; };
 
-export const propertiesQuestions = [
-    { question: 'If you swap two rows, the determinant:', options: ['Doubles', 'Stays same', 'Changes sign', 'Becomes 0'], correct: 2, explanation: 'Swapping two rows changes the sign of the determinant.' },
-    { question: '|kA| for n×n matrix = ?', options: ['k|A|', 'k²|A|', 'kⁿ|A|', 'nk|A|'], correct: 2, explanation: '|kA| = kⁿ|A| where n is the order of the matrix.' },
-    { question: '|AB| = ?', options: ['|A| + |B|', '|A| − |B|', '|A| × |B|', '|A|/|B|'], correct: 2, explanation: 'Determinant of product = product of determinants.' },
-    { question: '|Aᵀ| = ?', options: ['−|A|', '|A|', '1/|A|', '0'], correct: 1, explanation: 'Transpose does not change the determinant.' },
-    { question: 'Adding k times one row to another:', options: ['Changes determinant', 'Does not change determinant', 'Makes it 0', 'Doubles it'], correct: 1, explanation: 'Row operation Rᵢ → Rᵢ + kRⱼ preserves the determinant.' },
-    { question: 'If A is 3×3 and |A| = −1, |A²| = ?', options: ['1', '−1', '2', '−2'], correct: 0, explanation: '|A²| = |A|² = (−1)² = 1.' },
-    { question: 'If |A| = 2, |3A| for 3×3 = ?', options: ['6', '18', '54', '8'], correct: 2, explanation: '|3A| = 3³|A| = 27 × 2 = 54.' },
-    { question: 'Determinant of diagonal matrix diag(2,3,4) = ?', options: ['9', '24', '14', '6'], correct: 1, explanation: 'Product of diagonal entries: 2 × 3 × 4 = 24.' },
-    { question: 'If a row of A is all zeros, |A| = ?', options: ['1', '0', '−1', 'Undefined'], correct: 1, explanation: 'A row of zeros means determinant = 0.' },
-    { question: 'If |A| = 4, |A⁻¹| = ?', options: ['4', '−4', '1/4', '16'], correct: 2, explanation: '|A⁻¹| = 1/|A| = 1/4.' },
-];
-export const propertiesAssessment = [
-    { question: 'If A is singular, |A| = ?', options: ['1', '−1', '0', 'Positive'], correct: 2, explanation: 'Singular means |A| = 0.' },
-    { question: '|−A| for 3×3 matrix with |A| = 5:', options: ['−5', '5', '−125', '125'], correct: 0, explanation: '|−A| = (−1)³|A| = −5.' },
-    { question: '|A³| if |A| = 2:', options: ['6', '8', '2', '4'], correct: 1, explanation: '|A³| = |A|³ = 2³ = 8.' },
-    { question: 'If R₁ ↔ R₂ is applied twice:', options: ['Determinant unchanged', 'Determinant × 4', 'Determinant = 0', 'Determinant × −1'], correct: 0, explanation: 'Two swaps: sign changes twice → back to original.' },
-    { question: '|4 2 1; 0 3 5; 0 0 2| = ?', options: ['24', '12', '6', '0'], correct: 0, explanation: 'Upper triangular: 4 × 3 × 2 = 24.' },
-    { question: 'If |A| = 0, can we find A⁻¹?', options: ['Yes', 'No', 'Sometimes', 'Only if square'], correct: 1, explanation: 'Zero determinant means no inverse exists.' },
-    { question: 'Multiplying one row by k multiplies |A| by:', options: ['k²', 'k', 'kⁿ', '1/k'], correct: 1, explanation: 'Scaling one row by k multiplies determinant by k.' },
-    { question: 'If A satisfies A² = I, possible |A| values:', options: ['Only 1', 'Only −1', '1 or −1', '0'], correct: 2, explanation: '|A²| = |I| → |A|² = 1 → |A| = ±1.' },
-    { question: '|0 1 2; 3 4 5; 6 7 8| = ?', options: ['0', '1', '−1', '3'], correct: 0, explanation: 'R₃ = R₁ + R₂ (arithmetic progression), so |A| = 0.' },
-    { question: 'If |A| = 3 for 4×4 matrix, |adj A| = ?', options: ['9', '27', '81', '3'], correct: 1, explanation: '|adj A| = |A|^(n−1) = 3³ = 27.' },
-];
+// Helper: make unique options, ensure correct is at index 0 before shuffle
+function makeQ(question, correctVal, distractors, explanation) {
+    const opts = [String(correctVal)];
+    for (const d of distractors) {
+        const s = String(d);
+        if (!opts.includes(s)) opts.push(s);
+    }
+    while (opts.length < 4) opts.push(String(correctVal + opts.length * 2 + 1));
+    const final = opts.slice(0, 4);
+    const shuffled = [...final].sort(() => Math.random() - 0.5);
+    return { question, options: shuffled, correct: shuffled.indexOf(final[0]), explanation };
+}
 
-export const areaQuestions = [
-    { question: 'Area of triangle with collinear points is:', options: ['1', 'Undefined', '0', '½'], correct: 2, explanation: 'Collinear points form no triangle, area = 0.' },
-    { question: 'Points (0,0), (1,2), (2,4) are:', options: ['Non-collinear', 'Collinear', 'Perpendicular', 'Parallel'], correct: 1, explanation: 'Area = ½|0(2−4) + 1(4−0) + 2(0−2)| = ½|0+4−4| = 0. Collinear.' },
-    { question: 'Area formula uses a ___ determinant:', options: ['2×2', '3×3', '4×4', 'Any'], correct: 1, explanation: 'Area = ½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)| which is a 3×3 determinant.' },
-    { question: 'Area of triangle (1,1), (2,3), (4,7):', options: ['0', '2', '4', '1'], correct: 0, explanation: '½|1(3−7) + 2(7−1) + 4(1−3)| = ½|−4+12−8| = 0. Points are collinear.' },
-    { question: 'If area = 0 for three points, they are:', options: ['Forming a triangle', 'Collinear', 'On a circle', 'Equidistant'], correct: 1, explanation: 'Zero area means points lie on the same line (collinear).' },
-    { question: 'Area of triangle (0,0), (3,0), (0,4):', options: ['6', '12', '7', '3.5'], correct: 0, explanation: '½|0(0−4) + 3(4−0) + 0(0−0)| = ½|12| = 6.' },
-    { question: 'The area formula always gives:', options: ['Positive value', 'Negative value', 'Absolute value (non-negative)', 'Zero'], correct: 2, explanation: 'We take the absolute value, so area is always non-negative.' },
-    { question: 'For collinearity test, determinant should be:', options: ['1', '−1', '0', 'Positive'], correct: 2, explanation: 'Three points are collinear if and only if the determinant = 0.' },
-    { question: 'Area of triangle with vertices (1,0), (6,0), (4,3):', options: ['7.5', '15', '9', '6'], correct: 0, explanation: '½|1(0−3) + 6(3−0) + 4(0−0)| = ½|−3+18| = 7.5.' },
-    { question: 'Equation of line through (x₁,y₁) and (x₂,y₂) uses:', options: ['2×2 determinant', '3×3 determinant', 'No determinant', '4×4 determinant'], correct: 1, explanation: 'Line equation: |x y 1; x₁ y₁ 1; x₂ y₂ 1| = 0.' },
-];
-export const areaAssessment = [
-    { question: 'Find area of triangle (2,3), (4,5), (6,9):', options: ['2', '0', '4', '1'], correct: 0, explanation: '½|2(5−9) + 4(9−3) + 6(3−5)| = ½|−8+24−12| = ½|4| = 2.' },
-    { question: 'Check collinearity: (1,2), (3,6), (5,10)', options: ['Not collinear', 'Collinear', 'Cannot determine', 'Perpendicular'], correct: 1, explanation: '½|1(6−10)+3(10−2)+5(2−6)| = ½|−4+24−20| = 0. Collinear.' },
-    { question: 'Area of triangle is negative when:', options: ['Points go clockwise', 'Never (we use |absolute|)', 'Points are collinear', 'Always'], correct: 1, explanation: 'Area uses absolute value, so it is always non-negative.' },
-    { question: 'For 3 points to form a triangle, area must be:', options: ['0', 'Positive', 'Negative', '1'], correct: 1, explanation: 'Positive area means points are non-collinear (form a triangle).' },
-    { question: 'Line through (1,2) and (3,4): |x y 1; 1 2 1; 3 4 1| = 0 gives:', options: ['x − y + 1 = 0', 'x + y − 3 = 0', 'x − y = 0', '2x − y = 0'], correct: 0, explanation: 'Expanding: x(2−4) − y(1−3) + 1(4−6) = −2x+2y−2 = 0 → x−y+1=0.' },
-    { question: 'Area of triangle (0,0), (1,0), (0,1):', options: ['1', '0.5', '2', '0.25'], correct: 1, explanation: '½|0(0−1)+1(1−0)+0(0−0)| = ½|1| = 0.5.' },
-    { question: 'Maximum area of triangle inscribed in a circle depends on:', options: ['Only radius', 'Radius and position', 'Determinant sign', 'Matrix order'], correct: 0, explanation: 'For a fixed circle, max area depends on radius (equilateral triangle maximizes it).' },
-    { question: 'If three vertices yield |D| = 6, area = ?', options: ['6', '3', '12', '36'], correct: 1, explanation: 'Area = ½|D| = ½ × 6 = 3.' },
-    { question: 'Points (a,0), (0,b), (0,0) form triangle with area:', options: ['ab', '½ab', '½|ab|', '|ab|'], correct: 2, explanation: '½|a(b−0) + 0(0−0) + 0(0−b)| = ½|ab|.' },
-    { question: 'Collinearity condition for (x₁,y₁),(x₂,y₂),(x₃,y₃) is:', options: ['x₁+x₂+x₃=0', 'Area determinant = 0', 'y₁=y₂=y₃', 'x₁=x₂=x₃'], correct: 1, explanation: 'Three points are collinear iff the area determinant = 0.' },
-];
+// ─── KaTeX helpers ──────────────────────────────────────────────────────
+const mat2 = (a, b, c, d) => `$\\begin{vmatrix}${a}&${b}\\\\${c}&${d}\\end{vmatrix}$`;
+const bmat2 = (a, b, c, d) => `$\\begin{bmatrix}${a}&${b}\\\\${c}&${d}\\end{bmatrix}$`;
 
-export const minorCofactorQuestions = [
-    { question: 'Minor M₁₁ of [[1,2,3],[4,5,6],[7,8,9]] is:', options: ['−3', '3', '−12', '12'], correct: 0, explanation: 'Delete R1,C1: |5 6; 8 9| = 45−48 = −3.' },
-    { question: 'Cofactor A₁₂ has sign:', options: ['+', '−', '0', 'Depends on element'], correct: 1, explanation: 'A₁₂: (−1)^(1+2) = (−1)³ = −1.' },
-    { question: 'Cofactor of a₁₂ in [[2,3],[4,5]]:', options: ['−4', '4', '−5', '5'], correct: 0, explanation: 'A₁₂ = (−1)^(1+2) × M₁₂ = −1 × 4 = −4.' },
-    { question: 'Minor is the determinant of a:', options: ['Full matrix', 'Submatrix', 'Transpose', 'Identity'], correct: 1, explanation: 'Minor = determinant of submatrix after removing one row and one column.' },
-    { question: 'Sign pattern at position (2,3) is:', options: ['+', '−', '0', '±'], correct: 1, explanation: '(−1)^(2+3) = (−1)⁵ = −1.' },
-    { question: 'Sum of elements of a row × cofactors of ANOTHER row:', options: ['Equals |A|', 'Equals 0', 'Equals 1', 'Undefined'], correct: 1, explanation: 'This is the zero-sum property: elements × cofactors of different row = 0.' },
-    { question: 'For a 2×2 matrix, M₁₁ = ?', options: ['a₂₂', 'a₁₁', 'a₁₂', 'a₂₁'], correct: 0, explanation: 'Deleting R1,C1 leaves just a₂₂.' },
-    { question: 'Cofactor A₂₁ of [[1,2],[3,4]]:', options: ['−2', '2', '−3', '3'], correct: 0, explanation: 'A₂₁ = (−1)^(2+1) × M₂₁ = −1 × 2 = −2.' },
-    { question: 'Expanding along a column with zeros is:', options: ['Invalid', 'Harder', 'Easier', 'Same difficulty'], correct: 2, explanation: 'Zero elements mean fewer terms to compute — much easier!' },
-    { question: 'Find cofactor A₃₁ of [[2,1,3],[4,0,5],[6,7,8]]:', options: ['5', '−5', '8', '−8'], correct: 0, explanation: 'A₃₁ = (−1)^(3+1) × |1 3; 0 5| = 1 × (5−0) = 5.' },
-];
-export const minorCofactorAssessment = [
-    { question: 'Minor M₂₃ of [[2,1,3],[4,5,6],[7,8,9]]:', options: ['9', '−2', '3', '6'], correct: 0, explanation: 'Delete R2,C3: |2 1; 7 8| = 16−7 = 9.' },
-    { question: 'Cofactor A₁₁ of [[1,2,3],[4,5,6],[7,8,9]]:', options: ['−3', '3', '45', '−45'], correct: 0, explanation: 'A₁₁ = (+1)|5 6; 8 9| = 45−48 = −3.' },
-    { question: 'Sum aᵢ₁A₁₁ + aᵢ₂A₁₂ + aᵢ₃A₁₃ when i=1 gives:', options: ['0', '|A|', '1', 'adj(A)'], correct: 1, explanation: 'Expanding along row 1 gives the determinant.' },
-    { question: 'Sum a₁₁A₂₁ + a₁₂A₂₂ + a₁₃A₂₃ = ?', options: ['|A|', '0', '1', '−|A|'], correct: 1, explanation: 'Elements of row 1 × cofactors of row 2 = 0 (zero-sum property).' },
-    { question: 'For diagonal matrix diag(a,b,c), M₂₂ = ?', options: ['ac', 'bc', 'ab', 'abc'], correct: 0, explanation: 'Delete R2,C2: |a 0; 0 c| = ac.' },
-    { question: 'Number of minors in a 3×3 matrix:', options: ['3', '6', '9', '27'], correct: 2, explanation: 'Each of the 9 elements has its own minor.' },
-    { question: 'M₁₁ of [[1,0,2],[3,4,5],[6,7,8]]:', options: ['−3', '3', '−1', '1'], correct: 0, explanation: '|4 5; 7 8| = 32−35 = −3.' },
-    { question: 'If A is upper triangular, cofactors are:', options: ['All zero', 'All positive', 'Not necessarily simpler', 'Often simpler to compute'], correct: 3, explanation: 'Triangular form makes many submatrices also triangular, simplifying calculation.' },
-    { question: 'The cofactor matrix is also called:', options: ['Adjoint', 'Matrix of cofactors', 'Inverse', 'Transpose'], correct: 1, explanation: 'The matrix of cofactors is the matrix formed by cofactors Aᵢⱼ at each position.' },
-    { question: 'Cofactor A₂₂ of [[1,2,3],[4,5,6],[7,8,9]]:', options: ['−12', '12', '−6', '6'], correct: 0, explanation: 'A₂₂ = (+1)|1 3; 7 9| = 9−21 = −12.' },
-];
+// ─── FUNDAMENTALS ───────────────────────────────────────────────────────
+export function generateFundamentalsQuestions() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        const a = NZ(-9, 9), b = NZ(-9, 9), c = NZ(-9, 9), d = NZ(-9, 9);
+        const det = a * d - b * c;
+        if (i < 4) {
+            // Evaluate 2×2 determinant
+            qs.push(makeQ(
+                `Evaluate: ${mat2(a, b, c, d)}`,
+                det,
+                [a * b - c * d, a * c - b * d, a + d],
+                `For 2×2: $|A| = ad - bc = (${a})(${d}) - (${b})(${c}) = ${det}$.`
+            ));
+        } else if (i < 7) {
+            // Find k for zero determinant
+            const k_a = NZ(1, 6), k_d = NZ(1, 6);
+            const k_b = NZ(1, 6);
+            // k_a * k_d - k_b * k = 0 => k = (k_a * k_d) / k_b
+            const prod = k_a * k_d;
+            if (prod % k_b === 0) {
+                const kVal = prod / k_b;
+                qs.push(makeQ(
+                    `Find $k$ if ${mat2(k_a, k_b, kVal, k_d)} = 0$`,
+                    kVal,
+                    [kVal + 1, kVal - 1, kVal * 2],
+                    `$${k_a} \\times ${k_d} - ${k_b} \\times k = 0 \\Rightarrow k = ${kVal}$.`
+                ));
+            } else {
+                qs.push(makeQ(
+                    `If $|A| \\neq 0$, matrix $A$ is:`,
+                    'Non-singular',
+                    ['Singular', 'Zero matrix', 'Undefined'],
+                    `Non-zero determinant means the matrix is non-singular (invertible).`
+                ));
+            }
+        } else {
+            // Conceptual
+            const concepts = [
+                makeQ('Determinant is defined only for:', 'Square matrices', ['Any matrix', 'Rectangular matrices', 'Diagonal matrices'], 'Determinants are only defined for square matrices.'),
+                makeQ('If determinant = 0, matrix is:', 'Singular', ['Invertible', 'Identity', 'Orthogonal'], 'A zero determinant means the matrix is singular (non-invertible).'),
+                makeQ('The determinant of the identity matrix $I_2$ is:', '1', ['0', '2', '−1'], '$|I_2| = 1 \\times 1 - 0 \\times 0 = 1$.'),
+            ];
+            qs.push(concepts[i - 7]);
+        }
+    }
+    return qs;
+}
 
-export const adjointInverseQuestions = [
-    { question: 'Adjoint of A is the ___ of its cofactor matrix:', options: ['Inverse', 'Transpose', 'Negative', 'Determinant'], correct: 1, explanation: 'adj(A) = (cofactor matrix)ᵀ.' },
-    { question: 'A × adj(A) = ?', options: ['I', '|A|I', 'adj(A) × A', '|A|A'], correct: 1, explanation: 'A × adj(A) = |A| × I.' },
-    { question: 'A⁻¹ = ?', options: ['adj(A)/A', '|A| × adj(A)', 'adj(A)/|A|', 'A/|A|'], correct: 2, explanation: 'A⁻¹ = (1/|A|) × adj(A).' },
-    { question: 'Inverse exists only if:', options: ['A is rectangular', '|A| = 0', '|A| ≠ 0', 'A = I'], correct: 2, explanation: 'Inverse requires non-zero determinant.' },
-    { question: 'Adjoint of [[1,2],[3,4]]:', options: ['[[4,−2],[−3,1]]', '[[4,2],[3,1]]', '[[1,−2],[−3,4]]', '[[−1,2],[3,−4]]'], correct: 0, explanation: 'Swap diagonal, negate off-diagonal: [[4,−2],[−3,1]].' },
-    { question: '|adj A| for n×n matrix = ?', options: ['|A|', '|A|ⁿ', '|A|ⁿ⁻¹', '1/|A|'], correct: 2, explanation: '|adj A| = |A|^(n−1).' },
-    { question: 'If |A| = 5, |adj A| for 3×3:', options: ['5', '25', '125', '10'], correct: 1, explanation: '|adj A| = |A|^(3−1) = 5² = 25.' },
-    { question: 'adj(AB) = ?', options: ['adj(A) × adj(B)', 'adj(B) × adj(A)', '|AB| × I', 'A × B'], correct: 1, explanation: 'adj(AB) = adj(B) × adj(A), same reversal rule as inverses.' },
-    { question: 'Inverse of I (identity) is:', options: ['O', 'I itself', '−I', '2I'], correct: 1, explanation: 'I × I = I, so I⁻¹ = I.' },
-    { question: 'If A² = I, then A⁻¹ = ?', options: ['A²', 'A', 'I', '−A'], correct: 1, explanation: 'A² = I means A × A = I, so A⁻¹ = A.' },
-];
-export const adjointInverseAssessment = [
-    { question: 'Find inverse of [[2,1],[5,3]]:', options: ['[[3,−1],[−5,2]]', '[[3,1],[5,2]]', '[[2,−1],[−5,3]]', 'Does not exist'], correct: 0, explanation: '|A| = 6−5 = 1. adj(A) = [[3,−1],[−5,2]]. A⁻¹ = adj(A)/1 = [[3,−1],[−5,2]].' },
-    { question: 'If |A| = −3, |A⁻¹| = ?', options: ['3', '−3', '−1/3', '1/3'], correct: 2, explanation: '|A⁻¹| = 1/|A| = 1/(-3) = −1/3.' },
-    { question: '(A⁻¹)⁻¹ = ?', options: ['I', 'A', 'Aᵀ', 'O'], correct: 1, explanation: 'Inverting the inverse gives back the original.' },
-    { question: '(AB)⁻¹ = ?', options: ['A⁻¹B⁻¹', 'B⁻¹A⁻¹', 'BA', '(BA)⁻¹'], correct: 1, explanation: 'Shoe-sock rule: (AB)⁻¹ = B⁻¹A⁻¹.' },
-    { question: '(kA)⁻¹ = ? (k ≠ 0)', options: ['kA⁻¹', '(1/k)A⁻¹', 'k²A⁻¹', 'A⁻¹/k²'], correct: 1, explanation: '(kA)⁻¹ = (1/k)A⁻¹.' },
-    { question: '(Aᵀ)⁻¹ = ?', options: ['(A⁻¹)ᵀ', 'A⁻¹', 'Aᵀ', 'A'], correct: 0, explanation: 'Transpose and inverse commute: (Aᵀ)⁻¹ = (A⁻¹)ᵀ.' },
-    { question: 'adj(adj A) for 2×2 = ?', options: ['A', '|A|A', 'A/|A|', '|A|²A'], correct: 0, explanation: 'For 2×2: adj(adj A) = A.' },
-    { question: 'If A is orthogonal (AAᵀ = I), A⁻¹ = ?', options: ['A', 'Aᵀ', '−A', 'A²'], correct: 1, explanation: 'AAᵀ = I means Aᵀ is the inverse.' },
-    { question: 'For singular matrix, adj(A) × A = ?', options: ['|A|I = 0', 'I', 'A', 'Undefined'], correct: 0, explanation: 'Even for singular: adj(A)×A = |A|I = 0×I = O.' },
-    { question: 'Inverse of diagonal matrix diag(2,3) is:', options: ['diag(2,3)', 'diag(1/2,1/3)', 'diag(3,2)', 'Does not exist'], correct: 1, explanation: 'Inverse of diagonal = reciprocals of diagonal entries.' },
-];
+export function generateFundamentalsAssessment() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        const a = NZ(-8, 8), b = NZ(-8, 8), c = NZ(-8, 8), d = NZ(-8, 8);
+        const det = a * d - b * c;
+        if (i < 3) {
+            qs.push(makeQ(
+                `Evaluate: ${mat2(a, b, c, d)}`,
+                det, [a * b - c * d, -det, Math.abs(det) + 1],
+                `$|A| = (${a})(${d}) - (${b})(${c}) = ${det}$.`
+            ));
+        } else if (i < 5) {
+            // |A| product rule
+            const dA = NZ(-5, 5), dB = NZ(-5, 5);
+            qs.push(makeQ(
+                `If $|A| = ${dA}$ and $|B| = ${dB}$, find $|AB|$`,
+                dA * dB, [dA + dB, dA - dB, Math.abs(dA * dB)],
+                `$|AB| = |A| \\times |B| = ${dA} \\times ${dB} = ${dA * dB}$.`
+            ));
+        } else if (i < 7) {
+            // scalar multiplication
+            const n = R(2, 3), k = R(2, 4), detA = NZ(-4, 4);
+            const result = Math.pow(k, n) * detA;
+            qs.push(makeQ(
+                `If $|A| = ${detA}$ for a ${n}×${n} matrix, find $|${k}A|$`,
+                result, [k * detA, k * k * detA, -result],
+                `$|${k}A| = ${k}^{${n}} \\times |A| = ${Math.pow(k, n)} \\times ${detA} = ${result}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('If two rows are identical, $|A| = ?$', '0', ['1', '−1', 'Undefined'], 'Identical rows always give determinant = 0.'),
+                makeQ('Determinant of a triangular matrix equals:', 'Product of diagonal elements', ['Sum of all elements', 'Sum of diagonal', '0'], 'For triangular matrices, determinant = product of diagonal entries.'),
+                makeQ('Determinant of a zero matrix is:', '0', ['1', 'Undefined', '−1'], 'All elements are 0, so determinant is 0.'),
+            ];
+            qs.push(concepts[i - 7]);
+        }
+    }
+    return qs;
+}
 
-export const applicationsQuestions = [
-    { question: 'System AX = B has unique solution when:', options: ['|A| = 0', '|A| ≠ 0', 'A = I', 'B = O'], correct: 1, explanation: 'Unique solution exists when |A| ≠ 0.' },
-    { question: 'If |A| = 0 and (adj A)B = O:', options: ['No solution', 'Unique solution', 'Infinite solutions', 'Cannot determine'], correct: 2, explanation: '|A| = 0 with (adj A)B = O means infinitely many solutions.' },
-    { question: 'If |A| = 0 and (adj A)B ≠ O:', options: ['Unique solution', 'Infinite solutions', 'No solution', 'Two solutions'], correct: 2, explanation: '|A| = 0 with (adj A)B ≠ O means inconsistent (no solution).' },
-    { question: 'Cramer\'s Rule uses:', options: ['Matrix multiplication', 'Determinants', 'Eigenvalues', 'Row reduction'], correct: 1, explanation: 'Cramer\'s Rule solves linear systems using determinants.' },
-    { question: 'In Cramer\'s Rule, x = ?', options: ['|A|/D₁', 'D₁/|A|', '|A| × D₁', 'D₁ − |A|'], correct: 1, explanation: 'x = D₁/D where D₁ replaces column 1 with constants.' },
-    { question: 'System: 2x+y=5, 3x+4y=6. |A| = ?', options: ['5', '8', '11', '2'], correct: 0, explanation: '|A| = 2×4 − 1×3 = 8−3 = 5.' },
-    { question: 'A consistent system has:', options: ['No solution', 'At least one solution', 'Exactly two solutions', 'Only zero solution'], correct: 1, explanation: 'Consistent = at least one solution (unique or infinite).' },
-    { question: 'Homogeneous system AX = O always has:', options: ['No solution', 'Only trivial solution', 'At least trivial solution', 'Infinite solutions'], correct: 2, explanation: 'X = O (trivial solution) always satisfies AX = O.' },
-    { question: 'For non-trivial solution of AX = O:', options: ['|A| ≠ 0', '|A| = 0', 'A = I', 'A = O'], correct: 1, explanation: 'Non-trivial solutions exist only when |A| = 0.' },
-    { question: 'Matrix method to solve AX = B: X = ?', options: ['AB⁻¹', 'A⁻¹B', 'BA⁻¹', 'B/A'], correct: 1, explanation: 'X = A⁻¹B (pre-multiply both sides by A⁻¹).' },
-];
-export const applicationsAssessment = [
-    { question: 'Solve: x+2y=3, 2x+4y=6. System is:', options: ['Inconsistent', 'Unique solution', 'Infinitely many solutions', 'No answer'], correct: 2, explanation: 'Second equation = 2 × first. |A| = 0, (adj A)B = O → infinite solutions.' },
-    { question: 'Solve: x+y=2, 2x+2y=5:', options: ['x=1,y=1', 'Infinitely many', 'No solution', 'x=2,y=0'], correct: 2, explanation: '2(x+y) = 4 ≠ 5. Contradiction → inconsistent.' },
-    { question: 'If D = 0 in Cramer\'s Rule:', options: ['x = 0', 'Unique solution', 'System needs further analysis', 'x = D₁'], correct: 2, explanation: 'When D = 0, Cramer\'s Rule fails; need to check consistency separately.' },
-    { question: 'System kx+y=2, 2x+3y=5 has unique solution when:', options: ['k = 2/3', 'k ≠ 2/3', 'k = 0', 'Any k'], correct: 1, explanation: '|A| = 3k−2 ≠ 0 → k ≠ 2/3.' },
-    { question: 'For 3 equations, 3 unknowns, unique solution requires:', options: ['|A| = 0', '|A| ≠ 0', 'A is diagonal', 'B = O'], correct: 1, explanation: '3×3 system has unique solution when |A| ≠ 0.' },
-    { question: 'X = A⁻¹B requires:', options: ['A is rectangular', 'A is square & |A| ≠ 0', '|A| = 0', 'B = O'], correct: 1, explanation: 'A⁻¹ exists only when A is square and |A| ≠ 0.' },
-    { question: 'Solve: 2x+3y=5, 4x+y=6. x = ?', options: ['13/10', '−7/10', '2', '1'], correct: 0, explanation: '|A|=2−12=−10. Dx=5−18=−13. x=−13/−10=13/10.' },
-    { question: 'Homogeneous system with |A| ≠ 0 has:', options: ['Infinite solutions', 'Only trivial solution', 'No solution', 'Two solutions'], correct: 1, explanation: '|A| ≠ 0 → only X = O (trivial solution).' },
-    { question: 'Number of solutions of AX = B when A is singular:', options: ['Always 0', 'Always infinite', '0 or infinite', 'Exactly 1'], correct: 2, explanation: 'Singular A gives either no solution or infinitely many.' },
-    { question: 'In matrix method, we compute X = A⁻¹B using:', options: ['Row reduction', 'adj(A)/|A| × B', 'A × B', 'A + B'], correct: 1, explanation: 'A⁻¹ = adj(A)/|A|, then X = A⁻¹B.' },
-];
+// ─── PROPERTIES ─────────────────────────────────────────────────────────
+export function generatePropertiesQuestions() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 3) {
+            const n = R(2, 3), k = R(2, 5), detA = NZ(-5, 5);
+            const res = Math.pow(k, n) * detA;
+            qs.push(makeQ(
+                `If $|A| = ${detA}$ for a ${n}×${n} matrix, $|${k}A| = ?$`,
+                res, [k * detA, -res, detA],
+                `$|${k}A| = ${k}^{${n}} \\cdot |A| = ${Math.pow(k, n)} \\times ${detA} = ${res}$.`
+            ));
+        } else if (i < 5) {
+            const detA = NZ(-5, 5), p = R(2, 3);
+            const res = Math.pow(detA, p);
+            qs.push(makeQ(
+                `If $|A| = ${detA}$, $|A^{${p}}| = ?$`,
+                res, [detA * p, -res, Math.abs(res) + 1],
+                `$|A^{${p}}| = |A|^{${p}} = ${detA}^{${p}} = ${res}$.`
+            ));
+        } else if (i < 7) {
+            const d1 = NZ(2, 5), d2 = NZ(2, 5), d3 = NZ(2, 5);
+            const prod = d1 * d2 * d3;
+            qs.push(makeQ(
+                `Determinant of diagonal matrix $\\text{diag}(${d1}, ${d2}, ${d3})$ is:`,
+                prod, [d1 + d2 + d3, d1 * d2, d2 * d3],
+                `Product of diagonal entries: $${d1} \\times ${d2} \\times ${d3} = ${prod}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('If you swap two rows, the determinant:', 'Changes sign', ['Doubles', 'Stays same', 'Becomes 0'], 'Swapping two rows changes the sign of the determinant.'),
+                makeQ('$|A^T| = ?$', '$|A|$', ['$-|A|$', '$1/|A|$', '$0$'], 'Transpose does not change the determinant.'),
+                makeQ('Adding $k$ times one row to another:', 'Does not change determinant', ['Changes determinant', 'Makes it 0', 'Doubles it'], 'Row operation $R_i \\to R_i + kR_j$ preserves the determinant.'),
+            ];
+            qs.push(concepts[i - 7]);
+        }
+    }
+    return qs;
+}
 
-export const expansionQuestions = [
-    { question: 'Evaluate: |2 0 1; 3 4 5; 1 0 6| (expand R1):', options: ['39', '−39', '43', '−43'], correct: 2, explanation: '2(24−0) − 0(18−5) + 1(0−4) = 48−0−4 = 44. Correction: 2(24) + 0 + 1(0−4) = 48 − 4 = 44. Actually: 2|4 5;0 6| − 0|3 5;1 6| + 1|3 4;1 0| = 2(24−0) − 0 + (0−4) = 48−4 = 44. Hmm, let me re-verify. We get 43 by proper expansion: 2(24-0) - 0 + 1(0-4) = 48 - 4 = 44. The closest option is 43.' },
-    { question: 'Best row/column to expand along has:', options: ['Largest elements', 'Most zeros', 'All ones', 'Alternating signs'], correct: 1, explanation: 'Choose the row/column with the most zeros to minimize computation.' },
-    { question: 'Expanding |1 2 3; 4 5 6; 7 8 9| gives:', options: ['0', '1', '−1', '3'], correct: 0, explanation: 'R₃ − R₂ = R₂ − R₁ (arithmetic progression), determinant = 0.' },
-    { question: 'For 3×3, expanding along any row/column gives:', options: ['Different results', 'Same result', 'Only works for R1', 'Only works for C1'], correct: 1, explanation: 'Expansion along any row or column always gives the same determinant.' },
-    { question: 'Number of terms in 3×3 expansion along one row:', options: ['2', '3', '6', '9'], correct: 1, explanation: 'A 3×3 matrix has 3 elements per row, giving 3 terms.' },
-    { question: 'Evaluate: |4 2 1; 0 3 5; 0 0 2|:', options: ['24', '12', '6', '0'], correct: 0, explanation: 'Upper triangular: determinant = product of diagonal = 4 × 3 × 2 = 24.' },
-    { question: 'Sign at position (1,3) is:', options: ['+', '−', '0', 'Depends'], correct: 0, explanation: '(−1)^(1+3) = (−1)⁴ = +1.' },
-    { question: 'Evaluate: |1 0 0; 0 5 0; 0 0 3|:', options: ['15', '8', '0', '1'], correct: 0, explanation: 'Diagonal matrix: determinant = 1 × 5 × 3 = 15.' },
-    { question: 'Evaluate |1 2 1; 2 1 3; 3 0 1|:', options: ['14', '−14', '10', '−10'], correct: 1, explanation: 'Expand R1: 1(1−0)−2(2−9)+1(0−3) = 1+14−3 = 12. Proper: 1|1 3;0 1|−2|2 3;3 1|+1|2 1;3 0| = 1(1)−2(−7)+1(−3)=1+14−3=12. Closest: −14.' },
-    { question: 'A 3×3 determinant with R₂ = 2R₁ evaluates to:', options: ['2|A|', '0', '4|A|', '|A|/2'], correct: 1, explanation: 'Proportional rows → determinant = 0.' },
-];
-export const expansionAssessment = [
-    { question: 'Evaluate |1 2 3; 0 4 5; 1 0 6| by expanding C1:', options: ['22', '24', '14', '−22'], correct: 2, explanation: '1|4 5;0 6| − 0 + 1|2 3;4 5| = 1(24) + 1(10−12) = 24−2 = 22. Actually 1(24-0)-0+1(10-12) = 24+(-2) = 22. Closest is 14.' },
-    { question: 'Evaluate |k 1; 2 k| = 3 gives k = ?', options: ['± √5', '± √3', '± 1', '± 2'], correct: 0, explanation: 'k² − 2 = 3 → k² = 5 → k = ±√5.' },
-    { question: 'Expand |1 0 2; 3 4 5; 6 7 8| along C2:', options: ['3', '−3', '0', '7'], correct: 1, explanation: '−0|3 5;6 8| + 4|1 2;6 8| − 7|1 2;3 5| = 0 + 4(−4) − 7(−1) = −16+7 = −9. Hmm, −3.' },
-    { question: 'If R₁ = R₃ in a 3×3 matrix:', options: ['|A| = 2', '|A| = 1', '|A| = 0', '|A| = −1'], correct: 2, explanation: 'Identical rows give determinant = 0.' },
-    { question: 'Evaluate |1 2 3; 2 4 6; 1 1 1|:', options: ['0', '6', '−6', '12'], correct: 0, explanation: 'R₂ = 2R₁, so determinant = 0.' },
-    { question: 'Determinant of |a 0 0; 0 b 0; 0 0 c|:', options: ['a+b+c', 'abc', '0', '1'], correct: 1, explanation: 'Diagonal matrix: determinant = product of diagonal elements = abc.' },
-    { question: 'If R₂ → R₂ + 3R₁, determinant:', options: ['Triples', 'Unchanged', 'Changes sign', 'Becomes 0'], correct: 1, explanation: 'Adding a multiple of one row to another does not change the determinant.' },
-    { question: 'Number of 2×2 minors in a 3×3 matrix:', options: ['3', '6', '9', '12'], correct: 2, explanation: 'Each element has one minor, and there are 9 elements in a 3×3 matrix.' },
-    { question: 'If |A| = −2, and we multiply R₁ by 3:', options: ['|A| = −2', '|A| = −6', '|A| = −8', '|A| = 6'], correct: 1, explanation: 'Scaling one row by k multiplies determinant by k: −2 × 3 = −6.' },
-    { question: 'If |A| = 5, then |2A| for 3×3 = ?', options: ['10', '40', '80', '54'], correct: 1, explanation: '|2A| = 2³ × 5 = 8 × 5 = 40.' },
-];
+export function generatePropertiesAssessment() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 3) {
+            const detA = NZ(-5, 5);
+            const n = 3;
+            const negDet = Math.pow(-1, n) * detA;
+            qs.push(makeQ(
+                `$|-A|$ for a 3×3 matrix with $|A| = ${detA}$:`,
+                negDet, [-negDet, detA, -detA],
+                `$|-A| = (-1)^3 |A| = ${negDet}$.`
+            ));
+        } else if (i < 5) {
+            const detA = NZ(2, 5);
+            qs.push(makeQ(
+                `If $|A| = ${detA}$, $|A^{-1}| = ?$`,
+                `$1/${detA}$`, [`$${detA}$`, `$-${detA}$`, `$${detA * detA}$`],
+                `$|A^{-1}| = 1/|A| = 1/${detA}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('If a row of $A$ is all zeros, $|A| = ?$', '0', ['1', '−1', 'Undefined'], 'A row of zeros means determinant = 0.'),
+                makeQ('If $A$ is singular, $|A| = ?$', '0', ['1', '−1', 'Positive'], 'Singular means $|A| = 0$.'),
+                makeQ('If $R_1 \\leftrightarrow R_2$ is applied twice:', 'Determinant unchanged', ['Determinant × 4', 'Determinant = 0', 'Determinant × −1'], 'Two swaps: sign changes twice → back to original.'),
+                makeQ('If $A$ satisfies $A^2 = I$, possible $|A|$ values:', '$1$ or $-1$', ['Only $1$', 'Only $-1$', '$0$'], '$|A^2| = |I| \\Rightarrow |A|^2 = 1 \\Rightarrow |A| = \\pm 1$.'),
+                makeQ('Multiplying one row by $k$ multiplies $|A|$ by:', '$k$', ['$k^2$', '$k^n$', '$1/k$'], 'Scaling one row by $k$ multiplies determinant by $k$.'),
+            ];
+            qs.push(concepts[i - 5]);
+        }
+    }
+    return qs;
+}
+
+// ─── AREA & COLLINEARITY ────────────────────────────────────────────────
+export function generateAreaQuestions() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 4) {
+            const x1 = R(0, 5), y1 = R(0, 5), x2 = R(0, 8), y2 = R(0, 8), x3 = R(0, 8), y3 = R(0, 8);
+            const area2 = Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+            const areaStr = area2 % 2 === 0 ? `${area2 / 2}` : `${area2}/2`;
+            qs.push(makeQ(
+                `Area of triangle with vertices $(${x1},${y1})$, $(${x2},${y2})$, $(${x3},${y3})$:`,
+                areaStr,
+                [`${area2}`, `${area2 + 2}`, `${Math.max(1, area2 / 2 - 1)}`],
+                `Area $= \\frac{1}{2}|${x1}(${y2}-${y3}) + ${x2}(${y3}-${y1}) + ${x3}(${y1}-${y2})| = ${areaStr}$.`
+            ));
+        } else if (i < 7) {
+            // Collinear points (make y = mx + c)
+            const m = NZ(-2, 2), cc = R(-3, 3);
+            const x1 = R(0, 3), x2 = x1 + R(1, 3), x3 = x2 + R(1, 3);
+            const y1 = m * x1 + cc, y2 = m * x2 + cc, y3 = m * x3 + cc;
+            qs.push(makeQ(
+                `Points $(${x1},${y1})$, $(${x2},${y2})$, $(${x3},${y3})$ are:`,
+                'Collinear',
+                ['Non-collinear', 'Perpendicular', 'Parallel'],
+                `Area $= 0$ since these points lie on the line $y = ${m}x + ${cc}$. Hence collinear.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('Area of triangle with collinear points is:', '0', ['1', 'Undefined', '½'], 'Collinear points form no triangle, area = 0.'),
+                makeQ('The area formula always gives:', 'Absolute value (non-negative)', ['Positive value', 'Negative value', 'Zero'], 'We take the absolute value, so area is always non-negative.'),
+                makeQ('For collinearity test, determinant should be:', '0', ['1', '−1', 'Positive'], 'Three points are collinear if and only if the determinant = 0.'),
+            ];
+            qs.push(concepts[i - 7]);
+        }
+    }
+    return qs;
+}
+
+export function generateAreaAssessment() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 4) {
+            const x1 = R(0, 6), y1 = R(0, 6), x2 = R(0, 8), y2 = R(0, 8), x3 = R(0, 8), y3 = R(0, 8);
+            const area2 = Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+            const areaStr = area2 % 2 === 0 ? `${area2 / 2}` : `${area2}/2`;
+            qs.push(makeQ(
+                `Find area of triangle $(${x1},${y1})$, $(${x2},${y2})$, $(${x3},${y3})$:`,
+                areaStr,
+                [`${area2}`, `${area2 + 3}`, `${Math.max(0, area2 / 2 - 2)}`],
+                `Area $= \\frac{1}{2}|${x1}(${y2}-${y3}) + ${x2}(${y3}-${y1}) + ${x3}(${y1}-${y2})| = ${areaStr}$.`
+            ));
+        } else if (i < 7) {
+            const m = NZ(-2, 2), cc = R(-3, 3);
+            const x1 = R(1, 3), x2 = x1 + R(1, 3), x3 = x2 + R(1, 3);
+            qs.push(makeQ(
+                `Check collinearity: $(${x1},${m * x1 + cc})$, $(${x2},${m * x2 + cc})$, $(${x3},${m * x3 + cc})$`,
+                'Collinear', ['Not collinear', 'Cannot determine', 'Perpendicular'],
+                `Area determinant = 0 since these lie on $y = ${m}x + ${cc}$. Hence collinear.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('Area of triangle is negative when:', 'Never (we use absolute value)', ['Points go clockwise', 'Points are collinear', 'Always'], 'Area uses absolute value, so it is always non-negative.'),
+                makeQ('For 3 points to form a triangle, area must be:', 'Positive', ['0', 'Negative', '1'], 'Positive area means points are non-collinear (form a triangle).'),
+                makeQ('If three vertices yield $|D| = 6$, area = ?', '3', ['6', '12', '36'], 'Area $= \\frac{1}{2}|D| = \\frac{1}{2} \\times 6 = 3$.'),
+            ];
+            qs.push(concepts[i - 7]);
+        }
+    }
+    return qs;
+}
+
+// ─── MINORS & COFACTORS ─────────────────────────────────────────────────
+export function generateMinorCofactorQuestions() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 4) {
+            // Minor of a 2×2
+            const a = NZ(-5, 5), b = NZ(-5, 5), c = NZ(-5, 5), d = NZ(-5, 5);
+            const positions = [
+                { r: 1, c: 1, minor: d, label: `M_{11}`, del: `Delete $R_1,C_1$: leaves $${d}$` },
+                { r: 1, c: 2, minor: c, label: `M_{12}`, del: `Delete $R_1,C_2$: leaves $${c}$` },
+                { r: 2, c: 1, minor: b, label: `M_{21}`, del: `Delete $R_2,C_1$: leaves $${b}$` },
+                { r: 2, c: 2, minor: a, label: `M_{22}`, del: `Delete $R_2,C_2$: leaves $${a}$` },
+            ];
+            const pos = positions[i];
+            qs.push(makeQ(
+                `$${pos.label}$ of ${bmat2(a, b, c, d)} is:`,
+                pos.minor, [pos.minor + 1, -pos.minor, pos.minor * 2],
+                `${pos.del}.`
+            ));
+        } else if (i < 7) {
+            // Cofactor with sign
+            const r = R(1, 3), col = R(1, 3);
+            const sign = Math.pow(-1, r + col);
+            const signStr = sign === 1 ? '+' : '−';
+            qs.push(makeQ(
+                `Sign pattern at position $(${r},${col})$ is:`,
+                signStr, [sign === 1 ? '−' : '+', '0', '±'],
+                `$(-1)^{${r}+${col}} = (-1)^{${r + col}} = ${signStr}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('Minor is the determinant of a:', 'Submatrix', ['Full matrix', 'Transpose', 'Identity'], 'Minor = determinant of submatrix after removing one row and one column.'),
+                makeQ('Sum of elements of a row × cofactors of ANOTHER row:', 'Equals 0', ['Equals $|A|$', 'Equals 1', 'Undefined'], 'This is the zero-sum property: elements × cofactors of different row = 0.'),
+                makeQ('Expanding along a column with zeros is:', 'Easier', ['Invalid', 'Harder', 'Same difficulty'], 'Zero elements mean fewer terms to compute — much easier!'),
+            ];
+            qs.push(concepts[i - 7]);
+        }
+    }
+    return qs;
+}
+
+export function generateMinorCofactorAssessment() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 4) {
+            const a = NZ(-5, 5), b = NZ(-5, 5), c = NZ(-5, 5), d = NZ(-5, 5);
+            const sign12 = Math.pow(-1, 1 + 2);
+            const cofA12 = sign12 * c;
+            qs.push(makeQ(
+                `Cofactor $A_{12}$ of ${bmat2(a, b, c, d)}:`,
+                cofA12, [-cofA12, c, -c],
+                `$A_{12} = (-1)^{1+2} \\times M_{12} = ${sign12} \\times ${c} = ${cofA12}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('Sum $a_{i1}A_{11} + a_{i2}A_{12} + a_{i3}A_{13}$ when $i=1$ gives:', '$|A|$', ['$0$', '$1$', '$\\text{adj}(A)$'], 'Expanding along row 1 gives the determinant.'),
+                makeQ('Sum $a_{11}A_{21} + a_{12}A_{22} + a_{13}A_{23} = ?$', '$0$', ['$|A|$', '$1$', '$-|A|$'], 'Elements of row 1 × cofactors of row 2 = 0 (zero-sum property).'),
+                makeQ('Number of minors in a 3×3 matrix:', '9', ['3', '6', '27'], 'Each of the 9 elements has its own minor.'),
+                makeQ('The cofactor matrix is also called:', 'Matrix of cofactors', ['Adjoint', 'Inverse', 'Transpose'], 'The matrix of cofactors is the matrix formed by cofactors $A_{ij}$ at each position.'),
+                makeQ('For a 2×2 matrix, $M_{11} = ?$', '$a_{22}$', ['$a_{11}$', '$a_{12}$', '$a_{21}$'], 'Deleting $R_1,C_1$ leaves just $a_{22}$.'),
+                makeQ('If A is upper triangular, cofactors are:', 'Often simpler to compute', ['All zero', 'All positive', 'Not necessarily simpler'], 'Triangular form makes many submatrices also triangular, simplifying calculation.'),
+            ];
+            qs.push(concepts[i - 4]);
+        }
+    }
+    return qs;
+}
+
+// ─── ADJOINT & INVERSE ──────────────────────────────────────────────────
+export function generateAdjointInverseQuestions() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 3) {
+            const detA = NZ(2, 6), n = R(2, 3);
+            const adjDet = Math.pow(detA, n - 1);
+            qs.push(makeQ(
+                `If $|A| = ${detA}$ for a ${n}×${n} matrix, $|\\text{adj }A| = ?$`,
+                adjDet, [detA, Math.pow(detA, n), detA * 2],
+                `$|\\text{adj }A| = |A|^{n-1} = ${detA}^{${n - 1}} = ${adjDet}$.`
+            ));
+        } else if (i < 5) {
+            // Inverse of 2×2
+            const a = NZ(1, 4), b = NZ(-3, 3), c = NZ(-3, 3), d = NZ(1, 4);
+            const det = a * d - b * c;
+            if (det !== 0) {
+                qs.push(makeQ(
+                    `Adjoint of ${bmat2(a, b, c, d)} is:`,
+                    `${bmat2(d, -b, -c, a)}`,
+                    [`${bmat2(d, b, c, a)}`, `${bmat2(a, -b, -c, d)}`, `${bmat2(-a, b, c, -d)}`],
+                    `Swap diagonal, negate off-diagonal: ${bmat2(d, -b, -c, a)}.`
+                ));
+            } else {
+                qs.push(makeQ(
+                    'Adjoint of $A$ is the ___ of its cofactor matrix:',
+                    'Transpose', ['Inverse', 'Negative', 'Determinant'],
+                    `$\\text{adj}(A) = (\\text{cofactor matrix})^T$.`
+                ));
+            }
+        } else {
+            const concepts = [
+                makeQ('$A \\times \\text{adj}(A) = ?$', '$|A|I$', ['$I$', '$\\text{adj}(A) \\times A$', '$|A|A$'], '$A \\times \\text{adj}(A) = |A| \\times I$.'),
+                makeQ('$A^{-1} = ?$', '$\\text{adj}(A)/|A|$', ['$\\text{adj}(A)/A$', '$|A| \\times \\text{adj}(A)$', '$A/|A|$'], '$A^{-1} = \\frac{1}{|A|} \\times \\text{adj}(A)$.'),
+                makeQ('Inverse exists only if:', '$|A| \\neq 0$', ['$A$ is rectangular', '$|A| = 0$', '$A = I$'], 'Inverse requires non-zero determinant.'),
+                makeQ('If $A^2 = I$, then $A^{-1} = ?$', '$A$', ['$A^2$', '$I$', '$-A$'], '$A^2 = I$ means $A \\times A = I$, so $A^{-1} = A$.'),
+                makeQ('Inverse of $I$ (identity) is:', '$I$ itself', ['$O$', '$-I$', '$2I$'], '$I \\times I = I$, so $I^{-1} = I$.'),
+            ];
+            qs.push(concepts[i - 5]);
+        }
+    }
+    return qs;
+}
+
+export function generateAdjointInverseAssessment() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 3) {
+            const detA = NZ(-6, 6);
+            qs.push(makeQ(
+                `If $|A| = ${detA}$, $|A^{-1}| = ?$`,
+                `$1/${detA}$`, [`$${detA}$`, `$-${detA}$`, `$${detA * detA}$`],
+                `$|A^{-1}| = 1/|A| = 1/${detA}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('$(A^{-1})^{-1} = ?$', '$A$', ['$I$', '$A^T$', '$O$'], 'Inverting the inverse gives back the original.'),
+                makeQ('$(AB)^{-1} = ?$', '$B^{-1}A^{-1}$', ['$A^{-1}B^{-1}$', '$BA$', '$(BA)^{-1}$'], 'Shoe-sock rule: $(AB)^{-1} = B^{-1}A^{-1}$.'),
+                makeQ('$(kA)^{-1} = ?$ ($k \\neq 0$)', '$(1/k)A^{-1}$', ['$kA^{-1}$', '$k^2 A^{-1}$', '$A^{-1}/k^2$'], '$(kA)^{-1} = (1/k)A^{-1}$.'),
+                makeQ('$(A^T)^{-1} = ?$', '$(A^{-1})^T$', ['$A^{-1}$', '$A^T$', '$A$'], 'Transpose and inverse commute: $(A^T)^{-1} = (A^{-1})^T$.'),
+                makeQ('If $A$ is orthogonal ($AA^T = I$), $A^{-1} = ?$', '$A^T$', ['$A$', '$-A$', '$A^2$'], '$AA^T = I$ means $A^T$ is the inverse.'),
+                makeQ('For singular matrix, $\\text{adj}(A) \\times A = ?$', '$|A|I = O$', ['$I$', '$A$', 'Undefined'], 'Even for singular: $\\text{adj}(A) \\times A = |A|I = 0 \\times I = O$.'),
+                makeQ('$\\text{adj}(AB) = ?$', '$\\text{adj}(B) \\times \\text{adj}(A)$', ['$\\text{adj}(A) \\times \\text{adj}(B)$', '$|AB| \\times I$', '$A \\times B$'], '$\\text{adj}(AB) = \\text{adj}(B) \\times \\text{adj}(A)$, same reversal rule as inverses.'),
+            ];
+            qs.push(concepts[i - 3]);
+        }
+    }
+    return qs;
+}
+
+// ─── APPLICATIONS (Cramer's Rule, Systems) ──────────────────────────────
+export function generateApplicationsQuestions() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 3) {
+            // System with specific det
+            const a1 = NZ(1, 4), b1 = NZ(1, 4), a2 = NZ(1, 4), b2 = NZ(1, 4);
+            const det = a1 * b2 - b1 * a2;
+            qs.push(makeQ(
+                `System: $${a1}x + ${b1}y = c_1$, $${a2}x + ${b2}y = c_2$. $|A| = ?$`,
+                det, [a1 * a2 - b1 * b2, a1 + b2, a1 * b2 + b1 * a2],
+                `$|A| = ${a1} \\times ${b2} - ${b1} \\times ${a2} = ${det}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('System $AX = B$ has unique solution when:', '$|A| \\neq 0$', ['$|A| = 0$', '$A = I$', '$B = O$'], 'Unique solution exists when $|A| \\neq 0$.'),
+                makeQ('If $|A| = 0$ and $(\\text{adj }A)B = O$:', 'Infinite solutions', ['No solution', 'Unique solution', 'Cannot determine'], '$|A| = 0$ with $(\\text{adj }A)B = O$ means infinitely many solutions.'),
+                makeQ('If $|A| = 0$ and $(\\text{adj }A)B \\neq O$:', 'No solution', ['Unique solution', 'Infinite solutions', 'Two solutions'], '$|A| = 0$ with $(\\text{adj }A)B \\neq O$ means inconsistent (no solution).'),
+                makeQ("Cramer's Rule uses:", 'Determinants', ['Matrix multiplication', 'Eigenvalues', 'Row reduction'], "Cramer's Rule solves linear systems using determinants."),
+                makeQ('Homogeneous system $AX = O$ always has:', 'At least trivial solution', ['No solution', 'Only trivial solution', 'Infinite solutions'], '$X = O$ (trivial solution) always satisfies $AX = O$.'),
+                makeQ('For non-trivial solution of $AX = O$:', '$|A| = 0$', ['$|A| \\neq 0$', '$A = I$', '$A = O$'], 'Non-trivial solutions exist only when $|A| = 0$.'),
+                makeQ('Matrix method: $X = ?$', '$A^{-1}B$', ['$AB^{-1}$', '$BA^{-1}$', '$B/A$'], '$X = A^{-1}B$ (pre-multiply both sides by $A^{-1}$).'),
+            ];
+            qs.push(concepts[i - 3]);
+        }
+    }
+    return qs;
+}
+
+export function generateApplicationsAssessment() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        const concepts = [
+            makeQ('If $D = 0$ in Cramer\'s Rule:', 'System needs further analysis', ['$x = 0$', 'Unique solution', '$x = D_1$'], 'When $D = 0$, Cramer\'s Rule fails; need to check consistency separately.'),
+            makeQ('For 3 equations, 3 unknowns, unique solution requires:', '$|A| \\neq 0$', ['$|A| = 0$', '$A$ is diagonal', '$B = O$'], '3×3 system has unique solution when $|A| \\neq 0$.'),
+            makeQ('$X = A^{-1}B$ requires:', '$A$ is square & $|A| \\neq 0$', ['$A$ is rectangular', '$|A| = 0$', '$B = O$'], '$A^{-1}$ exists only when $A$ is square and $|A| \\neq 0$.'),
+            makeQ('Homogeneous system with $|A| \\neq 0$ has:', 'Only trivial solution', ['Infinite solutions', 'No solution', 'Two solutions'], '$|A| \\neq 0$ → only $X = O$ (trivial solution).'),
+            makeQ('Number of solutions of $AX = B$ when $A$ is singular:', '0 or infinite', ['Always 0', 'Always infinite', 'Exactly 1'], 'Singular $A$ gives either no solution or infinitely many.'),
+            makeQ('A consistent system has:', 'At least one solution', ['No solution', 'Exactly two solutions', 'Only zero solution'], 'Consistent = at least one solution (unique or infinite).'),
+            makeQ('In matrix method, we compute $X = A^{-1}B$ using:', '$\\text{adj}(A)/|A| \\times B$', ['Row reduction', '$A \\times B$', '$A + B$'], '$A^{-1} = \\text{adj}(A)/|A|$, then $X = A^{-1}B$.'),
+        ];
+        if (i < 3) {
+            const a1 = NZ(1, 5), b1 = NZ(1, 5), a2 = NZ(1, 5), b2 = NZ(1, 5);
+            const det = a1 * b2 - b1 * a2;
+            if (det !== 0) {
+                const c1 = R(1, 10), c2 = R(1, 10);
+                const dx = c1 * b2 - b1 * c2;
+                qs.push(makeQ(
+                    `For $${a1}x+${b1}y=${c1}$, $${a2}x+${b2}y=${c2}$: $D = |A| = ?$`,
+                    det, [a1 * a2 - b1 * b2, det + 2, -det],
+                    `$|A| = ${a1}(${b2}) - ${b1}(${a2}) = ${det}$.`
+                ));
+            } else {
+                qs.push(concepts[i]);
+            }
+        } else {
+            qs.push(concepts[Math.min(i - 3, concepts.length - 1)]);
+        }
+    }
+    return qs;
+}
+
+// ─── EXPANSION (Skill 6 if present) ─────────────────────────────────────
+export function generateExpansionQuestions() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 3) {
+            // Upper triangular determinant
+            const d1 = NZ(1, 5), d2 = NZ(1, 5), d3 = NZ(1, 5);
+            const prod = d1 * d2 * d3;
+            qs.push(makeQ(
+                `Evaluate: $\\begin{vmatrix}${d1}&${R(0, 3)}&${R(0, 3)}\\\\0&${d2}&${R(0, 3)}\\\\0&0&${d3}\\end{vmatrix}$`,
+                prod, [d1 + d2 + d3, d1 * d2, d2 * d3],
+                `Upper triangular: determinant = product of diagonal = $${d1} \\times ${d2} \\times ${d3} = ${prod}$.`
+            ));
+        } else if (i < 5) {
+            // Diagonal matrix
+            const d1 = NZ(1, 5), d2 = NZ(1, 5), d3 = NZ(1, 5);
+            const prod = d1 * d2 * d3;
+            qs.push(makeQ(
+                `Evaluate: $\\begin{vmatrix}${d1}&0&0\\\\0&${d2}&0\\\\0&0&${d3}\\end{vmatrix}$`,
+                prod, [d1 + d2 + d3, 0, 1],
+                `Diagonal matrix: determinant = $${d1} \\times ${d2} \\times ${d3} = ${prod}$.`
+            ));
+        } else {
+            const concepts = [
+                makeQ('Best row/column to expand along has:', 'Most zeros', ['Largest elements', 'All ones', 'Alternating signs'], 'Choose the row/column with the most zeros to minimize computation.'),
+                makeQ('For 3×3, expanding along any row/column gives:', 'Same result', ['Different results', 'Only works for $R_1$', 'Only works for $C_1$'], 'Expansion along any row or column always gives the same determinant.'),
+                makeQ('Number of terms in 3×3 expansion along one row:', '3', ['2', '6', '9'], 'A 3×3 matrix has 3 elements per row, giving 3 terms.'),
+                makeQ('A 3×3 determinant with $R_2 = 2R_1$ evaluates to:', '0', ['$2|A|$', '$4|A|$', '$|A|/2$'], 'Proportional rows → determinant = 0.'),
+                makeQ('If $|A| = 5$, and we multiply $R_1$ by 3:', '$|A_{\\text{new}}| = 15$', ['$|A| = 5$', '$|A| = 45$', '$|A| = -15$'], 'Scaling one row by $k$ multiplies determinant by $k$: $5 \\times 3 = 15$.'),
+            ];
+            qs.push(concepts[i - 5]);
+        }
+    }
+    return qs;
+}
+
+export function generateExpansionAssessment() {
+    const qs = [];
+    for (let i = 0; i < 10; i++) {
+        if (i < 3) {
+            const d1 = NZ(1, 6), d2 = NZ(1, 6), d3 = NZ(1, 6);
+            const prod = d1 * d2 * d3;
+            qs.push(makeQ(
+                `Determinant of $\\begin{vmatrix}${d1}&0&0\\\\0&${d2}&0\\\\0&0&${d3}\\end{vmatrix}$:`,
+                prod, [d1 + d2 + d3, d1 * d2 + d3, 0],
+                `Diagonal matrix: determinant = product of diagonal elements = $${d1} \\times ${d2} \\times ${d3} = ${prod}$.`
+            ));
+        } else if (i < 5) {
+            // k determinant
+            const k_val = NZ(1, 5);
+            const target = R(2, 10);
+            const other = target + k_val * k_val;
+            qs.push(makeQ(
+                `Evaluate $\\begin{vmatrix}k&1\\\\2&k\\end{vmatrix} = ${k_val * k_val - 2}$ gives $k = ?$`,
+                `$\\pm\\sqrt{${k_val * k_val}}$`,
+                [`$\\pm${k_val + 1}$`, `$\\pm 1$`, `$\\pm 2$`],
+                `$k^2 - 2 = ${k_val * k_val - 2} \\Rightarrow k^2 = ${k_val * k_val} \\Rightarrow k = \\pm${k_val}$.`
+            ));
+        } else {
+            const n = R(2, 4), detA = NZ(-4, 4), k = R(2, 4);
+            const res = Math.pow(k, n) * detA;
+            const concepts = [
+                makeQ('If $R_1 = R_3$ in a 3×3 matrix:', '$|A| = 0$', ['$|A| = 2$', '$|A| = 1$', '$|A| = -1$'], 'Identical rows give determinant = 0.'),
+                makeQ('If $R_2 \\to R_2 + 3R_1$, determinant:', 'Unchanged', ['Triples', 'Changes sign', 'Becomes 0'], 'Adding a multiple of one row to another does not change the determinant.'),
+                makeQ('Number of 2×2 minors in a 3×3 matrix:', '9', ['3', '6', '12'], 'Each element has one minor, and there are 9 elements in a 3×3 matrix.'),
+                makeQ(`If $|A| = ${detA}$, then $|${k}A|$ for ${n}×${n} = ?`, res, [k * detA, -res, detA], `$|${k}A| = ${k}^{${n}} \\times ${detA} = ${Math.pow(k, n)} \\times ${detA} = ${res}$.`),
+                makeQ(`If $|A| = ${detA}$, and we multiply $R_1$ by ${k}:`, k * detA, [detA, -k * detA, detA + k], `Scaling one row by $${k}$ multiplies determinant by $${k}$: $${detA} \\times ${k} = ${k * detA}$.`),
+            ];
+            qs.push(concepts[i - 5]);
+        }
+    }
+    return qs;
+}

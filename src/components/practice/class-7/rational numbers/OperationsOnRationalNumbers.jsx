@@ -450,18 +450,18 @@ const OperationsOnRationalNumbers = () => {
             <main className="practice-content-wrapper">
                 <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
                     <div className="practice-left-col" style={{ width: '100%' }}>
-                        <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                            <div className="question-header-modern">
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                        <div className="c7-question-card" style={{ paddingLeft: '2rem' }}>
+                            <div className="c7-question-header">
+                                <h2 className="c7-question-text" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                     <LatexContent html={currentQuestion.text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern">
-                                <div className="options-grid-modern">
+                            <div className="c7-interaction-area">
+                                <div className="c7-options-grid">
                                     {currentQuestion.options.map((option, idx) => (
                                         <button
                                             key={idx}
-                                            className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
+                                            className={`c7-option-btn ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                 } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
                                             style={{ fontWeight: '500' }}
                                             onClick={() => handleOptionSelect(option)}

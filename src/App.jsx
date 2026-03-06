@@ -290,6 +290,30 @@ import RotationalSymmetry from './components/practice/class-7/symmetry/Rotationa
 import LineRotationalRelationship from './components/practice/class-7/symmetry/LineRotationalRelationship';
 import SymmetryTest from './components/practice/class-7/symmetry/SymmetryTest';
 
+// Class 7 - Integers Chapter
+import IntegersHub from './components/practice/class-7/Integers/Integers';
+import IntegersIntro5W1H from './components/practice/class-7/Integers/Topics/5W1H/IntegersIntro5W1H';
+import IntegersTerminology from './components/practice/class-7/Integers/Topics/Terminology/IntegersTerminology';
+import IntegersSkills from './components/practice/class-7/Integers/Topics/Skills/IntegersSkills';
+import IntegersEasyTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersEasyTest';
+import IntegersMediumTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersMediumTest';
+import IntegersHardTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersHardTest';
+
+// Class 7 - Fractions and Decimals
+import FractionsAndDecimalsHub from './components/practice/class-7/FractionsAndDecimals/FractionsAndDecimals';
+import FractionsAndDecimalsIntro5W1H from './components/practice/class-7/FractionsAndDecimals/Topics/5W1H/FractionsAndDecimalsIntro5W1H';
+import FractionsAndDecimalsTerminology from './components/practice/class-7/FractionsAndDecimals/Topics/Terminology/FractionsAndDecimalsTerminology';
+import FractionsAndDecimalsSkills from './components/practice/class-7/FractionsAndDecimals/Topics/Skills/FractionsAndDecimalsSkills';
+import FractionsAndDecimalsEasyTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsEasyTest';
+import FractionsAndDecimalsMediumTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsMediumTest';
+import FractionsAndDecimalsHardTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsHardTest';
+import DataHandlingHub from './components/practice/class-7/DataHandling/DataHandling';
+import DataHandlingIntro5W1H from './components/practice/class-7/DataHandling/Topics/5W1H/DataHandlingIntro5W1H';
+import DataHandlingTerminology from './components/practice/class-7/DataHandling/Topics/Terminology/DataHandlingTerminology';
+import DataHandlingSkills from './components/practice/class-7/DataHandling/Topics/Skills/DataHandlingSkills';
+import DataHandlingEasyTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingEasyTest';
+import DataHandlingMediumTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingMediumTest';
+import DataHandlingHardTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingHardTest';
 import Formation from './components/practice/class-7/algebraic expressions/Formation';
 import TermsFactors from './components/practice/class-7/algebraic expressions/TermsFactors';
 import Coefficients from './components/practice/class-7/algebraic expressions/Coefficients';
@@ -551,6 +575,31 @@ function App() {
           <Route path="senior/grade/12/determinants/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DeterminantsEasyTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DeterminantsMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DeterminantsHardTest /></ProtectedRoute>} />
+
+          {/* Class 7: Integers */}
+          <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/introduction" element={<ProtectedRoute redirectTo="/login"><IntegersIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/terminology" element={<ProtectedRoute redirectTo="/login"><IntegersTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/skills" element={<ProtectedRoute redirectTo="/login"><IntegersSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><IntegersEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><IntegersMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><IntegersHardTest /></ProtectedRoute>} />
+
+          {/* Class 7: Fractions and Decimals */}
+          <Route path="middle/grade/7/fractions-and-decimals" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/introduction" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/terminology" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/skills" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHardTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DataHandlingEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DataHandlingMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DataHandlingHardTest /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
