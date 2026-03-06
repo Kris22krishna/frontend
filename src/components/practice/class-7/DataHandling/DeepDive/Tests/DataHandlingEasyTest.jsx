@@ -12,13 +12,13 @@ import {
 } from '../../Topics/Skills/dataHandlingQuestions';
 
 const BLUE_THEME_CSS = `
-    .option-btn-modern.selected {
+    .c7-option-btn.selected {
         border-color: #3B82F6 !important;
         background-color: #EFF6FF !important;
         color: #1E40AF !important;
         box-shadow: 0 4px 0 #2563EB !important;
     }
-    .option-btn-modern {
+    .c7-option-btn {
         min-height: 65px;
         min-width: 300px;
         display: flex;
@@ -120,11 +120,11 @@ const BLUE_THEME_CSS = `
             margin: 2rem auto 0 auto !important;
             height: auto !important;
         }
-        .options-grid-modern {
+        .c7-options-grid {
             grid-template-columns: 1fr !important;
             justify-items: center !important;
         }
-        .option-btn-modern {
+        .c7-option-btn {
             width: 100% !important;
             max-width: 350px !important;
         }
@@ -406,20 +406,20 @@ export default function DataHandlingEasyTest() {
             <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 140px 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                 <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: '60px' }}>
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible', justifyContent: 'flex-start' }}>
-                            <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "1rem" }}>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
+                        <div className="c7-question-card" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible', justifyContent: 'flex-start' }}>
+                            <div className="c7-question-header" style={{ flexShrink: 0, marginBottom: "1rem" }}>
+                                <h2 className="c7-question-text" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern" style={{ display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
-                                <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                            <div className="c7-interaction-area" style={{ display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
+                                <div className="c7-options-grid" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                                     {questions[qIndex].options.map((option, idx) => {
                                         let isLatexOpt = option.includes('$');
                                         return (
                                             <button
                                                 key={idx}
-                                                className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                                className={`c7-option-btn ${selectedOption === option ? 'selected' : ''}`}
                                                 onClick={() => setSelectedOption(option)}
                                             >
                                                 <LatexText text={isLatexOpt ? option : `$${option}$`} />
