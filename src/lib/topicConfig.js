@@ -273,6 +273,11 @@ export const TOPIC_CONFIGS = {
             { id: "TC-01", name: "Introduction", route: "ticking-clocks" },
             { id: "TC-02", name: "Terminology", route: "ticking-clocks" },
             { id: "TC-03", name: "Skills", route: "ticking-clocks" }
+        ],
+        'The Transport Museum': [
+            { id: "TM-01", name: "Introduction", route: "the-transport-museum-hero" },
+            { id: "TM-02", name: "Terminology", route: "the-transport-museum-hero" },
+            { id: "TM-03", name: "Skills", route: "the-transport-museum-hero" }
         ]
     }
 };

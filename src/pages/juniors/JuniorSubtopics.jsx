@@ -151,6 +151,9 @@ const JuniorSubtopics = () => {
                     } else if (decodedTopic === "Ticking Clocks and Turning Calendars") {
                         navigate('/ticking-clocks');
                         return;
+                    } else if (decodedTopic === "The Transport Museum") {
+                        navigate('/the-transport-museum');
+                        return;
                     }
                 }
             }
@@ -267,6 +270,10 @@ const JuniorSubtopics = () => {
                                 navigate(`/junior/grade/${grade}/equal-groups/${skill.route}`);
                             } else if (decodedTopic === "Fun with Symmetry") {
                                 navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
+                            } else if (decodedTopic === "Ticking Clocks and Turning Calendars") {
+                                navigate('/ticking-clocks');
+                            } else if (decodedTopic === "The Transport Museum") {
+                                navigate('/the-transport-museum');
                             }
                             setPendingSubtopic(null);
                             return;
