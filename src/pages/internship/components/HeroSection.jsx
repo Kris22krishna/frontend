@@ -68,7 +68,7 @@ const HeroSection = ({ onRegisterClick }) => {
                         onClick={onRegisterClick}
                         className="px-8 py-4 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 text-lg"
                     >
-                        Register Now — ₹100 Only
+                        Register Now
                     </button>
                     <a
                         href="#domains"
