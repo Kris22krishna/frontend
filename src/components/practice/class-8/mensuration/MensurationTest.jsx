@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Clock, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
@@ -8,7 +8,8 @@ import mascotImg from '../../../../assets/mascot.png';
 import '../../../../pages/high/class8/Grade8ChapterTests.css';
 
 const SKILL_ID = 1226;
-const SKILL_NAME = "Mensuration - Chapter Test";
+const SKILL_NAME = "Chapter Test";
+const CHAPTER_NAME = "Mensuration";
 const TOTAL_QUESTIONS = 20;
 
 const MensurationTest = () => {
@@ -305,7 +306,7 @@ const MensurationTest = () => {
             const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
             const skippedCount = questions.length - correctCount - wrongCount;
             await api.createReport({
-                title: SKILL_NAME,
+                title: `${CHAPTER_NAME} - ${SKILL_NAME}`,
                 type: 'test',
                 score: (correctCount / questions.length) * 100,
                 parameters: {
@@ -337,10 +338,18 @@ const MensurationTest = () => {
         return (
             <div className="junior-practice-page grey-selection-theme result-page-wrapper" style={{ background: '#F8FAFC', minHeight: '100vh', overflowY: 'auto' }}>
                 <div className="exam-report-container">
+                    <div className="w-full flex justify-start mb-4">
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="bg-white text-[#31326F] border-2 border-[#31326F] px-6 py-2 rounded-xl font-bold uppercase tracking-wider hover:bg-[#31326F] hover:text-white transition-colors flex items-center gap-2"
+                            style={{ fontSize: '0.9rem' }}
+                        >
+                            <ArrowLeft size={18} /> Back to Topics
+                        </button>
+                    </div>
                     <div className="results-hero-section flex flex-col items-center mb-8 mt-4 text-center">
                         <img src={mascotImg} alt="Happy Mascot" className="w-40 h-40 mb-2 drop-shadow-lg object-contain" />
-                        <h1 className="text-5xl font-normal text-[#31326F] mb-2 tracking-tight">Test Report</h1>
-                        <p className="text-[#64748B] text-xl font-normal mb-8 px-4">How you performed in <span className="font-normal">{SKILL_NAME}</span></p>
+                        <h1 className="text-4xl md:text-5xl font-normal text-[#31326F] mb-8 tracking-tight">{CHAPTER_NAME} Chapter Test Report</h1>
 
                         <div className="results-stats-grid grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-5xl">
                             <div className="stat-card bg-[#EFF6FF] p-6 rounded-3xl shadow-sm border-2 border-[#DBEAFE] text-center flex flex-col items-center justify-center">
@@ -366,15 +375,7 @@ const MensurationTest = () => {
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
-                        <button
-                            onClick={() => navigate(-1)}
-                            className="bg-white text-[#31326F] border-2 border-[#31326F] px-8 py-3 rounded-2xl font-black uppercase tracking-wider hover:bg-[#31326F] hover:text-white transition-colors"
-                            style={{ fontSize: '1.1rem', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
-                        >
-                            Back to Topics
-                        </button>
-                    </div>
+
 
                     <div style={{ marginBottom: '2rem', maxWidth: '1000px', marginLeft: 'auto', marginRight: 'auto' }}>
                         <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1E293B', marginBottom: '1.5rem' }}>Detailed Review & Solutions</h2>
