@@ -428,6 +428,21 @@
     box-shadow: 0 4px 0 #D32F2F !important;
 }
 
+/* Fair Share Theme Specific Feedback (Higher Specificity) */
+.fair-share-theme .option-btn-modern.correct {
+    background: #C8E6C9 !important;
+    border-color: #4CAF50 !important;
+    color: #1B5E20 !important;
+    box-shadow: 0 4px 0 #388E3C !important;
+}
+
+.fair-share-theme .option-btn-modern.wrong {
+    background: #FFCDD2 !important;
+    border-color: #EF5350 !important;
+    color: #B71C1C !important;
+    box-shadow: 0 4px 0 #D32F2F !important;
+}
+
 /* Feedback Mini */
 .feedback-mini {
     margin-top: 1rem;

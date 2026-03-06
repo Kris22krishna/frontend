@@ -279,6 +279,111 @@ const drawBalloons = (values, balloonColors) => {
     return svg;
 };
 
+// ─── NUMBER LINE (arc hops) ──────────────────────────────────────────────────
+const drawNumberLine = (values, op, step, lineColor = '#E91E63') => {
+    const startX = 30, y = 90, boxW = 54, boxH = 36, gap = 14;
+    const spacing = boxW + gap;
+    const n = values.length;
+    const totalW = startX + n * spacing + 20;
+    let svg = '';
+    // base line
+    svg += `<line x1="${startX - 10}" y1="${y}" x2="${totalW}" y2="${y}" stroke="#555" stroke-width="2.5"/>`;
+    // arrowhead right
+    svg += `<polygon points="${totalW},${y - 5} ${totalW + 10},${y} ${totalW},${y + 5}" fill="#555"/>`;
+    // tick marks + arc labels + boxes
+    values.forEach((v, i) => {
+        const cx = startX + i * spacing + boxW / 2;
+        // tick
+        svg += `<line x1="${cx}" y1="${y - 8}" x2="${cx}" y2="${y + 8}" stroke="#555" stroke-width="2"/>`;
+        // box below
+        const bx = cx - boxW / 2, by = y + 16;
+        const isBlank = v === '?';
+        const fillC = isBlank ? '#FFF9C4' : '#E0F7FA';
+        const borderC = isBlank ? '#F9A825' : '#00ACC1';
+        svg += `<rect x="${bx}" y="${by}" width="${boxW}" height="${boxH}" rx="8" fill="${fillC}" stroke="${borderC}" stroke-width="2" stroke-dasharray="${isBlank ? '5' : '0'}"/>`;
+        if (isBlank) {
+            svg += `<text x="${cx}" y="${by + 22}" text-anchor="middle" font-size="20" font-weight="900" fill="#E65100" font-family="Arial">?</text>`;
+        } else {
+            svg += `<text x="${cx}" y="${by + 22}" text-anchor="middle" font-size="14" font-weight="800" fill="#01579B" font-family="Arial">${v}</text>`;
+        }
+        // arc between consecutive ticks
+        if (i < n - 1) {
+            const x1 = cx, x2 = startX + (i + 1) * spacing + boxW / 2;
+            const mx = (x1 + x2) / 2, my = y - 28;
+            svg += `<path d="M${x1},${y} Q${mx},${my} ${x2},${y}" fill="none" stroke="${lineColor}" stroke-width="2" stroke-dasharray="4"/>`;
+            // arrowhead on arc
+            svg += `<polygon points="${x2 - 6},${y - 8} ${x2},${y} ${x2 + 6},${y - 8}" fill="${lineColor}"/>`;
+            // step label above arc
+            const sign = op === '+' ? '+' : '\u2212';
+            svg += `<rect x="${mx - 18}" y="${my - 16}" width="36" height="16" rx="6" fill="${lineColor}"/>`;
+            svg += `<text x="${mx}" y="${my - 4}" text-anchor="middle" font-size="11" font-weight="900" fill="white" font-family="Arial">${sign}${step}</text>`;
+        }
+    });
+    return svg;
+};
+
+// ─── BOX DIAGRAM (word problem) ────────────────────────────────────────────────
+const drawBoxDiagram = (total, known, unit, op, emoji) => {
+    const W = 320, H = 140;
+    const boxColor = op === '+' ? '#E8F5E9' : '#E3F2FD';
+    const borderColor = op === '+' ? '#43A047' : '#1E88E5';
+    const arrowColor = op === '+' ? '#E53935' : '#6A1B9A';
+    const labelColor = op === '+' ? '#1B5E20' : '#0D47A1';
+    let svg = '';
+    // background
+    svg += `<rect x="2" y="2" width="${W - 4}" height="${H - 4}" rx="14" fill="${boxColor}" stroke="${borderColor}" stroke-width="2.5"/>`;
+    // total label at top
+    svg += `<text x="${W / 2}" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="${labelColor}" font-family="Arial">Total: ${total} ${unit}</text>`;
+    // horizontal double-arrow across
+    svg += `<line x1="20" y1="40" x2="${W - 20}" y2="40" stroke="${arrowColor}" stroke-width="2.5"/>`;
+    svg += `<polygon points="20,35 10,40 20,45" fill="${arrowColor}"/>`;
+    svg += `<polygon points="${W - 20},35 ${W - 10},40 ${W - 20},45" fill="${arrowColor}"/>`;
+    // known box (left)
+    svg += `<rect x="16" y="52" width="120" height="52" rx="10" fill="white" stroke="${borderColor}" stroke-width="2"/>`;
+    svg += `<text x="76" y="74" text-anchor="middle" font-size="15" font-weight="800" fill="#333" font-family="Arial">${known}</text>`;
+    svg += `<text x="76" y="94" text-anchor="middle" font-size="11" fill="#555" font-family="Arial">${unit}</text>`;
+    // unknown box (right) with ? and dashed border
+    svg += `<rect x="148" y="52" width="152" height="52" rx="10" fill="#FFF9C4" stroke="#F9A825" stroke-width="2" stroke-dasharray="6"/>`;
+    svg += `<text x="224" y="84" text-anchor="middle" font-size="26" font-weight="900" fill="#E65100" font-family="Arial">?</text>`;
+    // emoji top-right
+    svg += `<text x="${W - 12}" y="${H - 10}" text-anchor="end" font-size="36" font-family="Arial">${emoji}</text>`;
+    return svg;
+};
+
+// ─── ADD 100/10/1 COLUMN ──────────────────────────────────────────────────────
+const drawAddColumn = (start, addValue, steps, blankIdx, bgColor, headerColor) => {
+    const colW = 100, rowH = 34, headerH = 36, padX = 10, startY = 6;
+    const rows = [start];
+    for (let i = 1; i <= steps; i++) rows.push(rows[i - 1] + addValue);
+    const H = headerH + rows.length * rowH + 16;
+    let svg = '';
+    svg += `<rect x="0" y="${startY}" width="${colW}" height="${H}" rx="12" fill="${bgColor}" stroke="${headerColor}" stroke-width="2"/>`;
+    // header
+    svg += `<rect x="0" y="${startY}" width="${colW}" height="${headerH}" rx="10" fill="${headerColor}"/>`;
+    svg += `<text x="${colW / 2}" y="${startY + 23}" text-anchor="middle" font-size="13" font-weight="900" fill="white" font-family="Arial">+${addValue}</text>`;
+    // rows
+    rows.forEach((v, i) => {
+        const ry = startY + headerH + i * rowH + 4;
+        const isBlank = i === blankIdx;
+        const fillC = isBlank ? '#FFF9C4' : 'white';
+        const sdc = isBlank ? '5' : '0';
+        const bdc = isBlank ? '#F9A825' : '#ccc';
+        svg += `<rect x="${padX}" y="${ry}" width="${colW - padX * 2}" height="${rowH - 4}" rx="6" fill="${fillC}" stroke="${bdc}" stroke-width="1.5" stroke-dasharray="${sdc}"/>`;
+        if (isBlank) {
+            svg += `<text x="${colW / 2}" y="${ry + rowH - 10}" text-anchor="middle" font-size="18" font-weight="900" fill="#E65100" font-family="Arial">?</text>`;
+        } else {
+            svg += `<text x="${colW / 2}" y="${ry + rowH - 10}" text-anchor="middle" font-size="14" font-weight="800" fill="#333" font-family="Arial">${v}</text>`;
+        }
+        // curly arrow between rows
+        if (i < rows.length - 1) {
+            const ax = colW - 6, ay1 = ry + rowH - 4, ay2 = ry + rowH + 2;
+            svg += `<path d="M${ax},${ay1} Q${ax + 14},${ay1 + 4} ${ax},${ay2 + 4}" fill="none" stroke="${headerColor}" stroke-width="1.8"/>`;
+            svg += `<polygon points="${ax - 4},${ay2 + 1} ${ax},${ay2 + 5} ${ax + 4},${ay2 + 1}" fill="${headerColor}"/>`;
+        }
+    });
+    return { svg, height: H + 16, rows };
+};
+
 // ─── QUESTION GENERATORS ──────────────────────────────────────────────────────
 
 const buildChain = (start, op, step, length) => {
@@ -413,6 +518,122 @@ const questionGenerators = [
         return makeQuestion(chain, bi, 'snake2', d =>
             `<svg viewBox="0 0 ${76 + 6 * 54} 140" width="100%" height="130" style="overflow:visible">${drawSnake(d, headColor, bodyColors)}</svg>`, '-', step);
     },
+
+    // Q11: Number Line — Add hops
+    () => {
+        const step = pick([10, 11, 12, 5, 8]);
+        const start = randomInt(100, 450);
+        const chain = buildChain(start, '+', step, 6);
+        const bi = randomInt(2, 5);
+        const lineColor = pick(['#E91E63', '#8E24AA', '#00897B', '#F4511E']);
+        const display = chain.map((v, i) => i === bi ? '?' : String(v));
+        const answer = chain[bi];
+        const wrong = shuffle([answer + step, answer - step, answer + step * 2, answer + step * 3].filter(v => v !== answer && v > 0)).slice(0, 3);
+        const options = shuffle([String(answer), ...wrong.map(String)]);
+        return {
+            answer: String(answer),
+            options,
+            visual: `<svg viewBox="0 0 ${30 + 6 * 68 + 30} 165" width="100%" height="155" style="overflow:visible">${drawNumberLine(display, '+', step, lineColor)}</svg>`,
+            solution: `The number line hops +${step} each time. The missing number is ${answer}.`,
+            text: `The number line hops <b>+${step}</b> each time.<br/><span style="color:#31326F;font-size:0.95rem">What is the <b>missing number</b> in the box?</span>`
+        };
+    },
+
+    // Q12: Number Line — Subtract hops
+    () => {
+        const step = pick([10, 9, 11, 6, 7]);
+        const start = randomInt(300, 600);
+        const chain = buildChain(start, '-', step, 6);
+        const bi = randomInt(2, 5);
+        const lineColor = pick(['#1E88E5', '#43A047', '#FB8C00', '#6D4C41']);
+        const display = chain.map((v, i) => i === bi ? '?' : String(v));
+        const answer = chain[bi];
+        const wrong = shuffle([answer + step, answer - step, answer + step * 2, answer - step * 2].filter(v => v !== answer && v > 0)).slice(0, 3);
+        const options = shuffle([String(answer), ...wrong.map(String)]);
+        return {
+            answer: String(answer),
+            options,
+            visual: `<svg viewBox="0 0 ${30 + 6 * 68 + 30} 165" width="100%" height="155" style="overflow:visible">${drawNumberLine(display, '-', step, lineColor)}</svg>`,
+            solution: `The number line hops \u2212${step} each time. The missing number is ${answer}.`,
+            text: `The number line hops <b>\u2212${step}</b> each time.<br/><span style="color:#31326F;font-size:0.95rem">What is the <b>missing number</b> in the box?</span>`
+        };
+    },
+
+    // Q13: Box Diagram — word problem (add)
+    () => {
+        const scenarios = [
+            { unit: 'Boys', addLabel: 'Girls', emoji: '\uD83E\uDDD1\u200D\uD83E\uDD1D\u200D\uD83E\uDDD1' },
+            { unit: 'Books', addLabel: 'New Books', emoji: '\uD83D\uDCDA' },
+            { unit: 'Saplings', addLabel: 'More Saplings', emoji: '\uD83C\uDF31' },
+            { unit: 'Mangoes', addLabel: 'More Mangoes', emoji: '\uD83E\uDD6D' },
+            { unit: 'Stamps', addLabel: 'New Stamps', emoji: '\uD83C\uDFAB' },
+        ];
+        const sc = pick(scenarios);
+        const known = randomInt(120, 450);
+        const added = randomInt(20, 150);
+        const total = known + added;
+        const answer = total;
+        const wrong = shuffle([answer + added, answer - added, answer + 10, answer - 10].filter(v => v !== answer && v > 0)).slice(0, 3);
+        const options = shuffle([String(answer), ...wrong.map(String)]);
+        return {
+            answer: String(answer),
+            options,
+            visual: `<svg viewBox="0 0 320 140" width="100%" height="130" style="overflow:visible">${drawBoxDiagram(total, known, sc.unit, '+', sc.emoji)}</svg>`,
+            solution: `${known} + ${added} = ${total} ${sc.unit} in total!`,
+            text: `There are <b>${known} ${sc.unit}</b>. <b>+${added} ${sc.addLabel}</b> are added.<br/>How many <b>${sc.unit}</b> are there in all?`
+        };
+    },
+
+    // Q14: Box Diagram — word problem (subtract / find remaining)
+    () => {
+        const scenarios = [
+            { unit: 'Sacks', removeLabel: 'Sacks sold', emoji: '\uD83D\uDED2' },
+            { unit: 'Books', removeLabel: 'Books taken', emoji: '\uD83D\uDCDA' },
+            { unit: 'Flowers', removeLabel: 'Flowers given', emoji: '\uD83C\uDF37' },
+            { unit: 'Coins', removeLabel: 'Coins spent', emoji: '\uD83E\uDE99' },
+            { unit: 'Apples', removeLabel: 'Apples eaten', emoji: '\uD83C\uDF4E' },
+        ];
+        const sc = pick(scenarios);
+        const total = randomInt(200, 550);
+        const known = randomInt(50, total - 50);
+        const answer = total - known;
+        const wrong = shuffle([answer + known, answer - 10, answer + 15, answer + 25].filter(v => v !== answer && v > 0)).slice(0, 3);
+        const options = shuffle([String(answer), ...wrong.map(String)]);
+        return {
+            answer: String(answer),
+            options,
+            visual: `<svg viewBox="0 0 320 140" width="100%" height="130" style="overflow:visible">${drawBoxDiagram(total, known, sc.unit, '-', sc.emoji)}</svg>`,
+            solution: `${total} \u2212 ${known} = ${answer} ${sc.unit} remaining!`,
+            text: `There are <b>${total} ${sc.unit}</b> in total. <b>${known} ${sc.removeLabel}</b>.<br/>How many <b>${sc.unit}</b> are left?`
+        };
+    },
+
+    // Q15: Add 100 / Add 10 / Add 1 column
+    () => {
+        const addValue = pick([100, 10, 1]);
+        const start = randomInt(100, 600);
+        const steps = randomInt(3, 5);
+        const blankIdx = randomInt(1, steps);
+        const palettes = [
+            { bg: '#FFF8E1', hdr: '#F9A825' },
+            { bg: '#E8F5E9', hdr: '#43A047' },
+            { bg: '#E3F2FD', hdr: '#1E88E5' },
+            { bg: '#FCE4EC', hdr: '#E91E63' },
+            { bg: '#EDE7F6', hdr: '#7B1FA2' },
+        ];
+        const pal = pick(palettes);
+        const { svg, height, rows } = drawAddColumn(start, addValue, steps, blankIdx, pal.bg, pal.hdr);
+        const answer = rows[blankIdx];
+        const wrong = shuffle([answer + addValue, answer - addValue, answer + addValue * 2, answer - addValue * 2].filter(v => v !== answer && v > 0)).slice(0, 3);
+        const options = shuffle([String(answer), ...wrong.map(String)]);
+        return {
+            answer: String(answer),
+            options,
+            visual: `<svg viewBox="0 0 120 ${height}" width="120" height="${height}" style="overflow:visible;display:block;margin:0 auto">${svg}</svg>`,
+            solution: `Each row adds ${addValue}. So the missing number is ${rows[blankIdx - 1]} + ${addValue} = ${answer}.`,
+            text: `Each row adds <b>${addValue}</b>.<br/><span style="color:#31326F;font-size:0.95rem">What is the <b>missing number</b> in the column?</span>`
+        };
+    },
 ];
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
@@ -462,7 +683,8 @@ const AddAndSubtract = () => {
     const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
     const generateQuestion = (idx) => {
-        const gen = questionGenerators[idx % questionGenerators.length];
+        // Pick from the full pool randomly — ensures new types (number line, box diagram, column) all appear
+        const gen = pick(questionGenerators);
         const qData = gen();
         setShuffledOptions(shuffle(qData.options));
         setCurrentQuestion(qData);
@@ -597,22 +819,7 @@ const AddAndSubtract = () => {
                                         {shuffledOptions.map((option, idx) => (
                                             <button key={idx}
                                                 className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.answer ? 'correct' : ''} ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''}`}
-                                                style={{
-                                                    fontWeight: 700,
-                                                    fontSize: '1.1rem',
-                                                    ...(isSubmitted && option === currentQuestion.answer && {
-                                                        background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                                                        borderColor: '#16a34a',
-                                                        color: 'white',
-                                                        boxShadow: '0 4px 15px rgba(34,197,94,0.4)',
-                                                    }),
-                                                    ...(isSubmitted && selectedOption === option && !isCorrect && {
-                                                        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                                                        borderColor: '#dc2626',
-                                                        color: 'white',
-                                                        boxShadow: '0 4px 15px rgba(239,68,68,0.4)',
-                                                    }),
-                                                }}
+                                                style={{ fontWeight: 600, fontSize: '1.05rem' }}
                                                 onClick={() => { if (!isSubmitted) setSelectedOption(option); }}
                                                 disabled={isSubmitted}>
                                                 <LatexContent html={option} />
