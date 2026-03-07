@@ -145,6 +145,9 @@ const JuniorSubtopics = () => {
                     } else if (decodedTopic === "Fun with Symmetry") {
                         navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
                         return;
+                    } else if (decodedTopic === "Ticking Clocks and Turning Calendars") {
+                        navigate('/ticking-clocks');
+                        return;
                     }
                 }
             }

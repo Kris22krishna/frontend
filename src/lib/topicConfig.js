@@ -265,6 +265,11 @@ export const TOPIC_CONFIGS = {
             { id: "1210", name: "Create Tiling Without Gaps", route: "create-tiling-without-gaps" },
             { id: "1211", name: "Classify Symmetrical Objects", route: "classify-symmetrical-objects" },
             { id: "1212", name: "Chapter Test", route: "chapter-test" }
+        ],
+        'Ticking Clocks and Turning Calendars': [
+            { id: "TC-01", name: "Introduction", route: "ticking-clocks" },
+            { id: "TC-02", name: "Terminology", route: "ticking-clocks" },
+            { id: "TC-03", name: "Skills", route: "ticking-clocks" }
         ]
     }
 };
