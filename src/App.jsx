@@ -406,6 +406,13 @@ import DeterminantsEasyTest from './components/practice/class-12/Determinants/De
 import DeterminantsMediumTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsMediumTest';
 import DeterminantsHardTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsHardTest';
 
+// Class 12 - Relations Chapter
+import RelationsHub from './components/practice/class-12/Relations/Relations';
+import RelationsIntro5W1H from './components/practice/class-12/Relations/Topics/5W1H/RelationsIntro5W1H';
+import RelationsTerminology from './components/practice/class-12/Relations/Topics/Terminology/RelationsTerminology';
+import RelationsSkills from './components/practice/class-12/Relations/Topics/Skills/RelationsSkills';
+import RelationsExams from './components/practice/class-12/Relations/Topics/Exams/RelationsExams';
+
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
 import BiologyChapters from './components/practice/class-11/biology/BiologyChapters';
@@ -595,6 +602,13 @@ function App() {
           <Route path="senior/grade/12/determinants/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DeterminantsEasyTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DeterminantsMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DeterminantsHardTest /></ProtectedRoute>} />
+
+          {/* Class 12: Relations */}
+          <Route path="senior/grade/12/relations" element={<ProtectedRoute redirectTo="/login"><RelationsHub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/introduction" element={<ProtectedRoute redirectTo="/login"><RelationsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/terminology" element={<ProtectedRoute redirectTo="/login"><RelationsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/skills" element={<ProtectedRoute redirectTo="/login"><RelationsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/exams" element={<ProtectedRoute redirectTo="/login"><RelationsExams /></ProtectedRoute>} />
 
           {/* Class 7: Integers */}
           <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />

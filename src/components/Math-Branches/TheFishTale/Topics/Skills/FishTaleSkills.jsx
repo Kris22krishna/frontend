@@ -314,17 +314,28 @@ export default function FishTaleSkills() {
 
             {/* SKILL CARDS */}
             <div className="ft-skills-section">
-                <div className="ft-skills-grid">
-                    {SKILLS.map(skill => (
-                        <div
-                            key={skill.id}
-                            className="ft-skill-card"
-                            onClick={() => setActiveSkill(skill.id)}
-                            style={{ borderColor: skill.color + '30' }}
-                        >
-                            <div className="ft-skill-card-emoji">{skill.emoji}</div>
-                            <div className="ft-skill-card-name" style={{ color: skill.color }}>{skill.name}</div>
-                            <div className="ft-skill-card-desc">{skill.desc}</div>
+                <div className="ft-skills-grid-v2">
+                    {SKILLS.map((skill, index) => (
+                        <div key={skill.id} className="ft-skill-card-v2" style={{ '--skill-color': skill.color }}>
+                            <div className="ft-skill-icon-v2" style={{ background: `${skill.color}10`, color: skill.color }}>
+                                {skill.emoji}
+                            </div>
+
+                            <div className="ft-skill-content-v2">
+                                <div className="ft-skill-text-stack-v2">
+                                    <span style={{ fontSize: 11, fontWeight: 900, color: skill.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>
+                                        SKILL {index + 1} &middot; {skill.name.toUpperCase()}
+                                    </span>
+                                    <h3 style={{ fontSize: 22, fontWeight: 900, color: '#1e293b', margin: 0 }}>{skill.name}</h3>
+                                </div>
+                                <p style={{ fontSize: 14, color: '#64748b', fontWeight: 500, margin: 0, opacity: 0.85 }}>{skill.desc}</p>
+                            </div>
+
+                            <div className="ft-skill-actions-v2">
+                                <button className="ft-skill-btn-outline" onClick={() => { setActiveSkill(skill.id); setMode(null); }}>Learn</button>
+                                <button className="ft-skill-btn-outline" onClick={() => { setActiveSkill(skill.id); setMode('practice'); }}>Practice</button>
+                                <button className="ft-skill-btn-filled" onClick={() => { setActiveSkill(skill.id); setMode('assessment'); }}>Assess</button>
+                            </div>
                         </div>
                     ))}
                 </div>
