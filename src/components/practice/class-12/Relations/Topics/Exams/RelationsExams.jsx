@@ -26,7 +26,7 @@ export default function RelationsExams() {
     return (
         <div className="rel-exams-page">
             {/* ── TOP NAV BAR ──────────────────────────────── */}
-            <nav className="rel-intro-nav" style={{ padding: '24px 48px' }}>
+            <nav className="rel-intro-nav" style={{ padding: '' }}>
                 <button
                     className="rel-intro-nav-back"
                     onClick={() => navigate("/senior/grade/12/relations")}
