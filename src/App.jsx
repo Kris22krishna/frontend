@@ -260,6 +260,21 @@ import LinesAndAnglesIntro5W1H from './components/practice/grade-6/LinesAndAngle
 import LinesAndAnglesTerminology from './components/practice/grade-6/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
 import LinesAndAnglesSkills from './components/practice/grade-6/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
 
+// Grade 6 Fractions
+import IntroductionToFractions from './components/practice/grade-6/Fractions/IntroductionToFractions';
+import FractionOnNumberLine from './components/practice/grade-6/Fractions/FractionOnNumberLine';
+import ProperFractions from './components/practice/grade-6/Fractions/ProperFractions';
+import ImproperFractions from './components/practice/grade-6/Fractions/ImproperFractions';
+import MixedFractions from './components/practice/grade-6/Fractions/MixedFractions';
+import EquivalentFractions from './components/practice/grade-6/Fractions/EquivalentFractions';
+import SimplestFormOfFractions from './components/practice/grade-6/Fractions/SimplestFormOfFractions';
+import LikeAndUnlikeFractions from './components/practice/grade-6/Fractions/LikeAndUnlikeFractions';
+import ComparingFractions from './components/practice/grade-6/Fractions/ComparingFractions';
+import AdditionOfFractions from './components/practice/grade-6/Fractions/AdditionOfFractions';
+import SubtractionOfFractions from './components/practice/grade-6/Fractions/SubtractionOfFractions';
+import FractionsChapterTest from './components/practice/grade-6/Fractions/FractionsChapterTest';
+
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -484,6 +499,20 @@ function App() {
           <Route path="middle/grade/6/lines-and-angles/introduction" element={<LinesAndAnglesIntro5W1H />} />
           <Route path="middle/grade/6/lines-and-angles/terminology" element={<LinesAndAnglesTerminology />} />
           <Route path="middle/grade/6/lines-and-angles/skills" element={<LinesAndAnglesSkills />} />
+
+          {/* Grade 6 Fractions */}
+          <Route path="middle/grade/6/fractions/introduction" element={<IntroductionToFractions />} />
+          <Route path="middle/grade/6/fractions/numberline" element={<FractionOnNumberLine />} />
+          <Route path="middle/grade/6/fractions/proper" element={<ProperFractions />} />
+          <Route path="middle/grade/6/fractions/improper" element={<ImproperFractions />} />
+          <Route path="middle/grade/6/fractions/mixed" element={<MixedFractions />} />
+          <Route path="middle/grade/6/fractions/equivalent" element={<EquivalentFractions />} />
+          <Route path="middle/grade/6/fractions/simplest" element={<SimplestFormOfFractions />} />
+          <Route path="middle/grade/6/fractions/like-unlike" element={<LikeAndUnlikeFractions />} />
+          <Route path="middle/grade/6/fractions/comparing" element={<ComparingFractions />} />
+          <Route path="middle/grade/6/fractions/addition" element={<AdditionOfFractions />} />
+          <Route path="middle/grade/6/fractions/subtraction" element={<SubtractionOfFractions />} />
+          <Route path="middle/grade/6/fractions/test" element={<FractionsChapterTest />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />

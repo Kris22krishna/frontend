@@ -625,7 +625,7 @@ const MiddleGradeSyllabus = () => {
 
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
-        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "the other side of zero", "prime time", "lines and angles"].some(t => topicName.includes(t))) return acc;
+        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "the other side of zero", "prime time", "lines and angles", "fractions"].some(t => topicName.includes(t))) return acc;
         if (gradeNum === 7 && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area") return acc;
         if (gradeNum === 7 && (topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions") && !skill.isLocal) return acc;
 
@@ -1136,6 +1136,30 @@ const MiddleGradeSyllabus = () => {
                 { skill_id: '6103', skill_name: 'Skills & Practice', topic: 'Lines and Angles', path: '/middle/grade/6/lines-and-angles/skills' }
             ]
         };
+
+        // Remove any API-provided fractions topics to prevent duplicates
+        Object.keys(skillsByTopic).forEach(key => {
+            if (key.toLowerCase().includes('fraction')) {
+                delete skillsByTopic[key];
+            }
+        });
+
+        skillsByTopic['Fractions'] = {
+            'Practice Topics': [
+                { skill_id: 'fractions-intro', skill_name: 'Introduction to Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/introduction' },
+                { skill_id: 'fractions-numberline', skill_name: 'Fraction on Number Line', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/numberline' },
+                { skill_id: 'fractions-proper', skill_name: 'Proper Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/proper' },
+                { skill_id: 'fractions-improper', skill_name: 'Improper Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/improper' },
+                { skill_id: 'fractions-mixed', skill_name: 'Mixed Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/mixed' },
+                { skill_id: 'fractions-equivalent', skill_name: 'Equivalent Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/equivalent' },
+                { skill_id: 'fractions-simplest', skill_name: 'Simplest Form of Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/simplest' },
+                { skill_id: 'fractions-like-unlike', skill_name: 'Like and Unlike Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/like-unlike' },
+                { skill_id: 'fractions-comparing', skill_name: 'Comparing Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/comparing' },
+                { skill_id: 'fractions-addition', skill_name: 'Addition of Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/addition' },
+                { skill_id: 'fractions-subtraction', skill_name: 'Subtraction of Fractions', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/subtraction' },
+                { skill_id: 'fractions-test', skill_name: 'Chapter Test', topic: 'Fractions', isLocal: true, path: '/middle/grade/6/fractions/test' }
+            ]
+        };
     }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
@@ -1191,6 +1215,12 @@ const MiddleGradeSyllabus = () => {
                                 subtitle: 'Geometry, Lines & Measurements',
                                 path: '/middle/grade/6/lines-and-angles/hub',
                                 background: 'linear-gradient(135deg, #9333ea 0%, #7c3aed 100%)'
+                            },
+                            'fractions': {
+                                title: 'Fractions',
+                                subtitle: 'Parts, Types & Operations',
+                                path: '/middle/grade/6/fractions/introduction',
+                                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                             }
                         };
 
