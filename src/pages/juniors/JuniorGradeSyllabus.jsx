@@ -74,7 +74,7 @@ const JuniorGradeSyllabus = () => {
                         return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii");
                     }
                     if (isGrade4) {
-                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers");
+                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling");
                     }
                     if (isGrade1 || isGrade2) {
                         return false; // Strictly hide all API topics for Grade 1 and Grade 2
@@ -214,6 +214,8 @@ const JuniorGradeSyllabus = () => {
                                             navigate('/ticking-clocks');
                                         } else if (topic.name === 'The Transport Museum') {
                                             navigate('/the-transport-museum');
+                                        } else if (topic.name === 'Data Handling') {
+                                            navigate('/data-handling');
                                         } else {
                                             navigate(`/junior/grade/${grade}/topic/${encodeURIComponent(topic.name)}`);
                                         }

@@ -278,6 +278,11 @@ export const TOPIC_CONFIGS = {
             { id: "TM-01", name: "Introduction", route: "the-transport-museum-hero" },
             { id: "TM-02", name: "Terminology", route: "the-transport-museum-hero" },
             { id: "TM-03", name: "Skills", route: "the-transport-museum-hero" }
+        ],
+        'Data Handling': [
+            { id: "DH-01", name: "Introduction", route: "data-handling-hero" },
+            { id: "DH-02", name: "Terminology", route: "data-handling-hero" },
+            { id: "DH-03", name: "Skills", route: "data-handling-hero" }
         ]
     }
 };
