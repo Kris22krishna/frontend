@@ -2,12 +2,19 @@
 description: # 🏗️ Universal Chapter Creation Template
 ---
 
+<<<<<<< HEAD
 
 
 This template provides a technical blueprint for creating a new interactive chapter for **any grade** (e.g., Grade 7, 10, or 12). 
 
 > [!IMPORTANT]
 > **Golden Reference:** All new chapters MUST be a visual and structural replica of the **Algebra** chapter located at `E:\LD\frontend\src\components\Math-Branches\Algebra`. Use this folder as your primary source of truth for UI, animations, and layout.
+=======
+This template provides a technical blueprint for creating a new interactive chapter for **any grade** (e.g., Grade 7, 10, or 12). 
+
+> [!IMPORTANT]
+> **Golden Reference:** All new chapters MUST be a visual and structural replica of the **Matrices** chapter located at `e:\LD\frontend\src\components\practice\class-12\Matrices`. Use this folder as your primary source of truth for UI, animations, and layout.
+>>>>>>> dev
 
 ---
 
@@ -18,6 +25,7 @@ Create a new directory under `src/components/practice/class-[Grade]/[ChapterName
 
 ```text
 [ChapterName]/
+<<<<<<< HEAD
 ├── [ChapterName].jsx                 # REPLICA OF: Algebra.jsx
 ├── Topics/
 │   ├── 5W1H/
@@ -27,6 +35,17 @@ Create a new directory under `src/components/practice/class-[Grade]/[ChapterName
 │   └── Skills/
 │       ├── [ChapterName]Skills.jsx       # REPLICA OF: AlgebraSkills.jsx
 │       └── [chapterName]Questions.js     # REPLICA OF: algebraQuestions.js
+=======
+├── [ChapterName].jsx                 # REPLICA OF: Matrices.jsx
+├── Topics/
+│   ├── 5W1H/
+│   │   └── [ChapterName]Intro5W1H.jsx    # REPLICA OF: MatricesIntro5W1H.jsx
+│   ├── Terminology/
+│   │   └── [ChapterName]Terminology.jsx  # REPLICA OF: MatricesTerminology.jsx
+│   └── Skills/
+│       ├── [ChapterName]Skills.jsx       # REPLICA OF: MatricesSkills.jsx
+│       └── [chapterName]Questions.js     # REPLICA OF: matrixQuestions.js
+>>>>>>> dev
 └── DeepDive/
     └── Tests/                        
         ├── [ChapterName]EasyTest.jsx     
@@ -36,6 +55,7 @@ Create a new directory under `src/components/practice/class-[Grade]/[ChapterName
 
 ---
 
+<<<<<<< HEAD
 ## 🧩 2. Design Pillars (The "Algebra" Standard)
 
 ### A. The Split-Panel Hub (`[ChapterName].jsx`)
@@ -53,6 +73,25 @@ Create a new directory under `src/components/practice/class-[Grade]/[ChapterName
 
 ### D. Skill-Based Practice (`[ChapterName]Skills.jsx`)
 - **Reference File:** [src/components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills.jsx](file:///e:/LD/frontend/src/components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills.jsx)
+=======
+## 🧩 2. Design Pillars (The "Matrices" Standard)
+
+### A. The Split-Panel Hub (`[ChapterName].jsx`)
+- **Reference File:** [src/components/practice/class-12/Matrices/Matrices.jsx](file:///e:/LD/frontend/src/components/practice/class-12/Matrices/Matrices.jsx)
+- **Layout:** Left panel for the "Hero" content (Title, Tagline, Stats) and Right panel for the "Module Cards".
+- **Styling:** Always import and utilize the CSS patterns found in [src/components/practice/class-12/Matrices/Matrices.css](file:///e:/LD/frontend/src/components/practice/class-12/Matrices/Matrices.css).
+
+### B. The 5W1H Framework (`[ChapterName]Intro5W1H.jsx`)
+- **Reference File:** [src/components/practice/class-12/Matrices/Topics/5W1H/MatricesIntro5W1H.jsx](file:///e:/LD/frontend/src/components/practice/class-12/Matrices/Topics/5W1H/MatricesIntro5W1H.jsx)
+- **Pattern:** 6 expandable cards with specific icons and color gradients.
+
+### C. Terminology & Rules (`[ChapterName]Terminology.jsx`)
+- **Reference File:** [src/components/practice/class-12/Matrices/Topics/Terminology/MatricesTerminology.jsx](file:///e:/LD/frontend/src/components/practice/class-12/Matrices/Topics/Terminology/MatricesTerminology.jsx)
+- **Pattern:** A list of terms, followed by "Golden Rules", concluding with a `Vocab Quiz`.
+
+### D. Skill-Based Practice (`[ChapterName]Skills.jsx`)
+- **Reference File:** [src/components/practice/class-12/Matrices/Topics/Skills/MatricesSkills.jsx](file:///e:/LD/frontend/src/components/practice/class-12/Matrices/Topics/Skills/MatricesSkills.jsx)
+>>>>>>> dev
 - **Pattern:** A skill picker that switches between **Learn** (Explainer), **Practice** (Interactive), and **Assess** (Timed) modes.
 
 ---
@@ -60,7 +99,11 @@ Create a new directory under `src/components/practice/class-[Grade]/[ChapterName
 ## 🛠️ 3. Technical Integration
 
 ### 🎨 Styling (CSS)
+<<<<<<< HEAD
 Do not write ad-hoc CSS. Instead, rely on the classes defined in [algebra.css](file:///e:/LD/frontend/src/components/Math-Branches/Algebra/algebra.css). If specific adjustments are needed, create a local CSS file that extends the Algebra design system.
+=======
+Do not write ad-hoc CSS. Instead, rely on the classes defined in [Matrices.css](file:///e:/LD/frontend/src/components/practice/class-12/Matrices/Matrices.css). If specific adjustments are needed, create a local CSS file that extends the Matrices design system.
+>>>>>>> dev
 
 ### 🔢 Math Standards
 - **Component:** Always use `<LatexText />` for text containing math.
@@ -114,11 +157,20 @@ Add your chapter entry to the appropriate `setSkills` array:
 ---
 
 ## ✅ 4. Summary Checklist
+<<<<<<< HEAD
 - [ ] Folder structure mirrors the **Algebra** branch exactly.
 - [ ] Hub component uses the **Algebra** left/right split layout.
 - [ ] [algebra.css](file:///e:/LD/frontend/src/components/Math-Branches/Algebra/algebra.css) is used or referenced for styling.
+=======
+- [ ] Folder structure mirrors the **Matrices** branch exactly.
+- [ ] Hub component uses the **Matrices** left/right split layout.
+- [ ] [Matrices.css](file:///e:/LD/frontend/src/components/practice/class-12/Matrices/Matrices.css) is used or referenced for styling.
+>>>>>>> dev
 - [ ] LateX math verified in all "Learn" and "Question" blocks.
 - [ ] Easy/Medium/Hard tests implemented in `DeepDive/Tests`.
 - [ ] Routes (Hub, Intro, Terminology, Skills, Tests) added to [App.jsx](file:///e:/LD/frontend/src/App.jsx).
 - [ ] Chapter card registered in the Grade Syllabus page.
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
