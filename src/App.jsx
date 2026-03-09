@@ -34,6 +34,10 @@ import IntroductionToGraphs from './components/practice/class-8/introduction_to_
 import GraphsIntro5W1H from './components/practice/class-8/introduction_to_graphs/Topics/5W1H/GraphsIntro5W1H';
 import GraphsTerminology from './components/practice/class-8/introduction_to_graphs/Topics/Terminology/GraphsTerminology';
 import GraphsSkills from './components/practice/class-8/introduction_to_graphs/Topics/Skills/GraphsSkills';
+import DirectAndInverseProportions from './components/practice/class-8/direct_and_inverse_proportions/DirectAndInverseProportions';
+import ProportionsIntro5W1H from './components/practice/class-8/direct_and_inverse_proportions/Topics/5W1H/ProportionsIntro5W1H';
+import ProportionsTerminology from './components/practice/class-8/direct_and_inverse_proportions/Topics/Terminology/ProportionsTerminology';
+import ProportionsSkills from './components/practice/class-8/direct_and_inverse_proportions/Topics/Skills/ProportionsSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -553,6 +557,11 @@ function App() {
           <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/terminology" element={<ProtectedRoute redirectTo="/login"><GraphsTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/skills" element={<ProtectedRoute redirectTo="/login"><GraphsSkills /></ProtectedRoute>} />
+          {/* Grade 8: Direct and Inverse Proportions Chapter Pages */}
+          <Route path="senior/grade/8/direct-and-inverse-proportions" element={<ProtectedRoute redirectTo="/login"><DirectAndInverseProportions /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/introduction" element={<ProtectedRoute redirectTo="/login"><ProportionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/terminology" element={<ProtectedRoute redirectTo="/login"><ProportionsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/skills" element={<ProtectedRoute redirectTo="/login"><ProportionsSkills /></ProtectedRoute>} />
           {/* Class 12: Matrices — unified structure (inside MainLayout for navbar/footer) */}
           <Route path="senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesHub /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/introduction" element={<ProtectedRoute redirectTo="/login"><MatricesIntro5W1H /></ProtectedRoute>} />
