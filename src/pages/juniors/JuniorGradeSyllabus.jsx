@@ -29,6 +29,7 @@ const topicIcons = {
     'Fun at Class Party': { emoji: '🎈', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
     'Equal Groups': { emoji: '👥', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'Ticking Clocks': { emoji: '🕐', color: '#F59E0B', gradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)' },
+    'The Transport Museum': { emoji: '🚌', color: '#0EA5E9', gradient: 'linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%)' },
     'House of Hundreds': { emoji: '🏠', color: '#FFCCBC', gradient: 'linear-gradient(135deg, #FFCCBC 0%, #FFAB91 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }
 };
@@ -211,6 +212,8 @@ const JuniorGradeSyllabus = () => {
                                     onClick={() => {
                                         if (topic.name === 'Ticking Clocks and Turning Calendars') {
                                             navigate('/ticking-clocks');
+                                        } else if (topic.name === 'The Transport Museum') {
+                                            navigate('/the-transport-museum');
                                         } else {
                                             navigate(`/junior/grade/${grade}/topic/${encodeURIComponent(topic.name)}`);
                                         }
