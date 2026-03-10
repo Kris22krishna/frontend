@@ -123,7 +123,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1300, skill_name: 'Surface Areas and Volumes: Interactive Chapter', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/surface-areas-and-volumes' },
 
                         // Introduction to Trigonometry
-                        { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' }
+                        { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' },
+
+                        // Probability
+                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
