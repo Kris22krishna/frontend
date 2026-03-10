@@ -597,18 +597,6 @@ const MiddleGradeSyllabus = () => {
     // Manual Override for Grade 5 Tenths and Hundredths
     if (gradeInt === 5) {
         skillsByTopic['The Fish Tale'] = {
-            'Subtopics': [
-                { skill_id: 'FT-01', skill_name: 'Large numbers in real-life situations', topic: 'The Fish Tale', sub_topic: 'Subtopics', isLocal: true, path: '/middle/grade/5/the-fish-tale/large-numbers-real-life' },
-                { skill_id: 'FT-02', skill_name: 'Place value (up to lakhs)', topic: 'The Fish Tale', sub_topic: 'Subtopics', isLocal: true, path: '/middle/grade/5/the-fish-tale/place-value-lakhs' },
-                { skill_id: 'FT-03', skill_name: 'Reading and writing big numbers', topic: 'The Fish Tale', sub_topic: 'Subtopics', isLocal: true, path: '/middle/grade/5/the-fish-tale/reading-writing-big-numbers' },
-                { skill_id: 'FT-04', skill_name: 'Comparison of numbers', topic: 'The Fish Tale', sub_topic: 'Subtopics', isLocal: true, path: '/middle/grade/5/the-fish-tale/comparison-of-numbers' },
-                { skill_id: 'FT-05', skill_name: 'Estimation and rounding', topic: 'The Fish Tale', sub_topic: 'Subtopics', isLocal: true, path: '/middle/grade/5/the-fish-tale/estimation-and-rounding' }
-            ],
-            'Skills': [
-                { skill_id: 'FT-06', skill_name: 'Number sense and place value understanding', topic: 'The Fish Tale', sub_topic: 'Skills', isLocal: true, path: '/middle/grade/5/the-fish-tale/number-sense-place-value' },
-                { skill_id: 'FT-07', skill_name: 'Estimation skills', topic: 'The Fish Tale', sub_topic: 'Skills', isLocal: true, path: '/middle/grade/5/the-fish-tale/estimation-skills' },
-                { skill_id: 'FT-08', skill_name: 'Interpreting real-life numerical data', topic: 'The Fish Tale', sub_topic: 'Skills', isLocal: true, path: '/middle/grade/5/the-fish-tale/interpreting-real-life-data' }
-            ],
             'Learn': [
                 { skill_id: 'FT-5W1H', skill_name: '5W1H Introduction', topic: 'The Fish Tale', sub_topic: 'Learn', isLocal: true, path: '/the-fish-tale/introduction' },
                 { skill_id: 'FT-TERM', skill_name: 'Terminology', topic: 'The Fish Tale', sub_topic: 'Learn', isLocal: true, path: '/the-fish-tale/terminology' },
