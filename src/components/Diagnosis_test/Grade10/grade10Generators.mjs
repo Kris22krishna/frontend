@@ -72,12 +72,17 @@ export const generateNaturalWholeNumbers = () => {
     const a4 = b4 * q4;
     rows.push({ left: a4, op: '÷', right: b4, answer: String(q4) });
 
-    const answerObj = { 0: rows[0].answer, 1: rows[1].answer, 2: rows[2].answer, 3: rows[3].answer };
+    const answerObj = {
+        0: { "0": rows[0].answer },
+        1: { "0": rows[1].answer },
+        2: { "0": rows[2].answer },
+        3: { "0": rows[3].answer }
+    };
     return {
         type: 'tableInput',
-        headers: ["Expression", "Your Answer"],
-        inputKeys: ["0", "1", "2", "3"],
-        placeholders: ["Ans", "Ans", "Ans", "Ans"],
+        headers: ["Expression", "Result"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Fundamental Operations on Natural and Whole Numbers'
@@ -104,12 +109,17 @@ export const generateIntegers = () => {
     const a4 = b4 * q4;
     rows.push({ left: `(${a4})`, op: '÷', right: `(${b4})`, answer: String(q4) });
 
-    const answerObj = { 0: rows[0].answer, 1: rows[1].answer, 2: rows[2].answer, 3: rows[3].answer };
+    const answerObj = {
+        0: { "0": rows[0].answer },
+        1: { "0": rows[1].answer },
+        2: { "0": rows[2].answer },
+        3: { "0": rows[3].answer }
+    };
     return {
         type: 'tableInput',
-        headers: ["Expression", "Your Answer"],
-        inputKeys: ["0", "1", "2", "3"],
-        placeholders: ["Ans", "Ans", "Ans", "Ans"],
+        headers: ["Expression", "Result"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Fundamental Operations On Integers'
@@ -191,13 +201,18 @@ export const generateFractions = () => {
         answer: { num: String(ansDiv.n), den: String(ansDiv.d) }
     });
 
-    const answerObj = { 0: rows[0].answer, 1: rows[1].answer, 2: rows[2].answer, 3: rows[3].answer };
+    const answerObj = {
+        0: { "num": rows[0].answer.num, "den": rows[0].answer.den },
+        1: { "num": rows[1].answer.num, "den": rows[1].answer.den },
+        2: { "num": rows[2].answer.num, "den": rows[2].answer.den },
+        3: { "num": rows[3].answer.num, "den": rows[3].answer.den }
+    };
     return {
         type: 'tableInput',
         variant: 'fraction',
-        headers: ["Expression", "Your Answer"],
-        inputKeys: ["0", "1", "2", "3"],
-        placeholders: ["Ans", "Ans", "Ans", "Ans"],
+        headers: ["Expression", "Numerator", "Denominator"],
+        inputKeys: ["num", "den"],
+        placeholders: ["N", "D"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Fractions'
@@ -230,12 +245,17 @@ export const generateDecimals = () => {
     const ans4 = String(quotient);
     rows.push({ left: a4, op: '÷', right: b4, answer: ans4 });
 
-    const answerObj = { 0: rows[0].answer, 1: rows[1].answer, 2: rows[2].answer, 3: rows[3].answer };
+    const answerObj = {
+        0: { "0": rows[0].answer },
+        1: { "0": rows[1].answer },
+        2: { "0": rows[2].answer },
+        3: { "0": rows[3].answer }
+    };
     return {
         type: 'tableInput',
-        headers: ["Expression", "Your Answer"],
-        inputKeys: ["0", "1", "2", "3"],
-        placeholders: ["Ans", "Ans", "Ans", "Ans"],
+        headers: ["Expression", "Result"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Fundamental operations on decimals'
@@ -268,14 +288,13 @@ export const generateLCM = () => {
     const val3 = lcm(a3, lcm(b3, c3));
     rows.push({ text: `Find the LCM of $${a3}, ${b3}, ${c3}$`, answer: String(val3) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
         headers: ["Question", "LCM"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Least Common Multiple'
@@ -310,14 +329,13 @@ export const generateHCF = () => {
     const val3 = gcd(a3, gcd(b3, c3));
     rows.push({ text: `Find the HCF of $${a3}, ${b3}, ${c3}$`, answer: String(val3) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
         headers: ["Question", "HCF"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Highest Common Factor'
@@ -355,16 +373,13 @@ export const generateLCMandHCF = () => {
         answer: String(hcfVal)
     });
 
-    const answerObj = {};
-    rows.forEach((r, i) => {
-        answerObj[i] = r.answer;
-    });
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
         headers: ["Question", "Your Answer"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'LCM and HCF'
@@ -394,14 +409,13 @@ export const generateRatioProportion = () => {
     const shareB = (adjTotal / 5) * 3;
     rows.push({ text: `Divide $${adjTotal}$ in ratio $2:3$. Value of second part?`, answer: String(shareB) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
         headers: ["Question", "Value of x"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Ratio and Proportion'
@@ -437,14 +451,13 @@ export const generateSquareRoots = () => {
     const n2Squared = n2 * n2;
     rows.push({ text: `Find the value of $\\sqrt{${n2Squared}}$`, answer: String(n2) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
         headers: ["Operation", "Result"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Square and Square Roots'
@@ -479,14 +492,13 @@ export const generateCubeRoots = () => {
     const cb2 = n2 * n2 * n2;
     rows.push({ text: `Find the value of $\\sqrt[3]{${cb2}}$`, answer: String(n2) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
         headers: ["Operation", "Result"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
         topic: 'Cube and Cube Roots'
@@ -542,14 +554,13 @@ export const generateBODMAS = () => {
     const ans3 = a3 + b3 * (c3 - d3);
     rows.push({ text: `Evaluate: $${a3} + ${b3} \\times (${c3} - ${d3})$`, answer: String(ans3) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
-        headers: ["Evaluate", "Your Answer"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        headers: ["Evaluate", "Result"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         question: '',
         answer: JSON.stringify(answerObj),
         rows: rows,
@@ -722,14 +733,13 @@ export const generateAlgebraicDivision = () => {
     const den3 = `${c3}p^4m^2n`;
     rows.push({ text: `$${num3} \\div ${den3}$`, answer: String(k3) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
-        headers: ["Division", "Your Answer"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        headers: ["Division", "Result"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         question: '',
         answer: JSON.stringify(answerObj),
         rows: rows,
@@ -773,14 +783,13 @@ export const generateLinearEquationOneVar = () => {
     // // 5x = 3x + 10 -> (3+diff)x = 3x + rhs
     // rows.push({ text: `Solve: $${3 + diff}x = 3x + ${rhs}$`, answer: String(x3) });
 
-    const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    const answerObj = { 0: { "0": rows[0].answer }, 1: { "0": rows[1].answer } };
 
     return {
         type: 'tableInput',
         headers: ["Equation", "Value of x"],
-        inputKeys: ["0", "1"],
-        placeholders: ["x=?", "x=?"],
+        inputKeys: ["0"],
+        placeholders: ["x=?"],
         question: 'Find the value of x for the following equations:',
         answer: JSON.stringify(answerObj),
         rows: rows,
@@ -903,13 +912,13 @@ export const generateSimultaneousEquations = () => {
     rows.push({ text: `x =`, answer: String(x) });
     rows.push({ text: `y =`, answer: String(y) });
 
-    const answerObj = { 0: String(x), 1: String(y) };
+    const answerObj = { 0: { "0": String(x) }, 1: { "0": String(y) } };
 
     return {
         type: 'tableInput',
         headers: ["Variable", "Value"],
-        inputKeys: ["0", "1"],
-        placeholders: ["Ans", "Ans"],
+        inputKeys: ["0"],
+        placeholders: ["Ans"],
         question: `Solve Simultaneous Linear Equations in Two Variables: <br/> ${eqText}`,
         answer: JSON.stringify(answerObj),
         rows: rows,

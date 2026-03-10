@@ -224,13 +224,25 @@ const DiagnosisTestRunner = () => {
                     // Check if all keys match
                     let allCorrect = true;
                     Object.keys(expected).forEach(rowIdx => {
-                        Object.keys(expected[rowIdx]).forEach(key => {
-                            if (String(userAnswer?.[rowIdx]?.[key]) !== String(expected[rowIdx][key])) {
+                        const rowExpected = expected[rowIdx];
+                        if (typeof rowExpected === 'object' && rowExpected !== null) {
+                            Object.keys(rowExpected).forEach(key => {
+                                const userVal = String(userAnswer?.[rowIdx]?.[key] || '').trim().toLowerCase();
+                                const expVal = String(rowExpected[key] || '').trim().toLowerCase();
+                                if (userVal !== expVal) {
+                                    allCorrect = false;
+                                }
+                            });
+                        } else {
+                            // Support legacy flat answer structure if ever used
+                            const userVal = String(userAnswer?.[rowIdx] || '').trim().toLowerCase();
+                            const expVal = String(rowExpected || '').trim().toLowerCase();
+                            if (userVal !== expVal) {
                                 allCorrect = false;
                             }
-                        });
+                        }
                     });
-                    if (allCorrect && userAnswer) score++;
+                    if (allCorrect && userAnswer && Object.keys(userAnswer).length > 0) score++;
                 } catch (e) {
                     console.error("Error parsing table answer:", e);
                 }
@@ -396,48 +408,132 @@ const DiagnosisTestRunner = () => {
                                 <p className="mt-4 text-slate-400 font-medium italic">Type your answer above and press Enter to go to the next question.</p>
                             </div>
                         ) : q.type === 'tableInput' ? (
-                            <div className="mt-6 overflow-x-auto pb-6">
-                                <table className="w-full border-collapse bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
-                                    <thead>
-                                        <tr className="bg-slate-50 text-slate-500 uppercase text-xs font-black tracking-widest">
-                                            {q.headers?.map((header, i) => (
-                                                <th key={i} className="p-5 text-left border-b border-slate-100">{header}</th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            <div className="mt-6 space-y-6">
+                                {q.variant === 'visual' || q.variant === 'fraction' ? (
+                                    <div className="space-y-4">
                                         {q.rows.map((row, rowIdx) => (
-                                            <tr key={rowIdx} className="hover:bg-slate-50/50 transition-colors">
-                                                <td className="p-5 border-b border-slate-50">
-                                                    <div className="flex flex-col gap-3">
-                                                        <span className="font-bold text-slate-800 text-lg">{row.text}</span>
-                                                        {row.image && (
-                                                            row.image.startsWith('<svg') ? (
-                                                                <div
-                                                                    className="w-24 h-24 bg-white rounded-xl border border-slate-100 p-2 flex items-center justify-center"
-                                                                    dangerouslySetInnerHTML={{ __html: row.image }}
+                                            <div key={rowIdx} className="flex items-center gap-2 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group">
+                                                <div className="flex-1 flex items-center justify-center gap-1 sm:gap-4 flex-wrap">
+                                                    {row.left !== undefined ? (
+                                                        <>
+                                                            {/* Operand 1 */}
+                                                            <div className="min-w-[60px] sm:min-w-[100px] p-3 sm:p-5 bg-sky-100 rounded-xl text-center font-black text-slate-800 text-xl sm:text-2xl shadow-inner border-b-4 border-sky-200">
+                                                                <MathRenderer text={typeof row.left === 'object' ? `$${f(row.left)}$` : String(row.left)} />
+                                                            </div>
+                                                            {/* Operator */}
+                                                            <div className="p-3 sm:p-5 bg-sky-50 rounded-xl text-center font-black text-sky-600 text-xl sm:text-2xl border-b-4 border-sky-100">
+                                                                <MathRenderer text={row.op} />
+                                                            </div>
+                                                            {/* Operand 2 */}
+                                                            <div className="min-w-[60px] sm:min-w-[100px] p-3 sm:p-5 bg-sky-100 rounded-xl text-center font-black text-slate-800 text-xl sm:text-2xl shadow-inner border-b-4 border-sky-200">
+                                                                <MathRenderer text={typeof row.right === 'object' ? `$${f(row.right)}$` : String(row.right)} />
+                                                            </div>
+                                                            {/* Equals */}
+                                                            <div className="p-3 sm:p-5 text-slate-400 font-black text-2xl">
+                                                                =
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <div className="flex-1 p-2">
+                                                            <MathRenderer text={row.text} />
+                                                        </div>
+                                                    )}
+
+                                                    {/* Input Area */}
+                                                    <div className="flex items-center gap-2">
+                                                        {q.variant === 'fraction' ? (
+                                                            <div className="flex flex-col gap-1 w-20 sm:w-24">
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full p-2 sm:p-3 border-2 border-slate-100 rounded-lg focus:border-indigo-600 focus:outline-none transition-all font-bold text-lg text-center bg-slate-50 group-hover:bg-white"
+                                                                    placeholder="N"
+                                                                    value={answers[q.id]?.[rowIdx]?.num || ''}
+                                                                    onChange={(e) => handleTableInputChange(rowIdx, 'num', e.target.value)}
                                                                 />
-                                                            ) : (
-                                                                <img src={row.image} alt={row.text} className="w-24 h-24 object-contain bg-white rounded-xl border border-slate-100 p-2" />
-                                                            )
+                                                                <div className="h-0.5 bg-slate-400 w-full rounded-full" />
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full p-2 sm:p-3 border-2 border-slate-100 rounded-lg focus:border-indigo-600 focus:outline-none transition-all font-bold text-lg text-center bg-slate-50 group-hover:bg-white"
+                                                                    placeholder="D"
+                                                                    value={answers[q.id]?.[rowIdx]?.den || ''}
+                                                                    onChange={(e) => handleTableInputChange(rowIdx, 'den', e.target.value)}
+                                                                />
+                                                            </div>
+                                                        ) : (
+                                                            <input
+                                                                type="number"
+                                                                className="w-32 sm:w-48 p-4 sm:p-5 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-2xl text-center bg-slate-50 group-hover:bg-white group-hover:border-indigo-100"
+                                                                placeholder="?"
+                                                                value={answers[q.id]?.[rowIdx]?.["0"] || ''}
+                                                                onChange={(e) => handleTableInputChange(rowIdx, '0', e.target.value)}
+                                                            />
                                                         )}
                                                     </div>
-                                                </td>
-                                                {q.inputKeys?.map((key, kIdx) => (
-                                                    <td key={kIdx} className="p-5 border-b border-slate-50">
-                                                        <input
-                                                            type="number"
-                                                            className="w-full p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-xl text-center placeholder:text-slate-200"
-                                                            placeholder={q.placeholders?.[kIdx] || "0"}
-                                                            value={answers[q.id]?.[rowIdx]?.[key] || ''}
-                                                            onChange={(e) => handleTableInputChange(rowIdx, key, e.target.value)}
-                                                        />
-                                                    </td>
-                                                ))}
-                                            </tr>
+                                                </div>
+                                            </div>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </div>
+                                ) : (
+                                    <div className="overflow-x-auto pb-6">
+                                        <table className="w-full border-collapse bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
+                                            <thead>
+                                                <tr className="bg-slate-50 text-slate-500 uppercase text-xs font-black tracking-widest">
+                                                    {q.headers?.map((header, i) => (
+                                                        <th key={i} className="p-5 text-left border-b border-slate-100">{header}</th>
+                                                    ))}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {q.rows.map((row, rowIdx) => (
+                                                    <tr key={rowIdx} className="hover:bg-slate-50/50 transition-colors">
+                                                        <td className="p-5 border-b border-slate-50">
+                                                            <div className="flex flex-col gap-3">
+                                                                <div className="font-bold text-slate-800 text-lg">
+                                                                    {row.text ? (
+                                                                        <MathRenderer text={row.text} />
+                                                                    ) : row.left !== undefined ? (
+                                                                        <MathRenderer text={(() => {
+                                                                            const f = (p) => {
+                                                                                if (typeof p === 'object' && p !== null && p.n !== undefined) {
+                                                                                    return `\\frac{${p.n}}{${p.d}}`;
+                                                                                }
+                                                                                return p;
+                                                                            };
+                                                                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)}$`;
+                                                                        })()} />
+                                                                    ) : row.shape ? (
+                                                                        <span className="font-bold text-slate-800">{row.shape}</span>
+                                                                    ) : null}
+                                                                </div>
+                                                                {row.image && (
+                                                                    row.image.startsWith('<svg') ? (
+                                                                        <div
+                                                                            className="w-24 h-24 bg-white rounded-xl border border-slate-100 p-2 flex items-center justify-center"
+                                                                            dangerouslySetInnerHTML={{ __html: row.image }}
+                                                                        />
+                                                                    ) : (
+                                                                        <img src={row.image} alt={row.text || row.shape || "visual"} className="w-24 h-24 object-contain bg-white rounded-xl border border-slate-100 p-2" />
+                                                                    )
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        {q.inputKeys?.map((key, kIdx) => (
+                                                            <td key={kIdx} className="p-5 border-b border-slate-50">
+                                                                <input
+                                                                    type="number"
+                                                                    className="w-full p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-xl text-center placeholder:text-slate-200"
+                                                                    placeholder={q.placeholders?.[kIdx] || "0"}
+                                                                    value={answers[q.id]?.[rowIdx]?.[key] || ''}
+                                                                    onChange={(e) => handleTableInputChange(rowIdx, key, e.target.value)}
+                                                                />
+                                                            </td>
+                                                        ))}
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
                                 <p className="mt-6 text-slate-400 font-medium italic text-center">Fill in each cell of the table to complete the question.</p>
                             </div>
                         ) : q.type === 'factorTree' ? (
