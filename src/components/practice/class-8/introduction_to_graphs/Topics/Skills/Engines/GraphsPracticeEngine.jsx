@@ -69,9 +69,9 @@ export default function GraphsPracticeEngine({ questionPool, sampleSize = 20, ti
                     margin: '0 auto 24px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '8px solid #fff'
                 }}>
-                    <div>
+                    <div style={{ width: 100, height: 100, background: '#fff', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                         <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>{score}</div>
-                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700 }}>out of {questions.length}</div>
+                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700 }}>of {questions.length} MCQs</div>
                     </div>
                 </div>
 

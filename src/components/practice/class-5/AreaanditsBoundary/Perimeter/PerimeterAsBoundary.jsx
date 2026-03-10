@@ -14,10 +14,10 @@ const BoundaryVisual = ({ type, pValue }) => {
         <div className="flex flex-col items-center my-12">
             {type === 'wire' ? (
                 <div className="relative group">
-                    <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-64 h-40 border-[8px] border-dashed border-slate-300 rounded-[2rem] flex items-center justify-center">
+                    <div className="w-64 h-40 border-[8px] border-dashed border-slate-300 rounded-[2rem] flex items-center justify-center">
                         <Ruler className="text-slate-300 opacity-20" size={100} />
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-6 py-2 rounded-full border-2 border-slate-100 font-black text-[#31326F] shadow-lg">Length = {pValue} cm</div>
-                    </motion.div>
+                    </div>
                 </div>
             ) : (
                 <div className="w-72 h-44 bg-emerald-50 border-4 border-emerald-600 rounded-3xl relative overflow-hidden shadow-xl flex items-center justify-center">
@@ -94,9 +94,9 @@ const PerimeterAsBoundary = () => {
                 difficulty: "Easy"
             });
             qs.push({
-                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>If a thread of $15$ cm is used to form a complete shape, what is the <strong>perimeter</strong> of that shape?</div>`,
+                text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>If a thread of 15 cm is used to form a complete shape, what is the <strong>perimeter</strong> of that shape?</div>`,
                 correctAnswer: "15 cm",
-                solution: "Since the entire $15$ cm thread forms the boundary, the perimeter is $15$ cm.",
+                solution: "Since the entire 15 cm thread forms the boundary, the perimeter is 15 cm.",
                 visual: <BoundaryVisual type="wire" pValue="15" />,
                 options: ["15 cm", "30 cm", "7.5 cm", "15 sq cm"],
                 difficulty: "Easy"
@@ -252,8 +252,8 @@ const PerimeterAsBoundary = () => {
                         <AnimatePresence mode="wait">
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}><LatexContent html={currentQuestion.text} /></h2></div>
-                                    <div className="visual-area flex justify-center py-4">{currentQuestion.visual}</div>
+                                    <div style={{ width: '100%', marginBottom: '1rem', textAlign: 'center', minHeight: '3rem', flexShrink: 0 }}><h2 style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', color: '#2D3748', lineHeight: '1.4', margin: '0' }}><LatexContent html={currentQuestion.text} block={true} /></h2></div>
+                                    <div className="visual-area flex flex-1 justify-center py-4 min-h-[150px] items-center" style={{ flexShrink: 1, minHeight: 0, overflow: 'hidden' }}>{currentQuestion.visual}</div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
