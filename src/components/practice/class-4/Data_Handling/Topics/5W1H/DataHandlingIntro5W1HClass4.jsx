@@ -135,9 +135,9 @@ export default function DataHandlingIntro5W1HClass4() {
                     ← Back to Data Handling
                 </button>
                 <div className="dh-nav-links">
-                    <button className="dh-nav-link dh-nav-link--active" onClick={() => navigate('/data-handling/introduction')}>🌟 Introduction</button>
-                    <button className="dh-nav-link" onClick={() => navigate('/data-handling/terminology')}>📖 Terminology</button>
-                    <button className="dh-nav-link" onClick={() => navigate('/data-handling/skills')}>🎯 Skills</button>
+                    <button className="dh-nav-link dh-nav-link--active" onClick={() => navigate('/junior/grade/4/data-handling/introduction')}>🌟 Introduction</button>
+                    <button className="dh-nav-link" onClick={() => navigate('/junior/grade/4/data-handling/terminology')}>📖 Terminology</button>
+                    <button className="dh-nav-link" onClick={() => navigate('/junior/grade/4/data-handling/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 
@@ -166,7 +166,7 @@ export default function DataHandlingIntro5W1HClass4() {
                     </p>
                     <button
                         className="dh-intro-cta-btn"
-                        onClick={() => navigate('/data-handling/terminology')}
+                        onClick={() => navigate('/junior/grade/4/data-handling/terminology')}
                     >
                         Terminology →
                     </button>
