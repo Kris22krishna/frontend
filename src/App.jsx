@@ -44,6 +44,11 @@ import ShapesIntro5W1H from './components/practice/class-4/Shapes_Around_Us/Topi
 import ShapesTerminology from './components/practice/class-4/Shapes_Around_Us/Topics/Terminology/ShapesTerminology';
 import ShapesSkills from './components/practice/class-4/Shapes_Around_Us/Topics/Skills/ShapesSkills';
 
+import PatternsAroundUs from './components/practice/class-4/Patterns_Around_Us/PatternsAroundUs';
+import PatternsIntro5W1H from './components/practice/class-4/Patterns_Around_Us/Topics/Introduction/Introduction';
+import PatternsTerminology from './components/practice/class-4/Patterns_Around_Us/Topics/Terminology/Terminology';
+import PatternsSkills from './components/practice/class-4/Patterns_Around_Us/Topics/Skills/Skills';
+
 import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
 import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
 import HideAndSeekTerminology from './components/practice/class-4/Hide_and_Seek/Topics/Terminology/HideAndSeekTerminology';
@@ -583,6 +588,11 @@ function App() {
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Patterns Around Us Chapter Pages */}
+          <Route path="junior/grade/4/patterns-around-us" element={<ProtectedRoute redirectTo="/login"><PatternsAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/patterns-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><PatternsIntro5W1H /></ProtectedRoute>} />
+          <Route path="junior/grade/4/patterns-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><PatternsTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/patterns-around-us/skills" element={<ProtectedRoute redirectTo="/login"><PatternsSkills /></ProtectedRoute>} />
           {/* Grade 4: Shapes Around Us Chapter Pages */}
           <Route path="junior/grade/4/shapes-around-us" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUs /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
