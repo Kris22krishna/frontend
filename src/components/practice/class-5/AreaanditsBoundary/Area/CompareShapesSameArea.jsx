@@ -9,7 +9,7 @@ import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-const GridShape = ({ points, color = "#4FB7B3", gridW = 6, gridH = 6, cellSize = 25, label = "" }) => {
+const GridShape = ({ points, color = "#4FB7B3", gridW = 6, gridH = 6, cellSize = 20, label = "", showArea = false }) => {
     return (
         <div className="flex flex-col items-center">
             {label && <div className="mb-2 font-black text-[#31326F]">{label}</div>}
@@ -24,8 +24,8 @@ const GridShape = ({ points, color = "#4FB7B3", gridW = 6, gridH = 6, cellSize =
                     <rect key={i} x={x * cellSize} y={y * cellSize} width={cellSize} height={cellSize} fill={color} stroke="white" strokeWidth="1" />
                 ))}
             </svg>
-            <div className="mt-1 text-[10px] text-slate-400 font-bold italic">Area: {points.length} sq units</div>
-        </div>
+            {showArea && <div className="mt-1 text-[10px] text-slate-400 font-bold italic">Area: {points.length} sq units</div>}
+        </div >
     );
 };
 
@@ -94,12 +94,44 @@ const CompareShapesSameArea = () => {
                 return pts;
             };
 
-            for (let i = 0; i < 3; i++) {
+            // 1. Notebook Comparison Question
+            const nbArea1 = randomInt(6, 10);
+            const nbArea2 = nbArea1 + randomInt(2, 4);
+            const notebookCorrect = nbArea1 > nbArea2 ? "Notebook A" : "Notebook B";
+            qs.push({
+                text: `<div style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; min-height: 4rem; width: 100%; text-align: center;'>Which <strong>notebook</strong> covers a larger area on the desk?</div>`,
+                correctAnswer: notebookCorrect,
+                solution: `Count the unit squares: Notebook A covers $${nbArea1}$ squares. Notebook B covers $${nbArea2}$ squares. <strong>${notebookCorrect}</strong> is larger.`,
+                visual: (
+                    <div className="flex gap-12 justify-center items-end">
+                        <div className="flex flex-col items-center">
+                            <div className="mb-2 font-black text-[#31326F]">Notebook A</div>
+                            <div className="relative bg-amber-100 border-2 border-amber-800 rounded-sm shadow-sm overflow-hidden" style={{ width: `${(nbArea1 % 2 === 0 ? 2 : 3) * 30}px`, height: `${Math.ceil(nbArea1 / (nbArea1 % 2 === 0 ? 2 : 3)) * 30}px` }}>
+                                <div className="absolute left-0 top-0 bottom-0 w-2 bg-red-400 opacity-50"></div>
+                                {/* Notebook lines */}
+                                {[...Array(10)].map((_, i) => <div key={i} className="border-b border-blue-200 mt-[10px]" />)}
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <div className="mb-2 font-black text-[#31326F]">Notebook B</div>
+                            <div className="relative bg-amber-100 border-2 border-amber-800 rounded-sm shadow-sm overflow-hidden" style={{ width: `${(nbArea2 % 2 === 0 ? 2 : 3) * 30}px`, height: `${Math.ceil(nbArea2 / (nbArea2 % 2 === 0 ? 2 : 3)) * 30}px` }}>
+                                <div className="absolute left-0 top-0 bottom-0 w-2 bg-red-400 opacity-50"></div>
+                                {[...Array(10)].map((_, i) => <div key={i} className="border-b border-blue-200 mt-[10px]" />)}
+                            </div>
+                        </div>
+                    </div>
+                ),
+                options: ["Notebook A", "Notebook B", "They are equal"],
+                difficulty: "Easy"
+            });
+
+            // 2. Abstract Grid Comparison
+            for (let i = 0; i < 2; i++) {
                 const c1 = randomInt(8, 12); const c2 = c1 + randomInt(2, 4);
                 const [pts1, pts2] = [getPoints(5, 5, c1), getPoints(5, 5, c2)];
                 const finalCorrect = c1 > c2 ? "Shape A" : "Shape B";
                 qs.push({
-                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Which shape has a <strong>larger area</strong>?</div>`,
+                    text: `<div style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; min-height: 4rem; width: 100%; text-align: center;'>Which shape has a <strong>larger area</strong>?</div>`,
                     correctAnswer: finalCorrect,
                     solution: `Count the squares: Shape A has $${c1}$ squares. Shape B has $${c2}$ squares. <strong>${finalCorrect}</strong> is larger.`,
                     visual: <div className="flex gap-12 justify-center"><GridShape points={pts1} label="Shape A" /><GridShape points={pts2} label="Shape B" color="#F6AD55" /></div>,
@@ -112,7 +144,7 @@ const CompareShapesSameArea = () => {
                 const ptsT = getPoints(5, 5, target); const ptsR = getPoints(5, 5, target); const ptsW = getPoints(5, 5, target + 2);
                 const leftOk = Math.random() > 0.5;
                 qs.push({
-                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Which option has the <strong>same area</strong> as the main shape?</div>`,
+                    text: `<div style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; min-height: 4rem; width: 100%; text-align: center;'>Which option has the <strong>same area</strong> as the main shape?</div>`,
                     correctAnswer: leftOk ? "Option 1" : "Option 2",
                     solution: `Main shape: $${target}$ squares. Match the one with $${target}$ squares.`,
                     visual: <div className="flex flex-col items-center gap-8"><GridShape points={ptsT} label="Main Shape" /><div className="flex gap-8"><GridShape points={leftOk ? ptsR : ptsW} label="Option 1" color="#818CF8" /><GridShape points={leftOk ? ptsW : ptsR} label="Option 2" color="#F472B6" /></div></div>,
@@ -124,10 +156,10 @@ const CompareShapesSameArea = () => {
                 const area = [12, 15, 18][randomInt(0, 2)];
                 const pts = getPoints(6, 6, area);
                 qs.push({
-                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Calculate the <strong>area</strong> of this irregular shape.</div>`,
+                    text: `<div style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; min-height: 4rem; width: 100%; text-align: center;'>Calculate the <strong>area</strong> of this irregular shape.</div>`,
                     correctAnswer: `${area} sq units`,
                     solution: `Exactly $${area}$ shaded squares were counted.`,
-                    visual: <GridShape points={pts} gridW={6} gridH={6} cellSize={30} />,
+                    visual: <GridShape points={pts} gridW={6} gridH={6} cellSize={25} />,
                     options: [`${area} sq units`, `${area - 2} sq units`, `${area + 3} sq units`, `${area + 1} sq units`],
                     difficulty: "Hard"
                 });
@@ -274,8 +306,11 @@ const CompareShapesSameArea = () => {
                         <AnimatePresence mode="wait">
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}><LatexContent html={currentQuestion.text} /></h2></div>
-                                    <div className="visual-area flex justify-center py-4">{currentQuestion.visual}</div>
+                                    <div style={{ width: '100%', marginBottom: '1rem', textAlign: 'center', minHeight: '3rem', flexShrink: 0 }}><h2 style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', color: '#2D3748', lineHeight: '1.4', margin: '0' }}><LatexContent html={currentQuestion.text} block={true} /></h2></div>
+                                    <div className="visual-area flex flex-1 flex-col justify-center py-4 min-h-[150px] items-center" style={{ flexShrink: 1, minHeight: 0, overflow: 'hidden' }}>
+                                        {currentQuestion.visual}
+                                        <div className="mt-4 text-[13px] text-slate-500 font-bold bg-slate-100 px-3 py-1 rounded-md">Scale: 1 square = 1 sq unit</div>
+                                    </div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (

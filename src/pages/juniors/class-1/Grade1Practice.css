@@ -991,7 +991,33 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 20px;
+}
+
+/* Retake and Next Skill Buttons */
+.retake-skill-btn {
+    background: white !important;
+    color: #31326F !important;
+    border: 3px solid #31326F !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.retake-skill-btn:hover {
+    background: #F8FAFC !important;
+    transform: translateY(-5px);
+}
+
+.next-skill-btn {
+    background: linear-gradient(135deg, #4ECDC4, #45B7AF) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4) !important;
+}
+
+.next-skill-btn:hover {
+    background: linear-gradient(135deg, #45B7AF, #3AA199) !important;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(78, 205, 196, 0.6) !important;
 }
 
 @media screen and (max-width: 768px) {

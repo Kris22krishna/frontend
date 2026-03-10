@@ -7,13 +7,13 @@ import '../../../../pages/middle/class-7/Class7PracticeLayout.css';
 import mascotImg from '../../../../assets/mascot.png';
 
 const BLUE_THEME_CSS = `
-    .option-btn-modern.selected {
+    .c7-option-btn.selected {
         border-color: #3B82F6 !important;
         background-color: #EFF6FF !important;
         color: #1E40AF !important;
         box-shadow: 0 4px 0 #2563EB !important;
     }
-    .option-btn-modern {
+    .c7-option-btn {
         min-height: 65px;
         min-width: 300px;
         display: flex;
@@ -66,15 +66,15 @@ const BLUE_THEME_CSS = `
         .practice-board-container { grid-template-columns: 1fr !important; justify-items: center !important; }
         .practice-left-col { width: 100% !important; max-width: 600px !important; margin: 0 auto !important; }
         .question-palette-container { width: 100% !important; max-width: 500px !important; margin: 2rem auto 0 auto !important; max-height: none !important; height: auto !important; }
-        .options-grid-modern { grid-template-columns: 1fr !important; justify-items: center !important; }
+        .c7-options-grid { grid-template-columns: 1fr !important; justify-items: center !important; }
         .practice-content-wrapper { padding-bottom: 80px !important; }
-        .option-btn-modern { min-height: 55px; font-size: 0.9rem; min-width: unset !important; width: 100% !important; max-width: 350px !important; margin: 0 auto !important; }
+        .c7-option-btn { min-height: 55px; font-size: 0.9rem; min-width: unset !important; width: 100% !important; max-width: 350px !important; margin: 0 auto !important; }
     }
     @media (max-width: 640px) {
         .junior-practice-header { padding: 0 1rem !important; }
         .practice-content-wrapper { padding: 1rem 1rem 80px 1rem !important; }
-        .question-card-modern { padding: 1.5rem !important; }
-        .question-text-modern { font-size: 1.1rem !important; }
+        .c7-question-card { padding: 1.5rem !important; }
+        .c7-question-text { font-size: 1.1rem !important; }
     }
 `;
 
@@ -314,16 +314,16 @@ const ComparingQuantitiesTest = () => {
             <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 140px 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                 <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '2rem', maxWidth: 1200, margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: 60 }}>
                     <div className="practice-left-col" style={{ width: '100%', minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="question-card-modern" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible', justifyContent: 'flex-start' }}>
-                            <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: '1rem' }}>
-                                <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem,1.8vw,1.35rem)', maxHeight: 'none', fontWeight: 500, textAlign: 'left', color: '#2D3748', lineHeight: 1.5, marginBottom: '1rem' }}>
+                        <div className="c7-question-card" style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'visible', justifyContent: 'flex-start' }}>
+                            <div className="c7-question-header" style={{ flexShrink: 0, marginBottom: '1rem' }}>
+                                <h2 className="c7-question-text" style={{ fontSize: 'clamp(1rem,1.8vw,1.35rem)', maxHeight: 'none', fontWeight: 500, textAlign: 'left', color: '#2D3748', lineHeight: 1.5, marginBottom: '1rem' }}>
                                     <LatexContent html={questions[qIndex].text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern" style={{ display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
-                                <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: 800, gridTemplateColumns: 'repeat(2,1fr)' }}>
+                            <div className="c7-interaction-area" style={{ display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
+                                <div className="c7-options-grid" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: 800, gridTemplateColumns: 'repeat(2,1fr)' }}>
                                     {questions[qIndex].options.map((option, idx) => (
-                                        <button key={idx} className={`option-btn-modern ${selectedOption===option?'selected':''}`} onClick={() => setSelectedOption(option)}>
+                                        <button key={idx} className={`c7-option-btn ${selectedOption===option?'selected':''}`} onClick={() => setSelectedOption(option)}>
                                             <LatexContent html={option} />
                                         </button>
                                     ))}

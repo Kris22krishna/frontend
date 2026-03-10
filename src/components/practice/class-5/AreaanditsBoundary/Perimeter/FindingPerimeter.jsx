@@ -116,7 +116,7 @@ const FindingPerimeter = () => {
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Find the <strong>perimeter</strong> of the shape on the grid.</div>`,
                     correctAnswer: `${p} cm`,
-                    solution: `Boundary length $= ${w} + ${h} + ${w} + ${h} = ${p}$ cm.`,
+                    solution: `Boundary length: \\( ${w} + ${h} + ${w} + ${h} = ${p} \\text{ cm} \\).`,
                     visual: <GridPerimeter points={pts} />,
                     options: Array.from(optionsSet),
                     difficulty: "Easy"
@@ -129,9 +129,9 @@ const FindingPerimeter = () => {
                     optionsSet.add(`${p + randomInt(2, 5) * 2} cm`);
                 }
                 qs.push({
-                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A rectangle has Length = $${w}$ cm and Width = $${h}$ cm. What is its <strong>perimeter</strong>?</div>`,
+                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A rectangle has Length = ${w} cm and Width = ${h} cm. What is its <strong>perimeter</strong>?</div>`,
                     correctAnswer: `${p} cm`,
-                    solution: `Perimeter $= 2 \\times (L + W) = 2 \\times (${w} + ${h}) = ${p}$ cm.`,
+                    solution: `Perimeter \\( = 2 \\times (L + W) = 2 \\times (${w} + ${h}) = ${p} \\text{ cm} \\).`,
                     visual: <DimensionPerimeterObject w={6} h={4} />,
                     options: Array.from(optionsSet),
                     difficulty: "Medium"
@@ -154,9 +154,9 @@ const FindingPerimeter = () => {
                         optionsSet.add(`${w + randomInt(1, 4) * 2} cm`);
                     }
                     qs.push({
-                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>If Perimeter is $${p}$ cm and Length is $${l}$ cm, what is the <strong>width</strong>?</div>`,
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>If Perimeter is ${p} cm and Length is ${l} cm, what is the <strong>width</strong>?</div>`,
                         correctAnswer: `${w} cm`,
-                        solution: `Width $= (\\text{Perimeter} \\div 2) - \\text{Length} = (${p} \\div 2) - ${l} = ${w}$ cm.`,
+                        solution: `Width \\( = (\\text{Perimeter} \\div 2) - \\text{Length} = (${p} \\div 2) - ${l} = ${w} \\text{ cm} \\).`,
                         visual: <div className="h-24 flex items-center justify-center text-4xl font-black text-indigo-400 opacity-30">P = {p}</div>,
                         options: Array.from(optionsSet),
                         difficulty: "Hard"

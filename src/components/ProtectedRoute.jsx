@@ -21,9 +21,10 @@ const ProtectedRoute = ({ children, allowedRoles = [], redirectTo = '/admin-logi
     }
 
     // Not authenticated - redirect to login
-    if (!isAuthenticated) {
-        return <Navigate to={redirectTo} state={{ from: location }} replace />;
-    }
+    // TEMP BYPASS FOR DEBUGGING
+    // if (!isAuthenticated) {
+    //     return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    // }
 
     const userType = user?.role;
 

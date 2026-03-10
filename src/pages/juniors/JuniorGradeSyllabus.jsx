@@ -28,6 +28,8 @@ const topicIcons = {
     'Fair Share': { emoji: '🍰', color: '#B39DDB', gradient: 'linear-gradient(135deg, #B39DDB 0%, #D1C4E9 100%)' },
     'Fun at Class Party': { emoji: '🎈', color: '#FFB6B9', gradient: 'linear-gradient(135deg, #FFB6B9 0%, #FFC8CB 100%)' },
     'Equal Groups': { emoji: '👥', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
+    'Ticking Clocks': { emoji: '🕐', color: '#F59E0B', gradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)' },
+    'The Transport Museum': { emoji: '🚌', color: '#0EA5E9', gradient: 'linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%)' },
     'House of Hundreds': { emoji: '🏠', color: '#FFCCBC', gradient: 'linear-gradient(135deg, #FFCCBC 0%, #FFAB91 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }
 };
@@ -72,7 +74,7 @@ const JuniorGradeSyllabus = () => {
                         return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii");
                     }
                     if (isGrade4) {
-                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers");
+                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling");
                     }
                     if (isGrade1 || isGrade2) {
                         return false; // Strictly hide all API topics for Grade 1 and Grade 2
@@ -207,7 +209,21 @@ const JuniorGradeSyllabus = () => {
                                     }}
                                     onMouseEnter={() => setHoveredTopic(topic.name)}
                                     onMouseLeave={() => setHoveredTopic(null)}
-                                    onClick={() => navigate(`/junior/grade/${grade}/topic/${encodeURIComponent(topic.name)}`)}
+                                    onClick={() => {
+                                        if (topic.name === 'Ticking Clocks and Turning Calendars') {
+                                            navigate('/ticking-clocks');
+                                        } else if (topic.name === 'The Transport Museum') {
+                                            navigate('/the-transport-museum');
+                                        } else if (topic.name === 'Data Handling') {
+                                            navigate('/junior/grade/4/data-handling');
+                                        } else if (topic.name === 'Shapes Around Us') {
+                                            navigate('/junior/grade/4/shapes-around-us');
+                                        } else if (topic.name === 'Hide and Seek') {
+                                            navigate('/junior/grade/4/hide-and-seek');
+                                        } else {
+                                            navigate(`/junior/grade/${grade}/topic/${encodeURIComponent(topic.name)}`);
+                                        }
+                                    }}
                                 >
                                     {/* Background glow */}
                                     <div className="card-glow"></div>
