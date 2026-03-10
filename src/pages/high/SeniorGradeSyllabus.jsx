@@ -117,7 +117,13 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1237, skill_name: 'Relationship Between Zeroes and Coefficients (Quadratic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Quadratic)' },
                         { skill_id: 1238, skill_name: 'Constructing Quadratic Polynomials from Given Conditions', topic: 'Polynomials', subtopic: 'Constructing Quadratic Polynomials from Given Conditions' },
                         { skill_id: 1239, skill_name: 'Relationship Between Zeroes and Coefficients (Cubic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Cubic)' },
-                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' }
+                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' },
+
+                        // Surface Areas and Volumes
+                        { skill_id: 1300, skill_name: 'Surface Areas and Volumes: Interactive Chapter', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/surface-areas-and-volumes' },
+
+                        // Introduction to Trigonometry
+                        { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
