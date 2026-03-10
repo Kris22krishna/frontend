@@ -477,7 +477,11 @@ export default function ShapesSkills() {
     return (
         <div className="sau-skills-page">
             <nav className="sau-nav">
-                <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/shapes-around-us')}>← Back to Shapes Around Us</button>
+                {view === 'list' ? (
+                    <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/shapes-around-us')}>← Back to Shapes Around Us</button>
+                ) : (
+                    <button className="sau-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
+                )}
                 <div className="sau-nav-links">
                     <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/introduction')}>🌟 Introduction</button>
                     <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/terminology')}>📖 Terminology</button>

@@ -694,7 +694,11 @@ export default function PatternsSkills() {
     return (
         <div className="pau-skills-page">
             <nav className="pau-nav">
-                <button className="pau-nav-back" onClick={() => navigate('/junior/grade/4/patterns-around-us')}>← Back to Patterns Around Us</button>
+                {view === 'list' ? (
+                    <button className="pau-nav-back" onClick={() => navigate('/junior/grade/4/patterns-around-us')}>← Back to Patterns Around Us</button>
+                ) : (
+                    <button className="pau-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
+                )}
                 <div className="pau-nav-links">
                     <button className="pau-nav-link" onClick={() => navigate('/junior/grade/4/patterns-around-us/introduction')}>🌟 Introduction</button>
                     <button className="pau-nav-link" onClick={() => navigate('/junior/grade/4/patterns-around-us/terminology')}>📖 Terminology</button>
