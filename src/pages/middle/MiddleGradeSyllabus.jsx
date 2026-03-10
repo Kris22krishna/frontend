@@ -596,6 +596,17 @@ const MiddleGradeSyllabus = () => {
 
     // Manual Override for Grade 5 Tenths and Hundredths
     if (gradeInt === 5) {
+        skillsByTopic['The Fish Tale'] = {
+            'Learn': [
+                { skill_id: 'FT-5W1H', skill_name: '5W1H Introduction', topic: 'The Fish Tale', sub_topic: 'Learn', isLocal: true, path: '/the-fish-tale/introduction' },
+                { skill_id: 'FT-TERM', skill_name: 'Terminology', topic: 'The Fish Tale', sub_topic: 'Learn', isLocal: true, path: '/the-fish-tale/terminology' },
+                { skill_id: 'FT-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'The Fish Tale', sub_topic: 'Learn', isLocal: true, path: '/the-fish-tale/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'FT-TEST', skill_name: 'Chapter Test', topic: 'The Fish Tale', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/the-fish-tale/chapter-test' }
+            ]
+        };
+
         skillsByTopic['Area and its Boundary'] = {
             'Area': [
                 { skill_id: '1159', skill_name: 'Finding Area', topic: 'Area and its Boundary', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/finding-area' },

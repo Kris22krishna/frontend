@@ -26,6 +26,10 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
+import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
+import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
+import FishTaleSkills from './components/practice/class-5/The_Fish_Tale/Topics/Skills/FishTaleSkills';
 import SurfaceAreasAndVolumes from './components/practice/class-10/SurfaceAreasAndVolumes/SurfaceAreasAndVolumes';
 import SurfaceVolumesIntro from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/5W1H/Intro5W1H';
 import SurfaceVolumesTerminology from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Terminology/Terminology';
@@ -426,6 +430,13 @@ import DeterminantsEasyTest from './components/practice/class-12/Determinants/De
 import DeterminantsMediumTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsMediumTest';
 import DeterminantsHardTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsHardTest';
 
+// Class 12 - Relations Chapter
+import RelationsHub from './components/practice/class-12/Relations/Relations';
+import RelationsIntro5W1H from './components/practice/class-12/Relations/Topics/5W1H/RelationsIntro5W1H';
+import RelationsTerminology from './components/practice/class-12/Relations/Topics/Terminology/RelationsTerminology';
+import RelationsSkills from './components/practice/class-12/Relations/Topics/Skills/RelationsSkills';
+import RelationsExams from './components/practice/class-12/Relations/Topics/Exams/RelationsExams';
+
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
 import BiologyChapters from './components/practice/class-11/biology/BiologyChapters';
@@ -482,6 +493,17 @@ import CountHowManyUnitsFit from './components/practice/class-4/Weigh_It_Pour_It
 import RepeatedAdditionToOneWhole from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/repeated_addition_to_one_whole';
 import CompareWeightsAndCapacities from './components/practice/class-4/Weigh_It_Pour_It/Comparison_of_Quantities/compare_weights_and_capacities';
 import WeightAndCapacityWordProblems from './components/practice/class-4/Weigh_It_Pour_It/Mixed_Measurement_Word_Problems/weight_and_capacity_word_problems';
+
+// Grade 5 - The Fish Tale
+import LargeNumbersRealLife from './components/practice/class-5/The_Fish_Tale/Real_Life_Situations/LargeNumbersRealLife';
+import PlaceValueLakhs from './components/practice/class-5/The_Fish_Tale/Place_Value/PlaceValueLakhs';
+import ReadingWritingBigNumbers from './components/practice/class-5/The_Fish_Tale/Reading_Writing_Numbers/ReadingWritingBigNumbers';
+import ComparisonOfNumbers from './components/practice/class-5/The_Fish_Tale/Comparison/ComparisonOfNumbers';
+import EstimationAndRounding from './components/practice/class-5/The_Fish_Tale/Estimation/EstimationAndRounding';
+import NumberSensePlaceValue from './components/practice/class-5/The_Fish_Tale/Number_Sense/NumberSensePlaceValue';
+import EstimationSkills from './components/practice/class-5/The_Fish_Tale/Estimation/EstimationSkills';
+import InterpretingRealLifeData from './components/practice/class-5/The_Fish_Tale/Real_Life_Data/InterpretingRealLifeData';
+import TheFishTaleTest from './components/practice/class-5/The_Fish_Tale/TheFishTaleTest';
 
 // Grade 4 - Elephants, Tigers, and Leopards
 import JungleNimGame from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/nim_game_add_1_or_2';
@@ -577,6 +599,12 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          {/* The Fish Tale Topic Pages */}
+          <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
+          <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />
+          <Route path="the-fish-tale/terminology" element={<ProtectedRoute redirectTo="/login"><FishTaleTerminology /></ProtectedRoute>} />
+          <Route path="the-fish-tale/skills" element={<ProtectedRoute redirectTo="/login"><FishTaleSkills /></ProtectedRoute>} />
+
 
           {/* Surface Areas and Volumes Routes */}
           <Route path="surface-areas-and-volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
@@ -629,7 +657,7 @@ function App() {
           <Route path="senior/grade/12/matrices/terminology" element={<ProtectedRoute redirectTo="/login"><MatricesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/skills" element={<ProtectedRoute redirectTo="/login"><MatricesSkills /></ProtectedRoute>} />
 
-          {/* Class 12: Matrices � canonical deep-dive routes */}
+          {/* Class 12: Matrices  canonical deep-dive routes */}
           <Route path="senior/grade/12/matrices/deep-dive/who-uses" element={<ProtectedRoute redirectTo="/login"><WhoUsesMatrices /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/deep-dive/what-is" element={<ProtectedRoute redirectTo="/login"><WhatIsMatrix /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/deep-dive/when-need" element={<ProtectedRoute redirectTo="/login"><WhenDoWeNeedMatrices /></ProtectedRoute>} />
@@ -653,6 +681,13 @@ function App() {
           <Route path="senior/grade/12/determinants/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DeterminantsEasyTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DeterminantsMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DeterminantsHardTest /></ProtectedRoute>} />
+
+          {/* Class 12: Relations */}
+          <Route path="senior/grade/12/relations" element={<ProtectedRoute redirectTo="/login"><RelationsHub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/introduction" element={<ProtectedRoute redirectTo="/login"><RelationsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/terminology" element={<ProtectedRoute redirectTo="/login"><RelationsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/skills" element={<ProtectedRoute redirectTo="/login"><RelationsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/exams" element={<ProtectedRoute redirectTo="/login"><RelationsExams /></ProtectedRoute>} />
 
           {/* Class 7: Integers */}
           <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />
@@ -845,6 +880,17 @@ function App() {
             <ComparingLargeSmallNumbers />
           </ProtectedRoute>
         } />
+
+        {/* Grade 5 - The Fish Tale */}
+        <Route path="/middle/grade/5/the-fish-tale/large-numbers-real-life" element={<ProtectedRoute redirectTo="/login"><LargeNumbersRealLife /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/place-value-lakhs" element={<ProtectedRoute redirectTo="/login"><PlaceValueLakhs /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/reading-writing-big-numbers" element={<ProtectedRoute redirectTo="/login"><ReadingWritingBigNumbers /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/comparison-of-numbers" element={<ProtectedRoute redirectTo="/login"><ComparisonOfNumbers /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/estimation-and-rounding" element={<ProtectedRoute redirectTo="/login"><EstimationAndRounding /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/number-sense-place-value" element={<ProtectedRoute redirectTo="/login"><NumberSensePlaceValue /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/estimation-skills" element={<ProtectedRoute redirectTo="/login"><EstimationSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/interpreting-real-life-data" element={<ProtectedRoute redirectTo="/login"><InterpretingRealLifeData /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/chapter-test" element={<ProtectedRoute redirectTo="/login"><TheFishTaleTest /></ProtectedRoute>} />
 
         {/* Grade 5 - Tenths and Hundredths */}
         <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
