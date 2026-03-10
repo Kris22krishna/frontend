@@ -288,6 +288,11 @@ export const TOPIC_CONFIGS = {
             { id: "SAU-01", name: "Introduction", route: "shapes-around-us-hero" },
             { id: "SAU-02", name: "Terminology", route: "shapes-around-us-hero" },
             { id: "SAU-03", name: "Skills", route: "shapes-around-us-hero" }
+        ],
+        'Hide and Seek': [
+            { id: "HAS-01", name: "Introduction", route: "hide-and-seek-hero" },
+            { id: "HAS-02", name: "Terminology", route: "hide-and-seek-hero" },
+            { id: "HAS-03", name: "Skills", route: "hide-and-seek-hero" }
         ]
     }
 };
