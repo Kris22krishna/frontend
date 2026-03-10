@@ -1,0 +1,4 @@
+/* CSS to hide the main footer when this chapter specific class is applied to the body */
+body.hide-main-footer .main-footer {
+    display: none !important;
+}

@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import './Navbar.css';
-import logo from '../assets/avatar.png';
+import logo from '../assets/logo.jpg';
 // import { api } from '../services/api'; // No longer needed directly for auth state
 import { useAuth } from '../contexts/AuthContext';
 

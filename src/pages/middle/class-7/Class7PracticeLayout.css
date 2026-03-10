@@ -108,14 +108,12 @@
     flex: 1;
     display: flex;
     align-items: center;
-    /* Center horizontally/vertically */
     justify-content: center;
     position: relative;
     padding: 0.5rem;
-    /* Reduced padding */
     overflow: hidden;
-    /* Contain children */
-    /* Height is now managed by flexbox */
+    /* Prevent children from stretching to full height */
+    overflow-y: auto;
 }
 
 
@@ -123,25 +121,25 @@
 .practice-board-container {
     display: grid;
     /* Desktop: 2 columns (Question | Scratchpad) */
-    grid-template-columns: minmax(0, 1fr) 300px;
-    grid-template-rows: 1fr;
+    grid-template-rows: auto;
+    /* Use auto to prevent row stretching */
     gap: 1.5rem;
     width: 100%;
     max-width: 1400px;
-    height: 100%;
     padding: 0 1rem;
-    align-items: stretch;
-    /* Stretch columns to fill height */
+    align-items: flex-start;
+    /* Keep everything at the top */
 }
 
 /* Left Column */
 .practice-left-col {
     position: relative;
-    height: 100%;
     overflow: hidden;
     /* Contain the scrollable card */
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 /* Right Column - Desktop */
@@ -195,13 +193,15 @@
 }
 
 /* Modern Question Card */
-.question-card-modern {
+.c7-question-card {
     background: white;
     border-radius: 2.5rem;
     padding: 2rem 2.5rem;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     width: 100%;
-    height: auto;
+    max-width: 750px;
+    margin: 1rem auto 0 auto;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -210,24 +210,25 @@
     z-index: 10;
     border: 4px solid #FFFFFF;
     overflow: visible;
+    gap: 0.5rem;
 }
 
 /* Custom Scrollbar for Webkit */
-.question-card-modern::-webkit-scrollbar {
+.c7-question-card::-webkit-scrollbar {
     width: 8px;
 }
 
-.question-card-modern::-webkit-scrollbar-track {
+.c7-question-card::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.question-card-modern::-webkit-scrollbar-thumb {
+.c7-question-card::-webkit-scrollbar-thumb {
     background-color: #B2DFDB;
     border-radius: 20px;
 }
 
 /* Question Styling */
-.question-header-modern {
+.c7-question-header {
     margin-bottom: 0.5rem;
     /* Reduced margin */
     text-align: center;
@@ -242,42 +243,54 @@
 }
 
 /* Custom Scrollbar for Question Text */
-.question-header-modern::-webkit-scrollbar {
+.c7-question-header::-webkit-scrollbar {
     width: 6px;
 }
 
-.question-header-modern::-webkit-scrollbar-track {
+.c7-question-header::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.question-header-modern::-webkit-scrollbar-thumb {
+.c7-question-header::-webkit-scrollbar-thumb {
     background-color: #B2DFDB;
     border-radius: 10px;
 }
 
 /* ... existing styles ... */
 
-.question-text-modern {
+.c7-question-text {
     font-family: 'Open Sans', sans-serif !important;
     font-size: clamp(1.2rem, 2.2vw, 2rem);
     font-weight: 400 !important;
     /* Non-bold */
     color: #2D3748;
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.4;
+    /* Reduced line height */
+    margin: 0 !important;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
+    /* Changed from center to top alignment */
     justify-content: center;
     gap: 0.8rem;
     overflow: visible;
     text-align: center;
 }
 
+/* Remove default margins from any injected p or div tags */
+.c7-question-text p,
+.c7-question-text div,
+.c7-question-text h1,
+.c7-question-text h2,
+.c7-question-text h3 {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 /* ... */
 
 /* Interaction Area */
-.interaction-area-modern {
+.c7-interaction-area {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -300,11 +313,10 @@
 
 
 /* Options Grid - Responsive */
-.options-grid-modern {
+.c7-options-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem;
-    /* Large gap for spreading out */
+    gap: 0.75rem;
     width: 100%;
     max-width: 900px;
     /* Wider grid */
@@ -312,7 +324,7 @@
     align-content: center;
 }
 
-.option-btn-modern {
+.c7-option-btn {
     background: white;
     border: 3px solid #E2E8F0;
     border-radius: 1.2rem;
@@ -326,7 +338,7 @@
     cursor: pointer;
     transition: all 0.1s;
     font-family: 'Open Sans', 'Nunito', sans-serif;
-    min-height: 100px;
+    min-height: 65px;
     /* Fixed min-height for symmetry */
     height: 100%;
     display: flex;
@@ -339,25 +351,25 @@
     width: auto;
 }
 
-.option-btn-modern:hover {
+.c7-option-btn:hover {
     border-color: #00BFA5;
     transform: translateY(-2px);
     background: #F0FDFA;
 }
 
-.option-btn-modern:active {
+.c7-option-btn:active {
     transform: translateY(2px);
     box-shadow: none;
 }
 
-.option-btn-modern.selected {
+.c7-option-btn.selected {
     border-color: #00BFA5;
     background: #E0F2F1;
     color: #00695C;
     box-shadow: 0 4px 0 #00897B;
 }
 
-.raksha-theme .option-btn-modern.selected {
+.raksha-theme .c7-option-btn.selected {
     border-color: #f59e0b;
     background: #FEF3C7;
     color: #92400E;
@@ -365,7 +377,7 @@
 }
 
 /* Grey Selection Theme (Override) */
-.grey-selection-theme .option-btn-modern.selected {
+.grey-selection-theme .c7-option-btn.selected {
     border-color: #94A3B8;
     background: #E2E8F0;
     color: #334155;
@@ -373,28 +385,28 @@
 }
 
 /* Grey Theme Hover (Override Green) */
-.grey-selection-theme .option-btn-modern:hover:not(:disabled) {
+.grey-selection-theme .c7-option-btn:hover:not(:disabled) {
     border-color: #94A3B8;
     background: #F1F5F9;
     transform: translateY(-2px);
 }
 
 /* Base Correct/Wrong */
-.fair-share-theme .option-btn-modern.selected {
+.fair-share-theme .c7-option-btn.selected {
     border-color: #7C3AED;
     background: #EDE9FE;
     color: #5B21B6;
     box-shadow: 0 4px 0 #6D28D9;
 }
 
-.option-btn-modern.correct {
+.c7-option-btn.correct {
     background: #C8E6C9;
     border-color: #4CAF50;
     color: #1B5E20;
     box-shadow: 0 4px 0 #388E3C;
 }
 
-.option-btn-modern.wrong {
+.c7-option-btn.wrong {
     background: #FFCDD2;
     border-color: #EF5350;
     color: #B71C1C;
@@ -402,14 +414,14 @@
 }
 
 /* Grey Theme Specific Feedback (Higher Specificity) */
-.grey-selection-theme .option-btn-modern.correct {
+.grey-selection-theme .c7-option-btn.correct {
     background: #C8E6C9 !important;
     border-color: #4CAF50 !important;
     color: #1B5E20 !important;
     box-shadow: 0 4px 0 #388E3C !important;
 }
 
-.grey-selection-theme .option-btn-modern.wrong {
+.grey-selection-theme .c7-option-btn.wrong {
     background: #FFCDD2 !important;
     border-color: #EF5350 !important;
     color: #B71C1C !important;
@@ -432,7 +444,7 @@
 }
 
 /* Center encouragement pill across both grid columns */
-.options-grid-modern .feedback-mini {
+.c7-options-grid .feedback-mini {
     grid-column: 1 / -1;
     justify-self: center;
     margin: 1rem auto 0;
@@ -926,7 +938,7 @@
         /* Hide mascot */
     }
 
-    .question-card-modern {
+    .c7-question-card {
         padding: 1.5rem;
     }
 }
@@ -1066,7 +1078,7 @@
     }
 
     /* Adjust padding for question card since mascot is different or overlay */
-    .question-card-modern {
+    .c7-question-card {
         padding: 2.5rem 1.5rem 1.5rem 1.5rem;
         /* Top padding for mascot */
         border-radius: 1.5rem;
@@ -1158,7 +1170,7 @@
         width: 100%;
     }
 
-    .question-card-modern {
+    .c7-question-card {
         background: white;
         border-radius: 1.5rem;
         padding: 1.5rem;
@@ -1178,12 +1190,12 @@
         flex-direction: column;
     }
 
-    .question-header-modern {
+    .c7-question-header {
         flex-shrink: 0;
         margin-bottom: 0;
     }
 
-    .question-text-modern {
+    .c7-question-text {
         font-size: 1.1rem;
         /* Comfortable size */
         line-height: 1.5;
@@ -1204,7 +1216,7 @@
         font-weight: 800;
     }
 
-    .interaction-area-modern {
+    .c7-interaction-area {
         width: 100%;
         padding: 0;
         overflow: visible;
@@ -1213,7 +1225,7 @@
         /* Don't shrink */
     }
 
-    .options-grid-modern {
+    .c7-options-grid {
         grid-template-columns: 1fr;
         gap: 12px;
         /* 12px gap */
@@ -1222,7 +1234,7 @@
         flex-direction: column;
     }
 
-    .option-btn-modern {
+    .c7-option-btn {
         width: 100%;
         /* Reset flex basis for column layout */
         flex: 0 0 auto;
@@ -1247,18 +1259,18 @@
     }
 
 
-    .option-btn-modern:hover {
+    .c7-option-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 0 #CBD5E0;
     }
 
-    .option-btn-modern:active {
+    .c7-option-btn:active {
         transform: translateY(2px);
         box-shadow: 0 2px 0 #CBD5E0;
     }
 
     /* Selected State */
-    .option-btn-modern.selected {
+    .c7-option-btn.selected {
         border-color: #3182CE;
         background: #EBF8FF;
         color: #2B6CB0;
@@ -1266,14 +1278,14 @@
     }
 
     /* Override mobile selected with validation colors */
-    .option-btn-modern.correct {
+    .c7-option-btn.correct {
         background: #C8E6C9 !important;
         border-color: #4CAF50 !important;
         color: #1B5E20 !important;
         box-shadow: 0 4px 0 #388E3C !important;
     }
 
-    .option-btn-modern.wrong {
+    .c7-option-btn.wrong {
         background: #FFCDD2 !important;
         border-color: #EF5350 !important;
         color: #B71C1C !important;
@@ -1352,11 +1364,11 @@
 
     /* Target very small screens specifically */
     @media (max-width: 360px) {
-        .question-text-modern {
+        .c7-question-text {
             font-size: 0.9rem;
         }
 
-        .option-btn-modern {
+        .c7-option-btn {
             min-height: 30px;
             font-size: 0.85rem;
             padding: 0.2rem;
@@ -1480,7 +1492,7 @@
     }
 
     /* Floating Narrow Question Card - FIXED WIDTHS */
-    .question-card-modern {
+    .c7-question-card {
         background: white;
         /* Mobile: 92-95vw, max 480px */
         width: 94vw;
@@ -1497,12 +1509,10 @@
         flex: 0 1 auto;
         /* Ensure it doesn't get too tall but allows content */
         max-height: none;
-        min-height: 50vh;
-        /* Occupy at least 50% screen */
     }
 
     /* Option Button Scaling Rule: Wide buttons */
-    .option-btn-modern {
+    .c7-option-btn {
         width: 100%;
         /* Fill the grid column */
         min-height: 48px;
@@ -1510,14 +1520,14 @@
         font-size: 1rem;
     }
 
-    .options-grid-modern {
+    .c7-options-grid {
         /* Ensure single column on mobile implies full width if 1fr */
         grid-template-columns: 1fr;
         width: 100%;
         gap: 0.8rem;
     }
 
-    .interaction-area-modern {
+    .c7-interaction-area {
         width: 100%;
         /* Ensure full width of card */
         padding: 0;
@@ -1632,8 +1642,8 @@
     .practice-content-wrapper,
     .practice-board-container,
     .practice-left-col,
-    .question-card-modern,
-    .interaction-area-modern {
+    .c7-question-card,
+    .c7-interaction-area {
         height: auto !important;
         min-height: unset !important;
         max-height: unset !important;
@@ -1651,7 +1661,7 @@
     }
 
     /* Scale down large visuals on mobile */
-    .question-text-modern svg {
+    .c7-question-text svg {
         max-width: 100%;
         height: auto !important;
         max-height: 180px;
@@ -1671,7 +1681,7 @@
     }
 
     /* Question card */
-    .question-card-modern {
+    .c7-question-card {
         margin: 0.5rem auto 1rem;
         padding: 1.4rem;
         display: block !important;
@@ -1679,18 +1689,18 @@
     }
 
     /* Question text */
-    .question-text-modern {
+    .c7-question-text {
         display: block;
         margin-bottom: 1rem;
     }
 
     /* Options container */
-    .interaction-area-modern {
+    .c7-interaction-area {
         width: 100%;
         margin-top: 0.5rem;
     }
 
-    .options-grid-modern {
+    .c7-options-grid {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -1698,7 +1708,7 @@
     }
 
     /* Options */
-    .option-btn-modern {
+    .c7-option-btn {
         min-height: 52px;
         padding: 0.7rem 1rem;
     }
@@ -1712,11 +1722,11 @@
 
 @media (max-width: 360px) {
 
-    .question-card-modern {
+    .c7-question-card {
         padding: 1rem;
     }
 
-    .option-btn-modern {
+    .c7-option-btn {
         min-height: 46px;
         font-size: 0.85rem;
     }
@@ -1798,7 +1808,7 @@
     }
 
     /* Ensure question card doesn't have max-height restrictions */
-    .question-card-modern {
+    .c7-question-card {
         max-height: none !important;
         height: auto !important;
         margin-bottom: 1.2rem !important;
@@ -1806,7 +1816,7 @@
     }
 
     /* Make interaction area fully visible */
-    .interaction-area-modern {
+    .c7-interaction-area {
         max-height: none !important;
         overflow: visible !important;
     }
@@ -1852,13 +1862,13 @@
     }
 
     /* Compact question text */
-    .question-text-modern {
+    .c7-question-text {
         font-size: 1rem !important;
         line-height: 1.3 !important;
     }
 
     /* Smaller options */
-    .option-btn-modern {
+    .c7-option-btn {
         min-height: 42px !important;
         padding: 0.5rem 0.8rem !important;
         font-size: 0.9rem !important;
@@ -1879,13 +1889,13 @@
     }
 
     /* Even tighter question spacing */
-    .question-card-modern {
+    .c7-question-card {
         padding: 0.8rem !important;
         gap: 0.6rem !important;
     }
 
     /* More compact option buttons */
-    .option-btn-modern {
+    .c7-option-btn {
         min-height: 38px !important;
         padding: 0.4rem 0.7rem !important;
         font-size: 0.85rem !important;
@@ -1916,27 +1926,27 @@
         width: 100% !important;
     }
 
-    .question-card-modern {
+    .c7-question-card {
         max-height: none !important;
         height: auto !important;
         overflow: visible !important;
         padding: 1rem !important;
     }
 
-    .interaction-area-modern {
+    .c7-interaction-area {
         flex-direction: row !important;
         flex-wrap: wrap;
         justify-content: center;
     }
 
-    .options-grid-modern {
+    .c7-options-grid {
         grid-template-columns: repeat(2, 1fr) !important;
         /* Back to 2 cols if space allows */
     }
 }
 
 /* Picture Based Questions - Split Layout */
-.question-card-modern.picture-layout {
+.c7-question-card.picture-layout {
     max-width: 1200px;
     width: 95%;
 }
@@ -1967,16 +1977,16 @@
     text-align: left;
 }
 
-.content-section .question-header-modern {
+.content-section .c7-question-header {
     margin-bottom: 2rem;
 }
 
-.content-section .question-text-modern {
+.content-section .c7-question-text {
     text-align: left !important;
     font-size: clamp(1.2rem, 2.5vw, 1.8rem) !important;
 }
 
-.content-section .options-grid-modern {
+.content-section .c7-options-grid {
     max-width: 100% !important;
     gap: 1.5rem !important;
 }

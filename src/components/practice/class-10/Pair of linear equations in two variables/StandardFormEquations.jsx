@@ -215,7 +215,6 @@ const StandardFormEquations = () => {
 
         try {
             await api.recordAttempt({
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
                 user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10),
                 session_id: sessionId,
                 skill_id: SKILL_ID,
@@ -348,14 +347,14 @@ const StandardFormEquations = () => {
 
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
 
-            <PracticeReportModal 
-                isOpen={showReportModal} 
+            <PracticeReportModal
+                isOpen={showReportModal}
                 stats={{
                     timeTaken: formatTime(timeElapsed),
                     correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
                     totalQuestions: questions.length
-                }} 
-                onContinue={() => navigate(-1)} 
+                }}
+                onContinue={() => navigate(-1)}
             />
 
             <footer className="junior-bottom-bar">
