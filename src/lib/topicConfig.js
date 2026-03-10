@@ -112,7 +112,11 @@ export const TOPIC_CONFIGS = {
             { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" }
         ],
         'Give and Take': [
-            { id: "GT-01", name: "Add and Subtract", route: "add-and-subtract" }
+            { id: "GT-01", name: "Add and Subtract", route: "add-and-subtract" },
+            { id: "GT-02", name: "Handling Money", route: "handling-money" }
+        ],
+        'Time Goes On': [
+            { id: "TGO-01", name: "Calendar", route: "calendar" }
         ],
         'House of Hundreds II': [
             { id: "HH2-01", name: "Draw tiles" },

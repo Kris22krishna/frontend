@@ -338,6 +338,8 @@ import FairShareGuesswho from './components/practice/class-3/fair-share/guess-wh
 import LongerShorterStrings from './components/practice/class-3/Fun-at-class-party/Longer&Shorter-strings';
 import HeightsAndMeters from './components/practice/class-3/Fun-at-class-party/heights-and-meters';
 import AddAndSubtract from './components/practice/class-3/Give-and-Take/add-and-subtract';
+import HandlingMoney from './components/practice/class-3/Give-and-Take/Handling- Money';
+import CalendarQuestions from './components/practice/class-3/Time-goes-on/calendar';
 
 // Grade 4 - The Cleanest Village
 import RepeatedAddition from './components/practice/class-4/The_Cleanest_Village/Equal_Groups_and_Repeated_Addition/repeated_addition';
@@ -495,6 +497,12 @@ function App() {
           </ProtectedRoute>
         } />
 
+        <Route path="/junior/grade/:grade/give-and-take/handling-money" element={
+          <ProtectedRoute redirectTo="/login">
+            <HandlingMoney />
+          </ProtectedRoute>
+        } />
+
         <Route path="/junior/grade/:grade/house-of-hundreds-ii/draw-tiles" element={
           <ProtectedRoute redirectTo="/login">
             <DrawTiles />
@@ -552,6 +560,12 @@ function App() {
         <Route path="/junior/grade/:grade/house-of-hundreds-ii/guess-the-number" element={
           <ProtectedRoute redirectTo="/login">
             <GuessTheNumber />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/junior/grade/:grade/time-goes-on/calendar" element={
+          <ProtectedRoute redirectTo="/login">
+            <CalendarQuestions />
           </ProtectedRoute>
         } />
 

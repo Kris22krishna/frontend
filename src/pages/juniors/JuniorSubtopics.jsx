@@ -73,6 +73,14 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/give-and-take/add-and-subtract`);
             return;
         }
+        if (subtopic.id === "GT-02") {
+            navigate(`/junior/grade/${grade}/give-and-take/handling-money`);
+            return;
+        }
+        if (subtopic.id === "TGO-01") {
+            navigate(`/junior/grade/${grade}/time-goes-on/calendar`);
+            return;
+        }
         if (subtopic.id === "HH2-01") {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/draw-tiles`);
             return;
