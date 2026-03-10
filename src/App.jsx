@@ -382,6 +382,8 @@ import MatricesHub from './components/practice/class-12/Matrices/Matrices';
 import MatricesIntro5W1H from './components/practice/class-12/Matrices/Topics/5W1H/MatricesIntro5W1H';
 import MatricesTerminology from './components/practice/class-12/Matrices/Topics/Terminology/MatricesTerminology';
 import MatricesSkills from './components/practice/class-12/Matrices/Topics/Skills/MatricesSkills';
+import MatricesConnectomics from './components/practice/class-12/Matrices/Topics/Connectomics/MatricesConnectomics';
+import MatricesExamEdge from './components/practice/class-12/Matrices/Topics/ExamEdge/MatricesExamEdge';
 import WhoUsesMatrices from './components/practice/class-12/Matrices/DeepDive/Pages/WhoUsesMatrices';
 import WhatIsMatrix from './components/practice/class-12/Matrices/DeepDive/Pages/WhatIsMatrix';
 import WhenDoWeNeedMatrices from './components/practice/class-12/Matrices/DeepDive/Pages/WhenDoWeNeedMatrices';
@@ -558,8 +560,10 @@ function App() {
           <Route path="senior/grade/12/matrices/introduction" element={<ProtectedRoute redirectTo="/login"><MatricesIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/terminology" element={<ProtectedRoute redirectTo="/login"><MatricesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/skills" element={<ProtectedRoute redirectTo="/login"><MatricesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/connectomics" element={<ProtectedRoute redirectTo="/login"><MatricesConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/exam-edge" element={<ProtectedRoute redirectTo="/login"><MatricesExamEdge /></ProtectedRoute>} />
 
-          {/* Class 12: Matrices � canonical deep-dive routes */}
+          {/* Class 12: Matrices  canonical deep-dive routes */}
           <Route path="senior/grade/12/matrices/deep-dive/who-uses" element={<ProtectedRoute redirectTo="/login"><WhoUsesMatrices /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/deep-dive/what-is" element={<ProtectedRoute redirectTo="/login"><WhatIsMatrix /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/deep-dive/when-need" element={<ProtectedRoute redirectTo="/login"><WhenDoWeNeedMatrices /></ProtectedRoute>} />
