@@ -39,6 +39,12 @@ import ProportionsIntro5W1H from './components/practice/class-8/direct_and_inver
 import ProportionsTerminology from './components/practice/class-8/direct_and_inverse_proportions/Topics/Terminology/ProportionsTerminology';
 import ProportionsSkills from './components/practice/class-8/direct_and_inverse_proportions/Topics/Skills/ProportionsSkills';
 
+import ShapesAroundUs from './components/practice/grade-4/Shapes_Around_Us/ShapesAroundUs';
+import ShapesIntro5W1H from './components/practice/grade-4/Shapes_Around_Us/Topics/5W1H/ShapesIntro5W1H';
+import ShapesTerminology from './components/practice/grade-4/Shapes_Around_Us/Topics/Terminology/ShapesTerminology';
+import ShapesSkills from './components/practice/grade-4/Shapes_Around_Us/Topics/Skills/ShapesSkills';
+
+
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
@@ -573,6 +579,11 @@ function App() {
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Shapes Around Us Chapter Pages */}
+          <Route path="junior/grade/4/shapes-around-us" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
           {/* Grade 8: Introduction to Graphs Chapter Pages */}
           <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />

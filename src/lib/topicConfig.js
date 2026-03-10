@@ -283,6 +283,11 @@ export const TOPIC_CONFIGS = {
             { id: "DH-01", name: "Introduction", route: "data-handling-hero" },
             { id: "DH-02", name: "Terminology", route: "data-handling-hero" },
             { id: "DH-03", name: "Skills", route: "data-handling-hero" }
+        ],
+        'Shapes Around Us': [
+            { id: "SAU-01", name: "Introduction", route: "shapes-around-us-hero" },
+            { id: "SAU-02", name: "Terminology", route: "shapes-around-us-hero" },
+            { id: "SAU-03", name: "Skills", route: "shapes-around-us-hero" }
         ]
     }
 };
