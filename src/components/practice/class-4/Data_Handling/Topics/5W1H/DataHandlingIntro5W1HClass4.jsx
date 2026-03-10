@@ -125,13 +125,13 @@ function W1HCard({ card }) {
     );
 }
 
-export default function DataHandlingIntro5W1H() {
+export default function DataHandlingIntro5W1HClass4() {
     const navigate = useNavigate();
 
     return (
         <div className="dh-intro-page">
             <nav className="dh-nav">
-                <button className="dh-nav-back" onClick={() => navigate('/data-handling')}>
+                <button className="dh-nav-back" onClick={() => navigate('/junior/grade/4/data-handling')}>
                     ← Back to Data Handling
                 </button>
                 <div className="dh-nav-links">

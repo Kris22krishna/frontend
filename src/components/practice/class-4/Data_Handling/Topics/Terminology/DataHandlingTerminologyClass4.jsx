@@ -445,7 +445,7 @@ function RuleSteps({ rule }) {
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 
-export default function DataHandlingTerminology() {
+export default function DataHandlingTerminologyClass4() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('terms');
     const [selectedIdx, setSelectedIdx] = useState(0);
@@ -514,7 +514,7 @@ export default function DataHandlingTerminology() {
             `}</style>
 
             <nav className="dh-nav">
-                <button className="dh-nav-back" onClick={() => navigate('/data-handling')}>← Back to Data Handling</button>
+                <button className="dh-nav-back" onClick={() => navigate('/junior/grade/4/data-handling')}>← Back to Data Handling</button>
                 <div className="dh-nav-links">
                     <button className="dh-nav-link" onClick={() => navigate('/data-handling/introduction')}>🌟 Introduction</button>
                     <button className="dh-nav-link dh-nav-link--active">📖 Terminology</button>
