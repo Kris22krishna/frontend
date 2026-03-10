@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../shapes-around-us.css';
-import { skillsData } from './skillsData';
+import { generateShapesSkillsData } from './shapesSkillsData';
 
 /* ═══════════════════════════════════════════════════════════════
    QUESTION CARD — renders MCQ with optional image
@@ -471,9 +471,16 @@ export default function ShapesSkills() {
     const navigate = useNavigate();
     const [view, setView] = useState('list');
     const [activeSkill, setActiveSkill] = useState(null);
+    const [skillsData, setSkillsData] = useState(() => generateShapesSkillsData());
 
-    const openMode = (skill, mode) => { setActiveSkill(skill); setView(mode); };
-
+    const openMode = (skill, mode) => {
+    const freshData = generateShapesSkillsData();
+    const found = freshData.find(s => s.id === skill.id);
+    setSkillsData(freshData);
+    setActiveSkill(found ?? skill);
+    setView(mode);
+};
+console.log("hi");
     return (
         <div className="sau-skills-page">
             <nav className="sau-nav">

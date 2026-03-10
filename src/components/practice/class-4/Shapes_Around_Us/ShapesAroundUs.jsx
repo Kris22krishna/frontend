@@ -102,6 +102,7 @@ export default function ShapesAroundUs() {
                         <button
                             key={mod.id}
                             className="sau-card-btn"
+                            // onClick={() => console.log(mod.path)}
                             onClick={() => navigate(mod.path)}
                         >
                             <div
