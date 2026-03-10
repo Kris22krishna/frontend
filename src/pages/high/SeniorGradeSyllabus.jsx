@@ -59,7 +59,8 @@ const SeniorGradeSyllabus = () => {
                 } else if (grade === '12') {
                     setSkills([
                         { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' },
-                        { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' }
+                        { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' },
+                        { skill_id: 12200, skill_name: 'Relations: Interactive Chapter', topic: 'Relations', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/relations' }
                     ]);
                 } else if (grade === '10') {
                     setSkills([
@@ -117,7 +118,16 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1237, skill_name: 'Relationship Between Zeroes and Coefficients (Quadratic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Quadratic)' },
                         { skill_id: 1238, skill_name: 'Constructing Quadratic Polynomials from Given Conditions', topic: 'Polynomials', subtopic: 'Constructing Quadratic Polynomials from Given Conditions' },
                         { skill_id: 1239, skill_name: 'Relationship Between Zeroes and Coefficients (Cubic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Cubic)' },
-                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' }
+                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' },
+
+                        // Surface Areas and Volumes
+                        { skill_id: 1300, skill_name: 'Surface Areas and Volumes: Interactive Chapter', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/surface-areas-and-volumes' },
+
+                        // Introduction to Trigonometry
+                        { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' },
+
+                        // Probability
+                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
@@ -158,7 +168,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: '1252', skill_name: 'Square Root via Prime Factorization', topic: 'Squares and Square Roots' },
                         { skill_id: '1253', skill_name: 'Square Root via Long Division', topic: 'Squares and Square Roots' },
                         { skill_id: '1254', skill_name: 'Square Root of Decimals', topic: 'Squares and Square Roots' },
-                        { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' }
+                        { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' },
+                        { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Chapter', topic: 'Introduction to Graphs' },
+                        { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
+                        { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -516,6 +529,30 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Line Graphs & Applications',
                 isLocal: true,
                 path: '/senior/grade/8/introduction-to-graphs'
+            }
+        ];
+
+        // Direct and Inverse Proportions (NCERT Ch. 13 — Grade 8)
+        skillsByTopic['Direct and Inverse Proportions'] = [
+            {
+                skill_id: 'local-8-proportions-landing',
+                skill_name: 'Direct and Inverse Proportions Chapter',
+                topic: 'Direct and Inverse Proportions',
+                subtopic: 'Direct & Inverse Proportion',
+                isLocal: true,
+                path: '/senior/grade/8/direct-and-inverse-proportions'
+            }
+        ];
+
+        // Comparing Quantities (NCERT Ch. 8 — Grade 8)
+        skillsByTopic['Comparing Quantities'] = [
+            {
+                skill_id: 'local-8-cq-landing',
+                skill_name: 'Comparing Quantities Chapter',
+                topic: 'Comparing Quantities',
+                subtopic: 'Percentages, Profit & Loss, Interest',
+                isLocal: true,
+                path: '/senior/grade/8/comparing-quantities'
             }
         ];
     }

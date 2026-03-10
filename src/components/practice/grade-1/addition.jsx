@@ -162,11 +162,60 @@ const Addition = () => {
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
-        for (const [topicName, skills] of Object.entries(grade1Config)) {
-            const skill = skills.find(s => s.id === skillId);
-            if (skill) return { topicName, skillName: skill.name };
+        // Find current grade and skill info
+        for (const gradeKey of Object.keys(TOPIC_CONFIGS)) {
+            const gradeConfig = TOPIC_CONFIGS[gradeKey];
+            for (const [topicName, skills] of Object.entries(gradeConfig)) {
+                const skill = skills.find(s => s.id === skillId);
+                if (skill) return { topicName, skillName: skill.name, grade: gradeKey };
+            }
         }
-        return { topicName: 'Addition', skillName: 'Mathematics' };
+        return { topicName: 'Addition', skillName: 'Mathematics', grade: '1' };
+    };
+
+    const getNextSkill = () => {
+        const { grade } = getTopicInfo();
+        const gradeConfig = TOPIC_CONFIGS[grade];
+        const topics = Object.keys(gradeConfig);
+
+        let currentTopicIdx = -1;
+        let currentSkillIdx = -1;
+
+        for (let i = 0; i < topics.length; i++) {
+            const skills = gradeConfig[topics[i]];
+            const idx = skills.findIndex(s => s.id === skillId);
+            if (idx !== -1) {
+                currentTopicIdx = i;
+                currentSkillIdx = idx;
+                break;
+            }
+        }
+
+        if (currentTopicIdx === -1) return null;
+
+        const currentTopicSkills = gradeConfig[topics[currentTopicIdx]];
+
+        // If there's another skill in the same topic
+        if (currentSkillIdx < currentTopicSkills.length - 1) {
+            return {
+                ...currentTopicSkills[currentSkillIdx + 1],
+                topicName: topics[currentTopicIdx]
+            };
+        }
+
+        // If it's the last skill in the topic, go to the first skill of the next topic
+        if (currentTopicIdx < topics.length - 1) {
+            const nextTopicName = topics[currentTopicIdx + 1];
+            const nextTopicSkills = gradeConfig[nextTopicName];
+            if (nextTopicSkills.length > 0) {
+                return {
+                    ...nextTopicSkills[0],
+                    topicName: nextTopicName
+                };
+            }
+        }
+
+        return null; // No more skills
     };
 
     const { topicName, skillName } = getTopicInfo();
@@ -585,9 +634,20 @@ const Addition = () => {
                     )}
 
                     <div className="results-actions">
-                        <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>
-                            <RefreshCw size={24} /> Start New Quest
+                        <button className="action-btn-large retake-skill-btn" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Retake Skill
                         </button>
+
+                        {getNextSkill() && (
+                            <button className="action-btn-large next-skill-btn" onClick={() => {
+                                const next = getNextSkill();
+                                navigate(`/junior/grade/1/${next.route}?skillId=${next.id}`);
+                                window.location.reload(); // Ensure fresh state if route is the same
+                            }}>
+                                Next Skill <ArrowRight size={24} />
+                            </button>
+                        )}
+
                         <button className="action-btn-large back-topics-btn" onClick={() => navigate('/junior/grade/1')}>
                             <FileText size={24} /> Back to Topics
                         </button>

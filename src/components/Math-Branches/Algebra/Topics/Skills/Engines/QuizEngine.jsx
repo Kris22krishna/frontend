@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
 
-export default function QuizEngine({ questions, title, onBack, color, prefix = 'alg' }) {
+export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -86,7 +86,7 @@ export default function QuizEngine({ questions, title, onBack, color, prefix = '
 
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: `var(--${prefix}-text)`, margin: '0 0 8px' }}>{msg}</h2>
                 <p style={{ color: `var(--${prefix}-muted)`, fontSize: 15, margin: '0 0 32px' }}>{msgSub}</p>
-                <div className={`${prefix}-quiz-finished-actions`} style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+                <div className={`${prefix}-quiz-finished-actions`} style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button
                         className={`${prefix}-btn-primary`}
                         onClick={() => {
@@ -104,6 +104,15 @@ export default function QuizEngine({ questions, title, onBack, color, prefix = '
                     >
                         Return to Skills
                     </button>
+                    {onSecondaryBack && (
+                        <button
+                            className={`${prefix}-btn-secondary`}
+                            onClick={onSecondaryBack}
+                            style={{ padding: '12px 24px', background: '#f8fafc' }}
+                        >
+                            Back to Chapter
+                        </button>
+                    )}
                 </div>
             </div>
         );
@@ -152,10 +161,11 @@ export default function QuizEngine({ questions, title, onBack, color, prefix = '
             <div className={`${prefix}-quiz-card`}>
                 <div style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    background: `${color}15`, padding: '4px 12px', borderRadius: 8,
-                    fontSize: 12, fontWeight: 800, color: color, marginBottom: 16
+                    background: `${color}15`, padding: '6px 16px', borderRadius: 10,
+                    fontSize: 11, fontWeight: 900, color: color, marginBottom: 20,
+                    textTransform: 'uppercase', letterSpacing: 1
                 }}>
-                    <span>QUESTION</span> {current + 1}
+                    QUESTION {current + 1}
                 </div>
                 <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text, #1e293b)`, lineHeight: 1.6, marginBottom: 24 }}>
                     {q.image && (

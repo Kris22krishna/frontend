@@ -1,0 +1,621 @@
+/* =====================================================
+   DATA HANDLING MODULE
+   Full-viewport split-screen design (mirrors Transport Museum)
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── TOKENS ─────────────────────────────────────────── */
+:root {
+  --dh-green: #059669;
+  --dh-teal: #0d9488;
+  --dh-purple: #7c3aed;
+  --dh-sky: #0284c7;
+  --dh-text: #0f172a;
+  --dh-muted: #64748b;
+  --dh-card: #ffffff;
+  --dh-border: #e2e8f0;
+  --dh-success: #10b981;
+  --dh-wrong: #ef4444;
+  --dh-r: 14px;
+  --dh-rlg: 20px;
+  --dh-sh: 0 4px 20px rgba(0, 0, 0, 0.09);
+  --dh-shlg: 0 12px 40px rgba(0, 0, 0, 0.14);
+}
+
+/* ══════════════════════════════════════════════════════
+   FULL-VIEWPORT LANDING PAGE
+   ══════════════════════════════════════════════════════ */
+
+.dh-fullpage {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* ── LEFT: Hero panel ──────────────────────────────── */
+.dh-left {
+  position: relative;
+  flex: 0 0 46%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 48px 48px 56px;
+  overflow: hidden;
+  background: linear-gradient(145deg,
+      #064e3b 0%,
+      #065f46 25%,
+      #059669 50%,
+      #7c3aed 75%,
+      #4c1d95 100%);
+}
+
+.dh-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.dh-deco-a {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.35) 0%, transparent 70%);
+  top: -80px;
+  left: -80px;
+}
+
+.dh-deco-b {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+  bottom: -60px;
+  right: -40px;
+}
+
+.dh-deco-c {
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+}
+
+.dh-left-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.dh-main-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+}
+
+.dh-title-accent {
+  background: linear-gradient(90deg, #34d399 0%, #a5f3fc 40%, #c4b5fd 80%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dh-main-sub {
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.75;
+  max-width: 400px;
+  margin: 0 0 36px;
+  font-weight: 400;
+}
+
+.dh-stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dh-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  padding: 14px 20px;
+  min-width: 76px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.dh-stat:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.dh-stat-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff !important;
+  text-shadow: 0 0 16px rgba(255, 255, 255, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  -webkit-text-fill-color: #ffffff;
+}
+
+.dh-stat-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 5px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ── RIGHT: Cards panel ────────────────────────────── */
+.dh-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 40px 40px 36px;
+  background: #f0fdf4;
+}
+
+.dh-right-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--dh-green);
+  margin: 0 0 20px 4px;
+}
+
+.dh-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dh-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #ffffff;
+  border: 1px solid var(--dh-border);
+  border-radius: var(--dh-rlg);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.dh-card-btn:hover {
+  transform: translateX(6px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+
+.dh-card-strip {
+  width: 6px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.dh-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  margin: 20px 18px 20px 20px;
+}
+
+.dh-card-text {
+  flex: 1;
+  padding: 18px 0;
+}
+
+.dh-card-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+
+.dh-card-tagline {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--dh-muted);
+  margin-bottom: 6px;
+}
+
+.dh-card-desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.55;
+  max-width: 340px;
+}
+
+.dh-card-chevron {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0 22px;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateX(-6px);
+}
+
+.dh-card-btn:hover .dh-card-chevron {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ══════════════════════════════════════════════════════
+   SHARED TOPIC/CONTENT PAGE CLASSES
+   ══════════════════════════════════════════════════════ */
+
+.dh-page {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f8fafc;
+  color: var(--dh-text);
+  min-height: 100vh;
+}
+
+/* ── Nav bar (shared across intro/terminology/skills) ─ */
+.dh-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.dh-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dh-green);
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s;
+}
+
+.dh-nav-back:hover {
+  color: var(--dh-teal);
+}
+
+.dh-nav-links {
+  display: flex;
+  gap: 6px;
+}
+
+.dh-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1.5px solid transparent;
+  background: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dh-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dh-nav-link:hover {
+  color: var(--dh-green);
+  background: rgba(5, 150, 105, 0.06);
+}
+
+.dh-nav-link--active {
+  background: linear-gradient(135deg, var(--dh-green), var(--dh-teal));
+  color: #fff !important;
+  border-color: transparent;
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3);
+}
+
+/* ── INTRO PAGE ──────────────────────────────────────── */
+.dh-intro-page {
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  background: #f0fdf4;
+}
+
+.dh-intro-hero {
+  background: linear-gradient(135deg, #d1fae5 0%, #ede9fe 100%);
+  padding: 80px 24px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.dh-intro-hero-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.dh-intro-hero-deco-a {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
+  top: -40px;
+  right: -40px;
+}
+
+.dh-intro-hero-deco-b {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+  bottom: -30px;
+  left: -30px;
+}
+
+.dh-intro-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.dh-intro-hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  color: var(--dh-text);
+  margin: 0 0 6px;
+}
+
+.dh-intro-hero-highlight {
+  background: linear-gradient(90deg, var(--dh-green), var(--dh-teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dh-intro-hero-sub {
+  font-size: 14px;
+  color: var(--dh-muted);
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ── INTRO CARDS ─────────────────────────────────────── */
+.dh-intro-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.dh-intro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 16px;
+}
+
+.dh-intro-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.dh-intro-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.dh-intro-card--open {
+  cursor: default;
+}
+
+.dh-intro-card-strip {
+  height: 4px;
+  width: 100%;
+}
+
+.dh-intro-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px 12px;
+}
+
+.dh-intro-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.dh-intro-card-title-block {
+  flex: 1;
+}
+
+.dh-intro-card-q {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.dh-intro-card-sublabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dh-muted);
+}
+
+.dh-intro-card-chevron {
+  font-size: 14px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.dh-intro-card-hint {
+  padding: 0 20px 14px;
+  font-size: 12px;
+  color: var(--dh-muted);
+  font-weight: 600;
+}
+
+.dh-intro-card-body {
+  padding: 0 20px 20px;
+  animation: dhFadeIn 0.3s ease;
+}
+
+@keyframes dhFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dh-intro-card-content {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #334155;
+  margin-bottom: 12px;
+}
+
+.dh-intro-card-fact {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #334155;
+  font-weight: 600;
+}
+
+/* ── CTA Strip ───────────────────────────────────────── */
+.dh-intro-cta-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.dh-intro-cta-sub {
+  font-size: 14px;
+  color: var(--dh-muted);
+  font-weight: 600;
+}
+
+.dh-intro-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 24px;
+  border-radius: 100px;
+  border: none;
+  background: linear-gradient(135deg, var(--dh-green), var(--dh-teal));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+  transition: all 0.2s;
+}
+
+.dh-intro-cta-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45);
+}
+
+/* ── TERMINOLOGY PAGE ────────────────────────────────── */
+.dh-terminology-page {
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  background: #f0fdf4;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .dh-fullpage {
+    flex-direction: column;
+  }
+
+  .dh-left {
+    flex: none;
+    padding: 40px 24px;
+  }
+
+  .dh-right {
+    padding: 32px 24px;
+  }
+
+  .dh-intro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .dh-main-title {
+    font-size: 2.2rem;
+  }
+
+  .dh-stats-grid {
+    gap: 8px;
+  }
+
+  .dh-stat {
+    padding: 10px 14px;
+    min-width: 60px;
+  }
+
+  .dh-nav {
+    padding: 0 12px;
+  }
+
+  .dh-nav-links {
+    gap: 2px;
+  }
+
+  .dh-nav-link {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+}
