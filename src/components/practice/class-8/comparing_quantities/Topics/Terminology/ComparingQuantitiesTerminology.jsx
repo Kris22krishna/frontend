@@ -18,7 +18,7 @@ const TERMS = [
         icon: '💹',
         color: '#1a237e',
         def: '$\\text{PROFIT} = \\text{Selling Price (SP)} - \\text{Cost Price (CP)}$, when $\\text{SP} > \\text{CP}$.\n$\\text{LOSS} = \\text{CP} - \\text{SP}$, when $\\text{SP} < \\text{CP}$.\n$\\text{Profit}\\% = (\\frac{\\text{Profit}}{\\text{CP}}) \\times 100$. $\\text{Loss}\\% = (\\frac{\\text{Loss}}{\\text{CP}}) \\times 100$.\n⚠️ Always calculate $\\%$ on Cost Price (CP), not SP.',
-        example: 'Bought a phone for ₹$12,000$. Sold for ₹$14,400$.\n$\\text{Profit} = 14,400 - 12,000 = ₹2,400$.\n$\\text{Profit}\\% = (\\frac{2400}{12000}) \\times 100 = 20\\%$.',
+        example: 'Bought a phone for ₹$12,000$. Sold for ₹$14,400$.\n$\\text{Profit} = 14,400 - 12,000 =$ ₹$2,400$.\n$\\text{Profit}\\% = (\\frac{2400}{12000}) \\times 100 = 20\\%$.',
         realWorld: 'All businesses track profit% to measure performance. A 20% margin is considered good retail profit.',
     },
     {
@@ -26,7 +26,7 @@ const TERMS = [
         icon: '🏷️',
         color: '#6a1b9a',
         def: '$\\text{MARKED PRICE (MP)} =$ price displayed on the item (also called list price).\n$\\text{DISCOUNT} =$ reduction on MP. Discount% is always on MP.\n$\\text{SP} = \\text{MP} - \\text{Discount} = \\text{MP} \\times (1 - \\frac{\\text{Discount}\\%}{100})$.\nProfit/Loss is calculated on CP, not MP.',
-        example: '$\\text{MP} = ₹1,000$. $\\text{Discount} = 20\\%$. $\\text{Discount amount} = 1000 \\times \\frac{20}{100} = ₹200$. $\\text{SP} = 800$.\nIf $\\text{CP} = ₹600$: $\\text{Profit} = 800 - 600 = ₹200$. $\\text{Profit}\\% = (\\frac{200}{600}) \\times 100 = 33.3\\%$.',
+        example: 'MP = ₹$1,000$. Discount $= 20\\%$. Discount amount $= 1000 \\times \\frac{20}{100} =$ ₹$200$. SP $= 800$.\nIf CP = ₹$600$: Profit $= 800 - 600 =$ ₹$200$. Profit$\\% = (\\frac{200}{600}) \\times 100 = 33.3\\%$.',
         realWorld: 'Festive season sales offer 30–70% discount off MRP. "Flat 40% off" means discount% = 40 on MP.',
     },
     {
@@ -34,7 +34,7 @@ const TERMS = [
         icon: '🏛️',
         color: '#b71c1c',
         def: 'SALES TAX (or GST) is a percentage added to the SP by the government.\n$\\text{Amount paid} = \\text{SP} + \\text{Tax} = \\text{SP} \\times (1 + \\frac{\\text{Tax}\\%}{100})$.\nIn the GST system, tax is split into CGST + SGST (each half of total GST).',
-        example: 'Shirt $\\text{SP} = ₹800$. $\\text{GST} = 12\\%$.\n$\\text{GST amount} = 800 \\times \\frac{12}{100} = ₹96$.\n$\\text{Total price paid} = 800 + 96 = ₹896$.',
+        example: 'Shirt SP = ₹$800$. GST $= 12\\%$.\nGST amount $= 800 \\times \\frac{12}{100} =$ ₹$96$.\nTotal price paid $= 800 + 96 =$ ₹$896$.',
         realWorld: 'Your restaurant bill includes 5% GST on food. Mobiles attract 18% GST. Essential food items: 0% GST.',
     },
     {
@@ -42,7 +42,7 @@ const TERMS = [
         icon: '📈',
         color: '#e65100',
         def: 'Simple Interest is earned (or paid) on the ORIGINAL principal every period at a fixed rate.\n$\\text{SI} = \\frac{\\text{P} \\times \\text{R} \\times \\text{T}}{100}$\n$\\text{Amount} = \\text{P} + \\text{SI}$\nWhere $\\text{P} = \\text{Principal}$, $\\text{R} = \\text{Rate \\% per annum}$, $\\text{T} = \\text{Time in years}$.',
-        example: '$\\text{P} = ₹5,000$. $\\text{R} = 8\\%$ p.a. $\\text{T} = 3$ years.\n$\\text{SI} = \\frac{5000 \\times 8 \\times 3}{100} = ₹1,200$.\n$\\text{Amount} = 5000 + 1200 = ₹6,200$.',
+        example: 'P = ₹$5,000$. R $= 8\\%$ p.a. T $= 3$ years.\nSI $= \\frac{5000 \\times 8 \\times 3}{100} =$ ₹$1,200$.\nAmount $= 5000 + 1200 =$ ₹$6,200$.',
         realWorld: 'Government bonds and some fixed deposits pay simple interest. SI stays the same every year.',
     },
     {
@@ -50,7 +50,7 @@ const TERMS = [
         icon: '📊',
         color: '#0f766e',
         def: 'Compound Interest is calculated on the Principal PLUS accumulated interest each period.\n$A = P \\times (1 + \\frac{R}{100})^n$, $\\text{CI} = A - P$\nFor half-yearly: rate becomes $\\frac{R}{2}$, periods become $2n$.\nFor quarterly: rate becomes $\\frac{R}{4}$, periods become $4n$.',
-        example: '$\\text{P} = ₹10,000$. $\\text{R} = 10\\%$ p.a. $\\text{T} = 2$ years (compounded annually).\n$A = 10000 \\times (1.1)^2 = 10000 \\times 1.21 = ₹12,100$.\n$\\text{CI} = 12100 - 10000 = ₹2,100$. (SI would be ₹$2,000$.)',
+        example: 'P = ₹$10,000$. R $= 10\\%$ p.a. T $= 2$ years (compounded annually).\n$A = 10000 \\times (1.1)^2 = 10000 \\times 1.21 =$ ₹$12,100$.\nCI $= 12100 - 10000 =$ ₹$2,100$. (SI would be ₹$2,000$.)',
         realWorld: 'Bank savings accounts, mutual funds, and most loans use compound interest. "Power of compounding" makes wealth grow faster over long periods.',
     },
     {
@@ -81,28 +81,28 @@ const KEY_IDEAS = [
                 title: 'Percentage Increase & Decrease',
                 f: '$\\text{\\% Change} = (\\frac{\\text{Change}}{\\text{Original}}) \\times 100$',
                 d: 'Always divide by the ORIGINAL (old) value. A common mistake is dividing by the new value. The base is always what you started with.',
-                ex: 'Price rose from ₹$200$ to ₹$250$. $\\text{Change} = 50$. $\\% \\text{ Increase} = (\\frac{50}{200}) \\times 100 = 25\\%$.\nPrice fell from ₹$250$ to ₹$200$. $\\text{Change} = 50$. $\\% \\text{ Decrease} = (\\frac{50}{250}) \\times 100 = 20\\%$.',
+                ex: 'Price rose from ₹$200$ to ₹$250$. Change $= 50$. $\\% \\text{ Increase} = (\\frac{50}{200}) \\times 100 = 25\\%$.\nPrice fell from ₹$250$ to ₹$200$. Change $= 50$. $\\% \\text{ Decrease} = (\\frac{50}{250}) \\times 100 = 20\\%$.',
                 tip: 'Notice: 25% increase $\\neq$ 25% decrease! The base changes, so the % is different.',
             },
             {
                 title: 'Profit, Loss & their Percentages',
                 f: '$\\text{Profit\\%} = (\\frac{\\text{Profit}}{\\text{CP}}) \\times 100   |   \\text{Loss\\%} = (\\frac{\\text{Loss}}{\\text{CP}}) \\times 100   |   \\text{SP} = \\text{CP} \\times (1 \\pm \\frac{\\text{\\%}}{100})$',
                 d: 'Cost Price (CP) is ALWAYS the base for profit/loss percentage. Never use SP as the base. $\\text{SP} = \\text{CP} + \\text{Profit}$ or $\\text{SP} = \\text{CP} - \\text{Loss}$.',
-                ex: '$\\text{CP} = ₹800$, $\\text{SP} = ₹920$. $\\text{Profit} = ₹120$. $\\text{Profit}\\% = (\\frac{120}{800}) \\times 100 = 15\\%$.\nIf $\\text{Profit}\\% = 25\\%$ and $\\text{CP} = ₹600$: $\\text{SP} = 600 \\times 1.25 = ₹750$.',
+                ex: 'CP = ₹$800$, SP = ₹$920$. Profit = ₹$120$. Profit$\\% = (\\frac{120}{800}) \\times 100 = 15\\%$.\nIf Profit$\\% = 25\\%$ and CP = ₹$600$: SP $= 600 \\times 1.25 =$ ₹$750$.',
                 tip: 'If profit% and loss% are equal on two transactions, there is ALWAYS a net loss overall.',
             },
             {
                 title: 'Discount & Finding Actual SP',
                 f: '$\\text{Discount} = \\text{MP} \\times (\\frac{\\text{D\\%}}{100})   \\text{SP} = \\text{MP} \\times (1 - \\frac{\\text{D\\%}}{100})$',
                 d: 'Discount% is always on Marked Price (MP), NOT on Cost Price. This is a very common exam trap. SP you calculate is what the customer pays — profit/loss is then computed from CP.',
-                ex: '$\\text{MP} = ₹2,000$. $\\text{Discount} = 15\\%$. $\\text{Discount} = 2000 \\times 0.15 = ₹300$. $\\text{SP} = ₹1,700$.\nIf $\\text{CP} = ₹1,400$: $\\text{Profit} = 1700 - 1400 = ₹300$. $\\text{Profit}\\% \\text{ on CP} = (\\frac{300}{1400}) \\times 100 = 21.4\\%$.',
+                ex: 'MP = ₹$2,000$. Discount $= 15\\%$. Discount $= 2000 \\times 0.15 =$ ₹$300$. SP = ₹$1,700$.\nIf CP = ₹$1,400$: Profit $= 1,700 - 1,400 =$ ₹$300$. Profit$\\% \\text{ on CP} = (\\frac{300}{1400}) \\times 100 = 21.4\\%$.',
                 tip: '$\\text{SP} = \\text{MP} \\times (1 - \\frac{\\text{D}\\%}{100})$. Memorise this — it lets you jump straight to SP in one step.',
             },
             {
                 title: 'GST and Tax',
                 f: '$\\text{Payable Amount} = \\text{SP} \\times (1 + \\frac{\\text{Tax\\%}}{100})$',
                 d: 'Sales tax or GST is added ON TOP of the selling price. The consumer pays $SP + GST$ amount. The shopkeeper collects the tax and remits it to the government.',
-                ex: 'Laptop $\\text{SP} = ₹50,000$. $\\text{GST} = 18\\%$.\n$\\text{GST amount} = 50,000 \\times 0.18 = ₹9,000$.\nCustomer pays $= ₹59,000$.',
+                ex: 'Laptop SP = ₹$50,000$. GST $= 18\\%$.\nGST amount $= 50,000 \\times 0.18 =$ ₹$9,000$.\nCustomer pays $=$ ₹$59,000$.',
                 tip: 'Always check: is the price quoted inclusive or exclusive of GST? "MRP inclusive of all taxes" means GST is already included.',
             },
         ],
@@ -116,7 +116,7 @@ const KEY_IDEAS = [
                 title: 'Simple Interest Formula',
                 f: '$\\text{SI} = \\frac{\\text{P} \\times \\text{R} \\times \\text{T}}{100}   |   A = P + \\text{SI}$',
                 d: 'In simple interest, the interest earned each year is the SAME, calculated only on the original principal $P$. $R$ is rate per annum, $T$ is time in years.',
-                ex: '$\\text{P} = ₹8,000, \\text{R} = 5\\%, \\text{T} = 4 \\text{ years}$.\n$\\text{SI} = \\frac{8000 \\times 5 \\times 4}{100} = ₹1,600$.\n$\\text{Amount} = 8000 + 1600 = ₹9,600$.',
+                ex: 'P = ₹$8,000$, R $= 5\\%$, T $= 4$ years.\nSI $= \\frac{8000 \\times 5 \\times 4}{100} =$ ₹$1,600$.\nAmount $= 8000 + 1600 =$ ₹$9,600$.',
                 tip: 'Finding P: $P = \\frac{\\text{SI} \\times 100}{R \\times T}$. Finding R: $R = \\frac{\\text{SI} \\times 100}{P \\times T}$. Finding T: $T = \\frac{\\text{SI} \\times 100}{P \\times R}$.',
             },
             {
@@ -130,21 +130,21 @@ const KEY_IDEAS = [
                 title: 'CI for Half-Yearly & Quarterly',
                 f: '$\\text{Half-yearly: Rate} = \\frac{R}{2}, n = 2T   |   \\text{Quarterly: Rate} = \\frac{R}{4}, n = 4T$',
                 d: 'When interest is compounded more frequently, the effective rate per period decreases but the number of periods increases. This gives the bank (or you) MORE effective return than annual compounding.',
-                ex: '$\\text{P} = ₹10,000$. $\\text{R} = 12\\%$ p.a. $\\text{T} = 1 \\text{ year}$, compounded half-yearly.\nRate per period $= 6\\%$. Periods $= 2$.\n$A = 10000 \\times (1.06)^2 = 10000 \\times 1.1236 = ₹11,236$.\n$\\text{CI} = ₹1,236$. (Annual CI would be ₹$1,200$.)',
+                ex: 'P = ₹$10,000$. R $= 12\\%$ p.a. T $= 1$ year, compounded half-yearly.\nRate per period $= 6\\%$. Periods $= 2$.\n$A = 10000 \\times (1.06)^2 = 10000 \\times 1.1236 =$ ₹$11,236$.\nCI = ₹$1,236$. (Annual CI would be ₹$1,200$.)',
                 tip: 'Half-yearly compounding always gives more CI than annual for the same rate and period.',
             },
             {
                 title: 'Comparing CI and SI',
                 f: '$\\text{For } n=1: \\text{CI} = \\text{SI}.  \\text{ For } n=2: \\text{CI} - \\text{SI} = P \\times (\\frac{R}{100})^2.  \\text{ For } n>1: \\text{CI} > \\text{SI} \\text{ always}.$',
                 d: 'For the same $P, R, \\text{ and } T$: the difference between CI and SI grows with time. For $2$ years, the extra $\\text{CI} = P \\times (\\frac{R}{100})^2$. This is a frequently tested NCERT result.',
-                ex: '$\\text{P} = ₹5,000$. $\\text{R} = 10\\%$. $\\text{T} = 2 \\text{ years}$.\n$\\text{SI} = \\frac{5000 \\times 10 \\times 2}{100} = ₹1,000$.\n$\\text{CI} = 5000 \\times (1.1)^2 - 5000 = 6050 - 5000 = ₹1,050$.\n$\\text{Extra CI} = \\text{CI} - \\text{SI} = ₹50 = 5000 \\times (0.10)^2 = ₹50 \\checkmark$',
+                ex: 'P = ₹$5,000$. R $= 10\\%$. T $= 2$ years.\nSI $= \\frac{5000 \\times 10 \\times 2}{100} =$ ₹$1,000$.\nCI $= 5000 \\times (1.1)^2 - 5000 = 6050 - 5000 =$ ₹$1,050$.\nExtra CI = CI - SI = ₹$50 = 5000 \\times (0.10)^2 =$ ₹$50 \\checkmark$.',
                 tip: 'The extra CI is always $P \\times (\\frac{R}{100})^2$ for 2 years. Use this as a shortcut check.',
             },
             {
                 title: 'CI Applications (Depreciation & Growth)',
                 f: '$\\text{Growth: } A = P(1 + \\frac{R}{100})^n   |   \\text{Depreciation: } A = P(1 - \\frac{R}{100})^n$',
                 d: 'Compound interest formula applies to ANY quantity that grows or decays by a fixed % each period — population growth, bacteria, radioactive decay, vehicle depreciation, and more.',
-                ex: 'A car worth ₹$6,00,000$ depreciates at $15\\%$ per year for $2$ years.\n$A = 600000 \\times (1 - 0.15)^2 = 600000 \\times 0.85^2 = 600000 \\times 0.7225 = ₹4,33,500$.',
+                ex: 'A car worth ₹$6,00,000$ depreciates at $15\\%$ per year for $2$ years.\n$A = 600000 \\times (1 - 0.15)^2 = 600000 \\times 0.85^2 = 600000 \\times 0.7225 =$ ₹$4,33,500$.',
                 tip: 'Depreciation uses $(1 - \\frac{R}{100})$ instead of $(1 + \\frac{R}{100})$. Value decreases each period.',
             },
         ],
@@ -155,11 +155,11 @@ const KEY_IDEAS = [
 const QUIZ_QUESTIONS = [
     { q: 'Profit% is always calculated on:', opts: ['Selling Price', 'Marked Price', 'Cost Price', 'Discount'], ans: 2, exp: '$\\text{Profit}\\% = (\\frac{\\text{Profit}}{\\text{CP}}) \\times 100$. CP is the base for all profit/loss percentage calculations.' },
     { q: 'Discount% is always calculated on:', opts: ['Cost Price', 'Marked Price', 'Selling Price', 'Amount Paid'], ans: 1, exp: 'Discount is always a percentage of the Marked Price (MP). $\\text{SP} = \\text{MP} - \\text{Discount}$.' },
-    { q: 'SI formula: $\\text{SI} = \\frac{\\text{P} \\times \\text{R} \\times \\text{T}}{100}$. If $\\text{P} = ₹2000, \\text{R} = 5\\%, \\text{T} = 3 \\text{ years}$, find SI.', opts: ['$₹200$', '$₹250$', '$₹300$', '$₹350$'], ans: 2, exp: '$\\text{SI} = \\frac{2000 \\times 5 \\times 3}{100} = \\frac{30000}{100} = ₹300$.' },
+    { q: 'SI formula: $\\text{SI} = \\frac{\\text{P} \\times \\text{R} \\times \\text{T}}{100}$. If P = ₹$2000, \\text{R} = 5\\%, \\text{T} = 3 \\text{ years}$, find SI.', opts: ['₹$200$', '₹$250$', '₹$300$', '₹$350$'], ans: 2, exp: '$\\text{SI} = \\frac{2000 \\times 5 \\times 3}{100} = \\frac{30000}{100} =$ ₹$300$.' },
     { q: 'For $2 \\text{ years}$, CI is always ______ than SI for same P, R:', opts: ['Equal to', 'Less than', 'Greater than', 'Cannot compare'], ans: 2, exp: 'CI > SI for $n > 1$ because CI is "interest on interest". For $n = 1$, CI = SI.' },
     { q: '$\\text{A} = \\text{P}(1 + \\frac{\\text{R}}{100})^n$ is the formula for:', opts: ['Simple Interest amount', 'Compound Interest amount', 'Profit', 'Discount amount'], ans: 1, exp: '$\\text{A} = \\text{P}(1 + \\frac{\\text{R}}{100})^n$ gives the Amount after $n \\text{ years}$ under compound interest. $\\text{CI} = A - P$.' },
     { q: 'For half-yearly compounding, if annual rate $= 10\\%$, the rate used per period is:', opts: ['$10\\%$', '$5\\%$', '$2.5\\%$', '$20\\%$'], ans: 1, exp: 'For half-yearly compounding, divide the annual rate by $2$. So $10\\%/2 = 5\\%$ per half-year.' },
-    { q: 'If cost price $= ₹500$ and loss $= 10\\%$, what is the selling price?', opts: ['$₹400$', '$₹450$', '$₹550$', '$₹480$'], ans: 1, exp: '$\\text{SP} = \\text{CP} \\times (1 - \\frac{\\text{Loss}\\%}{100}) = 500 \\times (1 - 0.10) = 500 \\times 0.9 = ₹450$.' },
+    { q: 'If cost price = ₹$500$ and loss $= 10\\%$, what is the selling price?', opts: ['₹$400$', '₹$450$', '₹$550$', '₹$480$'], ans: 1, exp: '$\\text{SP} = \\text{CP} \\times (1 - \\frac{\\text{Loss}\\%}{100}) = 500 \\times (1 - 0.10) = 500 \\times 0.9 =$ ₹$450$.' },
     { q: 'The % change formula uses which value as the base?', opts: ['New value', 'Average of old and new', 'Old (original) value', 'Difference between values'], ans: 2, exp: '$\\text{\\% Change} = (\\frac{\\text{Change}}{\\text{Original}}) \\times 100$. The base is ALWAYS the original (old) value.' },
     { q: 'GST is added on top of the:', opts: ['Cost Price', 'Marked Price', 'Selling Price', 'Profit'], ans: 2, exp: 'GST is levied on the Selling Price. $\\text{Amount payable} = \\text{SP} + \\text{GST} = \\text{SP} \\times (1 + \\frac{\\text{GST}\\%}{100})$.' },
     { q: '$\\text{CI} - \\text{SI for } 2 \\text{ years} = ?$', opts: ['$P \\times (\\frac{R}{100})^2$', '$P \\times \\frac{R}{100}$', '$2 \\times \\text{SI}$', '$P \\times \\frac{2R}{100}$'], ans: 0, exp: 'For $2$ years: $\\text{CI} - \\text{SI} = P \\times (\\frac{R}{100})^2$. This is a standard NCERT result worth memorising.' },
@@ -239,7 +239,7 @@ function QuizEngine({ onBack }) {
                     <LatexText text={q.q} />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
+                <div className="cq-quiz-options">
                     {q.opts.map((opt, oi) => {
                         let borderColor = 'rgba(0,0,0,0.04)', bgColor = '#fff', textColor = '#0f172a', dotColor = '#f1f5f9';
                         if (answered) {

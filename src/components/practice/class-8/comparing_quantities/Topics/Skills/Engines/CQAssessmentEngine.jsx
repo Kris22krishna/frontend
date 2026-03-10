@@ -117,7 +117,7 @@ export default function CQAssessmentEngine({ questionPool, sampleSize = 10, titl
                                         <LatexText text={q.question} />
                                     </div>
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                                <div className="cq-quiz-options">
                                     <div style={{ background: 'rgba(16,185,129,0.08)', borderRadius: 10, padding: '10px 14px' }}>
                                         <div style={{ fontSize: 11, fontWeight: 800, color: '#059669', textTransform: 'uppercase', marginBottom: 4 }}>Correct Answer</div>
                                         <div style={{ fontSize: 14, fontWeight: 600, color: '#0f172a' }}><LatexText text={q.options[q.correct]} /></div>
@@ -165,7 +165,7 @@ export default function CQAssessmentEngine({ questionPool, sampleSize = 10, titl
                         <LatexText text={q?.question || ''} />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                    <div className="cq-quiz-options">
                         {(q?.options || []).map((opt, oi) => {
                             const isSelected = answers[current] === oi;
                             return (

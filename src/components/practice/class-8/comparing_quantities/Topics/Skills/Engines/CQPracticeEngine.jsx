@@ -156,7 +156,7 @@ export default function CQPracticeEngine({ questionPool, sampleSize = 20, title,
 
                 {/* ── MCQ / MULTISTEP / TF ── */}
                 {(isMCQ || isTF) && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                    <div className="cq-quiz-options">
                         {q.options.map((opt, oi) => {
                             let border = 'rgba(0,0,0,0.06)', bg = '#fff', txtColor = '#0f172a', dot = '#f1f5f9';
                             if (answered) {

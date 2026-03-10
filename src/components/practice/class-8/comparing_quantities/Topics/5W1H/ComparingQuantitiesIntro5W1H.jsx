@@ -86,7 +86,7 @@ const CARDS = [
         color: '#0f766e',
         short: 'Use the % formula, profit/loss rules, SI = PRT/100, and the CI compound formula.',
         bullets: [
-            '1️⃣ $\\%$ of a number: $(\\frac{\\text{Percent}}{100}) \\times \\text{Number}$. E.g., $15\\%$ of ₹$800 = 0.15 \\times 800 = ₹120$.',
+            '1️⃣ $15\\%$ of ₹$800 = 0.15 \\times 800$ = ₹$120$.',
             '2️⃣ $\\%$ Change: $(\\frac{\\text{Change}}{\\text{Original}}) \\times 100$. Always divide by the ORIGINAL (base) value.',
             '3️⃣ $\\text{Profit}\\%: (\\frac{\\text{Profit}}{\\text{CP}}) \\times 100$. $\\text{Loss}\\%: (\\frac{\\text{Loss}}{\\text{CP}}) \\times 100$. Base = Cost Price.',
             '4️⃣ Discount: $\\text{Discount} = \\text{MP} \\times (\\frac{\\text{Discount}\\%}{100})$. $\\text{SP} = \\text{MP} - \\text{Discount}$.',

@@ -711,6 +711,18 @@
     margin-bottom: 16px;
 }
 
+.cq-quiz-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 600px) {
+    .cq-quiz-options {
+        grid-template-columns: 1fr;
+    }
+}
+
 .cq-score-header {
     display: flex;
     justify-content: space-between;

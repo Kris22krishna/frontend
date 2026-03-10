@@ -29,7 +29,7 @@ function genPercentageOf() {
         type: 'fill',
         question: `What is $${pct}\\%$ of ₹$${total}$?`,
         correctValue: answer,
-        explanation: `$${pct}\\%$ of $${total} = (\\frac{${pct}}{100}) \\times ${total} = ₹${answer}$.`,
+        explanation: `$${pct}\\%$ of $${total} = (\\frac{${pct}}{100}) \\times ${total} =$ ₹$${answer}$.`,
     };
 }
 
@@ -56,7 +56,7 @@ function genPercentIncrease() {
         question: `A TV costs ₹$${original}$. Its price increases by $${pct}\\%$.\nStep 1: Find the increase amount.\nStep 2: Find the new price.`,
         options: [`₹$${newVal - increase}$`, `₹$${newVal}$`, `₹$${newVal + increase}$`, `₹$${original * 2}$`],
         correct: 1,
-        explanation: `$\\text{Increase} = (\\frac{${pct}}{100}) \\times ${original} = ₹${increase}$. $\\text{New price} = ${original} + ${increase} = ₹${newVal}$.`,
+        explanation: `Increase $= (\\frac{${pct}}{100}) \\times ${original} =$ ₹$${increase}$. New price $= ${original} + ${increase} =$ ₹$${newVal}$.`,
     };
 }
 
@@ -92,7 +92,7 @@ const percentageStaticPractice = [
     { type: 'mcq', question: 'A student scored $54$ out of $90$. What is the percentage score?', options: ['$54\\%$', '$60\\%$', '$65\\%$', '$70\\%$'], correct: 1, explanation: '$(\\frac{54}{90}) \\times 100 = 60\\%$. Always: $(\\frac{\\text{obtained}}{\\text{total}}) \\times 100$.' },
     { type: 'multiStep', question: "A shirt's price increased from ₹$400$ to ₹$500$.\nStep 1: Find the increase.\nStep 2: Find $25\\%$ increase on original.", options: ['$20\\%$', '$25\\%$', '$30\\%$', '$15\\%$'], correct: 1, explanation: '$\\text{Increase} = 100$. $\\% \\text{ Increase} = (\\frac{100}{400}) \\times 100 = 25\\%$.' },
     { type: 'truefalse', question: 'TRUE or FALSE: $\\% \\text{ decrease}$ is calculated on the NEW (reduced) value.', options: ['True', 'False'], correct: 1, explanation: 'FALSE! $\\% \\text{ decrease} = (\\frac{\\text{Decrease}}{\\text{ORIGINAL value}}) \\times 100$. Always use the original (old) value as base.' },
-    { type: 'mcq', question: 'What is $12.5\\%$ of ₹$6,400$?', options: ['₹$640$', '₹$800$', '₹$700$', '₹$900$'], correct: 1, explanation: '$12.5\\% = \\frac{1}{8}$. $\\frac{6400}{8} = 800$. Or: $(\\frac{12.5}{100}) \\times 6400 = 800$.' },
+    { type: 'mcq', question: 'What is $12.5\\%$ of ₹$6,400$?', options: ['₹$640$', '₹$800$', '₹$700$', '₹$900$'], correct: 1, explanation: '$12.5\\% = \\frac{1}{8}$. $\\frac{6400}{8} = 800$. Or: $(12.5/100) \\times 6400 = 800$.' },
     { type: 'fill', question: 'A class has $32$ boys and $18$ girls. What percentage of students are girls?', correctValue: 36, explanation: '$\\text{Total} = 50$. $\\% \\text{ girls} = (\\frac{18}{50}) \\times 100 = 36\\%$.' },
 ];
 
@@ -138,7 +138,7 @@ function genProfitPct() {
         question: `A shopkeeper bought an item for ₹$${cp}$ and sold it for ₹$${sp}$. What is the profit percentage?`,
         options: [`$${profitPct - 5}\\%$`, `$${profitPct}\\%$`, `$${profitPct + 5}\\%$`, `$${profitPct * 2}\\%$`],
         correct: 1,
-        explanation: `$\\text{Profit} = ₹${sp} - ₹${cp} = ₹${profit}$. $\\text{Profit}\\% = (\\frac{${profit}}{${cp}}) \\times 100 = ${profitPct}\\%$.`,
+        explanation: `Profit = ₹$${sp}$ - ₹$${cp}$ = ₹$${profit}$. Profit$\\% = (\\frac{${profit}}{${cp}}) \\times 100 = ${profitPct}\\%$.`,
     };
 }
 
@@ -150,7 +150,7 @@ function genFindSP() {
         type: 'fill',
         question: `A merchant buys goods for ₹$${cp}$ and wants to earn $${profitPct}\\%$ profit. What should the selling price be?`,
         correctValue: sp,
-        explanation: `$\\text{SP} = \\text{CP} \\times (1 + \\frac{\\text{Profit}\\%}{100}) = ${cp} \\times ${1 + profitPct / 100} = ₹${sp}$.`,
+        explanation: `SP $= \\text{CP} \\times (1 + \\frac{\\text{Profit}\\%}{100}) = ${cp} \\times ${1 + profitPct / 100} =$ ₹$${sp}$.`,
     };
 }
 
@@ -164,7 +164,7 @@ function genDiscountCalc() {
         question: `A jacket has a Marked Price of ₹$${mp}$. A discount of $${discountPct}\\%$ is offered.\nStep 1: Calculate the discount amount.\nStep 2: Find the selling price.`,
         options: [`₹$${sp - 50}$`, `₹$${sp}$`, `₹$${sp + discount}$`, `₹$${mp}$`],
         correct: 1,
-        explanation: `$\\text{Discount} = (\\frac{${discountPct}}{100}) \\times ${mp} = ₹${discount}$. $\\text{SP} = ${mp} - ${discount} = ₹${sp}$.`,
+        explanation: `Discount $= (\\frac{${discountPct}}{100}) \\times ${mp} =$ ₹$${discount}$. SP $= ${mp} - ${discount} =$ ₹$${sp}$.`,
     };
 }
 
@@ -177,7 +177,7 @@ function genGSTCalc() {
         type: 'fill',
         question: `An electronic item costs ₹$${sp}$. GST of $${gst}\\%$ is applicable. What is the total amount payable?`,
         correctValue: total,
-        explanation: `$\\text{GST} = (\\frac{${gst}}{100}) \\times ${sp} = ₹${gstAmount}$. $\\text{Total} = ${sp} + ${gstAmount} = ₹${total}$.`,
+        explanation: `GST $= (\\frac{${gst}}{100}) \\times ${sp} =$ ₹$${gstAmount}$. Total $= ${sp} + ${gstAmount} =$ ₹$${total}$.`,
     };
 }
 
@@ -191,25 +191,25 @@ function genLossPct() {
         question: `An item was purchased for ₹$${cp}$ and sold for ₹$${sp}$. What is the loss percentage?`,
         options: [`$${lossPct - 5}\\%$`, `$${lossPct}\\%$`, `$${lossPct + 5}\\%$`, `$${lossPct * 2}\\%$`],
         correct: 1,
-        explanation: `$\\text{Loss} = ₹${cp} - ₹${sp} = ₹${loss}$. $\\text{Loss}\\% = (\\frac{${loss}}{${cp}}) \\times 100 = ${lossPct}\\%$.`,
+        explanation: `Loss = ₹$${cp}$ - ₹$${sp}$ = ₹$${loss}$. Loss$\\% = (\\frac{${loss}}{${cp}}) \\times 100 = ${lossPct}\\%$.`,
     };
 }
 
 const profitLossStaticPractice = [
     { type: 'mcq', question: 'Profit% and Loss% are always calculated on which price?', options: ['Selling Price', 'Marked Price', 'Cost Price', 'Discount'], correct: 2, explanation: '$\\text{Profit}\\% = (\\frac{\\text{Profit}}{\\text{CP}}) \\times 100$. $\\text{Loss}\\% = (\\frac{\\text{Loss}}{\\text{CP}}) \\times 100$. CP is ALWAYS the base.' },
     { type: 'truefalse', question: 'TRUE or FALSE: Discount% is calculated on the Selling Price.', options: ['True', 'False'], correct: 1, explanation: 'FALSE. Discount% is on the MARKED PRICE (MP), not SP. $\\text{SP} = \\text{MP} - \\text{Discount}$.' },
-    { type: 'mcq', question: 'If $\\text{SP} = ₹780$ and $\\text{Profit}\\% = 30\\%$, what is the CP?', options: ['$₹520$', '$₹550$', '$₹600$', '$₹650$'], correct: 2, explanation: '$\\text{SP} = \\text{CP} \\times (1 + \\frac{30}{100}) = 1.3 \\times \\text{CP}$. $\\text{CP} = \\frac{780}{1.3} = ₹600$.' },
+    { type: 'mcq', question: 'If SP = ₹$780$ and Profit$\\% = 30\\%$, what is the CP?', options: ['₹$520$', '₹$550$', '₹$600$', '₹$650$'], correct: 2, explanation: 'SP $= \\text{CP} \\times (1 + \\frac{30}{100}) = 1.3 \\times \\text{CP}$. CP $= \\frac{780}{1.3} =$ ₹$600$.' },
     { type: 'multiStep', question: '$\\text{MP} = ₹1200$. Discount $= 25\\%$. $\\text{CP} = ₹750$.\nStep 1: Find SP.\nStep 2: Find Profit%.', options: ['$10\\%$', '$20\\%$', '$15\\%$', '$25\\%$'], correct: 1, explanation: '$\\text{SP} = 1200 \\times 0.75 = ₹900$. $\\text{Profit} = 900 - 750 = 150$. $\\text{Profit}\\% = (\\frac{150}{750}) \\times 100 = 20\\%$.' },
     { type: 'truefalse', question: 'TRUE or FALSE: Equal % profit on one item and equal % loss on another item always results in no net gain/loss overall.', options: ['True', 'False'], correct: 1, explanation: 'FALSE! Equal profit% and loss% always results in a $\\text{NET LOSS} = \\frac{(\\text{common } \\%)^2}{100}$ percent of total cost.' },
-    { type: 'fill', question: '$\\text{CP} = ₹2500, \\text{SP} = ₹1900$. Find the loss%.', correctValue: 24, explanation: '$\\text{Loss} = 600$. $\\text{Loss}\\% = (\\frac{600}{2500}) \\times 100 = 24\\%$.' },
+    { type: 'fill', question: 'CP = ₹$2500$, SP = ₹$1900$. Find the loss%.', correctValue: 24, explanation: 'Loss $= 600$. Loss$\\% = (\\frac{600}{2500}) \\times 100 = 24\\%$.' },
 ];
 
 const profitLossStaticAssessment = [
     { question: 'A book is bought for ₹$250$ and sold for ₹$300$. Profit%?', options: ['$20\\%$', '$25\\%$', '$16.7\\%$', '$15\\%$'], correct: 0, explanation: '$\\text{Profit} = 50$. $\\text{Profit}\\% = (\\frac{50}{250}) \\times 100 = 20\\%$.' },
-    { question: '$\\text{MP} = ₹500, \\text{Discount} = 20\\%$. What is the SP?', options: ['$₹400$', '$₹420$', '$₹380$', '$₹450$'], correct: 0, explanation: '$\\text{SP} = 500 \\times (1 - 0.20) = 500 \\times 0.8 = ₹400$.' },
-    { question: '$\\text{SP} = ₹390, \\text{Loss} = 35\\%$. Find CP.', options: ['$₹500$', '$₹550$', '$₹600$', '$₹650$'], correct: 2, explanation: '$\\text{SP} = \\text{CP} \\times (1 - \\frac{35}{100}) = 0.65 \\times \\text{CP}$. $\\text{CP} = \\frac{390}{0.65} = ₹600$.' },
-    { question: 'An item is sold at $15\\%$ profit. $\\text{CP} = ₹800$. Find SP.', options: ['$₹920$', '$₹900$', '$₹880$', '$₹840$'], correct: 0, explanation: '$\\text{SP} = 800 \\times 1.15 = ₹920$.' },
-    { question: '$\\text{GST} = 18\\%$. If $\\text{SP} = ₹1,000$, what does the customer pay?', options: ['$₹1,180$', '$₹1,200$', '$₹1,080$', '$₹1,150$'], correct: 0, explanation: '$\\text{Amount} = 1000 + (\\frac{18}{100}) \\times 1000 = 1000 + 180 = ₹1,180$.' },
+    { question: 'MP = ₹$500$, Discount $= 20\\%$. What is the SP?', options: ['₹$400$', '₹$420$', '₹$380$', '₹$450$'], correct: 0, explanation: 'SP $= 500 \\times (1 - 0.20) = 500 \\times 0.8 =$ ₹$400$.' },
+    { question: 'SP = ₹$390$, Loss $= 35\\%$. Find CP.', options: ['₹$500$', '₹$550$', '₹$600$', '₹$650$'], correct: 2, explanation: 'SP $= \\text{CP} \\times (1 - \\frac{35}{100}) = 0.65 \\times \\text{CP}$. CP $= \\frac{390}{0.65} =$ ₹$600$.' },
+    { question: 'An item is sold at $15\\%$ profit. CP = ₹$800$. Find SP.', options: ['₹$920$', '₹$900$', '₹$880$', '₹$840$'], correct: 0, explanation: 'SP $= 800 \\times 1.15 =$ ₹$920$.' },
+    { question: 'GST $= 18\\%$. If SP = ₹$1,000$, what does the customer pay?', options: ['₹$1,180$', '₹$1,200$', '₹$1,080$', '₹$1,150$'], correct: 0, explanation: 'Amount $= 1000 + (\\frac{18}{100}) \\times 1000 = 1000 + 180 =$ ₹$1,180$.' },
 ];
 
 export function buildProfitLossPracticePool() {
@@ -246,7 +246,7 @@ function genSIBasic() {
         type: 'fill',
         question: `Find the Simple Interest on ₹$${p}$ at $${r}\\%$ per annum for $${t}$ year${t > 1 ? 's' : ''}.`,
         correctValue: si,
-        explanation: `$\\text{SI} = \\frac{${p} \\times ${r} \\times ${t}}{100} = ₹${si}$.`,
+        explanation: `SI $= \\frac{${p} \\times ${r} \\times ${t}}{100} =$ ₹$${si}$.`,
     };
 }
 
@@ -261,10 +261,10 @@ function genSIFindP() {
             type: 'fill',
             question: `The Simple Interest on a sum is ₹$${si}$ at $${r}\\%$ p.a. for $${t}$ year${t > 1 ? 's' : ''}. Find the Principal.`,
             correctValue: p,
-            explanation: `$\\text{P} = \\frac{\\text{SI} \\times 100}{\\text{R} \\times \\text{T}} = \\frac{${si} \\times 100}{${r} \\times ${t}} = ₹${p}$.`,
+            explanation: `P $= \\frac{\\text{SI} \\times 100}{\\text{R} \\times \\text{T}} = \\frac{${si} \\times 100}{${r} \\times ${t}} =$ ₹$${p}$.`,
         };
     }
-    return { type: 'fill', question: '$\\text{SI} = ₹600$ at $5\\%$ p.a. for $3$ years. Find Principal.', correctValue: 4000, explanation: '$\\text{P} = \\frac{600 \\times 100}{5 \\times 3} = ₹4000$.' };
+    return { type: 'fill', question: 'SI = ₹$600$ at $5\\%$ p.a. for $3$ years. Find Principal.', correctValue: 4000, explanation: 'P $= \\frac{600 \\times 100}{5 \\times 3} =$ ₹$4000$.' };
 }
 
 function genSIFindRate() {
@@ -276,13 +276,13 @@ function genSIFindRate() {
         if (!Number.isInteger(si)) continue;
         return {
             type: 'mcq',
-            question: `$\\text{P} = ₹${p}, \\text{T} = ${t}$ year${t > 1 ? 's' : ''}, $\\text{SI} = ₹${si}$. Find the rate of interest per annum.`,
+            question: `P = ₹$${p}$, T = ${t} year${t > 1 ? 's' : ''}, SI = ₹$${si}$. Find the rate of interest per annum.`,
             options: [`$${r - 1}\\%$`, `$${r}\\%$`, `$${r + 1}\\%$`, `$${r * 2}\\%$`],
             correct: 1,
             explanation: `$\\text{R} = \\frac{\\text{SI} \\times 100}{\\text{P} \\times \\text{T}} = \\frac{${si} \\times 100}{${p} \\times ${t}} = ${r}\\%$.`,
         };
     }
-    return { type: 'mcq', question: '$\\text{P} = ₹5000, \\text{T} = 2$ years, $\\text{SI} = ₹800$. Find rate.', options: ['$6\\%$', '$7\\%$', '$8\\%$', '$9\\%$'], correct: 2, explanation: '$\\text{R} = \\frac{800 \\times 100}{5000 \\times 2} = 8\\%$.' };
+    return { type: 'mcq', question: 'P = ₹$5000$, T = $2$ years, SI = ₹$800$. Find rate.', options: ['$6\\%$', '$7\\%$', '$8\\%$', '$9\\%$'], correct: 2, explanation: 'R $= \\frac{800 \\times 100}{5000 \\times 2} = 8\\%$.' };
 }
 
 function genAmount() {
@@ -293,26 +293,26 @@ function genAmount() {
     const amt = p + si;
     return {
         type: 'fill',
-        question: `$\\text{P} = ₹${p}, \\text{R} = ${r}\\%$ p.a., $\\text{T} = ${t}$ year${t > 1 ? 's' : ''}. Find the Amount.`,
+        question: `P = ₹$${p}$, R = $${r}\\%$ p.a., T = ${t} year${t > 1 ? 's' : ''}. Find the Amount.`,
         correctValue: amt,
-        explanation: `$\\text{SI} = \\frac{${p} \\times ${r} \\times ${t}}{100} = ₹${si}$. $\\text{Amount} = \\text{P} + \\text{SI} = ${p} + ${si} = ₹${amt}$.`,
+        explanation: `SI $= \\frac{${p} \\times ${r} \\times ${t}}{100} =$ ₹$${si}$. Amount $= \\text{P} + \\text{SI} = ${p} + ${si} =$ ₹$${amt}$.`,
     };
 }
 
 const siStaticPractice = [
     { type: 'mcq', question: 'In SI formula: SI = PRT/100. What does T stand for?', options: ['Tax', 'Total amount', 'Time in years', 'Transaction'], correct: 2, explanation: '$T = \\text{Time in years}$. $P = \\text{Principal}$, $R = \\text{Rate}\\%$ per annum, $T = \\text{Time in years}$.' },
     { type: 'truefalse', question: 'TRUE or FALSE: In Simple Interest, the interest earned increases year on year (i.e., year 2 interest > year 1 interest).', options: ['True', 'False'], correct: 1, explanation: 'FALSE. In Simple Interest, the SAME interest is earned each year because it is always calculated on the original Principal.' },
-    { type: 'multiStep', question: '$\\text{P} = ₹12,000, \\text{R} = 6\\%$ p.a., $\\text{T} = 2.5$ years.\nStep 1: Apply $\\text{SI} = \\frac{PRT}{100}$.\nStep 2: Find $\\text{Amount} = \\text{P} + \\text{SI}$.', options: ['$₹13,800$', '$₹14,200$', '$₹13,500$', '$₹14,000$'], correct: 0, explanation: '$\\text{SI} = \\frac{12000 \\times 6 \\times 2.5}{100} = ₹1800$. $\\text{Amount} = 12000 + 1800 = ₹13,800$.' },
+    { type: 'multiStep', question: 'P = ₹$12,000, R = 6\\%$ p.a., T = $2.5$ years.\nStep 1: Apply SI $= \\frac{PRT}{100}$.\nStep 2: Find Amount $= \\text{P} + \\text{SI}$.', options: ['₹$13,800$', '₹$14,200$', '₹$13,500$', '₹$14,000$'], correct: 0, explanation: 'SI $= \\frac{12000 \\times 6 \\times 2.5}{100} =$ ₹$1800$. Amount $= 12000 + 1800 =$ ₹$13,800$.' },
     { type: 'fill', question: 'At what rate will ₹$5000$ amount to ₹$6200$ in $3$ years under SI?', correctValue: 8, explanation: '$\\text{SI} = 6200 - 5000 = 1200$. $\\text{R} = \\frac{1200 \\times 100}{5000 \\times 3} = 8\\%$.' },
     { type: 'mcq', question: 'How long will it take ₹$8000$ to become ₹$10000$ at $5\\%$ SI per annum?', options: ['$3$ years', '$4$ years', '$5$ years', '$6$ years'], correct: 2, explanation: '$\\text{SI} = 10000 - 8000 = 2000$. $\\text{T} = \\frac{2000 \\times 100}{8000 \\times 5} = 5 \\text{ years}$.' },
     { type: 'truefalse', question: 'TRUE or FALSE: If P, R, and T are all doubled, the SI becomes 8 times the original.', options: ['True', 'False'], correct: 0, explanation: '$\\text{SI} = \\frac{PRT}{100}$. Doubling all three: $\\frac{(2P)(2R)(2T)}{100} = \\frac{8PRT}{100} = 8 \\times \\text{original}$. TRUE!' },
 ];
 
 const siStaticAssessment = [
-    { question: '$\\text{P} = ₹6000, \\text{R} = 5\\%$ p.a., $\\text{T} = 3 \\text{ years}$. Find SI.', options: ['$₹800$', '$₹900$', '$₹1000$', '$₹750$'], correct: 1, explanation: '$\\text{SI} = \\frac{6000 \\times 5 \\times 3}{100} = ₹900$.' },
-    { question: '$\\text{P} = ₹4000, \\text{SI} = ₹1200, \\text{T} = 5 \\text{ years}$. Find R.', options: ['$5\\%$', '$6\\%$', '$4\\%$', '$3\\%$'], correct: 1, explanation: '$\\text{R} = \\frac{1200 \\times 100}{4000 \\times 5} = 6\\%$.' },
-    { question: '$\\text{P} = ₹10000, \\text{R} = 8\\%, \\text{SI} = ₹3200$. Find T.', options: ['$3 \\text{ years}$', '$4 \\text{ years}$', '$5 \\text{ years}$', '$6 \\text{ years}$'], correct: 1, explanation: '$\\text{T} = \\frac{3200 \\times 100}{10000 \\times 8} = 4 \\text{ years}$.' },
-    { question: '$\\text{P} = ₹7500, \\text{R} = 12\\%$ p.a., $\\text{T} = 18 \\text{ months}$. Find Amount.', options: ['$₹8,550$', '$₹8,850$', '$₹9,000$', '$₹9,250$'], correct: 1, explanation: '$\\text{T} = \\frac{18}{12} = 1.5 \\text{ years}$. $\\text{SI} = \\frac{7500 \\times 12 \\times 1.5}{100} = 1350$. $\\text{Amount} = 7500+1350 = ₹8850$.' },
+    { question: 'P = ₹$6000, R = 5\\%$ p.a., T = $3 \\text{ years}$. Find SI.', options: ['₹$800$', '₹$900$', '₹$1000$', '₹$750$'], correct: 1, explanation: 'SI $= \\frac{6000 \\times 5 \\times 3}{100} =$ ₹$900$.' },
+    { question: 'P = ₹$4000$, SI = ₹$1200$, T = $5 \\text{ years}$. Find R.', options: ['$5\\%$', '$6\\%$', '$4\\%$', '$3\\%$'], correct: 1, explanation: 'R $= \\frac{1200 \\times 100}{4000 \\times 5} = 6\\%$.' },
+    { question: 'P = ₹$10000$, R $= 8\\%$, SI = ₹$3200$. Find T.', options: ['$3 \\text{ years}$', '$4 \\text{ years}$', '$5 \\text{ years}$', '$6 \\text{ years}$'], correct: 1, explanation: 'T $= \\frac{3200 \\times 100}{10000 \\times 8} = 4 \\text{ years}$.' },
+    { question: 'P = ₹$7500$, R $= 12\\%$ p.a., T = $18 \\text{ months}$. Find Amount.', options: ['₹$8,550$', '₹$8,850$', '₹$9,000$', '₹$9,250$'], correct: 1, explanation: 'T $= \\frac{18}{12} = 1.5 \\text{ years}$. SI $= \\frac{7500 \\times 12 \\times 1.5}{100} = 1350$. Amount $= 7500+1350 =$ ₹$8850$.' },
     { question: 'In how many years will ₹$2000$ double itself at $10\\%$ SI per annum?', options: ['$5 \\text{ years}$', '$8 \\text{ years}$', '$10 \\text{ years}$', '$12 \\text{ years}$'], correct: 2, explanation: 'To double: $\\text{SI} = \\text{P} = 2000$. $\\text{T} = \\frac{2000 \\times 100}{2000 \\times 10} = 10 \\text{ years}$.' },
 ];
 
@@ -351,7 +351,7 @@ function genCIAnnual() {
         type: 'fill',
         question: `Find the Compound Interest on ₹$${p}$ at $${r}\\%$ p.a. for $${n}$ years (compounded annually).`,
         correctValue: ci,
-        explanation: `$A = ${p} \\times (1 + \\frac{${r}}{100})^${n} = ${p} \\times ${multiplier.toFixed(4)} = ₹${amount}$. $\\text{CI} = ${amount} - ${p} = ₹${ci}$.`,
+        explanation: `$A = ${p} \\times (1 + \\frac{${r}}{100})^${n} = ${p} \\times ${multiplier.toFixed(4)} =$ ₹$${amount}$. CI $= ${amount} - ${p} =$ ₹$${ci}$.`,
     };
 }
 
@@ -364,10 +364,10 @@ function genCIHalfYearly() {
     const ci = parseFloat((amount - p).toFixed(2));
     return {
         type: 'mcq',
-        question: `$\\text{P} = ₹${p}$. $\\text{Rate} = ${rAnnual}\\%$ per annum, compounded half-yearly for $1$ year.\nWhat is the Compound Interest?`,
+        question: `P = ₹$${p}$. Rate $= ${rAnnual}\\%$ per annum, compounded half-yearly for $1$ year.\nWhat is the Compound Interest?`,
         options: [`₹$${parseFloat((ci - rHalf * 10).toFixed(2))}$`, `₹$${ci}$`, `₹$${parseFloat((ci + rHalf * 10).toFixed(2))}$`, `₹$${parseFloat((p * rAnnual / 100).toFixed(2))}$`],
         correct: 1,
-        explanation: `$\\text{Rate per half-year} = \\frac{${rAnnual}}{2} = ${rHalf}\\%$. $\\text{Periods} = 2$.\n$A = ${p} \\times (1 + \\frac{${rHalf}}{100})^2 = ₹${amount}$. $\\text{CI} = ₹${ci}$.`,
+        explanation: `Rate per half-year $= \\frac{${rAnnual}}{2} = ${rHalf}\\%$. Periods $= 2$.\n$A = ${p} \\times (1 + \\frac{${rHalf}}{100})^2 =$ ₹$${amount}$. CI = ₹$${ci}$.`,
     };
 }
 
@@ -379,9 +379,9 @@ function genCIvsSI() {
     const diff = parseFloat((ci2 - si2).toFixed(2));
     return {
         type: 'fill',
-        question: `$\\text{P} = ₹${p}, \\text{R} = ${r}\\%$ p.a., $\\text{T} = 2$ years.\nFind $(\\text{CI} - \\text{SI})$. [Hint: Use $\\text{CI} - \\text{SI} = P \\times (\\frac{R}{100})^2$]`,
+        question: `P = ₹$${p}$, R = $${r}\\%$ p.a., T = $2$ years.\nFind (CI - SI). [Hint: Use CI - SI $= P \\times (\\frac{R}{100})^2$]`,
         correctValue: diff,
-        explanation: `$\\text{CI} - \\text{SI} = P \\times (\\frac{R}{100})^2 = ${p} \\times (\\frac{${r}}{100})^2 = ${p} \\times ${Math.pow(r / 100, 2)} = ₹${diff}$.\n(\\text{Verification}: \\text{SI} = ₹${si2}, \\text{CI} = ₹${ci2}, \\text{Diff} = ₹${diff}.)`,
+        explanation: `CI - SI $= P \\times (\\frac{R}{100})^2 = ${p} \\times (\\frac{${r}}{100})^2 = ${p} \\times ${Math.pow(r / 100, 2)} =$ ₹$${diff}$.\n(Verification: SI = ₹$${si2}$, CI = ₹$${ci2}$, Diff = ₹$${diff}$.)`,
     };
 }
 
@@ -408,18 +408,18 @@ const ciStaticPractice = [
     { type: 'mcq', question: 'In CI formula $A = P(1 + \\frac{R}{100})^n$, what does "n" represent?', options: ['Rate of interest', 'Net amount', 'Number of compounding periods', 'None of above'], correct: 2, explanation: '"n" is the number of compounding periods (e.g., years for annual compounding). $R$ is the rate per period.' },
     { type: 'truefalse', question: 'TRUE or FALSE: For the same P, R and T with n > 1 year, CI is always greater than SI.', options: ['True', 'False'], correct: 0, explanation: 'TRUE. For more than $1$ year, CI > SI because CI earns "interest on interest". For $n = 1$, CI = SI exactly.' },
     { type: 'truefalse', question: 'TRUE or FALSE: For half-yearly compounding, you use rate = R and periods = n (same as annual).', options: ['True', 'False'], correct: 1, explanation: 'FALSE. For half-yearly: $\\text{rate} = \\frac{R}{2}$ per period, $\\text{periods} = 2n$. This gives MORE return than annual compounding.' },
-    { type: 'multiStep', question: '$\\text{P} = ₹1000, \\text{R} = 10\\%, n = 3$ years (annual compounding).\nDeduce: Year 1 principal $\\rightarrow$ Year 2 principal $\\rightarrow$ Year 3 amount.', options: ['$₹1,200$', '$₹1,310$', '$₹1,331$', '$₹1,300$'], correct: 2, explanation: 'Year 1: $1000 \\times 1.1 = 1100$. Year 2: $1100 \\times 1.1 = 1210$. Year 3: $1210 \\times 1.1 = 1331$. $\\text{CI} = ₹331$.' },
-    { type: 'fill', question: '$\\text{CI} - \\text{SI for P} = ₹5000, \\text{R} = 10\\%, \\text{T} = 2 \\text{ years equals?}$', correctValue: 50, explanation: '$\\text{CI} - \\text{SI} = P \\times (\\frac{R}{100})^2 = 5000 \\times (0.10)^2 = 5000 \\times 0.01 = ₹50$.' },
+    { type: 'multiStep', question: 'P = ₹$1000$, R = $10\\%, n = 3$ years (annual compounding).\nDeduce: Year 1 principal $\\rightarrow$ Year 2 principal $\\rightarrow$ Year 3 amount.', options: ['₹$1,200$', '₹$1,310$', '₹$1,331$', '₹$1,300$'], correct: 2, explanation: 'Year 1: $1000 \\times 1.1 = 1100$. Year 2: $1100 \\times 1.1 = 1210$. Year 3: $1210 \\times 1.1 = 1331$. CI = ₹$331$.' },
+    { type: 'fill', question: 'CI - SI for P = ₹$5000, R = 10\\%, T = 2$ years equals?', correctValue: 50, explanation: 'CI - SI $= P \\times (\\frac{R}{100})^2 = 5000 \\times (0.10)^2 = 5000 \\times 0.01 =$ ₹$50$.' },
     { type: 'mcq', question: 'A population of $1,00,000$ grows at $5\\%$ p.a. (like CI). Population after $2$ years?', options: ['$1,10,000$', '$1,10,250$', '$1,10,500$', '$1,05,000$'], correct: 1, explanation: '$A = 100000 \\times (1.05)^2 = 100000 \\times 1.1025 = 1,10,250$.' },
     { type: 'truefalse', question: 'TRUE or FALSE: Depreciation uses $A = P(1 - \\frac{R}{100})^n$, while growth uses $A = P(1 + \\frac{R}{100})^n$.', options: ['True', 'False'], correct: 0, explanation: 'TRUE. For depreciation (value decreasing), subtract: $(1 - \\frac{R}{100})$. For growth (value increasing), add: $(1 + \\frac{R}{100})$.' },
 ];
 
 const ciStaticAssessment = [
-    { question: '$\\text{P} = ₹5000, \\text{R} = 8\\%$ p.a., $n = 2 \\text{ years (annual CI)}$. Find Amount.', options: ['$₹5,832$', '$₹5,800$', '$₹5,832$', '$₹6,000$'], correct: 0, explanation: '$A = 5000 \\times (1.08)^2 = 5000 \\times 1.1664 = ₹5832$. $\\text{CI} = ₹832$.' },
-    { question: '$\\text{P} = ₹10,000, \\text{R} = 10\\%$ p.a., half-yearly for $1$ year. $\\text{CI} = ?$', options: ['$₹1,025$', '$₹1,000$', '$₹1,050$', '$₹950$'], correct: 0, explanation: '$\\text{Rate/period} = 5\\%, n = 2$. $A = 10000 \\times (1.05)^2 = 11025$. $\\text{CI} = ₹1025$.' },
-    { question: 'For $2$ years, $\\text{CI} - \\text{SI} = ₹25. \\text{R} = 5\\%$. Find Principal.', options: ['$₹8,000$', '$₹10,000$', '$₹12,000$', '$₹5,000$'], correct: 1, explanation: '$\\text{CI} - \\text{SI} = P(\\frac{R}{100})^2$. $25 = P \\times (0.05)^2 = P \\times 0.0025$. $P = \\frac{25}{0.0025} = ₹10,000$.' },
+    { question: 'P = ₹$5000$, R $= 8\\%$ p.a., $n = 2 \\text{ years (annual CI)}$. Find Amount.', options: ['₹$5,832$', '₹$5,800$', '₹$5,832$', '₹$6,000$'], correct: 0, explanation: '$A = 5000 \\times (1.08)^2 = 5000 \\times 1.1664 =$ ₹$5832$. CI = ₹$832$.' },
+    { question: 'P = ₹$10,000$, R $= 10\\%$ p.a., half-yearly for $1$ year. CI $= ?$', options: ['₹$1,025$', '₹$1,000$', '₹$1,050$', '₹$950$'], correct: 0, explanation: 'Rate per period $= 5\\%, n = 2$. $A = 10000 \\times (1.05)^2 = 11025$. CI = ₹$1025$.' },
+    { question: 'For $2$ years, CI - SI = ₹$25$. R $= 5\\%$. Find Principal.', options: ['₹$8,000$', '₹$10,000$', '₹$12,000$', '₹$5,000$'], correct: 1, explanation: 'CI - SI $= P(\\frac{R}{100})^2$. $25 = P \\times (0.05)^2 = P \\times 0.0025$. $P = \\frac{25}{0.0025} =$ ₹$10,000$.' },
     { question: 'A bike costs ₹$80,000$ and depreciates at $10\\%$ per year. Value after $2$ years?', options: ['$₹64,800$', '$₹60,000$', '$₹70,000$', '$₹72,000$'], correct: 0, explanation: '$A = 80000 \\times (0.9)^2 = 80000 \\times 0.81 = ₹64,800$.' },
-    { question: '$\\text{P} = ₹2000, \\text{R} = 15\\%$ p.a. compounded annually for $2$ years. $\\text{CI} = ?$', options: ['$₹600$', '$₹645$', '$₹660$', '$₹700$'], correct: 1, explanation: '$A = 2000 \\times (1.15)^2 = 2000 \\times 1.3225 = ₹2645$. $\\text{CI} = ₹645$.' },
+    { question: 'P = ₹$2000$, R $= 15\\%$ p.a. compounded annually for $2$ years. CI $= ?$', options: ['₹$600$', '₹$645$', '₹$660$', '₹$700$'], correct: 1, explanation: '$A = 2000 \\times (1.15)^2 = 2000 \\times 1.3225 =$ ₹$2645$. CI = ₹$645$.' },
 ];
 
 export function buildCompoundInterestPracticePool() {
