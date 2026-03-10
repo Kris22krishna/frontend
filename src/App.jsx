@@ -44,6 +44,16 @@ import IntroductionToGraphs from './components/practice/class-8/introduction_to_
 import GraphsIntro5W1H from './components/practice/class-8/introduction_to_graphs/Topics/5W1H/GraphsIntro5W1H';
 import GraphsTerminology from './components/practice/class-8/introduction_to_graphs/Topics/Terminology/GraphsTerminology';
 import GraphsSkills from './components/practice/class-8/introduction_to_graphs/Topics/Skills/GraphsSkills';
+import DirectAndInverseProportions from './components/practice/class-8/direct_and_inverse_proportions/DirectAndInverseProportions';
+import ProportionsIntro5W1H from './components/practice/class-8/direct_and_inverse_proportions/Topics/5W1H/ProportionsIntro5W1H';
+import ProportionsTerminology from './components/practice/class-8/direct_and_inverse_proportions/Topics/Terminology/ProportionsTerminology';
+import ProportionsSkills from './components/practice/class-8/direct_and_inverse_proportions/Topics/Skills/ProportionsSkills';
+
+import ShapesAroundUs from './components/practice/grade-4/Shapes_Around_Us/ShapesAroundUs';
+import ShapesIntro5W1H from './components/practice/grade-4/Shapes_Around_Us/Topics/5W1H/ShapesIntro5W1H';
+import ShapesTerminology from './components/practice/grade-4/Shapes_Around_Us/Topics/Terminology/ShapesTerminology';
+import ShapesSkills from './components/practice/grade-4/Shapes_Around_Us/Topics/Skills/ShapesSkills';
+
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -510,6 +520,19 @@ import IdentifyRepeatingTile from './components/practice/class-4/Fun_with_Symmet
 import CreateTilingWithoutGaps from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/create_tiling_without_gaps';
 import ClassifySymmetricalObjects from './components/practice/class-4/Fun_with_Symmetry/Real_Life_Symmetry/classify_symmetrical_objects';
 import FunWithSymmetryTest from './components/practice/class-4/Fun_with_Symmetry/FunWithSymmetryTest';
+import ElephantsTest from './components/practice/class-4/Elephants_Tigers_and_Leopards/ElephantsTest';
+import EqualGroupsTest from './components/practice/class-4/Equal_Groups/EqualGroupsTest';
+import WeighItPourItTest from './components/practice/class-4/Weigh_It_Pour_It/WeighItPourItTest';
+
+import TheTransportMuseum from './components/practice/class-4/The_Transport_Museum/TheTransportMuseum';
+import MuseumIntro5W1H from './components/practice/class-4/The_Transport_Museum/Topics/5W1H/MuseumIntro5W1H';
+import MuseumTerminology from './components/practice/class-4/The_Transport_Museum/Topics/Terminology/MuseumTerminology';
+import MuseumSkills from './components/practice/class-4/The_Transport_Museum/Topics/Skills/MuseumSkills';
+
+import DataHandlingClass4 from './components/practice/class-4/Data_Handling/DataHandlingClass4';
+import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
+import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
+import DataHandlingSkillsClass4 from './components/practice/class-4/Data_Handling/Topics/Skills/DataHandlingSkillsClass4';
 
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
@@ -586,11 +609,29 @@ function App() {
           <Route path="ticking-clocks/introduction" element={<ProtectedRoute redirectTo="/login"><TickingClocksIntro5W1H /></ProtectedRoute>} />
           <Route path="ticking-clocks/terminology" element={<ProtectedRoute redirectTo="/login"><TickingClocksTerminology /></ProtectedRoute>} />
           <Route path="ticking-clocks/skills" element={<ProtectedRoute redirectTo="/login"><TickingClocksSkills /></ProtectedRoute>} />
+          <Route path="the-transport-museum" element={<ProtectedRoute redirectTo="/login"><TheTransportMuseum /></ProtectedRoute>} />
+          <Route path="the-transport-museum/introduction" element={<ProtectedRoute redirectTo="/login"><MuseumIntro5W1H /></ProtectedRoute>} />
+          <Route path="the-transport-museum/terminology" element={<ProtectedRoute redirectTo="/login"><MuseumTerminology /></ProtectedRoute>} />
+          <Route path="the-transport-museum/skills" element={<ProtectedRoute redirectTo="/login"><MuseumSkills /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Shapes Around Us Chapter Pages */}
+          <Route path="junior/grade/4/shapes-around-us" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
           {/* Grade 8: Introduction to Graphs Chapter Pages */}
           <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/terminology" element={<ProtectedRoute redirectTo="/login"><GraphsTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/skills" element={<ProtectedRoute redirectTo="/login"><GraphsSkills /></ProtectedRoute>} />
+          {/* Grade 8: Direct and Inverse Proportions Chapter Pages */}
+          <Route path="senior/grade/8/direct-and-inverse-proportions" element={<ProtectedRoute redirectTo="/login"><DirectAndInverseProportions /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/introduction" element={<ProtectedRoute redirectTo="/login"><ProportionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/terminology" element={<ProtectedRoute redirectTo="/login"><ProportionsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/skills" element={<ProtectedRoute redirectTo="/login"><ProportionsSkills /></ProtectedRoute>} />
           {/* Class 12: Matrices — unified structure (inside MainLayout for navbar/footer) */}
           <Route path="senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesHub /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/introduction" element={<ProtectedRoute redirectTo="/login"><MatricesIntro5W1H /></ProtectedRoute>} />
@@ -990,6 +1031,13 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Elephants, Tigers, and Leopards Chapter Test */}
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ElephantsTest />
+          </ProtectedRoute>
+        } />
+
         {/* Fun with Symmetry Routes */}
         <Route path="/junior/grade/:grade/fun-with-symmetry/chapter-test" element={
           <ProtectedRoute redirectTo="/login">
@@ -1093,6 +1141,14 @@ function App() {
             <CreateYourOwnEqualGroups />
           </ProtectedRoute>
         } />
+
+        {/* Equal Groups Chapter Test */}
+        <Route path="/junior/grade/:grade/equal-groups/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualGroupsTest />
+          </ProtectedRoute>
+        } />
+
         {/* Weigh It, Pour It Routes */}
         <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
           <ProtectedRoute redirectTo="/login">
@@ -1132,6 +1188,13 @@ function App() {
         <Route path="/junior/grade/:grade/weigh-it-pour-it/weight-and-capacity-word-problems" element={
           <ProtectedRoute redirectTo="/login">
             <WeightAndCapacityWordProblems />
+          </ProtectedRoute>
+        } />
+
+        {/* Weigh It, Pour It Chapter Test */}
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <WeighItPourItTest />
           </ProtectedRoute>
         } />
 

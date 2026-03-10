@@ -142,11 +142,17 @@ const JuniorSubtopics = () => {
                     } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
                         navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
                         return;
+                    } else if (decodedTopic === "Equal Groups") {
+                        navigate(`/junior/grade/${grade}/equal-groups/${skill.route}`);
+                        return;
                     } else if (decodedTopic === "Fun with Symmetry") {
                         navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
                         return;
                     } else if (decodedTopic === "Ticking Clocks and Turning Calendars") {
                         navigate('/ticking-clocks');
+                        return;
+                    } else if (decodedTopic === "The Transport Museum") {
+                        navigate('/the-transport-museum');
                         return;
                     }
                 }
@@ -260,8 +266,14 @@ const JuniorSubtopics = () => {
                                 navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
                             } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
                                 navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
+                            } else if (decodedTopic === "Equal Groups") {
+                                navigate(`/junior/grade/${grade}/equal-groups/${skill.route}`);
                             } else if (decodedTopic === "Fun with Symmetry") {
                                 navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
+                            } else if (decodedTopic === "Ticking Clocks and Turning Calendars") {
+                                navigate('/ticking-clocks');
+                            } else if (decodedTopic === "The Transport Museum") {
+                                navigate('/the-transport-museum');
                             }
                             setPendingSubtopic(null);
                             return;

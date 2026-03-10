@@ -220,7 +220,8 @@ export const TOPIC_CONFIGS = {
             { id: "1157", name: "Mixed Word Problems", route: "equal-groups-mixed-word-problems" },
             { id: "1158", name: "Always, Sometimes, Never", route: "always-sometimes-never-statements" },
             { id: "1159", name: "Find the Mistake", route: "find-the-mistake-equal-groups" },
-            { id: "1160", name: "Create Your Own Groups", route: "create-your-own-equal-groups" }
+            { id: "1160", name: "Create Your Own Groups", route: "create-your-own-equal-groups" },
+            { id: "1214", name: "Chapter Test", route: "chapter-test" }
         ],
         'Weigh It, Pour It': [
             { id: "1129", name: "Gram to Kilogram (Fractions)", route: "gram-to-kilogram-fractions" },
@@ -230,7 +231,8 @@ export const TOPIC_CONFIGS = {
             { id: "1138", name: "Count How Many Units Fit", route: "count-how-many-units-fit" },
             { id: "1139", name: "Repeated Addition to One Whole", route: "repeated-addition-to-one-whole" },
             { id: "1140", name: "Compare Weights and Capacities", route: "compare-weights-and-capacities" },
-            { id: "1141", name: "Weight and Capacity Word Problems", route: "weight-and-capacity-word-problems" }
+            { id: "1141", name: "Weight and Capacity Word Problems", route: "weight-and-capacity-word-problems" },
+            { id: "1215", name: "Chapter Test", route: "chapter-test" }
         ],
         'Elephants, Tigers, and Leopards': [
             // Number Games & Patterns
@@ -250,7 +252,8 @@ export const TOPIC_CONFIGS = {
             { id: "1198", name: "Quick Compare", route: "quick-compare" },
             // Strategies
             { id: "1199", name: "Smart Shortcuts", route: "smart-shortcuts" },
-            { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" }
+            { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" },
+            { id: "1213", name: "Chapter Test", route: "chapter-test" }
         ],
         'Fun with Symmetry': [
             { id: "1201", name: "Identify Line of Symmetry", route: "identify-line-of-symmetry" },
@@ -270,6 +273,21 @@ export const TOPIC_CONFIGS = {
             { id: "TC-01", name: "Introduction", route: "ticking-clocks" },
             { id: "TC-02", name: "Terminology", route: "ticking-clocks" },
             { id: "TC-03", name: "Skills", route: "ticking-clocks" }
+        ],
+        'The Transport Museum': [
+            { id: "TM-01", name: "Introduction", route: "the-transport-museum-hero" },
+            { id: "TM-02", name: "Terminology", route: "the-transport-museum-hero" },
+            { id: "TM-03", name: "Skills", route: "the-transport-museum-hero" }
+        ],
+        'Data Handling': [
+            { id: "DH-01", name: "Introduction", route: "data-handling-hero" },
+            { id: "DH-02", name: "Terminology", route: "data-handling-hero" },
+            { id: "DH-03", name: "Skills", route: "data-handling-hero" }
+        ],
+        'Shapes Around Us': [
+            { id: "SAU-01", name: "Introduction", route: "shapes-around-us-hero" },
+            { id: "SAU-02", name: "Terminology", route: "shapes-around-us-hero" },
+            { id: "SAU-03", name: "Skills", route: "shapes-around-us-hero" }
         ]
     }
 };

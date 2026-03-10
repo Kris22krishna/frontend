@@ -13,33 +13,33 @@ const PerimeterObjectVisual = ({ type, l, w, unit }) => {
     const renders = {
         frame: (
             <div className="flex flex-col items-center">
-                <div className="w-56 h-64 bg-amber-50 border-[12px] border-amber-800 rounded shadow-2xl relative flex items-center justify-center">
-                    <Frame className="text-amber-800 opacity-10" size={100} />
-                    <div className="absolute top-2 left-1/2 -translate-x-1/2 font-black text-amber-900">{l} {unit}</div>
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 font-black text-amber-900 -rotate-90">{w} {unit}</div>
+                <div className="w-44 h-48 bg-amber-50 border-[10px] border-amber-800 rounded shadow-2xl relative flex items-center justify-center">
+                    <Frame className="text-amber-800 opacity-10" size={70} />
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 font-black text-amber-900 text-sm">{l} {unit}</div>
+                    <div className="absolute right-1 top-1/2 -translate-y-1/2 font-black text-amber-900 -rotate-90 text-sm">{w} {unit}</div>
                 </div>
             </div>
         ),
         garden: (
             <div className="flex flex-col items-center">
-                <div className="w-80 h-48 bg-emerald-50 border-4 border-emerald-500 rounded-2xl relative shadow-lg overflow-hidden flex items-center justify-center">
-                    <div className="absolute inset-0 grid grid-cols-6 grid-rows-4 opacity-10"><Fence size={40} /><Fence size={40} /></div>
-                    <span className="absolute bottom-4 left-1/2 -translate-x-1/2 font-black text-emerald-800 tracking-tighter">{l} {unit}</span>
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-emerald-800 -rotate-90">{w} {unit}</span>
+                <div className="w-64 h-36 bg-emerald-50 border-4 border-emerald-500 rounded-2xl relative shadow-lg overflow-hidden flex items-center justify-center">
+                    <div className="absolute inset-0 grid grid-cols-6 grid-rows-4 opacity-10"><Fence size={30} /><Fence size={30} /></div>
+                    <span className="absolute bottom-2 left-1/2 -translate-x-1/2 font-black text-emerald-800 tracking-tighter text-sm">{l} {unit}</span>
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 font-black text-emerald-800 -rotate-90 text-sm">{w} {unit}</span>
                 </div>
             </div>
         ),
         runner: (
             <div className="flex flex-col items-center">
-                <div className="w-80 h-48 border-4 border-slate-300 rounded-[3rem] relative bg-slate-50 flex items-center justify-center">
-                    <motion.div animate={{ x: [0, 100, 0, -100, 0], y: [0, 50, 100, 50, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "linear" }} className="text-indigo-500"><Footprints size={40} /></motion.div>
-                    <span className="absolute -top-10 left-1/2 -translate-x-1/2 font-black text-[#31326F]">{l} {unit}</span>
-                    <span className="absolute -right-16 top-1/2 -translate-y-1/2 font-black text-[#31326F]">{w} {unit}</span>
+                <div className="w-64 h-36 border-4 border-slate-300 rounded-[2.5rem] relative bg-slate-50 flex items-center justify-center">
+                    <div className="text-indigo-500 opacity-20"><Footprints size={40} /></div>
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 font-black text-[#31326F] text-sm">{l} {unit}</span>
+                    <span className="absolute -right-12 top-1/2 -translate-y-1/2 font-black text-[#31326F] text-sm">{w} {unit}</span>
                 </div>
             </div>
         )
     };
-    return <div className="my-16">{renders[type]}</div>;
+    return <div className="my-8">{renders[type]}</div>;
 };
 
 const CORRECT_MESSAGES = [
@@ -104,9 +104,9 @@ const PerimeterRealLife = () => {
                     optionsSet.add(`${p + randomInt(2, 8) * 2} cm`);
                 }
                 qs.push({
-                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A photo frame is $${l}$ cm $\\times$ $${w}$ cm. How much <strong>wooden strip</strong> is needed for its outer boundary?</div>`,
+                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A photo frame is ${l} cm × ${w} cm. How much <strong>wooden strip</strong> is needed for its outer boundary?</div>`,
                     correctAnswer: `${p} cm`,
-                    solution: `The strip needed is the perimeter. Perimeter $= 2 \\times (L + W) = 2 \\times (${l} + ${w}) = ${p}$ cm.`,
+                    solution: `The strip needed is the perimeter. \\( \\text{Perimeter} = 2 \\times (L + W) = 2 \\times (${l} + ${w}) = ${p} \\text{ cm} \\).`,
                     visual: <PerimeterObjectVisual type="frame" l={l} w={w} unit="cm" />,
                     options: Array.from(optionsSet),
                     difficulty: "Easy"
@@ -119,9 +119,9 @@ const PerimeterRealLife = () => {
                     optionsSet.add(`${p + randomInt(3, 10) * 2} m`);
                 }
                 qs.push({
-                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A field is $${l}$ m long and $${w}$ m wide. What is the total length of <strong>wire fence</strong> needed to go around it once?</div>`,
+                    text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A field is ${l} m long and ${w} m wide. What is the total length of <strong>wire fence</strong> needed to go around it once?</div>`,
                     correctAnswer: `${p} m`,
-                    solution: `Fence length = Perimeter. Perimeter $= 2 \\times (${l} + ${w}) = ${p}$ m.`,
+                    solution: `Fence length = Perimeter. \\( \\text{Perimeter} = 2 \\times (${l} + ${w}) = ${p} \\text{ m} \\).`,
                     visual: <PerimeterObjectVisual type="garden" l={l} w={w} unit="m" />,
                     options: Array.from(optionsSet),
                     difficulty: "Medium"
@@ -131,9 +131,9 @@ const PerimeterRealLife = () => {
                 if (i % 2 === 0) {
                     const l = randomInt(100, 200); const w = randomInt(50, 100); const p = 2 * (l + w); const laps = randomInt(2, 5); const td = p * laps;
                     qs.push({
-                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A runner goes $${laps}$ times around a park that is $${l}$ m $\\times$ $${w}$ m. What is the total <strong>distance</strong> covered?</div>`,
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A runner goes ${laps} times around a park that is ${l} m × ${w} m. What is the total <strong>distance</strong> covered?</div>`,
                         correctAnswer: `${td} m`,
-                        solution: `Perimeter of 1 lap $= ${p}$ m. Total Distance $= ${laps}$ laps $\\times ${p}$ m $= ${td}$ m.`,
+                        solution: `Perimeter of 1 lap = ${p} m. \\( \\text{Total Distance} = ${laps} \\text{ laps} \\times ${p} \\text{ m} = ${td} \\text{ m} \\).`,
                         visual: <PerimeterObjectVisual type="runner" l={l} w={w} unit="m" />,
                         options: [`${td} m`, `${p} m`, `${l * w} m`, `${td + 100} m`],
                         difficulty: "Hard"
@@ -141,9 +141,9 @@ const PerimeterRealLife = () => {
                 } else {
                     const l = randomInt(10, 15); const w = randomInt(6, 10); const p = 2 * (l + w); const rate = randomInt(20, 40); const cost = p * rate;
                     qs.push({
-                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Fencing costs ₹$${rate}$ per meter. For a field $${l}$ m $\\times$ $${w}$ m, what is the total <strong>cost</strong> of fencing?</div>`,
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Fencing costs ₹${rate} per meter. For a field ${l} m × ${w} m, what is the total <strong>cost</strong> of fencing?</div>`,
                         correctAnswer: `₹${cost}`,
-                        solution: `Perimeter $= ${p}$ m. Total Cost $= \\text{Perimeter} \\times \\text{Rate} = ${p} \\times ${rate} = ₹${cost}$.`,
+                        solution: `\\( \\text{Perimeter} = ${p} \\text{ m} \\). \\( \\text{Total Cost} = \\text{Perimeter} \\times \\text{Rate} = ${p} \\times ${rate} = ₹${cost} \\).`,
                         visual: <div className="h-24 flex items-center justify-center font-black text-emerald-600 bg-emerald-50 rounded-2xl p-4 text-2xl">Cost Analysis</div>,
                         options: [`₹${cost}`, `₹${cost + 100}`, `₹${p}`, `₹${l * w * rate}`],
                         difficulty: "Hard"
@@ -292,8 +292,8 @@ const PerimeterRealLife = () => {
                         <AnimatePresence mode="wait">
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}><LatexContent html={currentQuestion.text} /></h2></div>
-                                    <div className="visual-area flex justify-center py-4">{currentQuestion.visual}</div>
+                                    <div style={{ width: '100%', marginBottom: '1rem', textAlign: 'center', minHeight: '3rem', flexShrink: 0 }}><h2 style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', color: '#2D3748', lineHeight: '1.4', margin: '0' }}><LatexContent html={currentQuestion.text} block={true} /></h2></div>
+                                    <div className="visual-area flex flex-1 justify-center py-4 min-h-[150px] items-center" style={{ flexShrink: 1, minHeight: 0, overflow: 'hidden' }}>{currentQuestion.visual}</div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (

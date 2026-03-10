@@ -167,7 +167,9 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: '1252', skill_name: 'Square Root via Prime Factorization', topic: 'Squares and Square Roots' },
                         { skill_id: '1253', skill_name: 'Square Root via Long Division', topic: 'Squares and Square Roots' },
                         { skill_id: '1254', skill_name: 'Square Root of Decimals', topic: 'Squares and Square Roots' },
-                        { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' }
+                        { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' },
+                        { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Chapter', topic: 'Introduction to Graphs' },
+                        { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -525,6 +527,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Line Graphs & Applications',
                 isLocal: true,
                 path: '/senior/grade/8/introduction-to-graphs'
+            }
+        ];
+
+        // Direct and Inverse Proportions (NCERT Ch. 13 — Grade 8)
+        skillsByTopic['Direct and Inverse Proportions'] = [
+            {
+                skill_id: 'local-8-proportions-landing',
+                skill_name: 'Direct and Inverse Proportions Chapter',
+                topic: 'Direct and Inverse Proportions',
+                subtopic: 'Direct & Inverse Proportion',
+                isLocal: true,
+                path: '/senior/grade/8/direct-and-inverse-proportions'
             }
         ];
     }
