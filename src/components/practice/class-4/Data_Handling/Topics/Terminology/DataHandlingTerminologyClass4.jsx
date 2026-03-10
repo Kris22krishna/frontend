@@ -445,7 +445,7 @@ function RuleSteps({ rule }) {
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 
-export default function DataHandlingTerminology() {
+export default function DataHandlingTerminologyClass4() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('terms');
     const [selectedIdx, setSelectedIdx] = useState(0);
@@ -514,11 +514,11 @@ export default function DataHandlingTerminology() {
             `}</style>
 
             <nav className="dh-nav">
-                <button className="dh-nav-back" onClick={() => navigate('/data-handling')}>← Back to Data Handling</button>
+                <button className="dh-nav-back" onClick={() => navigate('/junior/grade/4/data-handling')}>← Back to Data Handling</button>
                 <div className="dh-nav-links">
-                    <button className="dh-nav-link" onClick={() => navigate('/data-handling/introduction')}>🌟 Introduction</button>
+                    <button className="dh-nav-link" onClick={() => navigate('/junior/grade/4/data-handling/introduction')}>🌟 Introduction</button>
                     <button className="dh-nav-link dh-nav-link--active">📖 Terminology</button>
-                    <button className="dh-nav-link" onClick={() => navigate('/data-handling/skills')}>🎯 Skills</button>
+                    <button className="dh-nav-link" onClick={() => navigate('/junior/grade/4/data-handling/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 
@@ -710,11 +710,11 @@ export default function DataHandlingTerminology() {
                                 {bestStreak >= 2 && <p style={{ color: '#f59e0b', fontWeight: 800, margin: '0 0 24px' }}>🔥 Best streak: {bestStreak} in a row!</p>}
                                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                                     <button onClick={resetQuiz} style={{ padding: '12px 28px', background: 'linear-gradient(135deg, #059669, #0d9488)', color: '#fff', borderRadius: 100, border: 'none', fontWeight: 800, cursor: 'pointer', fontSize: 15, fontFamily: 'Outfit, sans-serif' }}>Play Again 🔄</button>
-                                    <button onClick={() => navigate('/data-handling/skills')} style={{ padding: '12px 28px', background: '#f1f5f9', color: '#475569', borderRadius: 100, border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: 15 }}>Skills 🎯</button>
+                                    <button onClick={() => navigate('/junior/grade/4/data-handling/skills')} style={{ padding: '12px 28px', background: '#f1f5f9', color: '#475569', borderRadius: 100, border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: 15 }}>Skills 🎯</button>
                                 </div>
 
                                 <div style={{ marginTop: 24 }}>
-                                    <button onClick={() => navigate('/data-handling/skills')} style={{ padding: '16px 40px', fontSize: 18, background: 'linear-gradient(135deg, #059669, #0d9488)', color: '#fff', boxShadow: '0 4px 14px rgba(5,150,105,0.4)', borderRadius: 50, border: 'none', fontWeight: 800, cursor: 'pointer', fontFamily: 'Outfit, sans-serif', transition: 'all 0.2s' }}>
+                                    <button onClick={() => navigate('/junior/grade/4/data-handling/skills')} style={{ padding: '16px 40px', fontSize: 18, background: 'linear-gradient(135deg, #059669, #0d9488)', color: '#fff', boxShadow: '0 4px 14px rgba(5,150,105,0.4)', borderRadius: 50, border: 'none', fontWeight: 800, cursor: 'pointer', fontFamily: 'Outfit, sans-serif', transition: 'all 0.2s' }}>
                                         Continue to Skills →
                                     </button>
                                 </div>

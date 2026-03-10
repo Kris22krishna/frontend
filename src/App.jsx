@@ -504,10 +504,10 @@ import MuseumIntro5W1H from './components/practice/class-4/The_Transport_Museum/
 import MuseumTerminology from './components/practice/class-4/The_Transport_Museum/Topics/Terminology/MuseumTerminology';
 import MuseumSkills from './components/practice/class-4/The_Transport_Museum/Topics/Skills/MuseumSkills';
 
-import DataHandling from './components/practice/class-4/Data_Handling/DataHandling';
-import DataHandlingIntro5W1H from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1H';
-import DataHandlingTerminology from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminology';
-import DataHandlingSkills from './components/practice/class-4/Data_Handling/Topics/Skills/DataHandlingSkills';
+import DataHandlingClass4 from './components/practice/class-4/Data_Handling/DataHandlingClass4';
+import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
+import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
+import DataHandlingSkillsClass4 from './components/practice/class-4/Data_Handling/Topics/Skills/DataHandlingSkillsClass4';
 
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
@@ -569,10 +569,10 @@ function App() {
           <Route path="the-transport-museum/introduction" element={<ProtectedRoute redirectTo="/login"><MuseumIntro5W1H /></ProtectedRoute>} />
           <Route path="the-transport-museum/terminology" element={<ProtectedRoute redirectTo="/login"><MuseumTerminology /></ProtectedRoute>} />
           <Route path="the-transport-museum/skills" element={<ProtectedRoute redirectTo="/login"><MuseumSkills /></ProtectedRoute>} />
-          <Route path="data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandling /></ProtectedRoute>} />
-          <Route path="data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1H /></ProtectedRoute>} />
-          <Route path="data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminology /></ProtectedRoute>} />
-          <Route path="data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkills /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
           {/* Grade 8: Introduction to Graphs Chapter Pages */}
           <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
           <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />

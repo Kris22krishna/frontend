@@ -6,7 +6,7 @@ import './data-handling.css';
 const MODULES = [
     {
         id: 'introduction',
-        path: '/data-handling/introduction',
+        path: '/junior/grade/4/data-handling/introduction',
         label: 'Introduction',
         emoji: '🌟',
         tagline: '5W1H Exploration',
@@ -17,7 +17,7 @@ const MODULES = [
     },
     {
         id: 'terminology',
-        path: '/data-handling/terminology',
+        path: '/junior/grade/4/data-handling/terminology',
         label: 'Terminology',
         emoji: '📖',
         tagline: '10 Key Terms · 5 Rules',
@@ -28,7 +28,7 @@ const MODULES = [
     },
     {
         id: 'skills',
-        path: '/data-handling/skills',
+        path: '/junior/grade/4/data-handling/skills',
         label: 'Skills',
         emoji: '🎯',
         tagline: 'Learn, Practice & Assess',
@@ -46,7 +46,7 @@ const STATS = [
     { val: '4', label: 'Skills', color: '#0284c7' },
 ];
 
-export default function DataHandling() {
+export default function DataHandlingClass4() {
     const navigate = useNavigate();
 
     return (

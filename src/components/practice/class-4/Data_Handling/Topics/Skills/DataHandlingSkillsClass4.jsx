@@ -1083,7 +1083,7 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
 
-export default function DataHandlingSkills() {
+export default function DataHandlingSkillsClass4() {
     const navigate = useNavigate();
     const [mode, setMode] = useState('menu');
     const [selectedSkill, setSelectedSkill] = useState(null);
@@ -1137,14 +1137,14 @@ export default function DataHandlingSkills() {
             `}</style>
 
             <nav className="dh-nav">
-                <button className="dh-nav-back" onClick={() => mode !== 'menu' ? onBack() : navigate('/data-handling')}>
+                <button className="dh-nav-back" onClick={() => mode !== 'menu' ? onBack() : navigate('/junior/grade/4/data-handling')}>
                     {mode !== 'menu' ? '← Back to Skills' : '← Back to Data Handling'}
                 </button>
                 {mode === 'menu' && (
                     <div className="dh-nav-links">
-                        <button className="dh-nav-link" onClick={() => navigate('/data-handling/introduction')}>🌟 Introduction</button>
-                        <button className="dh-nav-link" onClick={() => navigate('/data-handling/terminology')}>📖 Terminology</button>
-                        <button className="dh-nav-link dh-nav-link--active" onClick={() => navigate('/data-handling/skills')}>🎯 Skills</button>
+                        <button className="dh-nav-link" onClick={() => navigate('/junior/grade/4/data-handling/introduction')}>🌟 Introduction</button>
+                        <button className="dh-nav-link" onClick={() => navigate('/junior/grade/4/data-handling/terminology')}>📖 Terminology</button>
+                        <button className="dh-nav-link dh-nav-link--active" onClick={() => navigate('/junior/grade/4/data-handling/skills')}>🎯 Skills</button>
                     </div>
                 )}
             </nav>

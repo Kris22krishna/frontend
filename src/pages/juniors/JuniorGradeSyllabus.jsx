@@ -215,7 +215,7 @@ const JuniorGradeSyllabus = () => {
                                         } else if (topic.name === 'The Transport Museum') {
                                             navigate('/the-transport-museum');
                                         } else if (topic.name === 'Data Handling') {
-                                            navigate('/data-handling');
+                                            navigate('/junior/grade/4/data-handling');
                                         } else {
                                             navigate(`/junior/grade/${grade}/topic/${encodeURIComponent(topic.name)}`);
                                         }
