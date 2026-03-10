@@ -349,6 +349,18 @@ export default function MatricesSkills() {
             <button className="mat-intro-nav-link mat-intro-nav-link--active">
               🎯 Skills
             </button>
+            <button
+              className="mat-intro-nav-link"
+              onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
+            >
+              🌐 Connectomics
+            </button>
+            <button
+              className="mat-intro-nav-link"
+              onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
+            >
+              ⚔️ Exam Edge
+            </button>
           </div>
         </nav>
         <div style={{ padding: "0 24px" }}>
@@ -720,6 +732,18 @@ export default function MatricesSkills() {
             onClick={() => navigate("/senior/grade/12/matrices/skills")}
           >
             🎯 Skills
+          </button>
+          <button
+            className="mat-intro-nav-link"
+            onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
+          >
+            🌐 Connectomics
+          </button>
+          <button
+            className="mat-intro-nav-link"
+            onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
+          >
+            ⚔️ Exam Edge
           </button>
         </div>
       </nav>
