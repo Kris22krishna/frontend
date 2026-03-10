@@ -57,23 +57,14 @@ export default function ComparingQuantities() {
 
                 <button
                     onClick={() => navigate('/senior/grade/8')}
-                    style={{
-                        position: 'absolute', top: 16, left: 28,
-                        display: 'inline-flex', alignItems: 'center', gap: 6,
-                        padding: '8px 14px', borderRadius: 50,
-                        background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(255,255,255,0.3)', color: '#fff',
-                        fontSize: 13, fontWeight: 700, cursor: 'pointer', zIndex: 10,
-                        fontFamily: 'Open Sans, sans-serif',
-                    }}
+                    className="cq-nav-back-abs"
                 >
                     ← Back to Chapters
                 </button>
 
                 <div className="cq-left-content">
                     <h1 className="cq-main-title">
-                        Master<br />
-                        <span className="cq-title-accent">Comparing<br />Quantities</span>
+                        Master <span className="cq-title-accent">Comparing Quantities</span>
                     </h1>
 
                     <p className="cq-main-sub">
@@ -93,19 +84,12 @@ export default function ComparingQuantities() {
 
             {/* ── RIGHT: MODULE CARDS ─────────────────────── */}
             <div className="cq-right">
-                <div style={{ marginBottom: 28 }}>
-                    <h2 style={{
-                        fontFamily: 'Outfit, sans-serif',
-                        fontSize: 'clamp(1.4rem, 2.2vw, 1.9rem)',
-                        fontWeight: 900, color: '#0f172a', margin: '0 0 6px'
-                    }}>
+                <div className="cq-right-header">
+                    <h2 className="cq-right-title">
                         Comparing{' '}
-                        <span style={{
-                            background: 'linear-gradient(90deg,#0f4c81,#6a1b9a)',
-                            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-                        }}>Quantities</span>
+                        <span className="cq-right-title-accent">Quantities</span>
                     </h2>
-                    <p style={{ fontSize: 14, color: '#64748b', margin: 0 }}>
+                    <p className="cq-right-subtitle">
                         Start with the introduction, build your vocabulary, then sharpen all 4 skills.
                     </p>
                 </div>
@@ -131,7 +115,7 @@ export default function ComparingQuantities() {
                     ))}
                 </div>
 
-                <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 24, fontWeight: 600 }}>
+                <p className="cq-footer-text">
                     📚 Based on NCERT Class 8 Mathematics — Chapter 8
                 </p>
             </div>

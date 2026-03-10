@@ -125,16 +125,12 @@ export default function ComparingQuantitiesIntro5W1H() {
             </nav>
 
             {/* ── HERO BANNER ──────────────────────────────── */}
-            <div style={{
-                background: 'linear-gradient(90deg, #0f4c81 0%, #6a1b9a 100%)',
-                padding: '16px 24px', textAlign: 'center',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-            }}>
-                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '24px', fontWeight: 900, color: '#ffffff', margin: '0 0 4px' }}>
+            <div className="cq-module-hero">
+                <h1 className="cq-module-title">
                     Discover Comparing Quantities Through{' '}
-                    <span style={{ color: '#f9a825' }}>6 Big Questions</span>
+                    <span className="cq-accent-text">6 Big Questions</span>
                 </h1>
-                <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 13, margin: 0, fontWeight: 500 }}>
+                <p className="cq-module-subtitle">
                     Tap each card to explore ✨
                 </p>
             </div>
@@ -168,24 +164,18 @@ export default function ComparingQuantitiesIntro5W1H() {
                                             </p>
                                         )}
                                     </div>
-                                    <div style={{
-                                        fontSize: 20, fontWeight: 900, color: card.color,
-                                        transition: 'transform 0.3s ease',
-                                        transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                                        flexShrink: 0, marginLeft: 8
-                                    }}>⌄</div>
+                                    <div
+                                        className={`cq-5w1h-chevron ${isOpen ? 'cq-5w1h-chevron--open' : ''}`}
+                                        style={{ color: card.color }}
+                                    >⌄</div>
                                 </div>
 
                                 {/* Expandable body */}
                                 {isOpen && (
-                                    <div className="cq-5w1h-body" style={{ padding: '0 0 20px' }}>
-                                        <ul style={{ margin: 0, padding: '0 24px', listStyle: 'none' }}>
+                                    <div className="cq-5w1h-body">
+                                        <ul className="cq-5w1h-list">
                                             {card.bullets.map((b, bi) => (
-                                                <li key={bi} style={{
-                                                    padding: '7px 0', fontSize: 14.5,
-                                                    color: '#334155', lineHeight: 1.65,
-                                                    borderBottom: bi < card.bullets.length - 1 ? '1px solid #f1f5f9' : 'none'
-                                                }}>
+                                                <li key={bi} className="cq-5w1h-item">
                                                     <LatexText text={b} />
                                                 </li>
                                             ))}
@@ -198,14 +188,13 @@ export default function ComparingQuantitiesIntro5W1H() {
                 </div>
 
                 {/* CTA */}
-                <div style={{ marginTop: 24, textAlign: 'center' }}>
-                    <p style={{ color: '#64748b', fontSize: 14, marginBottom: 16 }}>
+                <div className="cq-cta-section">
+                    <p className="cq-cta-text">
                         Ready to learn the vocabulary? 📖
                     </p>
                     <button
-                        className="cq-btn-primary"
+                        className="cq-btn-primary cq-btn-large"
                         onClick={() => navigate('/senior/grade/8/comparing-quantities/terminology')}
-                        style={{ fontSize: 15, padding: '14px 36px' }}
                     >
                         Next: Terminology →
                     </button>

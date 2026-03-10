@@ -9,20 +9,20 @@
 .cq-fullpage {
     display: flex;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     font-family: 'Open Sans', sans-serif;
 }
 
 .cq-left {
     position: relative;
-    width: 40%;
-    height: 100vh;
-    background: linear-gradient(140deg, #0f4c81 0%, #1a237e 40%, #6a1b9a 100%);
+    flex: 0 0 44%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 20px 32px;
+    padding: 48px 40px;
+    background: linear-gradient(140deg, #0f4c81 0%, #1a237e 40%, #6a1b9a 100%);
 }
 
 .cq-deco {
@@ -66,11 +66,12 @@
 
 .cq-main-title {
     font-family: 'Outfit', sans-serif;
-    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    font-size: clamp(2.4rem, 5.5vw, 3.6rem);
     font-weight: 900;
     line-height: 1.1;
     margin: 0 0 16px;
     color: #fff;
+    max-width: 480px;
 }
 
 .cq-title-accent {
@@ -124,14 +125,50 @@
     margin-top: 4px;
 }
 
+.cq-nav-back-abs {
+    position: absolute;
+    top: 16px;
+    left: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 10;
+    font-family: 'Open Sans', sans-serif;
+    transition: all 0.2s;
+}
+
+.cq-nav-back-abs:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateX(-3px);
+}
+
+@media (max-width: 600px) {
+    .cq-nav-back-abs {
+        top: 10px;
+        left: 10px;
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+}
+
 /* ── RIGHT: MODULE CARDS ────────────────────────────────────── */
 .cq-right {
     flex: 1;
-    padding: 20px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: clamp(24px, 4vh, 48px) clamp(24px, 4vw, 56px);
     background: #f8fafc;
+    overflow-y: auto;
 }
 
 .cq-cards-col {
@@ -219,6 +256,37 @@
     transform: translateX(4px);
 }
 
+.cq-right-header {
+    margin-bottom: 28px;
+}
+
+.cq-right-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 6px;
+}
+
+.cq-right-title-accent {
+    background: linear-gradient(90deg, #0f4c81, #6a1b9a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.cq-right-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .cq-right-header {
+        text-align: center;
+    }
+}
+
 /* ── INNER PAGE LAYOUT ──────────────────────────────────────── */
 .cq-page {
     min-height: 100vh;
@@ -286,6 +354,44 @@
     color: #4f46e5;
 }
 
+.cq-footer-text {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 24px;
+    font-weight: 600;
+}
+
+/* ── HERO BANNER ────────────────────────────────────────────── */
+.cq-module-hero {
+    background: linear-gradient(90deg, #0f4c81 0%, #1a237e 50%, #6a1b9a 100%);
+    padding: 24px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cq-module-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0 0 4px;
+    line-height: 1.25;
+}
+
+.cq-accent-text {
+    color: #f9a825;
+}
+
+.cq-module-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    margin: 0;
+    font-weight: 500;
+}
+
 /* ── SECTION WRAPPER ────────────────────────────────────────── */
 .cq-section {
     max-width: 1060px;
@@ -347,6 +453,37 @@
 .cq-5w1h-body {
     padding-left: 20px;
     padding-right: 20px;
+    padding-bottom: 20px;
+}
+
+.cq-5w1h-chevron {
+    font-size: 20px;
+    font-weight: 900;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.cq-5w1h-chevron--open {
+    transform: rotate(180deg);
+}
+
+.cq-5w1h-list {
+    margin: 0;
+    padding: 0 4px;
+    list-style: none;
+}
+
+.cq-5w1h-item {
+    padding: 8px 0;
+    font-size: 14.5px;
+    color: #334155;
+    line-height: 1.6;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.cq-5w1h-item:last-child {
+    border-bottom: none;
 }
 
 /* ── LEARN / TERMINOLOGY GRID ───────────────────────────────── */
@@ -357,19 +494,70 @@
     align-items: start;
 }
 
-@media (max-width: 720px) {
-    .cq-learn-grid {
-        grid-template-columns: 1fr;
-    }
-
+@media (max-width: 900px) {
     .cq-fullpage {
         flex-direction: column;
+        overflow-y: auto;
+        height: auto;
     }
 
     .cq-left {
         width: 100%;
-        min-height: auto;
+        flex: 0 0 auto;
+        min-height: 320px;
+        padding: 56px 24px;
+    }
+
+    .cq-right {
         padding: 40px 24px;
+    }
+
+    .cq-5w1h-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cq-learn-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .cq-stats-grid {
+        gap: 8px;
+    }
+
+    .cq-stat {
+        padding: 10px 14px;
+        min-width: 70px;
+    }
+
+    .cq-stat-num {
+        font-size: 20px;
+    }
+
+    .cq-skill-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+    }
+
+    .cq-skill-actions {
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .cq-skill-actions>button {
+        flex: 1;
+    }
+
+    .cq-nav {
+        padding: 10px 16px;
+    }
+
+    .cq-nav-links {
+        justify-content: center;
+        width: 100%;
+        margin-top: 8px;
     }
 }
 
@@ -601,6 +789,24 @@
 .cq-btn-primary:hover {
     transform: translateY(-1px);
     box-shadow: 0 10px 24px rgba(26, 35, 126, 0.35);
+}
+
+.cq-btn-large {
+    font-size: 15px;
+    padding: 14px 36px;
+}
+
+.cq-cta-section {
+    margin-top: 32px;
+    text-align: center;
+    padding-bottom: 24px;
+}
+
+.cq-cta-text {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 16px;
+    font-weight: 500;
 }
 
 .cq-btn-secondary {
