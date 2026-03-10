@@ -26,6 +26,12 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
+import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
+import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
+import SetsSkills from './components/Math-Branches/Sets/Topics/Skills/SetsSkills';
+import SetsConnectomics from './components/Math-Branches/Sets/Topics/Connectomics/SetsConnectomics';
+import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsExamEdge';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -334,6 +340,9 @@ import MatricesChapterTest from './components/practice/class-12/tests/MatricesCh
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
 import BiologyChapters from './components/practice/class-11/biology/BiologyChapters';
+
+// import SetsChapter1Skill100 from './components/practice/class-11/maths/Sets/sets-chapter1-skill100';
+import MathsChapters from './components/practice/class-11/maths/MathsChapters';
 
 // Grade 3 - Fair Share
 import FairShareCutting from './components/practice/class-3/fair-share/cutting';
@@ -1276,6 +1285,15 @@ function App() {
         {/* Class 11 Biology */}
         <Route path="/senior/grade/11/biology" element={<BiologyChapters />} />
         <Route path="/senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
+
+        {/* Class 11 Maths */}
+        <Route path="/senior/grade/11/maths" element={<MathsChapters />} />
+        <Route path="/senior/grade/11/maths/sets" element={<SetsDashboard />} />
+        <Route path="/senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
+        <Route path="/senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
+        <Route path="/senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
+        <Route path="/senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
+        <Route path="/senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
 
         {/* Placeholder routes for other Grade 11 subjects */}
         <Route path="/senior/grade/11/chemistry" element={<ComingSoon />} />
