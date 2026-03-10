@@ -168,6 +168,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' },
                         { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Chapter', topic: 'Introduction to Graphs' },
                         { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
+                        { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -537,6 +538,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Direct & Inverse Proportion',
                 isLocal: true,
                 path: '/senior/grade/8/direct-and-inverse-proportions'
+            }
+        ];
+
+        // Comparing Quantities (NCERT Ch. 8 — Grade 8)
+        skillsByTopic['Comparing Quantities'] = [
+            {
+                skill_id: 'local-8-cq-landing',
+                skill_name: 'Comparing Quantities Chapter',
+                topic: 'Comparing Quantities',
+                subtopic: 'Percentages, Profit & Loss, Interest',
+                isLocal: true,
+                path: '/senior/grade/8/comparing-quantities'
             }
         ];
     }
