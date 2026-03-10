@@ -397,6 +397,15 @@ import ProvingIrrationality from './components/practice/class-10/Real Numbers/Pr
 import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
 import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
 
+// Class 10: Probability
+import Probability from './components/practice/class-10/Probability/Probability';
+import ProbabilityIntro5W1H from './components/practice/class-10/Probability/Topics/5W1H/ProbabilityIntro5W1H';
+import ProbabilityTerminology from './components/practice/class-10/Probability/Topics/Terminology/ProbabilityTerminology';
+import ProbabilitySkills from './components/practice/class-10/Probability/Topics/Skills/ProbabilitySkills';
+import ProbabilityEasyTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityEasyTest';
+import ProbabilityMediumTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityMediumTest';
+import ProbabilityHardTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityHardTest';
+
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
 import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
@@ -685,6 +694,15 @@ function App() {
           <Route path="senior/grade/12/matrices/deep-dive/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><MatrixTransposeTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/deep-dive/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/matrices/deep-dive/test" element={<ProtectedRoute redirectTo="/login"><MatricesChapterTest /></ProtectedRoute>} />
+
+          {/* Class 10: Probability */}
+          <Route path="senior/grade/10/probability" element={<ProtectedRoute redirectTo="/login"><Probability /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/introduction" element={<ProtectedRoute redirectTo="/login"><ProbabilityIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/terminology" element={<ProtectedRoute redirectTo="/login"><ProbabilityTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/skills" element={<ProtectedRoute redirectTo="/login"><ProbabilitySkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><ProbabilityEasyTest /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><ProbabilityMediumTest /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><ProbabilityHardTest /></ProtectedRoute>} />
 
           {/* Class 12: Determinants */}
           <Route path="senior/grade/12/determinants" element={<ProtectedRoute redirectTo="/login"><DeterminantsHub /></ProtectedRoute>} />
