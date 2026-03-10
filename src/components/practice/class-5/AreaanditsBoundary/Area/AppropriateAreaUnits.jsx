@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Map, Compass, Globe } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Map, Compass, Globe, Mail, Book, School, TreePine, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
@@ -9,39 +9,76 @@ import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-const ScaleVisual = ({ level }) => {
-    const scales = {
-        small: (
-            <div className="flex flex-col items-center">
-                <div className="w-24 h-24 bg-white border-2 border-slate-200 rounded-lg flex items-center justify-center relative shadow-sm overflow-hidden">
-                    <div className="absolute top-1 left-1 w-6 h-6 bg-slate-100 border border-slate-300 rounded"></div>
-                    <div className="text-[10px] font-bold text-slate-400">STAMP</div>
-                </div>
-                <div className="mt-4 text-slate-400 font-bold">Small Object</div>
-            </div>
-        ),
-        medium: (
-            <div className="flex flex-col items-center">
-                <div className="w-48 h-32 bg-indigo-50 border-2 border-slate-200 rounded-xl flex items-center justify-center relative shadow-md">
-                    <div className="grid grid-cols-4 grid-rows-3 gap-2 p-2 w-full h-full opacity-20">
-                        {[...Array(12)].map((_, i) => <div key={i} className="bg-slate-300"></div>)}
+const ScaleVisual = ({ level, item }) => {
+    const renderVisual = () => {
+        switch (item) {
+            case 'stamp':
+                return (
+                    <div className="flex flex-col items-center">
+                        <div className="w-24 h-24 bg-white border-2 border-slate-200 rounded-lg flex items-center justify-center relative shadow-sm overflow-hidden">
+                            <div className="absolute top-1 left-1 w-6 h-6 bg-slate-100 border border-slate-300 rounded"></div>
+                            <div className="text-[10px] font-bold text-slate-400">STAMP</div>
+                        </div>
+                        <div className="mt-4 text-slate-400 font-bold">Small Object</div>
                     </div>
-                    <Map className="absolute text-indigo-400" size={40} />
-                </div>
-                <div className="mt-4 text-indigo-400 font-bold">Classroom / Room</div>
-            </div>
-        ),
-        large: (
-            <div className="flex flex-col items-center">
-                <div className="w-64 h-48 bg-emerald-50 border-2 border-slate-200 rounded-[2.5rem] flex items-center justify-center relative shadow-xl">
-                    <Globe className="text-emerald-500 opacity-20" size={100} />
-                    <Compass className="absolute text-emerald-600" size={50} />
-                </div>
-                <div className="mt-4 text-emerald-600 font-bold">City / Country</div>
-            </div>
-        )
+                );
+            case 'notebook':
+                return (
+                    <div className="flex flex-col items-center">
+                        <div className="w-28 h-36 bg-amber-50 border-2 border-amber-800 rounded-r-lg flex items-center justify-center relative shadow-md overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-3 bg-red-400 opacity-50"></div>
+                            <div className="flex w-full h-full flex-col justify-between py-2">
+                                {[...Array(6)].map((_, i) => <div key={i} className="border-b border-blue-200"></div>)}
+                            </div>
+                            <Book className="absolute text-amber-800 opacity-20" size={40} />
+                        </div>
+                        <div className="mt-4 text-amber-700 font-bold">Everyday Object</div>
+                    </div>
+                );
+            case 'classroom':
+                return (
+                    <div className="flex flex-col items-center">
+                        <div className="w-48 h-32 bg-indigo-50 border-2 border-slate-200 rounded-xl flex items-center justify-center relative shadow-md">
+                            <School className="text-indigo-400" size={60} />
+                        </div>
+                        <div className="mt-4 text-indigo-400 font-bold">Room Size</div>
+                    </div>
+                );
+            case 'garden':
+                return (
+                    <div className="flex flex-col items-center">
+                        <div className="w-48 h-32 bg-green-50 border-2 border-slate-200 rounded-xl flex items-center justify-center relative shadow-md overflow-hidden">
+                            <div className="grid grid-cols-3 grid-rows-2 w-full h-full p-2 place-items-center opacity-30">
+                                {[...Array(6)].map((_, i) => <TreePine key={i} className="text-green-600" size={24} />)}
+                            </div>
+                            <TreePine className="absolute text-green-600" size={50} />
+                        </div>
+                        <div className="mt-4 text-green-600 font-bold">Outdoor Plot</div>
+                    </div>
+                );
+            case 'Rajasthan':
+            case 'Mumbai':
+                return (
+                    <div className="flex flex-col items-center">
+                        <div className="w-64 h-48 bg-emerald-50 border-2 border-slate-200 rounded-[2.5rem] flex items-center justify-center relative shadow-xl">
+                            <Globe className="text-emerald-500 opacity-20" size={100} />
+                            <MapPin className="absolute text-emerald-600" size={50} />
+                        </div>
+                        <div className="mt-4 text-emerald-600 font-bold">City / State</div>
+                    </div>
+                );
+            default:
+                return (
+                    <div className="flex flex-col items-center">
+                        <div className="w-32 h-32 bg-slate-50 border border-slate-200 rounded-full flex items-center justify-center shadow-md">
+                            <Globe className="text-slate-400" size={40} />
+                        </div>
+                        <div className="mt-4 text-slate-400 font-bold">Object Details</div>
+                    </div>
+                );
+        }
     };
-    return <div className="my-12 flex justify-center">{scales[level]}</div>;
+    return <div className="my-12 flex justify-center">{renderVisual()}</div>;
 };
 
 const CORRECT_MESSAGES = [
@@ -99,17 +136,28 @@ const AppropriateAreaUnits = () => {
 
         const generateQuestions = () => {
             const qs = [];
-            const items = [
+            const itemPool = [
                 { i: "stamp", u: "sq cm", s: "small" }, { i: "notebook", u: "sq cm", s: "small" },
+                { i: "eraser", u: "sq cm", s: "small" }, { i: "playing card", u: "sq cm", s: "small" },
+                { i: "smartphone screen", u: "sq cm", s: "small" },
                 { i: "classroom", u: "sq m", s: "medium" }, { i: "garden", u: "sq m", s: "medium" },
-                { i: "Rajasthan", u: "sq km", s: "large" }, { i: "Mumbai", u: "sq km", s: "large" }
+                { i: "swimming pool", u: "sq m", s: "medium" }, { i: "basketball court", u: "sq m", s: "medium" },
+                { i: "living room", u: "sq m", s: "medium" },
+                { i: "Rajasthan", u: "sq km", s: "large" }, { i: "Mumbai", u: "sq km", s: "large" },
+                { i: "India", u: "sq km", s: "large" }, { i: "Thar Desert", u: "sq km", s: "large" },
+                { i: "a large forest", u: "sq km", s: "large" }
             ];
-            items.forEach(obj => {
+
+            // Randomly pick 9 unique items from the pool
+            const shuffledPool = [...itemPool].sort(() => Math.random() - 0.5);
+            const selectedItems = shuffledPool.slice(0, 9);
+
+            selectedItems.forEach(obj => {
                 qs.push({
                     text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>What is the MOST appropriate unit for the area of <strong>${obj.i}</strong>?</div>`,
                     correctAnswer: obj.u,
                     solution: `The scale is <strong>${obj.s}</strong>, so <strong>${obj.u}</strong> is the best fit.`,
-                    visual: <ScaleVisual level={obj.s} />,
+                    visual: <ScaleVisual level={obj.s} item={obj.i} />,
                     options: ["sq cm", "sq m", "sq km", "km"],
                     difficulty: obj.s === 'small' ? 'Easy' : obj.s === 'medium' ? 'Medium' : 'Hard'
                 });
@@ -117,15 +165,17 @@ const AppropriateAreaUnits = () => {
             qs.push({
                 text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>1 sq m is equal to how many sq cm?</div>`,
                 correctAnswer: "10,000",
-                solution: "$1 \\text{ m} \\times 1 \\text{ m} = 100 \\text{ cm} \\times 100 \\text{ cm} = 10,000 \\text{ sq cm}$",
+                solution: "\\( 1 \\text{ m} \\times 1 \\text{ m} = 100 \\text{ cm} \\times 100 \\text{ cm} = 10,000 \\text{ sq cm} \\)",
                 visual: <div className="h-24 flex items-center justify-center text-4xl font-black text-indigo-400 opacity-30">1m²</div>,
                 options: ["10,000", "1,000", "100", "10,00,000"],
                 difficulty: "Hard"
             });
-            while (qs.length < 10) qs.push(qs[0]);
-            const sessionQs = qs.slice(0, 10).map(q => ({
+
+            // Shuffle the 10 final questions
+            const sessionQs = [...qs].sort(() => Math.random() - 0.5).map(q => ({
                 ...q, shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
             }));
+
             setSessionQuestions(sessionQs);
         };
         generateQuestions();
@@ -265,8 +315,8 @@ const AppropriateAreaUnits = () => {
                         <AnimatePresence mode="wait">
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}><LatexContent html={currentQuestion.text} /></h2></div>
-                                    <div className="visual-area flex justify-center py-4">{currentQuestion.visual}</div>
+                                    <div style={{ width: '100%', marginBottom: '1rem', textAlign: 'center', minHeight: '3rem', flexShrink: 0 }}><h2 style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '500', color: '#2D3748', lineHeight: '1.4', margin: '0' }}><LatexContent html={currentQuestion.text} block={true} /></h2></div>
+                                    <div className="visual-area flex flex-1 justify-center py-4 min-h-[150px] items-center" style={{ flexShrink: 1, minHeight: 0, overflow: 'hidden' }}>{currentQuestion.visual}</div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
