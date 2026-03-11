@@ -172,6 +172,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Chapter', topic: 'Introduction to Graphs' },
                         { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
                         { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
+                        { skill_id: 'local-8-leq-landing', skill_name: 'Linear Equations Chapter', topic: 'Linear Equations in One Variable' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -553,6 +554,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Percentages, Profit & Loss, Interest',
                 isLocal: true,
                 path: '/senior/grade/8/comparing-quantities'
+            }
+        ];
+
+        // Linear Equations in One Variable (NCERT Ch. 2 — Grade 8)
+        skillsByTopic['Linear Equations in One Variable'] = [
+            {
+                skill_id: 'local-8-leq-landing',
+                skill_name: 'Linear Equations Chapter',
+                topic: 'Linear Equations in One Variable',
+                subtopic: 'Variables, Balancing, Word Problems',
+                isLocal: true,
+                path: '/senior/grade/8/linear-equations'
             }
         ];
     }
