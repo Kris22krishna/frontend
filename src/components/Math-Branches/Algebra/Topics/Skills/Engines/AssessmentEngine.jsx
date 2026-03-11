@@ -214,12 +214,12 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
-                    <button onClick={handlePrev} disabled={current === 0} className={`${prefix}-btn-secondary`} style={{ visibility: current === 0 ? 'hidden' : 'visible' }}>← Previous</button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, gap: '16px' }}>
+                    <button onClick={handlePrev} disabled={current === 0} className={`${prefix}-btn-secondary`} style={{ visibility: current === 0 ? 'hidden' : 'visible', padding: '12px 28px', fontSize: '15px', borderRadius: '100px', flex: 1, maxWidth: '200px' }}>← Previous</button>
                     {current + 1 === questionSet.length ? (
-                        <button onClick={handleSubmit} className={`${prefix}-btn-primary`} style={{ background: `var(--${prefix}-red)`, border: 'none', color: '#fff' }}>Submit Assessment</button>
+                        <button onClick={handleSubmit} className={`${prefix}-btn-primary`} style={{ background: `var(--${prefix}-red)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: '15px', borderRadius: '100px', flex: 1, maxWidth: '200px' }}>Submit Assessment</button>
                     ) : (
-                        <button onClick={handleNext} className={`${prefix}-btn-primary`} style={{ background: color, border: 'none', color: '#fff' }}>Next →</button>
+                        <button onClick={handleNext} className={`${prefix}-btn-primary`} style={{ background: color, border: 'none', color: '#fff', padding: '12px 28px', fontSize: '15px', borderRadius: '100px', flex: 1, maxWidth: '200px' }}>Next →</button>
                     )}
                 </div>
             </div>
