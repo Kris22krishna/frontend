@@ -2,6 +2,60 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
 
 export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+    const getQuestionType = (question) => {
+        if (question?.type === 'text') return 'text';
+        if (question?.type === 'msq') return 'msq';
+        return 'mcq';
+    };
+
+    const normalizeTextAnswer = (value) => String(value ?? '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+
+    const isAnswerComplete = (question, answer) => {
+        const type = getQuestionType(question);
+        if (type === 'text') return normalizeTextAnswer(answer).length > 0;
+        if (type === 'msq') return Array.isArray(answer) && answer.length > 0;
+        return answer !== null && answer !== undefined;
+    };
+
+    const isAnswerCorrect = (question, answer) => {
+        const type = getQuestionType(question);
+        if (type === 'text') {
+            return normalizeTextAnswer(answer) === normalizeTextAnswer(question.answer);
+        }
+        if (type === 'msq') {
+            const expected = Array.isArray(question.correct) ? [...question.correct].sort((a, b) => a - b) : [];
+            const actual = Array.isArray(answer) ? [...answer].sort((a, b) => a - b) : [];
+            return expected.length === actual.length && expected.every((value, index) => value === actual[index]);
+        }
+        return answer === question.correct;
+    };
+
+    const getCorrectAnswerLabel = (question) => {
+        const type = getQuestionType(question);
+        if (type === 'text') return question.answer ?? 'No answer provided';
+        if (type === 'msq') {
+            return Array.isArray(question.correct)
+                ? question.correct.map((index) => question.options?.[index]).filter(Boolean).join(', ')
+                : 'No answer provided';
+        }
+        return question.options?.[question.correct] ?? 'No answer provided';
+    };
+
+    const getUserAnswerLabel = (question, answer) => {
+        const type = getQuestionType(question);
+        if (!isAnswerComplete(question, answer)) return 'Not Answered';
+        if (type === 'text') return answer;
+        if (type === 'msq') {
+            return Array.isArray(answer)
+                ? answer.map((index) => question.options?.[index]).filter(Boolean).join(', ')
+                : 'Not Answered';
+        }
+        return question.options?.[answer] ?? 'Not Answered';
+    };
+
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
@@ -56,6 +110,24 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         setAnswers(newAns);
     };
 
+    const handleTextAnswerChange = (value) => {
+        if (finished) return;
+        const newAns = [...answers];
+        newAns[current] = value;
+        setAnswers(newAns);
+    };
+
+    const handleMsqToggle = (optIdx) => {
+        if (finished) return;
+        const currentAnswer = Array.isArray(answers[current]) ? answers[current] : [];
+        const nextAnswer = currentAnswer.includes(optIdx)
+            ? currentAnswer.filter((idx) => idx !== optIdx)
+            : [...currentAnswer, optIdx];
+        const newAns = [...answers];
+        newAns[current] = nextAnswer;
+        setAnswers(newAns);
+    };
+
     const handleNext = () => {
         if (current + 1 < questionSet.length) setCurrent(c => c + 1);
     };
@@ -65,7 +137,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     };
 
     const handleSubmit = () => {
-        if (answers.includes(null)) {
+        if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm("You have unanswered questions. Are you sure you want to submit?")) return;
         }
         setFinished(true);
@@ -74,7 +146,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     if (finished) {
         let score = 0;
         answers.forEach((ans, i) => {
-            if (ans === questionSet[i].correct) score++;
+            if (isAnswerCorrect(questionSet[i], ans)) score++;
         });
         const pct = Math.round((score / questionSet.length) * 100);
 
@@ -109,9 +181,9 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                 <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: `var(--${prefix}-text, #1e293b)` }}>Summary Report</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     {questionSet.map((question, i) => {
-                        const isCorrect = answers[i] === question.correct;
-                        const correctOptText = question.options[question.correct];
-                        const userOptText = answers[i] !== null ? question.options[answers[i]] : 'Not Answered';
+                        const isCorrect = isAnswerCorrect(question, answers[i]);
+                        const correctOptText = getCorrectAnswerLabel(question);
+                        const userOptText = getUserAnswerLabel(question, answers[i]);
 
                         return (
                             <div key={i} style={{
@@ -126,11 +198,17 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                 <div className={`${prefix}-summary-split`}>
                                     <div className={`${prefix}-summary-item`}>
                                         <strong style={{ color: `var(--${prefix}-teal)` }}>Correct Answer:</strong>
-                                        <div style={{ marginTop: 6 }}><MathRenderer text={correctOptText.includes('$') || correctOptText.includes('^') ? (correctOptText.includes('$') ? correctOptText : `$${correctOptText}$`) : correctOptText} /></div>
+                                        <div style={{ marginTop: 6 }}>
+                                            <MathRenderer text={String(correctOptText).includes('$') || String(correctOptText).includes('^') ? (String(correctOptText).includes('$') ? String(correctOptText) : `$${correctOptText}$`) : String(correctOptText)} />
+                                        </div>
                                     </div>
                                     <div className={`${prefix}-summary-item user-ans`}>
                                         <strong style={{ color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>Your Answer:</strong>
-                                        <div style={{ marginTop: 6 }}>{answers[i] === null ? 'Not Answered' : <MathRenderer text={userOptText.includes('$') || userOptText.includes('^') ? (userOptText.includes('$') ? userOptText : `$${userOptText}$`) : userOptText} />}</div>
+                                        <div style={{ marginTop: 6 }}>
+                                            {userOptText === 'Not Answered'
+                                                ? 'Not Answered'
+                                                : <MathRenderer text={String(userOptText).includes('$') || String(userOptText).includes('^') ? (String(userOptText).includes('$') ? String(userOptText) : `$${userOptText}$`) : String(userOptText)} />}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -185,33 +263,61 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         <MathRenderer text={q.question} />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                        {q.options.map((opt, oi) => {
-                            const isSelected = answers[current] === oi;
-                            return (
-                                <button
-                                    key={oi}
-                                    onClick={() => handleSelect(oi)}
-                                    style={{
-                                        display: 'flex', alignItems: 'center', gap: 12,
-                                        padding: '14px 16px', borderRadius: 12,
-                                        border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
-                                        background: isSelected ? `${color}05` : '#fff',
-                                        cursor: 'pointer', fontSize: 15, textAlign: 'left',
-                                        transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: `var(--${prefix}-text, #1e293b)`
-                                    }}
-                                >
-                                    <div style={{
-                                        width: 10, height: 10, borderRadius: '50%',
-                                        background: isSelected ? color : '#f1f5f9', flexShrink: 0
-                                    }} />
-                                    <span>
-                                        <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
-                                    </span>
-                                </button>
-                            );
-                        })}
-                    </div>
+                    {getQuestionType(q) === 'text' ? (
+                        <div style={{ display: 'grid', gap: 12 }}>
+                            <label style={{ fontSize: 12, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', color: `var(--${prefix}-muted, #64748b)` }}>
+                                Type your answer
+                            </label>
+                            <input
+                                type="text"
+                                value={answers[current] ?? ''}
+                                onChange={(e) => handleTextAnswerChange(e.target.value)}
+                                placeholder="Enter your answer"
+                                style={{
+                                    width: '100%',
+                                    padding: '14px 16px',
+                                    borderRadius: 12,
+                                    border: `2px solid ${isAnswerComplete(q, answers[current]) ? color : 'rgba(0,0,0,0.08)'}`,
+                                    background: '#fff',
+                                    color: `var(--${prefix}-text, #1e293b)`,
+                                    fontSize: 15,
+                                    fontWeight: 600,
+                                    outline: 'none'
+                                }}
+                            />
+                        </div>
+                    ) : (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                            {(q.options ?? []).map((opt, oi) => {
+                                const isSelected = getQuestionType(q) === 'msq'
+                                    ? Array.isArray(answers[current]) && answers[current].includes(oi)
+                                    : answers[current] === oi;
+
+                                return (
+                                    <button
+                                        key={oi}
+                                        onClick={() => getQuestionType(q) === 'msq' ? handleMsqToggle(oi) : handleSelect(oi)}
+                                        style={{
+                                            display: 'flex', alignItems: 'center', gap: 12,
+                                            padding: '14px 16px', borderRadius: 12,
+                                            border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
+                                            background: isSelected ? `${color}05` : '#fff',
+                                            cursor: 'pointer', fontSize: 15, textAlign: 'left',
+                                            transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: `var(--${prefix}-text, #1e293b)`
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: 10, height: 10, borderRadius: '50%',
+                                            background: isSelected ? color : '#f1f5f9', flexShrink: 0
+                                        }} />
+                                        <span>
+                                            <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, gap: '16px' }}>
@@ -240,7 +346,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                 <div style={{ fontSize: 13, fontWeight: 900, marginBottom: 16, color: `var(--${prefix}-text)`, textTransform: 'uppercase', letterSpacing: 1.2, opacity: 0.8 }}>Question Palette</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
                     {questionSet.map((_, i) => {
-                        const isAnswered = answers[i] !== null;
+                        const isAnswered = isAnswerComplete(questionSet[i], answers[i]);
                         const isCurrent = current === i;
                         return (
                             <button

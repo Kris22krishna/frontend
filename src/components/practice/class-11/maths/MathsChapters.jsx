@@ -8,7 +8,7 @@ const chapters = [
         key: 'sets',
         title: 'Sets',
         desc: 'Sets and their representations, empty set, equal sets, subsets, power set, universal set, operations on sets, Venn diagrams.',
-        icon: '{}',
+        icon: '∩',
         questions: 6,
         gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
         shadow: 'rgba(67,233,123,0.35)',

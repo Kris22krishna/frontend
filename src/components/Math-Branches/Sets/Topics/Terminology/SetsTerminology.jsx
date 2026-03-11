@@ -63,6 +63,8 @@ export default function SetsTerminology() {
                     <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/introduction')}>🌟 Intro</button>
                     <button className="sets-nav-link active" onClick={() => navigate('/senior/grade/11/maths/sets/terminology')}>📖 Terminology</button>
                     <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/skills')}>🎯 Skills</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/connectomics')}>Connectomics</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/exam-edge')}>Exam Edge</button>
                 </div>
             </nav>
 

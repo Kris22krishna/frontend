@@ -113,7 +113,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
 
                 <div className={`${prefix}-quiz-finished-actions`} style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button
-                        className="mat-btn-primary"
+                        className={`${prefix}-btn-primary`}
                         onClick={() => {
                             if (typeof questions === 'function') { setQuestionSet(questions()); }
                             setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false);
@@ -123,7 +123,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                         Try Again
                     </button>
                     <button
-                        className="mat-btn-secondary"
+                        className={`${prefix}-btn-secondary`}
                         onClick={onBack}
                         style={{ padding: '16px 32px', fontSize: 16, flex: 1, minWidth: 200 }}
                     >
