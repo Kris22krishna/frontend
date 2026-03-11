@@ -285,7 +285,7 @@ const Grade2AddOurPoints = () => {
             }
         }));
 
-        if (!isTest && !isCorrect) {
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -346,7 +346,6 @@ const Grade2AddOurPoints = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results"><div className="sun-timer"><span className="timer-text-sun">{formatTime(timer)}</span></div></div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container"><StickerExit onClick={handleExit} /></div>
                 </header>
@@ -502,7 +501,10 @@ const Grade2AddOurPoints = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
             />
         </div>
     );

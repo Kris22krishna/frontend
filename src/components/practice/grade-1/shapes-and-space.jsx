@@ -187,11 +187,11 @@ const ShapesAndSpace = () => {
         // Pre-shuffled pools for 100% uniqueness per session
         const shapesPool = ['circle', 'square', 'triangle', 'rectangle', 'oval'].sort(() => 0.5 - Math.random());
         const posPool = [
-            { q: 'Where is the yellow ball? 🎾', a: 'top' },
-            { q: 'Is the ball inside or outside the box? 📦', a: 'inside' },
-            { q: 'Where is the ball located? 📍', a: 'bottom' },
-            { q: 'Where can you see the ball? 👀', a: 'outside' },
-            { q: 'Look closely, where is the ball? 🔍', a: 'far' }
+            { q: 'Where is the yellow ball?', a: 'top' },
+            { q: 'Is the ball inside or outside the box?', a: 'inside' },
+            { q: 'Where is the ball located?', a: 'bottom' },
+            { q: 'Where can you see the ball?', a: 'outside' },
+            { q: 'Look closely, where is the ball?', a: 'far' }
         ].sort(() => 0.5 - Math.random());
         const sizePool = [
             { q: 'Which bar is HIGHER?', a: 'A', aSize: 120, bSize: 60, orient: 'vertical', exp: 'Bar A has a greater height than Bar B.' },
@@ -223,7 +223,7 @@ const ShapesAndSpace = () => {
                 const target = shapesPool[i % shapesPool.length];
                 const otherOptions = shapesPool.filter(s => s !== target);
                 question = {
-                    text: `What shape is this? 🔍`,
+                    text: `What shape is this?`,
                     options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
                     correct: target,
                     type: 'shape',
@@ -372,8 +372,8 @@ const ShapesAndSpace = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
-        if (!isTest && !isCorrect) {
+        // Show modal for all answers in practice mode
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             // Clear any existing timeout just in case
@@ -453,12 +453,6 @@ const ShapesAndSpace = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />
@@ -635,8 +629,13 @@ const ShapesAndSpace = () => {
                         {formatTime(timer)}
                     </div>
 
-                    <div style={{ fontWeight: 800, color: '#666', fontSize: '1rem', background: 'white', padding: '5px 12px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                        Question {qIndex + 1} of {totalQuestions}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1, minWidth: 0 }}>
+                        <span style={{ fontWeight: 400, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', whiteSpace: 'nowrap' }}>
+                            Q {qIndex + 1}/{totalQuestions}
+                        </span>
+                        <span style={{ fontWeight: 400, color: '#2D3436', fontSize: '1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <LatexText text={skillName} />
+                        </span>
                     </div>
 
                     {isTest && !isAnswered && (
