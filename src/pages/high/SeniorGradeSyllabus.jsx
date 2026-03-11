@@ -33,7 +33,7 @@ const SeniorGradeSyllabus = () => {
     };
 
     const handleSkillClick = (skill) => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated && grade === '10') {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
@@ -58,7 +58,9 @@ const SeniorGradeSyllabus = () => {
                     setSkills([]);
                 } else if (grade === '12') {
                     setSkills([
-                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' }
+                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' },
+                        { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' },
+                        { skill_id: 12200, skill_name: 'Relations: Interactive Chapter', topic: 'Relations', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/relations' }
                     ]);
                 } else if (grade === '10') {
                     setSkills([
@@ -79,33 +81,53 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1209, skill_name: 'Pair of Linear Equations Chapter Assessment', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Pair of Linear Equations Chapter Assessment' },
 
                         // Real Numbers
-                        { skill_id: 10201, skill_name: 'Real Number Foundations', topic: 'Real Numbers', subtopic: 'Real Number Foundations' },
-                        { skill_id: 10202, skill_name: 'Euclid\'s Division Lemma', topic: 'Real Numbers', subtopic: 'Euclid\'s Division Lemma' },
-                        { skill_id: 10203, skill_name: 'Breaking Numbers into Prime Factors', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10204, skill_name: 'Uniqueness of Prime Factorisation (Fundamental Theorem)', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10205, skill_name: 'Finding HCF and LCM Using Prime Factors', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10206, skill_name: 'Applying HCF and LCM to Real-Life Situations', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 10207, skill_name: 'Proving the Irrationality of Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
-                        { skill_id: 10208, skill_name: 'Behaviour of Operations on Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
-                        { skill_id: 1206, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
+                        { skill_id: 1111, skill_name: 'Understanding Real Numbers', topic: 'Real Numbers', subtopic: 'Real Number Foundations' },
+                        { skill_id: 1112, skill_name: 'Euclid’s Division Algorithm', topic: 'Real Numbers', subtopic: 'Euclid\'s Division Lemma' },
+                        { skill_id: 1113, skill_name: 'Prime Factorisation', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1114, skill_name: 'Fundamental Theorem of Arithmetic', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1115, skill_name: 'HCF and LCM Using Prime Factorisation', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1116, skill_name: 'Applications of HCF and LCM', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
+                        { skill_id: 1117, skill_name: 'Proving Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
+                        { skill_id: 1118, skill_name: 'Operations on Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
+                        { skill_id: 1119, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
+
                         // Arithmetic Progressions
-                        { skill_id: 10101, skill_name: 'Recognising and Describing Number Patterns', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
-                        { skill_id: 10102, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
-                        { skill_id: 10103, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
-                        { skill_id: 10104, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
-                        { skill_id: 10105, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
-                        { skill_id: 1208, skill_name: 'Chapter Test', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
+                        { skill_id: 1105, skill_name: 'Number Patterns Recognition', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 1106, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 1107, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
+                        { skill_id: 1108, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
+                        { skill_id: 1109, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
+                        { skill_id: 1110, skill_name: 'Arithmetic Progressions Chapter Assessment', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
 
                         // Quadratic Equations
-                        { skill_id: 10201, skill_name: 'Foundations and Meaning of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Foundations and Meaning of Quadratic Equations' },
-                        { skill_id: 10202, skill_name: 'Representing Real-Life Situations Mathematically', topic: 'Quadratic Equations', subtopic: 'Representing Real-Life Situations Mathematically' },
-                        { skill_id: 10203, skill_name: 'Identifying and Verifying Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Identifying and Verifying Quadratic Equations' },
-                        { skill_id: 10204, skill_name: 'Finding Roots by Factorisation', topic: 'Quadratic Equations', subtopic: 'Finding Roots by Factorisation' },
-                        { skill_id: 10205, skill_name: 'Solving Word Problems Using Factorisation', topic: 'Quadratic Equations', subtopic: 'Solving Word Problems Using Factorisation' },
-                        { skill_id: 10206, skill_name: 'Understanding Roots and Their Nature', topic: 'Quadratic Equations', subtopic: 'Understanding Roots and Their Nature' },
-                        { skill_id: 10207, skill_name: 'Using the Discriminant to Analyse Roots', topic: 'Quadratic Equations', subtopic: 'Using the Discriminant to Analyse Roots' },
-                        { skill_id: 10208, skill_name: 'Applying Quadratic Equations to Real-Life Situations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
-                        { skill_id: 1207, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' }
+                        { skill_id: 1120, skill_name: 'Understanding Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Foundations and Meaning of Quadratic Equations' },
+                        { skill_id: 1121, skill_name: 'Forming Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Representing Real-Life Situations Mathematically' },
+                        { skill_id: 1122, skill_name: 'Checking Whether an Equation Is Quadratic', topic: 'Quadratic Equations', subtopic: 'Identifying and Verifying Quadratic Equations' },
+                        { skill_id: 1123, skill_name: 'Solving Quadratic Equations by Factorisation', topic: 'Quadratic Equations', subtopic: 'Finding Roots by Factorisation' },
+                        { skill_id: 1124, skill_name: 'Applying Quadratic Equations to Word Problems', topic: 'Quadratic Equations', subtopic: 'Solving Word Problems Using Factorisation' },
+                        { skill_id: 1125, skill_name: 'Understanding the Nature of Roots', topic: 'Quadratic Equations', subtopic: 'Understanding Roots and Their Nature' },
+                        { skill_id: 1126, skill_name: 'Finding Roots Using the Discriminant', topic: 'Quadratic Equations', subtopic: 'Using the Discriminant to Analyse Roots' },
+                        { skill_id: 1127, skill_name: 'Real-Life Applications of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
+                        { skill_id: 1128, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' },
+
+                        // Polynomials
+                        { skill_id: 1233, skill_name: 'Understanding Polynomials and Their Degrees', topic: 'Polynomials', subtopic: 'Understanding Types and Degrees of Polynomials' },
+                        { skill_id: 1234, skill_name: 'Evaluating Polynomials and Identifying Zeroes', topic: 'Polynomials', subtopic: 'Evaluating Polynomials and Identifying Zeroes' },
+                        { skill_id: 1235, skill_name: 'Geometrical Interpretation of Zeroes', topic: 'Polynomials', subtopic: 'Geometrical Interpretation of Zeroes' },
+                        { skill_id: 1236, skill_name: 'Number of Zeroes from Graphical Behaviour', topic: 'Polynomials', subtopic: 'Number of Zeroes from Graphical Behaviour' },
+                        { skill_id: 1237, skill_name: 'Relationship Between Zeroes and Coefficients (Quadratic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Quadratic)' },
+                        { skill_id: 1238, skill_name: 'Constructing Quadratic Polynomials from Given Conditions', topic: 'Polynomials', subtopic: 'Constructing Quadratic Polynomials from Given Conditions' },
+                        { skill_id: 1239, skill_name: 'Relationship Between Zeroes and Coefficients (Cubic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Cubic)' },
+                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' },
+
+                        // Surface Areas and Volumes
+                        { skill_id: 1300, skill_name: 'Surface Areas and Volumes: Interactive Chapter', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/surface-areas-and-volumes' },
+
+                        // Introduction to Trigonometry
+                        { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' },
+
+                        // Probability
+                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
@@ -137,7 +159,19 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-exp-test', skill_name: 'Exponents and Powers Chapter Assessment', topic: 'Exponents and Powers' },
                         { skill_id: 'local-8-rn-test', skill_name: 'Rational Numbers Chapter Assessment', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-mens-test', skill_name: 'Mensuration Chapter Assessment', topic: 'Mensuration' },
-                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' }
+                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' },
+                        { skill_id: '1247', skill_name: 'Identify Perfect Squares', topic: 'Squares and Square Roots' },
+                        { skill_id: '1248', skill_name: 'Properties of Square Numbers', topic: 'Squares and Square Roots' },
+                        { skill_id: '1249', skill_name: 'Square Using Identity Patterns', topic: 'Squares and Square Roots' },
+                        { skill_id: '1250', skill_name: 'Pythagorean Triplets', topic: 'Squares and Square Roots' },
+                        { skill_id: '1251', skill_name: 'Concept of Square Root', topic: 'Squares and Square Roots' },
+                        { skill_id: '1252', skill_name: 'Square Root via Prime Factorization', topic: 'Squares and Square Roots' },
+                        { skill_id: '1253', skill_name: 'Square Root via Long Division', topic: 'Squares and Square Roots' },
+                        { skill_id: '1254', skill_name: 'Square Root of Decimals', topic: 'Squares and Square Roots' },
+                        { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' },
+                        { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Chapter', topic: 'Introduction to Graphs' },
+                        { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
+                        { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -409,6 +443,118 @@ const SeniorGradeSyllabus = () => {
                 path: '/senior/grade/8/factorisation/chapter-test'
             }
         ];
+
+        // Hardcode all Grade 8 skills for Squares and Square Roots (8 skills + 1 test)
+        skillsByTopic['Squares and Square Roots'] = [
+            {
+                skill_id: '1247',
+                skill_name: 'Identify Perfect Squares',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/identify-perfect-squares'
+            },
+            {
+                skill_id: '1248',
+                skill_name: 'Properties of Square Numbers',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/properties-of-square-numbers'
+            },
+            {
+                skill_id: '1249',
+                skill_name: 'Square Using Identity Patterns',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-using-identity-patterns'
+            },
+            {
+                skill_id: '1250',
+                skill_name: 'Pythagorean Triplets',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/pythagorean-triplets'
+            },
+            {
+                skill_id: '1251',
+                skill_name: 'Concept of Square Root',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/concept-of-square-root'
+            },
+            {
+                skill_id: '1252',
+                skill_name: 'Square Root via Prime Factorization',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-root-prime-factorization'
+            },
+            {
+                skill_id: '1253',
+                skill_name: 'Square Root via Long Division',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-root-long-division'
+            },
+            {
+                skill_id: '1254',
+                skill_name: 'Square Root of Decimals',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Square Roots',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/square-root-of-decimals'
+            },
+            {
+                skill_id: '1255',
+                skill_name: 'Squares and Square Roots Test',
+                topic: 'Squares and Square Roots',
+                subtopic: 'Squares and Square Roots Chapter Assessment',
+                isLocal: true,
+                path: '/senior/grade/8/squares-and-square-roots/chapter-test'
+            }
+        ];
+
+        // Introduction to Graphs (NCERT Ch. 15 — Grade 8)
+        skillsByTopic['Introduction to Graphs'] = [
+            {
+                skill_id: 'local-8-graphs-landing',
+                skill_name: 'Introduction to Graphs Chapter',
+                topic: 'Introduction to Graphs',
+                subtopic: 'Line Graphs & Applications',
+                isLocal: true,
+                path: '/senior/grade/8/introduction-to-graphs'
+            }
+        ];
+
+        // Direct and Inverse Proportions (NCERT Ch. 13 — Grade 8)
+        skillsByTopic['Direct and Inverse Proportions'] = [
+            {
+                skill_id: 'local-8-proportions-landing',
+                skill_name: 'Direct and Inverse Proportions Chapter',
+                topic: 'Direct and Inverse Proportions',
+                subtopic: 'Direct & Inverse Proportion',
+                isLocal: true,
+                path: '/senior/grade/8/direct-and-inverse-proportions'
+            }
+        ];
+
+        // Comparing Quantities (NCERT Ch. 8 — Grade 8)
+        skillsByTopic['Comparing Quantities'] = [
+            {
+                skill_id: 'local-8-cq-landing',
+                skill_name: 'Comparing Quantities Chapter',
+                topic: 'Comparing Quantities',
+                subtopic: 'Percentages, Profit & Loss, Interest',
+                isLocal: true,
+                path: '/senior/grade/8/comparing-quantities'
+            }
+        ];
     }
 
     const topics = Object.keys(skillsByTopic);
@@ -548,7 +694,7 @@ const SeniorGradeSyllabus = () => {
                             onClick={() => {
                                 const topicSkills = skillsByTopic[topic];
                                 if (topicSkills.length === 1 && topicSkills[0].path) {
-                                    navigate(topicSkills[0].path);
+                                    handleSkillClick(topicSkills[0]);
                                 } else {
                                     setSelectedTopic(topic);
                                 }
@@ -615,13 +761,7 @@ const SeniorGradeSyllabus = () => {
                                                         <div
                                                             key={skill.skill_id}
                                                             className="skill-card-modal"
-                                                            onClick={() => {
-                                                                if (skill.isLocal) {
-                                                                    navigate(skill.path);
-                                                                } else {
-                                                                    navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
-                                                                }
-                                                            }}
+                                                            onClick={() => handleSkillClick(skill)}
                                                         >
                                                             <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                                             <div className="skill-card-footer">
@@ -646,13 +786,7 @@ const SeniorGradeSyllabus = () => {
                                                 <div
                                                     key={skill.skill_id}
                                                     className="chapter-assessment-card group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-2"
-                                                    onClick={() => {
-                                                        if (skill.isLocal) {
-                                                            navigate(skill.path);
-                                                        } else {
-                                                            navigate(`/high/practice/${skill.skill_id}`, { state: { grade: grade } });
-                                                        }
-                                                    }}
+                                                    onClick={() => handleSkillClick(skill)}
                                                     style={{
                                                         background: 'linear-gradient(135deg, #4F46E5 0%, #3B82F6 100%)',
                                                         color: 'white',

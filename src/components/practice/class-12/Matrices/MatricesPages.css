@@ -1,0 +1,1477 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+.mat-page {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #f4f7f9;
+    color: #0f172a;
+    min-height: 100vh;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.mat-page button,
+.mat-page a,
+.mat-page input,
+.mat-page select,
+.mat-page textarea {
+    font: inherit;
+}
+
+.mat-page h1,
+.mat-page h2,
+.mat-page h3,
+.mat-page h4,
+.mat-hero-title,
+.mat-connect-title,
+.mat-exam-title,
+.mat-section-title,
+.mat-card-title {
+    font-family: 'Outfit', sans-serif !important;
+    letter-spacing: -0.02em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+    font-style: normal;
+}
+
+.mat-page,
+.mat-page p,
+.mat-page li,
+.mat-page span,
+.mat-page div,
+.mat-hero-sub,
+.mat-connect-subtitle,
+.mat-exam-subtitle,
+.mat-section-subtitle,
+.mat-card-desc {
+    font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+/* ── NAV BAR ── */
+.mat-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.mat-nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    color: #475569;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    /* slightly stronger than default */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mat-nav-back:hover {
+    color: #0f172a;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ── HERO ── */
+.mat-hero {
+    position: relative;
+    background: linear-gradient(135deg, #09090b 0%, #17171f 50%, #2e1065 100%);
+    padding: 80px 24px;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+}
+
+.mat-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.mat-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.mat-hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.mat-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    color: #e0e7ff;
+}
+
+.mat-hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    margin: 0 0 16px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+}
+
+.mat-hero-highlight {
+    background: linear-gradient(135deg, #818cf8 0%, #e879f9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.mat-hero-sub {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ── CARDS GRID ── */
+.mat-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 32px;
+    padding: 60px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.mat-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.mat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
+}
+
+.mat-card-bg-glow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--cg) 0%, transparent 70%);
+    opacity: 0.15;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.mat-card:hover .mat-card-bg-glow {
+    opacity: 0.35;
+}
+
+.mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+}
+
+.mat-card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    color: #fff;
+    box-shadow: 0 8px 24px var(--cg);
+    flex-shrink: 0;
+}
+
+.mat-card-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.mat-card-q {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--c1);
+    margin-bottom: 4px;
+}
+
+.mat-card-body {
+    position: relative;
+    z-index: 2;
+}
+
+.mat-card-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #475569;
+    margin-bottom: 24px;
+}
+
+.mat-card-fact {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 4px solid var(--c1);
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+/* ── CONNECTOMICS LIST ── */
+.mat-conn-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto 80px;
+}
+
+.mat-conn-item {
+    display: flex;
+    gap: 24px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+}
+
+.mat-conn-item:hover {
+    transform: translateX(12px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+    border-color: var(--c1);
+}
+
+.mat-conn-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 60px;
+    flex-shrink: 0;
+}
+
+.mat-conn-line {
+    width: 2px;
+    flex: 1;
+    background: linear-gradient(180deg, var(--c1), transparent);
+    opacity: 0.3;
+    min-height: 40px;
+    border-radius: 2px;
+}
+
+.mat-conn-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: var(--cg);
+    color: var(--c1);
+}
+
+.mat-conn-content {
+    flex: 1;
+}
+
+.mat-conn-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--cg);
+    color: var(--c1);
+    margin-bottom: 12px;
+}
+
+.mat-conn-path {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 12px;
+}
+
+.mat-conn-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #475569;
+}
+
+/* ── EXAM EDGE SAAS-LIKE TABS ── */
+.mat-tab-container {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+}
+
+.mat-tab {
+    padding: 16px 32px;
+    border-radius: 100px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.mat-tab:hover {
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+.mat-tab.active {
+    background: var(--c1);
+    color: #ffffff;
+    border-color: var(--c1);
+    box-shadow: 0 8px 24px var(--cg);
+    transform: translateY(-2px);
+}
+
+/* Question Cards */
+.mat-q-group {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.mat-q-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--c1);
+    margin: 0 0 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.mat-q-item {
+    padding: 16px 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: #1e293b;
+    line-height: 1.6;
+    border-left: 3px solid var(--c1);
+    transition: all 0.3s ease;
+}
+
+.mat-q-item:hover {
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+/* Connectomics redesign */
+.mat-connect-page {
+    background:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.06), transparent 25%),
+        linear-gradient(180deg, #f8fbff 0%, #f4f7f9 100%);
+}
+
+.mat-connect-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 72px 24px 56px;
+    background: linear-gradient(135deg, #071125 0%, #102f67 45%, #4c1d95 100%);
+}
+
+.mat-connect-hero::before,
+.mat-connect-hero::after,
+.mat-exam-hero::before,
+.mat-exam-hero::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+}
+
+.mat-connect-hero::before {
+    inset: auto auto -120px -120px;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.24), transparent 70%);
+}
+
+.mat-connect-hero::after {
+    inset: -160px -120px auto auto;
+    width: 440px;
+    height: 440px;
+    background: radial-gradient(circle, rgba(196, 181, 253, 0.18), transparent 70%);
+}
+
+.mat-connect-hero-shell,
+.mat-exam-hero-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+    gap: 28px;
+    align-items: center;
+}
+
+.mat-connect-title,
+.mat-exam-title {
+    margin: 0 0 16px;
+    font-size: clamp(2.8rem, 5vw, 4.4rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #fff;
+}
+
+.mat-connect-title span {
+    background: linear-gradient(90deg, #67e8f9 0%, #c4b5fd 55%, #fde68a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.mat-exam-title span {
+    background: linear-gradient(90deg, #f59e0b 0%, #fb7185 45%, #fef08a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.mat-connect-subtitle,
+.mat-exam-subtitle {
+    max-width: 680px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 17px;
+    line-height: 1.75;
+}
+
+.mat-connect-hero-panel,
+.mat-exam-side-card {
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.mat-connect-panel-label,
+.mat-exam-side-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+    margin-bottom: 18px;
+}
+
+.mat-connect-node-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.mat-connect-node-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 0 0 1px var(--chip-color);
+}
+
+.mat-connect-hero-stats,
+.mat-exam-side-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.mat-connect-stat,
+.mat-exam-stat {
+    border-radius: 18px;
+    padding: 14px 12px;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mat-connect-stat-value,
+.mat-exam-stat-value {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.65rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.mat-connect-stat-label,
+.mat-exam-stat-label {
+    display: block;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.mat-connect-main,
+.mat-exam-main {
+    max-width: 1200px;
+}
+
+.mat-connect-section,
+.mat-exam-section {
+    margin-bottom: 72px;
+}
+
+.mat-connect-section-head,
+.mat-exam-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.mat-connect-section-head .mat-section-subtitle,
+.mat-exam-section-head .mat-section-subtitle {
+    max-width: 480px;
+    margin: 0;
+}
+
+.mat-connect-section-head--compact,
+.mat-exam-section-head--compact {
+    margin-bottom: 20px;
+}
+
+.mat-connect-kicker,
+.mat-exam-kicker {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6366f1;
+}
+
+.mat-connect-objectives {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 18px;
+}
+
+.mat-connect-objective-card {
+    background: #fff;
+    border-radius: 22px;
+    padding: 22px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.mat-connect-objective-index {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6366f1;
+    margin-bottom: 10px;
+}
+
+.mat-connect-objective-card p,
+.mat-connect-flow-card p,
+.mat-connect-week-card p,
+.mat-connect-cta p,
+.mat-exam-primer-card p,
+.mat-exam-yield-card li,
+.mat-exam-strategy-card li,
+.mat-exam-timeline-card p,
+.mat-exam-cta p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #475569;
+}
+
+.mat-connect-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.mat-connect-flow-card {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 20px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.mat-connect-flow-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.mat-connect-flow-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(248, 250, 252, 0.95);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    color: var(--flow-color);
+    font-size: 24px;
+}
+
+.mat-connect-flow-icon--end {
+    opacity: 0.7;
+}
+
+.mat-connect-flow-line {
+    width: 2px;
+    flex: 1;
+    min-height: 24px;
+    background: linear-gradient(180deg, var(--flow-color), transparent);
+    opacity: 0.45;
+}
+
+.mat-connect-flow-tag,
+.mat-connect-detail-label,
+.mat-exam-yield-label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.mat-connect-flow-path {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #0f172a;
+    margin-bottom: 12px;
+}
+
+.mat-connect-flow-arrow {
+    color: var(--flow-color);
+}
+
+.mat-connect-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mat-connect-topic {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.mat-connect-topic.is-open {
+    border-color: #c7d2fe;
+    box-shadow: 0 20px 44px rgba(99, 102, 241, 0.08);
+}
+
+.mat-connect-topic-toggle {
+    width: 100%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+}
+
+.mat-connect-topic-heading {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.mat-connect-topic-id {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.mat-connect-topic-heading h3,
+.mat-connect-week-card h3,
+.mat-connect-cta h3,
+.mat-exam-primer-card h3,
+.mat-exam-yield-card h3,
+.mat-exam-strategy-card h3,
+.mat-exam-trick-card h3,
+.mat-exam-cta h3 {
+    margin: 0 0 8px;
+    font-family: 'Outfit', sans-serif;
+    color: #0f172a;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.mat-connect-topic-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.mat-connect-topic-caret {
+    font-size: 30px;
+    line-height: 1;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.mat-connect-topic-panel {
+    padding: 0 24px 24px;
+    border-top: 1px solid #eef2ff;
+}
+
+.mat-connect-topic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin: 20px 0 18px;
+}
+
+.mat-connect-detail-card {
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 18px;
+}
+
+.mat-connect-detail-card--concept {
+    background: linear-gradient(180deg, #eff6ff, #ffffff);
+}
+
+.mat-connect-detail-card--warning {
+    background: linear-gradient(180deg, #fff1f2, #ffffff);
+}
+
+.mat-connect-detail-card p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.65;
+}
+
+.mat-connect-detail-card .math-content,
+.mat-connect-practice-question .math-content,
+.mat-connect-misc-statement .math-content,
+.mat-connect-misc-truth .math-content,
+.mat-exam-trick-copy .math-content,
+.mat-exam-question-copy .math-content,
+.mat-exam-option .math-content,
+.mat-exam-insight .math-content {
+    color: inherit;
+    line-height: inherit;
+}
+
+.mat-connect-detail-card .math-content p,
+.mat-connect-practice-question .math-content p,
+.mat-connect-misc-statement .math-content p,
+.mat-connect-misc-truth .math-content p,
+.mat-exam-trick-copy .math-content p,
+.mat-exam-question-copy .math-content p,
+.mat-exam-option .math-content p,
+.mat-exam-insight .math-content p {
+    margin: 0;
+}
+
+.mat-connect-practice {
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 18px;
+}
+
+.mat-connect-practice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mat-connect-practice-item {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    padding: 14px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+}
+
+.mat-connect-practice-question {
+    min-width: 0;
+    color: #334155;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.mat-connect-level,
+.mat-exam-level {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+.mat-connect-level--easy,
+.mat-exam-level--easy {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.mat-connect-level--medium,
+.mat-exam-level--medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.mat-connect-level--hard,
+.mat-exam-level--hard {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.mat-connect-two-col,
+.mat-exam-two-col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.mat-connect-panel-card,
+.mat-exam-panel {
+    background: #fff;
+    border-radius: 24px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.mat-connect-panel-card--warning {
+    background: linear-gradient(180deg, #fffaf8, #ffffff);
+}
+
+.mat-connect-weeks,
+.mat-connect-misconceptions,
+.mat-exam-strategy-list,
+.mat-exam-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mat-connect-week-card,
+.mat-connect-misc-card,
+.mat-exam-strategy-card,
+.mat-exam-timeline-card {
+    border-radius: 18px;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.mat-connect-week-tag,
+.mat-exam-timeline-phase {
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: #6366f1;
+}
+
+.mat-connect-misc-card {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 14px;
+    background: #fff1f2;
+    border-color: #fecdd3;
+}
+
+.mat-connect-misc-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e11d48;
+    color: #fff;
+    font-weight: 900;
+}
+
+.mat-connect-misc-statement {
+    margin-bottom: 8px;
+    color: #9f1239;
+    font-weight: 700;
+}
+
+.mat-connect-misc-truth {
+    color: #be123c;
+    line-height: 1.65;
+}
+
+.mat-connect-cta,
+.mat-exam-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px 32px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #ffffff, #eef2ff);
+    border: 1px solid #dbeafe;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.05);
+}
+
+.mat-connect-cta button,
+.mat-exam-cta button {
+    border: none;
+    border-radius: 999px;
+    padding: 14px 24px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    box-shadow: 0 14px 24px rgba(99, 102, 241, 0.25);
+}
+
+/* Exam edge redesign */
+.mat-exam-page {
+    background:
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.08), transparent 25%),
+        linear-gradient(180deg, #f8fafc 0%, #f3f6fb 100%);
+}
+
+.mat-exam-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 72px 24px 56px;
+    background: linear-gradient(135deg, #111827 0%, #1f2937 48%, #7c2d12 100%);
+}
+
+.mat-exam-hero::before {
+    inset: -120px auto auto -100px;
+    width: 340px;
+    height: 340px;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.18), transparent 70%);
+}
+
+.mat-exam-hero::after {
+    inset: auto -120px -140px auto;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(251, 113, 133, 0.16), transparent 70%);
+}
+
+.mat-exam-primer-grid,
+.mat-exam-yield-grid,
+.mat-exam-question-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.mat-exam-primer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mat-exam-primer-card,
+.mat-exam-yield-card,
+.mat-exam-question-card,
+.mat-exam-advanced-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.mat-exam-primer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.mat-exam-primer-top a {
+    text-decoration: none;
+    color: #2563eb;
+    background: #eff6ff;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.mat-exam-yield-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mat-exam-yield-card {
+    border-top: 4px solid var(--exam-color);
+}
+
+.mat-exam-yield-card h3 {
+    color: var(--exam-color);
+}
+
+.mat-exam-yield-card ul,
+.mat-exam-strategy-card ul {
+    margin: 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mat-exam-yield-card li::marker,
+.mat-exam-strategy-card li::marker {
+    color: var(--exam-color);
+}
+
+.mat-exam-panel--dark {
+    background: linear-gradient(180deg, #111827, #0f172a);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.mat-exam-panel--dark .mat-section-title,
+.mat-exam-panel--dark .mat-exam-kicker,
+.mat-exam-panel--dark .mat-exam-trick-card h3 {
+    color: #fff;
+}
+
+.mat-exam-panel--dark .mat-section-title span {
+    background: linear-gradient(90deg, #f59e0b, #fda4af);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.mat-exam-strategy-card {
+    background: #ffffff;
+    border-color: rgba(226, 232, 240, 0.95);
+    box-shadow: inset 4px 0 0 var(--exam-color);
+}
+
+.mat-exam-strategy-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.mat-exam-strategy-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: rgba(248, 250, 252, 0.95);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.mat-exam-strategy-card h3 {
+    margin: 0;
+    color: var(--exam-color);
+}
+
+.mat-exam-tricks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.mat-exam-trick-card {
+    border-radius: 18px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mat-exam-trick-copy {
+    color: rgba(255, 255, 255, 0.76);
+    line-height: 1.65;
+}
+
+.mat-exam-tabs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.mat-exam-tab {
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #475569;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.mat-exam-tab.is-active {
+    background: var(--tab-surface);
+    border-color: var(--tab-color);
+    color: var(--tab-color);
+    box-shadow: inset 0 0 0 1px var(--tab-color);
+}
+
+.mat-exam-questions-shell {
+    border-radius: 24px;
+    background: linear-gradient(180deg, #f8fbff, #ffffff 22%);
+    border: 1px solid #dbe5f1;
+    box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.02);
+    padding: 20px;
+}
+
+.mat-exam-question-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mat-exam-question-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.mat-exam-question-number {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.mat-exam-question-copy {
+    color: #0f172a;
+    font-size: 15px;
+    line-height: 1.7;
+    min-width: 0;
+}
+
+.mat-exam-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.mat-exam-option {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 14px;
+    min-width: 0;
+}
+
+.mat-exam-option span:first-child {
+    font-weight: 800;
+    color: #94a3b8;
+}
+
+.mat-exam-advanced-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mat-exam-insight {
+    margin-top: 16px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    padding: 14px;
+    color: #475569;
+    line-height: 1.65;
+}
+
+.mat-exam-insight span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--tab-color);
+}
+
+.mat-exam-timeline-card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.mat-exam-timeline-step {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.mat-connect-hero-copy,
+.mat-exam-hero-copy,
+.mat-connect-flow-body,
+.mat-exam-hero-side,
+.mat-exam-side-card,
+.mat-exam-primer-card,
+.mat-exam-yield-card,
+.mat-exam-question-card,
+.mat-exam-advanced-card,
+.mat-exam-trick-card,
+.mat-exam-option {
+    min-width: 0;
+}
+
+.mat-exam-primer-card p,
+.mat-exam-question-copy p,
+.mat-exam-insight p,
+.mat-exam-trick-copy p,
+.mat-exam-option p {
+    margin: 0;
+}
+
+.mat-exam-panel--dark .mat-exam-trick-copy,
+.mat-exam-panel--dark .mat-exam-trick-copy .math-content {
+    color: rgba(255, 255, 255, 0.76);
+}
+
+@media (max-width: 992px) {
+    .mat-connect-hero-shell,
+    .mat-exam-hero-shell,
+    .mat-connect-two-col,
+    .mat-exam-two-col,
+    .mat-connect-topic-grid,
+    .mat-exam-yield-grid,
+    .mat-exam-question-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mat-connect-section-head,
+    .mat-exam-section-head,
+    .mat-connect-cta,
+    .mat-exam-cta,
+    .mat-exam-primer-grid {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .mat-exam-tricks-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .mat-connect-hero,
+    .mat-exam-hero {
+        padding: 52px 16px 44px;
+    }
+
+    .mat-connect-title,
+    .mat-exam-title {
+        font-size: clamp(2.2rem, 11vw, 3.2rem);
+    }
+
+    .mat-connect-subtitle,
+    .mat-exam-subtitle {
+        font-size: 15px;
+    }
+
+    .mat-connect-hero-stats,
+    .mat-exam-side-stats,
+    .mat-exam-options {
+        grid-template-columns: 1fr;
+    }
+
+    .mat-connect-flow-card,
+    .mat-connect-practice-item,
+    .mat-exam-timeline-card {
+        grid-template-columns: 1fr;
+    }
+
+    .mat-connect-flow-track {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .mat-connect-flow-line {
+        width: 40px;
+        min-height: 2px;
+        background: linear-gradient(90deg, var(--flow-color), transparent);
+    }
+
+    .mat-connect-topic-toggle,
+    .mat-connect-topic-panel,
+    .mat-connect-panel-card,
+    .mat-exam-panel,
+    .mat-exam-question-card,
+    .mat-exam-primer-card,
+    .mat-exam-yield-card,
+    .mat-exam-advanced-card,
+    .mat-connect-objective-card,
+    .mat-connect-flow-card {
+        padding: 18px;
+    }
+
+    .mat-connect-topic-heading {
+        min-width: 0;
+    }
+
+    .mat-connect-flow-path {
+        font-size: 1.25rem;
+    }
+
+    .mat-connect-cta button,
+    .mat-exam-cta button {
+        width: 100%;
+    }
+}

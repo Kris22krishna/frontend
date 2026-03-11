@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
+import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import PracticeReportModal from '../../PracticeReportModal';
+import { api } from '../../../../services/api';
+import '../TenthPracticeSession.css';
 
 const ApplicationProblems = () => {
     const navigate = useNavigate();
@@ -14,7 +16,8 @@ const ApplicationProblems = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
 
     // Logging states
@@ -22,9 +25,8 @@ const ApplicationProblems = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const SKILL_ID = 10005;
+    const SKILL_NAME = "Pair of Linear Equations - Application Problems";
     const [answers, setAnswers] = useState({});
-
-    const [feedbackMessage, setFeedbackMessage] = useState("");
 
     const generateQuestions = () => {
         const newQuestions = [];
@@ -57,7 +59,7 @@ const ApplicationProblems = () => {
         newQuestions.push({
             id: 3,
             text: `Cost of ${nPen} pens and ${nBook} books is ₹${cost}. Using variables $x$ and $y$:`,
-            options: [`$${nPen}x + ${nBook}y = ${cost}$`, `$${nPen}x - ${nBook}y = ${cost}$`, `$x + y = ${cost}$`, `$\\frac{x}{y} = ${cost}$`],
+            options: [`$${nPen}x + ${nBook}y = ${cost}$`, `$${nPen}x - ${nBook}y = ${cost}$`, `$x + y = ${cost}$`, `$\\dfrac{x}{y} = ${cost}$`],
             correctAnswer: `$${nPen}x + ${nBook}y = ${cost}$`,
             solution: `Cost = (Price of pen $\\times$ Qty) + (Price of book $\\times$ Qty) = $${nPen}x + ${nBook}y = ${cost}$.`
         });
@@ -132,7 +134,7 @@ const ApplicationProblems = () => {
             text: `A boat goes 12 km upstream and 36 km downstream in 6 hours. In 6.5 hours, it can go 18 km upstream and 24 km downstream. Assumed logic for question structure.`,
             options: [`Speed of boat: $8$ km/h, Stream: $4$ km/h`, `Speed: $10$, Stream: $3$`, `Speed: $6$, Stream: $2$`, `Speed: $12$, Stream: $6$`],
             correctAnswer: `Speed of boat: $8$ km/h, Stream: $4$ km/h`,
-            solution: `Let $\\frac{1}{x-y} = u, \\frac{1}{x+y} = v$.<br/>Equations: $12u + 36v = 6$ etc.<br/>Solving gives speed of boat 8 km/h and stream 4 km/h.`
+            solution: `Let $\\dfrac{1}{x-y} = u, \\dfrac{1}{x+y} = v$.<br/>Equations: $12u + 36v = 6$ etc.<br/>Solving gives speed of boat 8 km/h and stream 4 km/h.`
         });
         // NOTE: Hardcoded numbers above for safety in "Hard" problem solvability.
 
@@ -144,10 +146,19 @@ const ApplicationProblems = () => {
             text: `2 women and 5 men can together finish an embroidery work in 4 days, while 3 women and 6 men can finish it in 3 days. Find the time taken by 1 woman alone.`,
             options: [`$18$ days`, `$20$ days`, `$24$ days`, `$36$ days`],
             correctAnswer: `$18$ days`,
-            solution: `Let 1 woman take $x$ days ($\\frac{1}{x}$ work/day).<br/>$\\frac{2}{x} + \\frac{5}{y} = \\frac{1}{4}$ and $\\frac{3}{x} + \\frac{6}{y} = \\frac{1}{3}$.<br/>Solving for $x$ gives 18.`
+            solution: `Let 1 woman take $x$ days ($\\dfrac{1}{x}$ work/day).<br/>$\\dfrac{2}{x} + \\dfrac{5}{y} = \\dfrac{1}{4}$ and $\\dfrac{3}{x} + \\dfrac{6}{y} = \\dfrac{1}{3}$.<br/>Solving for $x$ gives 18.`
         });
 
-        // 9. Distance Speed Train
+        // 9. Fraction Problem
+        newQuestions.push({
+            id: 9,
+            text: `A fraction becomes $\\dfrac{1}{3}$ when 1 is subtracted from the numerator, and it becomes $\\dfrac{1}{4}$ when 8 is added to its denominator. Find the fraction.`,
+            options: [`$\\dfrac{5}{12}$`, `$\\dfrac{7}{15}$`, `$\\dfrac{5}{13}$`, `$\\dfrac{6}{13}$`],
+            correctAnswer: `$\\dfrac{5}{12}$`,
+            solution: `Let fraction be $\\dfrac{x}{y}$. $\\dfrac{x-1}{y} = \\dfrac{1}{3} \\Rightarrow 3x - y = 3$. $\\dfrac{x}{y+8} = \\dfrac{1}{4} \\Rightarrow 4x - y = 8$. Solve.`
+        });
+
+        // 10. Distance Speed Train
         // Train travels 300km. If speed was 5km/h more, it would take 2hr less.
         // Quad equation reducible to substitutions? This is usually Quadratics.
         // Linear equation context: "Points A and B are 90 km apart. Car starts from A and another from B..."
@@ -166,7 +177,7 @@ const ApplicationProblems = () => {
             text: `Points A and B on a highway are ${dAB} km apart. One car starts from A and another from B at the same time. If they travel in the same direction at different speeds, they meet in ${t_same.toFixed(1)} hours. If they travel towards each other, they meet in 1 hour (approx). What are the speeds of the two cars ($x > y$)?`,
             options: [`$x=${s1}, y=${s2}$`, `$x=${s1 + 10}, y=${s2 + 10}$`, `$x=${s1}, y=${s2 - 5}$`, `$x=${s1 - 5}, y=${s2}$`],
             correctAnswer: `$x=${s1}, y=${s2}$`,
-            solution: `Same direction: $x - y = \\frac{${dAB}}{${t_same.toFixed(1)}} = ${s1 - s2}$.<br/>Opposite: $x + y = \\frac{${dAB}}{t_{opp}}$.<br/>Solving yields correct speeds. (Note: values rounded for specific case)`
+            solution: `Same direction: $x - y = \\dfrac{${dAB}}{${t_same.toFixed(1)}} = ${s1 - s2}$.<br/>Opposite: $x + y = \\dfrac{${dAB}}{t_{opp}}$.<br/>Solving yields correct speeds. (Note: values rounded for specific case)`
         });
 
         // 10. Complex Money/Profit
@@ -208,9 +219,12 @@ const ApplicationProblems = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showReportModal) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, []);
+    }, [showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -259,7 +273,25 @@ const ApplicationProblems = () => {
             questionStartTime.current = Date.now();
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            navigate(-1);
+            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            if (userId) {
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                await api.createReport({
+                    title: SKILL_NAME,
+                    type: 'practice',
+                    score: (totalCorrect / questions.length) * 100,
+                    parameters: {
+                        skill_id: SKILL_ID,
+                        skill_name: SKILL_NAME,
+                        total_questions: questions.length,
+                        correct_answers: totalCorrect,
+                        timestamp: new Date().toISOString(),
+                        time_taken_seconds: timeElapsed
+                    },
+                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
+                }).catch(console.error);
+            }
+            setShowReportModal(true);
         }
     };
 
@@ -268,7 +300,10 @@ const ApplicationProblems = () => {
 
     return (
         <div className="junior-practice-page" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'flex-end', padding: '0 2rem', alignItems: 'center' }}>
+            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', padding: '0 2rem', alignItems: 'center' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>
+                    {SKILL_NAME}
+                </div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {questions.length}
@@ -298,7 +333,7 @@ const ApplicationProblems = () => {
                                         </button>
                                     ))}
                                     {isSubmitted && isCorrect && (
-                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
+                                        <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="feedback-mini correct" style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}>
                                             {feedbackMessage}
                                         </motion.div>
                                     )}
@@ -309,6 +344,17 @@ const ApplicationProblems = () => {
                 </div>
             </main>
             <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} />
+
+            <PracticeReportModal 
+                isOpen={showReportModal} 
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val.isCorrect === true).length,
+                    totalQuestions: questions.length
+                }} 
+                onContinue={() => navigate(-1)} 
+            />
+
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
@@ -329,7 +375,7 @@ const ApplicationProblems = () => {
                                 Prev
                             </button>
                             {isSubmitted ?
-                                <button className="nav-pill-next-btn" onClick={handleNext}>Next <ChevronRight /></button> :
+                                <button className="nav-pill-next-btn" onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight />}</button> :
                                 <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>Submit <Check /></button>
                             }
                         </div>
@@ -354,7 +400,7 @@ const ApplicationProblems = () => {
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
                         {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
+                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>{qIndex === questions.length - 1 ? "Finish" : "Next"} {qIndex === questions.length - 1 ? null : <ChevronRight size={16} strokeWidth={3} />}</button>
                         ) : (
                             <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
                         )}

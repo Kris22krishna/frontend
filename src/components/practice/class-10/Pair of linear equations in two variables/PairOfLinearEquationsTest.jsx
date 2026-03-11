@@ -4,7 +4,7 @@ import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshC
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../TenthPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
 
 const BLUE_THEME_CSS = `
@@ -15,7 +15,7 @@ const BLUE_THEME_CSS = `
         box-shadow: 0 4px 0 #2563EB !important;
     }
     .option-btn-modern {
-        min-height: 65px;
+        min-height: 52px;
         min-width: 300px;
         display: flex;
         align-items: center;
@@ -606,7 +606,7 @@ const PairOfLinearEquationsTest = () => {
             <style>{BLUE_THEME_CSS}</style>
             <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
                 <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {SKILL_NAME}
+                    {SKILL_NAME.length > 30 ? "Chapter Test" : SKILL_NAME}
                 </div>
                 <div className="bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border-2 border-[#3B82F6]/30 text-[#1E40AF] font-black text-xl shadow-lg">
                     {qIndex + 1} / {questions.length}
@@ -618,18 +618,18 @@ const PairOfLinearEquationsTest = () => {
                 </div>
             </header>
 
-            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 140px 2rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: '60px' }}>
+            <main className="practice-content-wrapper" style={{ flex: 1, padding: '1rem 2rem 2rem 2rem', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '2rem', maxWidth: '1200px', margin: '0 auto', alignItems: 'stretch', width: '100%', flex: 1, minHeight: 0, marginBottom: '2rem' }}>
 
                     {/* Left Column: Question Card */}
                     <div className="practice-left-col" style={{ width: "100%", minWidth: 0, height: "100%", display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
-                        <div className="question-card-modern" style={{ padding: "2rem", flex: "none", minHeight: "auto", height: "fit-content", display: "flex", flexDirection: "column", justifyContent: "flex-start", margin: "0" }}>
+                        <div className="question-card-modern" style={{ padding: "1.5rem", flex: "none", minHeight: "auto", height: "fit-content", display: "flex", flexDirection: "column", justifyContent: "flex-start", margin: "0" }}>
                             <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "0.5rem" }}>
                                 <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.35rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', color: '#2D3748', lineHeight: '1.5', marginBottom: '1rem' }}>
                                     <LatexText text={questions[qIndex].text} />
                                 </h2>
                             </div>
-                            <div className="interaction-area-modern" style={{ marginTop: "1.5rem", flex: "none" }}>
+                            <div className="interaction-area-modern" style={{ marginTop: "1rem", flex: "none" }}>
                                 <div className="options-grid-modern" style={{ display: 'grid', gap: '0.75rem', width: '100%', maxWidth: '800px', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                                     {questions[qIndex].options.map((option, idx) => (
                                         <button
@@ -646,7 +646,7 @@ const PairOfLinearEquationsTest = () => {
                     </div>
 
                     {/* Right Column: Question Palette */}
-                    <div className="question-palette-container" style={{ width: '300px', background: 'white', padding: '1.5rem', borderRadius: '24px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', height: '100%', maxHeight: 'calc(100vh - 220px)' }}>
+                    <div className="question-palette-container" style={{ width: '300px', background: 'white', padding: '1rem', borderRadius: '24px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', height: 'fit-content' }}>
                         <h3 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#1E293B', marginBottom: '1rem', textAlign: 'center', flexShrink: 0 }}>Question Palette</h3>
                         <div className="palette-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.4rem', flex: 1, alignContent: 'start' }}>
                             {questions.map((_, idx) => {
@@ -722,23 +722,22 @@ const PairOfLinearEquationsTest = () => {
                             Exit
                         </button>
                     </div>
-                    <div className="mobile-footer-center" style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-                        {isSubmitted && <button className="view-explanation-btn" style={{ fontSize: '0.7rem', padding: '0.3rem 0.5rem' }} onClick={() => setShowExplanationModal(true)}><Eye size={14} /> VIEW EXPLANATION</button>}
-                    </div>
                     <div className="mobile-footer-right" style={{ display: 'flex', gap: '5px' }}>
                         <button
                             className="nav-pill-next-btn bg-gray-200 text-gray-600"
-                            onClick={handlePrevious}
+                            onClick={handlePrev}
                             disabled={qIndex === 0}
                             style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }}
                         >
                             <ChevronLeft size={16} strokeWidth={3} /> Prev
                         </button>
-                        {isSubmitted ? (
-                            <button className="nav-pill-next-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleNext}>Next <ChevronRight size={16} strokeWidth={3} /></button>
-                        ) : (
-                            <button className="nav-pill-submit-btn" style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }} onClick={handleCheck} disabled={!selectedOption}>Submit <Check size={16} strokeWidth={3} /></button>
-                        )}
+                        <button
+                            className="nav-pill-next-btn"
+                            style={{ display: 'flex', alignItems: 'center', padding: '0.4rem 0.8rem', borderRadius: '9999px', fontWeight: 'bold', fontSize: '0.8rem' }}
+                            onClick={handleNext}
+                        >
+                            {qIndex === questions.length - 1 ? "Finish" : "Next"} <ChevronRight size={16} strokeWidth={3} />
+                        </button>
                     </div>
                 </div>
             </footer>

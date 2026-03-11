@@ -58,20 +58,45 @@ const DimensionRectangle = ({ width, height, unit = "cm" }) => {
 
 const CompositeShape = ({ parts }) => {
     const cellSize = 30;
+    const width = Math.max(...parts.map(p => p.x + p.w));
+    const height = Math.max(...parts.map(p => p.y + p.h));
+
+    const cells = [];
+    parts.forEach((part, partIndex) => {
+        for (let i = 0; i < part.h; i++) {
+            for (let j = 0; j < part.w; j++) {
+                cells.push(
+                    <rect
+                        key={`part-${partIndex}-${i}-${j}`}
+                        x={(part.x + j) * cellSize}
+                        y={(part.y + i) * cellSize}
+                        width={cellSize}
+                        height={cellSize}
+                        fill="#E0F2FE"
+                        stroke="#31326F"
+                        strokeWidth="1"
+                    />
+                );
+            }
+        }
+    });
+
     return (
         <div className="flex flex-col items-center my-8">
             <svg
-                width={Math.max(...parts.map(p => p.x + p.w)) * cellSize}
-                height={Math.max(...parts.map(p => p.y + p.h)) * cellSize}
+                width={width * cellSize}
+                height={height * cellSize}
+                className="shadow-sm"
             >
+                {cells}
                 {parts.map((p, i) => (
                     <rect
-                        key={i}
+                        key={`outline-${i}`}
                         x={p.x * cellSize}
                         y={p.y * cellSize}
                         width={p.w * cellSize}
                         height={p.h * cellSize}
-                        fill="#E0F2FE"
+                        fill="transparent"
                         stroke="#31326F"
                         strokeWidth="2"
                     />
@@ -151,7 +176,7 @@ const FindingArea = () => {
                     qs.push({
                         text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>What is the <strong>area</strong> of the rectangle on the grid?</div>`,
                         correctAnswer: `${area} sq cm`,
-                        solution: `Count the squares: $${h}$ rows $\\times$ $${w}$ columns $= ${area}$ sq cm.`,
+                        solution: `Count the squares: \\( ${h} \\text{ rows} \\times ${w} \\text{ columns} = ${area} \\text{ sq cm} \\).`,
                         visual: <GridRectangle width={w} height={h} />,
                         options: Array.from(optionsSet),
                         difficulty: "Easy"
@@ -169,10 +194,10 @@ const FindingArea = () => {
                         optionsSet.add(`${area + randomInt(5, 15)} sq cm`);
                     }
                     qs.push({
-                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A rectangle is $${w}$ cm long and $${h}$ cm wide. What is its <strong>area</strong>?</div>`,
+                        text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>A rectangle is ${w} cm long and ${h} cm wide. What is its <strong>area</strong>?</div>`,
                         correctAnswer: `${area} sq cm`,
-                        solution: `Area $= \\text{Length} \\times \\text{Width} = ${w} \\times ${h} = ${area}$ sq cm.`,
-                        visual: <DimensionRectangle width={6} height={4} unit="cm" />,
+                        solution: `Area \\( = \\text{Length} \\times \\text{Width} = ${w} \\times ${h} = ${area} \\text{ sq cm} \\).`,
+                        visual: <DimensionRectangle width={w} height={h} unit="cm" />,
                         options: Array.from(optionsSet),
                         difficulty: "Medium"
                     });
@@ -182,7 +207,7 @@ const FindingArea = () => {
             qs.push({
                 text: `<div class='question-container' style='font-family: "Open Sans", sans-serif; font-size: 2.2rem; font-weight: normal; text-align: center;'>Find the total <strong>area</strong> of this composite shape.</div>`,
                 correctAnswer: `23 sq cm`,
-                solution: `Split into two rectangles: $(3 \\times 5) + (4 \\times 2) = 15 + 8 = 23$ sq cm.`,
+                solution: `Split into two rectangles: \\( (3 \\times 5) + (4 \\times 2) = 15 + 8 = 23 \\text{ sq cm} \\).`,
                 visual: <CompositeShape parts={[{ x: 0, y: 0, w: 3, h: 5 }, { x: 3, y: 3, w: 4, h: 2 }]} />,
                 options: [`23 sq cm`, `28 sq cm`, `18 sq cm`, `19 sq cm`],
                 difficulty: "Hard"

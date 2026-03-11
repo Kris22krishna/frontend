@@ -45,6 +45,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/raksha-bandhan/division`);
             return;
         }
+        if (subtopic.id === "RB-TEST") {
+            navigate(`/junior/grade/${grade}/raksha-bandhan/chapter-test`);
+            return;
+        }
         if (subtopic.id === "FS-01") {
             navigate(`/junior/grade/${grade}/fair-share/cutting`);
             return;
@@ -61,12 +65,20 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/fair-share/guess-who`);
             return;
         }
+        if (subtopic.id === "FS-TEST") {
+            navigate(`/junior/grade/${grade}/fair-share/chapter-test`);
+            return;
+        }
         if (subtopic.id === "FCP-01") {
             navigate(`/junior/grade/${grade}/fun-at-class-party/longer-shorter`);
             return;
         }
         if (subtopic.id === "FCP-02") {
             navigate(`/junior/grade/${grade}/fun-at-class-party/heights-and-meters`);
+            return;
+        }
+        if (subtopic.id === "FCP-TEST") {
+            navigate(`/junior/grade/${grade}/fun-at-class-party/chapter-test`);
             return;
         }
         if (subtopic.id === "HH2-01") {
@@ -109,6 +121,10 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/guess-the-number`);
             return;
         }
+        if (subtopic.id === "HH2-TEST") {
+            navigate(`/junior/grade/${grade}/house-of-hundreds-ii/chapter-test`);
+            return;
+        }
 
         // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
         const gradeNum = grade.replace('grade', '');
@@ -125,6 +141,18 @@ const JuniorSubtopics = () => {
                         return;
                     } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
                         navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
+                        return;
+                    } else if (decodedTopic === "Equal Groups") {
+                        navigate(`/junior/grade/${grade}/equal-groups/${skill.route}`);
+                        return;
+                    } else if (decodedTopic === "Fun with Symmetry") {
+                        navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
+                        return;
+                    } else if (decodedTopic === "Ticking Clocks and Turning Calendars") {
+                        navigate('/ticking-clocks');
+                        return;
+                    } else if (decodedTopic === "The Transport Museum") {
+                        navigate('/the-transport-museum');
                         return;
                     }
                 }
@@ -157,7 +185,7 @@ const JuniorSubtopics = () => {
                     const topicSlug = decodedTopic.toLowerCase()
                         .replace(/\s+/g, '-')
                         .replace(/[?,]/g, ''); // what-is-long-round
-                    navigate(`/junior/grade/2/${topicSlug}/${skill.route}?skillId=${subtopic.id}`);
+                    navigate(`/junior/grade/2/${topicSlug}?skillId=${subtopic.id}`);
                     return;
                 }
             }
@@ -219,7 +247,7 @@ const JuniorSubtopics = () => {
                         const topicSlug = decodedTopic.toLowerCase()
                             .replace(/\s+/g, '-')
                             .replace(/[?,]/g, '');
-                        navigate(`/junior/grade/2/${topicSlug}/${skill.route}?skillId=${subtopic.id}`);
+                        navigate(`/junior/grade/2/${topicSlug}?skillId=${subtopic.id}`);
                         setPendingSubtopic(null);
                         return;
                     }
@@ -238,6 +266,14 @@ const JuniorSubtopics = () => {
                                 navigate(`/junior/grade/${grade}/weigh-it-pour-it/${skill.route}`);
                             } else if (decodedTopic === "Elephants, Tigers, and Leopards") {
                                 navigate(`/junior/grade/${grade}/elephants-tigers-and-leopards/${skill.route}`);
+                            } else if (decodedTopic === "Equal Groups") {
+                                navigate(`/junior/grade/${grade}/equal-groups/${skill.route}`);
+                            } else if (decodedTopic === "Fun with Symmetry") {
+                                navigate(`/junior/grade/${grade}/fun-with-symmetry/${skill.route}`);
+                            } else if (decodedTopic === "Ticking Clocks and Turning Calendars") {
+                                navigate('/ticking-clocks');
+                            } else if (decodedTopic === "The Transport Museum") {
+                                navigate('/the-transport-museum');
                             }
                             setPendingSubtopic(null);
                             return;
@@ -272,11 +308,13 @@ const JuniorSubtopics = () => {
                 }
 
                 // Filter by topic and get unique skills
+                const HIDDEN_SKILLS = ['factors']; // Skill names to hide (lowercase)
                 const filteredSkills = (skillsResponse || [])
                     .filter(skill => !isGrade1 && skill.topic === decodedTopic) // Block Grade 1 API topics
                     .filter((skill, index, self) =>
                         skill.skill_name && self.findIndex(s => s.skill_id === skill.skill_id) === index
-                    );
+                    )
+                    .filter(skill => !HIDDEN_SKILLS.includes(skill.skill_name?.trim().toLowerCase()));
 
                 const subtopicList = filteredSkills.map((skill, index) => {
                     return {

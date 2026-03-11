@@ -23,3 +23,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.agent/workflows/chapter-creation-template.md
+
+# Rules
+rules.md
+
+#Textbook
+ncert-books-for-class-8-maths.pdf
+demm101.pdf

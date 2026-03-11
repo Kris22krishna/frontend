@@ -6,6 +6,7 @@ import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
+import Class8PracticeReportModal from '../Class8PracticeReportModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
@@ -35,6 +36,7 @@ const LawsOfExponentsConceptual = () => {
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [showReportModal, setShowReportModal] = useState(false);
 
     // Logging states
     const [sessionId, setSessionId] = useState(null);
@@ -441,7 +443,7 @@ const LawsOfExponentsConceptual = () => {
                     console.error("Failed to create report", err);
                 }
             }
-            navigate(-1);
+            setShowReportModal(true);
         }
     };
 
@@ -478,13 +480,13 @@ const LawsOfExponentsConceptual = () => {
                 <div className="header-left"></div>
 
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-sm sm:text-xl shadow-lg whitespace-nowrap">
                         Question {qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
 
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-normal text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
@@ -502,13 +504,13 @@ const LawsOfExponentsConceptual = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' , justifyContent: 'flex-start' }}>
-                                    <div className="question-header-modern"  style={{  flexShrink: 0, marginBottom: "1rem" }}>
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                <div className="question-card-modern" style={{ paddingLeft: '2rem', justifyContent: 'flex-start' }}>
+                                    <div className="question-header-modern" style={{ flexShrink: 0, marginBottom: "1rem" }}>
+                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: 'normal', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
-                                    <div className="interaction-area-modern" style={{ marginTop: '1rem', flex: "none" }} style={{ marginTop: '1rem', flex: "none" }}>
+                                    <div className="interaction-area-modern" style={{ marginTop: '1rem', flex: "none" }}>
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
@@ -516,7 +518,7 @@ const LawsOfExponentsConceptual = () => {
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontWeight: '500' }}
+                                                    style={{ fontWeight: 'normal' }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -529,7 +531,7 @@ const LawsOfExponentsConceptual = () => {
                                                 initial={{ scale: 0.5, opacity: 0 }}
                                                 animate={{ scale: 1, opacity: 1 }}
                                                 className="feedback-mini correct"
-                                                style={{ marginTop: '20px' , gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}
+                                                style={{ marginTop: '20px', gridColumn: '1 / -1', justifySelf: 'center', textAlign: 'center', width: '100%' }}
                                             >
                                                 {feedbackMessage}
                                             </motion.div>
@@ -549,6 +551,26 @@ const LawsOfExponentsConceptual = () => {
                 explanation={currentQuestion.solution}
                 onClose={() => setShowExplanationModal(false)}
                 onNext={() => setShowExplanationModal(false)}
+            />
+
+            <Class8PracticeReportModal
+                isOpen={showReportModal}
+                stats={{
+                    timeTaken: formatTime(timeElapsed),
+                    correctAnswers: Object.values(answers).filter(val => val === true).length,
+                    totalQuestions: TOTAL_QUESTIONS
+                }}
+                onPracticeAgain={() => {
+                    setQIndex(0);
+                    setAnswers({});
+                    setTimeElapsed(0);
+                    setSelectedOption(null);
+                    setIsSubmitted(false);
+                    setIsCorrect(false);
+                    setShowReportModal(false);
+                    history.current = {};
+                }}
+                onBackToSkills={() => navigate(-1)}
             />
 
             <footer className="junior-bottom-bar">

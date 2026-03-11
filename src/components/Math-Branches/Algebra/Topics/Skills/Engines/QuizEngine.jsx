@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
 
-export default function QuizEngine({ questions, title, onBack, color }) {
+export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -62,8 +62,8 @@ export default function QuizEngine({ questions, title, onBack, color }) {
         let msgSub = pct >= 90 ? 'You have excellent control over this topic!' : 'Review the concepts and try again for 100%.';
 
         return (
-            <div className="alg-quiz-finished" style={{ textAlign: 'center', padding: '40px 0' }}>
-                <div className="alg-quiz-score-circle" style={{
+            <div className={`${prefix}-quiz-finished`} style={{ textAlign: 'center', padding: '40px 0' }}>
+                <div className={`${prefix}-quiz-score-circle`} style={{
                     width: 140, height: 140, borderRadius: '50%',
                     background: `conic-gradient(${color} ${pct * 3.6}deg, #f1f5f9 0deg)`,
                     margin: '0 auto 24px',
@@ -72,8 +72,8 @@ export default function QuizEngine({ questions, title, onBack, color }) {
                     border: '8px solid #fff'
                 }}>
                     <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: 'var(--alg-text)', lineHeight: 1 }}>{score}</div>
-                        <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>out of {questionSet.length}</div>
+                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: `var(--${prefix}-text)`, lineHeight: 1 }}>{score}</div>
+                        <div style={{ fontSize: 13, color: `var(--${prefix}-muted)`, fontWeight: 700 }}>out of {questionSet.length}</div>
                     </div>
                 </div>
 
@@ -84,11 +84,11 @@ export default function QuizEngine({ questions, title, onBack, color }) {
                     ⏱️ Time Taken: {formatTime(timeTaken)}
                 </div>
 
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: 'var(--alg-text)', margin: '0 0 8px' }}>{msg}</h2>
-                <p style={{ color: 'var(--alg-muted)', fontSize: 15, margin: '0 0 32px' }}>{msgSub}</p>
-                <div className="alg-quiz-finished-actions" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: `var(--${prefix}-text)`, margin: '0 0 8px' }}>{msg}</h2>
+                <p style={{ color: `var(--${prefix}-muted)`, fontSize: 15, margin: '0 0 32px' }}>{msgSub}</p>
+                <div className={`${prefix}-quiz-finished-actions`} style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button
-                        className="alg-btn-primary"
+                        className={`${prefix}-btn-primary`}
                         onClick={() => {
                             if (typeof questions === 'function') { setQuestionSet(questions()); }
                             setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false);
@@ -98,31 +98,56 @@ export default function QuizEngine({ questions, title, onBack, color }) {
                         Try Again
                     </button>
                     <button
-                        className="alg-btn-secondary"
+                        className={`${prefix}-btn-secondary`}
                         onClick={onBack}
                         style={{ padding: '12px 24px' }}
                     >
                         Return to Skills
                     </button>
+                    {onSecondaryBack && (
+                        <button
+                            className={`${prefix}-btn-secondary`}
+                            onClick={onSecondaryBack}
+                            style={{ padding: '12px 24px', background: '#f8fafc' }}
+                        >
+                            Back to Chapter
+                        </button>
+                    )}
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="alg-quiz-active alg-quiz-container">
+        <div className={`${prefix}-quiz-active ${prefix}-quiz-container`}>
             {/* Header */}
             <div style={{ marginBottom: 20 }}>
-                <div className="alg-score-header">
+                <div className={`${prefix}-score-header`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
                         <div style={{ fontSize: 11, fontWeight: 800, color: color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>Skill Verification</div>
-                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: 'var(--alg-text)', margin: 0 }}>{title}</h3>
+                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: `var(--${prefix}-text, #1e293b)`, margin: 0 }}>{title}</h3>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 13, color: color, fontWeight: 800, marginBottom: 4, background: `${color}15`, padding: '4px 10px', borderRadius: 8, display: 'inline-block' }}>
-                            ⏱️ {formatTime(timeTaken)}
+                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{ fontSize: 13, color: color, fontWeight: 800, background: `${color}15`, padding: '4px 10px', borderRadius: 8, display: 'inline-block' }}>
+                                ⏱️ {formatTime(timeTaken)}
+                            </div>
+                            <button
+                                onClick={onBack}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '6px',
+                                    background: '#fee2e2', color: '#ef4444',
+                                    border: '1px solid #fca5a5', padding: '4px 12px',
+                                    borderRadius: '8px', fontSize: '13px', fontWeight: '700',
+                                    cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(239,68,68,0.1)'
+                                }}
+                                onMouseOver={(e) => { e.currentTarget.style.background = '#fecaca'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(239,68,68,0.15)'; }}
+                                onMouseOut={(e) => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(239,68,68,0.1)'; }}
+                            >
+                                ✕ Exit
+                            </button>
                         </div>
-                        <div style={{ fontSize: 13, color: 'var(--alg-muted)', fontWeight: 700 }}>
+                        <div style={{ fontSize: 13, color: `var(--${prefix}-muted)`, fontWeight: 700 }}>
                             Question <span style={{ color: color }}>{current + 1}</span> / {questionSet.length}
                         </div>
                     </div>
@@ -133,43 +158,47 @@ export default function QuizEngine({ questions, title, onBack, color }) {
             </div>
 
             {/* Question Card */}
-            <div className="alg-quiz-card">
+            <div className={`${prefix}-quiz-card`}>
                 <div style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    background: `${color}15`, padding: '4px 12px', borderRadius: 8,
-                    fontSize: 12, fontWeight: 800, color: color, marginBottom: 16
+                    background: `${color}15`, padding: '6px 16px', borderRadius: 10,
+                    fontSize: 11, fontWeight: 900, color: color, marginBottom: 20,
+                    textTransform: 'uppercase', letterSpacing: 1
                 }}>
-                    <span>QUESTION</span> {current + 1}
+                    QUESTION {current + 1}
                 </div>
-                <div className="alg-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: 'var(--alg-text)', lineHeight: 1.6, marginBottom: 24 }}>
+                <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text, #1e293b)`, lineHeight: 1.6, marginBottom: 24 }}>
                     {q.image && (
                         <div style={{ marginBottom: 20, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                             <img src={q.image} alt="Problem Illustration" style={{ width: '100%', height: 'auto', display: 'block' }} />
                         </div>
                     )}
+                    {q.svg && (
+                        <div style={{ marginBottom: 20, textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: q.svg }} />
+                    )}
                     <MathRenderer text={q.question} />
                 </div>
 
                 {/* Options */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                     {q.options.map((opt, oi) => {
                         let borderColor = 'rgba(0,0,0,0.04)';
                         let bgColor = '#fff';
-                        let textColor = 'var(--alg-text)';
+                        let textColor = `var(--${prefix}-text)`;
                         let dotColor = '#f1f5f9';
 
                         if (answered) {
                             if (oi === q.correct) {
-                                borderColor = 'var(--alg-teal)';
+                                borderColor = `var(--${prefix}-teal)`;
                                 bgColor = 'rgba(16,185,129,0.05)';
-                                textColor = 'var(--alg-teal)';
-                                dotColor = 'var(--alg-teal)';
+                                textColor = `var(--${prefix}-teal)`;
+                                dotColor = `var(--${prefix}-teal)`;
                             }
                             else if (oi === selected) {
-                                borderColor = 'var(--alg-red)';
+                                borderColor = `var(--${prefix}-red)`;
                                 bgColor = 'rgba(239,68,68,0.05)';
-                                textColor = 'var(--alg-red)';
-                                dotColor = 'var(--alg-red)';
+                                textColor = `var(--${prefix}-red)`;
+                                dotColor = `var(--${prefix}-red)`;
                             }
                         } else if (selected === oi) {
                             borderColor = color;
@@ -210,9 +239,9 @@ export default function QuizEngine({ questions, title, onBack, color }) {
                     <div style={{
                         marginTop: 24, padding: '16px 20px', borderRadius: 12,
                         background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)',
-                        color: 'var(--alg-muted)', fontSize: 13.5, lineHeight: 1.6
+                        color: `var(--${prefix}-muted)`, fontSize: 13.5, lineHeight: 1.6
                     }}>
-                        <strong style={{ color: 'var(--alg-blue)' }}>💡 Explanation: </strong>
+                        <strong style={{ color: `var(--${prefix}-blue)` }}>💡 Explanation: </strong>
                         <MathRenderer text={q.explanation} />
                     </div>
                 )}
@@ -223,7 +252,7 @@ export default function QuizEngine({ questions, title, onBack, color }) {
                 <button
                     onClick={handleNext}
                     disabled={!answered}
-                    className="alg-btn-primary"
+                    className={`${prefix}-btn-primary`}
                     style={{
                         padding: '12px 40px',
                         background: answered ? color : '#f1f5f9',

@@ -9,7 +9,7 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
-import '../../../../pages/juniors/JuniorPracticeSession.css';
+import '../../../../pages/juniors/grade3/Raksha-Bandhan.css';
 // import { useTheme } from 'next-themes';
 
 
@@ -63,6 +63,7 @@ const RakshaBandhanMultiplication = () => {
     const isTabActive = useRef(true);
     const SKILL_ID = 9002; // Reserved ID for Raksha Bandhan Multiplication
     const SKILL_NAME = "Raksha Bandhan - Multiplication";
+    const SHORT_SKILL_NAME = "Multiplication";
 
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -132,19 +133,9 @@ const RakshaBandhanMultiplication = () => {
                 const repeatedAddition = Array(groups).fill(perGroup).join(' + ');
 
                 const templates = [
-                    `<div class='question-container'>
-                        <p>We found ${groups} ${item.plural} for the celebration.</p>
-                        <p>Each ${item.singular} has ${perGroup} ${item.unit}.</p>
-                        <p>How many ${item.unit} do we have in total?</p>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>During Raksha Bandhan, we used ${groups} ${item.plural}.</p>
-                        <p>If every ${item.singular} contains ${perGroup} ${item.unit}, what is the total number of ${item.unit}?</p>
-                     </div>`,
-                    `<div class='question-container'>
-                        <p>There are ${groups} ${item.plural} placed on a tray.</p>
-                        <p>Since each ${item.singular} holds ${perGroup} ${item.unit}, calculate the total count of ${item.unit}.</p>
-                     </div>`
+                    `We found ${groups} ${item.plural} for the celebration. Each ${item.singular} has ${perGroup} ${item.unit}. How many ${item.unit} do we have in total?`,
+                    `During Raksha Bandhan, we used ${groups} ${item.plural}. If every ${item.singular} contains ${perGroup} ${item.unit}, what is the total number of ${item.unit}?`,
+                    `There are ${groups} ${item.plural} placed on a tray. Since each ${item.singular} holds ${perGroup} ${item.unit}, calculate the total count of ${item.unit}.`
                 ];
 
                 const options = [
@@ -164,8 +155,8 @@ const RakshaBandhanMultiplication = () => {
                 questions.push({
                     text: templates[templateIdx],
                     correctAnswer: total.toString(),
-                    solution: `We can find the total by adding ${perGroup} repeatedly ${groups} times:<br/>
-                               <strong>${repeatedAddition} = ${total}</strong>.<br/><br/>
+                    solution: `We can find the total by adding ${perGroup} repeatedly ${groups} times: 
+                               <strong>${repeatedAddition} = ${total}</strong>.  
                                In multiplication, this is <strong>${groups} × ${perGroup} = ${total}</strong>.`,
                     shuffledOptions: [...uniqueOptions].sort(() => Math.random() - 0.5)
                 });
@@ -193,9 +184,17 @@ const RakshaBandhanMultiplication = () => {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
             setShuffledOptions(qData.shuffledOptions);
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
+            if (history[qIndex]) {
+                setSelectedOption(history[qIndex].selectedOption);
+                setIsSubmitted(history[qIndex].isSubmitted);
+                setIsCorrect(history[qIndex].isCorrect);
+                setFeedbackMessage(history[qIndex].feedbackMessage);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+                setFeedbackMessage("");
+            }
         }
     }, [qIndex, sessionQuestions]);
     const formatTime = (seconds) => {
@@ -273,10 +272,6 @@ const RakshaBandhanMultiplication = () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(prev => prev + 1);
             setShowExplanationModal(false);
-            // Reset states for next question
-            setSelectedOption(null);
-            setIsSubmitted(false);
-            setIsCorrect(false);
 
             // Reset question timer
             accumulatedTime.current = 0;
@@ -333,12 +328,28 @@ const RakshaBandhanMultiplication = () => {
         const total = stats.total;
         const percentage = Math.round((score / total) * 100);
 
-        return (
+        
+    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
+    if (showRes) {
+        const scoreVal = typeof score !== 'undefined' 
+            ? score 
+            : (typeof stats !== 'undefined' && stats.correct !== undefined 
+                ? stats.correct 
+                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
+        const totalVal = typeof questions !== 'undefined' 
+            ? questions.length 
+            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
+                ? sessionQuestions.length 
+                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
+        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    }
+
+    return (
             <div className="junior-practice-page results-view overflow-y-auto">
                 <header className="junior-practice-header results-header relative">
                     <button
                         onClick={() => navigate(-1)}
-                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-2xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
                     >
                         Back to Topics
                     </button>
@@ -453,10 +464,10 @@ const RakshaBandhanMultiplication = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-2xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
                             <RefreshCw size={24} /> Start New Quest
                         </button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-2xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(grade ? `/junior/grade/${grade}` : '/math')}>
                             Back to Topics
                         </button>
                     </div>
@@ -466,28 +477,29 @@ const RakshaBandhanMultiplication = () => {
     }
 
     return (
-        <div className="junior-practice-page raksha-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
-            <header className="junior-practice-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 2rem' }}>
+        <div className="junior-practice-page raksha-theme grey-selection-theme raksha-bandhan-practice-page">
+            <header className="junior-practice-header raksha-bandhan-header">
                 <div className="header-left">
-                    {/* Empty or Logo if needed */}
+                    {/* Desktop: full skill name */}
+                    <span className="raksha-skill-desktop text-[#31326F] font-normal text-xl">{SKILL_NAME}</span>
+                    {/* Mobile: short skill name */}
+                    <span className="raksha-skill-mobile text-[#31326F] font-semibold text-[0.85rem] leading-tight">{SHORT_SKILL_NAME}</span>
                 </div>
-
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max">
-                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">
-                        Question {qIndex + 1} / {TOTAL_QUESTIONS}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-center">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] text-sm sm:text-lg lg:text-2xl shadow-lg whitespace-nowrap font-medium">
+                        <span className="hidden sm:inline">Question </span>{qIndex + 1} / {TOTAL_QUESTIONS}
                     </div>
                 </div>
-
                 <div className="header-right">
-                    <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-lg shadow-md flex items-center gap-2">
+                    <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border-2 border-[#4FB7B3]/30 text-[#31326F] font-bold text-sm sm:text-lg shadow-md flex items-center gap-2">
                         {formatTime(timeElapsed)}
                     </div>
                 </div>
             </header>
 
             <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
+                <div className="practice-board-container raksha-bandhan-board-container">
+                    <div className="practice-left-col raksha-bandhan-left-col">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={qIndex}
@@ -497,21 +509,21 @@ const RakshaBandhanMultiplication = () => {
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 style={{ height: '100%', width: '100%' }}
                             >
-                                <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', textAlign: 'left', justifyContent: 'flex-start', overflow: 'visible' }}>
+                                <div className="question-card-modern">
+                                    <div className="question-header-modern" style={{ marginBottom: '0.75rem' }}>
+                                        <h2 className="question-text-modern" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)', maxHeight: 'none', fontWeight: '500', overflow: 'visible' }}>
                                             <LatexContent html={currentQuestion.text} />
                                         </h2>
                                     </div>
                                     <div className="interaction-area-modern">
-                                        <div className="options-grid-modern">
+                                        <div className="options-grid-modern" style={{ gap: '0.75rem' }}>
                                             {shuffledOptions.map((option, idx) => (
                                                 <button
                                                     key={idx}
                                                     className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
                                                         } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
                                                         }`}
-                                                    style={{ fontWeight: '500' }}
+                                                    style={{ fontWeight: '500', fontSize: '1.1rem', padding: '0.25rem 0.5rem', minHeight: '2.5rem' }}
                                                     onClick={() => handleOptionSelect(option)}
                                                     disabled={isSubmitted}
                                                 >
@@ -550,15 +562,7 @@ const RakshaBandhanMultiplication = () => {
                 {/* Desktop Controls */}
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button
-                            className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            Exit Practice
-                        </button>
+                        <button className="bg-[#FFF1F2] text-[#F43F5E] border-2 border-[#FFE4E6] px-6 py-2 rounded-full hover:bg-red-50 transition-colors flex items-center gap-2 text-lg" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && (
@@ -569,26 +573,17 @@ const RakshaBandhanMultiplication = () => {
                     </div>
                     <div className="bottom-right">
                         <div className="nav-buttons-group">
-                            <button
-                                className="nav-pill-next-btn"
-                                onClick={handlePrevious}
-                                disabled={qIndex === 0}
-                                style={{ opacity: qIndex === 0 ? 0.5 : 1, marginRight: '10px', backgroundColor: '#eef2ff', color: '#31326F' }}
-                            >
-                                <ChevronLeft size={28} strokeWidth={3} /> Prev
-                            </button>
+                            <button onClick={handlePrevious} disabled={qIndex === 0} className={`nav-pill-prev-btn flex items-center gap-2 transition-all ${qIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}><ChevronLeft size={24} strokeWidth={3} /> PREV</button>
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={28} strokeWidth={3} /></>
+                                        <>NEXT <ChevronRight size={24} strokeWidth={3} /></>
                                     ) : (
-                                        <>Done <Check size={28} strokeWidth={3} /></>
+                                        <>DONE <Check size={24} strokeWidth={3} /></>
                                     )}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit <Check size={28} strokeWidth={3} />
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT <Check size={24} strokeWidth={3} /></button>
                             )}
                         </div>
                     </div>
@@ -597,15 +592,7 @@ const RakshaBandhanMultiplication = () => {
                 {/* Mobile Controls */}
                 <div className="mobile-footer-controls">
                     <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
+                        <button className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}><X size={20} /></button>
 
                         {isSubmitted && (
                             <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
@@ -636,9 +623,7 @@ const RakshaBandhanMultiplication = () => {
                                     {qIndex < TOTAL_QUESTIONS - 1 ? "Next" : "Done"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>
-                                    Submit
-                                </button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheck} disabled={!selectedOption}>SUBMIT</button>
                             )}
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
 import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
 import MultiplicationPracticeMultiple from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_multiple_numbers';
@@ -32,6 +32,42 @@ import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/
 import SetsSkills from './components/Math-Branches/Sets/Topics/Skills/SetsSkills';
 import SetsConnectomics from './components/Math-Branches/Sets/Topics/Connectomics/SetsConnectomics';
 import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsExamEdge';
+import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
+import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
+import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
+import FishTaleSkills from './components/practice/class-5/The_Fish_Tale/Topics/Skills/FishTaleSkills';
+import SurfaceAreasAndVolumes from './components/practice/class-10/SurfaceAreasAndVolumes/SurfaceAreasAndVolumes';
+import SurfaceVolumesIntro from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/5W1H/Intro5W1H';
+import SurfaceVolumesTerminology from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Terminology/Terminology';
+import SurfaceVolumesSkills from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Skills/Skills';
+
+import IntroductionToTrignometry from './components/practice/class-10/IntroductionToTrignometry/IntroductionToTrignometry';
+import TrignometryIntro5W1H from './components/practice/class-10/IntroductionToTrignometry/Topics/5W1H/Intro5W1H';
+import TrignometryTerminology from './components/practice/class-10/IntroductionToTrignometry/Topics/Terminology/Terminology';
+import TrignometrySkills from './components/practice/class-10/IntroductionToTrignometry/Topics/Skills/Skills';
+
+import TickingClocks from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/TickingClocks';
+import TickingClocksIntro5W1H from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/Topics/5W1H/TickingClocksIntro5W1H';
+import TickingClocksTerminology from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/Topics/Terminology/TickingClocksTerminology';
+import TickingClocksSkills from './components/practice/class-4/Ticking_Clocks_and_Turning_Calendars/Topics/Skills/TickingClocksSkills';
+import IntroductionToGraphs from './components/practice/class-8/introduction_to_graphs/IntroductionToGraphs';
+import GraphsIntro5W1H from './components/practice/class-8/introduction_to_graphs/Topics/5W1H/GraphsIntro5W1H';
+import GraphsTerminology from './components/practice/class-8/introduction_to_graphs/Topics/Terminology/GraphsTerminology';
+import GraphsSkills from './components/practice/class-8/introduction_to_graphs/Topics/Skills/GraphsSkills';
+import DirectAndInverseProportions from './components/practice/class-8/direct_and_inverse_proportions/DirectAndInverseProportions';
+import ProportionsIntro5W1H from './components/practice/class-8/direct_and_inverse_proportions/Topics/5W1H/ProportionsIntro5W1H';
+import ProportionsTerminology from './components/practice/class-8/direct_and_inverse_proportions/Topics/Terminology/ProportionsTerminology';
+import ProportionsSkills from './components/practice/class-8/direct_and_inverse_proportions/Topics/Skills/ProportionsSkills';
+
+import ShapesAroundUs from './components/practice/class-4/Shapes_Around_Us/ShapesAroundUs';
+import ShapesIntro5W1H from './components/practice/class-4/Shapes_Around_Us/Topics/5W1H/ShapesIntro5W1H';
+import ShapesTerminology from './components/practice/class-4/Shapes_Around_Us/Topics/Terminology/ShapesTerminology';
+import ShapesSkills from './components/practice/class-4/Shapes_Around_Us/Topics/Skills/ShapesSkills';
+
+import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
+import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
+import HideAndSeekTerminology from './components/practice/class-4/Hide_and_Seek/Topics/Terminology/HideAndSeekTerminology';
+import HideAndSeekSkills from './components/practice/class-4/Hide_and_Seek/Topics/Skills/HideAndSeekSkills';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -93,7 +129,7 @@ import AssessmentRunner from './pages/AssessmentRunner';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
-import Grade4PracticeSession from './pages/juniors/class-4/Grade4PracticeSession';
+// House-of-Hundreds-II
 import DrawTiles from './components/practice/class-3/House-of-Hundreds-II/Draw-tiles';
 import NeighbouringNumbers from './components/practice/class-3/House-of-Hundreds-II/neighbouring-numbers';
 import HelpCranesOnNumberLine from './components/practice/class-3/House-of-Hundreds-II/Help-cranes-on-number-line';
@@ -103,7 +139,10 @@ import NumberInTheCentre from './components/practice/class-3/House-of-Hundreds-I
 import NumberPuzzles from './components/practice/class-3/House-of-Hundreds-II/number-puzzles';
 import TheNumberDetective from './components/practice/class-3/House-of-Hundreds-II/The-number-detective';
 import PaperSlips from './components/practice/class-3/House-of-Hundreds-II/Paper-slips';
-import GuessTheNumber from './components/practice/class-3/House-of-Hundreds-II/Guess-the-number';
+import RakshaBandhanTest from './components/practice/class-3/Raksha-Bandhan/RakshaBandhanTest';
+import FairShareTest from './components/practice/class-3/fair-share/FairShareTest';
+import FunAtClassPartyTest from './components/practice/class-3/Fun-at-class-party/FunAtClassPartyTest';
+import HouseOfHundredsIITest from './components/practice/class-3/House-of-Hundreds-II/HouseOfHundredsIITest';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -176,6 +215,23 @@ import Grade8RationalNumbersTest from './components/practice/class-8/rational-nu
 import MensurationTest from './components/practice/class-8/mensuration/MensurationTest';
 import FactorisationTest from './components/practice/class-8/factorisation/FactorisationTest';
 
+// Grade 8 Squares and Square Roots
+import IdentifyPerfectSquares from './components/practice/class-8/squares_and_square_roots/identify_perfect_squares';
+import PropertiesOfSquareNumbers from './components/practice/class-8/squares_and_square_roots/properties_of_square_numbers';
+import SquareUsingIdentityPatterns from './components/practice/class-8/squares_and_square_roots/square_using_identity_patterns';
+import PythagoreanTriplets from './components/practice/class-8/squares_and_square_roots/pythagorean_triplets';
+import ConceptOfSquareRoot from './components/practice/class-8/squares_and_square_roots/concept_of_square_root';
+import SquareRootPrimeFactorization from './components/practice/class-8/squares_and_square_roots/square_root_prime_factorization';
+import SquareRootLongDivision from './components/practice/class-8/squares_and_square_roots/square_root_long_division';
+import SquareRootOfDecimals from './components/practice/class-8/squares_and_square_roots/square_root_of_decimals';
+import SquaresAndSquareRootsTest from './components/practice/class-8/squares_and_square_roots/SquaresAndSquareRootsTest';
+
+// Grade 8 Comparing Quantities
+import ComparingQuantities from './components/practice/class-8/comparing_quantities/ComparingQuantities';
+import ComparingQuantitiesIntro5W1H from './components/practice/class-8/comparing_quantities/Topics/5W1H/ComparingQuantitiesIntro5W1H';
+import ComparingQuantitiesTerminology from './components/practice/class-8/comparing_quantities/Topics/Terminology/ComparingQuantitiesTerminology';
+import ComparingQuantitiesSkills from './components/practice/class-8/comparing_quantities/Topics/Skills/ComparingQuantitiesSkills';
+
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
 import Grade1Numbers1to9 from './components/practice/grade-1/numbers-1-9';
@@ -188,19 +244,20 @@ import Grade1Numbers21to50 from './components/practice/grade-1/numbers-21-50';
 import Grade1DataHandling from './components/practice/grade-1/data-handling';
 import Grade1Patterns from './components/practice/grade-1/patterns';
 import Grade1Numbers51to100 from './components/practice/grade-1/numbers-51-100';
-import IdentifyingShapes from './components/practice/class-2/what-is-long,what-is-round/identifying_shapes';
-import ComparingLengths from './components/practice/class-2/what-is-long,what-is-round/comparing_lengths';
-import RecognizingRoundObjects from './components/practice/class-2/what-is-long,what-is-round/recognizing_round_objects';
-import ComparingWeights from './components/practice/class-2/c-203/how-much-can-you-carry/ComparingWeights';
-import HeavierLighter from './components/practice/class-2/c-203/how-much-can-you-carry/HeavierLighter';
-import EstimatingWeight from './components/practice/class-2/c-203/how-much-can-you-carry/EstimatingWeight';
-import CountingInPairs from './components/practice/class-2/Counting in Groups/counting_in_pairs';
-import SkipCounting from './components/practice/class-2/Counting in Groups/skip_counting';
-import RepeatedAdditionClass2 from './components/practice/class-2/Counting in Groups/repeated_addition';
-import NumbersUpTo100 from './components/practice/class-2/Counting in Tens/numbers_up_to_100';
-import PlaceValueTensOnes from './components/practice/class-2/Counting in Tens/place_value_tens_ones';
-import ExpandedForm from './components/practice/class-2/Counting in Tens/expanded_form';
-import ComparingNumbers from './components/practice/class-2/Counting in Tens/comparing_numbers';
+import Grade2WhatIsLongWhatIsRound from './components/practice/grade-2/what-is-long-what-is-round/what-is-long-what-is-round';
+import Grade2HowMuchCanYouCarry from './components/practice/grade-2/how-much-can-you-carry/how-much-can-you-carry';
+import Grade2CountingInGroups from './components/practice/grade-2/counting-in-groups/counting-in-groups';
+import Grade2CountingInTens from './components/practice/grade-2/counting-in-tens/counting-in-tens';
+import Grade2Patterns from './components/practice/grade-2/patterns/patterns';
+import Grade2Footprints from './components/practice/grade-2/footprints/footprints';
+import Grade2JugsAndMugs from './components/practice/grade-2/jugs-and-mugs/jugs-and-mugs';
+import Grade2TensAndOnes from './components/practice/grade-2/tens-and-ones/tens-and-ones';
+import Grade2MyFunday from './components/practice/grade-2/my-funday/my-funday';
+import Grade2AddOurPoints from './components/practice/grade-2/add-our-points/add-our-points';
+import Grade2LinesAndLines from './components/practice/grade-2/lines-and-lines/lines-and-lines';
+import Grade2GiveAndTake from './components/practice/grade-2/give-and-take/give-and-take';
+import Grade2TheLongestStep from './components/practice/grade-2/the-longest-step/the-longest-step';
+import Grade2BirdsComeBirdsGo from './components/practice/grade-2/birds-come-birds-go/birds-come-birds-go';
 
 // Grade 5: Can you see the Pattern?
 import PatternIdentification from './components/practice/class-5/CanyouseethePattern/PatternRecognition/pattern-identification';
@@ -238,6 +295,12 @@ import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation
 import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
 import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
 
+// Grade 6 Symmetry
+import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
+import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
+import OrderOfRotationalSymmetry6 from './components/practice/grade-6/symmetry/OrderOfRotationalSymmetry';
+import IntroToSymmetry6 from './components/practice/grade-6/symmetry/line-of-symmetry';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -271,6 +334,30 @@ import RotationalSymmetry from './components/practice/class-7/symmetry/Rotationa
 import LineRotationalRelationship from './components/practice/class-7/symmetry/LineRotationalRelationship';
 import SymmetryTest from './components/practice/class-7/symmetry/SymmetryTest';
 
+// Class 7 - Integers Chapter
+import IntegersHub from './components/practice/class-7/Integers/Integers';
+import IntegersIntro5W1H from './components/practice/class-7/Integers/Topics/5W1H/IntegersIntro5W1H';
+import IntegersTerminology from './components/practice/class-7/Integers/Topics/Terminology/IntegersTerminology';
+import IntegersSkills from './components/practice/class-7/Integers/Topics/Skills/IntegersSkills';
+import IntegersEasyTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersEasyTest';
+import IntegersMediumTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersMediumTest';
+import IntegersHardTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersHardTest';
+
+// Class 7 - Fractions and Decimals
+import FractionsAndDecimalsHub from './components/practice/class-7/FractionsAndDecimals/FractionsAndDecimals';
+import FractionsAndDecimalsIntro5W1H from './components/practice/class-7/FractionsAndDecimals/Topics/5W1H/FractionsAndDecimalsIntro5W1H';
+import FractionsAndDecimalsTerminology from './components/practice/class-7/FractionsAndDecimals/Topics/Terminology/FractionsAndDecimalsTerminology';
+import FractionsAndDecimalsSkills from './components/practice/class-7/FractionsAndDecimals/Topics/Skills/FractionsAndDecimalsSkills';
+import FractionsAndDecimalsEasyTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsEasyTest';
+import FractionsAndDecimalsMediumTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsMediumTest';
+import FractionsAndDecimalsHardTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsHardTest';
+import DataHandlingHub from './components/practice/class-7/DataHandling/DataHandling';
+import DataHandlingIntro5W1H from './components/practice/class-7/DataHandling/Topics/5W1H/DataHandlingIntro5W1H';
+import DataHandlingTerminology from './components/practice/class-7/DataHandling/Topics/Terminology/DataHandlingTerminology';
+import DataHandlingSkills from './components/practice/class-7/DataHandling/Topics/Skills/DataHandlingSkills';
+import DataHandlingEasyTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingEasyTest';
+import DataHandlingMediumTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingMediumTest';
+import DataHandlingHardTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingHardTest';
 import Formation from './components/practice/class-7/algebraic expressions/Formation';
 import TermsFactors from './components/practice/class-7/algebraic expressions/TermsFactors';
 import Coefficients from './components/practice/class-7/algebraic expressions/Coefficients';
@@ -320,22 +407,62 @@ import ProvingIrrationality from './components/practice/class-10/Real Numbers/Pr
 import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
 import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
 
+// Class 10: Probability
+import Probability from './components/practice/class-10/Probability/Probability';
+import ProbabilityIntro5W1H from './components/practice/class-10/Probability/Topics/5W1H/ProbabilityIntro5W1H';
+import ProbabilityTerminology from './components/practice/class-10/Probability/Topics/Terminology/ProbabilityTerminology';
+import ProbabilitySkills from './components/practice/class-10/Probability/Topics/Skills/ProbabilitySkills';
+import ProbabilityEasyTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityEasyTest';
+import ProbabilityMediumTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityMediumTest';
+import ProbabilityHardTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityHardTest';
+
+// Class 10: Polynomials
+import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
+import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
+import GeometricalInterpretation from './components/practice/class-10/Polynomials/GeometricalInterpretation';
+import NumberFromGraphicalBehaviour from './components/practice/class-10/Polynomials/NumberFromGraphicalBehaviour';
+import RelationshipQuadratic from './components/practice/class-10/Polynomials/RelationshipQuadratic';
+import ConstructingQuadratic from './components/practice/class-10/Polynomials/ConstructingQuadratic';
+import RelationshipCubic from './components/practice/class-10/Polynomials/RelationshipCubic';
+import PolynomialsTest from './components/practice/class-10/Polynomials/PolynomialsTest';
+
 // Class 12 - Matrices Chapter
-import MatricesChapter from './components/practice/class-12/MatricesChapter';
-import WhoUsesMatrices from './components/practice/class-12/pages/WhoUsesMatrices';
-import WhatIsMatrix from './components/practice/class-12/pages/WhatIsMatrix';
-import WhenDoWeNeedMatrices from './components/practice/class-12/pages/WhenDoWeNeedMatrices';
-import HowOperationsWork from './components/practice/class-12/pages/HowOperationsWork';
-import WhyRulesWork from './components/practice/class-12/pages/WhyRulesWork';
-import WhereApplied from './components/practice/class-12/pages/WhereApplied';
-import InvertibleMatrices from './components/practice/class-12/pages/InvertibleMatrices';
-import MatrixOrderTest from './components/practice/class-12/tests/MatrixOrderTest';
-import MatrixTypesTest from './components/practice/class-12/tests/MatrixTypesTest';
-import MatrixEqualityTest from './components/practice/class-12/tests/MatrixEqualityTest';
-import MatrixOperationsTest from './components/practice/class-12/tests/MatrixOperationsTest';
-import MatrixTransposeTest from './components/practice/class-12/tests/MatrixTransposeTest';
-import InvertibleMatricesTest from './components/practice/class-12/tests/InvertibleMatricesTest';
-import MatricesChapterTest from './components/practice/class-12/tests/MatricesChapterTest';
+import MatricesHub from './components/practice/class-12/Matrices/Matrices';
+import MatricesIntro5W1H from './components/practice/class-12/Matrices/Topics/5W1H/MatricesIntro5W1H';
+import MatricesTerminology from './components/practice/class-12/Matrices/Topics/Terminology/MatricesTerminology';
+import MatricesSkills from './components/practice/class-12/Matrices/Topics/Skills/MatricesSkills';
+import MatricesConnectomics from './components/practice/class-12/Matrices/Topics/Connectomics/MatricesConnectomics';
+import MatricesExamEdge from './components/practice/class-12/Matrices/Topics/ExamEdge/MatricesExamEdge';
+import WhoUsesMatrices from './components/practice/class-12/Matrices/DeepDive/Pages/WhoUsesMatrices';
+import WhatIsMatrix from './components/practice/class-12/Matrices/DeepDive/Pages/WhatIsMatrix';
+import WhenDoWeNeedMatrices from './components/practice/class-12/Matrices/DeepDive/Pages/WhenDoWeNeedMatrices';
+import HowOperationsWork from './components/practice/class-12/Matrices/DeepDive/Pages/HowOperationsWork';
+import WhyRulesWork from './components/practice/class-12/Matrices/DeepDive/Pages/WhyRulesWork';
+import WhereApplied from './components/practice/class-12/Matrices/DeepDive/Pages/WhereApplied';
+import InvertibleMatrices from './components/practice/class-12/Matrices/DeepDive/Pages/InvertibleMatrices';
+import MatrixOrderTest from './components/practice/class-12/Matrices/DeepDive/Tests/MatrixOrderTest';
+import MatrixTypesTest from './components/practice/class-12/Matrices/DeepDive/Tests/MatrixTypesTest';
+import MatrixEqualityTest from './components/practice/class-12/Matrices/DeepDive/Tests/MatrixEqualityTest';
+import MatrixOperationsTest from './components/practice/class-12/Matrices/DeepDive/Tests/MatrixOperationsTest';
+import MatrixTransposeTest from './components/practice/class-12/Matrices/DeepDive/Tests/MatrixTransposeTest';
+import InvertibleMatricesTest from './components/practice/class-12/Matrices/DeepDive/Tests/InvertibleMatricesTest';
+import MatricesChapterTest from './components/practice/class-12/Matrices/DeepDive/Tests/MatricesChapterTest';
+
+// Class 12 - Determinants Chapter
+import DeterminantsHub from './components/practice/class-12/Determinants/Determinants';
+import DeterminantsIntro5W1H from './components/practice/class-12/Determinants/Topics/5W1H/DeterminantsIntro5W1H';
+import DeterminantsTerminology from './components/practice/class-12/Determinants/Topics/Terminology/DeterminantsTerminology';
+import DeterminantsSkills from './components/practice/class-12/Determinants/Topics/Skills/DeterminantsSkills';
+import DeterminantsEasyTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsEasyTest';
+import DeterminantsMediumTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsMediumTest';
+import DeterminantsHardTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsHardTest';
+
+// Class 12 - Relations Chapter
+import RelationsHub from './components/practice/class-12/Relations/Relations';
+import RelationsIntro5W1H from './components/practice/class-12/Relations/Topics/5W1H/RelationsIntro5W1H';
+import RelationsTerminology from './components/practice/class-12/Relations/Topics/Terminology/RelationsTerminology';
+import RelationsSkills from './components/practice/class-12/Relations/Topics/Skills/RelationsSkills';
+import RelationsExams from './components/practice/class-12/Relations/Topics/Exams/RelationsExams';
 
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
@@ -396,20 +523,59 @@ import CountHowManyUnitsFit from './components/practice/class-4/Weigh_It_Pour_It
 import RepeatedAdditionToOneWhole from './components/practice/class-4/Weigh_It_Pour_It/Equal_Grouping_and_Unit_Count/repeated_addition_to_one_whole';
 import CompareWeightsAndCapacities from './components/practice/class-4/Weigh_It_Pour_It/Comparison_of_Quantities/compare_weights_and_capacities';
 import WeightAndCapacityWordProblems from './components/practice/class-4/Weigh_It_Pour_It/Mixed_Measurement_Word_Problems/weight_and_capacity_word_problems';
+
+// Grade 5 - The Fish Tale
+import LargeNumbersRealLife from './components/practice/class-5/The_Fish_Tale/Real_Life_Situations/LargeNumbersRealLife';
+import PlaceValueLakhs from './components/practice/class-5/The_Fish_Tale/Place_Value/PlaceValueLakhs';
+import ReadingWritingBigNumbers from './components/practice/class-5/The_Fish_Tale/Reading_Writing_Numbers/ReadingWritingBigNumbers';
+import ComparisonOfNumbers from './components/practice/class-5/The_Fish_Tale/Comparison/ComparisonOfNumbers';
+import EstimationAndRounding from './components/practice/class-5/The_Fish_Tale/Estimation/EstimationAndRounding';
+import NumberSensePlaceValue from './components/practice/class-5/The_Fish_Tale/Number_Sense/NumberSensePlaceValue';
+import EstimationSkills from './components/practice/class-5/The_Fish_Tale/Estimation/EstimationSkills';
+import InterpretingRealLifeData from './components/practice/class-5/The_Fish_Tale/Real_Life_Data/InterpretingRealLifeData';
+import TheFishTaleTest from './components/practice/class-5/The_Fish_Tale/TheFishTaleTest';
+
 // Grade 4 - Elephants, Tigers, and Leopards
-import NimGameStrategy from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/nim_game_add_1_or_2';
-import NumberGridPatterns from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/addition_chart_patterns';
-import MagicMirrorNumbers from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/reverse_two_digit_addition';
+import JungleNimGame from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/nim_game_add_1_or_2';
+import AdditionChartPatterns from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/addition_chart_patterns';
+import MagicMirrorAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Number_Games_and_Patterns/reverse_two_digit_addition';
 import ForestRestorationAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/four_digit_addition_with_regrouping';
-import JourneySums from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/multi_number_addition';
-import EstimationBeforeAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/estimation_before_addition';
-import RiverCrossingSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Subtraction/four_digit_subtraction_with_regrouping';
-import HiddenPathDifference from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Subtraction/find_missing_difference';
-import EstimationBeforeSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Subtraction/estimation_before_subtraction';
-import BalanceScaleEstimation from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/more_or_less_find_unknown';
+import JungleGatheringAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/multi_number_addition';
+import EstimateFirstAddition from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/estimation_before_addition';
+import RiverCrossingSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/four_digit_subtraction_with_regrouping';
+import HiddenPathDifference from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Addition/find_missing_difference';
+import EstimateFirstSubtraction from './components/practice/class-4/Elephants_Tigers_and_Leopards/Large_Number_Subtraction/estimation_before_subtraction';
+import BalanceScaleComparison from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/more_or_less_find_unknown';
 import QuickCompare from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/compare_without_calculating';
-import SmartShortcuts from './components/practice/class-4/Elephants_Tigers_and_Leopards/Mental_Math_Strategies/near_hundred_add_subtract';
+import SmartShortcuts from './components/practice/class-4/Elephants_Tigers_and_Leopards/Comparison_and_Estimation/near_hundred_add_subtract';
 import CompensationStrategy from './components/practice/class-4/Elephants_Tigers_and_Leopards/Mental_Math_Strategies/compensation_strategy_questions';
+
+// Grade 4 - Fun with Symmetry
+import IdentifyLineOfSymmetry from './components/practice/class-4/Fun_with_Symmetry/Line_Symmetry/identify_line_of_symmetry';
+import DrawLineOfSymmetry from './components/practice/class-4/Fun_with_Symmetry/Line_Symmetry/draw_line_of_symmetry';
+import PaperFoldSymmetry from './components/practice/class-4/Fun_with_Symmetry/Symmetry_by_Folding_and_Mirror/paper_fold_symmetry';
+import MirrorImageShapes from './components/practice/class-4/Fun_with_Symmetry/Symmetry_by_Folding_and_Mirror/mirror_image_shapes';
+import CompleteHalfDesign from './components/practice/class-4/Fun_with_Symmetry/Completing_Symmetric_Figures/complete_half_design';
+import SymmetryOnDotGrid from './components/practice/class-4/Fun_with_Symmetry/Completing_Symmetric_Figures/symmetry_on_dot_grid';
+import LinesOfSymmetryInPolygons from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Shapes_and_Characters/lines_of_symmetry_in_polygons';
+import MirrorSymmetricNumbersLetters from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Shapes_and_Characters/mirror_symmetric_numbers_letters';
+import IdentifyRepeatingTile from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/identify_repeating_tile';
+import CreateTilingWithoutGaps from './components/practice/class-4/Fun_with_Symmetry/Symmetry_in_Patterns_and_Tiling/create_tiling_without_gaps';
+import ClassifySymmetricalObjects from './components/practice/class-4/Fun_with_Symmetry/Real_Life_Symmetry/classify_symmetrical_objects';
+import FunWithSymmetryTest from './components/practice/class-4/Fun_with_Symmetry/FunWithSymmetryTest';
+import ElephantsTest from './components/practice/class-4/Elephants_Tigers_and_Leopards/ElephantsTest';
+import EqualGroupsTest from './components/practice/class-4/Equal_Groups/EqualGroupsTest';
+import WeighItPourItTest from './components/practice/class-4/Weigh_It_Pour_It/WeighItPourItTest';
+
+import TheTransportMuseum from './components/practice/class-4/The_Transport_Museum/TheTransportMuseum';
+import MuseumIntro5W1H from './components/practice/class-4/The_Transport_Museum/Topics/5W1H/MuseumIntro5W1H';
+import MuseumTerminology from './components/practice/class-4/The_Transport_Museum/Topics/Terminology/MuseumTerminology';
+import MuseumSkills from './components/practice/class-4/The_Transport_Museum/Topics/Skills/MuseumSkills';
+
+import DataHandlingClass4 from './components/practice/class-4/Data_Handling/DataHandlingClass4';
+import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
+import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
+import DataHandlingSkillsClass4 from './components/practice/class-4/Data_Handling/Topics/Skills/DataHandlingSkillsClass4';
 
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
@@ -463,6 +629,143 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          {/* The Fish Tale Topic Pages */}
+          <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
+          <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />
+          <Route path="the-fish-tale/terminology" element={<ProtectedRoute redirectTo="/login"><FishTaleTerminology /></ProtectedRoute>} />
+          <Route path="the-fish-tale/skills" element={<ProtectedRoute redirectTo="/login"><FishTaleSkills /></ProtectedRoute>} />
+
+
+          {/* Surface Areas and Volumes Routes */}
+          <Route path="surface-areas-and-volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
+          <Route path="surface-areas-and-volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
+          {/* Fallback for spaces in URL */}
+          <Route path="surface areas and volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
+          <Route path="surface areas and volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
+          {/* Introduction to Trigonometry Routes */}
+          <Route path="introduction-to-trigonometry" element={<ProtectedRoute redirectTo="/login"><IntroductionToTrignometry /></ProtectedRoute>} />
+          <Route path="introduction-to-trigonometry/introduction" element={<ProtectedRoute redirectTo="/login"><TrignometryIntro5W1H /></ProtectedRoute>} />
+          <Route path="introduction-to-trigonometry/terminology" element={<ProtectedRoute redirectTo="/login"><TrignometryTerminology /></ProtectedRoute>} />
+          <Route path="introduction-to-trigonometry/skills" element={<ProtectedRoute redirectTo="/login"><TrignometrySkills /></ProtectedRoute>} />
+
+          <Route path="ticking-clocks" element={<ProtectedRoute redirectTo="/login"><TickingClocks /></ProtectedRoute>} />
+          <Route path="ticking-clocks/introduction" element={<ProtectedRoute redirectTo="/login"><TickingClocksIntro5W1H /></ProtectedRoute>} />
+          <Route path="ticking-clocks/terminology" element={<ProtectedRoute redirectTo="/login"><TickingClocksTerminology /></ProtectedRoute>} />
+          <Route path="ticking-clocks/skills" element={<ProtectedRoute redirectTo="/login"><TickingClocksSkills /></ProtectedRoute>} />
+          <Route path="the-transport-museum" element={<ProtectedRoute redirectTo="/login"><TheTransportMuseum /></ProtectedRoute>} />
+          <Route path="the-transport-museum/introduction" element={<ProtectedRoute redirectTo="/login"><MuseumIntro5W1H /></ProtectedRoute>} />
+          <Route path="the-transport-museum/terminology" element={<ProtectedRoute redirectTo="/login"><MuseumTerminology /></ProtectedRoute>} />
+          <Route path="the-transport-museum/skills" element={<ProtectedRoute redirectTo="/login"><MuseumSkills /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
+          <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Shapes Around Us Chapter Pages */}
+          <Route path="junior/grade/4/shapes-around-us" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
+          {/* Grade 4: Hide and Seek Chapter Pages */}
+          <Route path="junior/grade/4/hide-and-seek" element={<ProtectedRoute redirectTo="/login"><HideAndSeek /></ProtectedRoute>} />
+          <Route path="junior/grade/4/hide-and-seek/introduction" element={<ProtectedRoute redirectTo="/login"><HideAndSeekIntro5W1H /></ProtectedRoute>} />
+          <Route path="junior/grade/4/hide-and-seek/terminology" element={<ProtectedRoute redirectTo="/login"><HideAndSeekTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/hide-and-seek/skills" element={<ProtectedRoute redirectTo="/login"><HideAndSeekSkills /></ProtectedRoute>} />
+          {/* Grade 8: Introduction to Graphs Chapter Pages */}
+          <Route path="senior/grade/8/introduction-to-graphs" element={<ProtectedRoute redirectTo="/login"><IntroductionToGraphs /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/introduction" element={<ProtectedRoute redirectTo="/login"><GraphsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/terminology" element={<ProtectedRoute redirectTo="/login"><GraphsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/introduction-to-graphs/skills" element={<ProtectedRoute redirectTo="/login"><GraphsSkills /></ProtectedRoute>} />
+          {/* Grade 8: Direct and Inverse Proportions Chapter Pages */}
+          <Route path="senior/grade/8/direct-and-inverse-proportions" element={<ProtectedRoute redirectTo="/login"><DirectAndInverseProportions /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/introduction" element={<ProtectedRoute redirectTo="/login"><ProportionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/terminology" element={<ProtectedRoute redirectTo="/login"><ProportionsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/direct-and-inverse-proportions/skills" element={<ProtectedRoute redirectTo="/login"><ProportionsSkills /></ProtectedRoute>} />
+
+          {/* Grade 8: Comparing Quantities Chapter Pages */}
+          <Route path="senior/grade/8/comparing-quantities" element={<ProtectedRoute redirectTo="/login"><ComparingQuantities /></ProtectedRoute>} />
+          <Route path="senior/grade/8/comparing-quantities/introduction" element={<ProtectedRoute redirectTo="/login"><ComparingQuantitiesIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/comparing-quantities/terminology" element={<ProtectedRoute redirectTo="/login"><ComparingQuantitiesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/comparing-quantities/skills" element={<ProtectedRoute redirectTo="/login"><ComparingQuantitiesSkills /></ProtectedRoute>} />
+
+          {/* Class 12: Matrices — unified structure (inside MainLayout for navbar/footer) */}
+          <Route path="senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesHub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/introduction" element={<ProtectedRoute redirectTo="/login"><MatricesIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/terminology" element={<ProtectedRoute redirectTo="/login"><MatricesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/skills" element={<ProtectedRoute redirectTo="/login"><MatricesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/connectomics" element={<ProtectedRoute redirectTo="/login"><MatricesConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/exam-edge" element={<ProtectedRoute redirectTo="/login"><MatricesExamEdge /></ProtectedRoute>} />
+
+          {/* Class 12: Matrices  canonical deep-dive routes */}
+          <Route path="senior/grade/12/matrices/deep-dive/who-uses" element={<ProtectedRoute redirectTo="/login"><WhoUsesMatrices /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/what-is" element={<ProtectedRoute redirectTo="/login"><WhatIsMatrix /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/when-need" element={<ProtectedRoute redirectTo="/login"><WhenDoWeNeedMatrices /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/how-operations" element={<ProtectedRoute redirectTo="/login"><HowOperationsWork /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/why-rules" element={<ProtectedRoute redirectTo="/login"><WhyRulesWork /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/where-applied" element={<ProtectedRoute redirectTo="/login"><WhereApplied /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/invertible" element={<ProtectedRoute redirectTo="/login"><InvertibleMatrices /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/test/matrix-order" element={<ProtectedRoute redirectTo="/login"><MatrixOrderTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/test/matrix-types" element={<ProtectedRoute redirectTo="/login"><MatrixTypesTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/test/matrix-equality" element={<ProtectedRoute redirectTo="/login"><MatrixEqualityTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/test/matrix-operations" element={<ProtectedRoute redirectTo="/login"><MatrixOperationsTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><MatrixTransposeTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/matrices/deep-dive/test" element={<ProtectedRoute redirectTo="/login"><MatricesChapterTest /></ProtectedRoute>} />
+
+          {/* Class 10: Probability */}
+          <Route path="senior/grade/10/probability" element={<ProtectedRoute redirectTo="/login"><Probability /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/introduction" element={<ProtectedRoute redirectTo="/login"><ProbabilityIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/terminology" element={<ProtectedRoute redirectTo="/login"><ProbabilityTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/skills" element={<ProtectedRoute redirectTo="/login"><ProbabilitySkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><ProbabilityEasyTest /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><ProbabilityMediumTest /></ProtectedRoute>} />
+          <Route path="senior/grade/10/probability/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><ProbabilityHardTest /></ProtectedRoute>} />
+
+          {/* Class 12: Determinants */}
+          <Route path="senior/grade/12/determinants" element={<ProtectedRoute redirectTo="/login"><DeterminantsHub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/introduction" element={<ProtectedRoute redirectTo="/login"><DeterminantsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/terminology" element={<ProtectedRoute redirectTo="/login"><DeterminantsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/skills" element={<ProtectedRoute redirectTo="/login"><DeterminantsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DeterminantsEasyTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DeterminantsMediumTest /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DeterminantsHardTest /></ProtectedRoute>} />
+
+          {/* Class 12: Relations */}
+          <Route path="senior/grade/12/relations" element={<ProtectedRoute redirectTo="/login"><RelationsHub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/introduction" element={<ProtectedRoute redirectTo="/login"><RelationsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/terminology" element={<ProtectedRoute redirectTo="/login"><RelationsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/skills" element={<ProtectedRoute redirectTo="/login"><RelationsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/exams" element={<ProtectedRoute redirectTo="/login"><RelationsExams /></ProtectedRoute>} />
+
+          {/* Class 7: Integers */}
+          <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/introduction" element={<ProtectedRoute redirectTo="/login"><IntegersIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/terminology" element={<ProtectedRoute redirectTo="/login"><IntegersTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/skills" element={<ProtectedRoute redirectTo="/login"><IntegersSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><IntegersEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><IntegersMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/integers/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><IntegersHardTest /></ProtectedRoute>} />
+
+          {/* Class 7: Fractions and Decimals */}
+          <Route path="middle/grade/7/fractions-and-decimals" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/introduction" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/terminology" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/skills" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHardTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DataHandlingEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DataHandlingMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/data-handling/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DataHandlingHardTest /></ProtectedRoute>} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
@@ -472,7 +775,7 @@ function App() {
         <Route path="/junior/grade/:grade/topic/:topic" element={<JuniorSubtopics />} />
         <Route path="/junior/grade/:grade/practice" element={
           <ProtectedRoute redirectTo="/login">
-            <PracticeRouteWrapper />
+            <JuniorPracticeSession />
           </ProtectedRoute>
         } />
 
@@ -489,6 +792,11 @@ function App() {
         <Route path="/junior/grade/:grade/raksha-bandhan/division" element={
           <ProtectedRoute redirectTo="/login">
             <RakshaBandhanDivision />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/raksha-bandhan/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <RakshaBandhanTest />
           </ProtectedRoute>
         } />
         <Route path="/junior/grade/:grade/fair-share/cutting" element={
@@ -511,6 +819,11 @@ function App() {
             <FairShareGuesswho />
           </ProtectedRoute>
         } />
+        <Route path="/junior/grade/:grade/fair-share/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FairShareTest />
+          </ProtectedRoute>
+        } />
         <Route path="/junior/grade/:grade/fun-at-class-party/longer-shorter" element={
           <ProtectedRoute redirectTo="/login">
             <LongerShorterStrings />
@@ -519,6 +832,11 @@ function App() {
         <Route path="/junior/grade/:grade/fun-at-class-party/heights-and-meters" element={
           <ProtectedRoute redirectTo="/login">
             <HeightsAndMeters />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun-at-class-party/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FunAtClassPartyTest />
           </ProtectedRoute>
         } />
 
@@ -575,10 +893,9 @@ function App() {
             <PaperSlips />
           </ProtectedRoute>
         } />
-
-        <Route path="/junior/grade/:grade/house-of-hundreds-ii/guess-the-number" element={
+        <Route path="/junior/grade/:grade/house-of-hundreds-ii/chapter-test" element={
           <ProtectedRoute redirectTo="/login">
-            <GuessTheNumber />
+            <HouseOfHundredsIITest />
           </ProtectedRoute>
         } />
 
@@ -616,6 +933,17 @@ function App() {
             <ComparingLargeSmallNumbers />
           </ProtectedRoute>
         } />
+
+        {/* Grade 5 - The Fish Tale */}
+        <Route path="/middle/grade/5/the-fish-tale/large-numbers-real-life" element={<ProtectedRoute redirectTo="/login"><LargeNumbersRealLife /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/place-value-lakhs" element={<ProtectedRoute redirectTo="/login"><PlaceValueLakhs /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/reading-writing-big-numbers" element={<ProtectedRoute redirectTo="/login"><ReadingWritingBigNumbers /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/comparison-of-numbers" element={<ProtectedRoute redirectTo="/login"><ComparisonOfNumbers /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/estimation-and-rounding" element={<ProtectedRoute redirectTo="/login"><EstimationAndRounding /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/number-sense-place-value" element={<ProtectedRoute redirectTo="/login"><NumberSensePlaceValue /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/estimation-skills" element={<ProtectedRoute redirectTo="/login"><EstimationSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/interpreting-real-life-data" element={<ProtectedRoute redirectTo="/login"><InterpretingRealLifeData /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/the-fish-tale/chapter-test" element={<ProtectedRoute redirectTo="/login"><TheFishTaleTest /></ProtectedRoute>} />
 
         {/* Grade 5 - Tenths and Hundredths */}
         <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
@@ -711,10 +1039,95 @@ function App() {
             <ChapterTest />
           </ProtectedRoute>
         } />
-        {/* Fallback for spaces in URL */}
         <Route path="/junior/grade/:grade/the cleanest village/chapter test" element={
           <ProtectedRoute redirectTo="/login">
             <ChapterTest />
+          </ProtectedRoute>
+        } />
+
+        {/* Elephants, Tigers, and Leopards Routes */}
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/nim-game-strategy" element={
+          <ProtectedRoute redirectTo="/login">
+            <JungleNimGame />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/number-grid-patterns" element={
+          <ProtectedRoute redirectTo="/login">
+            <AdditionChartPatterns />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/magic-mirror-numbers" element={
+          <ProtectedRoute redirectTo="/login">
+            <MagicMirrorAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/forest-restoration-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <ForestRestorationAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/journey-sums" element={
+          <ProtectedRoute redirectTo="/login">
+            <JungleGatheringAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/estimation-before-addition" element={
+          <ProtectedRoute redirectTo="/login">
+            <EstimateFirstAddition />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/river-crossing-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <RiverCrossingSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/hidden-path-difference" element={
+          <ProtectedRoute redirectTo="/login">
+            <HiddenPathDifference />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/estimation-before-subtraction" element={
+          <ProtectedRoute redirectTo="/login">
+            <EstimateFirstSubtraction />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/balance-scale-estimation" element={
+          <ProtectedRoute redirectTo="/login">
+            <BalanceScaleComparison />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/quick-compare" element={
+          <ProtectedRoute redirectTo="/login">
+            <QuickCompare />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/smart-shortcuts" element={
+          <ProtectedRoute redirectTo="/login">
+            <SmartShortcuts />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/compensation-strategy" element={
+          <ProtectedRoute redirectTo="/login">
+            <CompensationStrategy />
+          </ProtectedRoute>
+        } />
+
+        {/* Elephants, Tigers, and Leopards Chapter Test */}
+        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <ElephantsTest />
+          </ProtectedRoute>
+        } />
+
+        {/* Fun with Symmetry Routes */}
+        <Route path="/junior/grade/:grade/fun-with-symmetry/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FunWithSymmetryTest />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/:grade/fun with symmetry/chapter test" element={
+          <ProtectedRoute redirectTo="/login">
+            <FunWithSymmetryTest />
           </ProtectedRoute>
         } />
 
@@ -809,6 +1222,14 @@ function App() {
             <CreateYourOwnEqualGroups />
           </ProtectedRoute>
         } />
+
+        {/* Equal Groups Chapter Test */}
+        <Route path="/junior/grade/:grade/equal-groups/chapter-test" element={
+          <ProtectedRoute redirectTo="/login">
+            <EqualGroupsTest />
+          </ProtectedRoute>
+        } />
+
         {/* Weigh It, Pour It Routes */}
         <Route path="/junior/grade/:grade/weigh-it-pour-it/gram-to-kilogram-fractions" element={
           <ProtectedRoute redirectTo="/login">
@@ -851,70 +1272,67 @@ function App() {
           </ProtectedRoute>
         } />
 
-        {/* Elephants, Tigers, and Leopards Routes */}
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/nim-game-strategy" element={
+        {/* Weigh It, Pour It Chapter Test */}
+        <Route path="/junior/grade/:grade/weigh-it-pour-it/chapter-test" element={
           <ProtectedRoute redirectTo="/login">
-            <NimGameStrategy />
+            <WeighItPourItTest />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/number-grid-patterns" element={
+
+        {/* Fun with Symmetry Routes */}
+        <Route path="/junior/grade/:grade/fun-with-symmetry/identify-line-of-symmetry" element={
           <ProtectedRoute redirectTo="/login">
-            <NumberGridPatterns />
+            <IdentifyLineOfSymmetry />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/magic-mirror-numbers" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/draw-line-of-symmetry" element={
           <ProtectedRoute redirectTo="/login">
-            <MagicMirrorNumbers />
+            <DrawLineOfSymmetry />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/forest-restoration-addition" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/paper-fold-symmetry" element={
           <ProtectedRoute redirectTo="/login">
-            <ForestRestorationAddition />
+            <PaperFoldSymmetry />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/journey-sums" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/mirror-image-shapes" element={
           <ProtectedRoute redirectTo="/login">
-            <JourneySums />
+            <MirrorImageShapes />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/estimation-before-addition" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/complete-half-design" element={
           <ProtectedRoute redirectTo="/login">
-            <EstimationBeforeAddition />
+            <CompleteHalfDesign />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/river-crossing-subtraction" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/symmetry-on-dot-grid" element={
           <ProtectedRoute redirectTo="/login">
-            <RiverCrossingSubtraction />
+            <SymmetryOnDotGrid />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/hidden-path-difference" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/lines-of-symmetry-in-polygons" element={
           <ProtectedRoute redirectTo="/login">
-            <HiddenPathDifference />
+            <LinesOfSymmetryInPolygons />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/estimation-before-subtraction" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/mirror-symmetric-numbers-letters" element={
           <ProtectedRoute redirectTo="/login">
-            <EstimationBeforeSubtraction />
+            <MirrorSymmetricNumbersLetters />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/balance-scale-estimation" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/identify-repeating-tile" element={
           <ProtectedRoute redirectTo="/login">
-            <BalanceScaleEstimation />
+            <IdentifyRepeatingTile />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/quick-compare" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/create-tiling-without-gaps" element={
           <ProtectedRoute redirectTo="/login">
-            <QuickCompare />
+            <CreateTilingWithoutGaps />
           </ProtectedRoute>
         } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/smart-shortcuts" element={
+        <Route path="/junior/grade/:grade/fun-with-symmetry/classify-symmetrical-objects" element={
           <ProtectedRoute redirectTo="/login">
-            <SmartShortcuts />
-          </ProtectedRoute>
-        } />
-        <Route path="/junior/grade/:grade/elephants-tigers-and-leopards/compensation-strategy" element={
-          <ProtectedRoute redirectTo="/login">
-            <CompensationStrategy />
+            <ClassifySymmetricalObjects />
           </ProtectedRoute>
         } />
 
@@ -1030,6 +1448,17 @@ function App() {
         <Route path="/senior/grade/8/rational-numbers/chapter-test" element={<ProtectedRoute redirectTo="/login"><Grade8RationalNumbersTest /></ProtectedRoute>} />
         <Route path="/senior/grade/8/mensuration/chapter-test" element={<ProtectedRoute redirectTo="/login"><MensurationTest /></ProtectedRoute>} />
         <Route path="/senior/grade/8/factorisation/chapter-test" element={<ProtectedRoute redirectTo="/login"><FactorisationTest /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/chapter-test" element={<ProtectedRoute redirectTo="/login"><SquaresAndSquareRootsTest /></ProtectedRoute>} />
+
+        {/* Grade 8 Squares and Square Roots */}
+        <Route path="/senior/grade/8/squares-and-square-roots/identify-perfect-squares" element={<ProtectedRoute redirectTo="/login"><IdentifyPerfectSquares /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/properties-of-square-numbers" element={<ProtectedRoute redirectTo="/login"><PropertiesOfSquareNumbers /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-using-identity-patterns" element={<ProtectedRoute redirectTo="/login"><SquareUsingIdentityPatterns /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/pythagorean-triplets" element={<ProtectedRoute redirectTo="/login"><PythagoreanTriplets /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/concept-of-square-root" element={<ProtectedRoute redirectTo="/login"><ConceptOfSquareRoot /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-root-prime-factorization" element={<ProtectedRoute redirectTo="/login"><SquareRootPrimeFactorization /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-root-long-division" element={<ProtectedRoute redirectTo="/login"><SquareRootLongDivision /></ProtectedRoute>} />
+        <Route path="/senior/grade/8/squares-and-square-roots/square-root-of-decimals" element={<ProtectedRoute redirectTo="/login"><SquareRootOfDecimals /></ProtectedRoute>} />
 
         {/* Grade 1 Specialized Routes */}
         <Route path="/junior/grade/1/shapes-and-space" element={<ProtectedRoute redirectTo="/login"><Grade1ShapesAndSpace /></ProtectedRoute>} />
@@ -1043,19 +1472,20 @@ function App() {
         <Route path="/junior/grade/1/data-handling" element={<ProtectedRoute redirectTo="/login"><Grade1DataHandling /></ProtectedRoute>} />
         <Route path="/junior/grade/1/patterns" element={<ProtectedRoute redirectTo="/login"><Grade1Patterns /></ProtectedRoute>} />
         <Route path="/junior/grade/1/numbers-51-to-100" element={<ProtectedRoute redirectTo="/login"><Grade1Numbers51to100 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/identifying-shapes" element={<ProtectedRoute redirectTo="/login"><IdentifyingShapes /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/comparing-lengths" element={<ProtectedRoute redirectTo="/login"><ComparingLengths /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/what-is-long-what-is-round/recognizing-round-objects" element={<ProtectedRoute redirectTo="/login"><RecognizingRoundObjects /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/comparing-weights" element={<ProtectedRoute redirectTo="/login"><ComparingWeights /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/heavier-lighter" element={<ProtectedRoute redirectTo="/login"><HeavierLighter /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/how-much-can-you-carry/estimating-weight" element={<ProtectedRoute redirectTo="/login"><EstimatingWeight /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/counting-in-pairs" element={<ProtectedRoute redirectTo="/login"><CountingInPairs /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/skip-counting" element={<ProtectedRoute redirectTo="/login"><SkipCounting /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-groups/repeated-addition" element={<ProtectedRoute redirectTo="/login"><RepeatedAdditionClass2 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/numbers-up-to-100" element={<ProtectedRoute redirectTo="/login"><NumbersUpTo100 /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/place-value-tens-ones" element={<ProtectedRoute redirectTo="/login"><PlaceValueTensOnes /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/expanded-form" element={<ProtectedRoute redirectTo="/login"><ExpandedForm /></ProtectedRoute>} />
-        <Route path="/junior/grade/2/counting-in-tens/comparing-numbers" element={<ProtectedRoute redirectTo="/login"><ComparingNumbers /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/what-is-long-what-is-round" element={<ProtectedRoute redirectTo="/login"><Grade2WhatIsLongWhatIsRound /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/how-much-can-you-carry" element={<ProtectedRoute redirectTo="/login"><Grade2HowMuchCanYouCarry /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-groups" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInGroups /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/counting-in-tens" element={<ProtectedRoute redirectTo="/login"><Grade2CountingInTens /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/patterns" element={<ProtectedRoute redirectTo="/login"><Grade2Patterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/footprints" element={<ProtectedRoute redirectTo="/login"><Grade2Footprints /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/jugs-and-mugs" element={<ProtectedRoute redirectTo="/login"><Grade2JugsAndMugs /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/tens-and-ones" element={<ProtectedRoute redirectTo="/login"><Grade2TensAndOnes /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/my-funday" element={<ProtectedRoute redirectTo="/login"><Grade2MyFunday /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/add-our-points" element={<ProtectedRoute redirectTo="/login"><Grade2AddOurPoints /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/lines-and-lines" element={<ProtectedRoute redirectTo="/login"><Grade2LinesAndLines /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/give-and-take" element={<ProtectedRoute redirectTo="/login"><Grade2GiveAndTake /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/the-longest-step" element={<ProtectedRoute redirectTo="/login"><Grade2TheLongestStep /></ProtectedRoute>} />
+        <Route path="/junior/grade/2/birds-come-birds-go" element={<ProtectedRoute redirectTo="/login"><Grade2BirdsComeBirdsGo /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
         <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
@@ -1076,6 +1506,12 @@ function App() {
         <Route path="/middle/grade/6/data-handling/bar-graphs" element={<BarGraphs />} />
         <Route path="/middle/grade/6/data-handling/drawing-a-bar-graph" element={<DrawingABarGraph />} />
         <Route path="/middle/grade/6/data-handling/figure-it-out" element={<FigureItOut />} />
+
+        {/* Grade 6 Symmetry */}
+        <Route path="/middle/grade/:grade/symmetry/intro" element={<IntroToSymmetry6 />} />
+        <Route path="/middle/grade/:grade/symmetry/reflection" element={<ReflectionInALine6 />} />
+        <Route path="/middle/grade/:grade/symmetry/rotational" element={<RotationalSymmetry6 />} />
+        <Route path="/middle/grade/:grade/symmetry/order-rotational" element={<OrderOfRotationalSymmetry6 />} />
         <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
         <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
         <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />
@@ -1264,22 +1700,33 @@ function App() {
         <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
         <Route path="/high/practice/1209" element={<PairOfLinearEquationsTest />} />
         {/* Class 10: Arithmetic Progressions Routes */}
-        <Route path="/high/practice/10101" element={<RecognisingPatterns />} />
-        <Route path="/high/practice/10102" element={<UnderstandingAP />} />
-        <Route path="/high/practice/10103" element={<IdentifyingTerms />} />
-        <Route path="/high/practice/10104" element={<FindingSpecificTerms />} />
-        <Route path="/high/practice/10105" element={<SumOfTerms />} />
-        <Route path="/high/practice/1208" element={<ArithmeticProgressionsTest />} />
+        <Route path="/high/practice/1105" element={<RecognisingPatterns />} />
+        <Route path="/high/practice/1106" element={<UnderstandingAP />} />
+        <Route path="/high/practice/1107" element={<IdentifyingTerms />} />
+        <Route path="/high/practice/1108" element={<FindingSpecificTerms />} />
+        <Route path="/high/practice/1109" element={<SumOfTerms />} />
+        <Route path="/high/practice/1110" element={<ArithmeticProgressionsTest />} />
         {/* Class 10: Quadratic Equations Routes */}
-        <Route path="/high/practice/10201" element={<FoundationsQuadratic />} />
-        <Route path="/high/practice/10202" element={<RepresentingSituations />} />
-        <Route path="/high/practice/10203" element={<IdentifyingQuadratic />} />
-        <Route path="/high/practice/10204" element={<RootsByFactorisation />} />
-        <Route path="/high/practice/10205" element={<WordProblemsFactorisation />} />
-        <Route path="/high/practice/10206" element={<NatureOfRoots />} />
-        <Route path="/high/practice/10207" element={<DiscriminantAnalysis />} />
-        <Route path="/high/practice/10208" element={<RealLifeApplications />} />
-        <Route path="/high/practice/1207" element={<QuadraticEquationsTest />} />
+        <Route path="/high/practice/1120" element={<FoundationsQuadratic />} />
+        <Route path="/high/practice/1121" element={<RepresentingSituations />} />
+        <Route path="/high/practice/1122" element={<IdentifyingQuadratic />} />
+        <Route path="/high/practice/1123" element={<RootsByFactorisation />} />
+        <Route path="/high/practice/1124" element={<WordProblemsFactorisation />} />
+        <Route path="/high/practice/1125" element={<NatureOfRoots />} />
+        <Route path="/high/practice/1126" element={<DiscriminantAnalysis />} />
+        <Route path="/high/practice/1127" element={<RealLifeApplications />} />
+        <Route path="/high/practice/1128" element={<QuadraticEquationsTest />} />
+
+        {/* Class 10: Polynomials Routes */}
+        <Route path="/high/practice/1233" element={<TypesAndDegrees />} />
+        <Route path="/high/practice/1234" element={<EvaluatingAndIdentifying />} />
+        <Route path="/high/practice/1235" element={<GeometricalInterpretation />} />
+        <Route path="/high/practice/1236" element={<NumberFromGraphicalBehaviour />} />
+        <Route path="/high/practice/1237" element={<RelationshipQuadratic />} />
+        <Route path="/high/practice/1238" element={<ConstructingQuadratic />} />
+        <Route path="/high/practice/1239" element={<RelationshipCubic />} />
+        <Route path="/high/practice/1240" element={<PolynomialsTest />} />
+
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
         {/* Class 11 Biology */}
@@ -1301,43 +1748,38 @@ function App() {
         <Route path="/senior/grade/11/maths" element={<ComingSoon />} />
 
         {/* Class 10: Real Numbers Routes */}
-        <Route path="/high/practice/10201" element={<RealNumberFoundations />} />
-        <Route path="/high/practice/10202" element={<EuclidsDivision />} />
-        <Route path="/high/practice/10203" element={<PrimeFactorisation />} />
-        <Route path="/high/practice/10204" element={<FundamentalTheoremArithmetic />} />
-        <Route path="/high/practice/10205" element={<HCFandLCM />} />
-        <Route path="/high/practice/10206" element={<HCFLCMApplications />} />
-        <Route path="/high/practice/10207" element={<ProvingIrrationality />} />
-        <Route path="/high/practice/10208" element={<IrrationalOperations />} />
-        <Route path="/high/practice/1206" element={<RealNumbersTest />} />
+        <Route path="/high/practice/1111" element={<RealNumberFoundations />} />
+        <Route path="/high/practice/1112" element={<EuclidsDivision />} />
+        <Route path="/high/practice/1113" element={<PrimeFactorisation />} />
+        <Route path="/high/practice/1114" element={<FundamentalTheoremArithmetic />} />
+        <Route path="/high/practice/1115" element={<HCFandLCM />} />
+        <Route path="/high/practice/1116" element={<HCFLCMApplications />} />
+        <Route path="/high/practice/1117" element={<ProvingIrrationality />} />
+        <Route path="/high/practice/1118" element={<IrrationalOperations />} />
+        <Route path="/high/practice/1119" element={<RealNumbersTest />} />
 
-        {/* Class 12: Matrices Routes */}
-        <Route path="/senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesChapter /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/who-uses" element={<ProtectedRoute redirectTo="/login"><WhoUsesMatrices /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/what-is" element={<ProtectedRoute redirectTo="/login"><WhatIsMatrix /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/when-need" element={<ProtectedRoute redirectTo="/login"><WhenDoWeNeedMatrices /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/how-operations" element={<ProtectedRoute redirectTo="/login"><HowOperationsWork /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/why-rules" element={<ProtectedRoute redirectTo="/login"><WhyRulesWork /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/where-applied" element={<ProtectedRoute redirectTo="/login"><WhereApplied /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/invertible" element={<ProtectedRoute redirectTo="/login"><InvertibleMatrices /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-order" element={<ProtectedRoute redirectTo="/login"><MatrixOrderTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-types" element={<ProtectedRoute redirectTo="/login"><MatrixTypesTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-equality" element={<ProtectedRoute redirectTo="/login"><MatrixEqualityTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-operations" element={<ProtectedRoute redirectTo="/login"><MatrixOperationsTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><MatrixTransposeTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><InvertibleMatricesTest /></ProtectedRoute>} />
-        <Route path="/senior/grade/12/matrices/test" element={<ProtectedRoute redirectTo="/login"><MatricesChapterTest /></ProtectedRoute>} />
+        {/* Class 12: Matrices � Legacy routes redirect to canonical deep-dive URLs */}
+        <Route path="/senior/grade/12/matrices/who-uses" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/who-uses" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/what-is" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/what-is" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/when-need" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/when-need" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/how-operations" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/how-operations" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/why-rules" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/why-rules" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/where-applied" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/where-applied" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/invertible" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/invertible" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/test/matrix-order" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test/matrix-order" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/test/matrix-types" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test/matrix-types" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/test/matrix-equality" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test/matrix-equality" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/test/matrix-operations" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test/matrix-operations" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/test/matrix-transpose" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test/matrix-transpose" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test/invertible-matrices" replace /></ProtectedRoute>} />
+        <Route path="/senior/grade/12/matrices/test" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test" replace /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
 }
 
-function PracticeRouteWrapper() {
-  const { grade } = useParams();
-  const isGrade4 = String(grade).replace(/\D/g, '') === '4';
-  return isGrade4 ? <Grade4PracticeSession /> : <JuniorPracticeSession />;
-}
-
 export default App;
 // Force rebuild
+
+
 

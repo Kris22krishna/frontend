@@ -1,7 +1,7 @@
 export const TOPIC_CONFIGS = {
     '1': {
         'Shapes and Space': [
-            { id: "101", name: "Identifying basic shapes (circle, square, triangle, rectangle)", route: "shapes-and-space" },
+            { id: "101", name: "Identifying basic shapes (circle, square, triangle, rectangle, oval)", route: "shapes-and-space" },
             { id: "102", name: "Understanding positions (top, bottom, inside, outside, near, far)", route: "shapes-and-space" },
             { id: "103", name: "Comparing sizes (big/small, long/short, tall/short)", route: "shapes-and-space" },
             { id: "104", name: "Chapter Test - Shapes and Space", route: "shapes-and-space" }
@@ -73,25 +73,88 @@ export const TOPIC_CONFIGS = {
     },
     '2': {
         'What is Long, What is Round?': [
-            { id: "1001", name: "Identifying shapes (2D shapes)", route: "identifying-shapes" },
-            { id: "1002", name: "Comparing lengths", route: "comparing-lengths" },
-            { id: "1003", name: "Recognizing round objects", route: "recognizing-round-objects" }
+            { id: "1001", name: "Identifying shapes (2D shapes)", route: "what-is-long-what-is-round" },
+            { id: "1002", name: "Comparing lengths", route: "what-is-long-what-is-round" },
+            { id: "1003", name: "Recognizing round objects", route: "what-is-long-what-is-round" },
+            { id: "1103", name: "Chapter Test", route: "what-is-long-what-is-round" }
         ],
         'How Much Can You Carry?': [
-            { id: "1007", name: "Comparing weights", route: "comparing-weights" },
-            { id: "1008", name: "Heavier/lighter", route: "heavier-lighter" },
-            { id: "1009", name: "Estimating weight", route: "estimating-weight" }
+            { id: "1007", name: "Comparing weights", route: "how-much-can-you-carry" },
+            { id: "1008", name: "Heavier/lighter", route: "how-much-can-you-carry" },
+            { id: "1009", name: "Estimating weight", route: "how-much-can-you-carry" },
+            { id: "1109", name: "Chapter Test", route: "how-much-can-you-carry" }
         ],
         'Counting in Groups': [
-            { id: "1004", name: "Counting in pairs", route: "counting-in-pairs" },
-            { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "skip-counting" },
-            { id: "1006", name: "Introduction to multiplication as repeated addition", route: "repeated-addition" }
+            { id: "1004", name: "Counting in pairs", route: "counting-in-groups" },
+            { id: "1005", name: "Skip counting (2s, 5s, 10s)", route: "counting-in-groups" },
+            { id: "1006", name: "Introduction to multiplication as repeated addition", route: "counting-in-groups" },
+            { id: "1106", name: "Chapter Test", route: "counting-in-groups" }
         ],
         'Counting in Tens': [
-            { id: "1010", name: "Numbers up to 100", route: "numbers-up-to-100" },
-            { id: "1011", name: "Place value (Tens and Ones)", route: "place-value-tens-ones" },
-            { id: "1012", name: "Expanded form", route: "expanded-form" },
-            { id: "1013", name: "Comparing numbers", route: "comparing-numbers" }
+            { id: "1010", name: "Numbers up to 100", route: "counting-in-tens" },
+            { id: "1011", name: "Place value (Tens and Ones)", route: "counting-in-tens" },
+            { id: "1012", name: "Expanded form", route: "counting-in-tens" },
+            { id: "1013", name: "Comparing numbers", route: "counting-in-tens" },
+            { id: "1113", name: "Chapter Test", route: "counting-in-tens" }
+        ],
+        'Patterns': [
+            { id: "1014", name: "Number patterns", route: "patterns" },
+            { id: "1015", name: "Shape patterns", route: "patterns" },
+            { id: "1016", name: "Identifying and completing patterns", route: "patterns" },
+            { id: "1116", name: "Chapter Test", route: "patterns" }
+        ],
+        'Footprints': [
+            { id: "1017", name: "Matching footprints", route: "footprints" },
+            { id: "1018", name: "Comparing footprint sizes", route: "footprints" },
+            { id: "1019", name: "Shape tracing", route: "footprints" },
+            { id: "1119", name: "Chapter Test", route: "footprints" }
+        ],
+        'Jugs and Mugs': [
+            { id: "1020", name: "Capacity (more/less)", route: "jugs-and-mugs" },
+            { id: "1021", name: "Measuring liquids (informal units)", route: "jugs-and-mugs" },
+            { id: "1121", name: "Chapter Test", route: "jugs-and-mugs" }
+        ],
+        'Tens and Ones': [
+            { id: "1022", name: "Place value up to 200", route: "tens-and-ones" },
+            { id: "1023", name: "Writing numbers in expanded form", route: "tens-and-ones" },
+            { id: "1024", name: "Comparison of numbers", route: "tens-and-ones" },
+            { id: "1124", name: "Chapter Test", route: "tens-and-ones" }
+        ],
+        'My Funday': [
+            { id: "1025", name: "Days of the week", route: "my-funday" },
+            { id: "1026", name: "Months of the year", route: "my-funday" },
+            { id: "1027", name: "Reading clock (hour and half-hour)", route: "my-funday" },
+            { id: "1127", name: "Chapter Test", route: "my-funday" }
+        ],
+        'Add Our Points': [
+            { id: "1028", name: "Two-digit addition (without carry)", route: "add-our-points" },
+            { id: "1029", name: "Two-digit addition (with carry)", route: "add-our-points" },
+            { id: "1030", name: "Word problems", route: "add-our-points" },
+            { id: "1130", name: "Chapter Test", route: "add-our-points" }
+        ],
+        'Lines and Lines': [
+            { id: "1031", name: "Straight and curved lines", route: "lines-and-lines" },
+            { id: "1032", name: "Drawing shapes", route: "lines-and-lines" },
+            { id: "1033", name: "Patterns using lines", route: "lines-and-lines" },
+            { id: "1133", name: "Chapter Test", route: "lines-and-lines" }
+        ],
+        'Give and Take': [
+            { id: "1034", name: "Two-digit subtraction (without borrow)", route: "give-and-take" },
+            { id: "1035", name: "Two-digit subtraction (with borrow)", route: "give-and-take" },
+            { id: "1036", name: "Word problems", route: "give-and-take" },
+            { id: "1136", name: "Chapter Test", route: "give-and-take" }
+        ],
+        'The Longest Step': [
+            { id: "1037", name: "Measurement of length", route: "the-longest-step" },
+            { id: "1038", name: "Estimation", route: "the-longest-step" },
+            { id: "1039", name: "Comparing distances", route: "the-longest-step" },
+            { id: "1139", name: "Chapter Test", route: "the-longest-step" }
+        ],
+        'Birds Come, Birds Go': [
+            { id: "1040", name: "Data handling", route: "birds-come-birds-go" },
+            { id: "1041", name: "Pictographs", route: "birds-come-birds-go" },
+            { id: "1042", name: "Counting using charts", route: "birds-come-birds-go" },
+            { id: "1142", name: "Chapter Test", route: "birds-come-birds-go" }
         ]
     },
     '3': {
@@ -99,17 +162,19 @@ export const TOPIC_CONFIGS = {
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
             { id: "RB-03", name: "Division" },
-            { id: "RB-04", name: "Factors" }
+            { id: "RB-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
         'Fair Share': [
             { id: "FS-01", name: "Cutting equal parts" },
             { id: "FS-02", name: "Halves and doubles" },
             { id: "FS-03", name: "Drawing other half" },
-            { id: "FS-04", name: "Guess Who Am I?" }
+            { id: "FS-04", name: "Guess Who Am I?" },
+            { id: "FS-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
         'Fun at Class Party': [
             { id: "FCP-01", name: "Longer & Shorter Strings", route: "longer-shorter" },
-            { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" }
+            { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" },
+            { id: "FCP-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
         'House of Hundreds II': [
             { id: "HH2-01", name: "Draw tiles" },
@@ -121,7 +186,7 @@ export const TOPIC_CONFIGS = {
             { id: "HH2-07", name: "Number Puzzles" },
             { id: "HH2-08", name: "The Number Detective" },
             { id: "HH2-09", name: "Paper Slips" },
-            { id: "HH2-10", name: "Guess the Number" }
+            { id: "HH2-TEST", name: "Chapter Test", route: "chapter-test" }
         ]
     },
     '4': {
@@ -155,7 +220,8 @@ export const TOPIC_CONFIGS = {
             { id: "1157", name: "Mixed Word Problems", route: "equal-groups-mixed-word-problems" },
             { id: "1158", name: "Always, Sometimes, Never", route: "always-sometimes-never-statements" },
             { id: "1159", name: "Find the Mistake", route: "find-the-mistake-equal-groups" },
-            { id: "1160", name: "Create Your Own Groups", route: "create-your-own-equal-groups" }
+            { id: "1160", name: "Create Your Own Groups", route: "create-your-own-equal-groups" },
+            { id: "1214", name: "Chapter Test", route: "chapter-test" }
         ],
         'Weigh It, Pour It': [
             { id: "1129", name: "Gram to Kilogram (Fractions)", route: "gram-to-kilogram-fractions" },
@@ -165,7 +231,8 @@ export const TOPIC_CONFIGS = {
             { id: "1138", name: "Count How Many Units Fit", route: "count-how-many-units-fit" },
             { id: "1139", name: "Repeated Addition to One Whole", route: "repeated-addition-to-one-whole" },
             { id: "1140", name: "Compare Weights and Capacities", route: "compare-weights-and-capacities" },
-            { id: "1141", name: "Weight and Capacity Word Problems", route: "weight-and-capacity-word-problems" }
+            { id: "1141", name: "Weight and Capacity Word Problems", route: "weight-and-capacity-word-problems" },
+            { id: "1215", name: "Chapter Test", route: "chapter-test" }
         ],
         'Elephants, Tigers, and Leopards': [
             // Number Games & Patterns
@@ -185,7 +252,47 @@ export const TOPIC_CONFIGS = {
             { id: "1198", name: "Quick Compare", route: "quick-compare" },
             // Strategies
             { id: "1199", name: "Smart Shortcuts", route: "smart-shortcuts" },
-            { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" }
+            { id: "1200", name: "Compensation Strategy", route: "compensation-strategy" },
+            { id: "1213", name: "Chapter Test", route: "chapter-test" }
+        ],
+        'Fun with Symmetry': [
+            { id: "1201", name: "Identify Line of Symmetry", route: "identify-line-of-symmetry" },
+            { id: "1202", name: "Draw Line of Symmetry", route: "draw-line-of-symmetry" },
+            { id: "1203", name: "Paper Fold Symmetry", route: "paper-fold-symmetry" },
+            { id: "1204", name: "Mirror Image Shapes", route: "mirror-image-shapes" },
+            { id: "1205", name: "Complete Half Design", route: "complete-half-design" },
+            { id: "1206", name: "Symmetry on Dot Grid", route: "symmetry-on-dot-grid" },
+            { id: "1207", name: "Lines of Symmetry in Polygons", route: "lines-of-symmetry-in-polygons" },
+            { id: "1208", name: "Mirror Symmetric Characters", route: "mirror-symmetric-numbers-letters" },
+            { id: "1209", name: "Identify Repeating Tile", route: "identify-repeating-tile" },
+            { id: "1210", name: "Create Tiling Without Gaps", route: "create-tiling-without-gaps" },
+            { id: "1211", name: "Classify Symmetrical Objects", route: "classify-symmetrical-objects" },
+            { id: "1212", name: "Chapter Test", route: "chapter-test" }
+        ],
+        'Ticking Clocks and Turning Calendars': [
+            { id: "TC-01", name: "Introduction", route: "ticking-clocks" },
+            { id: "TC-02", name: "Terminology", route: "ticking-clocks" },
+            { id: "TC-03", name: "Skills", route: "ticking-clocks" }
+        ],
+        'The Transport Museum': [
+            { id: "TM-01", name: "Introduction", route: "the-transport-museum-hero" },
+            { id: "TM-02", name: "Terminology", route: "the-transport-museum-hero" },
+            { id: "TM-03", name: "Skills", route: "the-transport-museum-hero" }
+        ],
+        'Data Handling': [
+            { id: "DH-01", name: "Introduction", route: "data-handling-hero" },
+            { id: "DH-02", name: "Terminology", route: "data-handling-hero" },
+            { id: "DH-03", name: "Skills", route: "data-handling-hero" }
+        ],
+        'Shapes Around Us': [
+            { id: "SAU-01", name: "Introduction", route: "shapes-around-us-hero" },
+            { id: "SAU-02", name: "Terminology", route: "shapes-around-us-hero" },
+            { id: "SAU-03", name: "Skills", route: "shapes-around-us-hero" }
+        ],
+        'Hide and Seek': [
+            { id: "HAS-01", name: "Introduction", route: "hide-and-seek-hero" },
+            { id: "HAS-02", name: "Terminology", route: "hide-and-seek-hero" },
+            { id: "HAS-03", name: "Skills", route: "hide-and-seek-hero" }
         ]
     }
 };

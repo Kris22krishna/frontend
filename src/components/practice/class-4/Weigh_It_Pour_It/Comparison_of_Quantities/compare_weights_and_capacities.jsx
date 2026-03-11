@@ -130,7 +130,7 @@ const CompareWeightsAndCapacities = () => {
                 correctAnswer: correctOption,
                 solution: explanation,
                 scaleTiltTarget: scaleTiltTarget,
-                shuffledOptions: ["Left Side", "Right Side", "Balanced"]
+                shuffledOptions: ["Left Side", "Balanced", "Right Side"]
             };
         };
 
@@ -157,7 +157,7 @@ const CompareWeightsAndCapacities = () => {
         if (sessionQuestions.length > 0) {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
-            setShuffledOptions(qData.shuffledOptions);
+            setShuffledOptions(["Left Side", "Balanced", "Right Side"]);
             const previousAnswer = answers[qIndex];
             if (previousAnswer) {
                 setSelectedOption(previousAnswer.selected);
@@ -282,38 +282,92 @@ const CompareWeightsAndCapacities = () => {
         const rotation = tilt === 'level' ? 0 : (tilt === 'left' ? -15 : 15);
 
         return (
-            <div className="relative w-full max-w-lg h-64 mx-auto mt-8 mb-12">
-                {/* Base */}
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[30px] border-l-transparent border-r-[30px] border-r-transparent border-b-[60px] border-b-[#31326F]"></div>
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-32 bg-[#31326F]"></div>
+            <div className="relative w-full max-w-2xl h-44 md:h-56 mx-auto mt-4 md:mt-8 mb-6 md:mb-10 flex flex-col items-center justify-end">
+                {/* Central Pillar */}
+                <div className="relative z-0 flex flex-col items-center w-full h-full justify-end">
+                    <div className="w-4 md:w-6 h-28 md:h-36 bg-[#31326F] rounded-t-full shadow-inner relative z-10">
+                        {/* Decorative lines on pillar */}
+                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 md:w-10 h-1 md:h-2 bg-[#E0FBEF] rounded-full opacity-50"></div>
+                        <div className="absolute top-8 left-1/2 -translate-x-1/2 w-8 md:w-10 h-1 md:h-2 bg-[#E0FBEF] rounded-full opacity-50"></div>
+                        <div className="absolute top-12 left-1/2 -translate-x-1/2 w-8 md:w-10 h-1 md:h-2 bg-[#E0FBEF] rounded-full opacity-50"></div>
+                    </div>
+                    {/* Elaborate Base */}
+                    <div className="relative flex flex-col items-center z-0 -mt-2">
+                        <div className="w-16 md:w-24 h-6 md:h-8 bg-[#4FB7B3] rounded-t-2xl shadow-md border-b-4 border-[#31326F]/20 relative z-10"></div>
+                        <div className="w-24 md:w-36 h-4 md:h-6 bg-[#31326F] rounded-t-xl rounded-b-md shadow-xl -mt-1 relative z-0"></div>
+                    </div>
+                </div>
 
-                {/* Beam Container - Rotates */}
+                {/* Rotating Beam Container */}
                 <motion.div
-                    className="absolute top-10 left-1/2 w-3/4 h-32 origin-top"
-                    style={{ marginLeft: '-37.5%' }} // Center of 75% width
+                    className="absolute top-2 md:top-4 left-1/2 w-4/5 md:w-3/4 h-32 md:h-40 origin-top z-20"
+                    style={{ marginLeft: '-40%', '@media (minWidth: 768px)': { marginLeft: '-37.5%' } }}
                     animate={{ rotate: rotation }}
-                    transition={{ type: "spring", stiffness: 60, damping: 10 }}
+                    transition={{ type: "spring", stiffness: 30, damping: 15, mass: 1 }}
                 >
-                    {/* The Beam */}
-                    <div className="w-full h-2 bg-[#31326F] rounded-full relative">
-                        {/* Left Pan String */}
-                        <div className="absolute left-4 top-1 w-0.5 h-24 bg-gray-400 origin-top"></div>
-                        <div className="absolute left-4 top-24 -translate-x-1/2 w-24 h-8 bg-gray-100 border-b-4 border-gray-300 rounded-b-full flex items-end justify-center pb-1 shadow-md">
-                            <div className="absolute bottom-full mb-1 w-max text-center">
-                                {leftContent}
-                            </div>
+                    {/* The Main Horizontal Beam */}
+                    <div className="w-full h-3 md:h-4 bg-[#4FB7B3] border-[3px] border-[#31326F] rounded-full relative shadow-sm">
+
+                        {/* Center Pivot Point (Fixed to beam) */}
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-6 md:w-8 h-6 md:h-8 bg-white border-4 border-[#31326F] rounded-full z-30 shadow-sm flex items-center justify-center">
+                            <div className="w-2 md:w-3 h-2 md:h-3 bg-[#4FB7B3] rounded-full"></div>
                         </div>
 
-                        {/* Right Pan String */}
-                        <div className="absolute right-4 top-1 w-0.5 h-24 bg-gray-400 origin-top"></div>
-                        <div className="absolute right-4 top-24 translate-x-1/2 w-24 h-8 bg-gray-100 border-b-4 border-gray-300 rounded-b-full flex items-end justify-center pb-1 shadow-md">
-                            <div className="absolute bottom-full mb-1 w-max text-center">
-                                {rightContent}
-                            </div>
-                        </div>
+                        {/* Left Pan Assembly */}
+                        <motion.div
+                            className="absolute left-2 md:left-4 top-2 flex flex-col items-center origin-top z-10"
+                            style={{ x: "-50%" }}
+                            animate={{ rotate: -rotation }}
+                            transition={{ type: "spring", stiffness: 30, damping: 15, mass: 1 }}
+                        >
+                            {/* Connector ring */}
+                            <div className="w-3 md:w-4 h-3 md:h-4 rounded-full border-[3px] border-[#31326F] bg-white -mt-2 shadow-sm z-20"></div>
 
-                        {/* Center Pivot Point Visual */}
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-[#31326F] rounded-full z-10"></div>
+                            {/* Chains (represented by thick lines) */}
+                            <div className="relative w-16 md:w-20 h-20 md:h-28 -mt-1 z-10">
+                                <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute top-0 left-0">
+                                    <line x1="50" y1="0" x2="10" y2="100" stroke="#9CA3AF" strokeWidth="3" strokeLinecap="round" />
+                                    <line x1="50" y1="0" x2="90" y2="100" stroke="#9CA3AF" strokeWidth="3" strokeLinecap="round" />
+                                </svg>
+                            </div>
+
+                            {/* Pan Base */}
+                            <div className="w-20 md:w-28 h-6 md:h-8 bg-white border-4 border-[#31326F] border-t-0 rounded-b-[2rem] shadow-xl relative flex items-end justify-center pb-2 z-20">
+                                {/* Inner bowl detail */}
+                                <div className="absolute inset-0 bg-blue-50/50 rounded-b-[1.75rem] m-0.5"></div>
+                                <div className="absolute bottom-[100%] mb-1 w-max text-center z-30">
+                                    {leftContent}
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Right Pan Assembly */}
+                        <motion.div
+                            className="absolute right-2 md:right-4 top-2 flex flex-col items-center origin-top z-10"
+                            style={{ x: "50%" }}
+                            animate={{ rotate: -rotation }}
+                            transition={{ type: "spring", stiffness: 30, damping: 15, mass: 1 }}
+                        >
+                            {/* Connector ring */}
+                            <div className="w-3 md:w-4 h-3 md:h-4 rounded-full border-[3px] border-[#31326F] bg-white -mt-2 shadow-sm z-20"></div>
+
+                            {/* Chains */}
+                            <div className="relative w-16 md:w-20 h-20 md:h-28 -mt-1 z-10">
+                                <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute top-0 left-0">
+                                    <line x1="50" y1="0" x2="10" y2="100" stroke="#9CA3AF" strokeWidth="3" strokeLinecap="round" />
+                                    <line x1="50" y1="0" x2="90" y2="100" stroke="#9CA3AF" strokeWidth="3" strokeLinecap="round" />
+                                </svg>
+                            </div>
+
+                            {/* Pan Base */}
+                            <div className="w-20 md:w-28 h-6 md:h-8 bg-white border-4 border-[#31326F] border-t-0 rounded-b-[2rem] shadow-xl relative flex items-end justify-center pb-2 z-20">
+                                {/* Inner bowl detail */}
+                                <div className="absolute inset-0 bg-blue-50/50 rounded-b-[1.75rem] m-0.5"></div>
+                                <div className="absolute bottom-[100%] mb-1 w-max text-center z-30">
+                                    {rightContent}
+                                </div>
+                            </div>
+                        </motion.div>
                     </div>
                 </motion.div>
             </div>
@@ -486,83 +540,74 @@ const CompareWeightsAndCapacities = () => {
                 </div>
             </header>
 
-            <main className="practice-content-wrapper">
-                <div className="practice-board-container" style={{ gridTemplateColumns: '1fr', maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="practice-left-col" style={{ width: '100%' }}>
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={qIndex}
-                                initial={{ x: 50, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: -50, opacity: 0 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
-                                style={{ height: '100%', width: '100%' }}
-                            >
-                                <div className="question-card-modern" style={{ paddingLeft: '0' }}>
-                                    <div className="question-header-modern" style={{ flexDirection: 'column', gap: '1rem' }}>
-                                        <div className="text-center font-bold text-gray-500 uppercase tracking-widest text-sm mb-2">
-                                            Comparison Lab ⚖️
-                                        </div>
+            <main className="flex-1 w-full max-w-5xl mx-auto px-4 pb-24 pt-4 relative z-10 flex flex-col justify-start min-h-0 min-h-[calc(100vh-140px)] -mt-12 sm:-mt-8">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={qIndex}
+                        initial={{ x: 50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -50, opacity: 0 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="my-auto bg-white/95 backdrop-blur-md rounded-[2rem] md:rounded-[3rem] shadow-2xl border-4 border-[#E0FBEF] p-4 sm:p-5 md:p-8 lg:p-10 flex flex-col items-center w-full grow-0 shrink-0 transform -translate-y-4 md:-translate-y-8"
+                    >
+                        <div className="text-center font-bold text-gray-500 uppercase tracking-widest text-sm mb-1 sm:mb-2">
+                            Comparison Lab ⚖️
+                        </div>
 
-                                        <BalanceScale
-                                            tilt={balanceTilt}
-                                            leftContent={
-                                                <div className="bg-white px-3 py-2 rounded-xl border-2 border-[#31326F] shadow-sm font-bold text-[#31326F]">
-                                                    {currentQuestion.val1} {currentQuestion.unit1}
-                                                </div>
-                                            }
-                                            rightContent={
-                                                <div className="bg-white px-3 py-2 rounded-xl border-2 border-[#31326F] shadow-sm font-bold text-[#31326F]">
-                                                    {currentQuestion.val2} {currentQuestion.unit2}
-                                                </div>
-                                            }
-                                        />
+                        <div className="w-full flex-shrink-0">
+                            <BalanceScale
+                                tilt={balanceTilt}
+                                leftContent={
+                                    <div className="bg-white px-2 py-1 md:px-3 md:py-2 rounded-xl border-2 border-[#31326F] shadow-sm font-bold text-sm md:text-base text-[#31326F]">
+                                        {currentQuestion.val1} {currentQuestion.unit1}
+                                    </div>
+                                }
+                                rightContent={
+                                    <div className="bg-white px-2 py-1 md:px-3 md:py-2 rounded-xl border-2 border-[#31326F] shadow-sm font-bold text-sm md:text-base text-[#31326F]">
+                                        {currentQuestion.val2} {currentQuestion.unit2}
+                                    </div>
+                                }
+                            />
+                        </div>
 
-                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2rem', fontWeight: '400', textAlign: 'center', maxHeight: 'none', overflow: 'visible' }}>
-                                            Which side will go down?
-                                        </h2>
-                                    </div>
-                                    <div className="interaction-area-modern">
-                                        <div className="options-grid-modern" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
-                                            {shuffledOptions.map((option, idx) => (
-                                                <button
-                                                    key={idx}
-                                                    className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''
-                                                        } ${isSubmitted && selectedOption === option && !isCorrect ? 'wrong' : ''
-                                                        }`}
-                                                    style={{
-                                                        fontFamily: '"Open Sans", sans-serif',
-                                                        fontWeight: '400',
-                                                        fontSize: '1.8rem',
-                                                        backgroundColor: !isSubmitted ? (selectedOption === option ? '#e5e7eb' : '#f9fafb') : undefined,
-                                                        color: !isSubmitted ? '#1f2937' : undefined,
-                                                        borderColor: !isSubmitted ? (selectedOption === option ? '#9ca3af' : '#d1d5db') : undefined,
-                                                        borderWidth: !isSubmitted ? '2px' : undefined,
-                                                        borderStyle: !isSubmitted ? 'solid' : undefined
-                                                    }}
-                                                    onClick={() => handleOptionSelect(option)}
-                                                    disabled={isSubmitted}
-                                                >
-                                                    <LatexContent html={option} />
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {isSubmitted && isCorrect && (
-                                            <motion.div
-                                                initial={{ scale: 0.5, opacity: 0 }}
-                                                animate={{ scale: 1, opacity: 1 }}
-                                                className="feedback-mini correct"
-                                                style={{ marginTop: '20px' }}
-                                            >
-                                                {feedbackMessage}
-                                            </motion.div>
-                                        )}
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-                </div>
+                        <h2 className="text-lg sm:text-xl md:text-3xl font-medium text-[#31326F] text-center mt-0 md:mt-2 mb-3 md:mb-6">
+                            Which side will go down?
+                        </h2>
+
+                        <div className="w-full max-w-4xl border-t-2 border-dashed border-gray-200 pt-3 md:pt-6 pb-1 md:pb-2">
+                            <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-5">
+                                {shuffledOptions.map((option, idx) => (
+                                    <button
+                                        key={idx}
+                                        className={`rounded-2xl md:rounded-3xl py-3 sm:py-4 md:py-5 flex items-center justify-center font-medium text-base sm:text-lg md:text-2xl transition-all border-4 relative overflow-hidden group w-full ${selectedOption === option
+                                            ? 'bg-blue-50 border-[#4FB7B3] text-[#31326F] shadow-inner transform scale-[1.02]'
+                                            : 'bg-white border-gray-200 text-gray-600 hover:border-blue-200 hover:bg-gray-50'
+                                            } ${isSubmitted && option === currentQuestion.correctAnswer
+                                                ? '!bg-green-100 !border-green-400 !text-green-800'
+                                                : ''
+                                            } ${isSubmitted && selectedOption === option && !isCorrect
+                                                ? '!bg-red-50 !border-red-400 !text-red-700'
+                                                : ''
+                                            }`}
+                                        onClick={() => handleOptionSelect(option)}
+                                        disabled={isSubmitted}
+                                    >
+                                        <LatexContent html={option} />
+                                    </button>
+                                ))}
+                            </div>
+                            {isSubmitted && isCorrect && (
+                                <motion.div
+                                    initial={{ scale: 0.5, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    className="mt-3 sm:mt-4 md:mt-6 font-medium text-base sm:text-lg md:text-xl text-center px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-green-100 text-green-700 mx-auto w-fit"
+                                >
+                                    {feedbackMessage}
+                                </motion.div>
+                            )}
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
             </main>
 
             <ExplanationModal
