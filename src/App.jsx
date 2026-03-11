@@ -789,6 +789,23 @@ function App() {
           <Route path="middle/grade/7/data-handling/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DataHandlingEasyTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DataHandlingMediumTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DataHandlingHardTest /></ProtectedRoute>} />
+
+          {/* Class 11 Biology */}
+          <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
+          <Route path="senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
+
+          {/* Class 11 Maths */}
+          <Route path="senior/grade/11/maths" element={<MathsChapters />} />
+          <Route path="senior/grade/11/maths/sets" element={<SetsDashboard />} />
+          <Route path="senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
+          <Route path="senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
+          <Route path="senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
+          <Route path="senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
+          <Route path="senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
+
+          {/* Placeholder routes for other Grade 11 subjects */}
+          <Route path="senior/grade/11/chemistry" element={<ComingSoon />} />
+          <Route path="senior/grade/11/physics" element={<ComingSoon />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
@@ -1751,6 +1768,7 @@ function App() {
         <Route path="/high/practice/1240" element={<PolynomialsTest />} />
 
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
+
 
         {/* Class 11 Biology */}
         <Route path="/senior/grade/11/biology" element={<BiologyChapters />} />

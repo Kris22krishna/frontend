@@ -1,328 +1,129 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { matricesConnectomicsData as data } from "./MatricesConnectomicsData";
 import "../../MatricesPages.css";
 import MathRenderer from "../../../../../MathRenderer";
-
-const HERO_STATS = [
-    { label: "Learning Targets", value: data.learningObjectives.length },
-    { label: "Core Connections", value: data.conceptMap.links.length },
-    { label: "Topic Zones", value: data.topicBreakdown.length },
-];
+import { Share2 } from "lucide-react";
 
 export default function MatricesConnectomics() {
     const navigate = useNavigate();
-    const [expandedTopics, setExpandedTopics] = useState(new Set([0]));
-
-    const toggleTopic = (idx) => {
-        setExpandedTopics((prev) => {
-            const next = new Set(prev);
-            if (next.has(idx)) next.delete(idx);
-            else next.add(idx);
-            return next;
-        });
-    };
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
 
     return (
-        <div className="mat-page mat-connect-page">
+        <div className="mat-page">
             <nav className="mat-intro-nav">
-                <button
-                    className="mat-intro-nav-back"
-                    onClick={() => navigate("/senior/grade/12/matrices")}
-                >
-                    ← Back to Matrices
+                <button className="mat-intro-nav-back" onClick={() => navigate("/senior/grade/12/matrices")}>
+                    ← Back to Dashboard
                 </button>
-                <div className="mat-intro-nav-links">
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/introduction")}
-                    >
-                        🌟 Introduction
-                    </button>
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/terminology")}
-                    >
-                        📖 Terminology
-                    </button>
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/skills")}
-                    >
-                        🎯 Skills
-                    </button>
-                    <button
-                        className="mat-intro-nav-link mat-intro-nav-link--active"
-                        onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
-                    >
-                        🌐 Connectomics
-                    </button>
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
-                    >
-                        ⚔️ Exam Edge
-                    </button>
-                </div>
             </nav>
 
-            <header className="mat-connect-hero">
-                <div className="mat-connect-hero-shell">
-                    <div className="mat-connect-hero-copy">
-                        <div className="mat-hero-badge">{data.hero.badge}</div>
-                        <h1 className="mat-connect-title">
-                            {data.hero.title} <span>{data.hero.highlight}</span>
-                        </h1>
-                        <p className="mat-connect-subtitle">{data.hero.subtitle}</p>
-                    </div>
-
-                    <div className="mat-connect-hero-panel">
-                        <div className="mat-connect-panel-label">Chapter Spine</div>
-                        <div className="mat-connect-node-cloud">
-                            {data.conceptMap.nodes.slice(0, 6).map((node) => (
-                                <div
-                                    key={node.id}
-                                    className="mat-connect-node-chip"
-                                    style={{ "--chip-color": node.color }}
-                                >
-                                    <span>{node.icon}</span>
-                                    <span>{node.label}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="mat-connect-hero-stats">
-                            {HERO_STATS.map((stat) => (
-                                <div key={stat.label} className="mat-connect-stat">
-                                    <span className="mat-connect-stat-value">{stat.value}</span>
-                                    <span className="mat-connect-stat-label">{stat.label}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            <div className="mat-intro-hero">
+                <div className="mat-intro-hero-deco mat-intro-hero-deco-a" />
+                <div className="mat-intro-hero-deco mat-intro-hero-deco-b" />
+                <div className="mat-intro-hero-inner">
+                    <h1 className="mat-intro-hero-title">Matrices <span className="mat-intro-hero-highlight">Connectomics</span></h1>
+                    <p className="mat-intro-hero-sub">Discover the hidden threads linking Matrices to the entire world of science.</p>
                 </div>
-            </header>
+            </div>
 
-            <main className="mat-section mat-connect-main">
-                <section className="mat-connect-section">
-                    <div className="mat-connect-section-head">
-                        <div>
-                            <p className="mat-connect-kicker">What this page gives you</p>
-                            <h2 className="mat-section-title">
-                                Learning <span>Objectives</span>
-                            </h2>
-                        </div>
-                        <p className="mat-section-subtitle">
-                            The exact outcomes you should be able to demonstrate after this chapter.
-                        </p>
-                    </div>
+            <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
 
-                    <div className="mat-connect-objectives">
-                        {data.learningObjectives.map((objective, idx) => (
-                            <article key={idx} className="mat-connect-objective-card">
-                                <div className="mat-connect-objective-index">
-                                    {String(idx + 1).padStart(2, "0")}
-                                </div>
-                                <p>{objective}</p>
-                            </article>
-                        ))}
-                    </div>
-                </section>
+                {/* Connections Map */}
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '32px', textAlign: 'center', color: '#1e1b4b' }}>
+                    The Web of Mathematics
+                </h2>
 
-                <section className="mat-connect-section">
-                    <div className="mat-connect-section-head">
-                        <div>
-                            <p className="mat-connect-kicker">Flow of ideas</p>
-                            <h2 className="mat-section-title">
-                                Concept <span>Map</span>
-                            </h2>
-                        </div>
-                        <p className="mat-section-subtitle">
-                            Follow how one idea unlocks the next instead of memorising topics in isolation.
-                        </p>
-                    </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '60px' }}>
+                    {data.conceptMap.links.map((link, idx) => {
+                        const fromNode = data.conceptMap.nodes.find(n => n.id === link.from);
+                        const toNode = data.conceptMap.nodes.find(n => n.id === link.to);
+                        if (!fromNode || !toNode) return null;
 
-                    <div className="mat-connect-flow">
-                        {data.conceptMap.links.map((link, idx) => {
-                            const fromNode = data.conceptMap.nodes.find((node) => node.id === link.from);
-                            const toNode = data.conceptMap.nodes.find((node) => node.id === link.to);
-                            if (!fromNode || !toNode) return null;
+                        return (
+                            <div key={idx} style={{
+                                background: '#fff',
+                                borderRadius: '20px',
+                                padding: '24px',
+                                border: '1px solid #e2e8f0',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}>
+                                <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: fromNode.color }} />
 
-                            return (
-                                <article
-                                    key={idx}
-                                    className="mat-connect-flow-card"
-                                    style={{ "--flow-color": fromNode.color }}
-                                >
-                                    <div className="mat-connect-flow-track">
-                                        <div className="mat-connect-flow-icon">{fromNode.icon}</div>
-                                        <div className="mat-connect-flow-line" />
-                                        <div className="mat-connect-flow-icon mat-connect-flow-icon--end">
-                                            {toNode.icon}
-                                        </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                                    <div style={{ fontSize: '24px' }}>{fromNode.icon}</div>
+                                    <div style={{ fontSize: '12px', fontWeight: 800, background: `${fromNode.color}15`, color: fromNode.color, padding: '4px 10px', borderRadius: '100px' }}>
+                                        Connection {idx + 1}
                                     </div>
-
-                                    <div className="mat-connect-flow-body">
-                                        <div className="mat-connect-flow-tag">Connection {idx + 1}</div>
-                                        <div className="mat-connect-flow-path">
-                                            <span>{fromNode.label}</span>
-                                            <span className="mat-connect-flow-arrow">→</span>
-                                            <span>{toNode.label}</span>
-                                        </div>
-                                        <p>{link.tooltip}</p>
-                                    </div>
-                                </article>
-                            );
-                        })}
-                    </div>
-                </section>
-
-                <section className="mat-connect-section">
-                    <div className="mat-connect-section-head">
-                        <div>
-                            <p className="mat-connect-kicker">Deep dive by unit</p>
-                            <h2 className="mat-section-title">
-                                Topic <span>Breakdown</span>
-                            </h2>
-                        </div>
-                        <p className="mat-section-subtitle">
-                            Expand each zone to see the concept, a worked idea, the common trap, and the practice ladder.
-                        </p>
-                    </div>
-
-                    <div className="mat-connect-accordion">
-                        {data.topicBreakdown.map((topic, idx) => {
-                            const isExpanded = expandedTopics.has(idx);
-
-                            return (
-                                <article
-                                    key={topic.id}
-                                    className={`mat-connect-topic ${isExpanded ? "is-open" : ""}`}
-                                >
-                                    <button
-                                        className="mat-connect-topic-toggle"
-                                        onClick={() => toggleTopic(idx)}
-                                    >
-                                        <div className="mat-connect-topic-heading">
-                                            <div className="mat-connect-topic-id">{topic.id}</div>
-                                            <div>
-                                                <h3>{topic.title}</h3>
-                                                <p>{topic.concepts}</p>
-                                            </div>
-                                        </div>
-                                        <div className="mat-connect-topic-caret">{isExpanded ? "−" : "+"}</div>
-                                    </button>
-
-                                    {isExpanded && (
-                                        <div className="mat-connect-topic-panel">
-                                            <div className="mat-connect-topic-grid">
-                                                <div className="mat-connect-detail-card mat-connect-detail-card--concept">
-                                                    <div className="mat-connect-detail-label">Core Concept</div>
-                                                    <MathRenderer text={topic.concepts} />
-                                                </div>
-
-                                                <div className="mat-connect-detail-card">
-                                                    <div className="mat-connect-detail-label">Worked Example</div>
-                                                    <p>{topic.example}</p>
-                                                </div>
-
-                                                <div className="mat-connect-detail-card mat-connect-detail-card--warning">
-                                                    <div className="mat-connect-detail-label">Common Mistake</div>
-                                                    <MathRenderer text={topic.mistake} />
-                                                </div>
-                                            </div>
-
-                                            <div className="mat-connect-practice">
-                                                <div className="mat-connect-detail-label">Practice Ladder</div>
-                                                <div className="mat-connect-practice-list">
-                                                    {topic.problems.map((problem, problemIdx) => (
-                                                        <div key={problemIdx} className="mat-connect-practice-item">
-                                                            <span className={`mat-connect-level mat-connect-level--${problem.level.toLowerCase()}`}>
-                                                                {problem.level}
-                                                            </span>
-                                                            <div className="mat-connect-practice-question">
-                                                                <MathRenderer text={problem.q} />
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </article>
-                            );
-                        })}
-                    </div>
-                </section>
-
-                <section className="mat-connect-section">
-                    <div className="mat-connect-two-col">
-                        <div className="mat-connect-panel-card">
-                            <div className="mat-connect-section-head mat-connect-section-head--compact">
-                                <div>
-                                    <p className="mat-connect-kicker">Teacher lens</p>
-                                    <h2 className="mat-section-title">
-                                        Pedagogy <span>Sequence</span>
-                                    </h2>
                                 </div>
-                            </div>
 
-                            <div className="mat-connect-weeks">
-                                {data.pedagogy.map((plan) => (
-                                    <article key={plan.week} className="mat-connect-week-card">
-                                        <div className="mat-connect-week-tag">{plan.week}</div>
-                                        <h3>{plan.title}</h3>
-                                        <p>{plan.focus}</p>
-                                    </article>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="mat-connect-panel-card mat-connect-panel-card--warning">
-                            <div className="mat-connect-section-head mat-connect-section-head--compact">
-                                <div>
-                                    <p className="mat-connect-kicker">Student traps</p>
-                                    <h2 className="mat-section-title">
-                                        Common <span>Misconceptions</span>
-                                    </h2>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                                    <span style={{ fontWeight: 800, color: '#1e1b4b' }}>{fromNode.label}</span>
+                                    <span style={{ color: '#94a3b8' }}>→</span>
+                                    <span style={{ fontWeight: 800, color: fromNode.color }}>{toNode.label}</span>
                                 </div>
-                            </div>
 
-                            <div className="mat-connect-misconceptions">
-                                {data.misconceptions.map((item, idx) => (
-                                    <article key={idx} className="mat-connect-misc-card">
-                                        <div className="mat-connect-misc-badge">!</div>
-                                        <div>
-                                            <div className="mat-connect-misc-statement">
-                                                <MathRenderer text={item.statement} />
-                                            </div>
-                                            <div className="mat-connect-misc-truth">
-                                                <MathRenderer text={item.truth} />
-                                            </div>
-                                        </div>
-                                    </article>
-                                ))}
+                                <p style={{ margin: 0, fontSize: '14px', color: '#64748b', lineHeight: 1.6 }}>
+                                    <MathRenderer text={link.tooltip} />
+                                </p>
                             </div>
+                        );
+                    })}
+                </div>
+
+                {/* Real World Applications */}
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '32px', textAlign: 'center', color: '#1e1b4b' }}>
+                    Real World Systems
+                </h2>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '60px' }}>
+                    {data.topicBreakdown.map((topic, idx) => (
+                        <div key={idx} style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '32px', borderRadius: '24px', color: '#fff' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 900, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                                Zone {topic.id}
+                            </div>
+                            <h3 style={{ fontSize: '22px', fontWeight: 800, marginBottom: '12px' }}>{topic.title}</h3>
+                            <p style={{ margin: 0, opacity: 0.8, fontSize: '15px', lineHeight: 1.6 }}>
+                                <MathRenderer text={topic.concepts} />
+                            </p>
                         </div>
-                    </div>
-                </section>
+                    ))}
+                </div>
 
-                <section className="mat-connect-cta">
-                    <div>
-                        <p className="mat-connect-kicker">Next move</p>
-                        <h3>Use the map. Then train for marks.</h3>
-                        <p>
-                            Once the chapter structure is clear, shift to exam pattern drills and timed question selection.
-                        </p>
-                    </div>
-                    <button onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}>
-                        Open Exam Edge →
-                    </button>
-                </section>
+                {/* Misconceptions */}
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '32px', textAlign: 'center', color: '#1e1b4b' }}>
+                    Common Misconceptions
+                </h2>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '60px' }}>
+                    {data.misconceptions.map((item, idx) => (
+                        <div key={idx} style={{
+                            background: '#fff',
+                            borderRadius: '20px',
+                            padding: '24px',
+                            border: '1px solid #fee2e2',
+                            boxShadow: '0 4px 12px rgba(239,68,68,0.04)',
+                            position: 'relative',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: '#ef4444' }} />
+                            <div style={{ fontSize: '14px', fontWeight: 800, color: '#ef4444', marginBottom: '8px' }}>
+                                ⚠️ <MathRenderer text={item.statement} />
+                            </div>
+                            <p style={{ margin: 0, fontSize: '14px', color: '#64748b', lineHeight: 1.6 }}>
+                                <MathRenderer text={item.truth} />
+                            </p>
+                        </div>
+                    ))}
+                </div>
+
+                <div style={{ marginTop: '60px', textAlign: 'center', background: '#f8fafc', padding: '40px', borderRadius: '32px', border: '2px dashed #e2e8f0' }}>
+                    <Share2 size={48} color="#6366f1" style={{ marginBottom: '16px' }} />
+                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1e1b4b' }}>Infinite Connections</h3>
+                    <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b' }}>
+                        Matrices aren't just a chapter; they're the computational backbone of computer graphics, machine learning, and quantum mechanics.
+                    </p>
+                </div>
             </main>
         </div>
     );

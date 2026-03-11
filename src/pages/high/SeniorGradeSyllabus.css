@@ -426,6 +426,28 @@
     background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
 }
 
+.g11-card-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.12) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+    z-index: 1;
+}
+
+.g11-subject-card:hover .g11-card-bg::before {
+    transform: translateX(30%);
+}
+
 .g11-card-content {
     position: relative;
     z-index: 1;

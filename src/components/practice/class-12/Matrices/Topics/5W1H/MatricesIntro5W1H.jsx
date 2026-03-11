@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { matricesIntroData } from "./MatricesIntroData";
 import "../../MatricesPages.css";
-import MathRenderer from "../../../../../MathRenderer";
+import { LatexText } from "../../../../../LatexText";
 
 /* ── Single card ─────────────────────────────────── */
 function W1HCard({ card }) {
@@ -10,55 +10,71 @@ function W1HCard({ card }) {
 
   return (
     <div
-      className="mat-card"
+      className={`mat-intro-card${open ? ' mat-intro-card--open' : ''}`}
       onClick={() => setOpen((o) => !o)}
       style={{
-        "--c1": card.gradFrom,
-        "--c2": card.gradTo,
-        "--cg": card.shadow,
-        borderColor: open ? card.gradFrom + "50" : "rgba(0,0,0,0.03)",
-        boxShadow: open ? `0 20px 40px ${card.shadow}` : "",
-        transform: open ? "translateY(-4px)" : "",
+        borderColor: open ? card.gradFrom + "50" : "#e2e8f0",
+        boxShadow: open ? `0 8px 32px ${card.shadow}` : "0 2px 10px rgba(0,0,0,0.07)",
       }}
     >
-      <div className="mat-card-bg-glow" />
+      {/* Gradient top strip */}
+      <div
+         className="mat-intro-card-strip"
+         style={{ background: `linear-gradient(90deg, ${card.gradFrom}, ${card.gradTo})` }}
+      />
+      <div className="mat-intro-card-main">
+        {/* Header row */}
+        <div className="mat-intro-card-header">
+          {/* Icon */}
+          <div
+             className="mat-intro-card-icon"
+             style={{
+                 background: `linear-gradient(135deg, ${card.gradFrom}, ${card.gradTo})`,
+                 boxShadow: `0 4px 14px ${card.shadow}`,
+             }}
+          >
+             {card.icon}
+          </div>
 
-      {/* Header row */}
-      <div className="mat-card-header">
-        <div className="mat-card-icon">{card.icon}</div>
-        <div style={{ flex: 1 }}>
-          <div className="mat-card-q">{card.q}</div>
-          <div className="mat-card-title">{card.label}</div>
+          {/* Q + label */}
+          <div style={{ flex: 1 }}>
+            <div
+               className="mat-intro-card-q"
+               style={{ color: card.gradFrom }}
+            >
+               {card.q}
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#64748b' }}>{card.label}</div>
+          </div>
+
+          {/* Chevron */}
+          <div
+            style={{
+              color: open ? card.gradFrom : "#94a3b8",
+              transform: open ? "rotate(180deg)" : "none",
+              transition: "all 0.3s ease",
+            }}
+          >
+            ▼
+          </div>
         </div>
-        <div
-          style={{
-            color: open ? card.gradFrom : "#94a3b8",
-            transform: open ? "rotate(180deg)" : "none",
-            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-            fontSize: "20px",
-          }}
-        >
-          ▼
-        </div>
+
+        {/* Collapsed hint */}
+        {!open && <div style={{ color: '#94a3b8', fontSize: '13px', fontWeight: 600, marginTop: '-8px', paddingLeft: '90px', paddingBottom: '24px' }}>Tap to explore →</div>}
+
+        {/* Expanded content */}
+        {open && (
+          <div className="mat-intro-card-body">
+            <div className="mat-intro-card-content">
+              <LatexText text={card.content} />
+            </div>
+            <div className="mat-intro-card-fact">
+              <span style={{ color: card.gradFrom, fontWeight: 800 }}>💡 Fun Fact: </span>
+              <LatexText text={card.fact} />
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Collapsed hint */}
-      {!open && <div style={{ color: '#94a3b8', fontSize: '14px', fontWeight: 600, marginTop: '-8px', paddingLeft: '84px' }}>Tap to explore →</div>}
-
-      {/* Expanded content */}
-      {open && (
-        <div className="mat-card-body">
-          <div className="mat-card-desc">
-            <MathRenderer text={card.content} />
-          </div>
-          <div className="mat-card-fact">
-            <strong style={{ color: card.gradFrom, display: "block", marginBottom: "4px" }}>
-              💡 Fun Fact
-            </strong>
-            <MathRenderer text={card.fact} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -74,40 +90,45 @@ export default function MatricesIntro5W1H() {
 
   return (
     <div className="mat-page">
-      <nav className="mat-intro-nav">
+      <nav className="mat-nav">
         <button
-          className="mat-intro-nav-back"
+          className="mat-nav-back"
           onClick={() => navigate("/senior/grade/12/matrices")}
         >
           ← Back to Matrices
         </button>
-        <div className="mat-intro-nav-links">
+        <div className="sets-nav-links" style={{ display: 'flex', gap: '8px' }}>
           <button
-            className="mat-intro-nav-link mat-intro-nav-link--active"
+            className="sets-nav-link active"
+            style={{ padding: '8px 18px', borderRadius: '100px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', background: 'linear-gradient(135deg, #1e1b4b, #312e81)', color: '#fff', border: 'none', boxShadow: '0 4px 14px rgba(30, 27, 75, 0.3)' }}
             onClick={() => navigate("/senior/grade/12/matrices/introduction")}
           >
             🌟 Introduction
           </button>
           <button
-            className="mat-intro-nav-link"
+            className="sets-nav-link"
+            style={{ padding: '8px 18px', borderRadius: '100px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0' }}
             onClick={() => navigate("/senior/grade/12/matrices/terminology")}
           >
             📖 Terminology
           </button>
           <button
-            className="mat-intro-nav-link"
+            className="sets-nav-link"
+            style={{ padding: '8px 18px', borderRadius: '100px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0' }}
             onClick={() => navigate("/senior/grade/12/matrices/skills")}
           >
             🎯 Skills
           </button>
           <button
-            className="mat-intro-nav-link"
+            className="sets-nav-link"
+            style={{ padding: '8px 18px', borderRadius: '100px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0' }}
             onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
           >
             🌐 Connectomics
           </button>
           <button
-            className="mat-intro-nav-link"
+            className="sets-nav-link"
+            style={{ padding: '8px 18px', borderRadius: '100px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', background: '#f8fafc', color: '#64748b', border: '1.5px solid #e2e8f0' }}
             onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
           >
             ⚔️ Exam Edge
@@ -115,62 +136,80 @@ export default function MatricesIntro5W1H() {
         </div>
       </nav>
 
-      <div className="mat-hero">
+      <div className="mat-hero" style={{ background: "linear-gradient(145deg, #1e1b4b 0%, #312e81 100%)", padding: "48px 24px" }}>
         <div className="mat-hero-inner">
-          <div className="mat-hero-badge">Curiosity</div>
           <h1 className="mat-hero-title">
-            Discover Matrices Through <span className="mat-hero-highlight">6 Big Questions</span>
+            Discover <span style={{ color: '#818cf8' }}>Matrices</span>
           </h1>
-          <p className="mat-hero-sub">Tap each card below to explore the what, why, and how of the most powerful data structure in mathematics.</p>
+          <p className="mat-hero-sub">Get started with the 6 big questions and check your prerequisites.</p>
         </div>
       </div>
 
-      <main style={{ paddingBottom: "80px" }}>
-        <div className="mat-cards">
+      <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 24px" }}>
+        
+        {/* Prerequisites */}
+        <section style={{ marginBottom: "60px" }}>
+           <h2 style={{ fontFamily: "Outfit, sans-serif", fontSize: "28px", fontWeight: 900, marginBottom: "24px", textAlign: "center", color: "#312e81" }}>
+              Prerequisites
+           </h2>
+           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
+               {matricesIntroData.prerequisites.map((p, idx) => (
+                   <div key={idx} style={{ background: "#fff", padding: "32px 24px", borderRadius: "24px", border: "1px solid #e2e8f0", textAlign: "center", boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)", transition: "all 0.3s ease" }}>
+                       <div style={{ fontSize: "40px", marginBottom: "16px" }}>{p.icon}</div>
+                       <h3 style={{ fontSize: "20px", fontWeight: 900, margin: "0 0 8px", color: "#0f172a" }}>{p.title}</h3>
+                       <p style={{ fontSize: "15px", color: "#64748b", margin: 0, lineHeight: 1.6 }}>{p.desc}</p>
+                   </div>
+               ))}
+           </div>
+        </section>
+
+        {/* 5W1H Cards Grid */}
+        <h2 style={{ fontFamily: "Outfit, sans-serif", fontSize: "28px", fontWeight: 900, marginBottom: "32px", textAlign: "center", color: "#312e81" }}>
+           6 Big Questions
+        </h2>
+        <div className="mat-intro-grid">
           {matricesIntroData.cards5W1H.map((card, idx) => (
             <W1HCard key={idx} card={card} />
           ))}
         </div>
 
-        {/* Beautiful CTA Strip */}
+        {/* Footer CTA */}
         <div
           style={{
-            maxWidth: "1000px",
-            margin: "0 auto",
-            background: "linear-gradient(135deg, #ffffff, #f8fafc)",
-            border: "1px solid #e2e8f0",
+            marginTop: "60px",
+            padding: "32px",
+            background: "linear-gradient(135deg, #1e1b4b, #312e81)",
             borderRadius: "24px",
-            padding: "40px",
+            color: "#fff",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.03)",
+            flexWrap: "wrap",
+            gap: "20px"
           }}
         >
           <div>
-            <h3 style={{ fontFamily: "'Outfit', sans-serif", fontSize: "24px", fontWeight: 800, margin: "0 0 8px", color: "#0f172a" }}>
+            <h3 style={{ fontSize: "20px", fontWeight: 800, margin: "0 0 4px" }}>
               Ready to learn the language?
             </h3>
-            <p style={{ margin: 0, color: "#64748b", fontSize: "16px" }}>
-              Next up: 9 key terms and the 6 golden rules of Matrices.
+            <p style={{ margin: 0, opacity: 0.8 }}>
+              Next up: Key terms and the 6 golden rules of Matrices.
             </p>
           </div>
           <button
             onClick={() => navigate("/senior/grade/12/matrices/terminology")}
             style={{
-              padding: "16px 32px",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-              color: "#fff",
+              padding: "12px 28px",
+              background: "#fff",
+              color: "#1e1b4b",
               border: "none",
               borderRadius: "100px",
               fontWeight: 800,
-              fontSize: "16px",
               cursor: "pointer",
-              boxShadow: "0 8px 20px rgba(99, 102, 241, 0.3)",
-              transition: "transform 0.3s ease",
+              transition: "transform 0.2s ease"
             }}
-            onMouseOver={e => e.currentTarget.style.transform = "translateY(-2px)"}
-            onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}
+            onMouseOver={e => e.currentTarget.style.transform = "scale(1.05)"}
+            onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
           >
             Terminology →
           </button>
