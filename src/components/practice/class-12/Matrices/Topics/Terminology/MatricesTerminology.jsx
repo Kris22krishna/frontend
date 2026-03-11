@@ -10,10 +10,13 @@ const TERMS = [
     name: "Order of a Matrix",
     color: "#6366f1",
     icon: "📏",
-    def: "A matrix with m rows and n columns has order m × n. The total number of elements is m × n.",
+    def: "A matrix with $m$ rows and $n$ columns has order $m \\times n$. The total number of elements is $m \\times n$.",
     examples: ["$2 \\times 3$", "$3 \\times 1$", "$4 \\times 4$"],
-    inUse:
+    inUse: [
       "In $\\begin{bmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\end{bmatrix}$, the order is $2 \\times 3$.",
+      "In $\\begin{bmatrix} 7 \\\\ 8 \\\\ 9 \\end{bmatrix}$, the order is $3 \\times 1$.",
+      "In a generic $\\begin{bmatrix} a_{11} & \\dots & a_{14} \\\\ \\vdots & \\ddots & \\vdots \\\\ a_{41} & \\dots & a_{44} \\end{bmatrix}$, the order is $4 \\times 4$."
+    ],
     memory: "Rows come first, Columns come second — like RC (Remote Control)!",
   },
   {
@@ -22,8 +25,11 @@ const TERMS = [
     icon: "🔢",
     def: "Each individual number in a matrix, denoted $a_{ij}$ where $i$ = row number and $j$ = column number.",
     examples: ["$a_{11}$", "$a_{23}$", "$a_{ij}$"],
-    inUse:
-      "In $\\begin{bmatrix} 5 & -3 \\\\ 7 & 1 \\end{bmatrix}$, the element $a_{12} = -3$.",
+    inUse: [
+      "In $\\begin{bmatrix} 5 & -3 \\\\ 7 & 1 \\end{bmatrix}$, the element $a_{11} = 5$.",
+      "In $\\begin{bmatrix} 5 & -3 & 2 \\\\ 7 & 1 & 8 \\end{bmatrix}$, the element $a_{23} = 8$.",
+      "In general, $a_{ij}$ is the element in the $i$-th row and $j$-th column."
+    ],
     memory:
       'First subscript = Row, Second subscript = Column. Think "RC" again!',
   },
@@ -36,8 +42,10 @@ const TERMS = [
       "$\\begin{bmatrix} 7 & 3 & -1 \\end{bmatrix}$",
       "$\\begin{bmatrix} 1 & 0 \\end{bmatrix}$",
     ],
-    inUse:
-      "$\\begin{bmatrix} 2 & 5 & 8 \\end{bmatrix}$ is a $1 \\times 3$ row matrix.",
+    inUse: [
+      "$\\begin{bmatrix} 7 & 3 & -1 \\end{bmatrix}$ is a $1 \\times 3$ row matrix.",
+      "$\\begin{bmatrix} 1 & 0 \\end{bmatrix}$ is a $1 \\times 2$ row matrix."
+    ],
     memory: "One row goes horizontally across — like a row of chairs!",
   },
   {
@@ -49,8 +57,10 @@ const TERMS = [
       "$\\begin{bmatrix} 2 \\\\ 5 \\end{bmatrix}$",
       "$\\begin{bmatrix} 1 \\\\ 0 \\\\ -3 \\end{bmatrix}$",
     ],
-    inUse:
-      "$\\begin{bmatrix} 4 \\\\ 7 \\end{bmatrix}$ is a $2 \\times 1$ column matrix.",
+    inUse: [
+      "$\\begin{bmatrix} 2 \\\\ 5 \\end{bmatrix}$ is a $2 \\times 1$ column matrix.",
+      "$\\begin{bmatrix} 1 \\\\ 0 \\\\ -3 \\end{bmatrix}$ is a $3 \\times 1$ column matrix."
+    ],
     memory: "A single column stands tall — like a pillar!",
   },
   {
@@ -59,8 +69,11 @@ const TERMS = [
     icon: "⬜",
     def: "A matrix where the number of rows equals the number of columns (order $n \\times n$).",
     examples: ["$2 \\times 2$", "$3 \\times 3$", "$n \\times n$"],
-    inUse:
+    inUse: [
       "$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$ is a $2 \\times 2$ square matrix.",
+      "$\\begin{bmatrix} 1 & 2 & 3 \\\\ 4 & 5 & 6 \\\\ 7 & 8 & 9 \\end{bmatrix}$ is a $3 \\times 3$ square matrix.",
+      "A matrix with $n$ rows and $n$ columns is a square matrix of order $n$."
+    ],
     memory: "Equal sides like a perfect square!",
   },
   {
@@ -72,8 +85,10 @@ const TERMS = [
       "$\\begin{bmatrix} 4 & 0 \\\\ 0 & 7 \\end{bmatrix}$",
       "$\\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 5 & 0 \\\\ 0 & 0 & 3 \\end{bmatrix}$",
     ],
-    inUse:
-      "A diagonal matrix has non-zero elements only on the main diagonal (top-left to bottom-right).",
+    inUse: [
+      "A $2 \\times 2$ diagonal matrix. Notice $a_{12}=0$ and $a_{21}=0$.",
+      "A $3 \\times 3$ diagonal matrix. All elements off the main diagonal are zero."
+    ],
     memory: "Everything off the diagonal is wiped clean to zero!",
   },
   {
@@ -85,7 +100,10 @@ const TERMS = [
       "$I_2 = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$",
       "$I_3 = \\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{bmatrix}$",
     ],
-    inUse: "Multiplying any matrix by $I$ gives back the same matrix!",
+    inUse: [
+      "$I_2$ is the $2 \\times 2$ identity matrix.",
+      "$I_3$ is the $3 \\times 3$ identity matrix. Multiplying any matrix by $I$ gives back the same matrix!"
+    ],
     memory:
       'The identity matrix is the "1" of matrix world — it changes nothing!',
   },
@@ -94,8 +112,11 @@ const TERMS = [
     color: "#06b6d4",
     icon: "0️⃣",
     def: "A matrix in which every element is 0. Denoted $O$. It is the additive identity: $A + O = A$.",
-    examples: ["$O = \\begin{bmatrix} 0 & 0 \\\\ 0 & 0 \\end{bmatrix}$"],
-    inUse: "Adding the zero matrix to any matrix gives back the same matrix!",
+    examples: ["$O_{2 \\times 2} = \\begin{bmatrix} 0 & 0 \\\\ 0 & 0 \\end{bmatrix}$", "$O_{1 \\times 3} = \\begin{bmatrix} 0 & 0 & 0 \\end{bmatrix}$"],
+    inUse: [
+      "Adding the zero matrix to any matrix gives back the same matrix!",
+      "$O$ can be of any order, as long as all elements are zero."
+    ],
     memory:
       'The zero matrix is the "0" of matrix world — adding it changes nothing!',
   },
@@ -105,8 +126,10 @@ const TERMS = [
     icon: "🔄",
     def: "Obtained by interchanging rows and columns. Denoted $A^T$ or $A'$. If $A$ is $m \\times n$, then $A^T$ is $n \\times m$.",
     examples: ["$A^T$", "$(A^T)^T = A$"],
-    inUse:
+    inUse: [
       "If $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$ then $A^T = \\begin{bmatrix} 1 & 3 \\\\ 2 & 4 \\end{bmatrix}$.",
+      "Transposing a matrix twice gives back the original matrix!"
+    ],
     memory:
       "Rows become columns and columns become rows — like flipping over the diagonal!",
   },
@@ -134,10 +157,10 @@ const SIX_RULES = [
     emoji: "✖️",
     color: "#0891b2",
     detail:
-      '$A_{m \\times n} \\cdot B_{n \\times p} = C_{m \\times p}$. The "inner dimensions" must match. The result has the "outer dimensions".',
+      "$A_{m \\times n} \\cdot B_{n \\times p} = C_{m \\times p}$. The \"inner dimensions\" must match. The result has the \"outer dimensions\".",
     examples: [
       "$A_{2 \\times 3} \\cdot B_{3 \\times 4} = C_{2 \\times 4}$ ✓",
-      "$A_{2 \\times 3} \\cdot B_{2 \\times 3}$ ✗ (3 ≠ 2)",
+      "$A_{2 \\times 3} \\cdot B_{2 \\times 3}$ ✗ ($3 \\neq 2$)",
     ],
     tip: "Inner dimensions must match, outer dimensions give the result size!",
   },
@@ -310,19 +333,19 @@ export default function MatricesTerminology() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Tabs state
   const [activeTab, setActiveTab] = useState("terms");
-
-  // Selection state for Master-Detail
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [selectedRuleIdx, setSelectedRuleIdx] = useState(0);
-
-  // Quiz state
+  const [activeExampleIdx, setActiveExampleIdx] = useState(0);
   const [quizIdx, setQuizIdx] = useState(0);
   const [quizSelected, setQuizSelected] = useState(null);
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+
+  useEffect(() => {
+    setActiveExampleIdx(0);
+  }, [selectedIdx]);
 
   const activeTerm = TERMS[selectedIdx];
   const activeRule = SIX_RULES[selectedRuleIdx];
@@ -340,9 +363,7 @@ export default function MatricesTerminology() {
     if (quizAnswered) return;
     setQuizSelected(optIdx);
     setQuizAnswered(true);
-    if (optIdx === activeQuiz.correct) {
-      setQuizTotalScore((s) => s + 1);
-    }
+    if (optIdx === activeQuiz.correct) setQuizTotalScore((s) => s + 1);
   };
 
   const nextQuiz = () => {
@@ -358,68 +379,18 @@ export default function MatricesTerminology() {
   return (
     <div className="mat-terminology-page">
       <style>{`
-                .mat-details-window-anim {
-                    animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                }
-                @keyframes slideInRight {
-                    from { opacity: 0; transform: translateX(20px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                .mat-term-btn-mini {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    padding: 10px 14px;
-                    border-radius: 12px;
-                    border: 1.5px solid rgba(0,0,0,0.06);
-                    cursor: pointer;
-                    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-                    text-align: left;
-                    font-family: 'Outfit', sans-serif;
-                    position: relative;
-                    overflow: hidden;
-                }
-                .mat-term-btn-mini::before {
-                    content: '';
-                    position: absolute;
-                    inset: 0;
-                    background: #fff;
-                    z-index: 0;
-                    transition: opacity 0.2s;
-                    opacity: 1;
-                }
-                .mat-term-btn-mini:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-                }
-                .mat-term-btn-mini:hover::before {
-                    opacity: 0.9;
-                }
-                .mat-term-btn-mini.active {
-                    transform: translateY(-1px);
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-                    z-index: 2;
-                }
-                .mat-term-btn-mini.active::before {
-                    opacity: 0;
-                }
-                .mat-term-btn-mini > * {
-                    position: relative;
-                    z-index: 1;
-                }
-                
-                @media (max-width: 1024px) {
-                    .mat-lexicon-grid {
-                        grid-template-columns: 1fr !important;
-                    }
-                    .mat-selector-container {
-                        max-width: 600px;
-                        margin: 0 auto 16px;
-                    }
-                }
+                .mat-details-window-anim { animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+                @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+                .mat-term-btn-mini { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; border: 1.5px solid rgba(0,0,0,0.06); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-align: left; font-family: 'Outfit', sans-serif; position: relative; overflow: hidden; }
+                .mat-term-btn-mini::before { content: ''; position: absolute; inset: 0; background: #fff; z-index: 0; transition: opacity 0.2s; opacity: 1; }
+                .mat-term-btn-mini:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
+                .mat-term-btn-mini:hover::before { opacity: 0.9; }
+                .mat-term-btn-mini.active { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 2; }
+                .mat-term-btn-mini.active::before { opacity: 0; }
+                .mat-term-btn-mini > * { position: relative; z-index: 1; }
+                @media (max-width: 1024px) { .mat-lexicon-grid { grid-template-columns: 1fr !important; } .mat-selector-container { max-width: 600px; margin: 0 auto 16px; } }
             `}</style>
 
-      {/* ── TOP NAV BAR ──────────────────────────────── */}
       <nav className="mat-intro-nav">
         <button
           className="mat-intro-nav-back"
@@ -446,15 +417,25 @@ export default function MatricesTerminology() {
           >
             🎯 Skills
           </button>
+          <button
+            className="mat-intro-nav-link"
+            onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
+          >
+            🌐 Connectomics
+          </button>
+          <button
+            className="mat-intro-nav-link"
+            onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
+          >
+            ⚔️ Exam Edge
+          </button>
         </div>
       </nav>
 
-      {/* ── MAIN CONTENT ──────────────────────────────── */}
       <div
         className="mat-lexicon-container"
         style={{ maxWidth: 1100, margin: "40px auto 20px", padding: "0 24px" }}
       >
-        {/* Heading Stack */}
         <div
           style={{
             display: "flex",
@@ -499,7 +480,6 @@ export default function MatricesTerminology() {
           </div>
         </div>
 
-        {/* Sub Tabs */}
         <div
           style={{
             display: "flex",
@@ -509,19 +489,19 @@ export default function MatricesTerminology() {
           }}
         >
           <button
-            className={`mat-tab ${activeTab === "terms" ? "active" : ""}`}
+            className={`mat-vocab-tab ${activeTab === "terms" ? "active" : ""}`}
             onClick={() => setActiveTab("terms")}
           >
             📚 Terminology
           </button>
           <button
-            className={`mat-tab ${activeTab === "rules" ? "active" : ""}`}
+            className={`mat-vocab-tab ${activeTab === "rules" ? "active" : ""}`}
             onClick={() => setActiveTab("rules")}
           >
             📏 6 Golden Rules
           </button>
           <button
-            className={`mat-tab ${activeTab === "quiz" ? "active" : ""}`}
+            className={`mat-vocab-tab ${activeTab === "quiz" ? "active" : ""}`}
             onClick={() => setActiveTab("quiz")}
           >
             🧪 Test Prep
@@ -529,7 +509,6 @@ export default function MatricesTerminology() {
         </div>
 
         {activeTab !== "quiz" ? (
-          /* ── MASTER-DETAIL VIEW (Terms or Rules) ── */
           <div
             className="mat-lexicon-grid"
             style={{
@@ -565,10 +544,6 @@ export default function MatricesTerminology() {
                         borderColor: isActive
                           ? term.color
                           : `${term.color}20`,
-                        gridColumn:
-                          i === TERMS.length - 1 ? "span 2" : "span 1",
-                        justifyContent:
-                          i === TERMS.length - 1 ? "center" : "flex-start",
                       }}
                     >
                       <div
@@ -616,7 +591,7 @@ export default function MatricesTerminology() {
                   return (
                     <button
                       key={i}
-                      className={`term-btn-mini ${isActive ? "active" : ""}`}
+                      className={`mat-term-btn-mini ${isActive ? "active" : ""}`}
                       onClick={() => setSelectedRuleIdx(i)}
                       style={{
                         background: `linear-gradient(135deg, ${rule.color}15, ${rule.color}05)`,
@@ -774,22 +749,32 @@ export default function MatricesTerminology() {
                         <div
                           style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
                         >
-                          {activeTerm.examples.map((ex, j) => (
-                            <code
-                              key={j}
-                              style={{
-                                background: "#fff",
-                                border: `1px solid ${activeTerm.color}20`,
-                                color: activeTerm.color,
-                                padding: "4px 10px",
-                                borderRadius: 8,
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <MathRenderer text={ex} />
-                            </code>
-                          ))}
+                          {activeTerm.examples.map((ex, j) => {
+                            const isExActive = activeExampleIdx === j;
+                            return (
+                              <button
+                                key={j}
+                                onClick={() => setActiveExampleIdx(j)}
+                                style={{
+                                  background: isExActive ? activeTerm.color : "#fff",
+                                  border: `1px solid ${isExActive ? activeTerm.color : activeTerm.color + "20"}`,
+                                  color: isExActive ? "#fff" : activeTerm.color,
+                                  padding: "4px 10px",
+                                  borderRadius: 8,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  cursor: "pointer",
+                                  transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+                                  fontFamily: "inherit",
+                                  fontSize: "inherit",
+                                  boxShadow: isExActive ? `0 4px 10px ${activeTerm.color}30` : "none",
+                                  transform: isExActive ? "translateY(-1px)" : "none",
+                                }}
+                              >
+                                <MathRenderer text={ex} />
+                              </button>
+                            );
+                          })}
                         </div>
                         <div
                           style={{
@@ -799,7 +784,7 @@ export default function MatricesTerminology() {
                             fontStyle: "italic",
                           }}
                         >
-                          <MathRenderer text={activeTerm.inUse} />
+                          <MathRenderer text={Array.isArray(activeTerm.inUse) ? activeTerm.inUse[activeExampleIdx] || activeTerm.inUse[0] : activeTerm.inUse} />
                         </div>
                       </div>
                     </div>
@@ -1028,7 +1013,6 @@ export default function MatricesTerminology() {
             </main>
           </div>
         ) : (
-          /* ── VOCABULARY TEST TAB ── */
           <div
             className="mat-details-window-anim"
             style={{
@@ -1245,7 +1229,6 @@ export default function MatricesTerminology() {
           </div>
         )}
 
-        {/* Footer CTA */}
         <div style={{ marginTop: 16, textAlign: "center" }}>
           <button
             className="mat-btn-primary"

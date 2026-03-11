@@ -1,0 +1,462 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
+import { api } from '../../../../../../services/api';
+import { LatexText } from '../../../../../LatexText';
+import '../../../TenthPracticeSession.css';
+
+const BLUE_THEME_CSS = `
+    .option-btn-modern.selected {
+        border-color: #3B82F6 !important;
+        background-color: #EFF6FF !important;
+        color: #1E40AF !important;
+        box-shadow: 0 4px 0 #2563EB !important;
+    }
+    .option-btn-modern {
+        min-height: 52px;
+        min-width: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem !important;
+        text-align: center;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        border: 2px solid #E2E8F0;
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .option-btn-modern:hover:not(.selected) {
+        border-color: #94A3B8;
+        background: #F8FAFC;
+    }
+    .grey-selection-theme {
+        --selected-border: #3B82F6;
+        --selected-bg: #EFF6FF;
+    }
+    .exam-report-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+    .report-stat-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        transition: transform 0.2s;
+    }
+    .report-stat-card:hover {
+        transform: translateY(-5px);
+    }
+    .solution-accordion {
+        border: 2px solid #FEF08A;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        background: white;
+    }
+    .solution-header {
+        padding: 1rem;
+        background: #F8FAFC;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    .solution-content {
+        padding: 1.5rem;
+        background: white;
+        border-top: 1px solid #E2E8F0;
+    }
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    .status-correct { background: #DCFCE7; color: #166534; }
+    .status-wrong { background: #FEE2E2; color: #991B1B; }
+    .status-skipped { background: #F1F5F9; color: #475569; }
+
+    .nav-pastel-btn {
+        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+        transition: all 0.3s ease !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.5px !important;
+        padding: 0.5rem 1.5rem;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .nav-pastel-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+        background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+    }
+    .nav-pastel-btn:disabled {
+        background: #E2E8F0 !important;
+        color: #94A3B8 !important;
+        box-shadow: none !important;
+        transform: none !important;
+        cursor: not-allowed !important;
+    }
+
+    @media (max-width: 1024px) {
+        .practice-board-container {
+            grid-template-columns: 1fr !important;
+            justify-items: center !important;
+            margin-bottom: 2rem !important;
+        }
+        .practice-left-col {
+            width: 100% !important;
+            max-width: 600px !important;
+            margin: 0 auto !important;
+        }
+        .question-palette-container {
+            width: 100% !important;
+            max-width: 500px !important;
+            margin: 2rem auto 0 auto !important;
+            max-height: none !important;
+            height: auto !important;
+        }
+        .options-grid-modern {
+            grid-template-columns: 1fr !important;
+            justify-items: center !important;
+        }
+        .practice-content-wrapper {
+            padding-bottom: 80px !important;
+        }
+        .option-btn-modern {
+            min-height: 55px;
+            font-size: 0.9rem;
+            min-width: unset !important;
+            width: 100% !important;
+            max-width: 350px !important;
+            margin: 0 auto !important;
+        }
+    }
+    @media (max-width: 640px) {
+        .junior-practice-header {
+            padding: 0 1rem !important;
+        }
+        .practice-content-wrapper {
+            padding: 1rem 1rem 80px 1rem !important;
+        }
+        .question-card-modern {
+            padding: 1.5rem !important;
+        }
+        .question-text-modern {
+            font-size: 1.1rem !important;
+        }
+    }
+`;
+
+const SKILL_ID = 10151;
+const SKILL_NAME = "Probability - Easy Test";
+
+const ProbabilityEasyTest = () => {
+    const navigate = useNavigate();
+    const [qIndex, setQIndex] = useState(0);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [timeElapsed, setTimeElapsed] = useState(0);
+    const [isTestOver, setIsTestOver] = useState(false);
+    const [responses, setResponses] = useState({});
+
+    const questionStartTime = useRef(Date.now());
+    const [sessionId, setSessionId] = useState(null);
+    const [questions, setQuestions] = useState([]);
+
+    const generateQuestions = () => {
+        return [
+            { id: 1, text: "The probability of an event that is certain to happen is:", options: ["$0$", "$1$", "$\\frac{1}{2}$", "None"], correctAnswer: "$1$", solution: "A sure event always occurs, so its probability is 1." },
+            { id: 2, text: "Which of the following cannot be the probability of an event?", options: ["$\\frac{2}{3}$", "$-1.5$", "$15\\%$", "$0.7$"], correctAnswer: "$-1.5$", solution: "Probability must range from $0$ to $1$. It cannot be negative." },
+            { id: 3, text: "If $P(E) = 0.05$, then $P(\\text{not } E)$ is:", options: ["0.95", "0.05", "1.05", "0"], correctAnswer: "0.95", solution: "$P(\\text{not } E) = 1 - P(E) = 1 - 0.05 = 0.95$." },
+            { id: 4, text: "A die is thrown once. The probability of getting a number greater than 4 is:", options: ["$\\frac{1}{2}$", "$\\frac{1}{3}$", "$\\frac{2}{3}$", "1"], correctAnswer: "$\\frac{1}{3}$", solution: "Numbers > 4 are 5 and 6 (2 outcomes). Total outcomes = 6. Probability = $\\frac{2}{6} = \\frac{1}{3}$." },
+            { id: 5, text: "The sum of the probabilities of all the elementary events of an experiment is:", options: ["0", "0.5", "1", "2"], correctAnswer: "1", solution: "The sum of probabilities of all possible elementary events in a sample space is 1." },
+            { id: 6, text: "A coin is tossed two times. The total number of outcomes is:", options: ["2", "4", "6", "8"], correctAnswer: "4", solution: "Outcomes are HH, HT, TH, TT. Total = 4." },
+            { id: 7, text: "The probability of drawing a red ball from a bag containing 3 red and 4 blue balls is:", options: ["$\\frac{3}{7}$", "$\\frac{4}{7}$", "$\\frac{3}{4}$", "$\\frac{7}{3}$"], correctAnswer: "$\\frac{3}{7}$", solution: "Favourable = 3 (Red). Total = $3 + 4 = 7$. Probability = $\\frac{3}{7}$." },
+            { id: 8, text: "What is the probability of an impossible event?", options: ["1", "0", "0.5", "Cannot be determined"], correctAnswer: "0", solution: "An impossible event can never happen. Probability is 0." },
+            { id: 9, text: "If a standard die is rolled, what is the probability of getting an even number?", options: ["$\\frac{1}{6}$", "$\\frac{1}{3}$", "$\\frac{1}{2}$", "$\\frac{2}{3}$"], correctAnswer: "$\\frac{1}{2}$", solution: "Even numbers are 2, 4, 6. Total 3 favourable. $3/6 = 1/2$." },
+            { id: 10, text: "A letter is chosen at random from the word 'APPLE'. What is the probability that it is a 'P'?", options: ["$\\frac{1}{5}$", "$\\frac{2}{5}$", "$\\frac{3}{5}$", "$\\frac{1}{2}$"], correctAnswer: "$\\frac{2}{5}$", solution: "'P' appears twice out of 5 letters. Probability = $\\frac{2}{5}$." }
+        ];
+    };
+
+    useEffect(() => {
+        setQuestions(generateQuestions());
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            api.createPracticeSession(String(uid).includes("-") ? 1 : parseInt(uid, 10), SKILL_ID).then(sess => {
+                if (sess && sess.session_id) setSessionId(sess.session_id);
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isTestOver) return;
+        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        return () => clearInterval(timer);
+    }, [isTestOver]);
+
+    const handleRecordResponse = () => {
+        const currentQ = questions[qIndex];
+        const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
+        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const isSkipped = !selectedOption;
+
+        const responseData = {
+            selectedOption,
+            isCorrect,
+            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent,
+            isSkipped
+        };
+
+        setResponses(prev => ({ ...prev, [qIndex]: responseData }));
+
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            const attemptData = {
+                difficulty_level: 'Easy',
+                user_id: String(uid).includes("-") ? 1 : parseInt(uid, 10),
+                session_id: sessionId,
+                skill_id: SKILL_ID,
+                question_text: currentQ.text,
+                correct_answer: currentQ.correctAnswer,
+                student_answer: isSkipped ? "SKIPPED" : selectedOption,
+                is_correct: isSkipped ? false : isCorrect,
+                solution_text: currentQ.solution,
+                time_spent_seconds: timeSpent
+            };
+            api.recordAttempt(attemptData).catch(console.error);
+        }
+    };
+
+    const navigateToQuestion = (targetIndex) => {
+        handleRecordResponse();
+        setQIndex(targetIndex);
+        setSelectedOption(responses[targetIndex]?.selectedOption || null);
+        questionStartTime.current = Date.now();
+    };
+
+    const handleNext = () => {
+        if (qIndex < questions.length - 1) {
+            navigateToQuestion(qIndex + 1);
+        } else {
+            handleRecordResponse();
+            finalizeTest();
+        }
+    };
+
+    const handlePrev = () => {
+        if (qIndex > 0) {
+            navigateToQuestion(qIndex - 1);
+        }
+    };
+
+    const finalizeTest = async () => {
+        setIsTestOver(true);
+        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+
+        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        const uid = parseInt(rawUid, 10);
+        if (!isNaN(uid)) {
+            const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
+            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+            const skippedCount = questions.length - correctCount - wrongCount;
+            await api.createReport({
+                title: SKILL_NAME,
+                type: 'practice',
+                score: (correctCount / questions.length) * 100,
+                parameters: {
+                    skill_id: SKILL_ID,
+                    total_questions: questions.length,
+                    correct_answers: correctCount,
+                    skipped_questions: skippedCount,
+                    time_taken_seconds: timeElapsed
+                },
+                user_id: uid
+            }).catch(console.error);
+        }
+    };
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    if (questions.length === 0) return <div>Loading...</div>;
+
+    if (isTestOver) {
+        const correct = Object.values(responses).filter(r => r.isCorrect === true).length;
+        const wrong = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
+        const skipped = questions.length - correct - wrong;
+
+        return (
+            <div className="junior-practice-page grey-selection-theme" style={{ background: '#F8FAFC', minHeight: '100vh', padding: '2rem', overflowY: 'auto' }}>
+                <style>{BLUE_THEME_CSS}</style>
+                <div className="exam-report-container">
+                    <div className="results-hero-section flex flex-col items-center mb-8 mt-4" style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🏆</div>
+                        <h1 className="text-5xl font-black text-[#31326F] mb-2 tracking-tight">Test Report</h1>
+                        <p className="text-[#64748B] text-xl font-medium mb-8">How you performed in <span className="font-bold">{SKILL_NAME}</span></p>
+
+                        <div className="results-stats-grid" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                            <div className="stat-card" style={{ background: '#EFF6FF', padding: '1.5rem', borderRadius: '1.5rem', border: '2px solid #DBEAFE', minWidth: '120px' }}>
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#3B82F6] mb-1">Score</span>
+                                <span className="text-4xl font-black text-[#1E3A8A]">{Math.round((correct / questions.length) * 100)}%</span>
+                            </div>
+                            <div className="stat-card" style={{ background: '#F0FDF4', padding: '1.5rem', borderRadius: '1.5rem', border: '2px solid #DCFCE7', minWidth: '120px' }}>
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#22C55E] mb-1">Correct</span>
+                                <span className="text-4xl font-black text-[#14532D]">{correct}</span>
+                            </div>
+                            <div className="stat-card" style={{ background: '#FEF2F2', padding: '1.5rem', borderRadius: '1.5rem', border: '2px solid #FEE2E2', minWidth: '120px' }}>
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#EF4444] mb-1">Wrong</span>
+                                <span className="text-4xl font-black text-[#7F1D1D]">{wrong}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
+                        <button
+                            onClick={() => navigate('/senior/grade/10/probability')}
+                            className="bg-white text-[#31326F] border-2 border-[#31326F] px-8 py-3 rounded-2xl font-black uppercase tracking-wider hover:bg-[#31326F] hover:text-white transition-colors"
+                        >
+                            Back to Hub
+                        </button>
+                    </div>
+
+                    <div style={{ marginBottom: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1E293B', marginBottom: '1.5rem' }}>Detailed Review & Solutions</h2>
+                        {questions.map((q, idx) => {
+                            const res = responses[idx] || { isSkipped: true, timeTaken: 0 };
+                            return (
+                                <details key={idx} className="solution-accordion group" style={{ marginBottom: '1rem' }}>
+                                    <summary className="solution-header" style={{ padding: '1.2rem', display: 'flex', gap: '1rem', outline: 'none' }}>
+                                        <span style={{ minWidth: '32px', height: '32px', background: '#FBBF24', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{idx + 1}</span>
+                                        <div style={{ flex: 1 }}><LatexText text={q.text} /></div>
+                                        {res.isSkipped ? <span className="status-badge status-skipped">Skipped</span> : res.isCorrect ? <span className="status-badge status-correct">Correct</span> : <span className="status-badge status-wrong">Incorrect</span>}
+                                    </summary>
+                                    <div className="solution-content" style={{ padding: '1.5rem', borderTop: '1px solid #E2E8F0', background: '#fff' }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                                            <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+                                                <h5 style={{ fontSize: '0.7rem', color: '#94A3B8', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Your Answer</h5>
+                                                {res.isSkipped ? <span style={{ color: '#F59E0B', fontWeight: 'bold' }}>Skipped</span> : <span style={{ color: res.isCorrect ? '#166534' : '#DC2626', fontWeight: 'bold' }}><LatexText text={res.selectedOption || ''} /></span>}
+                                            </div>
+                                            <div style={{ background: '#DCFCE7', padding: '1rem', borderRadius: '12px', border: '1px solid #BBF7D0' }}>
+                                                <h5 style={{ fontSize: '0.7rem', color: '#166534', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Correct Answer</h5>
+                                                <span style={{ color: '#166534', fontWeight: 'bold' }}><LatexText text={q.correctAnswer} /></span>
+                                            </div>
+                                        </div>
+                                        <div style={{ background: '#F0F9FF', padding: '1.5rem', borderRadius: '12px', border: '1px solid #E0F2FE' }}>
+                                            <h4 style={{ color: '#0284C7', fontWeight: '800', marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '0.85rem' }}>Solution:</h4>
+                                            <div style={{ color: '#334155', lineHeight: '1.6' }}><LatexText text={q.solution} /></div>
+                                        </div>
+                                    </div>
+                                </details>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="junior-practice-page grey-selection-theme" style={{ fontFamily: '"Open Sans", sans-serif', height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <style>{BLUE_THEME_CSS}</style>
+            <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '1rem 2rem', gap: '1rem', background: '#fff', borderBottom: '1px solid #E2E8F0' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F' }}>
+                    {SKILL_NAME}
+                </div>
+                <div style={{ background: '#F8FAFC', padding: '0.5rem 1.5rem', borderRadius: '99px', border: '2px solid #E2E8F0', color: '#1E40AF', fontWeight: '900', fontSize: '1.1rem' }}>
+                    {qIndex + 1} / {questions.length}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div style={{ background: '#F8FAFC', padding: '0.5rem 1rem', borderRadius: '12px', border: '2px solid #E2E8F0', color: '#1E40AF', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Clock size={20} /> {formatTime(timeElapsed)}
+                    </div>
+                </div>
+            </header>
+
+            <main className="practice-content-wrapper" style={{ flex: 1, padding: '2rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', background: '#F1F5F9' }}>
+                <div className="practice-board-container" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '2rem', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+
+                    <div className="practice-left-col" style={{ display: "flex", flexDirection: "column" }}>
+                        <div className="question-card-modern" style={{ padding: "2rem", background: '#fff', borderRadius: '24px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', border: '1px solid #E2E8F0' }}>
+                            <div className="question-header-modern" style={{ marginBottom: "1.5rem" }}>
+                                <h2 className="question-text-modern" style={{ fontSize: '1.35rem', fontWeight: '500', color: '#1E293B', lineHeight: '1.6' }}>
+                                    <LatexText text={questions[qIndex].text} />
+                                </h2>
+                            </div>
+                            <div className="options-grid-modern" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(2, 1fr)' }}>
+                                {questions[qIndex].options.map((option, idx) => (
+                                    <button
+                                        key={idx}
+                                        className={`option-btn-modern ${selectedOption === option ? 'selected' : ''}`}
+                                        onClick={() => setSelectedOption(option)}
+                                    >
+                                        <LatexText text={option} />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="question-palette-container" style={{ background: 'white', padding: '1.5rem', borderRadius: '24px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', border: '1px solid #E2E8F0', height: 'fit-content' }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#1E293B', marginBottom: '1rem', textAlign: 'center' }}>Question Palette</h3>
+                        <div className="palette-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
+                            {questions.map((_, idx) => {
+                                const isCurrent = qIndex === idx;
+                                const hasResponded = responses[idx] && !responses[idx].isSkipped;
+                                const isSkipped = responses[idx] && responses[idx].isSkipped;
+
+                                let btnBg = '#F8FAFC'; let btnColor = '#64748B'; let btnBorder = '1px solid #E2E8F0';
+                                if (isCurrent) { btnBorder = '2px solid #3B82F6'; btnBg = '#EFF6FF'; btnColor = '#1D4ED8'; }
+                                else if (hasResponded) { btnBg = '#DCFCE7'; btnColor = '#166534'; btnBorder = '1px solid #BBF7D0'; }
+                                else if (isSkipped) { btnBg = '#FFF7ED'; btnColor = '#C2410C'; btnBorder = '1px solid #FFEDD5'; }
+
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => navigateToQuestion(idx)}
+                                        style={{ height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', background: btnBg, color: btnColor, border: btnBorder }}
+                                    >
+                                        {idx + 1}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <footer className="junior-bottom-bar" style={{ padding: '1rem 2rem', background: '#fff', borderTop: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold" onClick={() => navigate('/senior/grade/10/probability')}>Exit Test</button>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                    <button className="nav-pastel-btn" onClick={handlePrev} disabled={qIndex === 0}>
+                        <ChevronLeft size={20} /> Previous
+                    </button>
+                    <button className="nav-pastel-btn" onClick={handleNext}>
+                        {qIndex === questions.length - 1 ? "Finish Test" : "Next Question"} <ChevronRight size={20} />
+                    </button>
+                </div>
+            </footer>
+        </div>
+    );
+};
+
+export default ProbabilityEasyTest;

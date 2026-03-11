@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
 
-export default function AssessmentEngine({ questions, title, onBack, color, prefix = 'alg' }) {
+export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
@@ -84,7 +84,7 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
                     <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: `var(--${prefix}-text, #1e293b)` }}>Assessment Complete</h2>
                     <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questionSet.length}</div>
                     <div style={{ fontSize: 18, color: `var(--${prefix}-muted)`, fontWeight: 600 }}>Score: {pct}%</div>
-                    <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20 }}>
+                    <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' }}>
                         <button
                             className={`${prefix}-btn-primary`}
                             onClick={() => {
@@ -100,6 +100,9 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
                             Retake Assessment
                         </button>
                         <button className={`${prefix}-btn-secondary`} onClick={onBack} style={{ padding: '10px 20px' }}>Return to Skills</button>
+                        {onSecondaryBack && (
+                            <button className={`${prefix}-btn-secondary`} onClick={onSecondaryBack} style={{ padding: '10px 20px', background: '#f8fafc' }}>Back to Chapter</button>
+                        )}
                     </div>
                 </div>
 
@@ -224,15 +227,17 @@ export default function AssessmentEngine({ questions, title, onBack, color, pref
             {/* Right Question Palette */}
             <div className={`${prefix}-assessment-palette`}>
                 <div style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                    padding: '12px', background: timeLeft < 60 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(8, 145, 178, 0.05)',
-                    color: timeLeft < 60 ? `var(--${prefix}-red)` : `var(--${prefix}-text)`,
-                    borderRadius: 12, marginBottom: 24, fontWeight: 800, fontSize: 20
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                    padding: '16px', background: timeLeft < 60 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(8, 145, 178, 0.05)',
+                    color: timeLeft < 60 ? `var(--${prefix}-red)` : 'var(--ft-ocean, #0369a1)',
+                    borderRadius: 16, marginBottom: 32, fontWeight: 900, fontSize: 24,
+                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)',
+                    border: timeLeft < 60 ? '1px solid rgba(239,68,68,0.2)' : '1px solid rgba(8,145,178,0.1)'
                 }}>
-                    ⏱️ {formatTime(timeLeft)}
+                    <span style={{ fontSize: 28 }}>⏱️</span> {formatTime(timeLeft)}
                 </div>
 
-                <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 16, color: `var(--${prefix}-text)` }}>Question Palette</div>
+                <div style={{ fontSize: 13, fontWeight: 900, marginBottom: 16, color: `var(--${prefix}-text)`, textTransform: 'uppercase', letterSpacing: 1.2, opacity: 0.8 }}>Question Palette</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
                     {questionSet.map((_, i) => {
                         const isAnswered = answers[i] !== null;
