@@ -289,8 +289,8 @@ const Time = () => {
 
             if (type === 'day-night') {
                 const scenarios = [
-                    { q: 'When can we see the big yellow Sun? ☀️', a: 'Day' },
-                    { q: 'When do we see the silver Moon and Stars? ✨', a: 'Night' },
+                    { q: 'When can we see the big yellow Sun?', a: 'Day' },
+                    { q: 'When do we see the silver Moon and Stars?', a: 'Night' },
                     { q: 'When is it time to put on PJs and sleep? 😴', a: 'Night' },
                     { q: 'When do we have yummy breakfast? 🥞', a: 'Day' }
                 ];
@@ -312,7 +312,7 @@ const Time = () => {
                 if (isOrderQ) {
                     const idx = Math.floor(Math.random() * 7);
                     question = {
-                        text: `If Sunday is the first day, which day is the ${orderText[idx]} day of the week? 🗓️`,
+                        text: `If Sunday is the first day, which day is the ${orderText[idx]} day of the week?`,
                         options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7]].sort(() => 0.5 - Math.random()),
                         correct: days[idx],
                         type: 'days-week',
@@ -463,8 +463,8 @@ const Time = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
-        if (!isTest && !isCorrect) {
+        // Show modal for all answers in practice mode
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             // Give a tiny delay so they see the option highlight green
@@ -515,12 +515,6 @@ const Time = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />
@@ -798,7 +792,10 @@ const Time = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
             />
         </div>
     );

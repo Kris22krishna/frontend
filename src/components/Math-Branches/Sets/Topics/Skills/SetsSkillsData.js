@@ -2,25 +2,16 @@ export const SKILLS = [
     {
         id: 'what-is-set',
         title: 'Fundamental: What is a Set?',
+        subtitle: 'FOUNDATION',
         desc: 'Learn the core definition of a set and how to represent them accurately.',
         icon: '💎',
         color: '#6366f1',
         learn: {
             title: 'The "Well-Defined" Secret',
-            content: `A set is not just any collection; it must be well-defined. 
-            This means there is an objective rule to decide if something belongs to it or not.
-            
-            Representation Forms:
-            1. Roster Form: Listing elements inside curly braces. Example: $A = \\{ a, e, i, o, u \\}$.
-            2. Set-Builder Form: Descriptive rule. Example: $V = \\{ x : x \\text{ is a vowel} \\}$.`,
             rules: [
-                'Order of elements does not matter.',
-                'Do not repeat elements in Roster form.',
-                'Use dots (...) for infinite sets like $\\{ 1, 2, 3, ... \\}$.'
-            ],
-            examples: [
-                { q: 'Is "Beautiful flowers" a set?', a: 'No, "Beautiful" is subjective and not well-defined.' },
-                { q: 'Is "Prime numbers less than 20" a set?', a: 'Yes, it is well-defined.' }
+                { title: 'Well-Defined Collection', f: 'A = \\{x : P(x)\\}', d: 'A set must be well-defined — there is an objective rule to decide membership. Subjective terms like "beautiful" or "best" do not define a set.', ex: 'V = {a, e, i, o, u} is well-defined. "Collection of talented actors" is NOT.', tip: 'If someone can argue about membership, it is NOT a set.' },
+                { title: 'Roster Form', f: 'A = \\{a, e, i, o, u\\}', d: 'Elements are listed inside curly braces, separated by commas. Order does not matter and repetitions are ignored.', ex: 'Letters of APPLE: {A, P, L, E} — not {A, P, P, L, E}.', tip: 'Always remove duplicates before writing in roster form.' },
+                { title: 'Set-Builder Form', f: 'V = \\{x : x \\text{ is a vowel}\\}', d: 'A descriptive property P(x) is used to define membership. The colon ":" means "such that".', ex: '{x : x² = 4} = {−2, 2} — the rule filters all solutions.', tip: 'Use set-builder when the roster form would be too long or infinite.' }
             ]
         },
         practice: [
@@ -158,25 +149,16 @@ export const SKILLS = [
     {
         id: 'types-of-sets',
         title: 'Empty & Finite Sets',
+        subtitle: 'CLASSIFICATION',
         desc: 'Understand the difference between sets with no elements, fixed elements, and infinite elements.',
         icon: '📏',
         color: '#0d9488',
         learn: {
             title: 'Counting Elements',
-            content: `Based on the number of elements, we classify sets as:
-            
-            1. Empty Set ($\\emptyset$): Zero elements. Also called Null or Void set.
-            2. Finite Set: A set where you can finish counting the elements.
-            3. Infinite Set: A set where counting never ends (e.g., Natural numbers).
-            4. Singleton Set: A set with exactly one element. Example: $\\{ 0 \\}$.`,
             rules: [
-                'The set $\\{\\emptyset\\}$ is NOT empty; it contains one element (the empty set).',
-                '$n(\\emptyset) = 0$.',
-                'Singletons have cardinality 1.'
-            ],
-            examples: [
-                { q: 'Is $A = \\{ x : x^2 = 4 \\text{ and } x \\text{ is odd} \\}$ an empty set?', a: 'Yes, because $x$ must be $\\pm 2$, which are NOT odd.' },
-                { q: 'Is the set of stars in the sky finite or infinite?', a: 'Finite (though huge, they can theoretically be counted).' }
+                { title: 'Empty Set', f: '\\emptyset = \\{\\}', d: 'A set with zero elements. Also called the Null or Void set. The set {∅} is NOT empty — it has one element (the empty set itself).', ex: '{x : x² = 4 and x is odd} = ∅ — no odd number squares to 4.', tip: 'Never write {∅} when you mean ∅ — they are very different!' },
+                { title: 'Finite vs Infinite', f: 'n(A) \\in \\mathbb{N} \\cup \\{0\\}', d: 'A finite set has a countable number of elements. An infinite set is one where counting never ends (e.g., natural numbers).', ex: 'Months of a year: finite (12). Set of all even numbers: infinite.', tip: 'Stars in the sky? Finite. Points on a line? Infinite.' },
+                { title: 'Singleton Set', f: 'n(A) = 1', d: 'A set with exactly one element. Every singleton is finite. Examples: {0}, {2}, {∅}.', ex: '{x : x ∈ ℕ, x² = 9} = {3} — only 3 works for natural numbers.', tip: 'When solving for membership, always check the domain (ℕ, ℤ, ℝ).' }
             ]
         },
         practice: [
@@ -289,24 +271,16 @@ export const SKILLS = [
     {
         id: 'equal-equivalent',
         title: 'Comparing Sets',
+        subtitle: 'COMPARISON',
         desc: 'When are two sets identical? Learn about equality and equivalence.',
         icon: '⚖️',
         color: '#f59e0b',
         learn: {
             title: 'Equality vs Equivalence',
-            content: `Equal Sets (=): Two sets $A$ and $B$ are equal if they have EXACTLY the same elements.
-            
-            Equivalent Sets ($\\approx$): Two sets $A$ and $B$ are equivalent if they have the same NUMBER of elements (same cardinality).
-            
-            Note: Every equal set is equivalent, but not every equivalent set is equal!`,
             rules: [
-                '$A = B$ means $A \\subseteq B$ and $B \\subseteq A$.',
-                'Order of listing does not prevent equality.',
-                'Repetition does not prevent equality.'
-            ],
-            examples: [
-                { q: 'Are $\\{ 1, 2, 3 \\}$ and $\\{ 3, 2, 1 \\}$ equal?', a: 'Yes.' },
-                { q: 'Are $\\{ a, b \\}$ and $\\{ 1, 2 \\}$ equal?', a: 'No, but they are equivalent ($n=2$).' }
+                { title: 'Equal Sets', f: 'A = B \\iff A \\subseteq B \\text{ and } B \\subseteq A', d: 'Two sets are equal if they contain EXACTLY the same elements. Order and repetition do not matter.', ex: '{1, 2, 3} = {3, 2, 1} ✓ and {10, 10, 20} = {20, 10} ✓', tip: 'To prove A = B, show every element of A is in B and vice versa.' },
+                { title: 'Equivalent Sets', f: 'A \\sim B \\iff n(A) = n(B)', d: 'Two sets are equivalent if they have the same number of elements (cardinality). They need NOT have the same elements.', ex: '{a, b} ~ {1, 2} — both have 2 elements, but different ones.', tip: 'Equal ⟹ Equivalent, but Equivalent ⟹ Equal only if elements match.' },
+                { title: 'Solving for Equality', f: 'A = B \\Rightarrow \\text{match elements}', d: 'When given A = B with unknowns, equate corresponding elements to find values.', ex: 'If {x, 5} = {5, 9}, then x = 9.', tip: 'Write both sets in sorted roster form — matching becomes easy.' }
             ]
         },
         practice: [
@@ -432,27 +406,16 @@ export const SKILLS = [
     {
         id: 'subsets-intervals',
         title: 'Subsets & Intervals',
+        subtitle: 'SET RELATIONS',
         desc: 'Master the concept of subsets, proper subsets, and real-number intervals.',
         icon: '🧬',
         color: '#ec4899',
         learn: {
             title: 'Layers of Sets',
-            content: `Subsets ($\\subseteq$): Every element of $A$ is in $B$.
-            
-            Proper Subset ($\\subset$): $A$ is a subset of $B$ but $A \\neq B$.
-            
-            Intervals (for $\\mathbb{R}$):
-            - Closed $[a, b]$: Includes both $a$ and $b$.
-            - Open $(a, b)$: Excludes both $a$ and $b$.
-            - Semi-open $[a, b)$: Includes $a$, excludes $b$.`,
             rules: [
-                'Empty set is subset of every set.',
-                'Total number of subsets of set with $n$ elements is $2^n$.',
-                'Proper subsets count is $2^n - 1$.'
-            ],
-            examples: [
-                { q: 'How many subsets does $A = \\{ 1, 2, 3 \\}$ have?', a: '$2^3 = 8$ subsets.' },
-                { q: 'What is the interval for $3 \\le x < 7$?', a: '$[ 3, 7 )$.' }
+                { title: 'Subsets', f: 'A \\subseteq B', d: 'Every element of A is also in B. The empty set is a subset of every set. A set is always a subset of itself.', ex: '{1, 3} ⊆ {1, 2, 3, 4} ✓ and ∅ ⊆ {1, 2, 3} ✓', tip: 'To disprove A ⊆ B, find just ONE element in A that is not in B.' },
+                { title: 'Proper Subsets & Power Set', f: '|P(A)| = 2^n', d: 'A proper subset means A ⊆ B but A ≠ B. The power set P(A) contains all 2ⁿ subsets. Proper subsets count: 2ⁿ − 1.', ex: 'A = {1, 2}: P(A) = {∅, {1}, {2}, {1,2}} — 4 subsets.', tip: 'Remember: 2ⁿ gives total subsets, 2ⁿ − 1 gives proper subsets.' },
+                { title: 'Intervals', f: '[a, b] \\text{ vs } (a, b)', d: 'Intervals represent subsets of real numbers. Closed [a,b] includes endpoints; Open (a,b) excludes them; Semi-open [a,b) or (a,b] mixes.', ex: '-1 < x ≤ 4 is written as (−1, 4].', tip: 'Round bracket = strict (<, >). Square bracket = inclusive (≤, ≥).' }
             ]
         },
         practice: [
@@ -590,25 +553,16 @@ export const SKILLS = [
     {
         id: 'universal-complement',
         title: 'Universal Set & Complement',
+        subtitle: 'COMPLEMENTS',
         desc: "Learn about the master set (U) and everything that stays outside a set (A').",
         icon: '🌌',
         color: '#f43f5e',
         learn: {
             title: 'The Universal Perspective',
-            content: `The Universal Set (U) is the set containing all objects under consideration in a particular context.
-            
-            The Complement of a set A (denoted as $A'$ or $A^c$) consists of all elements in U that are NOT in A.
-            
-            Mathematical Rule: $A' = \\{ x : x \\in U \\text{ and } x \\notin A \\}$.`,
             rules: [
-                "$A \\cup A' = U$",
-                "$A \\cap A' = \\emptyset$",
-                "$(A')' = A$",
-                "$U' = \\emptyset$ and $\\emptyset' = U$"
-            ],
-            examples: [
-                { q: "If $U = \\{ 1, 2, 3, 4, 5 \\}$ and $A = \\{ 1, 3 \\}$, find $A'$.", a: "$A' = \\{ 2, 4, 5 \\}.$" },
-                { q: 'What is the complement of the set of even numbers in $U = \\mathbb{N}$?', a: 'The set of odd numbers.' }
+                { title: 'Universal Set', f: 'U', d: 'The universal set U contains ALL objects under consideration in a given context. It defines the boundary of our discussion.', ex: 'If discussing vowels, U could be all English letters.', tip: 'U can change depending on context — always identify it first.' },
+                { title: 'Complement of A', f: "A' = \\{x : x \\in U, x \\notin A\\}", d: "The complement A' consists of everything in U that is NOT in A. Also written as Aᶜ or U − A.", ex: 'U = {1,2,3,4,5}, A = {1,3}. Then A\' = {2,4,5}.', tip: 'Always state U before computing complement — it depends on U.' },
+                { title: 'Laws of Complement', f: "A \\cup A' = U, \\; A \\cap A' = \\emptyset", d: "Key complement laws: (1) A ∪ A' = U, (2) A ∩ A' = ∅, (3) (A')' = A, (4) U' = ∅ and ∅' = U.", ex: 'n(U)=50, n(A)=20 → n(A\')=30.', tip: 'Double complement brings you back: (A\')\' = A always.' }
             ]
         },
         practice: [
@@ -700,26 +654,16 @@ export const SKILLS = [
     {
         id: 'set-operations',
         title: 'Set Operations',
+        subtitle: 'OPERATIONS',
         desc: 'Master the core operations: Union, Intersection, and Difference of sets.',
         icon: '🔗',
         color: '#8b5cf6',
         learn: {
             title: 'Operating on Sets',
-            content: `Just like numbers, sets have operations:
-            
-            1. Union ($A \\cup B$): Elements in A OR B (or both). Combined strength.
-            2. Intersection ($A \\cap B$): Elements in A AND B. Common ground.
-            3. Difference ($A - B$): Elements in A but NOT in B. Pure A.
-            4. Disjoint Sets: Sets with no common elements ($A \\cap B = \\emptyset$).`,
             rules: [
-                '$A \\cup B = \\{ x : x \\in A \\text{ or } x \\in B \\}$',
-                '$A \\cap B = \\{ x : x \\in A \\text{ and } x \\in B \\}$',
-                '$A - B = \\{ x : x \\in A \\text{ and } x \\notin B \\}$',
-                '$A - B \\neq B - A$ (Difference is not commutative)'
-            ],
-            examples: [
-                { q: 'If $A = \\{ 1, 2, 3 \\}$ and $B = \\{ 3, 4, 5 \\}$, find $A \\cup B$ and $A \\cap B$.', a: '$A \\cup B = \\{ 1, 2, 3, 4, 5 \\}$, $A \\cap B = \\{ 3 \\}$.' },
-                { q: 'Using same A and B, find $A - B$.', a: '$A - B = \\{ 1, 2 \\}$.' }
+                { title: 'Union', f: 'A \\cup B = \\{x : x \\in A \\text{ or } x \\in B\\}', d: 'The union combines all elements from both sets. Think of it as "everything in A OR B (or both)".', ex: 'A = {1,2,3}, B = {3,4,5} → A ∪ B = {1,2,3,4,5}.', tip: 'Union always has more or equal elements than either set.' },
+                { title: 'Intersection', f: 'A \\cap B = \\{x : x \\in A \\text{ and } x \\in B\\}', d: 'The intersection keeps only elements common to both sets. If A ∩ B = ∅, the sets are disjoint.', ex: 'A = {1,2,3}, B = {3,4,5} → A ∩ B = {3}.', tip: 'For disjoint sets, A ∩ B = ∅ and A ∪ B = n(A) + n(B).' },
+                { title: 'Difference', f: 'A - B = \\{x : x \\in A, x \\notin B\\}', d: 'A − B keeps only elements of A that are NOT in B. Note: A − B ≠ B − A (not commutative).', ex: 'A = {1,2,3,4,5,6}, B = {2,4,6,8} → B − A = {8}.', tip: 'Think of A − B as "remove B from A". What\'s left is purely A.' }
             ]
         },
         practice: [
@@ -811,25 +755,16 @@ export const SKILLS = [
     {
         id: 'venn-diagrams',
         title: 'Venn Diagrams',
+        subtitle: 'VISUALIZATION',
         desc: 'Visualize sets and their relationships using Euler-Venn diagrams.',
         icon: '⭕',
         color: '#22c55e',
         learn: {
             title: 'Visualizing Sets',
-            content: `Venn diagrams use geometric shapes (usually circles) to show relationships between sets.
-            
-            - The Rectangle represents the Universal Set (U).
-            - Circles represent individual sets (A, B, etc.).
-            - Overlapping areas show intersections ($A \\cap B$).
-            - The entire area within circles shows the union ($A \\cup B$).`,
             rules: [
-                'Non-overlapping circles indicate disjoint sets.',
-                'A circle inside another circle indicates a subset relationship.',
-                "Shaded regions help identify specific operations like $A - B$ or $(A \\cup B)'$."
-            ],
-            examples: [
-                { q: "In a Venn diagram with two overlapping circles A and B, what does the region outside both circles represent?", a: "$(A \\cup B)'$" },
-                { q: 'If $A \\subset B$, how would the diagram look?', a: 'Circle A would be entirely inside Circle B.' }
+                { title: 'Diagram Basics', f: 'U = \\text{Rectangle}, A,B = \\text{Circles}', d: 'Venn diagrams use a rectangle for U and circles for individual sets. Overlapping areas show A ∩ B.', ex: 'Two overlapping circles create 4 regions: only-A, only-B, both (A∩B), and neither.', tip: 'Always start by drawing the rectangle for U first.' },
+                { title: 'Subset & Disjoint', f: 'A \\subset B \\Rightarrow \\text{Circle A inside B}', d: 'Non-overlapping circles mean disjoint sets (A ∩ B = ∅). One circle inside another shows subset relationship.', ex: 'If A ⊂ B: circle A is completely inside circle B.', tip: 'Disjoint = no overlap. Subset = completely inside.' },
+                { title: 'Shading Regions', f: 'A - B = \\text{shade A, not overlap}', d: 'Each operation corresponds to a specific shaded region. A−B is A\'s portion only. (A∪B)\' is outside both circles.', ex: 'To shade A − B: color circle A\'s non-overlapping part.', tip: 'Practice shading each operation — exams love "identify the shaded region" questions.' }
             ]
         },
         practice: [
@@ -922,26 +857,16 @@ export const SKILLS = [
     {
         id: 'laws-properties',
         title: 'Laws & Properties',
+        subtitle: 'ALGEBRA OF SETS',
         desc: 'Understand the mathematical laws that govern set theory, from De Morgan to Distributive laws.',
         icon: '📜',
         color: '#f97316',
         learn: {
             title: 'The Rules of the Game',
-            content: `Set operations follow specific mathematical laws:
-            
-            1. Idempotent Laws: $A \\cup A = A$, $A \\cap A = A$
-            2. Commutative Laws: $A \\cup B = B \\cup A$, $A \\cap B = B \\cap A$
-            3. Associative Laws: $(A \\cup B) \\cup C = A \\cup (B \\cup C)$
-            4. Distributive Laws: $A \\cup (B \\cap C) = (A \\cup B) \\cap (A \\cup C)$
-            5. De Morgan\'s Laws: $(A \\cup B)' = A\' \\cap B\'$, $(A \\cap B)' = A\' \\cup B'$`,
             rules: [
-                "In De Morgan's, Union flips to Intersection (and vice versa) when complement is applied.",
-                'Distributive law works both ways (Union over Intersection and vice versa).',
-                'Identity Laws: $A \\cup \\emptyset = A$, $A \\cap U = A$.'
-            ],
-            examples: [
-                { q: "What is $(A \\cup B)'$ according to De Morgan's law?", a: "$A' \\cap B'$" },
-                { q: 'Evaluate $A \\cap (B \\cup C)$ using distributive law.', a: '$(A \\cap B) \\cup (A \\cap C)$' }
+                { title: 'Commutative & Associative', f: 'A \\cup B = B \\cup A', d: 'Commutative: order doesn\'t matter. Associative: grouping doesn\'t matter. Also Idempotent: A ∪ A = A, A ∩ A = A.', ex: '(A ∪ B) ∪ C = A ∪ (B ∪ C) — regroup freely.', tip: 'These work for both ∪ and ∩ — just like + and × for numbers.' },
+                { title: 'Distributive Laws', f: 'A \\cup (B \\cap C) = (A \\cup B) \\cap (A \\cup C)', d: 'Union distributes over intersection AND intersection distributes over union. Works both ways.', ex: 'A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C).', tip: 'Think of it like multiplication distributing over addition.' },
+                { title: 'De Morgan\'s Laws', f: "(A \\cup B)' = A' \\cap B'", d: 'When complementing, union flips to intersection (and vice versa). The "flip and complement" rule.', ex: '(A ∩ B)\' = A\' ∪ B\' — complement flips the operation.', tip: 'Remember: Break the bar, change the sign. This is crucial for proofs.' }
             ]
         },
         practice: [
@@ -1033,25 +958,16 @@ export const SKILLS = [
     {
         id: 'cardinality-problems',
         title: 'Cardinality & Word Problems',
+        subtitle: 'APPLICATION',
         desc: 'Apply set theory to solve real-world counting problems using inclusion-exclusion principles.',
         icon: '🧮',
         color: '#06b6d4',
         learn: {
             title: 'The Art of Counting',
-            content: `Cardinality refers to the number of elements in a set. We use specific formulas to solve counting problems:
-            
-            1. For two sets: $n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$
-            2. For disjoint sets: $n(A \\cup B) = n(A) + n(B)$
-            3. Purely A: $n(A - B) = n(A) - n(A \\cap B)$
-            4. Purely B: $n(B - A) = n(B) - n(A \\cap B)$`,
             rules: [
-                'Always identify the Universal Set total $n(U)$.',
-                'Subtract the intersection once in $n(A \\cup B)$ because it is counted twice in $n(A) + n(B)$.',
-                'Venn diagrams are the best way to verify word problem solutions.'
-            ],
-            examples: [
-                { q: 'In a class of 50, 30 like Math and 25 like Science. 10 like both. How many like neither?', a: '$n(M \\cup S) = 30 + 25 - 10 = 45$. Neither $= 50 - 45 = 5$.' },
-                { q: 'Find $n(A \\cup B)$ if $n(A)=20, n(B)=30$ and they are disjoint.', a: '$20 + 30 = 50$.' }
+                { title: 'Inclusion-Exclusion (2 sets)', f: 'n(A \\cup B) = n(A) + n(B) - n(A \\cap B)', d: 'We subtract the intersection once because it is double-counted when adding n(A) and n(B).', ex: 'n(A)=30, n(B)=25, n(A∩B)=10 → n(A∪B)=45. Neither=50−45=5.', tip: 'Draw a Venn diagram first — fill in the intersection, then work outward.' },
+                { title: 'Only A / Only B', f: 'n(A - B) = n(A) - n(A \\cap B)', d: 'To find elements in only A (pure A), subtract the overlap from A\'s total.', ex: 'n(A)=35, n(A∩B)=10 → only A = 25.', tip: 'In surveys: n(only A) + n(only B) + n(both) + n(neither) = n(U).' },
+                { title: 'Disjoint & Max/Min', f: 'A \\cap B = \\emptyset \\Rightarrow n(A \\cup B) = n(A) + n(B)', d: 'For disjoint sets, intersection is 0. Max of n(A∪B) occurs when disjoint. Min occurs when smaller set is a subset.', ex: 'n(A)=10, n(B)=15: min union=15 (A⊂B), max union=25 (disjoint).', tip: 'Max/min problems are common in competitive exams.' }
             ]
         },
         practice: [

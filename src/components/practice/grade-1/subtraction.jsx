@@ -121,7 +121,7 @@ const Subtraction = () => {
                     n2 = Math.floor(Math.random() * 4) + 1;
                 }
                 question = {
-                    text: `How many objects are left after taking away ${n2}? 🍎`,
+                    text: `How many objects are left after taking away ${n2}?`,
                     options: [n1 - n2, (n1 - n2 + 1), Math.max(0, n1 - n2 - 2)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: n1 - n2,
                     type: 'visual',
@@ -159,7 +159,7 @@ const Subtraction = () => {
                 const subtractSame = isTest ? true : Math.random() > 0.5;
                 const n2 = subtractSame ? n : 0;
                 question = {
-                    text: `Subtract ${n2} from ${n}! ✨`,
+                    text: `Subtract ${n2} from ${n}!`,
                     options: [n - n2, n, 0].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: n - n2,
                     type: 'zero',
@@ -279,8 +279,8 @@ const Subtraction = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
-        if (!isTest && !isCorrect) {
+        // Show modal for all answers in practice mode
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             // Give a tiny delay so they see the option highlight green
@@ -348,12 +348,6 @@ const Subtraction = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />
@@ -621,7 +615,10 @@ const Subtraction = () => {
                 explanation={currentQ.explanation}
                 solution={currentQ.solution}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
             />
         </div>
     );

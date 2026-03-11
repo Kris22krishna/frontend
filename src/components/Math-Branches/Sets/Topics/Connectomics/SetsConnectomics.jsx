@@ -14,6 +14,13 @@ export default function SetsConnectomics() {
                 <button className="sets-nav-back" onClick={() => navigate('/senior/grade/11/maths/sets')}>
                     ← Back to Dashboard
                 </button>
+                <div className="sets-nav-links">
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/introduction')}>🌟 Intro</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/terminology')}>📖 Terminology</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/skills')}>🎯 Skills</button>
+                    <button className="sets-nav-link active" onClick={() => navigate('/senior/grade/11/maths/sets/connectomics')}>🌐 Connectomics</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/exam-edge')}>⚔️ Exam Edge</button>
+                </div>
             </nav>
 
             <div className="sets-hero">
@@ -21,14 +28,14 @@ export default function SetsConnectomics() {
                 <p className="sets-hero-sub">Discover the hidden threads linking Sets to the entire world of science.</p>
             </div>
 
-            <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
+            <main className="sets-topic-shell" style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
                 
                 {/* Connections Map */}
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '32px', textAlign: 'center', color: '#1e1b4b' }}>
                     The Web of Mathematics
                 </h2>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '60px' }}>
+                <div className="sets-responsive-grid sets-responsive-grid--320" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(320px, 100%), 1fr))', gap: '24px', marginBottom: '60px' }}>
                     {setsConnectomicsData.connections.map((conn, idx) => (
                         <div key={idx} style={{ 
                             background: '#fff', 
@@ -48,7 +55,7 @@ export default function SetsConnectomics() {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                            <div className="sets-connection-path" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                                 <span style={{ fontWeight: 800, color: '#1e1b4b' }}>{conn.from}</span>
                                 <span style={{ color: '#94a3b8' }}>→</span>
                                 <span style={{ fontWeight: 800, color: conn.color }}>{conn.to}</span>
@@ -66,7 +73,7 @@ export default function SetsConnectomics() {
                     Real World Systems
                 </h2>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                <div className="sets-responsive-grid sets-responsive-grid--280" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '24px' }}>
                     {setsConnectomicsData.realWorld.map((app, idx) => (
                         <div key={idx} style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '32px', borderRadius: '24px', color: '#fff' }}>
                             <div style={{ fontSize: '11px', fontWeight: 900, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
@@ -78,7 +85,7 @@ export default function SetsConnectomics() {
                     ))}
                 </div>
 
-                <div style={{ marginTop: '60px', textAlign: 'center', background: '#f8fafc', padding: '40px', borderRadius: '32px', border: '2px dashed #e2e8f0' }}>
+                <div className="sets-topic-banner" style={{ marginTop: '60px', textAlign: 'center', background: '#f8fafc', padding: '40px', borderRadius: '32px', border: '2px dashed #e2e8f0' }}>
                     <Share2 size={48} color="#6366f1" style={{ marginBottom: '16px' }} />
                     <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1e1b4b' }}>Infinite Connections</h3>
                     <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b' }}>

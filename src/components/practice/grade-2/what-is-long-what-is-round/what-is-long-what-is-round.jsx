@@ -150,7 +150,7 @@ const Grade2WhatIsLong = () => {
             const target = shuffledTargets[i % shapes.length];
             const otherOptions = shapes.filter(s => s !== target);
             questions.push({
-                text: `Identify this 2D shape! 🎨`,
+                text: `Identify this 2D shape!`,
                 options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
                 correct: target,
                 type: 'shape',
@@ -172,7 +172,7 @@ const Grade2WhatIsLong = () => {
             const objectType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
 
             questions.push({
-                text: longerQ ? `Which one is LONGER? 📏` : `Which one is SHORTER? 📐`,
+                text: longerQ ? `Which one is LONGER?` : `Which one is SHORTER?`,
                 options: ['A', 'B'],
                 correct: longerQ ? (isALonger ? 'A' : 'B') : (isALonger ? 'B' : 'A'),
                 type: 'length',
@@ -222,7 +222,7 @@ const Grade2WhatIsLong = () => {
 
             if (isRound) {
                 questions.push({
-                    text: `Is this a ROUND object? 🔵`,
+                    text: `Is this a ROUND object?`,
                     options: ['Yes', 'No'],
                     correct: 'Yes',
                     type: 'emoji',
@@ -231,7 +231,7 @@ const Grade2WhatIsLong = () => {
                 });
             } else {
                 questions.push({
-                    text: `Is this a ROUND object? 🔵`,
+                    text: `Is this a ROUND object?`,
                     options: ['Yes', 'No'],
                     correct: 'No',
                     type: 'emoji',
@@ -367,7 +367,7 @@ const Grade2WhatIsLong = () => {
             }
         }));
 
-        if (!isTest && !isCorrect) {
+        if (!isTest && !isRight) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -436,12 +436,6 @@ const Grade2WhatIsLong = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />

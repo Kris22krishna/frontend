@@ -160,11 +160,15 @@ const JuniorPracticeSession = () => {
 
             // Ensure questions are valid
             const validQuestions = rawQuestions.map(q => {
-                console.log('🔍 Raw question data:', { id: q.id, template_id: q.template_id });
+                console.log('Raw question data:', { id: q.id, template_id: q.template_id });
+                const baseText = q.text || q.question_text || q.question || q.question_html || "";
+                // Remove trailing emojis (common in junior content)
+                const cleanedText = baseText.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]\s*$/u, '').trim();
+
                 return {
                     id: q.id || q.question_id || Math.random(),
                     template_id: q.template_id,
-                    text: q.text || q.question_text || q.question || q.question_html,
+                    text: cleanedText,
                     options: q.options || [],
                     correctAnswer: q.correctAnswer || q.correct_answer || q.answer || q.answer_value,
                     type: q.type || q.question_type || 'MCQ',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../shapes-around-us.css';
-import { skillsData } from './skillsData';
+import { generateShapesSkillsData } from './shapesSkillsData';
 
 /* ═══════════════════════════════════════════════════════════════
    QUESTION CARD — renders MCQ with optional image
@@ -12,7 +12,7 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
     if (type === 'multiple-choice') {
         return (
             <div style={{ marginBottom: 20 }}>
-                {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16 }}>{image}</div>}
+                {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{image}</div>}
                 <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {options.map((opt, i) => {
@@ -59,7 +59,7 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
     // Short answer
     return (
         <div style={{ marginBottom: 20 }}>
-            {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16 }}>{image}</div>}
+            {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{image}</div>}
             <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
             <div style={{ display: 'flex', gap: 10 }}>
                 <input type="text" value={disabled ? (selectedOption || '') : val} onChange={e => setVal(e.target.value)} disabled={disabled}
@@ -320,7 +320,7 @@ function AssessMode({ skill, onBack }) {
                                     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flex: 1 }}>
                                         <span style={{ width: 28, height: 28, borderRadius: '50%', background: pillColor, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>{i + 1}</span>
                                         <div>
-                                            {qq.image && <div style={{ fontSize: 32, marginBottom: 8 }}>{qq.image}</div>}
+                                            {qq.image && <div style={{ fontSize: 32, marginBottom: 8, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{qq.image}</div>}
                                             <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#0f172a', lineHeight: 1.5 }}>{qq.question}</p>
                                         </div>
                                     </div>
@@ -471,13 +471,24 @@ export default function ShapesSkills() {
     const navigate = useNavigate();
     const [view, setView] = useState('list');
     const [activeSkill, setActiveSkill] = useState(null);
+    const [skillsData, setSkillsData] = useState(() => generateShapesSkillsData());
 
-    const openMode = (skill, mode) => { setActiveSkill(skill); setView(mode); };
-
+    const openMode = (skill, mode) => {
+    const freshData = generateShapesSkillsData();
+    const found = freshData.find(s => s.id === skill.id);
+    setSkillsData(freshData);
+    setActiveSkill(found ?? skill);
+    setView(mode);
+};
+console.log("hi");
     return (
         <div className="sau-skills-page">
             <nav className="sau-nav">
-                <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/shapes-around-us')}>← Back to Shapes Around Us</button>
+                {view === 'list' ? (
+                    <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/shapes-around-us')}>← Back to Shapes Around Us</button>
+                ) : (
+                    <button className="sau-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
+                )}
                 <div className="sau-nav-links">
                     <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/introduction')}>🌟 Introduction</button>
                     <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/terminology')}>📖 Terminology</button>

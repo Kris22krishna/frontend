@@ -70,6 +70,9 @@ const Navbar = () => {
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
                     )}
+                    {isAuthenticated && userType === 'student' && (
+                        <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnosis Test</Link>
+                    )}
                 </div>
 
                 <div className="nav-actions">
@@ -106,6 +109,11 @@ const Navbar = () => {
                         {isAuthenticated ? (
                             <>
                                 <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">Portal</Link>
+                                {userType === 'student' && (
+                                    <Link to="/diagnosis-test" className={`mobile-dropdown-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
+                                        Diagnosis Test
+                                    </Link>
+                                )}
                                 <button onClick={handleLogout} className="mobile-dropdown-item logout-btn">Logout</button>
                             </>
                         ) : (

@@ -13,6 +13,15 @@ const chapters = [
         gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
         shadow: 'rgba(67,233,123,0.35)',
     },
+    {
+        key: 'the-cell',
+        title: 'The Cell: The Unit of Life',
+        desc: 'Master the fundamentals with Intro, Terminologies, Skills practice, and Exam Edge.',
+        icon: '🧬',
+        questions: 35,
+        gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        shadow: 'rgba(240,147,251,0.35)',
+    },
     // Future chapters can be added here
 ];
 

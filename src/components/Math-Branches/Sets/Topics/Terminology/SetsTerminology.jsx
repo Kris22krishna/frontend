@@ -63,6 +63,8 @@ export default function SetsTerminology() {
                     <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/introduction')}>🌟 Intro</button>
                     <button className="sets-nav-link active" onClick={() => navigate('/senior/grade/11/maths/sets/terminology')}>📖 Terminology</button>
                     <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/skills')}>🎯 Skills</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/connectomics')}>Connectomics</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/exam-edge')}>Exam Edge</button>
                 </div>
             </nav>
 
@@ -71,7 +73,7 @@ export default function SetsTerminology() {
 
                 {/* Heading Stack */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 40 }}>
-                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '3.5rem', fontWeight: 900, color: 'var(--sets-text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
+                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(2.2rem, 8vw, 3.5rem)', fontWeight: 900, color: 'var(--sets-text)', margin: '0 0 12px', letterSpacing: '-0.02em' }}>
                         Sets <span style={{ background: 'linear-gradient(135deg, var(--sets-indigo), var(--sets-violet))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lexicon</span>
                     </h1>
                     <p style={{ fontSize: 18, fontWeight: 500, color: 'var(--sets-muted)', maxWidth: '650px', lineHeight: 1.6 }}>
@@ -80,7 +82,7 @@ export default function SetsTerminology() {
                 </div>
 
                 {/* Sub Tabs */}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
+                <div className="sets-subtabs" style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
                     <button className={`sets-nav-link ${activeTab === 'terms' ? 'active' : ''}`} onClick={() => setActiveTab('terms')}>📚 Key Terms</button>
                     <button className={`sets-nav-link ${activeTab === 'rules' ? 'active' : ''}`} onClick={() => setActiveTab('rules')}>📏 5 Golden Rules</button>
                     <button className={`sets-nav-link ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>🧪 Quiz Time</button>
@@ -126,7 +128,7 @@ export default function SetsTerminology() {
                                     <p style={{ fontSize: 18, color: 'var(--sets-text)', lineHeight: 1.6, margin: '0 0 24px' }}>
                                         <MathRenderer text={activeTerm.def} />
                                     </p>
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 24 }}>
+                                    <div className="sets-detail-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: 24 }}>
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1.5, color: activeTerm.color, marginBottom: 12, fontWeight: 800 }}>Examples</h4>
                                             <div style={{ background: `${activeTerm.color}05`, padding: 20, borderRadius: 16, border: `1px solid ${activeTerm.color}15` }}>
@@ -167,7 +169,7 @@ export default function SetsTerminology() {
                                     <p style={{ fontSize: 18, color: 'var(--sets-text)', lineHeight: 1.6, margin: '0 0 24px' }}>
                                         <MathRenderer text={activeRule.detail} />
                                     </p>
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 24 }}>
+                                    <div className="sets-detail-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: 24 }}>
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1.5, color: activeRule.color, marginBottom: 12, fontWeight: 800 }}>Example Application</h4>
                                             <div style={{ background: '#f8fafc', padding: 20, borderRadius: 16, border: '1px solid rgba(0,0,0,0.05)' }}>
@@ -199,7 +201,7 @@ export default function SetsTerminology() {
                     <div className="sets-quiz-window">
                         {!quizFinished ? (
                             <>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+                                <div className="sets-quiz-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
                                     <div>
                                         <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--sets-indigo)', textTransform: 'uppercase', letterSpacing: 2 }}>Question {quizIdx + 1} of {VOCAB_QUIZ.length}</div>
                                         <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 26, fontWeight: 800, color: 'var(--sets-text)', margin: '4px 0 0' }}>Quiz Mode</h3>
@@ -213,7 +215,7 @@ export default function SetsTerminology() {
                                     <MathRenderer text={activeQuiz.question} />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 32 }}>
+                                <div className="sets-quiz-options" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(240px, 100%), 1fr))', gap: 16, marginBottom: 32 }}>
                                     {activeQuiz.options.map((opt, oi) => {
                                         let statusClass = '';
                                         if (quizAnswered) {
@@ -259,7 +261,7 @@ export default function SetsTerminology() {
                                 <div style={{ fontSize: 72, marginBottom: 20 }}>{quizTotalScore >= 4 ? '🏆' : '💪'}</div>
                                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, marginBottom: 12 }}>Great effort!</h2>
                                 <p style={{ color: 'var(--sets-muted)', fontSize: 20, marginBottom: 40 }}>You scored <span style={{ color: 'var(--sets-indigo)', fontWeight: 900 }}>{quizTotalScore} / {VOCAB_QUIZ.length}</span></p>
-                                <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+                                <div className="sets-finish-actions" style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
                                     <button className="sets-btn-outline" onClick={resetQuiz} style={{ padding: '14px 32px' }}>Try Again</button>
                                     <button className="sets-btn-filled" onClick={() => navigate('/senior/grade/11/maths/sets/skills')} style={{ padding: '14px 32px', '--skill-color': 'var(--sets-indigo)' }}>Practical Skills →</button>
                                 </div>

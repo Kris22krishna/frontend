@@ -210,7 +210,7 @@ const Grade2Template = () => {
             }
         }));
 
-        if (!isTest && !isCorrect) {
+        if (!isTest && !isRight) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -279,12 +279,6 @@ const Grade2Template = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />

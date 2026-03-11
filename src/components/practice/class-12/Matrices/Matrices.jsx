@@ -11,8 +11,7 @@ const MODULES = [
         emoji: "🌟",
         tagline: "5W1H Exploration",
         desc: "6 Big Questions about Matrices — What, Why, Who, When, Where and How.",
-        gradFrom: "#0891b2",
-        gradTo: "#06b6d4",
+        color: "#0891b2",
     },
     {
         id: "terminology",
@@ -21,8 +20,7 @@ const MODULES = [
         emoji: "📖",
         tagline: "9 Key Terms · 6 Rules",
         desc: "Master the language of Matrices — order, types, operations & the golden rules.",
-        gradFrom: "#7c3aed",
-        gradTo: "#a855f7",
+        color: "#7c3aed",
     },
     {
         id: "skills",
@@ -31,8 +29,7 @@ const MODULES = [
         emoji: "🎯",
         tagline: "Practice & Assessment",
         desc: "6 core skills, 10 practice questions and 10 assessment questions each.",
-        gradFrom: "#0369a1",
-        gradTo: "#3b82f6",
+        color: "#0369a1",
     },
     {
         id: "connectomics",
@@ -41,8 +38,7 @@ const MODULES = [
         emoji: "🔗",
         tagline: "Big Picture",
         desc: "See how matrices connect to other branches of mathematics and real-world applications.",
-        gradFrom: "#d97706",
-        gradTo: "#f59e0b",
+        color: "#d97706",
     },
     {
         id: "exam-edge",
@@ -51,8 +47,7 @@ const MODULES = [
         emoji: "🏆",
         tagline: "Test Ready",
         desc: "Challenge yourself with exam-style questions and advanced matrices problems.",
-        gradFrom: "#dc2626",
-        gradTo: "#ef4444",
+        color: "#dc2626",
     },
 ];
 
@@ -134,51 +129,24 @@ export default function Matrices() {
                         </p>
                     </div>
 
-                    <div className="mat-path-list">
-                        {MODULES.map((mod, idx) => (
+                    <div className="mat-cards-col">
+                        {MODULES.map((mod) => (
                             <button
                                 key={mod.id}
-                                className="mat-path-card"
+                                className="mat-module-card"
                                 onClick={() => navigate(mod.path)}
                             >
-                                <div className="mat-path-card-left">
-                                    <div
-                                        className="mat-path-step"
-                                        style={{
-                                            background: `linear-gradient(135deg, ${mod.gradFrom}, ${mod.gradTo})`,
-                                        }}
-                                    >
-                                        {idx + 1}
-                                    </div>
-
-                                    <div className="mat-path-connector" />
+                                <div className="mat-module-strip" style={{ background: mod.color }} />
+                                <div className="mat-module-icon" style={{ background: `${mod.color}15`, color: mod.color }}>
+                                    {mod.emoji}
                                 </div>
-
-                                <div className="mat-path-card-body">
-                                    <div className="mat-path-card-header">
-                                        <div className="mat-path-card-emoji">
-                                            {mod.emoji}
-                                        </div>
-                                        <div className="mat-path-card-info">
-                                            <span
-                                                className="mat-path-card-tag"
-                                                style={{ color: mod.gradFrom }}
-                                            >
-                                                {mod.tagline}
-                                            </span>
-                                            <h3 className="mat-path-card-name">
-                                                {mod.label}
-                                            </h3>
-                                        </div>
-                                    </div>
-                                    <p className="mat-path-card-desc">{mod.desc}</p>
+                                <div className="mat-module-text">
+                                    <div className="mat-module-tagline">{mod.tagline}</div>
+                                    <div className="mat-module-label">{mod.label}</div>
+                                    <div className="mat-module-desc">{mod.desc}</div>
                                 </div>
-
-                                <div
-                                    className="mat-path-card-arrow"
-                                    style={{ color: mod.gradFrom }}
-                                >
-                                    <ChevronRight size={22} />
+                                <div className="mat-module-chevron" style={{ color: mod.color }}>
+                                    <ChevronRight size={32} />
                                 </div>
                             </button>
                         ))}

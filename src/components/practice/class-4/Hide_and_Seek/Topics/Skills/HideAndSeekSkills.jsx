@@ -491,7 +491,6 @@ function AssessMode({ skill, onBack }) {
             </div>
         );
     }
-
     const currentAnswered = answersMap[qIdx] !== undefined;
 
     return (
@@ -570,8 +569,8 @@ function AssessMode({ skill, onBack }) {
                     fontWeight: 800, fontSize: 16, cursor: 'pointer',
                     boxShadow: '0 4px 14px rgba(239,68,68,0.35)', transition: 'all 0.2s'
                 }}>Submit Assessment</button>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 
@@ -591,7 +590,11 @@ export default function HideAndSeekSkills() {
     return (
         <div className="sau-skills-page">
             <nav className="sau-nav">
-                <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/hide-and-seek')}>← Back to Hide and Seek</button>
+                {view === 'list' ? (
+                    <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/hide-and-seek')}>← Back to Hide and Seek</button>
+                ) : (
+                    <button className="sau-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
+                )}
                 <div className="sau-nav-links">
                     <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/hide-and-seek/introduction')}>🌟 Introduction</button>
                     <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/hide-and-seek/terminology')}>📖 Terminology</button>

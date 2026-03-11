@@ -289,6 +289,11 @@ export const TOPIC_CONFIGS = {
             { id: "SAU-02", name: "Terminology", route: "shapes-around-us-hero" },
             { id: "SAU-03", name: "Skills", route: "shapes-around-us-hero" }
         ],
+        'Patterns Around Us': [
+            { id: "PAU-01", name: "Introduction", route: "patterns-around-us-hero" },
+            { id: "PAU-02", name: "Terminology", route: "patterns-around-us-hero" },
+            { id: "PAU-03", name: "Skills", route: "patterns-around-us-hero" }
+        ],
         'Hide and Seek': [
             { id: "HAS-01", name: "Introduction", route: "hide-and-seek-hero" },
             { id: "HAS-02", name: "Terminology", route: "hide-and-seek-hero" },
