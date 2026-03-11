@@ -658,7 +658,43 @@ function App() {
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
-          <Route path="diagnosis-test" element={<ProtectedRoute redirectTo="/login"><DiagnosisLanding /></ProtectedRoute>} />
+          
+          {/* Class 11 Biology */}
+          <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
+          <Route path="senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
+          <Route path="senior/grade/11/biology/the-cell" element={<TheCellDashboard />} />
+          <Route path="senior/grade/11/biology/the-cell/introduction" element={<TheCellIntro />} />
+          <Route path="senior/grade/11/biology/the-cell/terminology" element={<TheCellTerminology />} />
+          <Route path="senior/grade/11/biology/the-cell/skills" element={<TheCellSkills />} />
+          <Route path="senior/grade/11/biology/the-cell/connectomics" element={<TheCellConnectomics />} />
+          <Route path="senior/grade/11/biology/the-cell/exam-edge" element={<TheCellExamEdge />} />
+
+          {/* Class 11 Maths */}
+          <Route path="senior/grade/11/maths" element={<MathsChapters />} />
+          <Route path="senior/grade/11/maths/sets" element={<SetsDashboard />} />
+          <Route path="senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
+          <Route path="senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
+          <Route path="senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
+          <Route path="senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
+          <Route path="senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
+
+          {/* Class 11 Physics */}
+          <Route path="senior/grade/11/physics" element={<PhysicsChapters />} />
+          <Route path="senior/grade/11/physics/laws-of-motion" element={<LawsOfMotionDashboard />} />
+          <Route path="senior/grade/11/physics/laws-of-motion/introduction" element={<LawsOfMotionIntro />} />
+          <Route path="senior/grade/11/physics/laws-of-motion/terminology" element={<LawsOfMotionTerminology />} />
+          <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
+          <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
+          <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
+
+          {/* Class 11 Chemistry */}
+          <Route path="senior/grade/11/chemistry" element={<ChemistryChapters />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom" element={<StructureOfAtomDashboard />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/introduction" element={<StructureOfAtomIntro />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/terminology" element={<StructureOfAtomTerminology />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
           {/* Algebra Topic Pages */}
@@ -815,22 +851,6 @@ function App() {
           <Route path="middle/grade/7/data-handling/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DataHandlingMediumTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DataHandlingHardTest /></ProtectedRoute>} />
 
-          {/* Class 11 Biology */}
-          <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
-          <Route path="senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
-
-          {/* Class 11 Maths */}
-          <Route path="senior/grade/11/maths" element={<MathsChapters />} />
-          <Route path="senior/grade/11/maths/sets" element={<SetsDashboard />} />
-          <Route path="senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
-          <Route path="senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
-          <Route path="senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
-          <Route path="senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
-          <Route path="senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
-
-          {/* Placeholder routes for other Grade 11 subjects */}
-          <Route path="senior/grade/11/chemistry" element={<ComingSoon />} />
-          <Route path="senior/grade/11/physics" element={<ComingSoon />} />
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
@@ -1695,6 +1715,7 @@ function App() {
           <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 
+
         <Route path="/guest-dashboard" element={<GuestDashboard />} />
         <Route path="/mentor-dashboard" element={<MentorDashboard />} />
 
@@ -1793,47 +1814,6 @@ function App() {
         <Route path="/high/practice/1240" element={<PolynomialsTest />} />
 
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
-
-
-        {/* Class 11 Biology */}
-        <Route path="/senior/grade/11/biology" element={<BiologyChapters />} />
-        <Route path="/senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
-        <Route path="/senior/grade/11/biology/the-cell" element={<TheCellDashboard />} />
-        <Route path="/senior/grade/11/biology/the-cell/introduction" element={<TheCellIntro />} />
-        <Route path="/senior/grade/11/biology/the-cell/terminology" element={<TheCellTerminology />} />
-        <Route path="/senior/grade/11/biology/the-cell/skills" element={<TheCellSkills />} />
-        <Route path="/senior/grade/11/biology/the-cell/connectomics" element={<TheCellConnectomics />} />
-        <Route path="/senior/grade/11/biology/the-cell/exam-edge" element={<TheCellExamEdge />} />
-
-        {/* Class 11 Maths */}
-        <Route path="/senior/grade/11/maths" element={<MathsChapters />} />
-        <Route path="/senior/grade/11/maths/sets" element={<SetsDashboard />} />
-        <Route path="/senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
-        <Route path="/senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
-        <Route path="/senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
-        <Route path="/senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
-        <Route path="/senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
-
-        {/* Class 11 Physics */}
-        <Route path="/senior/grade/11/physics" element={<PhysicsChapters />} />
-        <Route path="/senior/grade/11/physics/laws-of-motion" element={<LawsOfMotionDashboard />} />
-        <Route path="/senior/grade/11/physics/laws-of-motion/introduction" element={<LawsOfMotionIntro />} />
-        <Route path="/senior/grade/11/physics/laws-of-motion/terminology" element={<LawsOfMotionTerminology />} />
-        <Route path="/senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
-        <Route path="/senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
-        <Route path="/senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
-        <Route path="/senior/grade/11/maths" element={<ComingSoon />} />
-
-        {/* Class 11 Chemistry */}
-        <Route path="/senior/grade/11/chemistry" element={<ChemistryChapters />} />
-        <Route path="/senior/grade/11/chemistry/structure-of-atom" element={<StructureOfAtomDashboard />} />
-        <Route path="/senior/grade/11/chemistry/structure-of-atom/introduction" element={<StructureOfAtomIntro />} />
-        <Route path="/senior/grade/11/chemistry/structure-of-atom/terminology" element={<StructureOfAtomTerminology />} />
-        <Route path="/senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
-        <Route path="/senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
-        <Route path="/senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
-
-
         {/* Class 10: Real Numbers Routes */}
         <Route path="/high/practice/1111" element={<RealNumberFoundations />} />
         <Route path="/high/practice/1112" element={<EuclidsDivision />} />

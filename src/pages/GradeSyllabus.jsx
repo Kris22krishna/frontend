@@ -51,6 +51,13 @@ const GradeSyllabus = () => {
                 return;
             }
         }
+        else if (gradeNum >= 11 && gradeNum <= 12) {
+            // Senior Grades (11-12) Use the new Subject Picker Design
+            if (!window.location.href.includes('/senior/')) {
+                window.location.href = `/senior/grade/${gradeNum}`;
+                return;
+            }
+        }
 
         const fetchData = async () => {
 

@@ -47,7 +47,7 @@ const generateSubAtomicQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Basic',
-                question: `Calculate the number of neutrons in an atom of **${el.name}-${mass}** (${el.symbol}).`,
+                question: `Calculate the number of neutrons in an atom of ${el.name}-${mass} (${el.symbol}).`,
                 options: shuffledOptions.map(String),
                 answer: shuffledOptions.indexOf(neutrons),
                 explanation: `The mass number (A) is ${mass} and the atomic number (Z) for ${el.name} is ${el.z}. Neutrons = A - Z = ${mass} - ${el.z} = ${neutrons}.`
@@ -69,7 +69,7 @@ const generateSubAtomicQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Intermediate',
-                question: `How many electrons are present in the **${el.symbol}${chargeStr}** ion? (Atomic number of ${el.name} = ${el.z})`,
+                question: `How many electrons are present in the ${el.symbol}${chargeStr} ion? (Atomic number of ${el.name} = ${el.z})`,
                 options: shuffledOptions.map(String),
                 answer: shuffledOptions.indexOf(electrons),
                 explanation: `A neutral ${el.name} atom has ${el.z} electrons. A charge of ${chargeStr} means it has ${charge > 0 ? 'lost' : 'gained'} ${Math.abs(charge)} electrons. Total electrons = ${el.z} - (${charge}) = ${electrons}.`
@@ -129,7 +129,7 @@ const generateRadiationQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Intermediate',
-                question: `Calculate the frequency of light having a wavelength of **${wl_nm} nm**. (c = 3.0 × 10⁸ m/s)`,
+                question: `Calculate the frequency of light having a wavelength of ${wl_nm} nm. (c = 3.0 × 10⁸ m/s)`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(correctOpt),
                 explanation: `Using ν = c/λ.\nν = (3.0 × 10⁸ m/s) / (${wl_nm} × 10⁻⁹ m) = ${freq_pow14} × 10¹⁴ Hz.`
@@ -152,7 +152,7 @@ const generateRadiationQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Advanced',
-                question: `Calculate the energy of one photon of radiation whose frequency is **${freq_pow14} × 10¹⁴ Hz**. (h = 6.626 × 10⁻³⁴ J s)`,
+                question: `Calculate the energy of one photon of radiation whose frequency is ${freq_pow14} × 10¹⁴ Hz. (h = 6.626 × 10⁻³⁴ J s)`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(correctOpt),
                 explanation: `Using E = hν.\nE = (6.626 × 10⁻³⁴ J s) × (${freq_pow14} × 10¹⁴ s⁻¹) = ${energy_pow19} × 10⁻¹⁹ J.`
@@ -187,7 +187,7 @@ const generateBohrQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Intermediate',
-                question: `What is the radius of the **n = ${n}** orbit of a Hydrogen atom? (r₀ = 52.9 pm)`,
+                question: `What is the radius of the n = ${n} orbit of a Hydrogen atom? (r₀ = 52.9 pm)`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(correctOpt),
                 explanation: `Radius rₙ = r₀ × n² / Z.\nFor Hydrogen, Z = 1. Therefore, rₙ = 52.9 × (${n})² = 52.9 × ${n*n} = ${radius} pm.`
@@ -209,7 +209,7 @@ const generateBohrQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Intermediate',
-                question: `Calculate the energy of an electron in the **n = ${n}** orbit of a Hydrogen atom.`,
+                question: `Calculate the energy of an electron in the n = ${n} orbit of a Hydrogen atom.`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(correctOpt),
                 explanation: `Energy Eₙ = -13.6 × (Z² / n²) eV.\nFor Hydrogen (Z = 1): Eₙ = -13.6 / ${n*n} = ${energy} eV.`
@@ -222,7 +222,7 @@ const generateBohrQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Basic',
-                question: `In the hydrogen spectrum, a transition from **n = ${n_high} to n = 2** falls in which series?`,
+                question: `In the hydrogen spectrum, a transition from n = ${n_high} to n = 2 falls in which series?`,
                 options: ["Lyman Series (UV)", "Balmer Series (Visible)", "Paschen Series (IR)", "Brackett Series (IR)"],
                 answer: 1, // Balmer
                 explanation: `Any transition ending at n₁ = 2 belongs to the Balmer series, which lies in the visible region of the electromagnetic spectrum.`
@@ -253,7 +253,7 @@ const generateQuantumQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Basic',
-                question: `Which subshell is designated by the quantum numbers **n = ${n}** and **l = ${l}**?`,
+                question: `Which subshell is designated by the quantum numbers n = ${n} and l = ${l}?`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(notation),
                 explanation: `The principal quantum number n = ${n}. The azimuthal quantum number l = 0 is 's', 1 is 'p', 2 is 'd', 3 is 'f'. Thus, l = ${l} corresponds to '${subshells[l]}'. The subshell is ${notation}.`
@@ -277,7 +277,7 @@ const generateQuantumQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Intermediate',
-                question: `Is the following set of quantum numbers valid?\n**${setStr}**`,
+                question: `Is the following set of quantum numbers valid?\n${setStr}`,
                 options: ["Valid", "Invalid"],
                 answer: isValid ? 0 : 1,
                 explanation: isValid 
@@ -296,7 +296,7 @@ const generateQuantumQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Intermediate',
-                question: `What is the maximum number of electrons that can be accommodated in a **${subshells[l]}-subshell** (l = ${l})?`,
+                question: `What is the maximum number of electrons that can be accommodated in a ${subshells[l]}-subshell (l = ${l})?`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(maxElectrons.toString()),
                 explanation: `The formula for the maximum number of electrons in a subshell is 2(2l + 1). For l = ${l}, total electrons = 2(2(${l}) + 1) = ${maxElectrons}.`
@@ -342,7 +342,7 @@ const generateConfigQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: targetEl.conf.includes('Exception') ? 'Advanced' : 'Intermediate',
-                question: `Which of the following represents the correct ground state electronic configuration of **${targetEl.name} (Z=${targetEl.Z})**?`,
+                question: `Which of the following represents the correct ground state electronic configuration of ${targetEl.name} (Z=${targetEl.Z})?`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(targetEl.conf),
                 explanation: targetEl.conf.includes('Exception') 
@@ -359,7 +359,7 @@ const generateConfigQuestions = () => {
             questions.push({
                 type: 'mcq',
                 difficulty: 'Intermediate',
-                question: `Identify the element whose ground state electronic configuration is: **${targetEl.conf}**`,
+                question: `Identify the element whose ground state electronic configuration is: ${targetEl.conf}`,
                 options: shuffledOptions,
                 answer: shuffledOptions.indexOf(targetEl.name),
                 explanation: `Summing the electrons in the configuration gives an atomic number (Z) of ${targetEl.Z}, which corresponds to ${targetEl.name}.`
