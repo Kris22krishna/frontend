@@ -38,6 +38,13 @@ import TheCellTerminology from './components/Biology-Branches/The-Cell/Topics/Te
 import TheCellSkills from './components/Biology-Branches/The-Cell/Topics/Skills/TheCellSkills';
 import TheCellConnectomics from './components/Biology-Branches/The-Cell/Topics/Connectomics/TheCellConnectomics';
 import TheCellExamEdge from './components/Biology-Branches/The-Cell/Topics/ExamEdge/TheCellExamEdge';
+import PhysicsChapters from './components/practice/class-11/physics/PhysicsChapters';
+import LawsOfMotionDashboard from './components/Physics-Branches/Laws-Of-Motion/LawsOfMotionDashboard';
+import LawsOfMotionIntro from './components/Physics-Branches/Laws-Of-Motion/Topics/Introduction/LawsOfMotionIntro';
+import LawsOfMotionTerminology from './components/Physics-Branches/Laws-Of-Motion/Topics/Terminology/LawsOfMotionTerminology';
+import LawsOfMotionSkills from './components/Physics-Branches/Laws-Of-Motion/Topics/Skills/LawsOfMotionSkills';
+import LawsOfMotionConnectomics from './components/Physics-Branches/Laws-Of-Motion/Topics/Connectomics/LawsOfMotionConnectomics';
+import LawsOfMotionExamEdge from './components/Physics-Branches/Laws-Of-Motion/Topics/ExamEdge/LawsOfMotionExamEdge';
 import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
 import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
 import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
@@ -1764,9 +1771,14 @@ function App() {
         <Route path="/senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
         <Route path="/senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
 
-        {/* Placeholder routes for other Grade 11 subjects */}
-        <Route path="/senior/grade/11/chemistry" element={<ComingSoon />} />
-        <Route path="/senior/grade/11/physics" element={<ComingSoon />} />
+        {/* Class 11 Physics */}
+        <Route path="/senior/grade/11/physics" element={<PhysicsChapters />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion" element={<LawsOfMotionDashboard />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/introduction" element={<LawsOfMotionIntro />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/terminology" element={<LawsOfMotionTerminology />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
         <Route path="/senior/grade/11/maths" element={<ComingSoon />} />
 
         {/* Class 10: Real Numbers Routes */}
