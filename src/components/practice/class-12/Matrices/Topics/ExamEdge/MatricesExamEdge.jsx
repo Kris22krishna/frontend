@@ -1,325 +1,217 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { matricesExamEdgeData as data } from "./MatricesExamEdgeData";
 import "../../MatricesPages.css";
 import MathRenderer from "../../../../../MathRenderer";
+import { Trophy, Target, AlertTriangle, Lightbulb } from "lucide-react";
 
-const QUESTION_TABS = [
-    { id: "kcet", label: "KCET Sprint", accent: "#0891b2" },
-    { id: "jee", label: "JEE Main", accent: "#ef4444" },
-    { id: "jeeAdvanced", label: "JEE Advanced", accent: "#7c3aed" },
-];
-
-const HERO_STATS = [
-    { label: "Exam Tracks", value: data.primers.length },
-    { label: "High-Yield Buckets", value: data.highYield.length },
-    { label: "Revision Phases", value: data.revisionPlan.length },
+const EXAM_TABS = [
+    { id: "kcet", name: "KCET", color: "#0d9488", emoji: "🌟" },
+    { id: "jee", name: "JEE Main", color: "#f59e0b", emoji: "🥇" },
+    { id: "jeeAdvanced", name: "JEE Advanced", color: "#ef4444", emoji: "🔬" },
 ];
 
 export default function MatricesExamEdge() {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("kcet");
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+    const currentTab = EXAM_TABS.find(t => t.id === activeTab);
+    const questionSet = data.questions[activeTab] || [];
 
-    const currentTab = QUESTION_TABS.find((tab) => tab.id === activeTab) || QUESTION_TABS[0];
-    const questionSet = data.questions[activeTab];
+    // Find the strategy for the current tab
+    const currentStrategy = data.strategy.find(s =>
+        activeTab === "kcet" ? s.exam.includes("KCET") : s.exam.includes("JEE")
+    );
 
     return (
-        <div className="mat-page mat-exam-page">
+        <div className="mat-page">
             <nav className="mat-intro-nav">
-                <button
-                    className="mat-intro-nav-back"
-                    onClick={() => navigate("/senior/grade/12/matrices")}
-                >
-                    ← Back to Matrices
+                <button className="mat-intro-nav-back" onClick={() => navigate("/senior/grade/12/matrices")}>
+                    ← Back to Dashboard
                 </button>
-                <div className="mat-intro-nav-links">
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/introduction")}
-                    >
-                        🌟 Introduction
-                    </button>
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/terminology")}
-                    >
-                        📖 Terminology
-                    </button>
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/skills")}
-                    >
-                        🎯 Skills
-                    </button>
-                    <button
-                        className="mat-intro-nav-link"
-                        onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
-                    >
-                        🌐 Connectomics
-                    </button>
-                    <button
-                        className="mat-intro-nav-link mat-intro-nav-link--active"
-                        onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
-                    >
-                        ⚔️ Exam Edge
-                    </button>
-                </div>
             </nav>
 
-            <header className="mat-exam-hero">
-                <div className="mat-exam-hero-shell">
-                    <div className="mat-exam-hero-copy">
-                        <div className="mat-hero-badge">{data.hero.badge}</div>
-                        <h1 className="mat-exam-title">
-                            Matrices <span>{data.hero.title}</span>
-                        </h1>
-                        <p className="mat-exam-subtitle">{data.hero.subtitle}</p>
+            <div className="mat-intro-hero">
+                <div className="mat-intro-hero-deco mat-intro-hero-deco-a" />
+                <div className="mat-intro-hero-deco mat-intro-hero-deco-b" />
+                <div className="mat-intro-hero-inner">
+                    <h1 className="mat-intro-hero-title">Matrices <span className="mat-intro-hero-highlight">Exam Edge</span></h1>
+                    <p className="mat-intro-hero-sub">Strategic insights and high-weightage topics for competitive exams.</p>
+                </div>
+            </div>
+
+            <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
+
+                {/* Exam Tabs */}
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '40px', flexWrap: 'wrap' }}>
+                    {EXAM_TABS.map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            style={{
+                                padding: '12px 24px',
+                                borderRadius: '100px',
+                                border: '2px solid',
+                                borderColor: activeTab === tab.id ? tab.color : '#e2e8f0',
+                                background: activeTab === tab.id ? `${tab.color}10` : '#fff',
+                                color: activeTab === tab.id ? tab.color : '#64748b',
+                                fontWeight: 800,
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
+                            }}
+                        >
+                            <span>{tab.emoji}</span> {tab.name}
+                        </button>
+                    ))}
+                </div>
+
+                <div style={{ background: '#fff', padding: '32px', borderRadius: '24px', border: '1px solid #e2e8f0', marginBottom: '40px' }}>
+
+                    {/* High Yield Topics */}
+                    <div style={{ marginBottom: '40px' }}>
+                        <h3 style={{ fontSize: '14px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Target size={18} color={currentTab.color} /> High-Yield Topics
+                        </h3>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                            {data.highYield
+                                .filter(hy =>
+                                    activeTab === "kcet" ? hy.category.includes("KCET") || hy.category.includes("Core") :
+                                    activeTab === "jee" ? hy.category.includes("JEE") || hy.category.includes("Core") :
+                                    true
+                                )
+                                .flatMap(hy => hy.topics)
+                                .map((t, idx) => (
+                                    <div key={idx} style={{ background: '#f8fafc', padding: '10px 18px', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '14px', fontWeight: 700, color: '#1e1b4b' }}>
+                                        <MathRenderer text={t} />
+                                    </div>
+                                ))
+                            }
+                        </div>
                     </div>
 
-                    <div className="mat-exam-hero-side">
-                        <div className="mat-exam-side-card">
-                            <div className="mat-exam-side-label">Mission Snapshot</div>
-                            <div className="mat-exam-side-stats">
-                                {HERO_STATS.map((stat) => (
-                                    <div key={stat.label} className="mat-exam-stat">
-                                        <span className="mat-exam-stat-value">{stat.value}</span>
-                                        <span className="mat-exam-stat-label">{stat.label}</span>
+                    {/* Strategy & Tricks */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+                        <div>
+                            <h3 style={{ fontSize: '14px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Trophy size={18} color="#f59e0b" /> Winning Strategy
+                            </h3>
+                            <div style={{ background: '#fffbeb', padding: '24px', borderRadius: '20px', border: '1px solid #fef3c7', color: '#92400e', fontSize: '16px', lineHeight: 1.6 }}>
+                                {currentStrategy ? (
+                                    <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                                        {currentStrategy.points.map((p, idx) => (
+                                            <li key={idx} style={{ marginBottom: '8px' }}>{p}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>Combine JEE Main and Advanced strategies for comprehensive preparation.</p>
+                                )}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style={{ fontSize: '14px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <AlertTriangle size={18} color="#ef4444" /> Toppers' Tricks
+                            </h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                {data.tricks.map((trick, idx) => (
+                                    <div key={idx} style={{ background: '#f0f9ff', padding: '16px 20px', borderRadius: '16px', border: '1px solid #e0f2fe', color: '#0c4a6e', fontSize: '14px', fontWeight: 700 }}>
+                                        <strong>{trick.title}: </strong>
+                                        <MathRenderer text={trick.content} />
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
                 </div>
-            </header>
 
-            <main className="mat-section mat-exam-main">
-                <section className="mat-exam-section">
-                    <div className="mat-exam-section-head">
-                        <div>
-                            <p className="mat-exam-kicker">Know the paper</p>
-                            <h2 className="mat-section-title">
-                                Exam <span>Primer</span>
-                            </h2>
-                        </div>
-                        <p className="mat-section-subtitle">
-                            Different exams reward different behaviours. Calibrate your preparation before you practise.
-                        </p>
-                    </div>
+                {/* Question Desk */}
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '24px', textAlign: 'center', color: '#1e1b4b' }}>
+                    Question Desk
+                </h2>
 
-                    <div className="mat-exam-primer-grid">
-                        {data.primers.map((primer) => (
-                            <article key={primer.exam} className="mat-exam-primer-card">
-                                <div className="mat-exam-primer-top">
-                                    <h3>{primer.exam}</h3>
-                                    <a href={primer.link} target="_blank" rel="noreferrer">
-                                        Official Site ↗
-                                    </a>
+                {activeTab === "jeeAdvanced" ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginBottom: '40px' }}>
+                        {questionSet.map((item, idx) => (
+                            <div key={idx} style={{
+                                background: '#fff',
+                                borderRadius: '20px',
+                                padding: '24px',
+                                border: '1px solid #e2e8f0',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                            }}>
+                                <div style={{ fontSize: '12px', fontWeight: 800, color: currentTab.color, textTransform: 'uppercase', marginBottom: '12px' }}>
+                                    Problem {idx + 1}
                                 </div>
-                                <p>{primer.description}</p>
-                            </article>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="mat-exam-section">
-                    <div className="mat-exam-section-head">
-                        <div>
-                            <p className="mat-exam-kicker">Study with leverage</p>
-                            <h2 className="mat-section-title">
-                                High-Yield <span>Topics</span>
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div className="mat-exam-yield-grid">
-                        {data.highYield.map((item) => (
-                            <article
-                                key={item.category}
-                                className="mat-exam-yield-card"
-                                style={{ "--exam-color": item.color }}
-                            >
-                                <div className="mat-exam-yield-label">Priority Bucket</div>
-                                <h3>{item.category}</h3>
-                                <ul>
-                                    {item.topics.map((topic, idx) => (
-                                        <li key={idx}>{topic}</li>
-                                    ))}
-                                </ul>
-                            </article>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="mat-exam-section">
-                    <div className="mat-exam-two-col">
-                        <div className="mat-exam-panel">
-                            <div className="mat-exam-section-head mat-exam-section-head--compact">
-                                <div>
-                                    <p className="mat-exam-kicker">Execution under pressure</p>
-                                    <h2 className="mat-section-title">
-                                        Strategy <span>Playbook</span>
-                                    </h2>
+                                <div style={{ fontSize: '16px', fontWeight: 600, color: '#1e1b4b', lineHeight: 1.6, marginBottom: '16px' }}>
+                                    <MathRenderer text={item.q} />
+                                </div>
+                                <div style={{ background: '#f0fdf4', padding: '16px', borderRadius: '12px', border: '1px solid #dcfce7', fontSize: '14px', color: '#166534' }}>
+                                    <strong>Insight: </strong><MathRenderer text={item.ans} />
                                 </div>
                             </div>
-
-                            <div className="mat-exam-strategy-list">
-                                {data.strategy.map((item) => (
-                                    <article
-                                        key={item.exam}
-                                        className="mat-exam-strategy-card"
-                                        style={{ "--exam-color": item.color }}
-                                    >
-                                        <div className="mat-exam-strategy-head">
-                                            <div className="mat-exam-strategy-icon">{item.icon}</div>
-                                            <h3>{item.exam}</h3>
-                                        </div>
-                                        <ul>
-                                            {item.points.map((point, idx) => (
-                                                <li key={idx}>{point}</li>
-                                            ))}
-                                        </ul>
-                                    </article>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="mat-exam-panel mat-exam-panel--dark">
-                            <div className="mat-exam-section-head mat-exam-section-head--compact">
-                                <div>
-                                    <p className="mat-exam-kicker">Shortcuts worth keeping</p>
-                                    <h2 className="mat-section-title">
-                                        Toppers' <span>Tricks</span>
-                                    </h2>
-                                </div>
-                            </div>
-
-                            <div className="mat-exam-tricks-grid">
-                                {data.tricks.map((trick) => (
-                                    <article key={trick.title} className="mat-exam-trick-card">
-                                        <h3>{trick.title}</h3>
-                                        <div className="mat-exam-trick-copy">
-                                            <MathRenderer text={trick.content} />
-                                        </div>
-                                    </article>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="mat-exam-section">
-                    <div className="mat-exam-section-head">
-                        <div>
-                            <p className="mat-exam-kicker">Practise by paper style</p>
-                            <h2 className="mat-section-title">
-                                Question <span>Desk</span>
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div className="mat-exam-tabs">
-                        {QUESTION_TABS.map((tab) => (
-                            <button
-                                key={tab.id}
-                                className={`mat-exam-tab ${activeTab === tab.id ? "is-active" : ""}`}
-                                style={{
-                                    "--tab-color": tab.accent,
-                                    "--tab-surface": `${tab.accent}12`,
-                                }}
-                                onClick={() => setActiveTab(tab.id)}
-                            >
-                                {tab.label}
-                            </button>
                         ))}
                     </div>
-
-                    <div className="mat-exam-questions-shell" style={{ "--tab-color": currentTab.accent }}>
-                        {activeTab === "jeeAdvanced" ? (
-                            <div className="mat-exam-advanced-list">
-                                {questionSet.map((item, idx) => (
-                                    <article key={idx} className="mat-exam-advanced-card">
-                                        <div className="mat-exam-question-number">Problem {idx + 1}</div>
-                                        <div className="mat-exam-question-copy">
-                                            <MathRenderer text={item.q} />
-                                        </div>
-                                        <div className="mat-exam-insight">
-                                            <span>Insight</span>
-                                            <MathRenderer text={item.ans} />
-                                        </div>
-                                    </article>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="mat-exam-question-grid">
-                                {questionSet.map((item, idx) => (
-                                    <article key={idx} className="mat-exam-question-card">
-                                        <div className="mat-exam-question-top">
-                                            <span className={`mat-exam-level mat-exam-level--${item.level.toLowerCase()}`}>
-                                                {item.level}
-                                            </span>
-                                            <span className="mat-exam-question-number">Q{idx + 1}</span>
-                                        </div>
-
-                                        <div className="mat-exam-question-copy">
-                                            <MathRenderer text={item.q} />
-                                        </div>
-
-                                        {item.options && (
-                                            <div className="mat-exam-options">
-                                                {item.options.map((option, optionIdx) => (
-                                                    <div key={optionIdx} className="mat-exam-option">
-                                                        <span>{String.fromCharCode(65 + optionIdx)}</span>
-                                                        <MathRenderer text={option} />
-                                                    </div>
-                                                ))}
+                ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+                        {questionSet.map((item, idx) => (
+                            <div key={idx} style={{
+                                background: '#fff',
+                                borderRadius: '20px',
+                                padding: '24px',
+                                border: '1px solid #e2e8f0',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                                    <span style={{
+                                        fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px',
+                                        padding: '4px 10px', borderRadius: '100px',
+                                        background: item.level === 'Easy' ? '#dcfce7' : item.level === 'Medium' ? '#fef9c3' : '#fee2e2',
+                                        color: item.level === 'Easy' ? '#166534' : item.level === 'Medium' ? '#854d0e' : '#991b1b',
+                                    }}>{item.level}</span>
+                                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#94a3b8' }}>Q{idx + 1}</span>
+                                </div>
+                                <div style={{ fontSize: '15px', fontWeight: 600, color: '#1e1b4b', lineHeight: 1.6, marginBottom: '16px' }}>
+                                    <MathRenderer text={item.q} />
+                                </div>
+                                {item.options && (
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                                        {item.options.map((opt, oi) => (
+                                            <div key={oi} style={{
+                                                padding: '10px 14px', borderRadius: '12px',
+                                                background: '#f8fafc', border: '1px solid #e2e8f0',
+                                                fontSize: '14px', color: '#475569',
+                                                display: 'flex', alignItems: 'flex-start', gap: '8px'
+                                            }}>
+                                                <span style={{ fontWeight: 800, color: currentTab.color, flexShrink: 0 }}>
+                                                    {String.fromCharCode(65 + oi)}
+                                                </span>
+                                                <MathRenderer text={opt} />
                                             </div>
-                                        )}
-                                    </article>
-                                ))}
+                                        ))}
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                </section>
-
-                <section className="mat-exam-section">
-                    <div className="mat-exam-section-head">
-                        <div>
-                            <p className="mat-exam-kicker">Last 14 days</p>
-                            <h2 className="mat-section-title">
-                                Revision <span>Timeline</span>
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div className="mat-exam-timeline">
-                        {data.revisionPlan.map((step, idx) => (
-                            <article key={step.phase} className="mat-exam-timeline-card">
-                                <div className="mat-exam-timeline-step">{idx + 1}</div>
-                                <div>
-                                    <div className="mat-exam-timeline-phase">{step.phase}</div>
-                                    <p>{step.focus}</p>
-                                </div>
-                            </article>
                         ))}
                     </div>
-                </section>
+                )}
 
-                <section className="mat-exam-cta">
-                    <div>
-                        <p className="mat-exam-kicker">Close the loop</p>
-                        <h3>Need raw question volume before mocks?</h3>
-                        <p>
-                            Go back to the skills page for targeted repetition, then return here for timed exam simulation.
-                        </p>
+                {/* Pro Tips */}
+                <div style={{ marginTop: '40px', background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '40px', borderRadius: '32px', color: '#fff' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                        <Lightbulb size={32} color="#f59e0b" />
+                        <h2 style={{ fontSize: '24px', fontWeight: 800, margin: 0 }}>Revision Timeline</h2>
                     </div>
-                    <button onClick={() => navigate("/senior/grade/12/matrices/skills")}>
-                        Back to Skills →
-                    </button>
-                </section>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                        {data.revisionPlan.map((step, idx) => (
+                            <div key={idx} style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', lineHeight: 1.6 }}>
+                                <div style={{ fontSize: '11px', fontWeight: 900, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>{step.phase}</div>
+                                {step.focus}
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </main>
         </div>
     );

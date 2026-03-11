@@ -12,7 +12,7 @@ export const matricesIntroData = {
             gradFrom: "#0891b2",
             gradTo: "#06b6d4",
             shadow: "rgba(6,182,212,0.35)",
-            content: `A matrix is a rectangular arrangement of numbers (or functions) in rows and columns, enclosed in brackets. Each number is called an element. A matrix with $m$ rows and $n$ columns has order $m \\times n$. For example, $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$ is a $2 \\times 2$ matrix. Matrices are the mathematical equivalent of organised data tables — powerful, compact, and structured!`,
+            content: `A matrix is a rectangular arrangement of numbers (or functions) in rows and columns, enclosed in brackets. Each number is called an element. A matrix with $m$ rows and $n$ columns has order $m \\times n$. For example, $\\displaystyle \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$ is a $2 \\times 2$ matrix. Matrices are the mathematical equivalent of organised data tables — powerful, compact, and structured!`,
             fact: 'The word "matrix" was coined by James Joseph Sylvester in 1850, from the Latin word meaning "womb" — because a matrix generates determinants!',
         },
         {

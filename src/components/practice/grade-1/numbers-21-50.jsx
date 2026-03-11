@@ -195,7 +195,7 @@ const Numbers21to50 = () => {
                 // Counting and recognition 21-50
                 const num = Math.floor(Math.random() * 30) + 21;
                 question = {
-                    text: `What number do you see in the blocks? 🔍`,
+                    text: `What number do you see in the blocks?`,
                     options: [num, num + 1, num - (num > 30 ? 10 : 1)].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: num,
                     type: 'counting',
@@ -213,7 +213,7 @@ const Numbers21to50 = () => {
                     `${tens - 1} Tens, ${ones} Ones`
                 ].sort(() => 0.5 - Math.random());
                 question = {
-                    text: `Break it down! How many tens and ones? 🧱`,
+                    text: `Break it down! How many tens and ones?`,
                     options: options,
                     correct: `${tens} Tens, ${ones} Ones`,
                     type: 'tens-ones',
@@ -228,7 +228,7 @@ const Numbers21to50 = () => {
                 const isGreater = Math.random() > 0.5;
                 const correct = isGreater ? (n1 > n2 ? n1 : n2) : (n1 < n2 ? n1 : n2);
                 question = {
-                    text: `Which number is ${isGreater ? 'LARGER' : 'SMALLER'}? ⚖️`,
+                    text: `Which number is ${isGreater ? 'LARGER' : 'SMALLER'}?`,
                     options: [n1, n2],
                     correct: correct,
                     type: 'comparison',
@@ -336,8 +336,8 @@ const Numbers21to50 = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
-        if (!isTest && !isCorrect) {
+        // Show modal for all answers in practice mode
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             // Give a tiny delay so they see the option highlight green
@@ -413,12 +413,6 @@ const Numbers21to50 = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />
@@ -674,7 +668,10 @@ const Numbers21to50 = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
             />
         </div>
     );

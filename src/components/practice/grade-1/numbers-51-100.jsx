@@ -176,7 +176,7 @@ const Numbers51to100 = () => {
                 const wrong1 = numberWords(Math.min(100, num + Math.floor(Math.random() * 5) + 1));
                 const wrong2 = numberWords(Math.max(51, num - Math.floor(Math.random() * 5) - 1));
                 question = {
-                    text: `How do you write ${num} in words? ✏️`,
+                    text: `How do you write ${num} in words?`,
                     options: [correctWord, wrong1, wrong2].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: correctWord,
                     type: 'counting',
@@ -217,7 +217,7 @@ const Numbers51to100 = () => {
                 const isGreater = Math.random() > 0.5;
                 const correct = isGreater ? (n1 > n2 ? n1 : n2) : (n1 < n2 ? n1 : n2);
                 question = {
-                    text: `Which number is ${isGreater ? 'LARGER' : 'SMALLER'}? ⚖️`,
+                    text: `Which number is ${isGreater ? 'LARGER' : 'SMALLER'}?`,
                     options: [n1, n2],
                     correct: correct,
                     type: 'counting',
@@ -333,8 +333,8 @@ const Numbers51to100 = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
-        if (!isTest && !isCorrect) {
+        // Show modal for all answers in practice mode
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             // Give a tiny delay so they see the option highlight green
@@ -402,12 +402,6 @@ const Numbers51to100 = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />
@@ -652,7 +646,10 @@ const Numbers51to100 = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
             />
         </div>
     );

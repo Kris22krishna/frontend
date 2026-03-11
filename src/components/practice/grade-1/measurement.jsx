@@ -249,7 +249,7 @@ const Measurement = () => {
                 const correct = (isHeavier ? (objA.w > objB.w ? objA.name : objB.name) : (objA.w < objB.w ? objA.name : objB.name));
 
                 question = {
-                    text: `Look at the objects! Which one is ${adj}? ⚖️`,
+                    text: `Look at the objects! Which one is ${adj}?`,
                     options: [objA.name, objB.name].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type: 'weight',
@@ -382,8 +382,8 @@ const Measurement = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
-        if (!isTest && !isCorrect) {
+        // Show modal for all answers in practice mode
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             // Give a tiny delay so they see the option highlight green
@@ -451,12 +451,6 @@ const Measurement = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />
@@ -717,7 +711,10 @@ const Measurement = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
             />
         </div>
     );

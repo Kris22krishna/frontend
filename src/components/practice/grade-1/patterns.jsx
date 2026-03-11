@@ -290,8 +290,8 @@ const Patterns = () => {
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
-        if (!isTest && !isCorrect) {
+        // Show modal for all answers in practice mode
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             // Give a tiny delay so they see the option highlight green
@@ -359,12 +359,6 @@ const Patterns = () => {
             <div className="grade1-practice-page results-view overflow-y-auto">
                 <Navbar />
                 <header className="results-header">
-                    <div className="sun-timer-results">
-                        <div className="sun-timer">
-                            <div className="sun-rays"></div>
-                            <span className="timer-text-sun">{formatTime(timer)}</span>
-                        </div>
-                    </div>
                     <h1 className="results-title">Adventure Report</h1>
                     <div className="exit-container">
                         <StickerExit onClick={handleExit} />
@@ -626,7 +620,10 @@ const Patterns = () => {
             <ExplanationModal
                 isOpen={showExplanationModal}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => setShowExplanationModal(false)}
+                onNext={() => {
+                    setShowExplanationModal(false);
+                    handleNext();
+                }}
                 explanation={answers[qIndex]?.explanation}
                 isCorrect={answers[qIndex]?.isCorrect}
                 mascot={mascotImg}
