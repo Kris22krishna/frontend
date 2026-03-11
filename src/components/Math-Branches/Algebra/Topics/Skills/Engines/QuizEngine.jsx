@@ -61,59 +61,83 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         let msg = pct >= 90 ? '🏆 Mastered!' : pct >= 75 ? '🌟 Great Job!' : pct >= 50 ? '👍 Keep it up!' : '💪 Keep Learning!';
         let msgSub = pct >= 90 ? 'You have excellent control over this topic!' : 'Review the concepts and try again for 100%.';
 
+        const avgTime = timeTaken / questionSet.length;
+        const avgTimeStr = avgTime < 60 ? `${Math.round(avgTime)}s` : formatTime(Math.round(avgTime));
+
         return (
-            <div className={`${prefix}-quiz-finished`} style={{ textAlign: 'center', padding: '40px 0' }}>
+            <div className={`${prefix}-quiz-finished`} style={{ 
+                maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '48px 32px',
+                background: '#fff', borderRadius: 24, border: '1px solid #e2e8f0',
+                boxShadow: `0 20px 60px ${color}20`,
+                position: 'relative', overflow: 'hidden'
+            }}>
+                <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: 6,
+                    background: `linear-gradient(90deg, ${color}, ${color}80)`
+                }} />
+
                 <div className={`${prefix}-quiz-score-circle`} style={{
-                    width: 140, height: 140, borderRadius: '50%',
+                    width: 160, height: 160, borderRadius: '50%',
                     background: `conic-gradient(${color} ${pct * 3.6}deg, #f1f5f9 0deg)`,
-                    margin: '0 auto 24px',
+                    margin: '0 auto 32px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                    border: '8px solid #fff'
+                    boxShadow: `0 10px 40px ${color}30`,
+                    border: '10px solid #fff'
                 }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: `var(--${prefix}-text)`, lineHeight: 1 }}>{score}</div>
-                        <div style={{ fontSize: 13, color: `var(--${prefix}-muted)`, fontWeight: 700 }}>out of {questionSet.length}</div>
+                    <div style={{ textAlign: 'center', background: '#fff', width: 120, height: 120, borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 44, fontWeight: 900, color: color, lineHeight: 1 }}>{pct}%</div>
+                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, marginTop: 4 }}>Accuracy</div>
                     </div>
                 </div>
 
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a', margin: '0 0 12px' }}>{msg}</h2>
+                <p style={{ color: '#475569', fontSize: 16, margin: '0 0 36px', lineHeight: 1.6 }}>{msgSub}</p>
+
+                {/* Stats Grid */}
                 <div style={{
-                    display: 'inline-block', padding: '6px 16px', background: `${color}15`,
-                    color: color, borderRadius: 50, fontSize: 14, fontWeight: 800, marginBottom: 16
+                    display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 40
                 }}>
-                    ⏱️ Time Taken: {formatTime(timeTaken)}
+                    <div style={{ background: '#f8fafc', padding: 20, borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Correct Answers</div>
+                        <div style={{ fontSize: 24, fontWeight: 800, color: '#0f172a' }}>{score} <span style={{ fontSize: 16, color: '#94a3b8' }}>/ {questionSet.length}</span></div>
+                    </div>
+                    <div style={{ background: '#f8fafc', padding: 20, borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Total Time</div>
+                        <div style={{ fontSize: 24, fontWeight: 800, color: '#0f172a' }}>{formatTime(timeTaken)}</div>
+                    </div>
+                    <div style={{ background: '#f8fafc', padding: 20, borderRadius: 16, border: '1px solid #e2e8f0', gridColumn: 'span 2' }}>
+                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Time Per Question</div>
+                        <div style={{ fontSize: 20, fontWeight: 800, color: '#0f172a' }}>{avgTimeStr} <span style={{ fontSize: 15, color: '#94a3b8', fontWeight: 600 }}>avg.</span></div>
+                    </div>
                 </div>
 
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: `var(--${prefix}-text)`, margin: '0 0 8px' }}>{msg}</h2>
-                <p style={{ color: `var(--${prefix}-muted)`, fontSize: 15, margin: '0 0 32px' }}>{msgSub}</p>
-                <div className={`${prefix}-quiz-finished-actions`} style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div className={`${prefix}-quiz-finished-actions`} style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button
-                        className={`${prefix}-btn-primary`}
+                        className="mat-btn-primary"
                         onClick={() => {
                             if (typeof questions === 'function') { setQuestionSet(questions()); }
                             setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false);
                         }}
-                        style={{ padding: '12px 24px', background: color }}
+                        style={{ padding: '16px 32px', background: color, fontSize: 16, boxShadow: `0 8px 24px ${color}40`, flex: 1, minWidth: 200 }}
                     >
                         Try Again
                     </button>
                     <button
-                        className={`${prefix}-btn-secondary`}
+                        className="mat-btn-secondary"
                         onClick={onBack}
-                        style={{ padding: '12px 24px' }}
+                        style={{ padding: '16px 32px', fontSize: 16, flex: 1, minWidth: 200 }}
                     >
                         Return to Skills
                     </button>
-                    {onSecondaryBack && (
-                        <button
-                            className={`${prefix}-btn-secondary`}
-                            onClick={onSecondaryBack}
-                            style={{ padding: '12px 24px', background: '#f8fafc' }}
-                        >
-                            Back to Chapter
-                        </button>
-                    )}
                 </div>
+                {onSecondaryBack && (
+                    <button
+                        onClick={onSecondaryBack}
+                        style={{ marginTop: 24, background: 'none', border: 'none', color: '#64748b', fontSize: 15, fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
+                    >
+                        Back to Chapter
+                    </button>
+                )}
             </div>
         );
     }

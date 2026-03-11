@@ -10,9 +10,29 @@ function makeQ(question, correctVal, distractors, explanation) {
         const s = String(d);
         if (!opts.includes(s)) opts.push(s);
     }
-    while (opts.length < 4) opts.push(String(Number(correctVal) + opts.length * 3 + 1));
+    
+    let fallbackCounter = 1;
+    while (opts.length < 4) {
+        let fallbackStr;
+        const numVal = Number(correctVal);
+        if (!isNaN(numVal)) {
+            fallbackStr = String(numVal + fallbackCounter * 3 + 1);
+        } else {
+            fallbackStr = `Option ${String.fromCharCode(64 + opts.length + 1)}`;
+        }
+        if (!opts.includes(fallbackStr)) opts.push(fallbackStr);
+        fallbackCounter++;
+    }
+    
     const final = opts.slice(0, 4);
-    const shuffled = [...final].sort(() => Math.random() - 0.5);
+    
+    // Fisher-Yates shuffle
+    const shuffled = [...final];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
     return { question, options: shuffled, correct: shuffled.indexOf(final[0]), explanation };
 }
 
