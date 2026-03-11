@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { generateHideAndSeekSkillsData } from './hideAndSeekSkillsData';
-import '../../../Shapes_Around_Us/shapes-around-us.css';
+import { generateLawsOfMotionSkillsData } from './LawsOfMotionSkillsData';
+import '../../LawsOfMotionBranch.css';
 
 /* ═══════════════════════════════════════════════════════════════
    SHUFFLE UTILITIES
@@ -15,7 +15,7 @@ const shuffleArray = (array) => {
     return shuffled;
 };
 
-const useShuffledQuestions = (sourceQuestions, amount = 20) => {
+const useShuffledQuestions = (sourceQuestions, amount = 15) => {
     const [questions, setQuestions] = useState([]);
 
     useEffect(() => {
@@ -42,90 +42,17 @@ const useShuffledQuestions = (sourceQuestions, amount = 20) => {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   GRID VISUALIZER
-   ═══════════════════════════════════════════════════════════════ */
-function GridVisualizer({ gridConfig }) {
-    if (!gridConfig) return null;
-    const { rows, cols, items = [], highlightCell } = gridConfig;
-
-    // rows are usually A, B, C... cols are 1, 2, 3...
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 20 }}>
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: `auto repeat(${cols}, 40px)`,
-                gridTemplateRows: `auto repeat(${rows}, 40px)`,
-                gap: 2,
-                background: '#e2e8f0',
-                border: '2px solid #cbd5e1',
-                padding: 4,
-                borderRadius: 8,
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-            }}>
-                {/* Top-left empty corner */}
-                <div />
-
-                {/* Column Headers (1, 2, 3...) */}
-                {Array.from({ length: cols }).map((_, c) => (
-                    <div key={`col-hdr-${c}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 14, color: '#64748b' }}>
-                        {c + 1}
-                    </div>
-                ))}
-
-                {/* Rows (A, B, C...) and Cells */}
-                {Array.from({ length: rows }).map((_, r) => {
-                    const rowLabel = String.fromCharCode(65 + rows - 1 - r); // Bottom row is 'A'
-                    return (
-                        <React.Fragment key={`row-${r}`}>
-                            {/* Row Header */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 14, color: '#64748b', paddingRight: 8 }}>
-                                {rowLabel}
-                            </div>
-
-                            {/* Cells in this row */}
-                            {Array.from({ length: cols }).map((_, c) => {
-                                const colNum = c + 1;
-                                const cellId = `${rowLabel}${colNum}`;
-                                const isHighlighted = highlightCell === cellId;
-
-                                // Find if any item is in this cell
-                                const item = items.find(i => i.row === rowLabel && i.col === colNum);
-
-                                return (
-                                    <div key={`cell-${rowLabel}-${colNum}`} style={{
-                                        background: isHighlighted ? '#fef08a' : '#fff', // highlight color
-                                        border: isHighlighted ? '2px solid #eab308' : '1px solid #e2e8f0',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: 20,
-                                        borderRadius: 4
-                                    }}>
-                                        {item ? item.label : ''}
-                                    </div>
-                                );
-                            })}
-                        </React.Fragment>
-                    );
-                })}
-            </div>
-        </div>
-    );
-}
-
-/* ═══════════════════════════════════════════════════════════════
    QUESTION CARD
    ═══════════════════════════════════════════════════════════════ */
-function QuestionCard({ type, question, options, answer, onAnswer, disabled, selectedOption, image, grid, showCorrect = true }) {
+function QuestionCard({ type, question, options, answer, onAnswer, disabled, selectedOption, image, showCorrect = true }) {
     const [val, setVal] = useState('');
 
     if (type === 'multiple-choice') {
         return (
             <div style={{ marginBottom: 20 }}>
-                {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16 }}>{image}</div>}
-                {grid && <GridVisualizer gridConfig={grid} />}
+                {image && <div style={{ fontSize: 16, fontFamily: "'Courier New', monospace", textAlign: 'center', marginBottom: 12, padding: 14, background: '#f0f9ff', borderRadius: 14, border: '1px solid #bae6fd', color: '#0369a1', fontWeight: 700, letterSpacing: 0.5, whiteSpace: 'pre-wrap' }}>{image}</div>}
                 <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <div style={{ display: 'grid', gap: 10 }}>
                     {options.map((opt, i) => {
                         let bg = '#fff';
                         let bdr = '#e2e8f0';
@@ -138,6 +65,9 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
                             else { clr = '#94a3b8'; }
                         } else if (disabled && !showCorrect) {
                             if (i === selectedOption) { bg = '#eff6ff'; bdr = '#3b82f6'; }
+                        } else if (i === selectedOption) {
+                            bg = 'rgba(79, 70, 229, 0.05)';
+                            bdr = 'var(--lom-primary)';
                         }
 
                         return (
@@ -155,7 +85,7 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
                                 <span style={{
                                     width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     fontSize: 13, fontWeight: 800, flexShrink: 0,
-                                    background: i === selectedOption ? (showCorrect ? (i === answer ? '#10b981' : '#ef4444') : '#3b82f6') : '#f1f5f9',
+                                    background: i === selectedOption ? (showCorrect ? (i === answer ? '#10b981' : '#ef4444') : 'var(--lom-primary)') : '#f1f5f9',
                                     color: i === selectedOption ? '#fff' : '#64748b'
                                 }}>{letter}</span>
                                 {opt}
@@ -167,17 +97,16 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
         );
     }
 
-    // Short answer
+    // Short answer fallback
     return (
         <div style={{ marginBottom: 20 }}>
-            {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16 }}>{image}</div>}
-            {grid && <GridVisualizer gridConfig={grid} />}
+            {image && <div style={{ fontSize: 16, fontFamily: "'Courier New', monospace", textAlign: 'center', marginBottom: 12, padding: 14, background: '#f0f9ff', borderRadius: 14, border: '1px solid #bae6fd', color: '#0369a1', fontWeight: 700, letterSpacing: 0.5, whiteSpace: 'pre-wrap' }}>{image}</div>}
             <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
             <div style={{ display: 'flex', gap: 10 }}>
                 <input type="text" value={disabled ? (selectedOption || '') : val} onChange={e => setVal(e.target.value)} disabled={disabled}
                     placeholder="Type answer..." style={{ padding: '12px 16px', borderRadius: 12, border: '2px solid #e2e8f0', fontSize: 16, flex: 1 }} />
                 <button disabled={disabled || !val} onClick={() => onAnswer(val.trim())}
-                    style={{ padding: '0 20px', background: disabled ? '#e2e8f0' : '#0284c7', color: '#fff', borderRadius: 12, fontWeight: 600, border: 'none', cursor: disabled ? 'default' : 'pointer' }}>Submit</button>
+                    style={{ padding: '0 20px', background: disabled ? '#e2e8f0' : 'var(--lom-primary)', color: '#fff', borderRadius: 12, fontWeight: 600, border: 'none', cursor: disabled ? 'default' : 'pointer' }}>Submit</button>
             </div>
         </div>
     );
@@ -215,7 +144,7 @@ function fmtTime(ms) {
    ═══════════════════════════════════════════════════════════════ */
 function LearnMode({ skill, onBack }) {
     return (
-        <div className="sau-detail-anim" style={{ maxWidth: 800, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
             <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Skills</button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
                 <div style={{ fontSize: 40 }}>{skill.icon}</div>
@@ -230,7 +159,7 @@ function LearnMode({ skill, onBack }) {
                         <h4 style={{ margin: '0 0 10px', fontSize: 18, color: '#0f172a', fontWeight: 800 }}>{sec.heading}</h4>
                         <p style={{ margin: '0 0 12px', fontSize: 16, color: '#334155', lineHeight: 1.6 }}>{sec.content}</p>
                         <div style={{ padding: '10px 14px', background: `${skill.color}15`, borderRadius: 10, color: '#0f172a', fontWeight: 600, fontSize: 14 }}>
-                            <span style={{ color: skill.color, marginRight: 6 }}>💡 Example:</span>{sec.example}
+                            <span style={{ color: skill.color, marginRight: 6 }}>💡 Key Fact:</span>{sec.example}
                         </div>
                     </div>
                 ))}
@@ -245,8 +174,8 @@ function LearnMode({ skill, onBack }) {
 /* ═══════════════════════════════════════════════════════════════
    PRACTICE MODE
    ═══════════════════════════════════════════════════════════════ */
-function PracticeMode({ skill, onBack }) {
-    const questions = useShuffledQuestions(skill.practice, 20);
+function PracticeMode({ skill, onBack, onAssess }) {
+    const questions = useShuffledQuestions(skill.practice, skill.practice.length);
 
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
@@ -285,8 +214,8 @@ function PracticeMode({ skill, onBack }) {
         else if (pct >= 70) { msg = 'Great Job!'; emoji = '🌟'; sub = 'You\'re almost there, keep going!'; }
 
         return (
-            <div className="sau-detail-anim" style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '40px 24px' }}>
-                <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#3b82f6', fontWeight: 700, cursor: 'pointer', marginBottom: 16, fontSize: 14 }}>← Back to Skills</button>
+            <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '40px 24px', background: '#fff', borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+                <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: 'var(--lom-primary)', fontWeight: 700, cursor: 'pointer', marginBottom: 16, fontSize: 14 }}>← Back to Skills</button>
                 <ScoreRing score={score} total={total} color={skill.color} />
                 <div style={{ margin: '16px 0 8px', padding: '8px 24px', background: '#f8fafc', borderRadius: 100, display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 700, color: '#64748b', fontSize: 14 }}>
                     ⏱️ Time Taken: {fmtTime(totalTime)}
@@ -296,18 +225,19 @@ function PracticeMode({ skill, onBack }) {
                 <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 24px' }}>{sub}</p>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
                     <button onClick={onBack} style={{ padding: '12px 28px', borderRadius: 100, border: `2px solid ${skill.color}`, background: '#fff', color: skill.color, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>Back to Skills</button>
+                    <button onClick={onAssess} style={{ padding: '12px 28px', borderRadius: 100, border: 'none', background: skill.color, color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Take Assessment 🏆</button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="sau-detail-anim" style={{ maxWidth: 700, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+        <div style={{ maxWidth: 700, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer' }}>← Exit Practice</button>
                 <div style={{ fontWeight: 800, color: skill.color }}>Practice {qIdx + 1}/{questions.length}</div>
             </div>
-            <QuestionCard key={qIdx} type={q.type} question={q.question} options={q.options} answer={q.correctAnswer} onAnswer={handleAnswer} disabled={answered} selectedOption={selectedOpt} image={q.image} grid={q.grid} />
+            <QuestionCard key={qIdx} type={q.type} question={q.question} options={q.options} answer={q.correctAnswer} onAnswer={handleAnswer} disabled={answered} selectedOption={selectedOpt} image={q.image} />
             {answered && (
                 <div style={{ padding: 16, borderRadius: 12, marginBottom: 20, background: isCorrect ? '#f0fdf4' : '#fef2f2', border: `2px solid ${isCorrect ? '#10b981' : '#ef4444'}` }}>
                     <div style={{ fontSize: 18, fontWeight: 800, color: isCorrect ? '#059669' : '#dc2626', marginBottom: 6 }}>{isCorrect ? '🎉 Correct!' : '❌ Not quite!'}</div>
@@ -318,7 +248,7 @@ function PracticeMode({ skill, onBack }) {
                 {qIdx > 0 ? (
                     <button onClick={prevQ} style={{ padding: '12px 32px', borderRadius: 100, fontWeight: 800, fontSize: 16, border: `2px solid ${skill.color}`, background: '#fff', color: skill.color, cursor: 'pointer' }}>← Previous</button>
                 ) : <div />}
-                <button onClick={nextQ} disabled={!answered} style={{ padding: '12px 32px', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', background: answered ? skill.color : '#e2e8f0', color: answered ? '#fff' : '#94a3b8', cursor: answered ? 'pointer' : 'default' }}>
+                <button onClick={nextQ} disabled={!answered} style={{ padding: '12px 32px', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', background: answered ? skill.color : '#e2e8f0', color: answered ? '#fff' : '#94a3b8', cursor: answered ? 'pointer' : 'default', transition: 'all 0.2s' }}>
                     {qIdx + 1 === questions.length ? 'Finish →' : 'Next Question →'}
                 </button>
             </div>
@@ -330,7 +260,7 @@ function PracticeMode({ skill, onBack }) {
    ASSESS MODE
    ═══════════════════════════════════════════════════════════════ */
 function AssessMode({ skill, onBack }) {
-    const questions = useShuffledQuestions(skill.assessment, 20);
+    const questions = useShuffledQuestions(skill.assessment, skill.assessment.length);
 
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
@@ -389,7 +319,7 @@ function AssessMode({ skill, onBack }) {
         const accuracy = Math.round((score / questions.length) * 100);
 
         return (
-            <div className="sau-detail-anim" style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
+            <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px', background: '#fff', borderRadius: 24 }}>
                 {/* Header */}
                 <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 12, margin: '0 0 28px' }}>
                     📊 Assessment Report
@@ -397,15 +327,15 @@ function AssessMode({ skill, onBack }) {
 
                 {/* Stat cards */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
-                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#fff' }}>
+                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Total Score</div>
                         <div><span style={{ fontSize: 36, fontWeight: 900, color: skill.color }}>{score}</span><span style={{ fontSize: 18, color: '#94a3b8', fontWeight: 700 }}> / {questions.length}</span></div>
                     </div>
-                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#fff' }}>
+                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Accuracy</div>
                         <div style={{ fontSize: 36, fontWeight: 900, color: accuracy >= 70 ? '#059669' : '#dc2626' }}>{accuracy}%</div>
                     </div>
-                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#fff' }}>
+                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
                         <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Time Taken</div>
                         <div style={{ fontSize: 36, fontWeight: 900, color: '#d97706' }}>⏱️ {fmtTime(totalTime)}</div>
                     </div>
@@ -469,13 +399,13 @@ function AssessMode({ skill, onBack }) {
                                 {/* Check Solution toggle */}
                                 {qq.explanation && (
                                     <div>
-                                        <button onClick={() => setExpandedSolution(prev => ({ ...prev, [i]: !prev[i] }))} style={{ background: 'none', border: 'none', color: '#059669', fontWeight: 700, fontSize: 14, cursor: 'pointer', padding: 0 }}>
+                                        <button onClick={() => setExpandedSolution(prev => ({ ...prev, [i]: !prev[i] }))} style={{ background: 'none', border: 'none', color: 'var(--lom-primary)', fontWeight: 700, fontSize: 14, cursor: 'pointer', padding: 0 }}>
                                             {showSol ? '∧ Hide Solution' : '∨ Check Solution'}
                                         </button>
                                         {showSol && (
-                                            <div style={{ marginTop: 8, padding: '12px 16px', background: '#fefce8', border: '1px solid #fde68a', borderRadius: 12 }}>
-                                                <div style={{ fontWeight: 700, color: '#92400e', marginBottom: 4 }}>💡 Step-by-Step Logic</div>
-                                                <p style={{ margin: 0, fontSize: 14, color: '#78350f', lineHeight: 1.6 }}>{qq.explanation}</p>
+                                            <div style={{ marginTop: 8, padding: '12px 16px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12 }}>
+                                                <div style={{ fontWeight: 700, color: 'var(--lom-primary)', marginBottom: 4 }}>💡 Step-by-Step Logic</div>
+                                                <p style={{ margin: 0, fontSize: 14, color: '#334155', lineHeight: 1.6 }}>{qq.explanation}</p>
                                             </div>
                                         )}
                                     </div>
@@ -486,7 +416,7 @@ function AssessMode({ skill, onBack }) {
                 </div>
 
                 <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
-                    <button onClick={onBack} style={{ padding: '14px 40px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer' }}>Back to Skills</button>
+                    <button onClick={onBack} style={{ padding: '14px 40px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Back to Skills</button>
                 </div>
             </div>
         );
@@ -494,7 +424,7 @@ function AssessMode({ skill, onBack }) {
     const currentAnswered = answersMap[qIdx] !== undefined;
 
     return (
-        <div className="sau-detail-anim" style={{ display: 'flex', gap: 24, maxWidth: 1100, margin: '0 auto', alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', gap: 24, maxWidth: 1100, margin: '0 auto', alignItems: 'flex-start' }}>
             {/* LEFT: Question panel */}
             <div style={{ flex: '1 1 60%', background: '#fff', borderRadius: 24, padding: 32, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
                 <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 100, border: '2px solid #0f172a', fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Question {qIdx + 1}</div>
@@ -509,7 +439,6 @@ function AssessMode({ skill, onBack }) {
                     disabled={false} // Users can change answers in Assess mode
                     selectedOption={answersMap[qIdx] ?? null}
                     image={q.image}
-                    grid={q.grid}
                     showCorrect={false}
                 />
 
@@ -518,16 +447,16 @@ function AssessMode({ skill, onBack }) {
                     <button onClick={() => goTo(Math.max(0, qIdx - 1))} disabled={qIdx === 0}
                         style={{ padding: '10px 24px', borderRadius: 100, border: '2px solid #e2e8f0', background: '#fff', fontWeight: 700, fontSize: 14, color: qIdx === 0 ? '#cbd5e1' : '#334155', cursor: qIdx === 0 ? 'default' : 'pointer' }}>← Previous</button>
                     <button onClick={toggleMark}
-                        style={{ padding: '10px 24px', borderRadius: 100, border: `2px solid ${marked[qIdx] ? '#f59e0b' : '#e2e8f0'}`, background: marked[qIdx] ? '#fef3c7' : '#fff', fontWeight: 700, fontSize: 14, color: marked[qIdx] ? '#92400e' : '#334155', cursor: 'pointer' }}>
+                        style={{ padding: '10px 24px', borderRadius: 100, border: `2px solid ${marked[qIdx] ? '#f59e0b' : '#e2e8f0'}`, background: marked[qIdx] ? '#fef3c7' : '#fff', fontWeight: 700, fontSize: 14, color: marked[qIdx] ? '#92400e' : '#334155', cursor: 'pointer', transition: 'all 0.2s' }}>
                         {marked[qIdx] ? '★ Marked' : 'Mark for Review'}
                     </button>
                     <button onClick={() => goTo(Math.min(questions.length - 1, qIdx + 1))} disabled={qIdx === questions.length - 1}
-                        style={{ padding: '10px 24px', borderRadius: 100, border: 'none', background: '#ef4444', fontWeight: 700, fontSize: 14, color: '#fff', cursor: qIdx === questions.length - 1 ? 'default' : 'pointer', opacity: qIdx === questions.length - 1 ? 0.5 : 1 }}>Next →</button>
+                        style={{ padding: '10px 24px', borderRadius: 100, border: 'none', background: 'var(--lom-primary)', fontWeight: 700, fontSize: 14, color: '#fff', cursor: qIdx === questions.length - 1 ? 'default' : 'pointer', opacity: qIdx === questions.length - 1 ? 0.5 : 1, transition: 'all 0.2s' }}>Next →</button>
                 </div>
             </div>
 
             {/* RIGHT: Sidebar (timer + palette) */}
-            <div style={{ flex: '0 0 280px', background: '#fffbeb', borderRadius: 24, padding: 24, position: 'sticky', top: 80 }}>
+            <div className="lom-details-window" style={{ flex: '0 0 280px', background: '#f8fafc', borderRadius: 24, padding: 24, position: 'sticky', top: 80 }}>
                 {/* Timer */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 20 }}>
                     <span style={{ fontSize: 28 }}>⏱️</span>
@@ -543,7 +472,7 @@ function AssessMode({ skill, onBack }) {
                         const isCurrent = i === qIdx;
                         let bg = '#fff', bdr = '#e2e8f0', clr = '#64748b';
                         if (isMarked) { bg = '#fef3c7'; bdr = '#f59e0b'; clr = '#92400e'; }
-                        if (isAnswered) { bg = '#3b82f6'; bdr = '#3b82f6'; clr = '#fff'; }
+                        if (isAnswered) { bg = 'var(--lom-primary)'; bdr = 'var(--lom-primary)'; clr = '#fff'; }
                         if (isCurrent) { bdr = '#0f172a'; }
                         return (
                             <button key={i} onClick={() => goTo(i)} style={{
@@ -557,7 +486,7 @@ function AssessMode({ skill, onBack }) {
 
                 {/* Legend */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 20, fontSize: 13 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 16, height: 16, borderRadius: 4, background: '#3b82f6' }} /><span style={{ fontWeight: 600, color: '#334155' }}>Answered</span></div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 16, height: 16, borderRadius: 4, background: 'var(--lom-primary)' }} /><span style={{ fontWeight: 600, color: '#334155' }}>Answered</span></div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 16, height: 16, borderRadius: 4, background: '#fff', border: '2px solid #e2e8f0' }} /><span style={{ fontWeight: 600, color: '#334155' }}>Not Answered</span></div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 16, height: 16, borderRadius: 4, background: '#fef3c7', border: '2px solid #f59e0b' }} /><span style={{ fontWeight: 600, color: '#334155' }}>Marked for Review</span></div>
                 </div>
@@ -577,63 +506,74 @@ function AssessMode({ skill, onBack }) {
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
-export default function HideAndSeekSkills() {
+export default function LawsOfMotionSkills() {
     const navigate = useNavigate();
     const [view, setView] = useState('list');
     const [activeSkillId, setActiveSkillId] = useState(null);
-    const [hideAndSeekSkillsData, setHideAndSeekSkillsData] = useState([]);
-    useEffect(() => { setHideAndSeekSkillsData(generateHideAndSeekSkillsData()); }, []);
-    const activeSkill = hideAndSeekSkillsData.find(s => s.id === activeSkillId);
+    const [cellSkillsData, setCellSkillsData] = useState([]);
+    
+    useEffect(() => { 
+        setCellSkillsData(generateLawsOfMotionSkillsData()); 
+    }, []);
+    
+    const activeSkill = cellSkillsData.find(s => s.id === activeSkillId);
 
-    const openMode = (skill, mode) => { setActiveSkillId(skill.id); setHideAndSeekSkillsData(generateHideAndSeekSkillsData()); setView(mode); };
+    const openMode = (skill, mode) => { 
+        setActiveSkillId(skill.id); 
+        // Regenerate questions so repeats across different sessions have distinct shuffling
+        setCellSkillsData(generateLawsOfMotionSkillsData()); 
+        setView(mode); 
+    };
 
     return (
-        <div className="sau-skills-page">
-            <nav className="sau-nav">
+        <div className="lom-page">
+            <nav className="lom-nav">
                 {view === 'list' ? (
-                    <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/hide-and-seek')}>← Back to Hide and Seek</button>
+                    <button className="lom-nav-back" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion')}>← Back to Dashboard</button>
                 ) : (
-                    <button className="sau-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
+                    <button className="lom-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
                 )}
-                <div className="sau-nav-links">
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/hide-and-seek/introduction')}>🌟 Introduction</button>
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/hide-and-seek/terminology')}>📖 Terminology</button>
-                    <button className="sau-nav-link sau-nav-link--active">🎯 Skills</button>
+                <div className="lom-nav-links">
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/introduction')}>🌟 Intro</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/terminology')}>📖 Terminology</button>
+                    <button className="lom-nav-link active" onClick={() => setView('list')}>🎯 Skills</button>
                 </div>
             </nav>
 
             <div style={{ padding: '40px 24px', maxWidth: 1100, margin: '0 auto' }}>
                 {view === 'list' && (
-                    <div className="sau-detail-anim">
+                    <div>
                         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, color: '#0f172a', margin: '0 0 12px' }}>Master Spatial Skills</h1>
+                            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, color: '#0f172a', margin: '0 0 12px' }}>Core <span style={{ background: 'linear-gradient(135deg, var(--lom-indigo), #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Skills</span></h1>
                             <p style={{ fontSize: 18, color: '#64748b', margin: 0, maxWidth: 600, marginInline: 'auto' }}>
                                 Choose a skill below. Read the lesson, practice to build confidence, and take the assessment to earn your mastery!
                             </p>
                         </div>
-                        <div className="sau-skills-list">
-                            {hideAndSeekSkillsData.map((skill) => (
-                                <div key={skill.id} className="sau-skill-card" style={{
-                                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                    background: '#fff', borderRadius: 16, padding: '24px 32px', marginBottom: 16,
-                                    boxShadow: '0 4px 20px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9'
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: 900, margin: '0 auto' }}>
+                            {cellSkillsData.map((skill) => (
+                                <div key={skill.id} style={{
+                                    display: 'flex', alignItems: 'center',
+                                    background: '#fff', borderRadius: 20, padding: '20px 28px',
+                                    boxShadow: '0 2px 12px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9',
+                                    transition: 'all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                    gap: '20px', flexWrap: 'wrap'
                                 }}>
-                                    <div className="sau-skill-info" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-                                        <div className="sau-skill-icon" style={{ background: `${skill.color}15`, color: skill.color, padding: '16px', borderRadius: '12px', fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{skill.icon}</div>
-                                        <div>
-                                            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>{skill.title}</div>
-                                            <div style={{ fontSize: 14, color: '#64748b' }}>{skill.desc}</div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: '1 1 auto', minWidth: 0 }}>
+                                        <div style={{ background: `${skill.color}15`, color: skill.color, width: 52, height: 52, borderRadius: 14, fontSize: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{skill.icon}</div>
+                                        <div style={{ minWidth: 0 }}>
+                                            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 18, fontWeight: 800, color: '#0f172a', marginBottom: 2, lineHeight: 1.1 }}>{skill.title}</div>
+                                            <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, maxWidth: 400 }}>{skill.desc}</div>
                                         </div>
                                     </div>
-                                    <div className="sau-skill-actions" style={{ display: 'flex', gap: 12 }}>
+                                    <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
                                         <button onClick={() => openMode(skill, 'learn')}
-                                            style={{ padding: '10px 20px', borderRadius: 12, background: '#f8fafc', border: '1px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8 }}
+                                            style={{ padding: '9px 18px', borderRadius: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}
                                         >📖 Learn</button>
                                         <button onClick={() => openMode(skill, 'practice')}
-                                            style={{ padding: '10px 20px', borderRadius: 12, background: '#f8fafc', border: '1px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8 }}
+                                            style={{ padding: '9px 18px', borderRadius: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}
                                         >✏️ Practice</button>
                                         <button onClick={() => openMode(skill, 'assess')}
-                                            style={{ padding: '10px 24px', borderRadius: 12, background: skill.color, border: 'none', color: '#fff', fontWeight: 800, cursor: 'pointer', boxShadow: `0 4px 12px ${skill.color}40`, transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8 }}
+                                            style={{ padding: '9px 22px', borderRadius: 10, background: skill.color, border: 'none', color: '#fff', fontWeight: 800, cursor: 'pointer', boxShadow: `0 4px 12px ${skill.color}40`, transition: 'all 0.2s', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}
                                         >🏆 Assess</button>
                                     </div>
                                 </div>
@@ -643,7 +583,7 @@ export default function HideAndSeekSkills() {
                 )}
 
                 {view === 'learn' && <LearnMode skill={activeSkill} onBack={() => setView('list')} />}
-                {view === 'practice' && <PracticeMode skill={activeSkill} onBack={() => setView('list')} />}
+                {view === 'practice' && <PracticeMode skill={activeSkill} onBack={() => setView('list')} onAssess={() => openMode(activeSkill, 'assess')} />}
                 {view === 'assess' && <AssessMode skill={activeSkill} onBack={() => setView('list')} />}
             </div>
         </div>

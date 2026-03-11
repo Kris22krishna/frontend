@@ -1,0 +1,921 @@
+/* =====================================================
+   Laws of Motion MODULE – Modular Design
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── TOKENS ─────────────────────────────────────────── */
+:root {
+  --lom-primary: #1d4ed8;
+  --lom-teal: #0d9488;
+  --lom-indigo: #1d4ed8;
+  --lom-violet: #4338ca;
+  --lom-blue: #2563eb;
+  --lom-text: #0f172a;
+  --lom-muted: #64748b;
+  --lom-card: #ffffff;
+  --lom-border: #e2e8f0;
+  --lom-success: #10b981;
+  --lom-wrong: #ef4444;
+  --lom-red: #ef4444;
+  --lom-r: 14px;
+  --lom-rlg: 20px;
+  --lom-sh: 0 4px 20px rgba(0, 0, 0, 0.09);
+  --lom-shlg: 0 12px 40px rgba(0, 0, 0, 0.14);
+}
+
+/* ══════════════════════════════════════════════════════
+   FULL-VIEWPORT LANDING PAGE (LomDashboard)
+   ══════════════════════════════════════════════════════ */
+
+.lom-fullpage {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.lom-left {
+  position: relative;
+  flex: 0 0 46%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 48px 48px 56px;
+  overflow: hidden;
+  background: linear-gradient(145deg,
+      #0f172a 0%,
+      #1e293b 25%,
+      #1d4ed8 50%,
+      #1e3a8a 75%,
+      #1e1b4b 100%);
+}
+
+.lom-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.lom-deco-a {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(29, 78, 216, 0.3) 0%, transparent 70%);
+  top: -80px;
+  left: -80px;
+}
+
+.lom-deco-b {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+  bottom: -60px;
+  right: -40px;
+}
+
+.lom-left-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.lom-main-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+}
+
+.lom-title-accent {
+  background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 40%, #fef9c3 80%, #fcd34d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lom-main-sub {
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.75;
+  max-width: 400px;
+  margin: 0 0 36px;
+  font-weight: 400;
+}
+
+.lom-stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.lom-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 14px 20px;
+  min-width: 80px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.lom-stat:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.lom-stat-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.lom-stat-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 5px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.lom-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 40px 40px 36px;
+  background: #f8fafc;
+}
+
+.lom-right-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--lom-indigo);
+  margin: 0 0 20px 4px;
+}
+
+.lom-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lom-card-btn {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--lom-border);
+  border-radius: var(--lom-rlg);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.lom-card-btn:hover {
+  transform: translateX(6px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  border-color: var(--lom-indigo);
+}
+
+.lom-card-strip {
+  width: 6px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.lom-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  margin: 20px 18px 20px 20px;
+}
+
+.lom-card-text {
+  flex: 1;
+  padding: 18px 0;
+}
+
+.lom-card-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 3px;
+  color: var(--lom-text);
+}
+
+.lom-card-tagline {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--lom-muted);
+  margin-bottom: 6px;
+}
+
+.lom-card-desc {
+  font-size: 13px;
+  color: var(--lom-muted);
+  line-height: 1.55;
+  max-width: 340px;
+}
+
+.lom-card-chevron {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0 22px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  transform: translateX(-6px);
+  color: var(--lom-indigo);
+}
+
+.lom-card-btn:hover .lom-card-chevron {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── SHARED TOPIC PAGE CLASSES ─────────────────────── */
+
+.lom-page {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f8fafc;
+  color: var(--lom-text);
+  min-height: 100vh;
+}
+
+.lom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.lom-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lom-indigo);
+  background: rgba(29, 78, 216, 0.08);
+  border: 1.5px solid rgba(29, 78, 216, 0.2);
+  border-radius: 100px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lom-nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.lom-nav-link {
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: var(--lom-muted);
+}
+
+.lom-nav-link.active {
+  background: linear-gradient(135deg, var(--lom-indigo), var(--lom-violet));
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
+}
+
+.lom-hero {
+  background: transparent;
+  padding: 60px 24px 40px;
+  text-align: center;
+  color: var(--lom-text);
+  position: relative;
+  overflow: hidden;
+}
+
+.lom-hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.lom-hero-sub {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── 5W1H CARDS ────────────────────────────────────── */
+
+.lom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lom-intro-card {
+  background: #fff;
+  border: 1px solid var(--lom-border);
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.lom-intro-strip {
+  height: 6px;
+  width: 100%;
+}
+
+.lom-intro-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--lom-shlg);
+  border-color: var(--lom-indigo);
+}
+
+.lom-intro-card-header {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.lom-intro-card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+}
+
+.lom-intro-card-q {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--lom-text);
+}
+
+.lom-intro-card-body {
+  padding: 0 24px 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+.lom-intro-card-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--lom-muted);
+  margin-bottom: 16px;
+}
+
+.lom-intro-card-fact {
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(29, 78, 216, 0.05);
+  border: 1px solid rgba(29, 78, 216, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TERMINOLOGY ───────────────────────────────────── */
+
+.lom-term-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lom-term-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid var(--lom-border);
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.lom-term-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--lom-indigo);
+  box-shadow: var(--lom-shlg);
+}
+
+.lom-term-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--lom-indigo);
+}
+
+.lom-term-def {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--lom-muted);
+  margin-bottom: 16px;
+}
+
+.lom-term-ex {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  border-left: 4px solid var(--lom-indigo);
+}
+
+/* ── RULES ─────────────────────────────────────────── */
+
+.lom-rules-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.lom-rule-item {
+  display: flex;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid var(--lom-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.lom-rule-item:hover {
+  transform: translateX(10px);
+  border-color: var(--lom-indigo);
+}
+
+.lom-rule-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--lom-indigo);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.lom-rule-content h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.lom-rule-content p {
+  font-size: 15px;
+  color: var(--lom-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── SKILLS DASHBOARD ─────────────────────────────── */
+
+.lom-skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.lom-skill-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 20px;
+  padding: 24px 32px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.lom-skill-card:hover {
+  transform: translateX(10px);
+  border-color: var(--skill-color);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.lom-skill-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.lom-skill-info {
+  flex: 1;
+}
+
+.lom-skill-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: var(--lom-text);
+}
+
+.lom-skill-desc {
+  font-size: 14px;
+  color: var(--lom-muted);
+}
+
+.lom-skill-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.lom-btn {
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lom-btn-outline {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  color: var(--lom-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+}
+
+.lom-btn-outline:hover:not(:disabled) {
+  border-color: var(--lom-indigo);
+  color: var(--lom-indigo);
+  background: rgba(29, 78, 216, 0.02);
+  transform: translateX(-2px);
+}
+
+.lom-btn-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lom-btn-filled {
+  background: var(--skill-color);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.lom-btn-filled:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+
+/* ── TERMINOLOGY MASTER-DETAIL ──────────────────────── */
+
+.lom-lexicon-container {
+  max-width: 1100px;
+  margin: 40px auto 20px;
+  padding: 0 24px;
+}
+
+.lom-lexicon-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.lom-selector-container {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: grid;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.lom-term-btn-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  font-family: 'Outfit', sans-serif;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+
+.lom-term-btn-mini:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.lom-term-btn-mini.active {
+  background: var(--lom-indigo);
+  color: #fff;
+  border-color: var(--lom-indigo);
+  box-shadow: 0 8px 20px rgba(29, 78, 216, 0.2);
+}
+
+.lom-details-window {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  min-height: 330px;
+  animation: LomSlideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes LomSlideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── QUIZ LAYOUT ────────────────────────────────────── */
+
+.lom-quiz-window {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  animation: LomSlideInRight 0.4s ease;
+}
+
+.lom-quiz-option {
+  padding: 16px 24px;
+  border-radius: 14px;
+  border: 3px solid rgba(0, 0, 0, 0.05);
+  background: #fff;
+  font-weight: 600;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.lom-quiz-option:hover:not(:disabled) {
+  border-color: var(--lom-indigo);
+  background: rgba(29, 78, 216, 0.05);
+}
+
+.lom-quiz-option.correct {
+  border-color: var(--lom-success);
+  background: rgba(16, 185, 129, 0.05);
+  color: var(--lom-success);
+}
+
+.lom-quiz-option.wrong {
+  border-color: var(--lom-wrong);
+  background: rgba(239, 68, 68, 0.05);
+  color: var(--lom-wrong);
+}
+
+/* ── ASSESSMENT UPGRADE ────────────────────────────── */
+
+.lom-assess-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 100px;
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.lom-assess-main {
+  margin: 0;
+}
+
+.lom-palette-window {
+  margin: 0;
+  padding: 24px;
+}
+
+.lom-timer-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f5f9;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  color: #475569;
+}
+
+.lom-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.lom-palette-btn {
+  height: 48px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lom-palette-btn.current {
+  border: 2px solid var(--lom-indigo);
+  background: rgba(29, 78, 216, 0.05);
+  color: var(--lom-indigo);
+}
+
+.lom-palette-btn.answered {
+  background: var(--lom-success);
+  color: #fff;
+  border: none;
+}
+
+.lom-palette-btn.viewed {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.lom-palette-btn.unvisited {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.lom-palette-legend {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lom-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--lom-muted);
+}
+
+.lom-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+@media (max-width: 1024px) {
+  .lom-assess-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── LEXICON LAYOUT ──────────────────────────────────── */
+
+.lom-lexicon-container {
+  max-width: 1100px;
+  margin: 40px auto 20px;
+  padding: 0 24px;
+}
+
+.lom-lexicon-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.lom-selector-container {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: grid;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.lom-term-btn-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  font-family: 'Outfit', sans-serif;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+
+.lom-term-btn-mini:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.lom-term-btn-mini.active {
+  background: var(--lom-indigo);
+  color: #fff;
+  border-color: var(--lom-indigo);
+  box-shadow: 0 8px 20px rgba(29, 78, 216, 0.2);
+}
+
+.lom-details-window {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  min-height: 330px;
+  animation: LomSlideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 768px) {
+  .lom-lexicon-grid {
+    grid-template-columns: 1fr;
+  }
+}

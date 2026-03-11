@@ -32,6 +32,19 @@ import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/
 import SetsSkills from './components/Math-Branches/Sets/Topics/Skills/SetsSkills';
 import SetsConnectomics from './components/Math-Branches/Sets/Topics/Connectomics/SetsConnectomics';
 import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsExamEdge';
+import TheCellDashboard from './components/Biology-Branches/The-Cell/TheCellDashboard';
+import TheCellIntro from './components/Biology-Branches/The-Cell/Topics/Introduction/TheCellIntro';
+import TheCellTerminology from './components/Biology-Branches/The-Cell/Topics/Terminology/TheCellTerminology';
+import TheCellSkills from './components/Biology-Branches/The-Cell/Topics/Skills/TheCellSkills';
+import TheCellConnectomics from './components/Biology-Branches/The-Cell/Topics/Connectomics/TheCellConnectomics';
+import TheCellExamEdge from './components/Biology-Branches/The-Cell/Topics/ExamEdge/TheCellExamEdge';
+import PhysicsChapters from './components/practice/class-11/physics/PhysicsChapters';
+import LawsOfMotionDashboard from './components/Physics-Branches/Laws-Of-Motion/LawsOfMotionDashboard';
+import LawsOfMotionIntro from './components/Physics-Branches/Laws-Of-Motion/Topics/Introduction/LawsOfMotionIntro';
+import LawsOfMotionTerminology from './components/Physics-Branches/Laws-Of-Motion/Topics/Terminology/LawsOfMotionTerminology';
+import LawsOfMotionSkills from './components/Physics-Branches/Laws-Of-Motion/Topics/Skills/LawsOfMotionSkills';
+import LawsOfMotionConnectomics from './components/Physics-Branches/Laws-Of-Motion/Topics/Connectomics/LawsOfMotionConnectomics';
+import LawsOfMotionExamEdge from './components/Physics-Branches/Laws-Of-Motion/Topics/ExamEdge/LawsOfMotionExamEdge';
 import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
 import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
 import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
@@ -63,6 +76,11 @@ import ShapesAroundUs from './components/practice/class-4/Shapes_Around_Us/Shape
 import ShapesIntro5W1H from './components/practice/class-4/Shapes_Around_Us/Topics/5W1H/ShapesIntro5W1H';
 import ShapesTerminology from './components/practice/class-4/Shapes_Around_Us/Topics/Terminology/ShapesTerminology';
 import ShapesSkills from './components/practice/class-4/Shapes_Around_Us/Topics/Skills/ShapesSkills';
+
+import PatternsAroundUs from './components/practice/class-4/Patterns_Around_Us/PatternsAroundUs';
+import PatternsIntro5W1H from './components/practice/class-4/Patterns_Around_Us/Topics/Introduction/Introduction';
+import PatternsTerminology from './components/practice/class-4/Patterns_Around_Us/Topics/Terminology/Terminology';
+import PatternsSkills from './components/practice/class-4/Patterns_Around_Us/Topics/Skills/Skills';
 
 import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
 import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
@@ -666,6 +684,11 @@ function App() {
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Patterns Around Us Chapter Pages */}
+          <Route path="junior/grade/4/patterns-around-us" element={<ProtectedRoute redirectTo="/login"><PatternsAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/patterns-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><PatternsIntro5W1H /></ProtectedRoute>} />
+          <Route path="junior/grade/4/patterns-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><PatternsTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/patterns-around-us/skills" element={<ProtectedRoute redirectTo="/login"><PatternsSkills /></ProtectedRoute>} />
           {/* Grade 4: Shapes Around Us Chapter Pages */}
           <Route path="junior/grade/4/shapes-around-us" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUs /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
@@ -1747,6 +1770,34 @@ function App() {
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
 
+        {/* Class 11 Biology */}
+        <Route path="/senior/grade/11/biology" element={<BiologyChapters />} />
+        <Route path="/senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
+        <Route path="/senior/grade/11/biology/the-cell" element={<TheCellDashboard />} />
+        <Route path="/senior/grade/11/biology/the-cell/introduction" element={<TheCellIntro />} />
+        <Route path="/senior/grade/11/biology/the-cell/terminology" element={<TheCellTerminology />} />
+        <Route path="/senior/grade/11/biology/the-cell/skills" element={<TheCellSkills />} />
+        <Route path="/senior/grade/11/biology/the-cell/connectomics" element={<TheCellConnectomics />} />
+        <Route path="/senior/grade/11/biology/the-cell/exam-edge" element={<TheCellExamEdge />} />
+
+        {/* Class 11 Maths */}
+        <Route path="/senior/grade/11/maths" element={<MathsChapters />} />
+        <Route path="/senior/grade/11/maths/sets" element={<SetsDashboard />} />
+        <Route path="/senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
+        <Route path="/senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
+        <Route path="/senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
+        <Route path="/senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
+        <Route path="/senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
+
+        {/* Class 11 Physics */}
+        <Route path="/senior/grade/11/physics" element={<PhysicsChapters />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion" element={<LawsOfMotionDashboard />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/introduction" element={<LawsOfMotionIntro />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/terminology" element={<LawsOfMotionTerminology />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
+        <Route path="/senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
+        <Route path="/senior/grade/11/maths" element={<ComingSoon />} />
 
         {/* Class 10: Real Numbers Routes */}
         <Route path="/high/practice/1111" element={<RealNumberFoundations />} />

@@ -1,38 +1,38 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home } from 'lucide-react';
-import './shapes-around-us.css';
+import './patterns-around-us.css';
 
 const MODULES = [
     {
         id: 'introduction',
-        path: '/junior/grade/4/shapes-around-us/introduction',
+        path: '/junior/grade/4/patterns-around-us/introduction',
         label: 'Introduction',
         emoji: '🌟',
         tagline: '5W1H Exploration',
-        desc: '6 Big Questions about Shapes — What, Why, Who, When, Where and How.',
+        desc: '6 Big Questions about Patterns — What, Why, Who, When, Where and How.',
         gradFrom: '#d97706',
         gradTo: '#f59e0b',
         shadow: 'rgba(245,158,11,0.4)',
     },
     {
         id: 'terminology',
-        path: '/junior/grade/4/shapes-around-us/terminology',
+        path: '/junior/grade/4/patterns-around-us/terminology',
         label: 'Terminology',
         emoji: '📖',
-        tagline: '10 Key Terms',
-        desc: 'Master the language of Geometry — prism, pyramid, radius, diameter, faces & angles.',
+        tagline: '10 Key Terms · 5 Rules',
+        desc: 'Master the language of Patterns — alternating, repeating, growing, symmetry & tessellations.',
         gradFrom: '#0284c7',
         gradTo: '#38bdf8',
         shadow: 'rgba(56,189,248,0.4)',
     },
     {
         id: 'skills',
-        path: '/junior/grade/4/shapes-around-us/skills',
+        path: '/junior/grade/4/patterns-around-us/skills',
         label: 'Skills',
         emoji: '🎯',
         tagline: 'Learn, Practice & Assess',
-        desc: '4 core skills, 10 practice questions and 10 assessment questions for each skill.',
+        desc: '4 core skills, 20 practice questions and 20 assessment questions for each skill.',
         gradFrom: '#0ea5e9',
         gradTo: '#38bdf8',
         shadow: 'rgba(14,165,233,0.4)',
@@ -42,37 +42,36 @@ const MODULES = [
 const STATS = [
     { val: '6', label: 'Big Questions', color: '#d97706' },
     { val: '10', label: 'Key Terms', color: '#0284c7' },
-    { val: '3', label: 'Shape Properties', color: '#059669' },
+    { val: '5', label: 'Rules', color: '#059669' },
     { val: '4', label: 'Skills', color: '#0ea5e9' },
 ];
 
-export default function ShapesAroundUs() {
+export default function PatternsAroundUs() {
     const navigate = useNavigate();
 
     return (
-        <div className="sau-fullpage">
-
+        <div className="pau-fullpage">
             {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
-            <div className="sau-left">
-                <div className="sau-deco sau-deco-a" />
-                <div className="sau-deco sau-deco-b" />
-                <div className="sau-deco sau-deco-c" />
+            <div className="pau-left">
+                <div className="pau-deco pau-deco-a" />
+                <div className="pau-deco pau-deco-b" />
+                <div className="pau-deco pau-deco-c" />
 
-                <div className="sau-left-content">
-                    <h1 className="sau-main-title">
-                        Shapes<br />
-                        <span className="sau-title-accent">Around Us</span>
+                <div className="pau-left-content">
+                    <h1 className="pau-main-title">
+                        Patterns<br />
+                        <span className="pau-title-accent">Around Us</span>
                     </h1>
 
-                    <p className="sau-main-sub">
-                        From 3D buildings to 2D circles, learn about the amazing properties, faces, and angles of the shapes that make up our world!
+                    <p className="pau-main-sub">
+                        From grouping objects to making money patterns and identifying odd & even numbers, let's explore the world of patterns!
                     </p>
 
-                    <div className="sau-stats-grid">
+                    <div className="pau-stats-grid">
                         {STATS.map((s, i) => (
-                            <div className="sau-stat" key={i}>
-                                <span className="sau-stat-num" style={{ color: s.color }}>{s.val}</span>
-                                <span className="sau-stat-lbl">{s.label}</span>
+                            <div className="pau-stat" key={i}>
+                                <span className="pau-stat-num" style={{ color: s.color }}>{s.val}</span>
+                                <span className="pau-stat-lbl">{s.label}</span>
                             </div>
                         ))}
                     </div>
@@ -80,7 +79,7 @@ export default function ShapesAroundUs() {
             </div>
 
             {/* ══ RIGHT PANEL — Topic Cards ═══════════════════ */}
-            <div className="sau-right">
+            <div className="pau-right">
                 <button
                     onClick={() => navigate('/junior/grade/4')}
                     style={{
@@ -96,21 +95,20 @@ export default function ShapesAroundUs() {
                     <Home size={16} />
                     Back
                 </button>
-                <p className="sau-right-eyebrow">Choose a topic to explore</p>
-                <div className="sau-cards-col">
+                <p className="pau-right-eyebrow">Choose a topic to explore</p>
+                <div className="pau-cards-col">
                     {MODULES.map(mod => (
                         <button
                             key={mod.id}
-                            className="sau-card-btn"
-                            // onClick={() => console.log(mod.path)}
+                            className="pau-card-btn"
                             onClick={() => navigate(mod.path)}
                         >
                             <div
-                                className="sau-card-strip"
+                                className="pau-card-strip"
                                 style={{ background: `linear-gradient(180deg, ${mod.gradFrom}, ${mod.gradTo})` }}
                             />
                             <div
-                                className="sau-card-icon"
+                                className="pau-card-icon"
                                 style={{
                                     background: `linear-gradient(135deg, ${mod.gradFrom}, ${mod.gradTo})`,
                                     boxShadow: `0 6px 20px ${mod.shadow}`,
@@ -118,12 +116,12 @@ export default function ShapesAroundUs() {
                             >
                                 {mod.emoji}
                             </div>
-                            <div className="sau-card-text">
-                                <div className="sau-card-label" style={{ color: mod.gradFrom }}>{mod.label}</div>
-                                <div className="sau-card-tagline">{mod.tagline}</div>
-                                <div className="sau-card-desc">{mod.desc}</div>
+                            <div className="pau-card-text">
+                                <div className="pau-card-label" style={{ color: mod.gradFrom }}>{mod.label}</div>
+                                <div className="pau-card-tagline">{mod.tagline}</div>
+                                <div className="pau-card-desc">{mod.desc}</div>
                             </div>
-                            <div className="sau-card-chevron" style={{ color: mod.gradFrom }}>›</div>
+                            <div className="pau-card-chevron" style={{ color: mod.gradFrom }}>›</div>
                         </button>
                     ))}
                 </div>
