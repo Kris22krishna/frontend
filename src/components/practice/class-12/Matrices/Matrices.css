@@ -1,10 +1,10 @@
 /* =====================================================
-   ALGEBRA MODULE – Full-viewport split-screen design
+   MATRICES MODULE â€“ Full-viewport split-screen design
    ===================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-/* ── TOKENS ─────────────────────────────────────────── */
+/* â”€â”€ TOKENS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   --mat-teal: #0891b2;
   --mat-indigo: #6366f1;
@@ -23,30 +23,30 @@
   --mat-shlg: 0 12px 40px rgba(0, 0, 0, 0.14);
 }
 
-/* ══════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FULL-VIEWPORT LANDING PAGE
-   ══════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* Wrapper fills exactly the viewport height minus the nav bar
-   (the nav bar is ~64px on most screen sizes) */
 .mat-fullpage {
   display: flex;
   min-height: calc(100vh - 64px);
   font-family: 'Inter', system-ui, sans-serif;
-  overflow: hidden;
+  background: #f1f5f9;
 }
 
-/* ── LEFT: Hero panel ──────────────────────────────── */
+/* â”€â”€ LEFT PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-left {
-  position: relative;
-  flex: 0 0 46%;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  flex: 0 0 42%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 48px 48px 48px 56px;
   overflow: hidden;
-  /* Vivid multi-stop gradient */
-  background: linear-gradient(145deg,
+  background:
+    linear-gradient(145deg,
       #0c4a6e 0%,
       #0369a1 25%,
       #0891b2 50%,
@@ -54,7 +54,7 @@
       #4c1d95 100%);
 }
 
-/* Decorative glowing circles */
+/* Decorative blobs */
 .mat-deco {
   position: absolute;
   border-radius: 50%;
@@ -62,37 +62,80 @@
 }
 
 .mat-deco-a {
-  width: 380px;
-  height: 380px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, transparent 70%);
-  top: -80px;
-  left: -80px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+  top: -100px;
+  left: -100px;
+  animation: mat-pulse 8s ease-in-out infinite;
 }
 
 .mat-deco-b {
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(167, 139, 250, 0.3) 0%, transparent 70%);
-  bottom: -60px;
-  right: -40px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, transparent 70%);
+  bottom: -80px;
+  right: -60px;
+  animation: mat-pulse 10s ease-in-out infinite reverse;
 }
 
 .mat-deco-c {
-  width: 160px;
-  height: 160px;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.25) 0%, transparent 70%);
-  top: 50%;
-  left: 55%;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
+  top: 45%;
+  left: 58%;
   transform: translate(-50%, -50%);
+  animation: mat-pulse 12s ease-in-out infinite;
+}
+
+.mat-deco-grid {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@keyframes mat-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; }
 }
 
 .mat-left-content {
   position: relative;
   z-index: 2;
   width: 100%;
+  max-width: 440px;
 }
 
-/* Big "Master Algebra" heading */
+/* Back link */
+.mat-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 32px;
+  transition: all 0.25s ease;
+}
+
+.mat-back-link:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  transform: translateX(-3px);
+}
+
+/* Title */
 .mat-main-title {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(2.8rem, 4.5vw, 4.2rem);
@@ -104,7 +147,6 @@
 }
 
 .mat-title-accent {
-  /* Bright yellow-cyan shimmer */
   background: linear-gradient(90deg, #67e8f9 0%, #a5f3fc 40%, #fef9c3 80%, #fde68a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -113,205 +155,368 @@
 
 .mat-main-sub {
   font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.75;
   max-width: 400px;
   margin: 0 0 36px;
   font-weight: 400;
 }
 
-/* Stats grid — 5 chips in a wrap */
-.mat-stats-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.mat-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 14px;
-  padding: 14px 20px;
-  min-width: 76px;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.mat-stat:hover {
-  transform: translateY(-3px);
-  background: rgba(255, 255, 255, 0.22);
-}
-
-.mat-word-chip-cloud {
+/* Stats row */
+.mat-stats-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 24px;
 }
 
-.mat-word-chip {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 700;
-  font-family: 'Outfit', sans-serif;
+.mat-stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 10px 14px;
   transition: all 0.25s ease;
   cursor: default;
 }
 
-.mat-word-chip:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+.mat-stat-chip:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
-/* The big number — solid white so it is ALWAYS readable */
-.mat-stat-num {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2rem;
-  font-weight: 900;
+.mat-stat-chip-icon {
+  font-size: 18px;
   line-height: 1;
-  color: #ffffff !important;
-  /* always white on dark bg */
-  text-shadow: 0 0 16px rgba(255, 255, 255, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
-  -webkit-text-fill-color: #ffffff;
-  /* override any gradient */
 }
 
-.mat-stat-lbl {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-top: 5px;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-/* ── RIGHT: Cards panel ────────────────────────────── */
-.mat-right {
-  flex: 1;
+.mat-stat-chip-text {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 40px 40px 40px 36px;
-  background: #f1f5f9;
 }
 
-.mat-right-eyebrow {
-  font-size: 11px;
+.mat-stat-chip-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+}
+
+.mat-stat-chip-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* â”€â”€ RIGHT PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.mat-right {
+  flex: 1;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 36px 48px 36px;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(8, 145, 178, 0.06), transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(124, 58, 237, 0.06), transparent 50%),
+    #f8fafc;
+  overflow-y: auto;
+}
+
+.mat-right-inner {
+  width: 100%;
+  max-width: 620px;
+}
+
+/* Right header */
+.mat-right-header {
+  margin-bottom: 32px;
+}
+
+.mat-right-badge {
+  display: inline-block;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: var(--mat-teal);
-  margin: 0 0 20px 4px;
+  color: #fff;
+  background: linear-gradient(135deg, #0891b2, #7c3aed);
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 16px;
 }
 
-.mat-cards-col {
+.mat-right-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.65rem, 2.4vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #0f172a;
+  margin: 0 0 10px;
+  letter-spacing: -0.03em;
+}
+
+.mat-right-desc {
+  margin: 0;
+  color: #64748b;
+  font-size: 14.5px;
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+/* â”€â”€ PATH LIST (vertical step cards) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.mat-path-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-/* Each topic card */
-.mat-card-btn {
-  display: flex;
-  align-items: center;
   gap: 0;
-  background: #ffffff;
-  border: 1px solid var(--mat-border);
-  border-radius: var(--mat-rlg);
-  overflow: hidden;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-  padding: 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
 }
 
-.mat-card-btn:hover {
-  transform: translateX(6px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+/* Each card */
+.mat-path-card {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  position: relative;
 }
 
-/* Colored left strip */
-.mat-card-strip {
-  width: 6px;
-  align-self: stretch;
+.mat-path-card-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48px;
   flex-shrink: 0;
+  position: relative;
 }
 
-/* Emoji icon */
-.mat-card-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+/* Step number circle */
+.mat-path-step {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-  margin: 20px 18px 20px 20px;
-}
-
-/* Text block */
-.mat-card-text {
-  flex: 1;
-  padding: 18px 0;
-}
-
-.mat-card-label {
   font-family: 'Outfit', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 3px;
+  color: #fff;
+  flex-shrink: 0;
+  z-index: 2;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 20px;
 }
 
-.mat-card-tagline {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--mat-muted);
-  margin-bottom: 6px;
+.mat-path-card:hover .mat-path-step {
+  transform: scale(1.15);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
 }
 
-.mat-card-desc {
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.55;
-  max-width: 340px;
+/* Vertical connector line */
+.mat-path-connector {
+  width: 2px;
+  flex: 1;
+  background: linear-gradient(180deg, #cbd5e1, #e2e8f0);
+  margin-top: 0;
 }
 
-/* Chevron arrow */
-.mat-card-chevron {
+.mat-path-card:last-child .mat-path-connector {
+  display: none;
+}
+
+/* Card body */
+.mat-path-card-body {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e8ecf1;
+  border-radius: 18px;
+  padding: 20px 22px;
+  margin: 8px 0 8px 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 0;
+}
+
+.mat-path-card:hover .mat-path-card-body {
+  border-color: #c7d2e0;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+  transform: translateX(4px);
+}
+
+.mat-path-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.mat-path-card-emoji {
   font-size: 32px;
-  font-weight: 900;
   line-height: 1;
-  padding: 0 22px;
-  opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  transform: translateX(-6px);
+  flex-shrink: 0;
 }
 
-.mat-card-btn:hover .mat-card-chevron {
+.mat-path-card-info {
+  min-width: 0;
+}
+
+.mat-path-card-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.mat-path-card-name {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.15;
+}
+
+.mat-path-card-desc {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+/* Arrow on hover */
+.mat-path-card-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.mat-path-card:hover .mat-path-card-arrow {
   opacity: 1;
   transform: translateX(0);
 }
 
-/* ══════════════════════════════════════════════════════
+/* â”€â”€ LANDING RESPONSIVE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
+@media (max-width: 1100px) {
+  .mat-left {
+    flex: 0 0 38%;
+    padding: 36px 28px 36px 36px;
+  }
+
+  .mat-right {
+    padding: 32px 24px 40px 24px;
+  }
+
+  .mat-path-card-name {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mat-fullpage {
+    flex-direction: column;
+  }
+
+  .mat-left {
+    position: relative;
+    top: auto;
+    height: auto;
+    flex: none;
+    padding: 40px 24px;
+  }
+
+  .mat-right {
+    min-height: auto;
+    padding: 32px 20px 40px 20px;
+  }
+
+  .mat-main-title {
+    font-size: 2.4rem;
+  }
+
+  .mat-stats-row {
+    gap: 8px;
+  }
+
+  .mat-stat-chip {
+    padding: 8px 12px;
+  }
+
+  .mat-stat-chip-val {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mat-left {
+    padding: 32px 16px;
+  }
+
+  .mat-main-title {
+    font-size: 2rem;
+  }
+
+  .mat-main-sub {
+    font-size: 0.88rem;
+    margin-bottom: 24px;
+  }
+
+  .mat-right {
+    padding: 24px 16px 32px;
+  }
+
+  .mat-path-card-body {
+    padding: 16px;
+    margin-left: 10px;
+    border-radius: 14px;
+  }
+
+  .mat-path-card-emoji {
+    font-size: 26px;
+  }
+
+  .mat-path-card-name {
+    font-size: 1.05rem;
+  }
+
+  .mat-path-card-desc {
+    font-size: 12.5px;
+  }
+
+  .mat-path-step {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .mat-path-card-left {
+    width: 40px;
+  }
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SHARED TOPIC/CONTENT PAGE CLASSES
    (AlgebraIntro5W1H, AlgebraTerminology, AlgebraSkills)
-   ══════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 .mat-page {
   font-family: 'Inter', system-ui, sans-serif;
@@ -419,729 +624,11 @@
   line-height: 1.6;
 }
 
-/* ── CARDS ──────────────────────────────────────────── */
-.mat-card {
-  background: #fff;
-  border: 1px solid var(--mat-border);
-  border-radius: var(--mat-r);
-  padding: 28px;
-  box-shadow: var(--mat-sh);
-  transition: all 0.3s ease;
-}
 
-.mat-card:hover {
-  border-color: var(--mat-teal);
-  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.2);
-  transform: translateY(-4px);
-}
 
-/* ── 5W1H GRID ──────────────────────────────────────── */
-.mat-5w1h-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.mat-5w1h-card {
-  background: #fff;
-  border-radius: var(--mat-rlg);
-  overflow: hidden;
-  border: 1px solid var(--mat-border);
-  box-shadow: var(--mat-sh);
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.mat-5w1h-card:hover {
-  transform: translateY(-8px) scale(1.01);
-  box-shadow: var(--mat-shlg);
-  border-color: var(--mat-teal);
-}
-
-.mat-5w1h-header {
-  padding: 20px 24px 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: linear-gradient(135deg, #f0fdfa, #eff6ff);
-}
-
-.mat-5w1h-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
-.mat-5w1h-q {
-  font-family: 'Outfit', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--mat-text);
-}
-
-.mat-5w1h-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--mat-muted);
-}
-
-.mat-5w1h-body {
-  padding: 16px 24px 24px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.mat-5w1h-body p {
-  line-height: 1.75;
-  color: var(--mat-muted);
-  font-size: 15px;
-}
-
-/* ── TABS ────────────────────────────────────────────── */
-.mat-module-tabs {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.mat-tab {
-  padding: 12px 24px;
-  border-radius: 100px;
-  border: 2px solid rgba(8, 145, 178, 0.1);
-  background: #fff;
-  color: var(--mat-muted);
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-}
-
-.mat-tab:hover {
-  border-color: rgba(8, 145, 178, 0.3);
-  transform: translateY(-2px);
-}
-
-.mat-tab.active {
-  background: linear-gradient(135deg, var(--mat-teal), var(--mat-indigo));
-  color: #fff;
-  border-color: transparent;
-  box-shadow: 0 8px 20px rgba(8, 145, 178, 0.3);
-}
-
-.mat-tab-icon {
-  font-size: 18px;
-}
-
-.mat-term-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.mat-term-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  border-radius: var(--mat-rlg);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 24px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.mat-term-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  border-color: var(--mat-teal);
-  box-shadow: 0 12px 30px rgba(8, 145, 178, 0.15);
-  background: #fff;
-}
-
-.mat-term-name {
-  font-family: 'Outfit', sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--mat-text);
-  margin-bottom: 6px;
-}
-
-.mat-term-def {
-  color: var(--mat-muted);
-  font-size: 14px;
-  line-height: 1.65;
-  margin-bottom: 14px;
-}
-
-.mat-term-example {
-  background: rgba(8, 145, 178, 0.06);
-  border: 1px solid rgba(8, 145, 178, 0.18);
-  border-radius: 8px;
-  padding: 10px 14px;
-}
-
-.mat-term-example-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--mat-teal);
-  margin-bottom: 4px;
-}
-
-.mat-term-example-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  color: var(--mat-violet);
-}
-
-/* ── RULES ───────────────────────────────────────────── */
-.mat-rules-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.mat-rule-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  background: #fff;
-  border: 1px solid var(--mat-border);
-  border-radius: var(--mat-r);
-  padding: 22px 26px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-}
-
-.mat-rule-item:hover {
-  transform: translateX(6px);
-  border-color: var(--mat-teal);
-  box-shadow: -4px 0 20px rgba(8, 145, 178, 0.18);
-}
-
-.mat-rule-num {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Outfit', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #0891b2, var(--mat-indigo));
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.3);
-}
-
-.mat-rule-text {
-  font-size: 16px;
-  color: var(--mat-text);
-  line-height: 1.65;
-  flex: 1;
-}
-
-/* ── SKILLS ──────────────────────────────────────────── */
-.mat-skills-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 950px;
-  margin: 30px auto;
-}
-
-.mat-skill-card {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  border-radius: 20px;
-  padding: 24px 32px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-}
-
-.mat-skill-card:hover {
-  transform: translateX(10px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
-  border-color: var(--skill-color);
-}
-
-.mat-skill-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-}
-
-.mat-skill-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.mat-skill-text-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 4px;
-}
-
-.mat-skill-actions {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-
-/* Button Styles */
-.mat-skill-btn-outline {
-  padding: 9px 24px;
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: #fff !important;
-  border: 1.5px solid rgba(0, 0, 0, 0.1) !important;
-  color: #0f172a !important;
-}
-
-.mat-skill-btn-outline:hover {
-  background: #f8fafc !important;
-  border-color: #64748b !important;
-  transform: translateY(-2px);
-}
-
-.mat-skill-btn-filled {
-  padding: 10px 24px;
-  border-radius: 100px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: var(--skill-color) !important;
-  border: none !important;
-  color: #fff !important;
-  box-shadow: 0 4px 12px var(--skill-color-30);
-}
-
-.mat-skill-btn-filled:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 10px 25px var(--skill-color-40);
-}
-
-.mat-skill-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(8, 145, 178, 0.4);
-}
-
-.mat-assess-btn {
-  background: linear-gradient(135deg, var(--mat-violet), #a855f7);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.28);
-}
-
-.mat-assess-btn:hover {
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
-}
-
-/* ── QUIZ ────────────────────────────────────────────── */
-.mat-quiz-wrap {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 52px 24px;
-}
-
-.mat-quiz-header {
-  text-align: center;
-  margin-bottom: 36px;
-}
-
-.mat-quiz-progress {
-  background: rgba(8, 145, 178, 0.1);
-  border-radius: 50px;
-  height: 8px;
-  margin-bottom: 12px;
-  overflow: hidden;
-}
-
-.mat-quiz-progress-fill {
-  height: 100%;
-  border-radius: 50px;
-  background: linear-gradient(90deg, #0891b2, #06b6d4, var(--mat-indigo));
-  transition: width 0.4s ease;
-}
-
-.mat-quiz-counter {
-  font-size: 13px;
-  color: var(--mat-muted);
-  text-align: right;
-  margin-bottom: 24px;
-}
-
-.mat-question-card {
-  background: #fff;
-  border: 1px solid var(--mat-border);
-  border-radius: var(--mat-rlg);
-  padding: 32px;
-  margin-bottom: 24px;
-  box-shadow: var(--mat-sh);
-}
-
-.mat-q-num {
-  display: inline-block;
-  background: linear-gradient(135deg, #0891b2, var(--mat-indigo));
-  padding: 4px 14px;
-  border-radius: 50px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 14px;
-}
-
-.mat-q-text {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--mat-text);
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.mat-q-math {
-  font-family: 'JetBrains Mono', monospace;
-  background: rgba(8, 145, 178, 0.07);
-  border: 1px solid rgba(8, 145, 178, 0.2);
-  border-radius: 8px;
-  padding: 10px 16px;
-  margin-bottom: 20px;
-  font-size: 18px;
-  color: #0891b2;
-  text-align: center;
-}
-
-.mat-options {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.mat-option {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 20px;
-  border-radius: 10px;
-  border: 2px solid #e2e8f0;
-  background: #f8fafc;
-  cursor: pointer;
-  font-size: 15px;
-  color: var(--mat-text);
-  transition: all 0.2s ease;
-  text-align: left;
-  width: 100%;
-}
-
-.mat-option:hover:not(:disabled) {
-  border-color: var(--mat-teal);
-  background: rgba(8, 145, 178, 0.05);
-  transform: translateX(4px);
-}
-
-.mat-option.selected {
-  border-color: var(--mat-indigo);
-  background: rgba(99, 102, 241, 0.06);
-}
-
-.mat-option.correct {
-  border-color: var(--mat-success);
-  background: rgba(16, 185, 129, 0.07);
-  color: #065f46;
-}
-
-.mat-option.wrong {
-  border-color: var(--mat-wrong);
-  background: rgba(239, 68, 68, 0.07);
-  color: #991b1b;
-}
-
-.mat-option-letter {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
-  background: #e2e8f0;
-  flex-shrink: 0;
-  color: var(--mat-muted);
-}
-
-.mat-option.correct .mat-option-letter {
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--mat-success);
-}
-
-.mat-option.wrong .mat-option-letter {
-  background: rgba(239, 68, 68, 0.12);
-  color: var(--mat-wrong);
-}
-
-.mat-explanation {
-  margin-top: 16px;
-  padding: 16px 20px;
-  border-radius: 10px;
-  background: rgba(16, 185, 129, 0.06);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  color: var(--mat-muted);
-  font-size: 14px;
-  line-height: 1.65;
-}
-
-.mat-explanation strong {
-  color: var(--mat-success);
-}
-
-.mat-quiz-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-
-/* ── BUTTONS ─────────────────────────────────────────── */
-.mat-btn-primary {
-  padding: 14px 32px;
-  border-radius: 100px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border: none;
-  background: linear-gradient(135deg, #0369a1, #0891b2, #06b6d4);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(8, 145, 178, 0.3);
-}
-
-.mat-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(8, 145, 178, 0.4);
-}
-
-.mat-btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.mat-btn-secondary {
-  padding: 14px 32px;
-  border-radius: 100px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border: 2px solid #e2e8f0;
-  background: #fff;
-  color: var(--mat-text);
-}
-
-.mat-btn-secondary:hover {
-  border-color: var(--mat-teal);
-  color: #0891b2;
-  transform: translateY(-2px);
-}
-
-/* ── SCORE ───────────────────────────────────────────── */
-.mat-score-screen {
-  text-align: center;
-  padding: 64px 24px;
-}
-
-.mat-score-circle {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  margin: 0 auto 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  font-family: 'Outfit', sans-serif;
-  font-size: 48px;
-  font-weight: 900;
-  background: conic-gradient(#06b6d4 var(--score-pct, 0%), #e2e8f0 0%);
-  box-shadow: 0 0 0 10px rgba(8, 145, 178, 0.1);
-  color: var(--mat-text);
-}
-
-.mat-score-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--mat-muted);
-}
-
-.mat-score-msg {
-  font-family: 'Outfit', sans-serif;
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--mat-text);
-  margin-bottom: 12px;
-}
-
-/* ── 7-WORDS BANNER ──────────────────────────────────── */
-.mat-7words-banner {
-  background: linear-gradient(135deg, rgba(8, 145, 178, 0.07), rgba(99, 102, 241, 0.06));
-  border: 1px solid rgba(8, 145, 178, 0.2);
-  border-radius: var(--mat-rlg);
-  padding: 32px;
-  margin-bottom: 40px;
-  text-align: center;
-}
-
-.mat-7words-title {
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #0891b2;
-  margin-bottom: 16px;
-}
-
-.mat-7words-words {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.mat-word-chip {
-  background: linear-gradient(135deg, #0891b2, var(--mat-indigo));
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 8px 18px;
-  border-radius: 100px;
-  box-shadow: 0 4px 12px rgba(8, 145, 178, 0.25);
-}
-
-/* ── SUB-SKILL TABS ──────────────────────────────────── */
-.mat-subskill-tabs {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 32px;
-}
-
-.mat-subskill-tab {
-  padding: 8px 20px;
-  border-radius: 100px;
-  border: 2px solid #e2e8f0;
-  background: #fff;
-  color: var(--mat-muted);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.mat-subskill-tab.active,
-.mat-subskill-tab:hover {
-  border-color: var(--mat-teal);
-  color: #0891b2;
-  background: rgba(8, 145, 178, 0.06);
-}
-
-/* ── MATH FORMULA ────────────────────────────────────── */
-.mat-formula {
-  font-family: 'JetBrains Mono', monospace;
-  color: #0891b2;
-  font-size: 15px;
-}
-
-.mat-highlight {
-  background: rgba(8, 145, 178, 0.09);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--mat-violet);
-  font-weight: 600;
-}
-
-/* ── RESPONSIVE ──────────────────────────────────────── */
-@media (max-width: 900px) {
-  .mat-fullpage {
-    flex-direction: column;
-    min-height: 100vh;
-    overflow: auto;
-  }
-
-  .mat-left {
-    flex: none;
-    padding: 48px 24px 40px;
-  }
-
-  .mat-right {
-    padding: 32px 20px 40px;
-  }
-
-  .mat-main-title {
-    font-size: 2.4rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .mat-main-title {
-    font-size: 2rem;
-  }
-
-  .mat-stats-grid {
-    gap: 8px;
-  }
-
-  .mat-stat {
-    padding: 10px 14px;
-    min-width: 64px;
-  }
-
-  .mat-stat-num {
-    font-size: 1.6rem;
-  }
-
-  .mat-quiz-actions {
-    flex-direction: column;
-  }
-
-  .mat-btn-primary,
-  .mat-btn-secondary {
-    width: 100%;
-    text-align: center;
-  }
-}
-
-/* ══════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    INTRODUCTION PAGE  (AlgebraIntro5W1H)
-   ══════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 .mat-intro-page {
   font-family: 'Inter', system-ui, sans-serif;
@@ -1150,7 +637,7 @@
   color: #0f172a;
 }
 
-/* ── TOP NAV BAR ──────────────────────────────────────── */
+/* â”€â”€ TOP NAV BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-intro-nav {
   display: flex;
   align-items: center;
@@ -1223,7 +710,7 @@
   color: #ffffff;
 }
 
-/* ── HERO BANNER ──────────────────────────────────────── */
+/* â”€â”€ HERO BANNER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-intro-hero {
   position: relative;
   overflow: hidden;
@@ -1279,7 +766,7 @@
 }
 
 .mat-intro-hero-highlight {
-  /* Yellow-cyan shimmer — same as landing "Algebra" accent */
+  /* Yellow-cyan shimmer â€” same as landing "Algebra" accent */
   background: linear-gradient(90deg, #67e8f9 0%, #a5f3fc 40%, #fef9c3 80%, #fde68a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1295,7 +782,7 @@
   margin-inline: auto;
 }
 
-/* ── CONTENT AREA ─────────────────────────────────────── */
+/* â”€â”€ CONTENT AREA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-intro-content {
   max-width: 1100px;
   margin: 0 auto;
@@ -1303,7 +790,7 @@
   /* was 40px/60px */
 }
 
-/* ── 6 CARDS GRID ─────────────────────────────────────── */
+/* â”€â”€ 6 CARDS GRID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-intro-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
@@ -1399,7 +886,7 @@
   }
 }
 
-/* ── INDIVIDUAL CARD ──────────────────────────────────── */
+/* â”€â”€ INDIVIDUAL CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-intro-card {
   background: #ffffff;
   border: 1.5px solid #e2e8f0;
@@ -1521,7 +1008,7 @@
   border: 1px solid transparent;
 }
 
-/* ── CTA STRIP (slim single row) ─────────────────────── */
+/* â”€â”€ CTA STRIP (slim single row) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-intro-cta-strip {
   display: flex;
   align-items: center;
@@ -1592,7 +1079,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* ── RESPONSIVE ───────────────────────────────────────── */
+/* â”€â”€ RESPONSIVE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 768px) {
   .mat-intro-nav {
     padding: 12px 16px;
@@ -1625,12 +1112,12 @@
   }
 }
 
-/* ── UTILITY: HIDE GLOBAL FOOTER ON INTRO PAGE ───────── */
+/* â”€â”€ UTILITY: HIDE GLOBAL FOOTER ON INTRO PAGE â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .main-layout:has(.mat-intro-page) .main-footer {
   display: none !important;
 }
 
-/* ── SKILLS LIST RESPONSIVENESS ─────────────────────── */
+/* â”€â”€ SKILLS LIST RESPONSIVENESS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-skills-list {
   display: flex;
   flex-direction: column;
@@ -1783,7 +1270,7 @@
   }
 }
 
-/* ── QUIZ ENGINE RESPONSIVENESS ─────────────────────── */
+/* â”€â”€ QUIZ ENGINE RESPONSIVENESS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mat-quiz-container {
   max-width: 800px;
   margin: 0 auto;
@@ -1839,7 +1326,7 @@
   }
 }
 
-/* ── SIDEBAR BUTTONS FOR SKILLS/LEARN ────────────────── */
+/* â”€â”€ SIDEBAR BUTTONS FOR SKILLS/LEARN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .mat-sidebar-btn {
   display: flex;
@@ -1899,7 +1386,7 @@
   font-size: 15px;
 }
 
-/* ── ALGEBRA SKILLS RESPONSIVE UTILITIES ───────────────── */
+/* â”€â”€ ALGEBRA SKILLS RESPONSIVE UTILITIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /* Main Containers */
 .mat-lexicon-container {
@@ -2051,7 +1538,7 @@
   }
 }
 
-/* ── MOBILE MEDIA QUERIES ─────────────────────────── */
+/* â”€â”€ MOBILE MEDIA QUERIES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @media (max-width: 991px) {
   .mat-assessment-layout {

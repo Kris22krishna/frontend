@@ -52,6 +52,13 @@ export default function SurfaceAreasAndVolumes() {
         <div className="sv-fullpage">
             {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
             <div className="sv-left">
+                <button
+                    className="sv-exit-btn"
+                    onClick={() => navigate('/senior/grade/10')}
+                >
+                    <span style={{ fontSize: 20 }}>‹</span> Back to Grade 10
+                </button>
+
                 <div className="sv-deco sv-deco-a" />
                 <div className="sv-deco sv-deco-b" />
                 <div className="sv-deco sv-deco-c" />

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './trigonometry.css';
+import MathRenderer from '../../../MathRenderer';
 
 const MODULES = [
     {
@@ -48,10 +49,22 @@ const STATS = [
 export default function IntroductionToTrignometry() {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.body.classList.add('hide-main-footer');
+        return () => document.body.classList.remove('hide-main-footer');
+    }, []);
+
     return (
         <div className="trig-fullpage">
             {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
             <div className="trig-left">
+                <button
+                    className="trig-exit-btn"
+                    onClick={() => navigate('/senior/grade/10')}
+                >
+                    <span style={{ fontSize: 20 }}>‹</span> Back to Grade 10
+                </button>
+
                 <div className="trig-deco trig-deco-a" />
                 <div className="trig-deco trig-deco-b" />
                 <div className="trig-deco trig-deco-c" />
@@ -108,7 +121,7 @@ export default function IntroductionToTrignometry() {
                                     {mod.label}
                                 </div>
                                 <div className="trig-card-tagline">{mod.tagline}</div>
-                                <div className="trig-card-desc">{mod.desc}</div>
+                                <div className="trig-card-desc"><MathRenderer text={mod.desc} /></div>
                             </div>
                             <div className="trig-card-chevron" style={{ color: mod.gradFrom }}>
                                 ›

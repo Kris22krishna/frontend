@@ -1,173 +1,190 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import "./Matrices.css";
 
 const MODULES = [
-  {
-    id: "introduction",
-    path: "/senior/grade/12/matrices/introduction",
-    label: "Introduction",
-    emoji: "🌟",
-    tagline: "5W1H Exploration",
-    desc: "6 Big Questions about Matrices — What, Why, Who, When, Where and How.",
-    gradFrom: "#0891b2",
-    gradTo: "#06b6d4",
-    shadow: "rgba(6,182,212,0.4)",
-  },
-  {
-    id: "terminology",
-    path: "/senior/grade/12/matrices/terminology",
-    label: "Terminology",
-    emoji: "📖",
-    tagline: "9 Key Terms · 6 Rules",
-    desc: "Master the language of Matrices — order, types, operations & the golden rules.",
-    gradFrom: "#7c3aed",
-    gradTo: "#a855f7",
-    shadow: "rgba(168,85,247,0.4)",
-  },
-  {
-    id: "skills",
-    path: "/senior/grade/12/matrices/skills",
-    label: "Skills",
-    emoji: "🎯",
-    tagline: "Practice & Assessment",
-    desc: "6 core skills, 10 practice questions and 10 assessment questions each.",
-    gradFrom: "#0369a1",
-    gradTo: "#3b82f6",
-    shadow: "rgba(59,130,246,0.4)",
-  },
+    {
+        id: "introduction",
+        path: "/senior/grade/12/matrices/introduction",
+        label: "Introduction",
+        emoji: "🌟",
+        tagline: "5W1H Exploration",
+        desc: "6 Big Questions about Matrices — What, Why, Who, When, Where and How.",
+        gradFrom: "#0891b2",
+        gradTo: "#06b6d4",
+    },
+    {
+        id: "terminology",
+        path: "/senior/grade/12/matrices/terminology",
+        label: "Terminology",
+        emoji: "📖",
+        tagline: "9 Key Terms · 6 Rules",
+        desc: "Master the language of Matrices — order, types, operations & the golden rules.",
+        gradFrom: "#7c3aed",
+        gradTo: "#a855f7",
+    },
+    {
+        id: "skills",
+        path: "/senior/grade/12/matrices/skills",
+        label: "Skills",
+        emoji: "🎯",
+        tagline: "Practice & Assessment",
+        desc: "6 core skills, 10 practice questions and 10 assessment questions each.",
+        gradFrom: "#0369a1",
+        gradTo: "#3b82f6",
+    },
+    {
+        id: "connectomics",
+        path: "/senior/grade/12/matrices/connectomics",
+        label: "Connectomics",
+        emoji: "🔗",
+        tagline: "Big Picture",
+        desc: "See how matrices connect to other branches of mathematics and real-world applications.",
+        gradFrom: "#d97706",
+        gradTo: "#f59e0b",
+    },
+    {
+        id: "exam-edge",
+        path: "/senior/grade/12/matrices/exam-edge",
+        label: "Exam Edge",
+        emoji: "🏆",
+        tagline: "Test Ready",
+        desc: "Challenge yourself with exam-style questions and advanced matrices problems.",
+        gradFrom: "#dc2626",
+        gradTo: "#ef4444",
+    },
 ];
 
 const STATS = [
-  { val: "6", label: "Big Questions", color: "#0891b2" },
-  { val: "9", label: "Key Terms", color: "#7c3aed" },
-  { val: "6", label: "Rules", color: "#059669" },
-  { val: "6", label: "Skills", color: "#0369a1" },
-  { val: "120", label: "Practice Qs", color: "#b45309" },
+    { val: "6", label: "Big Questions", icon: "❓" },
+    { val: "9", label: "Key Terms", icon: "📝" },
+    { val: "6", label: "Rules", icon: "📐" },
+    { val: "6", label: "Skills", icon: "🎯" },
+    { val: "120", label: "Practice Qs", icon: "✏️" },
 ];
 
 export default function Matrices() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  return (
-    <div className="mat-fullpage" style={{ position: "relative" }}>
-      {/* Back Button */}
-      <button
-        onClick={() => navigate("/senior/grade/12")}
-        style={{
-          position: "absolute",
-          top: "24px",
-          left: "24px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          background: "rgba(255, 255, 255, 0.9)",
-          color: "#1E293B",
-          border: "1px solid #E2E8F0",
-          padding: "8px 16px",
-          borderRadius: "12px",
-          fontWeight: "600",
-          fontSize: "0.9rem",
-          cursor: "pointer",
-          zIndex: 50,
-          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(12px)",
-          transition: "all 0.2s ease"
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.background = "#fff";
-          e.currentTarget.style.transform = "translateY(-1px)";
-          e.currentTarget.style.boxShadow = "0 6px 8px -1px rgba(0, 0, 0, 0.15)";
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.background = "rgba(255, 255, 255, 0.9)";
-          e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
-        }}
-      >
-        <ArrowLeft size={18} /> Back to Grade 12
-      </button>
+    React.useEffect(() => {
+        const footer = document.querySelector(".main-footer");
+        if (footer) footer.style.display = "none";
+        return () => {
+            if (footer) footer.style.display = "block";
+        };
+    }, []);
 
-      {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
-      <div className="mat-left">
-        {/* Decorative circles */}
-        <div className="mat-deco mat-deco-a" />
-        <div className="mat-deco mat-deco-b" />
-        <div className="mat-deco mat-deco-c" />
+    return (
+        <div className="mat-fullpage">
+            {/* ── LEFT PANEL ─────────────────────────────── */}
+            <div className="mat-left">
+                {/* Decorative elements */}
+                <div className="mat-deco mat-deco-a" />
+                <div className="mat-deco mat-deco-b" />
+                <div className="mat-deco mat-deco-c" />
+                <div className="mat-deco mat-deco-grid" />
 
-        <div className="mat-left-content">
-          <h1 className="mat-main-title">
-            Master
-            <br />
-            <span className="mat-title-accent">Matrices</span>
-          </h1>
+                <div className="mat-left-content">
+                    <button
+                        className="mat-back-link"
+                        onClick={() => navigate("/senior/grade/12")}
+                    >
+                        <ArrowLeft size={16} />
+                        <span>Grade 12</span>
+                    </button>
 
-          <p className="mat-main-sub">
-            From rectangular arrays to powerful transformations — learn Matrices
-            the way they were meant to be taught.
-          </p>
+                    <h1 className="mat-main-title">
+                        Master
+                        <br />
+                        <span className="mat-title-accent">Matrices</span>
+                    </h1>
 
-          {/* Stats grid */}
-          <div className="mat-stats-grid">
-            {STATS.map((s, i) => (
-              <div className="mat-stat" key={i}>
-                <span className="mat-stat-num" style={{ color: s.color }}>
-                  {s.val}
-                </span>
-                <span className="mat-stat-lbl">{s.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+                    <p className="mat-main-sub">
+                        From rectangular arrays to powerful transformations —
+                        learn Matrices the way they were meant to be taught.
+                    </p>
 
-      {/* ══ RIGHT PANEL — Topic Cards ═══════════════════ */}
-      <div className="mat-right">
-        <p className="mat-right-eyebrow">Choose a topic to explore</p>
-        <div className="mat-cards-col">
-          {MODULES.map((mod) => (
-            <button
-              key={mod.id}
-              className="mat-card-btn"
-              onClick={() => navigate(mod.path)}
-            >
-              {/* Gradient left strip */}
-              <div
-                className="mat-card-strip"
-                style={{
-                  background: `linear-gradient(180deg, ${mod.gradFrom}, ${mod.gradTo})`,
-                }}
-              />
-
-              {/* Icon */}
-              <div
-                className="mat-card-icon"
-                style={{
-                  background: `linear-gradient(135deg, ${mod.gradFrom}, ${mod.gradTo})`,
-                  boxShadow: `0 6px 20px ${mod.shadow}`,
-                }}
-              >
-                {mod.emoji}
-              </div>
-
-              {/* Text */}
-              <div className="mat-card-text">
-                <div className="mat-card-label" style={{ color: mod.gradFrom }}>
-                  {mod.label}
+                    {/* Stats row */}
+                    <div className="mat-stats-row">
+                        {STATS.map((s, i) => (
+                            <div className="mat-stat-chip" key={i}>
+                                <span className="mat-stat-chip-icon">{s.icon}</span>
+                                <div className="mat-stat-chip-text">
+                                    <span className="mat-stat-chip-val">{s.val}</span>
+                                    <span className="mat-stat-chip-lbl">{s.label}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div className="mat-card-tagline">{mod.tagline}</div>
-                <div className="mat-card-desc">{mod.desc}</div>
-              </div>
+            </div>
 
-              {/* Arrow */}
-              <div className="mat-card-chevron" style={{ color: mod.gradFrom }}>
-                ›
-              </div>
-            </button>
-          ))}
+            {/* ── RIGHT PANEL ────────────────────────────── */}
+            <div className="mat-right">
+                <div className="mat-right-inner">
+                    <div className="mat-right-header">
+                        <span className="mat-right-badge">LEARNING PATH</span>
+                        <h2 className="mat-right-title">
+                            Your roadmap to mastery
+                        </h2>
+                        <p className="mat-right-desc">
+                            Follow each step in order — build intuition, lock the
+                            terminology, sharpen skills, then ace the exam.
+                        </p>
+                    </div>
+
+                    <div className="mat-path-list">
+                        {MODULES.map((mod, idx) => (
+                            <button
+                                key={mod.id}
+                                className="mat-path-card"
+                                onClick={() => navigate(mod.path)}
+                            >
+                                <div className="mat-path-card-left">
+                                    <div
+                                        className="mat-path-step"
+                                        style={{
+                                            background: `linear-gradient(135deg, ${mod.gradFrom}, ${mod.gradTo})`,
+                                        }}
+                                    >
+                                        {idx + 1}
+                                    </div>
+
+                                    <div className="mat-path-connector" />
+                                </div>
+
+                                <div className="mat-path-card-body">
+                                    <div className="mat-path-card-header">
+                                        <div className="mat-path-card-emoji">
+                                            {mod.emoji}
+                                        </div>
+                                        <div className="mat-path-card-info">
+                                            <span
+                                                className="mat-path-card-tag"
+                                                style={{ color: mod.gradFrom }}
+                                            >
+                                                {mod.tagline}
+                                            </span>
+                                            <h3 className="mat-path-card-name">
+                                                {mod.label}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <p className="mat-path-card-desc">{mod.desc}</p>
+                                </div>
+
+                                <div
+                                    className="mat-path-card-arrow"
+                                    style={{ color: mod.gradFrom }}
+                                >
+                                    <ChevronRight size={22} />
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

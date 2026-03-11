@@ -28,7 +28,7 @@
 
 .sv-fullpage {
     display: flex;
-    min-height: calc(100vh - 80px);
+    height: 100vh;
     margin-top: -80px;
     padding-top: 80px;
     font-family: 'Inter', system-ui, sans-serif;
@@ -40,9 +40,10 @@
     position: relative;
     flex: 0 0 46%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 48px 48px 56px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 32px 48px 48px 52px;
     overflow: hidden;
     background: linear-gradient(145deg, #0c4a6e 0%, #0369a1 25%, #0891b2 50%, #6d28d9 75%, #4c1d95 100%);
 }
@@ -82,6 +83,8 @@
     position: relative;
     z-index: 2;
     width: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .sv-main-title {
@@ -259,6 +262,43 @@
 .sv-card-btn:hover .sv-card-chevron {
     opacity: 1;
     transform: translateX(0);
+}
+
+/* Exit Button Styles */
+.sv-exit-btn {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sv-exit-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.sv-exit-btn span {
+    font-size: 22px;
+    line-height: 1;
+    margin-top: -3px;
+    margin-right: -2px;
+    font-weight: 400;
 }
 
 /* Introduction & Content Page Styles */
