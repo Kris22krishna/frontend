@@ -4,6 +4,8 @@ import { Clock, ChevronLeft, ChevronRight, CheckCircle, Grid, AlertCircle } from
 import MathRenderer from '../MathRenderer';
 import DiagnosisResults from './DiagnosisResults';
 import './DiagnosisTest.css';
+import { useViolationTracker } from './violation/useViolation';
+import ViolationWarning from './violation/ViolationWarning';
 
 const DiagnosisTestRunner = () => {
     const { grade } = useParams();
@@ -17,6 +19,23 @@ const DiagnosisTestRunner = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [startTime, setStartTime] = useState(null);
+
+    const maxViolations = 3;
+    const {
+        violationCount,
+        showWarning,
+        violationMessage,
+        dismissWarning,
+        requestFullscreen
+    } = useViolationTracker(maxViolations, () => {
+        setIsSubmitted(true);
+    });
+
+    useEffect(() => {
+        if (!loading && !isSubmitted && questions.length > 0) {
+            requestFullscreen();
+        }
+    }, [loading, isSubmitted, questions.length]);
 
     const loadQuestions = useCallback(async () => {
         setLoading(true);
@@ -721,6 +740,14 @@ const DiagnosisTestRunner = () => {
                     </div>
                 </aside>
             </div >
+
+            <ViolationWarning
+                show={showWarning && !isSubmitted}
+                violationCount={violationCount}
+                maxViolations={maxViolations}
+                message={violationMessage}
+                onDismiss={dismissWarning}
+            />
         </div >
     );
 };
