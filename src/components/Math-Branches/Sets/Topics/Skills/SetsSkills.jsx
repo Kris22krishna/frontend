@@ -24,7 +24,7 @@ export default function SetsSkills() {
 
     if (view !== 'list' && skill) {
         return (
-            <div className="sets-page" style={{ background: '#f8fafc', minHeight: '100vh', padding: '20px 0 60px' }}>
+            <div className={`sets-page sets-skill-runtime ${view === 'practice' ? 'sets-skill-runtime--practice' : ''} ${view === 'assessment' ? 'sets-skill-runtime--assessment' : ''}`} style={{ background: '#f8fafc', minHeight: '100vh', padding: '20px 0 60px' }}>
                 <nav className="sets-nav">
                     <button className="sets-nav-back" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>
                         ← Back to Skills
@@ -37,21 +37,21 @@ export default function SetsSkills() {
                         <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/exam-edge')}>⚔️ Exam Edge</button>
                     </div>
                 </nav>
-                <div style={{ padding: '0 24px' }}>
+                <div className="sets-skill-runtime-body" style={{ padding: '0 24px' }}>
                     {view === 'learn' ? (
                         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
+                            <div className="sets-skill-title-row" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
                                 <div style={{ width: 44, height: 44, borderRadius: 12, background: `${skill.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
                                     {skill.icon}
                                 </div>
-                                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.5rem', fontWeight: 900, color: 'var(--sets-text)', margin: 0 }}>
+                                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(2rem, 7vw, 2.5rem)', fontWeight: 900, color: 'var(--sets-text)', margin: 0 }}>
                                     Learn: {skill.title}
                                 </h1>
                             </div>
 
                             <div className="sets-learn-grid" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 24, alignItems: 'start' }}>
                                 {/* Side Selector */}
-                                <aside style={{ background: 'rgba(255,255,255,0.7)', padding: 12, borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8, maxHeight: '65vh', overflowY: 'auto' }}>
+                                <aside className="sets-learn-sidebar" style={{ background: 'rgba(255,255,255,0.7)', padding: 12, borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8, maxHeight: '65vh', overflowY: 'auto' }}>
                                     {skill.learn.rules.map((rule, ri) => (
                                         <button
                                             key={ri}
@@ -77,12 +77,12 @@ export default function SetsSkills() {
                                 </aside>
 
                                 {/* Detailed Window */}
-                                <main key={selectedLearnIdx} style={{
+                                <main className="sets-details-window" key={selectedLearnIdx} style={{
                                     background: '#fff', borderRadius: 20, padding: '24px 32px',
                                     border: `2px solid ${skill.color}15`, boxShadow: '0 8px 30px rgba(0,0,0,0.03)', minHeight: 400,
                                     animation: 'setsSlideInRight 0.4s ease'
                                 }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                                    <div className="sets-learn-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                                         <div>
                                             <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>
                                                 {skill.learn.rules[selectedLearnIdx].title}
@@ -104,7 +104,7 @@ export default function SetsSkills() {
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                                    <div className="sets-rule-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--sets-muted)', marginBottom: 10 }}>
                                                 Explanation
@@ -132,7 +132,7 @@ export default function SetsSkills() {
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div style={{ marginTop: 40, display: 'flex', gap: 16 }}>
+                                    <div className="sets-learn-footer" style={{ marginTop: 40, display: 'flex', gap: 16 }}>
                                         <button className="sets-btn sets-btn-filled" style={{ '--skill-color': skill.color, padding: '14px 32px', fontSize: 15 }}
                                             onClick={() => setView('practice')}>
                                             Mastered this? Try Practice →

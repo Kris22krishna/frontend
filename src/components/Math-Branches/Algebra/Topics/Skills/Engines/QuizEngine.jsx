@@ -204,7 +204,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                 </div>
 
                 {/* Options */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div className={`${prefix}-quiz-options`}>
                     {q.options.map((opt, oi) => {
                         let borderColor = 'rgba(0,0,0,0.04)';
                         let bgColor = '#fff';

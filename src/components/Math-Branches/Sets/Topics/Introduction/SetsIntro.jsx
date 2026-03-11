@@ -96,15 +96,15 @@ export default function SetsIntro() {
                 <p className="sets-hero-sub">Get started with the 6 big questions and check your prerequisites.</p>
             </div>
 
-            <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px' }}>
+            <main className="sets-topic-shell" style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px' }}>
                 {/* Prerequisites */}
                 <section style={{ marginBottom: '60px' }}>
                     <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '24px', textAlign: 'center', color: 'var(--sets-indigo)' }}>
                         Prerequisites
                     </h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                    <div className="sets-responsive-grid sets-responsive-grid--280" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '24px' }}>
                         {setsIntroData.prerequisites.map((p, idx) => (
-                            <div key={idx} style={{ background: '#fff', padding: '32px 24px', borderRadius: '24px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)', transition: 'all 0.3s ease' }}>
+                            <div key={idx} className="sets-feature-card" style={{ background: '#fff', padding: '32px 24px', borderRadius: '24px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)', transition: 'all 0.3s ease' }}>
                                 <div style={{ fontSize: '40px', marginBottom: '16px' }}>{p.icon}</div>
                                 <h3 style={{ fontSize: '20px', fontWeight: 900, margin: '0 0 8px', color: 'var(--sets-text)' }}>{p.title}</h3>
                                 <p style={{ fontSize: '15px', color: 'var(--sets-muted)', margin: 0, lineHeight: 1.6 }}>{p.desc}</p>
@@ -124,7 +124,7 @@ export default function SetsIntro() {
                 </div>
 
                 {/* Footer CTA */}
-                <div style={{ 
+                <div className="sets-topic-cta" style={{ 
                     marginTop: '60px', 
                     padding: '32px', 
                     background: 'linear-gradient(135deg, #1e1b4b, #312e81)', 
@@ -141,6 +141,7 @@ export default function SetsIntro() {
                         <p style={{ margin: 0, opacity: 0.8 }}>Next up: Key terms and the 5 Golden Rules of Sets.</p>
                     </div>
                     <button 
+                        className="sets-topic-cta-button"
                         onClick={() => navigate('/senior/grade/11/maths/sets/terminology')}
                         style={{ padding: '12px 28px', background: '#fff', color: '#1e1b4b', border: 'none', borderRadius: '100px', fontWeight: 800, cursor: 'pointer' }}
                     >

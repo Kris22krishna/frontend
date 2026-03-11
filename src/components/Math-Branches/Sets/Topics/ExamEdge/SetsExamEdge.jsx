@@ -18,11 +18,11 @@ export default function SetsExamEdge() {
                     ← Back to Dashboard
                 </button>
                 <div className="sets-nav-links">
-                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/introduction')}>Intro</button>
-                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/terminology')}>Terminology</button>
-                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/skills')}>Skills</button>
-                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/connectomics')}>Connectomics</button>
-                    <button className="sets-nav-link active" onClick={() => navigate('/senior/grade/11/maths/sets/exam-edge')}>Exam Edge</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/introduction')}>🌟 Intro</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/terminology')}>📖 Terminology</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/skills')}>🎯 Skills</button>
+                    <button className="sets-nav-link" onClick={() => navigate('/senior/grade/11/maths/sets/connectomics')}>🌐 Connectomics</button>
+                    <button className="sets-nav-link active" onClick={() => navigate('/senior/grade/11/maths/sets/exam-edge')}>⚔️ Exam Edge</button>
                 </div>
             </nav>
 
@@ -31,10 +31,10 @@ export default function SetsExamEdge() {
                 <p className="sets-hero-sub">Strategic insights and high-weightage topics for competitive exams.</p>
             </div>
 
-            <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
+            <main className="sets-topic-shell" style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
                 
                 {/* Exam Tabs */}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '40px', flexWrap: 'wrap' }}>
+                <div className="sets-chip-row" style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '40px', flexWrap: 'wrap' }}>
                     {setsExamEdgeData.exams.map(e => (
                         <button 
                             key={e.name}
@@ -62,7 +62,7 @@ export default function SetsExamEdge() {
                 <div className="sets-details-window" style={{ background: '#fff' }}>
                     
                     {/* Weightage & Frequency */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
+                    <div className="sets-stats-pair" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: '20px', marginBottom: '32px' }}>
                         <div style={{ background: `${exam.color}08`, padding: '20px', borderRadius: '16px', border: `1px solid ${exam.color}20` }}>
                             <div style={{ fontSize: '12px', fontWeight: 900, color: exam.color, textTransform: 'uppercase', marginBottom: '4px' }}>Weightage</div>
                             <div style={{ fontSize: '24px', fontWeight: 900, color: '#1e1b4b' }}>{exam.weightage}</div>
@@ -88,7 +88,7 @@ export default function SetsExamEdge() {
                     </div>
 
                     {/* Strategy & Pitfalls */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+                    <div className="sets-responsive-grid sets-responsive-grid--300" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: '32px' }}>
                         <div>
                             <h3 style={{ fontSize: '14px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                 <Trophy size={18} color="#f59e0b" /> Winning Strategy
@@ -113,12 +113,12 @@ export default function SetsExamEdge() {
                 </div>
 
                 {/* Pro Tips */}
-                <div style={{ marginTop: '40px', background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '40px', borderRadius: '32px', color: '#fff' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                <div className="sets-topic-banner sets-topic-banner--dark" style={{ marginTop: '40px', background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '40px', borderRadius: '32px', color: '#fff' }}>
+                    <div className="sets-section-head-inline" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
                         <Lightbulb size={32} color="#f59e0b" />
                         <h2 style={{ fontSize: '24px', fontWeight: 800, margin: 0 }}>Bonus Exam Tips</h2>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                    <div className="sets-responsive-grid sets-responsive-grid--250" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(250px, 100%), 1fr))', gap: '20px' }}>
                         {setsExamEdgeData.proTips.map((tip, idx) => (
                             <div key={idx} style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', lineHeight: 1.6 }}>
                                 <MathRenderer text={tip} />
