@@ -26,3 +26,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </HelmetProvider>
   </React.StrictMode>,
 );
+
+// Signal to prerenderer that the app has rendered
+document.dispatchEvent(new Event('app-rendered'));

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Home, Star, ChevronRight, Sparkles } from 'lucide-react';
 import SEO from '../../components/common/SEO';
+import { getGradePageSEO, DEFAULT_OG_IMAGE } from '../../lib/seoConfig';
 import Navbar from '../../components/Navbar';
 import { LatexText } from '../../components/LatexText';
 import { api } from '../../services/api';
@@ -46,6 +47,7 @@ const getTopicStyle = (topicName) => {
 const JuniorGradeSyllabus = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
+    const gradeSEO = getGradePageSEO('junior', grade);
     const [topics, setTopics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hoveredTopic, setHoveredTopic] = useState(null);
@@ -161,7 +163,14 @@ const JuniorGradeSyllabus = () => {
 
     return (
         <div className="junior-page">
-            <SEO title={`${gradeLabels[grade]} - Math Adventures`} description={`Fun math topics for ${gradeLabels[grade]}`} />
+            <SEO
+                title={gradeSEO.title}
+                description={gradeSEO.description}
+                keywords={gradeSEO.keywords}
+                canonical={gradeSEO.canonical}
+                image={DEFAULT_OG_IMAGE}
+                structuredData={gradeSEO.structuredData}
+            />
             <Navbar />
 
             {/* Floating decorations */}

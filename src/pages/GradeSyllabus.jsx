@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { api } from '../services/api'; // Use real API
 import SEO from '../components/common/SEO';
+import { getGradePageSEO, DEFAULT_OG_IMAGE } from '../lib/seoConfig';
 import { LatexText } from '../components/LatexText';
 import '../styles/GradeSyllabus.css';
 
@@ -19,6 +20,7 @@ SkillItem.propTypes = {
 
 const GradeSyllabus = () => {
     const { grade } = useParams();
+    const gradeSEO = getGradePageSEO('math', grade);
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -138,7 +140,14 @@ const GradeSyllabus = () => {
 
     return (
         <div className="grade-syllabus-container">
-            <SEO title={`Class ${grade.replace('grade', '')} Maths - skill100`} description={`Complete syllabus for Class ${grade.replace('grade', '')}`} />
+            <SEO
+                title={gradeSEO.title}
+                description={gradeSEO.description}
+                keywords={gradeSEO.keywords}
+                canonical={gradeSEO.canonical}
+                image={DEFAULT_OG_IMAGE}
+                structuredData={gradeSEO.structuredData}
+            />
 
             <header className="syllabus-header">
                 <h1>Class {grade.replace('grade', '')} Maths</h1>

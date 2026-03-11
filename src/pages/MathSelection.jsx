@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, Star, Zap, Trophy, Sparkles } from 'lucide-react';
 import SEO from '../components/common/SEO';
+import { SEO_CONFIG } from '../lib/seoConfig';
 import '../styles/MathSelection.css';
 
 // Custom SVG Illustrations for each category
@@ -129,7 +130,12 @@ const MathSelection = () => {
 
     return (
         <div className="math-selection-page">
-            <SEO title="Math - Choose Your Level" description="Select your grade level to start learning mathematics." />
+            <SEO
+                title={SEO_CONFIG.math.title}
+                description={SEO_CONFIG.math.description}
+                keywords={SEO_CONFIG.math.keywords}
+                canonical={SEO_CONFIG.math.canonical}
+            />
 
             {/* Hero Section */}
             <section className="math-hero">

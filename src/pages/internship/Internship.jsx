@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../../components/Navbar';
+import SEO from '../../components/common/SEO';
+import { SEO_CONFIG } from '../../lib/seoConfig';
 import HeroSection from './components/HeroSection';
 import WhySection from './components/WhySection';
 import DomainsSection from './components/DomainsSection';
@@ -20,6 +22,12 @@ const Internship = () => {
 
     return (
         <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-blue-500 selection:text-white">
+            <SEO
+                title={SEO_CONFIG.internship.title}
+                description={SEO_CONFIG.internship.description}
+                keywords={SEO_CONFIG.internship.keywords}
+                canonical={SEO_CONFIG.internship.canonical}
+            />
             <Navbar />
             <HeroSection onRegisterClick={openModal} />
             <WhySection />
