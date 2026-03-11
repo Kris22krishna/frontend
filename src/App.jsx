@@ -32,6 +32,12 @@ import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/
 import SetsSkills from './components/Math-Branches/Sets/Topics/Skills/SetsSkills';
 import SetsConnectomics from './components/Math-Branches/Sets/Topics/Connectomics/SetsConnectomics';
 import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsExamEdge';
+import TheCellDashboard from './components/Biology-Branches/The-Cell/TheCellDashboard';
+import TheCellIntro from './components/Biology-Branches/The-Cell/Topics/Introduction/TheCellIntro';
+import TheCellTerminology from './components/Biology-Branches/The-Cell/Topics/Terminology/TheCellTerminology';
+import TheCellSkills from './components/Biology-Branches/The-Cell/Topics/Skills/TheCellSkills';
+import TheCellConnectomics from './components/Biology-Branches/The-Cell/Topics/Connectomics/TheCellConnectomics';
+import TheCellExamEdge from './components/Biology-Branches/The-Cell/Topics/ExamEdge/TheCellExamEdge';
 import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
 import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
 import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
@@ -1742,6 +1748,12 @@ function App() {
         {/* Class 11 Biology */}
         <Route path="/senior/grade/11/biology" element={<BiologyChapters />} />
         <Route path="/senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
+        <Route path="/senior/grade/11/biology/the-cell" element={<TheCellDashboard />} />
+        <Route path="/senior/grade/11/biology/the-cell/introduction" element={<TheCellIntro />} />
+        <Route path="/senior/grade/11/biology/the-cell/terminology" element={<TheCellTerminology />} />
+        <Route path="/senior/grade/11/biology/the-cell/skills" element={<TheCellSkills />} />
+        <Route path="/senior/grade/11/biology/the-cell/connectomics" element={<TheCellConnectomics />} />
+        <Route path="/senior/grade/11/biology/the-cell/exam-edge" element={<TheCellExamEdge />} />
 
         {/* Class 11 Maths */}
         <Route path="/senior/grade/11/maths" element={<MathsChapters />} />
