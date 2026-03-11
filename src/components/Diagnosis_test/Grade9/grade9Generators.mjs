@@ -1,14 +1,4 @@
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-};
-
-import { formatLinearExpression } from '../mathUtils.mjs';
+import { getRandomInt, shuffleArray, formatLinearExpression } from '../mathUtils.mjs';
 
 // --- Number System ---
 
@@ -308,28 +298,31 @@ export const generateCoordinateBasics = () => {
     const y = getRandomInt(-5, 5);
     if (x === 0 || y === 0) return generateCoordinateBasics();
 
-    const questionText = `In which quadrant does the point $(${x}, ${y})$ lie? (I/II/III/IV)`;
-    let answer;
-    if (x > 0 && y > 0) answer = "Quadrant I";
-    else if (x < 0 && y > 0) answer = "Quadrant II";
-    else if (x < 0 && y < 0) answer = "Quadrant III";
-    else answer = "Quadrant IV";
+    const points = [
+        { x: getRandomInt(1, 10), y: getRandomInt(1, 10), q: "Quadrant I" },
+        { x: getRandomInt(-10, -1), y: getRandomInt(1, 10), q: "Quadrant II" },
+        { x: getRandomInt(-10, -1), y: getRandomInt(-10, -1), q: "Quadrant III" },
+        { x: getRandomInt(1, 10), y: getRandomInt(-10, -1), q: "Quadrant IV" }
+    ];
 
-    // For table input we might want a dropdown, but for now simple text match or rewrite
-    // To match user's request for identical UI, we'll use Select if possible or just text
-    // Assuming simple text row for consistency
-    const rows = [{
-        text: questionText,
-        inputType: 'select',
-        options: ['Quadrant I', 'Quadrant II', 'Quadrant III', 'Quadrant IV'],
-        answer: answer
-    }];
-    const answerObj = { 0: answer };
+    const shuffled = shuffleArray(points);
+    const rows = [];
+    const answerObj = {};
+
+    shuffled.forEach((p, i) => {
+        rows.push({
+            text: `Point $(${p.x}, ${p.y})$`,
+            inputType: 'select',
+            options: ['Quadrant I', 'Quadrant II', 'Quadrant III', 'Quadrant IV']
+        });
+        answerObj[i] = { "0": p.q };
+    });
 
     return {
         type: "tableInput",
-        question: "Select the correct option:",
+        question: "Select the quadrant in which the following points are present:",
         topic: "Coordinate Geometry / Basics",
+        inputKeys: ["0"],
         answer: JSON.stringify(answerObj),
         rows: rows
     };

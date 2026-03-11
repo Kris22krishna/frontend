@@ -1,15 +1,6 @@
-// Grade 7 with LaTeX - Moderate complexity
-// Focus: Fractions, exponents, simple algebra, percentages
+import { getRandomInt, shuffleArray } from '../mathUtils.mjs';
 
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-};
+// --- Integers ---
 
 // --- Integers ---
 
@@ -297,11 +288,12 @@ export const generateBODMAS = () => {
     rows.push({ text: `Evaluate: $${a4} \\div ${b4} + ${c4}$`, answer: String(ans4) });
 
     const answerObj = {};
-    rows.forEach((r, i) => answerObj[i] = r.answer);
+    rows.forEach((r, i) => answerObj[i] = { "0": r.answer });
 
     return {
         type: "tableInput",
         topic: "BODMAS",
+        inputKeys: ["0"],
         answer: JSON.stringify(answerObj),
         rows: rows
     };
@@ -409,40 +401,37 @@ export const generateCommercialMath = () => {
     const cp1 = (getRandomInt(10, 50) * 10); // 100 to 500
     const profit1 = (getRandomInt(1, 5) * 10); // 10, 20... 50
     const sp1 = cp1 + profit1;
-    rows.push({ text: `Cost Price = ₹${cp1}, Selling Price = ₹${sp1}. Find Profit.` });
-    answerObj[index++] = String(profit1);
+    rows.push({ text: `Cost Price = ₹${cp1}, Selling Price = ₹${sp1}. Find Profit.`, answer: String(profit1) });
 
     // Case 2: Loss
     const cp2 = (getRandomInt(20, 80) * 10);
     const loss2 = (getRandomInt(2, 5) * 10);
     const sp2 = cp2 - loss2;
-    rows.push({ text: `Cost Price = ₹${cp2}, Selling Price = ₹${sp2}. Find Loss.` });
-    answerObj[index++] = String(loss2);
+    rows.push({ text: `Cost Price = ₹${cp2}, Selling Price = ₹${sp2}. Find Loss.`, answer: String(loss2) });
 
     // 2. Simple Interest: Given P, R, T, find SI
-    // Case 3: Simple values
-    const P3 = getRandomInt(5, 20) * 100; // 500 to 2000
-    const R3 = getRandomInt(2, 5); // 2% to 5%
-    const T3 = getRandomInt(1, 3); // 1 to 3 years
+    const P3 = getRandomInt(5, 20) * 100;
+    const R3 = getRandomInt(2, 5);
+    const T3 = getRandomInt(1, 3);
     const SI3 = (P3 * R3 * T3) / 100;
-    rows.push({ text: `Principal = ₹${P3}, Rate = ${R3}%, Time = ${T3} yrs. Find S.I.` });
-    answerObj[index++] = String(SI3);
+    rows.push({ text: `Principal = ₹${P3}, Rate = ${R3}%, Time = ${T3} yrs. Find S.I.`, answer: String(SI3) });
 
-    // Case 4: Total Amount
     const P4 = getRandomInt(10, 30) * 100;
     const R4 = getRandomInt(3, 6);
     const T4 = getRandomInt(2, 4);
     const SI4 = (P4 * R4 * T4) / 100;
     const Amt4 = P4 + SI4;
-    // rows.push({ text: `Principal = ₹${P4}, Rate = ${R4}%, Time = ${T4} yrs. Find Amount.` });
     rows.push({
-        text: `Ravi invested ₹${P4} at ${R4}% per annum for ${T4} years on simple interest. Find the amount he will receive at the end of ${T4} years.`
+        text: `Ravi invested ₹${P4} at ${R4}% per annum for ${T4} years on simple interest. Find the amount he will receive at the end of ${T4} years.`,
+        answer: String(Amt4)
     });
-    answerObj[index++] = String(Amt4);
+
+    rows.forEach((r, i) => answerObj[i] = { "0": r.answer });
 
     return {
         type: "tableInput",
-        variant: "default", // Changed from double-input to single
+        variant: "default",
+        inputKeys: ["0"],
         question: "Calculate the missing values:",
         topic: "Commercial Math",
         answer: JSON.stringify(answerObj),
@@ -605,7 +594,7 @@ export const generatePercentage = () => {
         }
 
         subQuestions.push({ text: questionText });
-        answer[String(i)] = correctVal;
+        answer[String(i)] = { "0": correctVal };
     }
 
     return {
@@ -613,6 +602,7 @@ export const generatePercentage = () => {
         question: "Solve the following problems:",
         rows: subQuestions,
         headers: ["Problem", "Answer"], // Question col, Answer col
+        inputKeys: ["0"],
         answer: JSON.stringify(answer),
         topic: "Commercial Math / Percentage",
         variant: "default" // Standard table input
@@ -751,12 +741,13 @@ export const generateGrade7Algebra = () => {
     for (let i = 0; i < 2; i++) {
         const item = genTerm(termTypes[i]);
         rows.push({ text: item.q });
-        answerObj[i + 1] = item.a;
+        answerObj[i + 1] = { "0": item.a };
     }
 
     return {
         type: "tableInput",
         variant: "default",
+        inputKeys: ["0"],
         question: "Solve the following algebra problems:",
         topic: "Algebra",
         headers: ["Problem", "Answer"],
@@ -789,12 +780,13 @@ export const generateAlgebraWordProblemTable = () => {
             a = String(age * k);
         }
         rows.push({ text: q });
-        answerObj[i] = a;
+        answerObj[i] = { "0": a };
     });
 
     return {
         type: "tableInput",
         variant: "default",
+        inputKeys: ["0"],
         question: "Solve the following word problems:",
         topic: "Algebra / Word Problems",
         headers: ["Problem", "Answer"],
@@ -846,10 +838,25 @@ export const generateLinesAndAngles = () => {
         }
     }
 
+    const lineSvg = `
+        <svg width="200" height="150" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+            <line x1="20" y1="40" x2="180" y2="40" stroke="black" stroke-width="2" />
+            <line x1="20" y1="110" x2="180" y2="110" stroke="black" stroke-width="2" />
+            <line x1="150" y1="10" x2="50" y2="140" stroke="crimson" stroke-width="2" />
+            <text x="125" y="35" font-size="12">1</text>
+            <text x="145" y="35" font-size="12">2</text>
+            <text x="120" y="60" font-size="12">3</text>
+            <text x="140" y="60" font-size="12">4</text>
+            <text x="75" y="105" font-size="12">5</text>
+            <text x="95" y="105" font-size="12">6</text>
+            <text x="70" y="130" font-size="12">7</text>
+            <text x="90" y="130" font-size="12">8</text>
+        </svg>`;
+
     return {
         type: "mcq",
         question: question,
-        image: "/lines_angles_q15.png", // Path to public image
+        image: lineSvg,
         topic: "Lines and Angles",
         options: uniqueOptions,
         answer: answer
@@ -904,10 +911,27 @@ export const generateTrianglesProperties = () => {
         }
     }
 
+    const isoSvg = `
+        <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,10 20,90 80,90" fill="none" stroke="crimson" stroke-width="2" />
+            <line x1="30" y1="50" x2="40" y2="50" stroke="black" />
+            <line x1="60" y1="50" x2="70" y2="50" stroke="black" />
+            <text x="50" y="35" font-size="12" text-anchor="middle">v</text>
+            <text x="35" y="85" font-size="12">x</text>
+        </svg>`;
+
+    const rightSvg = `
+        <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="20,10 20,90 90,90" fill="none" stroke="crimson" stroke-width="2" />
+            <rect x="20" y="80" width="10" height="10" fill="none" stroke="black" stroke-width="1" />
+            <text x="25" y="30" font-size="12">y</text>
+            <text x="70" y="85" font-size="12">x</text>
+        </svg>`;
+
     return {
         type: "mcq",
         question: question,
-        image: imagePath,
+        image: typeIdx === 0 ? isoSvg : rightSvg,
         topic: "Triangles and Properties",
         options: uniqueOptions,
         answer: answer
@@ -916,13 +940,58 @@ export const generateTrianglesProperties = () => {
 
 export const generateSolidShapesProperties = () => {
     // 3D Shapes Data
+    // 3D Shapes Data with Inline SVGs
     const shapes = [
-        { name: "Cube", img: "/solid_cube_q17.png", f: 6, v: 8, e: 12 },
-        { name: "Cuboid", img: "/solid_cuboid_q17.png", f: 6, v: 8, e: 12 },
-        { name: "Cylinder", img: "/solid_cylinder_q17.png", f: 3, v: 0, e: 2 },
-        { name: "Cone", img: "/solid_cone_q17.png", f: 2, v: 1, e: 1 },
-        { name: "Triangular Prism", img: "/solid_tri_prism_q17.png", f: 5, v: 6, e: 9 },
-        { name: "Square Pyramid", img: "/solid_sq_pyramid_q17.png", f: 5, v: 5, e: 8 }
+        {
+            name: "Cube",
+            img: `<svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 30 L50 10 L80 30 L80 70 L50 90 L20 70 Z" fill="none" stroke="crimson" stroke-width="2"/>
+                <path d="M20 30 L50 50 L80 30 M50 50 L50 90" fill="none" stroke="crimson" stroke-width="2"/>
+            </svg>`,
+            f: 6, v: 8, e: 12
+        },
+        {
+            name: "Cuboid",
+            img: `<svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="15" y="35" width="50" height="40" fill="none" stroke="crimson" stroke-width="2"/>
+                <path d="M15 35 L35 15 L85 15 L85 55 L65 75 M35 15 L65 15" fill="none" stroke="crimson" stroke-width="2"/>
+                <path d="M65 35 L85 15" fill="none" stroke="crimson" stroke-width="2"/>
+            </svg>`,
+            f: 6, v: 8, e: 12
+        },
+        {
+            name: "Cylinder",
+            img: `<svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="50" cy="20" rx="30" ry="10" fill="none" stroke="crimson" stroke-width="2"/>
+                <path d="M20 20 L20 80 A30 10 0 0 0 80 80 L80 20" fill="none" stroke="crimson" stroke-width="2"/>
+                <ellipse cx="50" cy="80" rx="30" ry="10" fill="none" stroke="crimson" stroke-width="2" stroke-dasharray="4"/>
+            </svg>`,
+            f: 3, v: 0, e: 2
+        },
+        {
+            name: "Cone",
+            img: `<svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 10 L85 80 A35 10 0 0 1 15 80 Z" fill="none" stroke="crimson" stroke-width="2"/>
+                <ellipse cx="50" cy="80" rx="35" ry="10" fill="none" stroke="crimson" stroke-width="2" stroke-dasharray="4"/>
+            </svg>`,
+            f: 2, v: 1, e: 1
+        },
+        {
+            name: "Triangular Prism",
+            img: `<svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="15,80 45,80 30,50" fill="none" stroke="crimson" stroke-width="2"/>
+                <path d="M30 50 L70 20 L85 50 L45 80 M70 20 L85 50" fill="none" stroke="crimson" stroke-width="2"/>
+            </svg>`,
+            f: 5, v: 6, e: 9
+        },
+        {
+            name: "Square Pyramid",
+            img: `<svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 10 L15 80 L55 90 L85 60 Z" fill="none" stroke="crimson" stroke-width="2"/>
+                <path d="M50 10 L55 90" fill="none" stroke="crimson" stroke-width="2"/>
+            </svg>`,
+            f: 5, v: 5, e: 8
+        }
     ];
 
     // Select 3 random shapes for the table
@@ -949,10 +1018,11 @@ export const generateSolidShapesProperties = () => {
         variant: "triple-input", // Custom variant we added
         question: "Observe the shapes and identify the number of Faces, Vertices, and Edges.",
         topic: "Visualizing Solid Shapes",
-        // headers: ["Identify the shape", "Faces", "Vertices", "Edges"], // Removed - headers are hardcoded in component
+        headers: ["Shape", "Faces", "Vertices", "Edges"],
         inputKeys: ["faces", "vertices", "edges"],
+        placeholders: ["Faces", "Vertices", "Edges"],
         answer: JSON.stringify(answerObj),
-        rows: rows
+        rows: rows.map(r => ({ ...r, shape: "" })) // Ensure shape is present for table rendering if needed
     };
 };
 
@@ -998,13 +1068,14 @@ export const generateDataHandling = () => {
     for (let i = 0; i < 3; i++) { // Changed 2 to 3
         const q = getSubQuestion(types[i]); // Pass the specific type
         subQuestions.push({ text: q.text });
-        answerObj[String(i)] = q.answer;
+        answerObj[String(i)] = { "0": q.answer };
     }
 
     return {
         type: "tableInput",
         rows: subQuestions,
         headers: ["Problem", "Answer"],
+        inputKeys: ["0"],
         answer: JSON.stringify(answerObj),
         topic: "Data Handling",
         variant: "default"
@@ -1112,6 +1183,7 @@ export const generateBarGraph = () => {
     return {
         type: "tableInput",
         variant: "default",
+        inputKeys: ["0"],
         question: isDouble
             ? `Study the table showing marks in Term 1 and Term 2 and answer the questions:<br/><br/>` + dataTable
             : `Study the table showing marks obtained in different subjects and answer the questions:<br/><br/>` + dataTable,

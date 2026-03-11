@@ -16,6 +16,7 @@ const DiagnosisTestRunner = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [startTime, setStartTime] = useState(null);
 
     const loadQuestions = useCallback(async () => {
         setLoading(true);
@@ -88,6 +89,7 @@ const DiagnosisTestRunner = () => {
 
             if (generated.length === 0) throw new Error("No questions were generated");
             setQuestions(generated);
+            setStartTime(Date.now());
             setLoading(false);
         } catch (err) {
             console.error("Initialization error:", err);
@@ -213,15 +215,18 @@ const DiagnosisTestRunner = () => {
 
     const handleSubmit = () => setIsSubmitted(true);
 
-    const calculateScore = () => {
-        let score = 0;
+    const calculateDetailedResults = () => {
+        let correctCount = 0;
+        const questionResults = [];
+
         questions.forEach(q => {
             const userAnswer = answers[q.id];
+            let isCorrect = false;
+            let displayAnswer = q.answer;
 
             if (q.type === 'tableInput') {
                 try {
                     const expected = JSON.parse(q.answer);
-                    // Check if all keys match
                     let allCorrect = true;
                     Object.keys(expected).forEach(rowIdx => {
                         const rowExpected = expected[rowIdx];
@@ -229,20 +234,19 @@ const DiagnosisTestRunner = () => {
                             Object.keys(rowExpected).forEach(key => {
                                 const userVal = String(userAnswer?.[rowIdx]?.[key] || '').trim().toLowerCase();
                                 const expVal = String(rowExpected[key] || '').trim().toLowerCase();
-                                if (userVal !== expVal) {
-                                    allCorrect = false;
-                                }
+                                if (userVal !== expVal) allCorrect = false;
                             });
                         } else {
-                            // Support legacy flat answer structure if ever used
-                            const userVal = String(userAnswer?.[rowIdx] || '').trim().toLowerCase();
+                            const userVal = String(userAnswer?.[rowIdx]?.["0"] || userAnswer?.[rowIdx] || '').trim().toLowerCase();
                             const expVal = String(rowExpected || '').trim().toLowerCase();
-                            if (userVal !== expVal) {
-                                allCorrect = false;
-                            }
+                            if (userVal !== expVal) allCorrect = false;
                         }
                     });
-                    if (allCorrect && userAnswer && Object.keys(userAnswer).length > 0) score++;
+                    if (allCorrect && userAnswer && Object.keys(userAnswer).length > 0) {
+                        isCorrect = true;
+                        correctCount++;
+                    }
+                    displayAnswer = "Table completed correctly";
                 } catch (e) {
                     console.error("Error parsing table answer:", e);
                 }
@@ -251,19 +255,53 @@ const DiagnosisTestRunner = () => {
                     const expected = JSON.parse(q.answer);
                     let allCorrect = true;
                     Object.keys(expected).forEach(nodeId => {
-                        if (String(userAnswer?.[nodeId]) !== String(expected[nodeId])) {
-                            allCorrect = false;
-                        }
+                        if (String(userAnswer?.[nodeId]) !== String(expected[nodeId])) allCorrect = false;
                     });
-                    if (allCorrect && userAnswer) score++;
+                    if (allCorrect && userAnswer) {
+                        isCorrect = true;
+                        correctCount++;
+                    }
+                    displayAnswer = "Factor tree completed correctly";
                 } catch (e) {
                     console.error("Error parsing factor tree answer:", e);
                 }
             } else {
-                if (userAnswer === q.answer) score++;
+                if (userAnswer === q.answer) {
+                    isCorrect = true;
+                    correctCount++;
+                }
             }
+
+            let userDisplay = userAnswer;
+            let correctDisplay = q.answer;
+
+            if (q.type === 'tableInput') {
+                userDisplay = isCorrect ? "Completed Correctly" : "Incorrectly Filled";
+                correctDisplay = "Check Table Properties";
+            } else if (q.type === 'factorTree') {
+                userDisplay = isCorrect ? "Completed Correctly" : "Incorrectly Filled";
+                correctDisplay = "Check Factor Tree Nodes";
+            }
+
+            questionResults.push({
+                question: q.question,
+                userAnswer: userDisplay,
+                correctAnswer: correctDisplay,
+                isCorrect,
+                type: q.type,
+                topic: q.topic,
+                image: q.img || q.image
+            });
         });
-        return score;
+
+        const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+
+        return {
+            score: correctCount,
+            total: questions.length,
+            timeTaken,
+            questionResults
+        };
     };
 
     if (loading) {
@@ -313,16 +351,17 @@ const DiagnosisTestRunner = () => {
     if (!q) return null;
 
     if (isSubmitted) {
+        const results = calculateDetailedResults();
         return (
             <DiagnosisResults
-                score={calculateScore()}
-                total={questions.length}
+                results={results}
                 grade={grade}
                 onRetake={() => {
                     setIsSubmitted(false);
                     setAnswers({});
                     setCurrentIndex(0);
                     setTimeLeft(30 * 60);
+                    setStartTime(Date.now());
                     loadQuestions();
                 }}
             />
@@ -410,68 +449,78 @@ const DiagnosisTestRunner = () => {
                         ) : q.type === 'tableInput' ? (
                             <div className="mt-6 space-y-6">
                                 {q.variant === 'visual' || q.variant === 'fraction' ? (
-                                    <div className="space-y-4">
-                                        {q.rows.map((row, rowIdx) => (
-                                            <div key={rowIdx} className="flex items-center gap-2 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group">
-                                                <div className="flex-1 flex items-center justify-center gap-1 sm:gap-4 flex-wrap">
-                                                    {row.left !== undefined ? (
-                                                        <>
-                                                            {/* Operand 1 */}
-                                                            <div className="min-w-[60px] sm:min-w-[100px] p-3 sm:p-5 bg-sky-100 rounded-xl text-center font-black text-slate-800 text-xl sm:text-2xl shadow-inner border-b-4 border-sky-200">
-                                                                <MathRenderer text={typeof row.left === 'object' ? `$${f(row.left)}$` : String(row.left)} />
-                                                            </div>
-                                                            {/* Operator */}
-                                                            <div className="p-3 sm:p-5 bg-sky-50 rounded-xl text-center font-black text-sky-600 text-xl sm:text-2xl border-b-4 border-sky-100">
-                                                                <MathRenderer text={row.op} />
-                                                            </div>
-                                                            {/* Operand 2 */}
-                                                            <div className="min-w-[60px] sm:min-w-[100px] p-3 sm:p-5 bg-sky-100 rounded-xl text-center font-black text-slate-800 text-xl sm:text-2xl shadow-inner border-b-4 border-sky-200">
-                                                                <MathRenderer text={typeof row.right === 'object' ? `$${f(row.right)}$` : String(row.right)} />
-                                                            </div>
-                                                            {/* Equals */}
-                                                            <div className="p-3 sm:p-5 text-slate-400 font-black text-2xl">
-                                                                =
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <div className="flex-1 p-2">
-                                                            <MathRenderer text={row.text} />
-                                                        </div>
-                                                    )}
-
-                                                    {/* Input Area */}
-                                                    <div className="flex items-center gap-2">
-                                                        {q.variant === 'fraction' ? (
-                                                            <div className="flex flex-col gap-1 w-20 sm:w-24">
-                                                                <input
-                                                                    type="number"
-                                                                    className="w-full p-2 sm:p-3 border-2 border-slate-100 rounded-lg focus:border-indigo-600 focus:outline-none transition-all font-bold text-lg text-center bg-slate-50 group-hover:bg-white"
-                                                                    placeholder="N"
-                                                                    value={answers[q.id]?.[rowIdx]?.num || ''}
-                                                                    onChange={(e) => handleTableInputChange(rowIdx, 'num', e.target.value)}
-                                                                />
-                                                                <div className="h-0.5 bg-slate-400 w-full rounded-full" />
-                                                                <input
-                                                                    type="number"
-                                                                    className="w-full p-2 sm:p-3 border-2 border-slate-100 rounded-lg focus:border-indigo-600 focus:outline-none transition-all font-bold text-lg text-center bg-slate-50 group-hover:bg-white"
-                                                                    placeholder="D"
-                                                                    value={answers[q.id]?.[rowIdx]?.den || ''}
-                                                                    onChange={(e) => handleTableInputChange(rowIdx, 'den', e.target.value)}
-                                                                />
-                                                            </div>
+                                    <div className="space-y-6">
+                                        {q.rows.map((row, rowIdx) => {
+                                            const f = (p) => {
+                                                if (typeof p === 'object' && p !== null && p.n !== undefined) {
+                                                    return `\\frac{${p.n}}{${p.d}}`;
+                                                }
+                                                return p;
+                                            };
+                                            return (
+                                                <div key={rowIdx} className="flex items-center gap-2 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all group animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                                    <div className="flex-1 flex items-center justify-center gap-1 sm:gap-6 flex-wrap">
+                                                        {row.left !== undefined ? (
+                                                            <>
+                                                                {/* Operand 1 */}
+                                                                <div className="min-w-[70px] sm:min-w-[120px] p-4 sm:p-6 bg-sky-50 rounded-2xl text-center font-black text-slate-800 text-2xl sm:text-3xl shadow-sm border border-sky-100 group-hover:bg-sky-100 transition-colors">
+                                                                    <MathRenderer text={typeof row.left === 'object' ? `$${f(row.left)}$` : String(row.left)} />
+                                                                </div>
+                                                                {/* Operator */}
+                                                                <div className="p-3 sm:p-5 text-center font-black text-sky-500 text-2xl sm:text-3xl">
+                                                                    <MathRenderer text={row.op} />
+                                                                </div>
+                                                                {/* Operand 2 */}
+                                                                <div className="min-w-[70px] sm:min-w-[120px] p-4 sm:p-6 bg-sky-50 rounded-2xl text-center font-black text-slate-800 text-2xl sm:text-3xl shadow-sm border border-sky-100 group-hover:bg-sky-100 transition-colors">
+                                                                    <MathRenderer text={typeof row.right === 'object' ? `$${f(row.right)}$` : String(row.right)} />
+                                                                </div>
+                                                                {/* Equals */}
+                                                                <div className="p-3 sm:p-5 text-slate-300 font-black text-3xl">
+                                                                    =
+                                                                </div>
+                                                            </>
                                                         ) : (
-                                                            <input
-                                                                type="number"
-                                                                className="w-32 sm:w-48 p-4 sm:p-5 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-2xl text-center bg-slate-50 group-hover:bg-white group-hover:border-indigo-100"
-                                                                placeholder="?"
-                                                                value={answers[q.id]?.[rowIdx]?.["0"] || ''}
-                                                                onChange={(e) => handleTableInputChange(rowIdx, '0', e.target.value)}
-                                                            />
+                                                            <div className="flex-1 p-2 text-2xl font-bold text-slate-700">
+                                                                <MathRenderer text={row.text} />
+                                                            </div>
                                                         )}
+
+                                                        {/* Input Area */}
+                                                        <div className="flex items-center gap-2">
+                                                            {q.variant === 'fraction' ? (
+                                                                <div className="flex flex-col items-center gap-2 bg-slate-50 p-3 rounded-2xl border-2 border-slate-100 group-hover:border-indigo-100 transition-all">
+                                                                    <input
+                                                                        type="number"
+                                                                        className="w-16 sm:w-20 p-2 sm:p-3 border-2 border-transparent rounded-xl focus:border-indigo-600 focus:bg-white focus:outline-none transition-all font-black text-xl text-center placeholder:text-slate-300"
+                                                                        placeholder="N"
+                                                                        value={answers[q.id]?.[rowIdx]?.num || ''}
+                                                                        onChange={(e) => handleTableInputChange(rowIdx, 'num', e.target.value)}
+                                                                    />
+                                                                    <div className="h-1 bg-slate-300 w-full rounded-full opacity-50" />
+                                                                    <input
+                                                                        type="number"
+                                                                        className="w-16 sm:w-20 p-2 sm:p-3 border-2 border-transparent rounded-xl focus:border-indigo-600 focus:bg-white focus:outline-none transition-all font-black text-xl text-center placeholder:text-slate-300"
+                                                                        placeholder="D"
+                                                                        value={answers[q.id]?.[rowIdx]?.den || ''}
+                                                                        onChange={(e) => handleTableInputChange(rowIdx, 'den', e.target.value)}
+                                                                    />
+                                                                </div>
+                                                            ) : (
+                                                                <div className="relative group/input">
+                                                                    <input
+                                                                        type="number"
+                                                                        className="w-32 sm:w-56 p-5 sm:p-7 border-4 border-slate-100 rounded-2xl focus:border-indigo-600 focus:outline-none transition-all font-black text-3xl text-center bg-white shadow-inner group-hover:shadow-md"
+                                                                        placeholder="?"
+                                                                        value={answers[q.id]?.[rowIdx]?.["0"] || ''}
+                                                                        onChange={(e) => handleTableInputChange(rowIdx, '0', e.target.value)}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 ) : (
                                     <div className="overflow-x-auto pb-6">
@@ -517,15 +566,57 @@ const DiagnosisTestRunner = () => {
                                                                 )}
                                                             </div>
                                                         </td>
-                                                        {q.inputKeys?.map((key, kIdx) => (
+                                                        {(q.inputKeys || ["0"]).map((key, kIdx) => (
                                                             <td key={kIdx} className="p-5 border-b border-slate-50">
-                                                                <input
-                                                                    type="number"
-                                                                    className="w-full p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-xl text-center placeholder:text-slate-200"
-                                                                    placeholder={q.placeholders?.[kIdx] || "0"}
-                                                                    value={answers[q.id]?.[rowIdx]?.[key] || ''}
-                                                                    onChange={(e) => handleTableInputChange(rowIdx, key, e.target.value)}
-                                                                />
+                                                                <div className="flex flex-col gap-1">
+                                                                    {q.placeholders?.[kIdx] && (
+                                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter text-center">
+                                                                            {q.placeholders[kIdx]}
+                                                                        </span>
+                                                                    )}
+                                                                    {row.inputType === 'select' ? (
+                                                                        <select
+                                                                            className="w-full p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-xl text-center bg-white appearance-none cursor-pointer"
+                                                                            value={answers[q.id]?.[rowIdx]?.[key] || ''}
+                                                                            onChange={(e) => handleTableInputChange(rowIdx, key, e.target.value)}
+                                                                        >
+                                                                            <option value="">Select...</option>
+                                                                            {(row.options || q.options || []).map((opt, oIdx) => (
+                                                                                <option key={oIdx} value={typeof opt === 'object' ? opt.value : opt}>
+                                                                                    {typeof opt === 'object' ? opt.label : opt}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                    ) : row.inputType === 'radio' ? (
+                                                                        <div className="flex items-center justify-center gap-4">
+                                                                            {(row.options || q.options || ["True", "False"]).map((opt, oIdx) => {
+                                                                                const optValue = typeof opt === 'object' ? opt.value : opt;
+                                                                                const optLabel = typeof opt === 'object' ? opt.label : opt;
+                                                                                const isSelected = answers[q.id]?.[rowIdx]?.[key] === optValue;
+                                                                                return (
+                                                                                    <button
+                                                                                        key={oIdx}
+                                                                                        onClick={() => handleTableInputChange(rowIdx, key, optValue)}
+                                                                                        className={`px-6 py-3 rounded-xl border-2 font-bold transition-all duration-200 ${isSelected
+                                                                                            ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm'
+                                                                                            : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300'
+                                                                                            }`}
+                                                                                    >
+                                                                                        {optLabel}
+                                                                                    </button>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    ) : (
+                                                                        <input
+                                                                            type="text"
+                                                                            className="w-full p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-xl text-center placeholder:text-slate-200"
+                                                                            placeholder={q.placeholders?.[kIdx] || "0"}
+                                                                            value={answers[q.id]?.[rowIdx]?.[key] || ''}
+                                                                            onChange={(e) => handleTableInputChange(rowIdx, key, e.target.value)}
+                                                                        />
+                                                                    )}
+                                                                </div>
                                                             </td>
                                                         ))}
                                                     </tr>
@@ -629,8 +720,8 @@ const DiagnosisTestRunner = () => {
                         </div>
                     </div>
                 </aside>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

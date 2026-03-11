@@ -1,12 +1,4 @@
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-};
+import { getRandomInt, shuffleArray } from '../mathUtils.mjs';
 
 const formatOption = (val) => {
     return { value: String(val), label: String(val) };
@@ -80,6 +72,7 @@ export const generateNaturalWholeNumbers = () => {
     };
     return {
         type: 'tableInput',
+        variant: 'visual',
         headers: ["Expression", "Result"],
         inputKeys: ["0"],
         placeholders: ["Ans"],
@@ -117,6 +110,7 @@ export const generateIntegers = () => {
     };
     return {
         type: 'tableInput',
+        variant: 'visual',
         headers: ["Expression", "Result"],
         inputKeys: ["0"],
         placeholders: ["Ans"],

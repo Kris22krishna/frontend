@@ -1,15 +1,6 @@
-// Grade 8 with LaTeX - Moderate complexity
-// Focus: Rational numbers, negative exponents, square/cube roots, algebraic identities
+import { getRandomInt, shuffleArray } from '../mathUtils.mjs';
 
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-};
+// --- SVG Helpers ---
 
 // --- SVG Helpers ---
 
@@ -470,7 +461,7 @@ export const generateGraphs = () => {
             inputType: "select",
             options: quadrants
         });
-        answerObj[index] = item.type;
+        answerObj[index] = { "0": item.type };
     });
 
     return {
@@ -622,9 +613,9 @@ export const generateQuadrilateralsGrade8 = () => {
 export const generatePracticalGeometryGrade8 = () => {
     // Check properties
     const rows = [
-        { text: "Do the diagonals of a Square intersect at 90 degrees?", inputType: "select", options: ["Yes", "No"] },
-        { text: "Are the diagonals of a Rectangle always equal?", inputType: "select", options: ["Yes", "No"] },
-        { text: "Can a Rhombus have unequal diagonals?", inputType: "select", options: ["Yes", "No"] }
+        { text: "Do the diagonals of a Square intersect at 90 degrees?", inputType: "radio", options: ["Yes", "No"] },
+        { text: "Are the diagonals of a Rectangle always equal?", inputType: "radio", options: ["Yes", "No"] },
+        { text: "Can a Rhombus have unequal diagonals?", inputType: "radio", options: ["Yes", "No"] }
     ];
     const answerObj = {
         0: "Yes",
