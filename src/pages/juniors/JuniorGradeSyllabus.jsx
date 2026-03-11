@@ -218,6 +218,8 @@ const JuniorGradeSyllabus = () => {
                                             navigate('/junior/grade/4/data-handling');
                                         } else if (topic.name === 'Shapes Around Us') {
                                             navigate('/junior/grade/4/shapes-around-us');
+                                        } else if (topic.name === 'Patterns Around Us') {
+                                            navigate('/junior/grade/4/patterns-around-us');
                                         } else if (topic.name === 'Hide and Seek') {
                                             navigate('/junior/grade/4/hide-and-seek');
                                         } else {
