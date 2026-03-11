@@ -469,7 +469,7 @@ const Grade2Footprints = () => {
             }
         }));
 
-        if (!isTest) {
+        if (!isTest && !isRight) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -708,10 +708,7 @@ const Grade2Footprints = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => {
-                    setShowExplanationModal(false);
-                    handleNext();
-                }}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );

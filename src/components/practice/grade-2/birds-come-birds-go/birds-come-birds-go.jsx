@@ -256,7 +256,7 @@ const Grade2BirdsComeBirdsGo = () => {
         const isCorrect = selectedOption === sessionQuestions[qIndex].correct;
         if (isCorrect) setScore(s => s + 1);
         setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect, type: sessionQuestions[qIndex].type, visualData: sessionQuestions[qIndex].visualData, questionText: sessionQuestions[qIndex].text, correctAnswer: sessionQuestions[qIndex].correct, explanation: sessionQuestions[qIndex].explanation } }));
-        if (!isTest) setShowExplanationModal(true);
+        if (!isTest && !isCorrect) setShowExplanationModal(true);
         else { setIsAutoAdvancing(true); setTimeout(() => { handleNext(); setIsAutoAdvancing(false); }, 800); }
     };
 

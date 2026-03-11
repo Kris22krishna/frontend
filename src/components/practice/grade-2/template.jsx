@@ -210,7 +210,7 @@ const Grade2Template = () => {
             }
         }));
 
-        if (!isTest) {
+        if (!isTest && !isRight) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -550,10 +550,7 @@ const Grade2Template = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => {
-                    setShowExplanationModal(false);
-                    handleNext();
-                }}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );

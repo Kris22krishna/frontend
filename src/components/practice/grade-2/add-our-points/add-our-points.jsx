@@ -285,7 +285,7 @@ const Grade2AddOurPoints = () => {
             }
         }));
 
-        if (!isTest) {
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -501,10 +501,7 @@ const Grade2AddOurPoints = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => {
-                    setShowExplanationModal(false);
-                    handleNext();
-                }}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );

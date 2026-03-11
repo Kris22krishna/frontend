@@ -371,7 +371,7 @@ const Grade2HowMuchCanYouCarry = () => {
             }
         }));
 
-        if (!isTest) {
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -691,10 +691,7 @@ const Grade2HowMuchCanYouCarry = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => {
-                    setShowExplanationModal(false);
-                    handleNext();
-                }}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );

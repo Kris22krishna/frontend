@@ -367,7 +367,7 @@ const Grade2WhatIsLong = () => {
             }
         }));
 
-        if (!isTest) {
+        if (!isTest && !isRight) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
@@ -684,10 +684,7 @@ const Grade2WhatIsLong = () => {
                 correctAnswer={currentQ.correct}
                 explanation={currentQ.explanation}
                 onClose={() => setShowExplanationModal(false)}
-                onNext={() => {
-                    setShowExplanationModal(false);
-                    handleNext();
-                }}
+                onNext={() => setShowExplanationModal(false)}
             />
         </div>
     );
