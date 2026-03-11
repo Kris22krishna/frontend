@@ -45,6 +45,15 @@ import LawsOfMotionTerminology from './components/Physics-Branches/Laws-Of-Motio
 import LawsOfMotionSkills from './components/Physics-Branches/Laws-Of-Motion/Topics/Skills/LawsOfMotionSkills';
 import LawsOfMotionConnectomics from './components/Physics-Branches/Laws-Of-Motion/Topics/Connectomics/LawsOfMotionConnectomics';
 import LawsOfMotionExamEdge from './components/Physics-Branches/Laws-Of-Motion/Topics/ExamEdge/LawsOfMotionExamEdge';
+
+import ChemistryChapters from './components/practice/class-11/chemistry/ChemistryChapters';
+import StructureOfAtomDashboard from './components/Chemistry-Branches/Structure-of-Atom/StructureOfAtomDashboard';
+import StructureOfAtomIntro from './components/Chemistry-Branches/Structure-of-Atom/Topics/Introduction/StructureOfAtomIntro';
+import StructureOfAtomTerminology from './components/Chemistry-Branches/Structure-of-Atom/Topics/Terminology/StructureOfAtomTerminology';
+import StructureOfAtomSkills from './components/Chemistry-Branches/Structure-of-Atom/Topics/Skills/StructureOfAtomSkills';
+import StructureOfAtomConnectomics from './components/Chemistry-Branches/Structure-of-Atom/Topics/Connectomics/StructureOfAtomConnectomics';
+import StructureOfAtomExamEdge from './components/Chemistry-Branches/Structure-of-Atom/Topics/ExamEdge/StructureOfAtomExamEdge';
+
 import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
 import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
 import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
@@ -1780,6 +1789,16 @@ function App() {
         <Route path="/senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
         <Route path="/senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
         <Route path="/senior/grade/11/maths" element={<ComingSoon />} />
+
+        {/* Class 11 Chemistry */}
+        <Route path="/senior/grade/11/chemistry" element={<ChemistryChapters />} />
+        <Route path="/senior/grade/11/chemistry/structure-of-atom" element={<StructureOfAtomDashboard />} />
+        <Route path="/senior/grade/11/chemistry/structure-of-atom/introduction" element={<StructureOfAtomIntro />} />
+        <Route path="/senior/grade/11/chemistry/structure-of-atom/terminology" element={<StructureOfAtomTerminology />} />
+        <Route path="/senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
+        <Route path="/senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
+        <Route path="/senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
+
 
         {/* Class 10: Real Numbers Routes */}
         <Route path="/high/practice/1111" element={<RealNumberFoundations />} />

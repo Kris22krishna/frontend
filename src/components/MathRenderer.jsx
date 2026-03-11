@@ -37,7 +37,20 @@ const MathRenderer = ({ text, inline = true }) => {
                     const content = part.slice(1, -1);
                     return <InlineMath key={index} math={content} />;
                 } else {
-                    return <span key={index}>{part}</span>;
+                    // Handle basic Markdown bold (**) within text parts
+                    const boldRegex = /(\*\*[\s\S]*?\*\*)/g;
+                    const textParts = part.split(boldRegex);
+                    
+                    return (
+                        <span key={index}>
+                            {textParts.map((tPart, tIndex) => {
+                                if (tPart.startsWith('**') && tPart.endsWith('**') && tPart.length >= 4) {
+                                    return <strong key={tIndex}>{tPart.slice(2, -2)}</strong>;
+                                }
+                                return tPart;
+                            })}
+                        </span>
+                    );
                 }
             })}
         </span>
