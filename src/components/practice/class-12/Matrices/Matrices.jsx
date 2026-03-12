@@ -46,19 +46,15 @@ const MODULES = [
         label: "Exam Edge",
         emoji: "🏆",
         tagline: "Test Ready",
-        desc: "Challenge yourself with exam-style questions and advanced matrices problems.",
-        color: "#dc2626",
     },
 ];
 
 const STATS = [
-    { val: "6", label: "Big Questions", icon: "❓" },
-    { val: "9", label: "Key Terms", icon: "📝" },
-    { val: "6", label: "Rules", icon: "📐" },
-    { val: "6", label: "Skills", icon: "🎯" },
-    { val: "120", label: "Practice Qs", icon: "✏️" },
+    { label: 'Core Topics', num: '5', color: '#6366f1' },
+    { label: 'Practice Problems', num: '6', color: '#0d9488' },
+    { label: 'Chapter Links', num: '7', color: '#7c3aed' },
+    { label: 'Mastery', num: '0%', color: '#f59e0b' }
 ];
-
 export default function Matrices() {
     const navigate = useNavigate();
 
@@ -100,15 +96,12 @@ export default function Matrices() {
                         learn Matrices the way they were meant to be taught.
                     </p>
 
-                    {/* Stats row */}
+                    {/* Stats */ }
                     <div className="mat-stats-row">
                         {STATS.map((s, i) => (
                             <div className="mat-stat-chip" key={i}>
-                                <span className="mat-stat-chip-icon">{s.icon}</span>
-                                <div className="mat-stat-chip-text">
-                                    <span className="mat-stat-chip-val">{s.val}</span>
-                                    <span className="mat-stat-chip-lbl">{s.label}</span>
-                                </div>
+                                <span className="mat-stat-chip-val">{s.num}</span>
+                                <span className="mat-stat-chip-lbl">{s.label}</span>
                             </div>
                         ))}
                     </div>
@@ -118,16 +111,7 @@ export default function Matrices() {
             {/* ── RIGHT PANEL ────────────────────────────── */}
             <div className="mat-right">
                 <div className="mat-right-inner">
-                    <div className="mat-right-header">
-                        <span className="mat-right-badge">LEARNING PATH</span>
-                        <h2 className="mat-right-title">
-                            Your roadmap to mastery
-                        </h2>
-                        <p className="mat-right-desc">
-                            Follow each step in order — build intuition, lock the
-                            terminology, sharpen skills, then ace the exam.
-                        </p>
-                    </div>
+                    <div className="mat-right-eyebrow">CHOOSE YOUR PATH</div>
 
                     <div className="mat-cards-col">
                         {MODULES.map((mod) => (

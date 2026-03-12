@@ -1,4 +1,4 @@
-﻿/* =====================================================
+/* =====================================================
    MATRICES MODULE Ã¢â‚¬â€œ Full-viewport split-screen design
    ===================================================== */
 
@@ -36,21 +36,18 @@
 
 /* Ã¢â€â‚¬Ã¢â€â‚¬ LEFT PANEL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
 .mat-left {
-  position: sticky;
-  top: 64px;
-  height: calc(100vh - 64px);
-  flex: 0 0 42%;
+  position: relative;
+  flex: 0 0 46%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 48px 48px 48px 56px;
   overflow: hidden;
-  background:
-    linear-gradient(145deg,
-      #0c4a6e 0%,
-      #0369a1 25%,
-      #0891b2 50%,
-      #6d28d9 75%,
+  background: linear-gradient(145deg,
+      #1e1b4b 0%,
+      #312e81 25%,
+      #4338ca 50%,
+      #581c87 75%,
       #4c1d95 100%);
 }
 
@@ -62,41 +59,19 @@
 }
 
 .mat-deco-a {
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
-  top: -100px;
-  left: -100px;
-  animation: mat-pulse 8s ease-in-out infinite;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+  top: -80px;
+  left: -80px;
 }
 
 .mat-deco-b {
-  width: 320px;
-  height: 320px;
+  width: 280px;
+  height: 280px;
   background: radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, transparent 70%);
-  bottom: -80px;
-  right: -60px;
-  animation: mat-pulse 10s ease-in-out infinite reverse;
-}
-
-.mat-deco-c {
-  width: 180px;
-  height: 180px;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
-  top: 45%;
-  left: 58%;
-  transform: translate(-50%, -50%);
-  animation: mat-pulse 12s ease-in-out infinite;
-}
-
-.mat-deco-grid {
-  position: absolute;
-  inset: 0;
-  border-radius: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+  bottom: -60px;
+  right: -40px;
 }
 
 @keyframes mat-pulse {
@@ -108,30 +83,28 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 440px;
 }
 
 /* Back link */
+/* Back link - to match Sets inline styles if necessary, default back link logic */
 .mat-back-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.85);
-  padding: 8px 16px;
+  color: #fff;
+  padding: 10px 20px;
   border-radius: 100px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   transition: all 0.25s ease;
 }
 
 .mat-back-link:hover {
-  background: rgba(255, 255, 255, 0.22);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
   transform: translateX(-3px);
 }
 
@@ -147,7 +120,7 @@
 }
 
 .mat-title-accent {
-  background: linear-gradient(90deg, #67e8f9 0%, #a5f3fc 40%, #fef9c3 80%, #fde68a 100%);
+  background: linear-gradient(90deg, #818cf8 0%, #a5f3fc 40%, #fef9c3 80%, #fde68a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -155,7 +128,7 @@
 
 .mat-main-sub {
   font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.78);
   line-height: 1.75;
   max-width: 400px;
   margin: 0 0 36px;
@@ -166,52 +139,47 @@
 .mat-stats-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .mat-stat-chip {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 14px;
-  padding: 10px 14px;
-  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 16px 24px;
+  min-width: 100px;
+  height: 90px;
+  transition: transform 0.2s ease, background 0.2s ease;
   cursor: default;
 }
 
 .mat-stat-chip:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-.mat-stat-chip-icon {
-  font-size: 18px;
-  line-height: 1;
-}
-
-.mat-stat-chip-text {
-  display: flex;
-  flex-direction: column;
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px);
 }
 
 .mat-stat-chip-val {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 800;
+  font-size: 2.2rem;
+  font-weight: 900;
   line-height: 1;
   color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .mat-stat-chip-lbl {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.6px;
-  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 5px;
   text-transform: uppercase;
-  margin-top: 2px;
+  text-align: center;
 }
 
 /* Ã¢â€â‚¬Ã¢â€â‚¬ RIGHT PANEL Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
@@ -234,40 +202,14 @@
   max-width: 620px;
 }
 
-/* Right header */
-.mat-right-header {
-  margin-bottom: 32px;
-}
-
-.mat-right-badge {
-  display: inline-block;
-  font-size: 10px;
+/* Right eyebrow */
+.mat-right-eyebrow {
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: #fff;
-  background: linear-gradient(135deg, #0891b2, #7c3aed);
-  padding: 5px 14px;
-  border-radius: 100px;
-  margin-bottom: 16px;
-}
-
-.mat-right-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.65rem, 2.4vw, 2.2rem);
-  font-weight: 800;
-  line-height: 1.1;
-  color: #0f172a;
-  margin: 0 0 10px;
-  letter-spacing: -0.03em;
-}
-
-.mat-right-desc {
-  margin: 0;
-  color: #64748b;
-  font-size: 14.5px;
-  line-height: 1.65;
-  max-width: 520px;
+  color: var(--mat-indigo);
+  margin: 0 0 20px 4px;
 }
 
 /* ── CARDS COLUMN (Sets Style) ── */
