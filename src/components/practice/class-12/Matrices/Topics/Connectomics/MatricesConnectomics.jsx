@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertTriangle, ArrowLeft, ArrowRight, Share2 } from "lucide-react";
+import { AlertTriangle, ArrowRight, Share2 } from "lucide-react";
 import { matricesConnectomicsData as data } from "./MatricesConnectomicsData";
 import "../../MatricesPages.css";
 import MathRenderer from "../../../../../MathRenderer";
@@ -10,14 +10,97 @@ export default function MatricesConnectomics() {
 
   return (
     <div className="mat-page">
-      <nav className="mat-intro-nav">
+      <nav className="mat-nav">
         <button
-          className="mat-intro-nav-back"
+          className="mat-nav-back"
           onClick={() => navigate("/senior/grade/12/matrices")}
         >
-          <ArrowLeft size={16} />
-          <span>Back to Matrices</span>
+          ← Back to Matrices
         </button>
+
+        <div className="sets-nav-links" style={{ display: "flex", gap: "8px" }}>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/introduction")}
+          >
+            🌟 Introduction
+          </button>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/terminology")}
+          >
+            📖 Terminology
+          </button>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/skills")}
+          >
+            🎯 Skills
+          </button>
+          <button
+            className="sets-nav-link active"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "linear-gradient(135deg, #1e1b4b, #312e81)",
+              color: "#fff",
+              border: "none",
+              boxShadow: "0 4px 14px rgba(30, 27, 75, 0.3)",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
+          >
+            🌐 Connectomics
+          </button>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
+          >
+            ⚔️ Exam Edge
+          </button>
+        </div>
       </nav>
 
       <div className="mat-intro-hero">

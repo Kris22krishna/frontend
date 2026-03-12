@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
-  ArrowLeft,
   BadgeCheck,
   Brain,
   Lightbulb,
+  RefreshCw,
   Rocket,
   Target,
   Trophy,
 } from "lucide-react";
 import { matricesExamEdgeData as data } from "./MatricesExamEdgeData";
 import InteractiveExamQuestionCard from "../../../shared/InteractiveExamQuestionCard";
+import { pickQuestionDeskItems } from "../../../shared/examDeskUtils";
 import "../../MatricesPages.css";
 import MathRenderer from "../../../../../MathRenderer";
 
@@ -24,23 +25,116 @@ const EXAM_TABS = [
 export default function MatricesExamEdge() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("kcet");
+  const [questionSeed, setQuestionSeed] = useState(1);
 
   const currentTab = EXAM_TABS.find((tab) => tab.id === activeTab);
   const questionSet = data.questions[activeTab] || [];
+  const questionDeskItems = pickQuestionDeskItems(
+    questionSet,
+    activeTab === "jeeAdvanced" ? 2 : 3,
+    questionSeed + activeTab.length
+  );
   const currentStrategy = data.strategy.find((item) =>
     activeTab === "kcet" ? item.exam.includes("KCET") : item.exam.includes("JEE")
   );
 
+  useEffect(() => {
+    setQuestionSeed((seed) => seed + 1);
+  }, [activeTab]);
+
   return (
     <div className="mat-page">
-      <nav className="mat-intro-nav">
+      <nav className="mat-nav">
         <button
-          className="mat-intro-nav-back"
+          className="mat-nav-back"
           onClick={() => navigate("/senior/grade/12/matrices")}
         >
-          <ArrowLeft size={16} />
-          <span>Back to Matrices</span>
+          ← Back to Matrices
         </button>
+
+        <div className="sets-nav-links" style={{ display: "flex", gap: "8px" }}>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/introduction")}
+          >
+            🌟 Introduction
+          </button>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/terminology")}
+          >
+            📖 Terminology
+          </button>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/skills")}
+          >
+            🎯 Skills
+          </button>
+          <button
+            className="sets-nav-link"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "#f8fafc",
+              color: "#64748b",
+              border: "1.5px solid #e2e8f0",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
+          >
+            🌐 Connectomics
+          </button>
+          <button
+            className="sets-nav-link active"
+            style={{
+              padding: "8px 18px",
+              borderRadius: "100px",
+              fontSize: "14px",
+              fontWeight: 700,
+              cursor: "pointer",
+              background: "linear-gradient(135deg, #1e1b4b, #312e81)",
+              color: "#fff",
+              border: "none",
+              boxShadow: "0 4px 14px rgba(30, 27, 75, 0.3)",
+            }}
+            onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
+          >
+            ⚔️ Exam Edge
+          </button>
+        </div>
       </nav>
 
       <div className="mat-intro-hero">
@@ -239,22 +333,57 @@ export default function MatricesExamEdge() {
           </div>
         </div>
 
-        <h2
+        <div
           style={{
-            fontFamily: "Outfit, sans-serif",
-            fontSize: 28,
-            fontWeight: 900,
-            marginBottom: 24,
-            textAlign: "center",
-            color: "#1e1b4b",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+            marginBottom: 18,
           }}
         >
-          Question Desk
-        </h2>
+          <h2
+            style={{
+              fontFamily: "Outfit, sans-serif",
+              fontSize: 28,
+              fontWeight: 900,
+              margin: 0,
+              color: "#1e1b4b",
+            }}
+          >
+            Question Desk
+          </h2>
+
+          <button
+            type="button"
+            onClick={() => setQuestionSeed((seed) => seed + 1)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 16px",
+              borderRadius: 999,
+              border: `1px solid ${currentTab.color}33`,
+              background: `${currentTab.color}10`,
+              color: currentTab.color,
+              fontSize: 14,
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            <RefreshCw size={15} />
+            New Mix
+          </button>
+        </div>
+
+        <p style={{ margin: "0 0 24px", color: "#64748b", fontSize: 14, lineHeight: 1.6 }}>
+          Showing a fresh set of {questionDeskItems.length} exam-style questions for {currentTab.name}.
+        </p>
 
         {activeTab === "jeeAdvanced" ? (
           <div style={{ display: "grid", gap: 20, marginBottom: 40 }}>
-            {questionSet.map((item, index) => (
+            {questionDeskItems.map(({ item, questionNumber }) => (
               <div
                 key={item.q}
                 style={{
@@ -274,7 +403,7 @@ export default function MatricesExamEdge() {
                     marginBottom: 12,
                   }}
                 >
-                  Problem {index + 1}
+                  Problem {questionNumber}
                 </div>
                 <div
                   style={{
@@ -312,11 +441,12 @@ export default function MatricesExamEdge() {
               marginBottom: 40,
             }}
           >
-            {questionSet.map((item, index) => (
+            {questionDeskItems.map(({ item, questionNumber }, index) => (
               <InteractiveExamQuestionCard
                 key={`${item.q}-${index}`}
                 item={item}
                 index={index}
+                displayIndex={questionNumber}
                 accentColor={currentTab.color}
                 textColor="#1e1b4b"
               />

@@ -11,6 +11,7 @@ const LEVEL_STYLES = {
 export default function InteractiveExamQuestionCard({
   item,
   index,
+  displayIndex = index + 1,
   accentColor,
   textColor = "#1e293b",
 }) {
@@ -58,7 +59,7 @@ export default function InteractiveExamQuestionCard({
           {item.level}
         </span>
         <span style={{ fontSize: 12, fontWeight: 800, color: "#94a3b8" }}>
-          Q{index + 1}
+          Q{displayIndex}
         </span>
       </div>
 
@@ -132,6 +133,8 @@ export default function InteractiveExamQuestionCard({
                 transition: "all 0.2s ease",
                 width: "100%",
                 minHeight: 82,
+                minWidth: 0,
+                overflow: "hidden",
               }}
             >
               <span
@@ -154,8 +157,12 @@ export default function InteractiveExamQuestionCard({
                 style={{
                   display: "block",
                   minWidth: 0,
+                  maxWidth: "100%",
                   lineHeight: 1.55,
                   color,
+                  whiteSpace: "normal",
+                  overflowWrap: "anywhere",
+                  wordBreak: "break-word",
                 }}
               >
                 <MathRenderer text={option} />

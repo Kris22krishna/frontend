@@ -279,7 +279,15 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
             </div>
 
             <div style={{ fontSize: 13, fontWeight: 900, marginBottom: 16, color: `var(--${prefix}-text)`, textTransform: 'uppercase', letterSpacing: 1.2, opacity: 0.8 }}>Question Palette</div>
-            <div className={`${prefix}-palette-grid`} style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+            <div
+                className={`${prefix}-palette-grid`}
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(5, minmax(0, 42px))',
+                    justifyContent: 'space-between',
+                    gap: 8
+                }}
+            >
                 {questionSet.map((_, index) => {
                     const isAnswered = isAnswerComplete(questionSet[index], answers[index]);
                     const isCurrent = current === index;
@@ -289,13 +297,14 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                             onClick={() => setCurrent(index)}
                             className={`${prefix}-palette-cell ${isCurrent ? 'is-current' : ''} ${isAnswered ? 'is-answered' : ''}`}
                             style={{
-                                aspectRatio: '1/1',
-                                borderRadius: 8,
-                                fontSize: 14,
+                                width: '42px',
+                                height: '42px',
+                                borderRadius: 12,
+                                fontSize: 13,
                                 fontWeight: 700,
                                 background: isAnswered ? color : '#f1f5f9',
                                 color: isAnswered ? '#fff' : `var(--${prefix}-muted)`,
-                                border: isCurrent ? `3px solid var(--${prefix}-text)` : 'none',
+                                border: isCurrent ? `2px solid var(--${prefix}-text)` : '1px solid rgba(148, 163, 184, 0.14)',
                                 cursor: 'pointer',
                                 padding: 0,
                                 display: 'flex',
@@ -422,32 +431,32 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                             display: 'flex',
                                             alignItems: 'flex-start',
                                             gap: 12,
-                                            padding: '16px 18px',
+                                            padding: '14px 16px',
                                             borderRadius: 16,
                                             border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
                                             background: isSelected ? `${color}05` : '#fff',
                                             cursor: 'pointer',
-                                            fontSize: 15,
+                                            fontSize: 14,
                                             textAlign: 'left',
                                             transition: 'all 0.2s',
                                             fontWeight: isSelected ? 700 : 500,
                                             color: `var(--${prefix}-text, #1e293b)`,
                                             width: '100%',
-                                            minHeight: 84,
+                                            minHeight: 78,
                                             lineHeight: 1.55
                                         }}
                                     >
                                         <div
                                             style={{
-                                                width: 10,
-                                                height: 10,
+                                                width: 8,
+                                                height: 8,
                                                 borderRadius: '50%',
                                                 background: isSelected ? color : '#f1f5f9',
                                                 flexShrink: 0,
                                                 marginTop: 6
                                             }}
                                         />
-                                        <span style={{ display: 'block', minWidth: 0, lineHeight: 1.55, color: 'inherit' }}>
+                                        <span style={{ display: 'block', minWidth: 0, maxWidth: '100%', lineHeight: 1.55, color: 'inherit' }}>
                                             <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
                                         </span>
                                     </button>

@@ -136,12 +136,15 @@ export default function MatricesIntro5W1H() {
         </div>
       </nav>
 
-      <div className="mat-hero" style={{ background: "linear-gradient(145deg, #1e1b4b 0%, #312e81 100%)", padding: "48px 24px" }}>
-        <div className="mat-hero-inner">
-          <h1 className="mat-hero-title">
-            Discover <span style={{ color: '#818cf8' }}>Matrices</span>
+<div className="det-intro-hero" style={{ padding: "16px 24px 20px" }}>
+        <div className="det-intro-hero-deco det-intro-hero-deco-a" />
+        <div className="det-intro-hero-deco det-intro-hero-deco-b" />
+        <div className="det-intro-hero-inner">
+          <h1 className="det-intro-hero-title">
+            Discover Matrices Through{" "}
+            <span className="det-intro-hero-highlight">6 Big Questions</span>
           </h1>
-          <p className="mat-hero-sub">Get started with the 6 big questions and check your prerequisites.</p>
+          <p className="det-intro-hero-sub">Tap each card to explore ✨</p>
         </div>
       </div>
 

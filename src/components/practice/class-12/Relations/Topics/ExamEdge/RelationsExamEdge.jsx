@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AlertTriangle,
   BadgeCheck,
   Brain,
   Lightbulb,
+  RefreshCw,
   Rocket,
   Target,
   Trophy,
@@ -12,6 +13,7 @@ import "../../Relations.css";
 import MathRenderer from "../../../../../MathRenderer";
 import RelationsTopNav from "../../RelationsTopNav";
 import InteractiveExamQuestionCard from "../../../shared/InteractiveExamQuestionCard";
+import { pickQuestionDeskItems } from "../../../shared/examDeskUtils";
 import { relationsExamEdgeData as data } from "./RelationsExamEdgeData";
 
 const EXAM_TABS = [
@@ -22,12 +24,22 @@ const EXAM_TABS = [
 
 export default function RelationsExamEdge() {
   const [activeTab, setActiveTab] = useState("kcet");
+  const [questionSeed, setQuestionSeed] = useState(1);
 
   const currentTab = EXAM_TABS.find((tab) => tab.id === activeTab);
   const questionSet = data.questions[activeTab] || [];
+  const questionDeskItems = pickQuestionDeskItems(
+    questionSet,
+    activeTab === "jeeAdvanced" ? 2 : 3,
+    questionSeed + activeTab.length
+  );
   const currentStrategy = data.strategy.find((item) =>
     activeTab === "kcet" ? item.exam.includes("KCET") : item.exam.includes("JEE")
   );
+
+  useEffect(() => {
+    setQuestionSeed((seed) => seed + 1);
+  }, [activeTab]);
 
   return (
     <div className="rel-page">
@@ -223,22 +235,57 @@ export default function RelationsExamEdge() {
           </div>
         </div>
 
-        <h2
+        <div
           style={{
-            fontFamily: "Outfit, sans-serif",
-            fontSize: 28,
-            fontWeight: 900,
-            marginBottom: 24,
-            textAlign: "center",
-            color: "var(--rel-text)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+            marginBottom: 18,
           }}
         >
-          Question Desk
-        </h2>
+          <h2
+            style={{
+              fontFamily: "Outfit, sans-serif",
+              fontSize: 28,
+              fontWeight: 900,
+              margin: 0,
+              color: "var(--rel-text)",
+            }}
+          >
+            Question Desk
+          </h2>
+
+          <button
+            type="button"
+            onClick={() => setQuestionSeed((seed) => seed + 1)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "10px 16px",
+              borderRadius: 999,
+              border: `1px solid ${currentTab.color}33`,
+              background: `${currentTab.color}10`,
+              color: currentTab.color,
+              fontSize: 14,
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            <RefreshCw size={15} />
+            New Mix
+          </button>
+        </div>
+
+        <p style={{ margin: "0 0 24px", color: "#64748b", fontSize: 14, lineHeight: 1.6 }}>
+          Showing a fresh set of {questionDeskItems.length} exam-style questions for {currentTab.name}.
+        </p>
 
         {activeTab === "jeeAdvanced" ? (
           <div style={{ display: "grid", gap: 20, marginBottom: 40 }}>
-            {questionSet.map((item, index) => (
+            {questionDeskItems.map(({ item, questionNumber }) => (
               <div
                 key={item.q}
                 style={{
@@ -258,7 +305,7 @@ export default function RelationsExamEdge() {
                     marginBottom: 12,
                   }}
                 >
-                  Problem {index + 1}
+                  Problem {questionNumber}
                 </div>
                 <div
                   style={{
@@ -296,11 +343,12 @@ export default function RelationsExamEdge() {
               marginBottom: 40,
             }}
           >
-            {questionSet.map((item, index) => (
+            {questionDeskItems.map(({ item, questionNumber }, index) => (
               <InteractiveExamQuestionCard
                 key={`${item.q}-${index}`}
                 item={item}
                 index={index}
+                displayIndex={questionNumber}
                 accentColor={currentTab.color}
                 textColor="var(--rel-text)"
               />
