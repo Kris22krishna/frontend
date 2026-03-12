@@ -429,16 +429,7 @@ import DiscriminantAnalysis from './components/practice/class-10/Quadratic Equat
 import RealLifeApplications from './components/practice/class-10/Quadratic Equations/RealLifeApplications';
 import QuadraticEquationsTest from './components/practice/class-10/Quadratic Equations/QuadraticEquationsTest';
 
-// Class 10: Real Numbers
-import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
-import EuclidsDivision from './components/practice/class-10/Real Numbers/EuclidsDivision';
-import PrimeFactorisation from './components/practice/class-10/Real Numbers/PrimeFactorisation';
-import FundamentalTheoremArithmetic from './components/practice/class-10/Real Numbers/FundamentalTheoremArithmetic';
-import HCFandLCM from './components/practice/class-10/Real Numbers/HCFandLCM';
-import HCFLCMApplications from './components/practice/class-10/Real Numbers/HCFLCMApplications';
-import ProvingIrrationality from './components/practice/class-10/Real Numbers/ProvingIrrationality';
-import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
-import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
+
 
 // Class 10: Probability
 import Probability from './components/practice/class-10/Probability/Probability';
@@ -1814,16 +1805,7 @@ function App() {
         <Route path="/high/practice/1240" element={<PolynomialsTest />} />
 
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
-        {/* Class 10: Real Numbers Routes */}
-        <Route path="/high/practice/1111" element={<RealNumberFoundations />} />
-        <Route path="/high/practice/1112" element={<EuclidsDivision />} />
-        <Route path="/high/practice/1113" element={<PrimeFactorisation />} />
-        <Route path="/high/practice/1114" element={<FundamentalTheoremArithmetic />} />
-        <Route path="/high/practice/1115" element={<HCFandLCM />} />
-        <Route path="/high/practice/1116" element={<HCFLCMApplications />} />
-        <Route path="/high/practice/1117" element={<ProvingIrrationality />} />
-        <Route path="/high/practice/1118" element={<IrrationalOperations />} />
-        <Route path="/high/practice/1119" element={<RealNumbersTest />} />
+
 
         {/* Class 12: Matrices � Legacy routes redirect to canonical deep-dive URLs */}
         <Route path="/senior/grade/12/matrices/who-uses" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/who-uses" replace /></ProtectedRoute>} />
