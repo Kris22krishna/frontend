@@ -417,12 +417,13 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                     <button
                                         key={optIndex}
                                         onClick={() => getQuestionType(q) === 'msq' ? handleMsqToggle(optIndex) : handleSelect(optIndex)}
+                                        className={`${prefix}-quiz-option`}
                                         style={{
                                             display: 'flex',
-                                            alignItems: 'center',
+                                            alignItems: 'flex-start',
                                             gap: 12,
-                                            padding: '14px 16px',
-                                            borderRadius: 12,
+                                            padding: '16px 18px',
+                                            borderRadius: 16,
                                             border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
                                             background: isSelected ? `${color}05` : '#fff',
                                             cursor: 'pointer',
@@ -430,7 +431,10 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                             textAlign: 'left',
                                             transition: 'all 0.2s',
                                             fontWeight: isSelected ? 700 : 500,
-                                            color: `var(--${prefix}-text, #1e293b)`
+                                            color: `var(--${prefix}-text, #1e293b)`,
+                                            width: '100%',
+                                            minHeight: 84,
+                                            lineHeight: 1.55
                                         }}
                                     >
                                         <div
@@ -439,10 +443,11 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                                 height: 10,
                                                 borderRadius: '50%',
                                                 background: isSelected ? color : '#f1f5f9',
-                                                flexShrink: 0
+                                                flexShrink: 0,
+                                                marginTop: 6
                                             }}
                                         />
-                                        <span>
+                                        <span style={{ display: 'block', minWidth: 0, lineHeight: 1.55, color: 'inherit' }}>
                                             <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
                                         </span>
                                     </button>

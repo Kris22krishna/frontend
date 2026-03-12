@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
-  ArrowLeft,
   BadgeCheck,
   Brain,
   Lightbulb,
@@ -10,10 +8,11 @@ import {
   Target,
   Trophy,
 } from "lucide-react";
-import { matricesExamEdgeData as data } from "./MatricesExamEdgeData";
-import InteractiveExamQuestionCard from "../../../shared/InteractiveExamQuestionCard";
-import "../../MatricesPages.css";
+import "../../Relations.css";
 import MathRenderer from "../../../../../MathRenderer";
+import RelationsTopNav from "../../RelationsTopNav";
+import InteractiveExamQuestionCard from "../../../shared/InteractiveExamQuestionCard";
+import { relationsExamEdgeData as data } from "./RelationsExamEdgeData";
 
 const EXAM_TABS = [
   { id: "kcet", name: "KCET", color: "#0d9488", icon: BadgeCheck },
@@ -21,8 +20,7 @@ const EXAM_TABS = [
   { id: "jeeAdvanced", name: "JEE Advanced", color: "#ef4444", icon: Brain },
 ];
 
-export default function MatricesExamEdge() {
-  const navigate = useNavigate();
+export default function RelationsExamEdge() {
   const [activeTab, setActiveTab] = useState("kcet");
 
   const currentTab = EXAM_TABS.find((tab) => tab.id === activeTab);
@@ -32,26 +30,18 @@ export default function MatricesExamEdge() {
   );
 
   return (
-    <div className="mat-page">
-      <nav className="mat-intro-nav">
-        <button
-          className="mat-intro-nav-back"
-          onClick={() => navigate("/senior/grade/12/matrices")}
-        >
-          <ArrowLeft size={16} />
-          <span>Back to Matrices</span>
-        </button>
-      </nav>
+    <div className="rel-page">
+      <RelationsTopNav active="exam-edge" backLabel="Back to Relations" />
 
-      <div className="mat-intro-hero">
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-a" />
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-b" />
-        <div className="mat-intro-hero-inner">
-          <h1 className="mat-intro-hero-title">
-            Matrices <span className="mat-intro-hero-highlight">Exam Edge</span>
+      <div className="rel-intro-hero">
+        <div className="rel-intro-hero-deco rel-intro-hero-deco-a" />
+        <div className="rel-intro-hero-deco rel-intro-hero-deco-b" />
+        <div className="rel-intro-hero-inner">
+          <h1 className="rel-intro-hero-title">
+            Relations <span className="rel-intro-hero-highlight">Exam Edge</span>
           </h1>
-          <p className="mat-intro-hero-sub">
-            Strategic insights and high-weightage topics for competitive exams.
+          <p className="rel-intro-hero-sub">
+            High-yield topics, exam-style patterns, and a revision plan built for Relations.
           </p>
         </div>
       </div>
@@ -83,10 +73,10 @@ export default function MatricesExamEdge() {
                   color: isActive ? tab.color : "#64748b",
                   fontWeight: 800,
                   cursor: "pointer",
-                  transition: "all 0.2s ease",
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
+                  transition: "all 0.2s ease",
                 }}
               >
                 <Icon size={18} />
@@ -141,7 +131,7 @@ export default function MatricesExamEdge() {
                       border: "1px solid #e2e8f0",
                       fontSize: 14,
                       fontWeight: 700,
-                      color: "#1e1b4b",
+                      color: "var(--rel-text)",
                     }}
                   >
                     <MathRenderer text={topic} />
@@ -184,19 +174,13 @@ export default function MatricesExamEdge() {
                   lineHeight: 1.6,
                 }}
               >
-                {currentStrategy ? (
-                  <ul style={{ margin: 0, paddingLeft: 20 }}>
-                    {currentStrategy.points.map((point) => (
-                      <li key={point} style={{ marginBottom: 8 }}>
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p style={{ margin: 0 }}>
-                    Combine JEE Main and Advanced strategies for comprehensive preparation.
-                  </p>
-                )}
+                <ul style={{ margin: 0, paddingLeft: 20 }}>
+                  {(currentStrategy?.points || []).map((point) => (
+                    <li key={point} style={{ marginBottom: 8 }}>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
@@ -246,7 +230,7 @@ export default function MatricesExamEdge() {
             fontWeight: 900,
             marginBottom: 24,
             textAlign: "center",
-            color: "#1e1b4b",
+            color: "var(--rel-text)",
           }}
         >
           Question Desk
@@ -280,7 +264,7 @@ export default function MatricesExamEdge() {
                   style={{
                     fontSize: 16,
                     fontWeight: 600,
-                    color: "#1e1b4b",
+                    color: "var(--rel-text)",
                     lineHeight: 1.6,
                     marginBottom: 16,
                   }}
@@ -318,7 +302,7 @@ export default function MatricesExamEdge() {
                 item={item}
                 index={index}
                 accentColor={currentTab.color}
-                textColor="#1e1b4b"
+                textColor="var(--rel-text)"
               />
             ))}
           </div>
@@ -327,7 +311,7 @@ export default function MatricesExamEdge() {
         <div
           style={{
             marginTop: 40,
-            background: "linear-gradient(135deg, #1e1b4b, #312e81)",
+            background: "linear-gradient(135deg, #0f172a, #312e81)",
             padding: 40,
             borderRadius: 32,
             color: "#fff",

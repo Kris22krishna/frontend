@@ -1,34 +1,24 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { AlertTriangle, ArrowLeft, ArrowRight, Share2 } from "lucide-react";
-import { matricesConnectomicsData as data } from "./MatricesConnectomicsData";
-import "../../MatricesPages.css";
+import { AlertTriangle, ArrowRight, Share2 } from "lucide-react";
+import "../../Relations.css";
 import MathRenderer from "../../../../../MathRenderer";
+import RelationsTopNav from "../../RelationsTopNav";
+import { relationsConnectomicsData as data } from "./RelationsConnectomicsData";
 
-export default function MatricesConnectomics() {
-  const navigate = useNavigate();
-
+export default function RelationsConnectomics() {
   return (
-    <div className="mat-page">
-      <nav className="mat-intro-nav">
-        <button
-          className="mat-intro-nav-back"
-          onClick={() => navigate("/senior/grade/12/matrices")}
-        >
-          <ArrowLeft size={16} />
-          <span>Back to Matrices</span>
-        </button>
-      </nav>
+    <div className="rel-page">
+      <RelationsTopNav active="connectomics" backLabel="Back to Relations" />
 
-      <div className="mat-intro-hero">
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-a" />
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-b" />
-        <div className="mat-intro-hero-inner">
-          <h1 className="mat-intro-hero-title">
-            Matrices <span className="mat-intro-hero-highlight">Connectomics</span>
+      <div className="rel-intro-hero">
+        <div className="rel-intro-hero-deco rel-intro-hero-deco-a" />
+        <div className="rel-intro-hero-deco rel-intro-hero-deco-b" />
+        <div className="rel-intro-hero-inner">
+          <h1 className="rel-intro-hero-title">
+            Relations <span className="rel-intro-hero-highlight">Connectomics</span>
           </h1>
-          <p className="mat-intro-hero-sub">
-            Discover the hidden threads linking Matrices to the entire world of science.
+          <p className="rel-intro-hero-sub">
+            Discover how Relations connect set theory, functions, logic, graphs, and data systems.
           </p>
         </div>
       </div>
@@ -41,10 +31,10 @@ export default function MatricesConnectomics() {
             fontWeight: 900,
             marginBottom: 32,
             textAlign: "center",
-            color: "#1e1b4b",
+            color: "var(--rel-text)",
           }}
         >
-          The Web of Mathematics
+          The Web of Relations
         </h2>
 
         <div
@@ -110,7 +100,7 @@ export default function MatricesConnectomics() {
                     flexWrap: "wrap",
                   }}
                 >
-                  <span style={{ fontWeight: 800, color: "#1e1b4b" }}>{fromNode.label}</span>
+                  <span style={{ fontWeight: 800, color: "var(--rel-text)" }}>{fromNode.label}</span>
                   <ArrowRight size={16} color="#94a3b8" />
                   <span style={{ fontWeight: 800, color: fromNode.color }}>{toNode.label}</span>
                 </div>
@@ -130,7 +120,7 @@ export default function MatricesConnectomics() {
             fontWeight: 900,
             marginBottom: 32,
             textAlign: "center",
-            color: "#1e1b4b",
+            color: "var(--rel-text)",
           }}
         >
           Real World Systems
@@ -139,7 +129,7 @@ export default function MatricesConnectomics() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
             gap: 24,
             marginBottom: 60,
           }}
@@ -148,7 +138,7 @@ export default function MatricesConnectomics() {
             <div
               key={topic.id}
               style={{
-                background: "linear-gradient(135deg, #1e1b4b, #312e81)",
+                background: "linear-gradient(135deg, #0f172a, #312e81)",
                 padding: 32,
                 borderRadius: 24,
                 color: "#fff",
@@ -167,7 +157,7 @@ export default function MatricesConnectomics() {
                 Zone {topic.id}
               </div>
               <h3 style={{ fontSize: 22, fontWeight: 800, marginBottom: 12 }}>{topic.title}</h3>
-              <p style={{ margin: 0, opacity: 0.8, fontSize: 15, lineHeight: 1.6 }}>
+              <p style={{ margin: 0, opacity: 0.84, fontSize: 15, lineHeight: 1.6 }}>
                 <MathRenderer text={topic.concepts} />
               </p>
             </div>
@@ -181,7 +171,7 @@ export default function MatricesConnectomics() {
             fontWeight: 900,
             marginBottom: 32,
             textAlign: "center",
-            color: "#1e1b4b",
+            color: "var(--rel-text)",
           }}
         >
           Common Misconceptions
@@ -267,12 +257,12 @@ export default function MatricesConnectomics() {
           >
             <Share2 size={34} color="#6366f1" />
           </div>
-          <h3 style={{ fontSize: 20, fontWeight: 800, color: "#1e1b4b", margin: 0 }}>
+          <h3 style={{ fontSize: 20, fontWeight: 800, color: "var(--rel-text)", margin: 0 }}>
             Infinite Connections
           </h3>
           <p style={{ maxWidth: 640, margin: 0, color: "#64748b", lineHeight: 1.7 }}>
-            Matrices are not just a chapter. They are the computational backbone of computer
-            graphics, machine learning, data science, and quantum mechanics.
+            Relations are not just a chapter. They are the language behind mappings, social
+            networks, database tables, and every system built on structured connections.
           </p>
         </div>
       </main>
