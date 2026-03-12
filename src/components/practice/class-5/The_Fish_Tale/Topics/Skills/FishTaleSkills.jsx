@@ -20,8 +20,6 @@ export default function FishTaleSkills() {
                 <nav className="ft-topic-nav">
                     <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
                         <button className="ft-back-link" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>← Back to Skills</button>
-                        <div style={{ width: 1, height: 20, background: '#e2e8f0' }} />
-                        <button className="ft-back-link" onClick={() => navigate('/the-fish-tale')} style={{ color: '#64748b', fontSize: 13 }}>← Back to Chapter</button>
                     </div>
                     <div style={{ display: 'flex', gap: 16 }}>
                         <span style={{ cursor: 'pointer', color: '#94a3b8' }} onClick={() => navigate('/the-fish-tale/introduction')}>🌟 Intro</span>
@@ -69,7 +67,7 @@ export default function FishTaleSkills() {
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: '#94a3b8', marginBottom: 10 }}>Explanation</h4>
                                             <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--ft-text)' }}>
@@ -78,9 +76,9 @@ export default function FishTaleSkills() {
                                         </div>
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>Practical Example</h4>
-                                            <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
-                                                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--ft-text)' }}>
-                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex} />
+                                            <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)', overflowX: 'auto' }}>
+                                                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--ft-text)', whiteSpace: 'nowrap' }}>
+                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].ex.includes('$') ? skill.learn.rules[selectedLearnIdx].ex : `$${skill.learn.rules[selectedLearnIdx].ex}$`} />
                                                 </div>
                                             </div>
                                         </div>

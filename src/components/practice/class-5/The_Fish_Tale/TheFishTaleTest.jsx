@@ -18,10 +18,19 @@ const TheFishTaleTest = () => {
 
             if (skillType === 0) {
                 // 1. Place Value
-                const num = Math.floor(Math.random() * 900000) + 100000;
-                const digits = num.toString().split('');
-                const pos = Math.floor(Math.random() * 6);
-                const digit = digits[pos];
+                let num = Math.floor(Math.random() * 900000) + 100000;
+                let digits = num.toString().split('');
+                let pos = Math.floor(Math.random() * 6);
+                let digit = digits[pos];
+
+                // Ensure the chosen digit is unique in the number
+                while (num.toString().indexOf(digit) !== num.toString().lastIndexOf(digit)) {
+                    num = Math.floor(Math.random() * 900000) + 100000;
+                    digits = num.toString().split('');
+                    pos = Math.floor(Math.random() * 6);
+                    digit = digits[pos];
+                }
+
                 const places = ['Lakhs', 'Ten Thousands', 'Thousands', 'Hundreds', 'Tens', 'Ones'];
                 const value = parseInt(digit) * Math.pow(10, 5 - pos);
 
@@ -104,6 +113,15 @@ Total Profit = Profit per kg $\\times$ Quantity = $${sp - cp} \\times ${kg} = ${
             }
 
             opts = [...new Set(opts)];
+
+            // Pad to 4 options unless it's a Comparison question (which has exactly 3: >, <, =)
+            if (skillType !== 3) {
+                while (opts.length < 4) {
+                    opts.push(`$${inFormat(Math.floor(Math.random() * 90000) + 1000)}$`);
+                    opts = [...new Set(opts)];
+                }
+            }
+
             opts.sort(() => Math.random() - 0.5);
 
             generated.push({

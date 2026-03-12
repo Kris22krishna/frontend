@@ -620,7 +620,9 @@ const MiddlePracticeSession = () => {
                                 </div>
                                 <div className="flex-1">
                                     <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
-                                    <div className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-h-48 overflow-y-auto pr-4 scrollbar-thin"><LatexText text={currentQ.explanation} /></div>
+                                    <div className="text-gray-600 dark:text-gray-300 text-lg leading-normal max-h-48 overflow-y-auto pr-4 scrollbar-thin whitespace-pre-line [&>p]:mb-0 [&>p]:mt-1">
+                                        <LatexText text={currentQ.explanation} />
+                                    </div>
                                 </div>
                                 <div className="mt-8 flex justify-end">
                                     <button onClick={() => setShowExplanation(false)} className="flex items-center gap-2 px-10 py-4 bg-[#31326F] text-white rounded-2xl font-black text-lg shadow-lg hover:shadow-xl hover:bg-[#25265E] transition-all">Got it<CheckCircle2 size={24} /></button>

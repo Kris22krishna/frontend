@@ -81,7 +81,8 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         return (
             <div className={`${prefix}-quiz-finished`} style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: `var(--${prefix}-text, #1e293b)` }}>Assessment Complete</h2>
+                    {title && <div style={{ fontSize: 16, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>{title}</div>}
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: `var(--${prefix}-text, #1e293b)`, margin: 0, paddingBottom: 16 }}>Assessment Complete</h2>
                     <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questionSet.length}</div>
                     <div style={{ fontSize: 18, color: `var(--${prefix}-muted)`, fontWeight: 600 }}>Score: {pct}%</div>
                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' }}>
