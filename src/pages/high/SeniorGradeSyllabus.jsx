@@ -118,7 +118,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' },
 
                         // Probability
-                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' }
+                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' },
+
+                        // Real Numbers
+                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting

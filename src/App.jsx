@@ -440,6 +440,14 @@ import ProbabilityEasyTest from './components/practice/class-10/Probability/Deep
 import ProbabilityMediumTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityMediumTest';
 import ProbabilityHardTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityHardTest';
 
+// Class 10: Real Numbers
+import RealNumbersDashboard from './components/practice/class-10/RealNumbers/RealNumbersDashboard';
+import RealNumbersIntro from './components/practice/class-10/RealNumbers/Topics/Introduction/RealNumbersIntro';
+import RealNumbersTerminology from './components/practice/class-10/RealNumbers/Topics/Terminology/RealNumbersTerminology';
+import RealNumbersSkills from './components/practice/class-10/RealNumbers/Topics/Skills/RealNumbersSkills';
+import RealNumbersConnectomics from './components/practice/class-10/RealNumbers/Topics/Connectomics/RealNumbersConnectomics';
+import RealNumbersExamEdge from './components/practice/class-10/RealNumbers/Topics/ExamEdge/RealNumbersExamEdge';
+
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
 import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
@@ -798,6 +806,14 @@ function App() {
           <Route path="senior/grade/10/probability/terminology" element={<ProtectedRoute redirectTo="/login"><ProbabilityTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/skills" element={<ProtectedRoute redirectTo="/login"><ProbabilitySkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><ProbabilityEasyTest /></ProtectedRoute>} />
+
+          {/* Class 10: Real Numbers */}
+          <Route path="senior/grade/10/real-numbers" element={<ProtectedRoute redirectTo="/login"><RealNumbersDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/introduction" element={<ProtectedRoute redirectTo="/login"><RealNumbersIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/terminology" element={<ProtectedRoute redirectTo="/login"><RealNumbersTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/skills" element={<ProtectedRoute redirectTo="/login"><RealNumbersSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/connectomics" element={<ProtectedRoute redirectTo="/login"><RealNumbersConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/exam-edge" element={<ProtectedRoute redirectTo="/login"><RealNumbersExamEdge /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><ProbabilityMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><ProbabilityHardTest /></ProtectedRoute>} />
 
