@@ -1,4 +1,48 @@
 export const structureOfAtomConnectomicsData = {
+    chapterLink: "After reviewing these prerequisites, proceed directly to the Introduction section to begin exploring the Structure of Atom.",
+    checkpoints: [
+        {
+            title: "Atomic Number & Mass",
+            desc: "Basic definitions of Z (protons) and A (protons + neutrons) from Class 9.",
+            status: "Required"
+        },
+        {
+            title: "Dalton's Atomic Theory",
+            desc: "The idea that matter is made of indivisible atoms (which we will disprove).",
+            status: "Required"
+        },
+        {
+            title: "Basic Valency",
+            desc: "Understanding how elements combine based on their outermost electrons.",
+            status: "Required"
+        },
+        {
+            title: "Electromagnetic Spectrum",
+            desc: "Familiarity with light, wavelength, frequency, and regions like UV and Visible.",
+            status: "Recommended"
+        },
+        {
+            title: "Coulomb's Law",
+            desc: "Opposite charges attract, like charges repel. Force increases as distance decreases.",
+            status: "Required"
+        },
+        {
+            title: "Centripetal Force",
+            desc: "Force required to keep an object moving in a circular path (physics crossover).",
+            status: "Recommended"
+        },
+        {
+            title: "Kinetic & Potential Energy",
+            desc: "Definitions of KE (energy of motion) and PE (energy of position).",
+            status: "Required"
+        },
+        {
+            title: "Moles & Molar Mass",
+            desc: "From Chapter 1 (Some Basic Concepts). Needed for converting mass to number of atoms.",
+            status: "Required"
+        }
+    ],
+
     connections: [
         { 
             from: "Structure of Atom (Ch.2)", 

@@ -143,29 +143,203 @@ function fmtTime(ms) {
    LEARN MODE
    ═══════════════════════════════════════════════════════════════ */
 function LearnMode({ skill, onBack }) {
-    return (
-        <div style={{ maxWidth: 800, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-            <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Skills</button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-                <div style={{ fontSize: 40 }}>{skill.icon}</div>
-                <div>
-                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: skill.color, margin: 0 }}>{skill.title}</h2>
-                    <p style={{ margin: 0, fontSize: 16, color: '#64748b' }}>Learn the concepts</p>
-                </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {skill.learnSections.map((sec, i) => (
-                    <div key={i} style={{ padding: 20, borderRadius: 16, background: '#f8fafc', border: '1px solid #e2e8f0' }}>
-                        <h4 style={{ margin: '0 0 10px', fontSize: 18, color: '#0f172a', fontWeight: 800 }}>{sec.heading}</h4>
-                        <p style={{ margin: '0 0 12px', fontSize: 16, color: '#334155', lineHeight: 1.6 }}>{sec.content}</p>
-                        <div style={{ padding: '10px 14px', background: `${skill.color}15`, borderRadius: 10, color: '#0f172a', fontWeight: 600, fontSize: 14 }}>
-                            <span style={{ color: skill.color, marginRight: 6 }}>💡 Key Fact:</span>{sec.example}
-                        </div>
+    const [activeIdx, setActiveIdx] = useState(0);
+    const sec = skill.learnSections && skill.learnSections[activeIdx];
+
+    const renderCardContent = (sec, idx) => {
+        if (!sec) return null;
+        const topColors = ['#2563eb', '#f59e0b', '#10b981', '#7c3aed', '#ec4899', '#0d9488'];
+        const cardColor = topColors[idx % topColors.length] || skill.color;
+
+        let keyIcon = '💡', keyTitle = 'Key Fact:', keyBg = '#f8fafc', keyBorder = '#cbd5e1', keyColor = '#0f172a';
+        if (sec?.keyLabel === 'neet-trap') { keyIcon = '⚠️'; keyTitle = 'NEET Trap:'; keyBg = '#fff1f2'; keyBorder = '#f43f5e'; keyColor = '#9f1239'; }
+        else if (sec?.keyLabel === 'misconception') { keyIcon = '⚠️'; keyTitle = 'Classic NEET Misconception:'; keyBg = '#fffbeb'; keyBorder = '#fbbf24'; keyColor = '#92400e'; }
+        else if (sec?.keyLabel === 'neet-note') { keyIcon = '📌'; keyTitle = 'NEET Note:'; keyBg = '#f0fdf4'; keyBorder = '#10b981'; keyColor = '#065f46'; }
+
+        // Split heading if it has a dash for small caps + serif styling
+        const headingParts = sec.heading.split('—').map(s => s.trim());
+        const smallCaps = headingParts.length > 1 ? headingParts[0] : `Topic ${idx + 1}`;
+        const mainHeading = headingParts.length > 1 ? headingParts[1] : sec.heading;
+
+        return (
+            <div style={{ background: '#fff', borderRadius: 24, padding: 40, boxShadow: '0 10px 40px rgba(0,0,0,0.06)', borderTop: `8px solid ${cardColor}`, display: 'flex', flexDirection: 'column', gap: 20, borderLeft: '1px solid #f1f5f9', borderRight: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
+                    {sec.icon && <div style={{ fontSize: 40 }}>{sec.icon}</div>}
+                    <div>
+                        <div style={{ textTransform: 'uppercase', letterSpacing: '1.5px', fontSize: 13, fontWeight: 800, color: cardColor, marginBottom: 6 }}>{smallCaps}</div>
+                        <h3 style={{ fontFamily: '"Playfair Display", "Merriweather", serif', fontSize: 32, fontWeight: 900, color: '#0f172a', margin: 0, lineHeight: 1.3 }}>{mainHeading}</h3>
                     </div>
-                ))}
+                </div>
+
+                {/* Styled Content */}
+                {sec?.content && (() => {
+                    const blocks = sec.content.split('\n\n');
+                    return blocks.map((block, bi) => {
+                        const lines = block.split('\n');
+                        return (
+                            <div key={bi} style={{ marginBottom: 16 }}>
+                                {lines.map((line, li) => {
+                                    let t = line.trim();
+                                    if (!t) return null;
+                                    t = t.replace(/_([a-zA-Z0-9]+)/g, '<sub>$1</sub>');
+                                    
+                                    
+                                    if ((t.endsWith(':') || t.endsWith('):')) && t.length < 100) {
+                                        return <h4 key={li} style={{ fontFamily: 'Outfit, sans-serif', fontSize: 19, fontWeight: 800, color: '#1e293b', margin: '20px 0 10px', letterSpacing: '-0.3px', borderBottom: `2px solid ${cardColor}20`, paddingBottom: 6, display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: t }}></h4>;
+                                    }
+                                    if (t.startsWith('•') && (t.includes('=') || t.includes('→') || t.includes('⇒') || t.includes(':'))) {
+                                        let cleanT = t.slice(1).trim();
+                                        
+                                        // Convert fractions FIRST before font splitting: X/Y → vertical fraction
+                                        const fractionRx = /((?:[^\s<>\/()]|<[^>]*>)+)\/((?:[^\s<>,;.\/()]|<[^>]*>)+)/g;
+                                        const fractionRepl = '<span style="display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; margin:0 3px; line-height:1.1; font-size:0.85em;"><span style="border-bottom:1.5px solid currentColor; padding:0 4px 2px;">$1</span><span style="padding:2px 4px 0;">$2</span></span>';
+                                        cleanT = cleanT.replace(fractionRx, fractionRepl);
+
+                                        // Determine separator to split by (prioritize =, then :)
+                                        // But DO NOT split on '=' if it's inside an HTML tag (like style="...")
+                                        let sep = '';
+                                        // Regex to find '=' or ':' that is NOT inside an HTML tag <...>
+                                        const match = cleanT.match(/(?![^<]*>)([=;:])/);
+                                        
+                                        if (match) {
+                                            sep = match[1];
+                                            // Ensure we don't accidentally match the ; from an HTML entity if it's standard text
+                                            if (sep === ';' && !cleanT.includes('=')) sep = ''; 
+                                            // Restrict to just = or : for our formatting rule
+                                            if (sep !== '=' && sep !== ':') sep = '';
+                                        }
+
+                                        let contentHTML;
+                                        if (sep) {
+                                            // Split by the FIRST occurrence of the valid separator
+                                            const exactMatchIndex = cleanT.match(/(?![^<]*>)([=:])/)?.index;
+                                            
+                                            if (exactMatchIndex !== undefined) {
+                                                const left = cleanT.substring(0, exactMatchIndex).trim();
+                                                const right = cleanT.substring(exactMatchIndex + 1).trim();
+                                                contentHTML = `<span style="font-family: 'Outfit', sans-serif;">${left}</span> <span style="font-family: 'Courier New', monospace;">${sep} ${right}</span>`;
+                                            } else {
+                                                contentHTML = `<span style="font-family: 'Courier New', monospace;">${cleanT}</span>`;
+                                            }
+                                        } else {
+                                            // Fallback for → or ⇒ without = or : (keep as monospace or choose one)
+                                            contentHTML = `<span style="font-family: 'Courier New', monospace;">${cleanT}</span>`;
+                                        }
+
+                                        return (
+                                            <div key={li} style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '16px 0' }}>
+                                                <div style={{ padding: '14px 36px', background: '#f8fafc', borderRadius: 12, fontSize: 17, fontWeight: 800, color: cardColor, border: '2px solid #e2e8f0', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)' }}
+                                                   dangerouslySetInnerHTML={{ __html: contentHTML }}
+                                                >
+                                                </div>
+                                            </div>
+                                        );
+                                    }
+                                    if (t.startsWith('•')) {
+                                        return (
+                                            <div key={li} style={{ display: 'flex', gap: 12, marginBottom: 10, fontSize: 16, color: '#475569', lineHeight: 1.6 }}>
+                                                <span style={{ color: cardColor, fontWeight: 900, fontSize: 20, lineHeight: '1.4' }}>•</span>
+                                                <span dangerouslySetInnerHTML={{ __html: t.slice(1).trim() }}></span>
+                                            </div>
+                                        );
+                                    }
+                                    return <p key={li} style={{ margin: '0 0 10px', fontSize: 16, color: '#475569', lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: t }}></p>;
+                                })}
+                            </div>
+                        );
+                    });
+                })()}
+
+                {sec?.table && (
+                    <div style={{ overflowX: 'auto', margin: '20px 0', width: '100%' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15, background: '#fff', borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+                            <thead>
+                                <tr>
+                                    {sec.table.headers.map((h, hi) => (
+                                        <th key={hi} style={{ padding: '14px 18px', textAlign: 'left', background: `${cardColor}15`, color: cardColor, fontWeight: 800, fontSize: 14, letterSpacing: '0.5px', textTransform: 'uppercase', borderBottom: `2px solid ${cardColor}40` }} dangerouslySetInnerHTML={{ __html: h }}></th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {sec.table.rows.map((row, ri) => (
+                                    <tr key={ri} style={{ borderBottom: '1px solid #f1f5f9', background: ri % 2 === 0 ? '#fff' : '#f8fafc' }}>
+                                        {row.map((cell, ci) => (
+                                            <td key={ci} style={{ padding: '14px 18px', color: ci === 0 ? '#0f172a' : '#475569', fontWeight: ci === 0 ? 700 : 400 }} dangerouslySetInnerHTML={{ __html: cell }}></td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {sec?.example && (
+                    <div style={{ background: keyBg, borderLeft: `5px solid ${keyBorder}`, padding: '20px 24px', borderRadius: '0 12px 12px 0', marginTop: 'auto' }}>
+                        <div style={{ fontWeight: 800, fontSize: 15, color: keyColor, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontSize: 18 }}>{keyIcon}</span> {keyTitle}
+                        </div>
+                        <p style={{ margin: 0, fontSize: 15, color: keyColor, lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: sec.example }}></p>
+                    </div>
+                )}
             </div>
-            <div style={{ marginTop: 30, display: 'flex', justifyContent: 'center' }}>
-                <button onClick={onBack} style={{ padding: '12px 32px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Got it! →</button>
+        );
+    };
+
+    return (
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px' }}>
+            <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 24 }}>← Back to Skills</button>
+
+            <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+                {/* LEFT SIDEBAR */}
+                <div style={{ flex: '0 0 300px', position: 'sticky', top: 80 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, padding: '0 12px' }}>
+                        <div style={{ fontSize: 36 }}>{skill.icon}</div>
+                        <h2 style={{ fontFamily: '"Playfair Display", "Merriweather", serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '-0.5px', lineHeight: 1.2 }}>{skill.title}</h2>
+                    </div>
+                    
+                    <div style={{ background: '#fff', borderRadius: 20, padding: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9' }}>
+                        {skill.learnSections && skill.learnSections.map((s, i) => {
+                            const active = i === activeIdx;
+                            const topColors = ['#2563eb', '#f59e0b', '#10b981', '#7c3aed', '#ec4899', '#0d9488'];
+                            const itemColor = active ? topColors[i % topColors.length] : '#f8fafc';
+                            const textColor = active ? '#fff' : '#475569';
+                            return (
+                                <button key={i} onClick={() => setActiveIdx(i)} style={{
+                                    width: '100%', textAlign: 'left', padding: '14px 16px', borderRadius: 12,
+                                    border: 'none', cursor: 'pointer', transition: 'all 0.2s',
+                                    background: itemColor,
+                                    color: textColor,
+                                    fontWeight: active ? 800 : 600, fontSize: 15,
+                                    display: 'flex', alignItems: 'center', gap: 12,
+                                    marginBottom: i === skill.learnSections.length - 1 ? 0 : 6,
+                                    boxShadow: active ? `0 4px 12px ${itemColor}40` : 'none'
+                                }}>
+                                    <span style={{ fontSize: 18, opacity: active ? 1 : 0.6 }}>{s.icon || '📄'}</span>
+                                    <span style={{ lineHeight: 1.3 }}>{s.heading.split('—')[0].trim()}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* RIGHT CONTENT PANEL */}
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 24 }}>
+                    {renderCardContent(sec, activeIdx)}
+
+                    {/* Navigation */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
+                        <button onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))} disabled={activeIdx === 0}
+                            style={{ padding: '14px 28px', borderRadius: 100, border: `2px solid ${activeIdx === 0 ? '#e2e8f0' : skill.color}`, background: '#fff', color: activeIdx === 0 ? '#cbd5e1' : skill.color, fontWeight: 800, fontSize: 15, cursor: activeIdx === 0 ? 'default' : 'pointer', transition: 'all 0.2s' }}>← Previous</button>
+                        
+                        {activeIdx < skill.learnSections.length - 1 ? (
+                            <button onClick={() => setActiveIdx(activeIdx + 1)}
+                                style={{ padding: '14px 32px', borderRadius: 100, border: 'none', background: skill.color, color: '#fff', fontWeight: 800, fontSize: 16, cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40`, transition: 'all 0.2s' }}>Next Topic →</button>
+                        ) : (
+                            <button onClick={onBack}
+                                style={{ padding: '14px 32px', borderRadius: 100, border: 'none', background: '#10b981', color: '#fff', fontWeight: 800, fontSize: 16, cursor: 'pointer', boxShadow: `0 4px 14px #10b98140`, transition: 'all 0.2s' }}>Got it! ✓</button>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     );
