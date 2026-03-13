@@ -105,18 +105,56 @@ export default function TheCellExamEdge() {
                     </div>
                 </div>
 
-                {/* Pro Tips */}
-                <div style={{ marginTop: '40px', background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '40px', borderRadius: '32px', color: '#fff' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-                        <Lightbulb size={32} color="#f59e0b" />
-                        <h2 style={{ fontSize: '24px', fontWeight: 800, margin: 0 }}>Bonus Exam Tips</h2>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
-                        {cellExamEdgeData.proTips.map((tip, idx) => (
-                            <div key={idx} style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '14px', lineHeight: 1.6 }}>
-                                <MathRenderer text={tip} />
+                {/* Quick Revision Space */}
+                <div style={{ marginTop: '40px', background: '#fff', borderRadius: '32px', padding: '40px', boxShadow: '0 12px 32px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
+                    <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#1e1b4b', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ background: '#fee2e2', padding: '10px', borderRadius: '12px', color: '#dc2626' }}>⚡</span>
+                        Quick Revision Module
+                    </h2>
+                    <p style={{ color: '#64748b', fontSize: '15px', marginBottom: '32px', paddingLeft: '56px' }}>Everything critical for last-minute review — formulas, rules, and NEET traps.</p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+                        {cellExamEdgeData.quickRevision && cellExamEdgeData.quickRevision.map((card, idx) => (
+                            <div key={idx} style={{ background: '#f8fafc', borderRadius: '20px', padding: '24px', border: '1px solid #e2e8f0' }}>
+                                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1e1b4b', marginBottom: '16px', paddingBottom: '12px', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    {card.title}
+                                </h3>
+                                <p style={{ fontSize: '15px', color: '#334155', lineHeight: 1.6, whiteSpace: 'pre-line', margin: 0 }}>
+                                    {card.content}
+                                </p>
                             </div>
                         ))}
+                    </div>
+                </div>
+
+                {/* Master Comparison Table */}
+                <div style={{ marginTop: '40px', background: '#fff', borderRadius: '32px', padding: '40px', boxShadow: '0 12px 32px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
+                    <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#1e1b4b', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ background: '#fef3c7', padding: '10px', borderRadius: '12px', color: '#d97706' }}>📊</span>
+                        {cellExamEdgeData.masterComparison?.title || "Master Comparison"}
+                    </h2>
+                    
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
+                            <thead>
+                                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                                    {cellExamEdgeData.masterComparison?.headers.map((th, i) => (
+                                        <th key={i} style={{ padding: '16px', fontSize: '14px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>{th}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cellExamEdgeData.masterComparison?.rows.map((row, idx) => (
+                                    <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.2s', background: idx % 2 === 0 ? '#fff' : '#f8fafc' }}>
+                                        {row.map((td, j) => (
+                                            <td key={j} style={{ padding: '16px', fontSize: '15px', color: j === 0 ? '#1e1b4b' : '#334155', fontWeight: j === 0 ? 800 : 500 }}>
+                                                {td}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </main>

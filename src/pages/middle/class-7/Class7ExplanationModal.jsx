@@ -60,7 +60,7 @@ const Class7ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation,
 
                             <div className="flex-1">
                                 <p className="text-blue-400 text-sm font-black uppercase tracking-widest mb-3">Why is this correct?</p>
-                                <div className="text-gray-600 text-lg leading-relaxed pr-4 scrollbar-thin whitespace-pre-line">
+                                <div className="text-gray-600 text-lg leading-relaxed pr-4 scrollbar-thin whitespace-pre-line [&>p]:mb-0 [&>p]:mt-1">
                                     <LatexText text={explanation || "Great effort! Keep practicing to master this concept."} />
                                 </div>
                             </div>

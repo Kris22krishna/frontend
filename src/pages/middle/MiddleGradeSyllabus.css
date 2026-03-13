@@ -159,20 +159,22 @@
    MASONRY LAYOUT (CSS COLUMNS)
    ------------------------------------------- */
 .middle-masonry-grid {
-    column-count: 3;
-    column-gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
+    align-items: start;
     padding-bottom: 2rem;
 }
 
 @media (max-width: 1024px) {
     .middle-masonry-grid {
-        column-count: 2;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
     .middle-masonry-grid {
-        column-count: 1;
+        grid-template-columns: 1fr;
     }
 }
 
@@ -188,10 +190,7 @@
     position: relative;
     border: 1px solid rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    break-inside: avoid;
-    /* Essential for CSS Columns */
-    margin-bottom: 2rem;
-    /* Spacing between items in columns */
+    break-inside: auto;
 }
 
 /* Thick Accent Border on Left */
