@@ -14,6 +14,23 @@ export const generateTheCellSkillsData = () => {
     const makeMCQ = (q, correctOpt, distractors, explanation) => {
         const allOpts = shuffle([correctOpt, ...distractors].slice(0, 4));
         const correctIdx = allOpts.indexOf(correctOpt);
+        
+        // Deduplicate options if any are accidentally identical
+        const seen = new Set();
+        if (correctIdx !== -1) seen.add(allOpts[correctIdx]);
+        
+        for (let i = 0; i < allOpts.length; i++) {
+            if (i === correctIdx) continue;
+            let opt = allOpts[i];
+            let attempts = 0;
+            while (seen.has(opt) && attempts < 20) {
+                opt = `${opt} (Variant ${attempts + 1})`;
+                attempts++;
+            }
+            seen.add(opt);
+            allOpts[i] = opt;
+        }
+
         return { type: 'multiple-choice', question: q, options: allOpts, correctAnswer: correctIdx, explanation };
     };
 

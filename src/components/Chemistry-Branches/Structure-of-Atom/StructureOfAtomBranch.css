@@ -581,8 +581,13 @@
 }
 
 .atom-skill-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
+  min-width: 250px;
+}
+.atom-skill-actions > button:last-child {
+  grid-column: 1 / -1;
 }
 
 .atom-btn {
@@ -592,6 +597,10 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .atom-btn-outline {
@@ -841,5 +850,88 @@
 @media (max-width: 1024px) {
   .atom-assess-layout {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── RESPONSIVE UPGRADES ── */
+@media (max-width: 1024px) {
+  .atom-fullpage {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+  }
+  .atom-left {
+    padding: 40px 24px;
+    flex: none;
+  }
+  .atom-right {
+    padding: 30px 20px;
+    flex: none;
+  }
+  .atom-main-title {
+    font-size: 2.5rem;
+  }
+  .atom-nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .atom-nav {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    align-items: center;
+    position: static;
+  }
+  .atom-grid {
+    grid-template-columns: 1fr;
+  }
+  .atom-term-grid {
+    grid-template-columns: 1fr;
+  }
+  .atom-skill-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  .atom-skill-actions {
+    justify-content: center;
+  }
+  .atom-hero {
+    padding: 40px 20px;
+  }
+  .atom-hero-title {
+    font-size: 2rem;
+  }
+  .atom-assess-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .atom-stats-grid {
+    justify-content: center;
+  }
+  .atom-card-btn {
+    flex-direction: column;
+    text-align: center;
+  }
+  .atom-card-icon {
+    margin: 20px auto 10px;
+  }
+  .atom-card-chevron {
+    transform: none;
+    padding: 10px;
+  }
+  .atom-nav-back {
+    width: 100%;
+    justify-content: center;
+  }
+  .atom-intro-card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .atom-palette-grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 }

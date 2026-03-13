@@ -17,6 +17,13 @@ export default function TheCellExamEdge() {
                 <button className="cell-nav-back" onClick={() => navigate('/senior/grade/11/biology/the-cell')}>
                     ← Back to Dashboard
                 </button>
+                <div className="cell-nav-links">
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/connectomics')}>🧠 Connectomics</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/introduction')}>🌟 Intro</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/terminology')}>📖 Terminology</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/skills')}>🎯 Skills</button>
+                    <button className="cell-nav-link active" onClick={() => navigate('/senior/grade/11/biology/the-cell/exam-edge')}>⚡ Exam Edge</button>
+                </div>
             </nav>
 
             <div className="cell-hero">
@@ -156,6 +163,12 @@ export default function TheCellExamEdge() {
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                    <button onClick={() => navigate('/senior/grade/11/biology/the-cell')} style={{ padding: '12px 32px', fontSize: 16, background: '#10b981', color: '#fff', border: 'none', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 14px rgba(16,185,129,0.4)', transition: 'all 0.2s' }}>
+                        Finish Topic <span style={{ color: '#fff' }}>✓</span>
+                    </button>
                 </div>
             </main>
         </div>
