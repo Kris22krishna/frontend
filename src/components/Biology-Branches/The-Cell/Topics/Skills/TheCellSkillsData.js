@@ -1,163 +1,422 @@
 export const generateTheCellSkillsData = () => {
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const shuffle = (array) => {
+        const newArr = [...array];
+        for (let i = newArr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+        }
+        return newArr;
+    };
+    
+    // Helper to format options and return correct index
+    const makeMCQ = (q, correctOpt, distractors, explanation) => {
+        const allOpts = shuffle([correctOpt, ...distractors].slice(0, 4));
+        const correctIdx = allOpts.indexOf(correctOpt);
+        return { type: 'multiple-choice', question: q, options: allOpts, correctAnswer: correctIdx, explanation };
+    };
+
+    const s1_theory = [
+        () => makeMCQ('Which scientist added the principle "Omnis cellula e cellula" to cell theory?', 'Rudolf Virchow', ['Matthias Schleiden', 'Theodor Schwann', 'Robert Hooke'], 'Virchow (1855) added this principle.'),
+        () => makeMCQ('Which of the following is NOT considered an exception to cell theory?', 'Amoeba', ['Viruses', 'Mature red blood cells of humans', 'Mature sieve tube cells'], 'Amoeba is a complete unicellular eukaryote.'),
+        () => makeMCQ('Who formulated the first cell theory?', 'Schleiden and Schwann', ['Anton Van Leeuwenhoek', 'Robert Hooke', 'Rudolf Virchow'], 'Matthias (Botanist) and Theodore (Zoologist) formulated it.'),
+        () => makeMCQ('Who first saw and described a live cell?', 'Anton Van Leeuwenhoek', ['Robert Hooke', 'Rudolf Virchow', 'Schleiden'], 'He observed living bacteria and protozoa.'),
+        () => makeMCQ('Which scientist examined plant cells to form part of the Cell Theory?', 'Schleiden', ['Schwann', 'Virchow', 'Hooke'], 'Matthias Schleiden was a botanist.'),
+        () => makeMCQ('Exceptions to cell theory include:', 'Viruses', ['Bacteria', 'Fungi', 'Algae'], 'Viruses lack cellular structure.'),
+        () => makeMCQ('Who discovered the nucleus?', 'Robert Brown', ['Robert Hooke', 'Rudolf Virchow', 'Anton Van Leeuwenhoek'], 'Robert Brown discovered it in 1831.'),
+        () => makeMCQ('An example of the largest isolated single cell is:', 'Ostrich egg', ['Nerve cell', 'Mycoplasma', 'Human ovum'], 'The ostrich egg is the largest.'),
+        () => makeMCQ('"Omnis cellula e cellula" translates to:', 'All cells arise from pre-existing cells', ['All cells have a nucleus', 'Cells are the fundamental unit', 'Cells contain DNA'], 'Proposed by Virchow.'),
+        () => {
+            const year = pick(['1838', '1839', '1855']);
+            if (year === '1838') return makeMCQ('In 1838, who observed that all plants are composed of different kinds of cells?', 'Matthias Schleiden', ['Theodor Schwann', 'Rudolf Virchow', 'Robert Hooke'], 'Schleiden was a German botanist working in 1838.');
+            if (year === '1839') return makeMCQ('In 1839, who reported that cells had a thin outer layer, today known as plasma membrane?', 'Theodor Schwann', ['Matthias Schleiden', 'Rudolf Virchow', 'Robert Hooke'], 'Schwann reported this in 1839.');
+            return makeMCQ('In 1855, who explained that cells divide and new cells are formed from pre-existing cells?', 'Rudolf Virchow', ['Matthias Schleiden', 'Theodor Schwann', 'Robert Hooke'], 'Virchow proposed this in 1855.');
+        },
+        () => makeMCQ('Robert Hooke first observed cells in which material?', 'Cork', ['Leaves', 'Onion peel', 'Pond water'], 'He observed dead cork cells.'),
+        () => makeMCQ('Which of the following lacks a nucleus at maturity?', 'Both mature mammalian RBCs and sieve tube cells', ['Only mammalian RBCs', 'Only sieve tube cells', 'Companion cells'], 'Both are classical exceptions.'),
+        () => makeMCQ('Schleiden and Schwann\'s original theory failed to explain:', 'How new cells are formed', ['The chemical composition of cells', 'The presence of the nucleus', 'The existence of plant cell walls'], 'They could not explain the origin of new cells.'),
+        () => makeMCQ('The term "cellulae" used by Robert Hooke refers to:', 'Small rooms or compartments', ['Living organisms', 'Nuclear structures', 'Flowing fluid'], 'He thought they looked like monk cells.'),
+        () => makeMCQ('Who concluded that the presence of a cell wall is a unique character of plant cells?', 'Theodor Schwann', ['Matthias Schleiden', 'Rudolf Virchow', 'Robert Brown'], 'Although a zoologist, Schwann made this conclusion about plants.')
+    ];
+
+    const s2_proEU = [
+        () => makeMCQ('The smallest self-replicating cell capable of independent existence is:', 'Mycoplasma', ['Virus', 'Bacteria', 'Amoeba'], 'Mycoplasma (PPLO) is the smallest known cell.'),
+        () => makeMCQ('Which structure is found in prokaryotes but ABSENT in eukaryotes?', 'Mesosome', ['Ribosome', 'Plasma membrane', 'DNA'], 'Mesosomes are invaginations in prokaryotes.'),
+        () => makeMCQ('Prokaryotic cells have which type of ribosome?', '70S', ['80S', '90S', '100S'], '70S (50S + 30S).'),
+        () => makeMCQ('A specialised differentiated form of cell membrane in prokaryotes is called:', 'Mesosome', ['Lysosome', 'Nucleoid', 'Plasmid'], 'It performs respiration and secretion.'),
+        () => makeMCQ('Which of these is NOT a eukaryote?', 'Bacteria', ['Protists', 'Fungi', 'Plants'], 'Bacteria are Monerans.'),
+        () => makeMCQ('Which organism does NOT have a cell wall?', 'Mycoplasma', ['Cyanobacteria', 'Fungi', 'Angiosperms'], 'Mycoplasma completely lacks a cell wall.'),
+        () => makeMCQ('The genetic material of a prokaryote is called:', 'Nucleoid', ['Nucleolus', 'Nucleus', 'Nucleoplasm'], 'It is naked DNA not enclosed by a membrane.'),
+        () => makeMCQ('Gram staining is used to classify:', 'Bacteria', ['Viruses', 'Fungi', 'Plants'], 'Gram positive and negative based on cell envelope.'),
+        () => makeMCQ('Plasmids in bacteria carry genes for:', 'Antibiotic resistance', ['Photosynthesis', 'Respiration', 'Protein folding'], 'They are extrachromosomal DNA.'),
+        () => makeMCQ('Flagella in prokaryotes differ from eukaryotic flagella in:', 'Lacking a 9+2 arrangement', ['Being absent', 'Having a 9+2 arrangement', 'Being made of tubulin'], 'Prokaryotic flagella lack the 9+2 tubulin structure.'),
+        () => {
+            const org = pick(['Cyanobacteria', 'Bacteria', 'Archaea']);
+            return makeMCQ('Which of the following describes ' + org + '?', 'Prokaryotic', ['Eukaryotic', 'Acellular', 'Multicellular eukaryote'], org + ' belongs to Monera (prokaryotes).');
+        },
+        () => makeMCQ('The genomic DNA of a prokaryote is typically:', 'Circular and naked', ['Linear and naked', 'Circular with histones', 'Linear with histones'], 'They lack histone proteins.'),
+        () => makeMCQ('Many bacteria have a sticky protective coat outside the cell wall called:', 'Capsule or glycocalyx', ['Plasma membrane', 'Pellicle', 'Mesosome'], 'The outermost layer of the cell envelope.'),
+        () => makeMCQ('Pili and fimbriae in bacteria are primarily involved in:', 'Attachment to surfaces or host tissues', ['Motility', 'Reproduction', 'Respiration'], 'They do not play a role in motility.'),
+        () => makeMCQ('Which of the following is true regarding Mycoplasma? (NEET Trap)', 'They can survive without oxygen', ['They have a rigid cell wall', 'They are larger than typical bacteria', 'They possess 80S ribosomes'], 'They are facultative anaerobes and lack a cell wall.')
+    ];
+
+    const s3_membrane = [
+        () => makeMCQ('The Fluid Mosaic Model of the plasma membrane was proposed by:', 'Singer and Nicolson', ['Gorter and Grendel', 'Danielli and Davson', 'Robertson'], 'Proposed in 1972.'),
+        () => makeMCQ('Which component of the plasma membrane is responsible for cell recognition?', 'Glycoproteins and glycolipids', ['Cholesterol', 'Integral proteins', 'Phospholipid heads'], 'Forming the glycocalyx.'),
+        () => makeMCQ('What is the main function of the plasma membrane?', 'Selective permeability', ['Protein synthesis', 'Energy production', 'Lipid synthesis'], 'It controls transport.'),
+        () => makeMCQ('The quasi-fluid nature of lipids enables:', 'Lateral movement of proteins', ['Rigidity', 'Active transport', 'Osmosis'], 'Fluidity allows movement.'),
+        () => makeMCQ('Active transport across a cell membrane requires:', 'ATP and moves against concentration gradient', ['No energy', 'Only a concentration gradient', 'Osmosis'], 'Active means using energy.'),
+        () => makeMCQ('The most abundant lipid in the cell membrane is:', 'Phospholipid', ['Cholesterol', 'Glycolipid', 'Sphingolipid'], 'Forming the bilayer.'),
+        () => makeMCQ('In the fluid mosaic model, proteins are arranged:', 'Like icebergs floating in a sea of lipids', ['In a continuous layer', 'As a rigid sheet', 'Only on the inner surface'], 'Asymmetrical and scattered.'),
+        () => makeMCQ('Passive transport of water across a selectively permeable membrane is called:', 'Osmosis', ['Diffusion', 'Active transport', 'Exocytosis'], 'Osmosis handles water.'),
+        () => makeMCQ('Which of the following can pass freely through the lipid bilayer?', 'Small non-polar molecules', ['Charged ions', 'Large polar molecules', 'Proteins'], 'Lipid-soluble easily cross.'),
+        () => makeMCQ('Cholesterol is present in the plasma membrane of:', 'Animal cells', ['Plant cells', 'Bacterial cells', 'Fungal cells'], 'It provides stability in animals.'),
+        () => {
+            const ratio = pick(['Human RBC', 'Average cell']);
+            if (ratio === 'Human RBC') return makeMCQ('In human RBCs, the approximate composition of the membrane is:', '52% protein and 40% lipid', ['40% protein and 52% lipid', '50% protein and 50% lipid', '60% protein and 40% lipid'], 'A classic NEET fact.');
+            return makeMCQ('Integral membrane proteins are:', 'Partially or totally buried in the membrane', ['Loosely attached to the surface', 'Found only in the cytoplasm', 'Attached only to carbohydrates'], 'They span the bilayer.');
+        },
+        () => makeMCQ('Na+/K+ pump is an example of:', 'Active transport', ['Passive transport', 'Osmosis', 'Facilitated diffusion'], 'It requires ATP.'),
+        () => makeMCQ('The fluid nature of the membrane is important for functions like:', 'All of the above (cell growth, endocytosis, division)', ['Only cell growth', 'Only endocytosis', 'Only cell division'], 'Fluidity is required for all dynamic processes.'),
+        () => makeMCQ('Polar molecules cannot pass through the non-polar lipid bilayer. They require:', 'Carrier proteins', ['Cholesterol', 'Glycolipids', 'To be converted to non-polar'], 'They need facilitated diffusion via proteins.'),
+        () => makeMCQ('The tail of the phospholipid molecule is:', 'Hydrophobic and non-polar', ['Hydrophilic and polar', 'Hydrophobic and polar', 'Hydrophilic and non-polar'], 'Made of saturated hydrocarbons protected from aqueous environments.')
+    ];
+
+    const s4_wall = [
+        () => makeMCQ('The cell wall of bacteria is composed of:', 'Peptidoglycan (Murein)', ['Cellulose', 'Chitin', 'Silica'], 'Unique to bacteria.'),
+        () => makeMCQ('Which of the following is correctly matched?', 'Plasmodesmata \u2014 cytoplasmic channels connecting adjacent plant cells', ['Tight junctions \u2014 allow ions to pass', 'Gap junctions \u2014 provide cement', 'Adhering junctions \u2014 allow cytoplasm communication'], 'It connects adjacent plant cells.'),
+        () => makeMCQ('The main chemical component of a fungal cell wall is:', 'Chitin', ['Cellulose', 'Peptidoglycan', 'Pectin'], 'Fungal walls are chitin.'),
+        () => makeMCQ('Algal cell walls are made of cellulose, galactans, mannans and:', 'Calcium carbonate', ['Silica', 'Magnesium sulfate', 'Iron oxide'], 'A classic NEET fact for algae.'),
+        () => makeMCQ('Which structure is unique to plant cells but absent in animal cells?', 'Cell Wall', ['Mitochondria', 'Nucleoplasm', 'Ribosomes'], 'Rigid outer layer.'),
+        () => makeMCQ('During ripening of a fruit, what dissolves to make it soft?', 'Middle lamella', ['Primary cell wall', 'Secondary cell wall', 'Plasma membrane'], 'Made of calcium pectate.'),
+        () => makeMCQ('Mycoplasma differs from other bacteria in that it:', 'Lacks a cell wall', ['Lacks a nucleus', 'Has 80S ribosomes', 'Is photosynthetic'], 'Unique wall-less prokaryote.'),
+        () => makeMCQ('The middle lamella is primarily composed of:', 'Calcium and magnesium pectates', ['Lignin', 'Cellulose', 'Suberin'], 'It acts as glue.'),
+        () => makeMCQ('The primary cell wall is capable of growth and:', 'Gradually diminishes as the cell matures', ['Becomes thicker as the cell matures', 'Turns into the middle lamella', 'Is found inside the plasma membrane'], 'Secondary wall forms later.'),
+        () => makeMCQ('Secondary cell walls are formed:', 'Inner to the primary wall (towards membrane)', ['Outer to the primary wall', 'Between the middle lamella and primary wall', 'Outside the middle lamella'], 'Added inside.'),
+        () => makeMCQ('Which of the following organisms has a cell wall made of silica?', 'Diatoms', ['Fungi', 'Cyanobacteria', 'Dinoflagellates'], 'Diatoms have siliceous frustules.'),
+        () => {
+            const poly = pick(['Cellulose', 'Hemicellulose', 'Pectin']);
+            return makeMCQ(poly + ' is a major component of:', 'Plant cell walls', ['Fungal cell walls', 'Bacterial cell walls', 'Animal membranes'], 'It forms the plant cell matrix.');
+        },
+        () => makeMCQ('Plasmodesmata are analogous to which animal cell junction?', 'Gap junctions', ['Tight junctions', 'Desmosomes', 'Adherens junctions'], 'Both allow cytoplasmic communication.'),
+        () => makeMCQ('Which part of the plant cell wall is the outermost layer, formed first after division?', 'Middle lamella', ['Primary wall', 'Secondary wall', 'Tertiary wall'], 'Shared by adjacent cells.'),
+        () => makeMCQ('Lignin is characteristically deposited in:', 'Secondary cell walls of woody tissues', ['Primary cell walls of leaves', 'Algal cell walls', 'Middle lamella of soft fruits'], 'Lignin provides immense rigidity.')
+    ];
+
+    const s5_endo = [
+        () => makeMCQ('Which of the following is NOT a part of the endomembrane system?', 'Mitochondria', ['Endoplasmic reticulum', 'Golgi apparatus', 'Lysosomes'], 'It functions independently.'),
+        () => makeMCQ('The membrane surrounding the central vacuole of a plant cell is called the:', 'Tonoplast', ['Plasma membrane', 'Unit membrane', 'Outer membrane'], 'It maintains turgidity.'),
+        () => makeMCQ('Smooth Endoplasmic Reticulum (SER) is primarily involved in:', 'Lipid synthesis and detoxification', ['Protein synthesis', 'ATP production', 'Photosynthesis'], 'It lacks ribosomes.'),
+        () => makeMCQ('The Golgi apparatus was discovered by:', 'Camillo Golgi', ['George Palade', 'Christian de Duve', 'Robert Brown'], 'In 1898.'),
+        () => makeMCQ('Lysosomes are formed by the packaging process in the:', 'Golgi apparatus', ['Endoplasmic Reticulum', 'Mitochondria', 'Nucleus'], 'They bud off from the trans face.'),
+        () => makeMCQ('Lysosomes contain enzymes optimally active at:', 'Acidic pH', ['Basic pH', 'Neutral pH', 'Any pH'], 'pH ~4.5 to 5.'),
+        () => makeMCQ('If a cell is actively synthesizing secretory proteins, it will have an abundance of:', 'Rough Endoplasmic Reticulum', ['SER', 'Lysosomes', 'Vacuoles'], 'RER is studded with ribosomes.'),
+        () => makeMCQ('What does the tonoplast actively pump INTO the vacuole?', 'Ions and other materials against concentration gradient', ['Water only', 'Proteins', 'Lipids'], 'Maintains high osmotic pressure inside.'),
+        () => makeMCQ('Detoxification of drugs in the liver is primarily handled by the:', 'SER', ['RER', 'Golgi', 'Lysosomes'], 'Cytochrome P450 enzymes reside here.'),
+        () => makeMCQ('Which face of the Golgi is also known as the convex or forming face?', 'Cis face', ['Trans face', 'Maturing face', 'Lateral face'], 'It receives vesicles from ER.'),
+        () => {
+            const func = pick(['synthesis of steroid hormones', 'glycosylation of proteins']);
+            if (func === 'synthesis of steroid hormones') return makeMCQ('In animal cells, lipid-like steroidal hormones are synthesised in:', 'SER', ['RER', 'Golgi', 'Lysosomes'], 'A key SER function.');
+            return makeMCQ('The important site of formation of glycoproteins and glycolipids is:', 'Golgi apparatus', ['RER', 'SER', 'Lysosomes'], 'Glycosylation occurs here.');
+        },
+        () => makeMCQ('The components of the endomembrane system are coordinated in their:', 'Functions', ['Size', 'Structure', 'Evolutionary origin'], 'They work together in a pathway.'),
+        () => makeMCQ('A plant vacuole can occupy up to what percentage of the cell volume?', '90%', ['50%', '10%', '99%'], 'It is huge in mature plant cells.'),
+        () => makeMCQ('Amoeba engulfs its food by a process known as phagocytosis. The food vacuole thus formed fuses with:', 'Lysosomes', ['Mitochondria', 'Golgi', 'RER'], 'To digest the food.'),
+        () => makeMCQ('The RER is frequently observed in cells actively involved in:', 'Protein synthesis and secretion', ['Lipid synthesis', 'ATP production', 'Cell division'], 'Due to attached ribosomes.')
+    ];
+
+    const s6_organelles = [
+        () => makeMCQ('Which type of plastid is responsible for storing starch?', 'Amyloplast', ['Chloroplast', 'Chromoplast', 'Elaioplast'], 'Amyloplasts = starch.'),
+        () => makeMCQ('The microtubule arrangement in cilia and flagella is:', '9+2', ['9+0', '9+1', '8+2'], '9 peripheral doublets + 2 central singlets.'),
+        () => makeMCQ('Which of the following have 70S ribosomes?', 'Mitochondria and Chloroplasts', ['Nucleus and Mitochondria', 'Lysosomes and Chloroplasts', 'Golgi and Mitochondria'], 'Semi-autonomous organelles.'),
+        () => makeMCQ('Microtubules are absent in:', 'Microfilaments', ['Cilia', 'Flagella', 'Spindle fibres'], 'Microfilaments are actin, not tubulin.'),
+        () => makeMCQ('Which organelle is known as the powerhouse of the cell?', 'Mitochondria', ['Nucleus', 'Chloroplast', 'Golgi'], 'Produces ATP.'),
+        () => makeMCQ('Mitochondria are NOT part of the endomembrane system because:', 'Their functions are not coordinated with it', ['They lack a membrane', 'They are found only in animals', 'They divide by binary fission'], 'They operate independently.'),
+        () => makeMCQ('Which organelles are correctly classified as semi-autonomous?', 'Mitochondria and Chloroplasts', ['Mitochondria and Golgi', 'Lysosomes and Vacuoles', 'Nucleus and Mitochondria'], 'They have their own DNA & ribosomes.'),
+        () => makeMCQ('During ripening of a tomato, which plastid conversion occurs?', 'Chloroplast \u2192 Chromoplast', ['Leucoplast \u2192 Chloroplast', 'Chromoplast \u2192 Chloroplast', 'Chloroplast \u2192 Amyloplast'], 'Green fades, red lycopene accumulates.'),
+        () => makeMCQ('Centrioles have a microtubule organization of:', '9+0', ['9+2', '9+1', 'Variable'], '9 triplets, zero in the center.'),
+        () => makeMCQ('Aleuroplasts store which type of nutrient?', 'Proteins', ['Starch', 'Oils and fats', 'Water'], 'Aleuro = protein.'),
+        () => {
+            const structure = pick(['Inner mitochondrial membrane', 'Thylakoids']);
+            if (structure === 'Inner mitochondrial membrane') return makeMCQ('Cristae are infoldings of the:', 'Inner mitochondrial membrane', ['Outer mitochondrial membrane', 'Stroma', 'Chloroplast membrane'], 'Increase SA for ATP production.');
+            return makeMCQ('Grana are stacks of:', 'Thylakoids', ['Cristae', 'Cisternae', 'Stroma lamellae'], 'Found in chloroplasts.');
+        },
+        () => makeMCQ('George Palade observed which organelle under the electron microscope in 1953?', 'Ribosomes', ['Mitochondria', 'Golgi', 'Lysosomes'], 'Dense particles of RNA and protein.'),
+        () => makeMCQ('The central part of the proximal region of the centriole is proteinaceous and called the:', 'Hub', ['Spoke', 'Axoneme', 'Shaft'], 'Connects to triplets via radial spokes.'),
+        () => makeMCQ('The eukaryotic 80S ribosome consists of two subunits:', '60S and 40S', ['50S and 30S', '40S and 40S', '60S and 20S'], 'Math does not add up directly.'),
+        () => makeMCQ('Which portion of the cytoskeleton is responsible for muscular contraction and cleavage furrow formation?', 'Microfilaments (Actin)', ['Microtubules', 'Intermediate filaments', 'Keratin'], 'Actin handles dynamic movement.')
+    ];
+
+    const s7_nucleus = [
+        () => makeMCQ('The unit of chromatin (nucleosome) is composed of approximately:', '~200 bp of DNA with an octamer of histones', ['100 bp of DNA around 8 histones', '50 bp of DNA with H1 histone', '400 bp of DNA wrapped around 4 histones'], 'The standard nucleosome wrap.'),
+        () => makeMCQ('The nucleolus is the primary site of synthesis of:', 'rRNA', ['mRNA', 'tRNA', 'DNA'], 'Ribosome factory.'),
+        () => makeMCQ('Which histone is NOT part of the histone octamer core?', 'H1', ['H2A', 'H3', 'H4'], 'H1 acts as the sealing/linker histone.'),
+        () => makeMCQ('Euchromatin, compared to heterochromatin, is:', 'Loosely packed and transcriptionally active', ['More tightly coiled and inactive', 'Located exclusively outside the nucleus', 'Associated only with RNA'], 'Lightly stained, active DNA.'),
+        () => makeMCQ('Every chromosome has a primary constriction called the:', 'Centromere', ['Telomere', 'Kinetochore', 'Satellite'], 'Holds sister chromatids.'),
+        () => makeMCQ('Where does active ribosomal RNA (rRNA) synthesis take place?', 'Nucleolus', ['Nuclear pore', 'Nucleoplasm', 'SER'], 'Inside the nucleus.'),
+        () => makeMCQ('During cell division, chromatin condenses to form:', 'Chromosomes', ['Nucleoli', 'Centrioles', 'Spindle fibers'], 'Distinct thread-like bodies.'),
+        () => makeMCQ('What is the function of the nuclear pores?', 'To allow bidirectional passage of RNA and proteins', ['To let DNA out', 'For lipid synthesis', 'Energy transfer'], 'Nuclear transport.'),
+        () => makeMCQ('Which scientist first described the material of the nucleus as chromatin?', 'Walther Flemming', ['Robert Brown', 'George Palade', 'Camillo Golgi'], 'He named it because it took up basic dyes.'),
+        () => makeMCQ('A chromosome with a centromere situated close to its end is called:', 'Acrocentric', ['Metacentric', 'Sub-metacentric', 'Telocentric'], 'Almost at the end.'),
+        () => {
+            const type = pick(['Telocentric', 'Metacentric', 'Sub-metacentric']);
+            if (type === 'Telocentric') return makeMCQ('A chromosome with the centromere at the extreme tip is:', 'Telocentric', ['Acrocentric', 'Metacentric', 'Sub-metacentric'], 'Terminal centromere.');
+            if (type === 'Metacentric') return makeMCQ('A chromosome with a centromere exactly in the middle is:', 'Metacentric', ['Acrocentric', 'Telocentric', 'Sub-metacentric'], 'Two equal arms.');
+            return makeMCQ('A chromosome with a centromere slightly away from the middle is:', 'Sub-metacentric', ['Acrocentric', 'Metacentric', 'Telocentric'], 'One shorter and one longer arm.');
+        },
+        () => makeMCQ('The space between the two membranes of the nuclear envelope is called the:', 'Perinuclear space', ['Nucleoid region', 'Nucleoplasm', 'Cisterna'], 'Forms a barrier between nucleus and cytoplasm.'),
+        () => makeMCQ('Disc-shaped structures present on the sides of the centromere to which spindle fibers attach are:', 'Kinetochores', ['Satellites', 'Centrioles', 'Nucleosomes'], 'Protein anchors for microtubules.'),
+        () => makeMCQ('Non-staining secondary constrictions on a chromosome give the appearance of a small fragment called a:', 'Satellite', ['Telomere', 'Centromere', 'Kinetochore'], 'Found at constant locations in specific chromosomes.'),
+        () => makeMCQ('The outer membrane of the nucleus is usually continuous with:', 'The Endoplasmic Reticulum', ['The Golgi Apparatus', 'The Plasma Membrane', 'The Mitochondria'], 'Often bears ribosomes.')
+    ];
+
+    const s8_compare = [
+        () => makeMCQ('Which of the following is found in plant cells but NOT in animal cells?', 'Plastids', ['Mitochondria', 'Ribosomes', 'Golgi apparatus'], 'Chloroplasts, etc.'),
+        () => makeMCQ('Dictyosomes are structures found in plant cells equivalent to the _____ in animal cells.', 'Golgi apparatus', ['Lysosomes', 'Centrosome', 'Mitochondria'], 'Unconnected Golgi stacks in plants.'),
+        () => makeMCQ('Which features are common to BOTH prokaryotic and eukaryotic cells?', 'Plasma membrane, ribosomes, and DNA', ['Nuclear membrane and mitochondria', 'Golgi apparatus and ER', 'Cytoskeleton and nucleus'], 'Universal features of life.'),
+        () => makeMCQ('Read the statements: I. All eukaryotes lack a cell wall. II. Cyanobacteria are prokaryotes. III. Peroxisomes are endomembrane members. Correct?', 'Only II is true', ['I and II', 'II and III', 'I, II, and III'], 'Plants have walls; peroxisomes are independent.'),
+        () => makeMCQ('Which cell shape is characteristic of human red blood cells?', 'Round and biconcave', ['Long and narrow', 'Amoeboid', 'Branched'], 'For maximizing surface area.'),
+        () => makeMCQ('Which organelle is large and centrally located in a typical plant cell but small/absent in an animal cell?', 'Vacuole', ['Nucleus', 'Mitochondria', 'Golgi apparatus'], 'Central vacuole takes up to 90%.'),
+        () => makeMCQ('Which of the following cells typically lack centrioles?', 'Higher plant cells', ['Animal cells', 'Fungal cells', 'Protozoa'], 'Angiosperms lack them.'),
+        () => makeMCQ('Cholesterol is a major component of the cell membrane in:', 'Animal cells', ['Plant cells', 'Bacteria', 'Fungi'], 'Plants use other sterols.'),
+        () => makeMCQ('In a plant cell, the nucleus is typically located:', 'Peripherally', ['Centrally', 'Inside the vacuole', 'Outside the plasma membrane'], 'Pushed aside by the huge vacuole.'),
+        () => makeMCQ('Lysosomes are rare or absent in:', 'Plant cells', ['Animal cells', 'Amoeba', 'Macrophages'], 'Plant vacuoles often take over their role.'),
+        () => {
+            const org = pick(['Nerve cell', 'Tracheid']);
+            if (org === 'Nerve cell') return makeMCQ('Which of these is the longest cell type in animals?', 'Nerve cell', ['Muscle cell', 'RBC', 'WBC'], 'Can be over a meter long.');
+            return makeMCQ('In plants, elongated cells with thick lignified walls used for water transport are:', 'Tracheids', ['Mesophyll cells', 'Guard cells', 'Companion cells'], 'Elongated tube-like cells.');
+        },
+        () => makeMCQ('Plasmodesmata are found exclusively in:', 'Plant cells', ['Animal cells', 'Bacterial cells', 'Mycoplasma'], 'Connecting adjacent plant cell walls.'),
+        () => makeMCQ('Gap junctions in animal cells serve a similar functional role to what structure in plant cells?', 'Plasmodesmata', ['Cell wall', 'Middle lamella', 'Desmosomes'], 'Both allow intercellular communication.'),
+        () => makeMCQ('A major difference between bacterial and plant cell walls is the presence of:', 'Peptidoglycan in bacteria vs Cellulose in plants', ['Chitin in bacteria vs Cellulose in plants', 'Cellulose in bacteria vs Pectin in plants', 'Lipids in bacteria vs Proteins in plants'], 'Chemical composition differs entirely.'),
+        () => makeMCQ('Which of the following organisms represents a complete single eukaryotic cell?', 'Amoeba', ['Mycoplasma', 'Cyanobacteria', 'Virus'], 'It is a unicellular eukaryote (Protist).')
+    ];
+
+    const generateSet = (generatorArray, count) => {
+        let selected = [];
+        let attempts = 0;
+        while(selected.length < count && attempts < 100) {
+            const q = pick(generatorArray)();
+            if (!selected.some(existing => existing.question === q.question)) {
+                selected.push(q);
+            }
+            attempts++;
+        }
+        return selected;
+    };
+
     return [
         {
-            id: 'cell-theory-basics',
-            title: 'Cell Theory & Basics',
-            desc: 'Understand the foundation of biology: Cell Theory, and cell types.',
-            color: '#059669',
-            icon: '🔬',
+            id: 'cell-theory',
+            title: 'Cell Theory',
+            desc: 'The foundations of life: Hooke, Leeuwenhoek, Schleiden, Schwann, and Virchow.',
+            color: '#3b82f6',
+            icon: '🏛️',
             learnSections: [
                 {
-                    heading: 'The Cell Theory',
-                    content: 'Proposed by Schleiden and Schwann. Later, Rudolf Virchow added "Omnis cellula-e cellula" (All cells arise from pre-existing cells).',
-                    example: 'Virchow modified the hypothesis to give the cell theory a final shape in 1855.',
-                },
-                {
-                    heading: 'Prokaryotes vs Eukaryotes',
-                    content: 'Prokaryotes lack a membrane-bound nucleus and organelles (e.g. Bacteria, Mycoplasma). Eukaryotes have compartmentalized organelles and a true nucleus.',
-                    example: 'Mycoplasma are the smallest living cells known and lack a cell wall completely!',
+                    heading: 'Discovery Timeline',
+                    content: "<strong>1665: Robert Hooke \u2014 First observation of cells</strong>\nObserved <strong>dead cork cells</strong> under a compound microscope. Named them <em>cellulae</em> (Latin for small rooms). He did <strong>not</strong> propose cell theory \u2014 only coined the word \"cell.\"\n\n<strong>~1670s: Antonie van Leeuwenhoek \u2014 First living cells</strong>\nFirst to observe <strong>living, free cells</strong> \u2014 bacteria (he called them \"animalcules\") and protozoa \u2014 using a simple (single-lens) microscope he built himself.\n\n<strong>1838: Matthias Schleiden \u2014 Plant cells</strong>\n<strong>Botanist.</strong> Concluded that all plants are composed of cells and products of cells. First statement of cell theory (plants).\n\n<strong>1839: Theodor Schwann \u2014 Animal cells</strong>\n<strong>Zoologist.</strong> Extended Schleiden's observation to animals. Formulated the original two-principle cell theory: <strong>(1)</strong> all organisms are made of cells; <strong>(2)</strong> the cell is the basic structural unit of life.\n\n<strong>1855: Rudolf Virchow \u2014 Cells from pre-existing cells</strong>\n<strong>Pathologist.</strong> Proposed <em>\"Omnis cellula e cellula\"</em> \u2014 every cell arises from a pre-existing cell. This is the <strong>third and most critical</strong> addition to cell theory.",
+                    keyLabel: 'neet-trap',
+                    example: "<strong>Exceptions to Cell Theory \u2014 Direct NEET Questions</strong>\n<strong>Viruses</strong> are not made of cells (they are nucleoprotein particles) \u2014 they cannot replicate independently. They are the most cited exception.\n\n<strong>Mature RBCs (human):</strong> no nucleus. <strong>Mature sieve tube cells:</strong> no nucleus at maturity. <strong>Platelets:</strong> cell fragments, not whole cells."
                 }
             ],
-            practice: [
-                { type: 'multiple-choice', question: 'Who formulated the first cell theory?', options: ['Schleiden and Schwann', 'Anton Van Leeuwenhoek', 'Robert Hooke', 'Rudolf Virchow'], correctAnswer: 0, explanation: 'Matthias Schleiden (Botanist) and Theodore Schwann (Zoologist) together formulated the cell theory.' },
-                { type: 'multiple-choice', question: '"Omnis cellula-e cellula" means:', options: ['All cells have a nucleus', 'All cells arise from pre-existing cells', 'Cells are the fundamental unit of life', 'Cells contain DNA'], correctAnswer: 1, explanation: 'Rudolf Virchow stated this in 1855.' },
-                { type: 'multiple-choice', question: 'Which of the following lacks a cell wall?', options: ['Mycoplasma', 'Bacteria', 'Fungi', 'Blue-green algae'], correctAnswer: 0, explanation: 'Mycoplasma are the smallest living cells and completely lack a cell wall.' },
-                { type: 'multiple-choice', question: 'Prokaryotic cells have which type of ribosome?', options: ['70S', '80S', '90S', '100S'], correctAnswer: 0, explanation: 'Prokaryotes have 70S ribosomes (50S + 30S subunits).' },
-                { type: 'multiple-choice', question: 'What is the main function of the plasma membrane?', options: ['Protein synthesis', 'Selective permeability', 'Energy production', 'Lipid synthesis'], correctAnswer: 1, explanation: 'The cell membrane is selectively permeable, controlling transport of molecules.' },
-                { type: 'multiple-choice', question: 'Who first saw and described a live cell?', options: ['Robert Hooke', 'Rudolf Virchow', 'Anton Van Leeuwenhoek', 'Schleiden'], correctAnswer: 2, explanation: 'Anton Van Leeuwenhoek first saw and described a live cell.' },
-                { type: 'multiple-choice', question: 'The fluid mosaic model of the plasma membrane was proposed by:', options: ['Singer and Nicolson', 'Schleiden and Schwann', 'Camillo Golgi', 'Robert Brown'], correctAnswer: 0, explanation: 'Proposed in 1972 by Singer and Nicolson.' },
-                { type: 'multiple-choice', question: 'Which structure is unique to plant cells but absent in animal cells?', options: ['Mitochondria', 'Cell Wall', 'Nucleoplasm', 'Ribosomes'], correctAnswer: 1, explanation: 'Plant cells have a rigid cell wall, which animal cells lack.' },
-                { type: 'multiple-choice', question: 'A specialised differentiated form of cell membrane in prokaryotes is called:', options: ['Mesosome', 'Lysosome', 'Nucleoid', 'Plasmid'], correctAnswer: 0, explanation: 'Mesosomes are infoldings of the cell membrane in prokaryotes.' },
-                { type: 'multiple-choice', question: 'The main chemical component of a fungal cell wall is:', options: ['Cellulose', 'Chitin', 'Peptidoglycan', 'Pectin'], correctAnswer: 1, explanation: 'Fungal cell walls are mainly composed of chitin.' },
-                { type: 'multiple-choice', question: 'Which of these is NOT a eukaryote?', options: ['Protists', 'Fungi', 'Plants', 'Bacteria'], correctAnswer: 3, explanation: 'Bacteria are prokaryotes (Monera).' },
-                { type: 'multiple-choice', question: 'Plasmids in bacteria carry genes for:', options: ['Photosynthesis', 'Respiration', 'Antibiotic resistance', 'Protein folding'], correctAnswer: 2, explanation: 'Plasmids are extrachromosomal DNA often conferring traits like antibiotic resistance.' },
-                { type: 'multiple-choice', question: 'The quasi-fluid nature of lipids enables:', options: ['Rigidity', 'Lateral movement of proteins', 'Active transport', 'Osmosis'], correctAnswer: 1, explanation: 'The fluid mosaic model explains that the quasi-fluid lipid layer allows lateral protein movement.' },
-                { type: 'multiple-choice', question: 'Which organelle is non-membrane bound and found in ALL cells?', options: ['Nucleus', 'Mitochondria', 'Ribosome', 'Vacuole'], correctAnswer: 2, explanation: 'Ribosomes are found in both prokaryotes and eukaryotes and lack a membrane.' },
-                { type: 'multiple-choice', question: 'Active transport across a cell membrane requires:', options: ['No energy', 'ATP', 'Only a concentration gradient', 'Osmosis'], correctAnswer: 1, explanation: 'Active transport acts against the concentration gradient and requires ATP energy.' },
+            practice: generateSet(s1_theory, 15),
+            assessment: generateSet(s1_theory, 15)
+        },
+        {
+            id: 'prokaryote-eukaryote',
+            title: 'Prokaryotic vs Eukaryotic',
+            desc: 'The fundamental classification. Core features and the Mycoplasma trap.',
+            color: '#10b981',
+            icon: '🦠',
+            learnSections: [
+                {
+                    heading: 'Prokaryotic Cell',
+                    content: "Most ancient cells (~3.5 billion years). No membrane-bound nucleus \u2014 genetic material is in an irregular, non-membrane-bound region called the <strong>nucleoid</strong>.\n\n<strong>Examples:</strong> Bacteria (Eubacteria), Archaea, Cyanobacteria (blue-green algae), <em>Mycoplasma</em>",
+                    keyLabel: 'neet-trap',
+                    example: "<strong>Mycoplasma \u2014 The Smallest Cell</strong>\n<strong>Mycoplasma</strong> (PPLO \u2014 Pleuropneumonia-Like Organism) is the <strong>smallest cell capable of independent existence</strong>. It has <strong>NO cell wall</strong> \u2192 pleomorphic (no fixed shape). Passes through bacteria-retaining filters. Size: ~0.1\u20130.3 \u00b5m."
+                },
+                {
+                    heading: 'Full Comparison Table',
+                    content: "Eukaryotes are defined by a membrane-bound nucleus and compartmentalised organelles.",
+                    table: {
+                        headers: ['Feature', 'Prokaryote', 'Eukaryote'],
+                        rows: [
+                            ['<strong>Size</strong>', '1\u201310 \u00b5m', '10\u2013100 \u00b5m'],
+                            ['<strong>Nuclear envelope</strong>', 'Absent (nucleoid)', 'Present'],
+                            ['<strong>DNA type</strong>', 'Circular, naked, no histones', 'Linear, multiple chromosomes, with histones'],
+                            ['<strong>Plasmids</strong>', 'Present', 'Absent (except yeast)'],
+                            ['<strong>Ribosomes</strong>', '70S (50S + 30S)', '80S cytoplasm; 70S in mitochondria/chloroplast'],
+                            ['<strong>Cell wall</strong>', 'Peptidoglycan (bacteria); absent in Mycoplasma', 'Cellulose (plants); chitin (fungi); absent (animals)'],
+                            ['<strong>Membrane organelles</strong>', 'Absent', 'Present'],
+                            ['<strong>Mesosome</strong>', 'Present', 'Absent'],
+                            ['<strong>Division</strong>', 'Binary fission', 'Mitosis / Meiosis']
+                        ]
+                    },
+                    keyLabel: 'misconception',
+                    example: "<strong>The 70S Trap</strong>\nMitochondria and chloroplasts have <strong>70S ribosomes</strong> \u2014 same as prokaryotes, NOT 80S. This supports the endosymbiotic theory of organelle evolution."
+                }
             ],
-            assessment: [
-                { type: 'multiple-choice', question: 'Which of the following are exceptions to the cell theory?', options: ['Bacteria', 'Fungi', 'Viruses', 'Algae'], correctAnswer: 2, explanation: 'Viruses do not have a cellular structure and thus are an exception to the cell theory.' },
-                { type: 'multiple-choice', question: 'Who discovered the nucleus?', options: ['Robert Hooke', 'Robert Brown', 'Rudolf Virchow', 'Anton Van Leeuwenhoek'], correctAnswer: 1, explanation: 'Robert Brown discovered the nucleus in 1831.' },
-                { type: 'multiple-choice', question: 'Gram staining is used to classify:', options: ['Viruses', 'Bacteria', 'Fungi', 'Plants'], correctAnswer: 1, explanation: 'Bacteria can be Gram-positive or Gram-negative based on their cell envelope.' },
-                { type: 'multiple-choice', question: 'The most abundant lipid in the cell membrane is:', options: ['Cholesterol', 'Phospholipid', 'Glycolipid', 'Sphingolipid'], correctAnswer: 1, explanation: 'Phospholipids form the primary bilayer of the membrane.' },
-                { type: 'multiple-choice', question: 'What is the function of pili and fimbriae in bacteria?', options: ['Motility', 'Attachment/Adhesion', 'Conjugation', 'Both B and C'], correctAnswer: 3, explanation: 'They are surface structures used for attachment and some forms of DNA transfer (conjugation), not motility.' },
-                { type: 'multiple-choice', question: 'Ostrich egg is an example of:', options: ['The smallest cell', 'The longest cell', 'The largest isolated single cell', 'A prokaryote'], correctAnswer: 2, explanation: 'The egg of an ostrich is the largest isolated single cell.' },
-                { type: 'multiple-choice', question: 'Which scientist examined plant cells to form part of the Cell Theory?', options: ['Schwann', 'Virchow', 'Schleiden', 'Hooke'], correctAnswer: 2, explanation: 'Matthias Schleiden (Botanist) examined plant cells.' },
-                { type: 'multiple-choice', question: 'The genetic material of a prokaryote is called:', options: ['Nucleolus', 'Nucleoid', 'Nucleus', 'Nucleoplasm'], correctAnswer: 1, explanation: 'It is a naked mass of DNA not enclosed by a nuclear membrane, called a nucleoid.' },
-                { type: 'multiple-choice', question: 'Algal cell walls are made of cellulose, galactans, mannans and minerals like:', options: ['Silica', 'Calcium carbonate', 'Magnesium sulfate', 'Iron oxide'], correctAnswer: 1, explanation: 'Algal cell walls contain cellulose, galactans, mannans and calcium carbonate.' },
-                { type: 'multiple-choice', question: 'In the fluid mosaic model, proteins are arranged:', options: ['In a continuous layer', 'As a rigid sheet', 'Like icebergs floating in a sea of lipids', 'Only on the inner surface'], correctAnswer: 2, explanation: 'Proteins are irregularly scattered in the fluid lipid bilayer.' },
-                { type: 'multiple-choice', question: 'Passive transport of water across a selectively permeable membrane is called:', options: ['Osmosis', 'Diffusion', 'Active transport', 'Exocytosis'], correctAnswer: 0, explanation: 'Osmosis is the diffusion of water.' },
-                { type: 'multiple-choice', question: 'Which cell shape is characteristic of human red blood cells?', options: ['Long and narrow', 'Round and biconcave', 'Amoeboid', 'Branched'], correctAnswer: 1, explanation: 'RBCs are round and biconcave.' },
-                { type: 'multiple-choice', question: 'Flagella in prokaryotes differ from eukaryotic flagella in:', options: ['Being absent', 'Having a 9+2 arrangement', 'Lacking a 9+2 arrangement', 'Being made of tubulin'], correctAnswer: 2, explanation: 'Prokaryotic flagella use flagellin and lack the 9+2 microtubule structure of eukaryotes.' },
-                { type: 'multiple-choice', question: 'Which of the following can pass freely through the lipid bilayer?', options: ['Charged ions', 'Large polar molecules', 'Small non-polar molecules', 'Proteins'], correctAnswer: 2, explanation: 'Non-polar (lipid-soluble) molecules pass easily. Polar molecules need carrier proteins.' },
-                { type: 'multiple-choice', question: 'A continuous network of interconnected sacs/tubules spreading through the cytoplasm is:', options: ['Golgi apparatus', 'Endoplasmic Reticulum', 'Lysosomes', 'Mitochondria'], correctAnswer: 1, explanation: 'This describes the Endoplasmic Reticulum.' },
-            ]
+            practice: generateSet(s2_proEU, 15),
+            assessment: generateSet(s2_proEU, 15)
+        },
+        {
+            id: 'cell-membrane',
+            title: 'Cell Membrane',
+            desc: 'The selectively permeable boundary. Fluid Mosaic Model and transport.',
+            color: '#f59e0b',
+            icon: '🚧',
+            learnSections: [
+                {
+                    heading: 'Fluid Mosaic Model (1972)',
+                    content: "Proposed by <strong>Singer & Nicolson</strong>. Proteins are embedded like a mosaic in a fluid lipid bilayer.\n\n<strong>Phospholipid Bilayer:</strong> Two sheets of phospholipids. Each has a hydrophilic head and a hydrophobic tail. In animal cells, cholesterol is present between phospholipids.\n\n<strong>Proteins:</strong>\n- <strong>Integral:</strong> span the full lipid bilayer; function as channels.\n- <strong>Peripheral:</strong> loosely attached; involved in structural support.",
+                    keyLabel: 'neet-trap',
+                    example: "<strong>Cholesterol NEET Trap</strong>\nCholesterol is present in <strong>animal cell membranes</strong>. Absent in <strong>plant cell membranes</strong> and most prokaryotic membranes. Exception: <strong>Mycoplasma</strong> \u2014 a prokaryote that has sterols in its membrane despite lacking a cell wall."
+                },
+                {
+                    heading: 'Membrane Transport',
+                    content: "<strong>Passive (no ATP):</strong> Simple diffusion (O\u2082, CO\u2082). Facilitated diffusion (polar molecules move via protein channels).\n\n<strong>Active (requires ATP):</strong> Against concentration gradient. Example: Na\u207a/K\u207a ATPase pump (3 Na\u207a out, 2 K\u207a in).\n\n<strong>Osmosis:</strong> Movement of water through a semipermeable membrane.",
+                    keyLabel: 'key-fact',
+                    example: "<strong>Glycocalyx:</strong> Carbohydrate chains attached to proteins (glycoproteins) or lipids (glycolipids) exclusively on the extracellular face. Responsible for cell recognition (e.g., ABO blood groups)."
+                }
+            ],
+            practice: generateSet(s3_membrane, 15),
+            assessment: generateSet(s3_membrane, 15)
+        },
+        {
+            id: 'cell-wall',
+            title: 'Cell Wall',
+            desc: 'Provides rigidity and shape. Composition across differing organisms.',
+            color: '#0d9488',
+            icon: '🧱',
+            learnSections: [
+                {
+                    heading: 'Cell Wall Composition by Organism',
+                    content: "Present in plants, fungi, and most bacteria. Absent in animal cells.",
+                    table: {
+                        headers: ['Organism', 'Composition'],
+                        rows: [
+                            ['<strong>Bacteria</strong>', 'Peptidoglycan (murein)'],
+                            ['<strong>Cyanobacteria</strong>', 'Cellulose, pectin + amino acids'],
+                            ['<strong>Fungi</strong>', 'Chitin (N-acetylglucosamine)'],
+                            ['<strong>Diatoms (algae)</strong>', 'Silica (SiO\u2082)'],
+                            ['<strong>Higher plants</strong>', 'Cellulose, hemicellulose, pectin (primary); + lignin (secondary)'],
+                            ['<strong>Mycoplasma</strong>', '<strong>No cell wall</strong>']
+                        ]
+                    },
+                    keyLabel: 'neet-note',
+                    example: "<strong>Plasmodesmata:</strong> Cytoplasmic strands that traverse the cell wall, connecting the cytoplasm of adjacent plant cells. They allow direct cell-to-cell communication (analogous to gap junctions in animals)."
+                },
+                {
+                    heading: 'Plant Cell Wall Layers',
+                    content: "- <strong>Middle Lamella:</strong> Outermost; shared between adjacent cells. Made of calcium/magnesium pectates (cements cells together).\n- <strong>Primary Wall:</strong> Thin, flexible; allows expansion in young cells.\n- <strong>Secondary Wall:</strong> Innermost layer (when present). Contains lignin; mature cells (waterproof and rigid).",
+                    keyLabel: 'key-fact',
+                    example: "The middle lamella dissolves during fruit ripening, which makes the fruit soft."
+                }
+            ],
+            practice: generateSet(s4_wall, 15),
+            assessment: generateSet(s4_wall, 15)
         },
         {
             id: 'endomembrane-system',
-            title: 'The Endomembrane System',
-            desc: 'Explore the ER, Golgi, Lysosomes, and Vacuoles working together.',
+            title: 'Endomembrane System',
+            desc: 'The internal transport network: ER, Golgi, Lysosomes, and Vacuoles.',
             color: '#7c3aed',
             icon: '📦',
             learnSections: [
                 {
-                    heading: 'System Components',
-                    content: 'The endomembrane system includes the Endoplasmic Reticulum (ER), Golgi complex, lysosomes, and vacuoles because their functions are coordinated.',
-                    example: 'Mitochondria and chloroplasts are NOT part of this system because their functions are independent.',
+                    heading: 'Members vs Non-Members',
+                    content: "A network of interconnected membrane-bound compartments that function together to synthesise, process, package, and transport proteins and lipids.\n\n<strong>Members:</strong>\n- Endoplasmic Reticulum (ER)\n- Golgi Apparatus\n- Lysosomes\n- Vacuoles",
+                    keyLabel: 'neet-trap',
+                    example: "<strong>NOT members:</strong> Mitochondria, Chloroplasts, and Peroxisomes \u2014 these have independent membrane origins and do not interact with the ER\u2013Golgi secretory pathway."
                 },
                 {
-                    heading: 'Roles',
-                    content: 'RER synthesizes proteins, SER synthesizes lipids. Golgi packages and modifies materials. Lysosomes are the "suicide bags" (digestion).',
-                    example: 'Golgi receives proteins from the ER, modifies them, and ships them to their destination.',
+                    heading: 'System Components',
+                    content: "<strong>ER:</strong> RER (with ribosomes) synthesises/folds proteins. SER synthesises lipids and detoxifies drugs.\n\n<strong>Golgi:</strong> Discovered by Camillo Golgi. cis face (receives) and trans face (dispatches). Functions: Glycosylation, packaging, lysosome and acrosome formation.\n\n<strong>Lysosomes:</strong> Formed by Golgi. Contain acid hydrolases (pH ~4.5\u20135).\n\n<strong>Vacuoles:</strong> Plant central vacuole occupies up to 90% volume. Bounded by <strong>tonoplast</strong>, maintaining turgor.",
+                    keyLabel: 'key-fact',
+                    example: "<strong>Lysosomes = Suicide Bags:</strong> They can autodigest the cell under stress (autolysis) using their hydrolytic enzymes."
                 }
             ],
-            practice: [
-                { type: 'multiple-choice', question: 'Which organelles are part of the endomembrane system?', options: ['ER, Golgi, Lysosomes, Vacuoles', 'Mitochondria, Chloroplasts, Nucleus', 'Ribosomes, Cytoskeleton, Centrioles', 'Nucleus, ER, Golgi, Mitochondria'], correctAnswer: 0, explanation: 'Their functions are coordinated in transport and processing.' },
-                { type: 'multiple-choice', question: 'Smooth Endoplasmic Reticulum (SER) is primarily involved in:', options: ['Protein synthesis', 'Lipid synthesis', 'ATP production', 'Photosynthesis'], correctAnswer: 1, explanation: 'SER lacks ribosomes and synthesizes lipids/steroids.' },
-                { type: 'multiple-choice', question: 'Rough Endoplasmic Reticulum (RER) is "rough" because it has:', options: ['Lysosomes attached', 'Ribosomes attached', 'Microtubules attached', 'Golgi bodies attached'], correctAnswer: 1, explanation: 'Ribosomes on its surface give it a rough appearance and synthesize proteins.' },
-                { type: 'multiple-choice', question: 'The Golgi apparatus was discovered by:', options: ['George Palade', 'Camillo Golgi', 'Christian de Duve', 'Robert Brown'], correctAnswer: 1, explanation: 'Camillo Golgi observed densely stained reticular structures near the nucleus (1898).' },
-                { type: 'multiple-choice', question: 'The main function of the Golgi apparatus is:', options: ['Energy generation', 'Packaging and secretion of materials', 'Lipid synthesis', 'Digestion'], correctAnswer: 1, explanation: 'It acts as the packaging and dispatch center of the cell.' },
-                { type: 'multiple-choice', question: 'Lysosomes are rich in which type of enzymes?', options: ['Ligases', 'Hydrolytic enzymes (Hydrolases)', 'Transferases', 'Isomerases'], correctAnswer: 1, explanation: 'Lysosomes contain lipases, proteases, carbohydrases active at acidic pH.' },
-                { type: 'multiple-choice', question: 'In plant cells, vacuoles can occupy up to:', options: ['10% of cell volume', '50% of cell volume', '90% of cell volume', '1% of cell volume'], correctAnswer: 2, explanation: 'The large central vacuole is a prominent feature of mature plant cells.' },
-                { type: 'multiple-choice', question: 'The membrane surrounding the vacuole is called:', options: ['Tonoplast', 'Plasma membrane', 'Cell wall', 'Nuclear envelope'], correctAnswer: 0, explanation: 'The tonoplast facilitates active transport of ions into the vacuole.' },
-                { type: 'multiple-choice', question: 'Which face of the Golgi apparatus receives vesicles from the ER?', options: ['Trans face (Maturing)', 'Cis face (Forming)', 'Lateral face', 'Basal face'], correctAnswer: 1, explanation: 'Materials enter via the convex cis face and exit from the concave trans face.' },
-                { type: 'multiple-choice', question: 'Lysosomes are formed by the process of packaging in the:', options: ['Endoplasmic Reticulum', 'Mitochondria', 'Golgi apparatus', 'Nucleus'], correctAnswer: 2, explanation: 'Hydrolytic enzymes from ER are packaged into lysosomes by the Golgi.' },
-                { type: 'multiple-choice', question: 'Contractile vacuoles in Amoeba are important for:', options: ['Digestion', 'Excretion and Osmoregulation', 'Respiration', 'Reproduction'], correctAnswer: 1, explanation: 'They pump out excess water.' },
-                { type: 'multiple-choice', question: 'Food vacuoles in Protists are formed by:', options: ['Exocytosis', 'Engulfing the food particles (Phagocytosis)', 'Division of the nucleus', 'Synthesis in the ER'], correctAnswer: 1, explanation: 'They form around engulfed food particles.' },
-                { type: 'multiple-choice', question: 'Important site for the formation of glycoproteins and glycolipids is the:', options: ['Lysosome', 'Vacuole', 'Golgi apparatus', 'Plastids'], correctAnswer: 2, explanation: 'Proteins and lipids from the ER are modified in the Golgi apparatus by adding carbohydrate chains.' },
-                { type: 'multiple-choice', question: 'In animal cells, lipid-like steroidal hormones are synthesized in the:', options: ['RER', 'SER', 'Golgi apparatus', 'Lysosomes'], correctAnswer: 1, explanation: 'SER is responsible for synthesizing lipids and steroidal hormones.' },
-                { type: 'multiple-choice', question: 'Are mitochondria part of the endomembrane system?', options: ['Yes', 'No'], correctAnswer: 1, explanation: 'No, their functions are not intricately coordinated with the ER/Golgi transport pathway.' },
-            ],
-            assessment: [
-                { type: 'multiple-choice', question: 'If a cell is actively synthesizing secretory proteins, it will have an abundance of:', options: ['SER', 'RER', 'Lysosomes', 'Vacuoles'], correctAnswer: 1, explanation: 'RER is heavily involved in synthesizing proteins meant for secretion.' },
-                { type: 'multiple-choice', question: 'Which organelle is considered the "suicide bag" of the cell?', options: ['Golgi', 'Mitochondria', 'Lysosome', 'Ribosome'], correctAnswer: 2, explanation: 'Lysosomes contain powerful hydrolytic enzymes that can digest the cell if released.' },
-                { type: 'multiple-choice', question: 'The stacked, flattened disc-like sacs in the Golgi apparatus are called:', options: ['Cristae', 'Cisternae', 'Thylakoids', 'Granum'], correctAnswer: 1, explanation: 'Cisternae are the flattened sacs of the Golgi.' },
-                { type: 'multiple-choice', question: 'What does the tonoplast actively pump INTO the vacuole?', options: ['Water only', 'Ions and other materials', 'Proteins', 'Lipids'], correctAnswer: 1, explanation: 'The tonoplast actively transports ions against their concentration gradient into the vacuole.' },
-                { type: 'multiple-choice', question: 'A lysosome\'s enzymes are optimally active under which condition?', options: ['Basic pH', 'Neutral pH', 'Acidic pH', 'Any pH'], correctAnswer: 2, explanation: 'Lysosomal hydrolases require an acidic environment to function.' },
-                { type: 'multiple-choice', question: 'Where do the materials packaged by the Golgi apparatus usually come from?', options: ['Mitochondria', 'Endoplasmic Reticulum', 'Plasma Membrane', 'Nucleus'], correctAnswer: 1, explanation: 'Proteins and lipids are synthesized in the ER and sent to the Golgi.' },
-                { type: 'multiple-choice', question: 'Detoxification of drugs in the liver is primarily handled by the:', options: ['RER', 'SER', 'Golgi', 'Lysosomes'], correctAnswer: 1, explanation: 'SER plays a major role in detoxifying drugs and poisons.' },
-                { type: 'multiple-choice', question: 'Which face of the Golgi is also known as the convex face?', options: ['Cis face', 'Trans face', 'Maturing face', 'Lateral face'], correctAnswer: 0, explanation: 'The Cis face or forming face is convex.' },
-                { type: 'multiple-choice', question: 'Which cell structure is NOT part of the endomembrane system?', options: ['Vacuole', 'Golgi', 'Peroxisome', 'Lysosome'], correctAnswer: 2, explanation: 'Peroxisomes, Mitochondria, and Chloroplasts are excluded.' },
-                { type: 'multiple-choice', question: 'Which of the following describes the relationship between cis and trans faces of the Golgi?', options: ['They are entirely different and unconnected', 'They are interconnected but distinctly different', 'They are identical in structure and function', 'They lie parallel but don\'t interact'], correctAnswer: 1, explanation: 'They have distinct roles but are interconnected through vesicle transport.' },
-                { type: 'multiple-choice', question: 'The space inside the ER is called the:', options: ['Luminal compartment', 'Extraluminal compartment', 'Stroma', 'Matrix'], correctAnswer: 0, explanation: 'Inside the ER is the luminal space; the cytoplasm is the extraluminal space.' },
-                { type: 'multiple-choice', question: 'Proteins synthesized by ribosomes on the ER are modified in the:', options: ['Lysosome cisternae', 'Golgi cisternae', 'Mitochondrial cristae', 'Vacuole'], correctAnswer: 1, explanation: 'They are modified in the Golgi cisternae before release.' },
-                { type: 'multiple-choice', question: 'Which organelle is large and centrally located in a typical plant cell but small/absent in an animal cell?', options: ['Nucleus', 'Vacuole', 'Mitochondria', 'Golgi apparatus'], correctAnswer: 1, explanation: 'Plant cells have a huge central vacuole.' },
-                { type: 'multiple-choice', question: 'Autolysis (self-digestion) of a dying cell is carried out by:', options: ['Lysosomes', 'Peroxisomes', 'Dietary vacuoles', 'SER'], correctAnswer: 0, explanation: 'Lysosomes rupture and their hydrolases digest the cell.' },
-                { type: 'multiple-choice', question: 'A cell with extensive SER would likely synthesize large amounts of:', options: ['Enzymes', 'Lipids/Steroids', 'Carbohydrates', 'Nucleic acids'], correctAnswer: 1, explanation: 'SER is the major site of lipid synthesis.' },
-            ]
+            practice: generateSet(s5_endo, 15),
+            assessment: generateSet(s5_endo, 15)
         },
         {
-            id: 'energy-organelles',
-            title: 'Energy & Core Organelles',
-            desc: 'Understand Mitochondria, Plastids, and the mighty Nucleus.',
-            color: '#dc2626',
-            icon: '⚡',
+            id: 'organelles',
+            title: 'Cell Organelles',
+            desc: 'Mitochondria, Plastids, Ribosomes, and the Cytoskeleton.',
+            color: '#ec4899',
+            icon: '⚙️',
             learnSections: [
                 {
-                    heading: 'The Powerhouses',
-                    content: 'Mitochondria produce ATP (cellular energy). Chloroplasts (a type of plastid) trap solar energy for photosynthesis.',
-                    example: 'Both have double membranes and contain their own circular DNA and 70S ribosomes! They are semi-autonomous.',
+                    heading: 'Mitochondria & Plastids',
+                    content: "<strong>Mitochondria:</strong> Double membrane. Inner membrane folded into <strong>cristae</strong> (increases surface area for ATP). Matrix contains circular DNA and <strong>70S ribosomes</strong>.\n\n<strong>Plastids (Plants only):</strong>\n- <strong>Chloroplasts (green):</strong> Thylakoids stacked into grana. Has 70S ribosomes.\n- <strong>Chromoplasts (coloured):</strong> Carotenoids (red, yellow, orange).\n- <strong>Leucoplasts (colourless):</strong> Store starch (amyloplast), oil (elaioplast), protein (aleuroplast).",
+                    keyLabel: 'misconception',
+                    example: "<strong>Semi-Autonomous Organelles:</strong> Mitochondria and chloroplasts are semi-autonomous because they have their own circular DNA and 70S ribosomes, meaning they can synthesise some of their own proteins."
                 },
                 {
-                    heading: 'The Nucleus',
-                    content: 'The control center. It contains chromatin (DNA + histones) which condenses into chromosomes during cell division.',
-                    example: 'The nucleolus inside the nucleus is the site for ribosomal RNA (rRNA) synthesis.',
+                    heading: 'Ribosomes & Centrosomes',
+                    content: "<strong>Ribosomes:</strong> Non-membrane bound. 70S in prokaryotes, 80S in eukaryote cytoplasm.\n\n<strong>Centrosome:</strong> Animal cells only. Contains two <strong>centrioles</strong>. \n\n<strong>Cilia/Flagella:</strong> 9+2 microtubule arrangement. Motor protein: dynein.\n\n<strong>Cytoskeleton:</strong> Microfilaments (actin), Intermediate filaments, Microtubules (tubulin).",
+                    keyLabel: 'neet-trap',
+                    example: "<strong>9+2 vs 9+0 Trap:</strong>\nCilia and flagella have a <strong>9+2</strong> microtubule arrangement (9 peripheral doublets, 2 central singlets).\nCentrioles and basal bodies have a <strong>9+0</strong> arrangement (9 peripheral triplets, NO central pair)."
                 }
             ],
-            practice: [
-                { type: 'multiple-choice', question: 'Which organelle is known as the powerhouse of the cell?', options: ['Nucleus', 'Chloroplast', 'Mitochondria', 'Golgi'], correctAnswer: 2, explanation: 'Mitochondria produce cellular energy in the form of ATP.' },
-                { type: 'multiple-choice', question: 'What are the infoldings of the inner mitochondrial membrane called?', options: ['Cisternae', 'Thylakoids', 'Cristae', 'Matrix'], correctAnswer: 2, explanation: 'Cristae increase the surface area for ATP production.' },
-                { type: 'multiple-choice', question: 'Plastids are found in:', options: ['All plant cells only', 'All animal cells', 'All plant cells and in euglenoides', 'Only in algae'], correctAnswer: 2, explanation: 'Plastids are found in all plant cells and in euglenoides.' },
-                { type: 'multiple-choice', question: 'Which type of plastid stores starch?', options: ['Amyloplast', 'Elaioplast', 'Aleuroplast', 'Chromoplast'], correctAnswer: 0, explanation: 'Amyloplasts store carbohydrates like starch.' },
-                { type: 'multiple-choice', question: 'The flat, membranous sacs inside the chloroplast are called:', options: ['Cristae', 'Stroma', 'Thylakoids', 'Cisternae'], correctAnswer: 2, explanation: 'Thylakoids are stacked like coins to form grana within the chloroplast.' },
-                { type: 'multiple-choice', question: 'Mitochondria and chloroplasts share what feature with prokaryotes?', options: ['70S ribosomes', '80S ribosomes', 'Linear DNA', 'Cell wall'], correctAnswer: 0, explanation: 'Both organelles contain 70S ribosomes and circular DNA.' },
-                { type: 'multiple-choice', question: 'The space enclosed by the inner membrane of the chloroplast is called the:', options: ['Matrix', 'Stroma', 'Lumen', 'Cytoplasm'], correctAnswer: 1, explanation: 'The inner space of the chloroplast is the stroma.' },
-                { type: 'multiple-choice', question: 'The nucleus is enclosed by how many membranes?', options: ['None', 'One', 'Two', 'Three'], correctAnswer: 2, explanation: 'The nuclear envelope consists of two parallel membranes with a perinuclear space.' },
-                { type: 'multiple-choice', question: 'Where does active ribosomal RNA (rRNA) synthesis take place?', options: ['Nucleolus', 'Nuclear pore', 'Nucleoplasm', 'SER'], correctAnswer: 0, explanation: 'The nucleolus is a non-membrane bound spherical structure in the nucleoplasm involved in rRNA synthesis.' },
-                { type: 'multiple-choice', question: 'During cell division, chromatin condenses to form:', options: ['Nucleoli', 'Chromosomes', 'Centrioles', 'Spindle fibers'], correctAnswer: 1, explanation: 'Chromosomes are highly condensed structures of DNA and proteins seen during division.' },
-                { type: 'multiple-choice', question: 'Every chromosome has a primary constriction called the:', options: ['Telomere', 'Centromere', 'Kinetochore', 'Satellite'], correctAnswer: 1, explanation: 'The centromere is the primary constriction holding sister chromatids together.' },
-                { type: 'multiple-choice', question: 'Disc-shaped structures on the sides of the centromere are called:', options: ['Telomeres', 'Kinetochores', 'Centrosomes', 'Satellites'], correctAnswer: 1, explanation: 'Kinetochores serve as attachment points for spindle fibers.' },
-                { type: 'multiple-choice', question: 'A chromosome with a centromere near the end (forming an extremely short arm and very long arm) is called:', options: ['Metacentric', 'Sub-metacentric', 'Acrocentric', 'Telocentric'], correctAnswer: 2, explanation: 'Acrocentric chromosomes have the centromere situated close to its end.' },
-                { type: 'multiple-choice', question: 'Microbodies (like peroxisomes) are found in:', options: ['Only animal cells', 'Only plant cells', 'Both plant and animal cells', 'Prokaryotes'], correctAnswer: 2, explanation: 'Microbodies containing various enzymes are found in both plants and animals.' },
-                { type: 'multiple-choice', question: 'Cilia and flagella have a core called the axoneme. What is its microtubular arrangement?', options: ['9 + 0', '9 + 2', '9 + 4', 'Center pair only'], correctAnswer: 1, explanation: 'Eukaryotic cilia and flagella have a 9+2 arrangement (9 peripheral doublets, 2 central singlets).' },
+            practice: generateSet(s6_organelles, 15),
+            assessment: generateSet(s6_organelles, 15)
+        },
+        {
+            id: 'nucleus',
+            title: 'The Nucleus',
+            desc: 'The control centre. Chromatin, nucleosomes, and the nucleolus.',
+            color: '#8b5cf6',
+            icon: '🧩',
+            learnSections: [
+                {
+                    heading: 'Nuclear Structure',
+                    content: "<strong>Nuclear Envelope:</strong> Double-membrane barrier with nuclear pores (~10 nm) allowing selective transport.\n\n<strong>Nucleolus:</strong> Not membrane-bound. Site of <strong>rRNA synthesis</strong> (ribosome factory). Disappears during cell division.\n\n<strong>Chromatin:</strong> DNA + histone proteins.\n- <strong>Euchromatin:</strong> loosely packed \u2192 transcriptionally active.\n- <strong>Heterochromatin:</strong> tightly coiled \u2192 transcriptionally inactive (e.g. Barr body).",
+                    keyLabel: 'key-fact',
+                    example: "<strong>Barr Body:</strong> In mammalian females (XX), one X chromosome is permanently inactivated and exists as a dense heterochromatic Barr body."
+                },
+                {
+                    heading: 'The Nucleosome',
+                    content: "The fundamental unit of chromatin. Appears as \"beads on a string\" under electron microscopy.\n\n<strong>Components:</strong>\n- <strong>Histone octamer:</strong> 2\u00d7 H2A + 2\u00d7 H2B + 2\u00d7 H3 + 2\u00d7 H4 = 8 proteins.\n- <strong>DNA:</strong> ~200 bp wrapped around the octamer (1.65\u20132 turns).",
+                    keyLabel: 'neet-trap',
+                    example: "<strong>The H1 Histone Trap</strong>\n<strong>H1 is NOT part of the octamer.</strong> It is the linker/sealing histone that sits outside the core. Histones are basic proteins (rich in lysine and arginine) that bind negatively charged DNA."
+                }
             ],
-            assessment: [
-                { type: 'multiple-choice', question: 'Which plastid contains fat-soluble carotenoid pigments (orange, yellow, red)?', options: ['Chloroplast', 'Chromoplast', 'Leucoplast', 'Amyloplast'], correctAnswer: 1, explanation: 'Chromoplasts give color to plant parts.' },
-                { type: 'multiple-choice', question: 'Which organelle divides by fission?', options: ['Golgi apparatus', 'Lysosome', 'Mitochondria', 'Nucleus'], correctAnswer: 2, explanation: 'Mitochondria (and chloroplasts) replicate by fission, similar to bacteria.' },
-                { type: 'multiple-choice', question: 'The space inside a thylakoid is called the:', options: ['Stroma', 'Matrix', 'Lumen', 'Cisterna'], correctAnswer: 2, explanation: 'The membrane of thylakoids encloses a space called the lumen.' },
-                { type: 'multiple-choice', question: 'Aleuroplasts store which type of nutrient?', options: ['Starch', 'Oils and fats', 'Proteins', 'Water'], correctAnswer: 2, explanation: 'Aleuroplasts specifically store proteins.' },
-                { type: 'multiple-choice', question: 'What is the function of the nuclear pores?', options: ['To let DNA out', 'For lipid synthesis', 'To allow passage of RNA and proteins', 'Energy transfer'], correctAnswer: 2, explanation: 'Nuclear pores allow RNA and proteins to move between the nucleus and the cytoplasm.' },
-                { type: 'multiple-choice', question: 'In a metacentric chromosome, the centromere is located:', options: ['At the very end', 'Near the end', 'Slightly off-center', 'In the exact middle'], correctAnswer: 3, explanation: 'Metacentric means the centromere is in the middle, creating two equal arms.' },
-                { type: 'multiple-choice', question: 'What is a satellite chromosome?', options: ['A chromosome with no centromere', 'A chromosome with a secondary constriction', 'A tiny chromosome', 'A chromosome outside the nucleus'], correctAnswer: 1, explanation: 'Secondary constrictions give the appearance of a small fragment called a satellite.' },
-                { type: 'multiple-choice', question: 'Centrosomes usually contain two cylindrical structures called:', options: ['Centromeres', 'Centrioles', 'Kinetochores', 'Basal bodies'], correctAnswer: 1, explanation: 'A centrosome contains two mutually perpendicular centrioles.' },
-                { type: 'multiple-choice', question: 'Centrioles have a microtubule organization of:', options: ['9 + 2', '9 + 0', '9 + 1', 'Variable'], correctAnswer: 1, explanation: 'Centrioles have 9 evenly spaced peripheral fibrils of tubulin and no central pair (9+0 arrangement).' },
-                { type: 'multiple-choice', question: 'Which scientist first described chromatin?', options: ['Robert Brown', 'George Palade', 'Walther Flemming', 'Camillo Golgi'], correctAnswer: 2, explanation: 'Flemming gave the name chromatin to the material stained by basic dyes.' },
-                { type: 'multiple-choice', question: 'Which cells lack a nucleus at maturity?', options: ['Human neurons', 'Mammalian RBCs and sieve tube cells', 'Human skin cells', 'Muscle cells'], correctAnswer: 1, explanation: 'Erythrocytes (RBCs) in many mammals and sieve tube cells of vascular plants lack a nucleus.' },
-                { type: 'multiple-choice', question: 'Which part of the mitochondria is responsible for the formation of cristae?', options: ['Outer membrane', 'Inner membrane', 'Intermembrane space', 'Matrix'], correctAnswer: 1, explanation: 'The inner membrane forms infoldings called cristae.' },
-                { type: 'multiple-choice', question: 'The central part of the proximal region of the centriole is proteinaceous and called the:', options: ['Axoneme', 'Hub', 'Spokes', 'Kinetochore'], correctAnswer: 1, explanation: 'The central part is called the hub, connected to the peripheral triplets by radial spokes.' },
-                { type: 'multiple-choice', question: 'In chloroplasts, enzymes required for the synthesis of carbohydrates and proteins are found in the:', options: ['Thylakoid lumen', 'Grana', 'Stroma', 'Outer membrane'], correctAnswer: 2, explanation: 'The stroma contains the enzymes for the dark reaction of photosynthesis (Calvin cycle).' },
-                { type: 'multiple-choice', question: 'A telocentric chromosome has its centromere:', options: ['In the middle', 'Slightly away from the middle', 'Close to the end', 'At the terminal end'], correctAnswer: 3, explanation: 'Telocentric chromosomes have a terminal centromere.' },
-            ]
+            practice: generateSet(s7_nucleus, 15),
+            assessment: generateSet(s7_nucleus, 15)
+        },
+        {
+            id: 'plant-vs-animal',
+            title: 'Plant vs Animal Cell',
+            desc: 'The master comparison. Differences in organelle distribution.',
+            color: '#14b8a6',
+            icon: '🌿',
+            learnSections: [
+                {
+                    heading: 'Master Comparison',
+                    content: "One of the most reliably tested comparison tables in NEET Biology.",
+                    table: {
+                        headers: ['Feature', 'Plant Cell', 'Animal Cell'],
+                        rows: [
+                            ['<strong>Cell wall</strong>', '✅ Present', '❌ Absent'],
+                            ['<strong>Plastids</strong>', '✅ Present', '❌ Absent'],
+                            ['<strong>Large central vacuole</strong>', '✅ Present (tonoplast)', '❌ Absent (only small ones)'],
+                            ['<strong>Centrioles</strong>', '❌ Absent (in higher plants)', '✅ Present'],
+                            ['<strong>Lysosomes</strong>', 'Rare / Absent', '✅ Prominent'],
+                            ['<strong>Plasmodesmata</strong>', '✅ Present', '❌ Absent (gap junctions instead)'],
+                            ['<strong>Golgi apparatus</strong>', '✅ Individual <strong>dictyosomes</strong>', '✅ Stacked complex'],
+                            ['<strong>Nucleus position</strong>', 'Peripheral', 'Central'],
+                            ['<strong>Cholesterol in membrane</strong>', 'Absent', 'Present']
+                        ]
+                    },
+                    keyLabel: 'neet-trap',
+                    example: "<strong>Classic Traps:</strong>\n<strong>1. Centrioles:</strong> \"Higher plants\" (angiosperms) have NO centrioles, but lower plants (algae, bryophytes) DO.\n<strong>2. Golgi in plants:</strong> Dispersed as individual units called <strong>dictyosomes</strong>."
+                }
+            ],
+            practice: generateSet(s8_compare, 15),
+            assessment: generateSet(s8_compare, 15)
         }
     ];
 };

@@ -22,6 +22,46 @@ export default function LawsOfMotionConnectomics() {
 
             <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px' }}>
 
+                {/* Connectomic Checkpoint */}
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '12px', textAlign: 'center', color: '#1e1b4b' }}>
+                    📋 Connectomic Checkpoint
+                </h2>
+                <p style={{ textAlign: 'center', color: '#64748b', fontSize: '15px', marginBottom: '24px', maxWidth: '600px', marginInline: 'auto' }}>
+                    Every concept in this chapter rests on what you already know. Verify these before proceeding.
+                </p>
+
+                <div style={{
+                    background: '#fff', borderRadius: '20px', padding: '28px',
+                    border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                    marginBottom: '24px'
+                }}>
+                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#f59e0b', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        ✅ You must be comfortable with:
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px' }}>
+                        {lawsOfMotionConnectomicsData.checkpoints.map((item, idx) => (
+                            <div key={idx} style={{
+                                padding: '10px 14px', background: '#f8fafc', borderRadius: '10px',
+                                border: '1px solid #e2e8f0', fontSize: '14px', color: '#334155',
+                                display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 600
+                            }}>
+                                <span style={{ color: '#10b981', fontSize: '13px', fontWeight: 800 }}>✓</span>
+                                {item}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Chapter Link Note */}
+                <div style={{
+                    background: '#fff', borderRadius: '16px', padding: '18px 22px',
+                    border: '1px solid #e2e8f0', borderLeft: '4px solid #3b82f6',
+                    marginBottom: '60px', fontSize: '14px', color: '#334155', lineHeight: 1.6
+                }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>🔗 Chapter Link</div>
+                    {lawsOfMotionConnectomicsData.chapterLink}
+                </div>
+
                 {/* Connections Map */}
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '32px', textAlign: 'center', color: '#1e1b4b' }}>
                     The Web of Physics

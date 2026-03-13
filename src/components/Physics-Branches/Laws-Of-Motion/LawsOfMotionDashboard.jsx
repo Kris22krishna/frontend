@@ -12,6 +12,15 @@ const STATS = [
 
 const MODULES = [
     {
+        id: 'connect',
+        title: 'Connectomics',
+        tagline: 'BEFORE YOU BEGIN',
+        desc: 'Verify your prerequisites and see how motion connects to other branches of physics.',
+        icon: '🔗',
+        color: '#f59e0b',
+        path: '/senior/grade/11/physics/laws-of-motion/connectomics'
+    },
+    {
         id: 'intro',
         title: 'Introduction',
         tagline: 'START HERE',
@@ -37,15 +46,6 @@ const MODULES = [
         icon: '🎯',
         color: '#7c3aed',
         path: '/senior/grade/11/physics/laws-of-motion/skills'
-    },
-    {
-        id: 'connect',
-        title: 'Connectomics',
-        tagline: 'BIG PICTURE',
-        desc: 'See how motion connects to other branches of physics and real-world technology.',
-        icon: '🔗',
-        color: '#f59e0b',
-        path: '/senior/grade/11/physics/laws-of-motion/connectomics'
     },
     {
         id: 'exam',

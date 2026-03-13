@@ -12,6 +12,15 @@ const STATS = [
 
 const MODULES = [
     {
+        id: 'connect',
+        title: 'Connectomics',
+        tagline: 'BIG PICTURE',
+        desc: 'See how the cell connects to other branches of biology and real-world applications.',
+        icon: '🔗',
+        color: '#f59e0b',
+        path: '/senior/grade/11/biology/the-cell/connectomics'
+    },
+    {
         id: 'intro',
         title: 'Introduction',
         tagline: 'START HERE',
@@ -37,15 +46,6 @@ const MODULES = [
         icon: '🎯',
         color: '#7c3aed',
         path: '/senior/grade/11/biology/the-cell/skills'
-    },
-    {
-        id: 'connect',
-        title: 'Connectomics',
-        tagline: 'BIG PICTURE',
-        desc: 'See how the cell connects to other branches of biology and real-world applications.',
-        icon: '🔗',
-        color: '#f59e0b',
-        path: '/senior/grade/11/biology/the-cell/connectomics'
     },
     {
         id: 'exam',

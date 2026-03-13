@@ -11,10 +11,19 @@ const STATS = [
 ];
 
 const MODULES = [
-    {
+        {
+        id: 'connect',
+        title: 'Connectomics',
+        tagline: 'PREREQUISITES',
+        desc: 'Checkpoints from previous classes and connections to other fields.',
+        icon: '🔗',
+        color: '#f59e0b',
+        path: '/senior/grade/11/chemistry/structure-of-atom/connectomics'
+    },
+{
         id: 'intro',
         title: 'Introduction',
-        tagline: 'START HERE',
+        tagline: 'THE BEGINNING',
         desc: 'Discovery of fundamental particles, early atomic models, and prerequisites.',
         icon: '🌟',
         color: '#6366f1',
@@ -37,15 +46,6 @@ const MODULES = [
         icon: '🎯',
         color: '#7c3aed',
         path: '/senior/grade/11/chemistry/structure-of-atom/skills'
-    },
-    {
-        id: 'connect',
-        title: 'Connectomics',
-        tagline: 'BIG PICTURE',
-        desc: 'How the atom links to physics, spectroscopy, biology, and the universe.',
-        icon: '🔗',
-        color: '#f59e0b',
-        path: '/senior/grade/11/chemistry/structure-of-atom/connectomics'
     },
     {
         id: 'exam',
