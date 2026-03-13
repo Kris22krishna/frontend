@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../NumberSystem.css';
 import MathRenderer from '../../../../../MathRenderer';
-import QuizEngine from './engines/QuizEngine.jsx';
-import AssessmentEngine from './engines/AssessmentEngine.jsx';
-import CategorizedPracticeEngine from './engines/CategorizedPracticeEngine.jsx';
+import QuizEngine from './Engines/QuizEngine.jsx';
+import AssessmentEngine from './Engines/AssessmentEngine.jsx';
+import CategorizedPracticeEngine from './Engines/CategorizedPracticeEngine.jsx';
 import { SKILLS } from './NumberSystemSkillsData';
 
 export default function NumberSystemSkills() {
