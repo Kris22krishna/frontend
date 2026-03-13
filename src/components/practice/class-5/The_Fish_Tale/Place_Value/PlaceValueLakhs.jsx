@@ -40,7 +40,7 @@ const PlaceValueLakhs = () => {
     const generateQuestions = () => {
         const generated = [];
         for (let i = 0; i < TOTAL_QUESTIONS; i++) {
-            const number = Math.floor(Math.random() * 900000) + 100000; // 1,00,000 to 9,99,999
+            let number = Math.floor(Math.random() * 900000) + 100000; // 1,00,000 to 9,99,999
             const places = [
                 { name: 'Lakhs', val: 100000 },
                 { name: 'Ten Thousands', val: 10000 },
@@ -50,8 +50,15 @@ const PlaceValueLakhs = () => {
                 { name: 'Ones', val: 1 }
             ];
 
-            const place = places[Math.floor(Math.random() * places.length)];
-            const digit = Math.floor((number / place.val) % 10);
+            let place = places[Math.floor(Math.random() * places.length)];
+            let digit = Math.floor((number / place.val) % 10);
+
+            // Ensure the digit is unique in the string representation
+            while (number.toString().indexOf(digit.toString()) !== number.toString().lastIndexOf(digit.toString())) {
+                number = Math.floor(Math.random() * 900000) + 100000;
+                place = places[Math.floor(Math.random() * places.length)];
+                digit = Math.floor((number / place.val) % 10);
+            }
 
             const qText = `What is the place value of the digit ${digit} in the number ${number.toLocaleString('en-IN')}?`;
             const correctAns = `${digit} ${place.name}`;

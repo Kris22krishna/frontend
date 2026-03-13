@@ -7,7 +7,7 @@ import LatexContent from '../../../../LatexContent';
 import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const ChapterTest = () => {
+const HowBigHowHeavyTest = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -22,8 +22,8 @@ const ChapterTest = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 2000;
-    const SKILL_NAME = "Chapter Test: Can You See the Pattern?";
+    const SKILL_ID = 1224; // Assuming a new ID for the chapter test
+    const SKILL_NAME = "Chapter Test: How Big? How Heavy?";
 
     const TOTAL_QUESTIONS = 15;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -49,104 +49,102 @@ const ChapterTest = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const generateQuestions = () => {
-            const qs = [];
-            // --- PATTERN RECOGNITION (5 QS) ---
-            qs.push({
-                text: "What is the next number in this sequence of triangular numbers: $1, 3, 6, 10, \\dots$?",
-                correctAnswer: "15",
-                options: ["12", "15", "18", "20"],
-                solution: "Triangular numbers represent the number of dots in an equilateral triangle. The pattern is formed by adding consecutive integers: <br/>1st: $1$<br/>2nd: $1 + 2 = 3$<br/>3rd: $3 + 3 = 6$<br/>4th: $6 + 4 = 10$<br/>5th: $10 + 5 = 15$. <br/>Therefore, the next number is found by adding the next integer, which is 5."
-            });
-            qs.push({
-                text: "Identify the pattern to find the next term: $2, 6, 18, 54, \\dots$?",
-                correctAnswer: "162",
-                options: ["162", "108", "150", "120"],
-                solution: "This is a geometric sequence where each term is found by multiplying the previous term by a constant factor (common ratio). Let's check the ratio: <br/>$6 \\div 2 = 3$<br/>$18 \\div 6 = 3$<br/>$54 \\div 18 = 3$.<br/>Since the common ratio is 3, the next term is $54 \\times 3 = 162$."
-            });
-            qs.push({
-                text: "A square tile is turned $45^\\circ$ clockwise, then $90^\\circ$ clockwise, then $45^\\circ$ clockwise again. What is the total angle of rotation?",
-                correctAnswer: "$180^\\circ$",
-                options: ["$90^\\circ$", "$180^\\circ$", "$135^\\circ$", "$360^\\circ$"],
-                solution: "To find the total rotation, we simply sum up all individual clockwise turns: <br/>$45^\\circ + 90^\\circ + 45^\\circ = 180^\\circ$.<br/>A rotation of $180^\\circ$ is equivalent to a half-turn, meaning the tile will appear upside down relative to its starting position."
-            });
-            qs.push({
-                text: "In a $3 \\times 3$ grid, each row sums to 20. If Row 3 has $(?, 4, 9)$, what is '?'?",
-                correctAnswer: "7",
-                options: ["5", "7", "9", "10"],
-                solution: "This problem uses algebraic reasoning within a grid pattern. We are given that the sum of the row is 20. <br/>Row Sum = $? + 4 + 9 = 20$<br/>$? + 13 = 20$<br/>$? = 20 - 13$<br/>$? = 7$.<br/>Checking the work: $7 + 4 + 9 = 11 + 9 = 20$, which is correct."
-            });
-            qs.push({
-                text: "Which rule describes this sequence: $101, 202, 303, 404, \\dots$?",
-                correctAnswer: "Add 101",
-                options: ["Add 101", "Add 100", "Multiply by 2", "Add 1"],
-                solution: "Let's find the difference between consecutive terms:<br/>$202 - 101 = 101$<br/>$303 - 202 = 101$<br/>$404 - 303 = 101$.<br/>Since the difference is constant, the rule is to <b>add 101</b> to each term to get the next one. This is also called an arithmetic progression."
-            });
-
-            // --- NUMBER PROPERTIES (5 QS) ---
-            qs.push({
-                text: "Using properties of operations, $56 \\times 99$ is equivalent to:",
-                correctAnswer: "$56 \\times (100 - 1)$",
-                options: ["$56 \\times (100 - 1)$", "$56 \\times 100 + 1$", "$56 \\times 90 + 9$", "$56 \\times 100 - 56$"],
-                solution: "The <b>Distributive Property</b> allows us to break down a difficult multiplication into two easier ones. <br/>$56 \\times 99$ can be written as $56 \\times (100 - 1)$. <br/>In the next step, you would calculate $(56 \\times 100) - (56 \\times 1)$, which is $5600 - 56 = 5544$. This is much easier than multiplying by 99 directly."
-            });
-            qs.push({
-                text: "In the number 4,444, how many times greater is the 4 in the hundreds place than the 4 in the tens place?",
-                correctAnswer: "10 times",
-                options: ["10 times", "100 times", "5 times", "1,000 times"],
-                solution: "In our base-10 number system, each place value is exactly 10 times larger than the place to its immediate right. <br/>- The 4 in the hundreds place represents 400.<br/>- The 4 in the tens place represents 40.<br/>$400 \div 40 = 10$.<br/>Therefore, it is exactly 10 times greater."
-            });
-            qs.push({
-                text: "Identify which of the following is a number palindrome:",
-                correctAnswer: "10101",
-                options: ["10101", "12312", "11221", "404040"],
-                solution: "A palindrome is a sequence that reads the same forward and backward. <br/>- <b>10101</b>: Forward: 1-0-1-0-1 | Backward: 1-0-1-0-1. (Match!)<br/>- 11221: Forward: 1-1-2-2-1 | Backward: 1-2-2-1-1. (Mismatch)<br/>Palindromes are symmetric around their center digit."
-            });
-            qs.push({
-                text: "What is the sum of the first three square numbers?",
-                correctAnswer: "14",
-                options: ["9", "14", "10", "15"],
-                solution: "A square number is the result of multiplying a number by itself.<br/>1st square: $1 \times 1 = 1$<br/>2nd square: $2 \times 2 = 4$<br/>3rd square: $3 \times 3 = 9$<br/>Total Sum = $1 + 4 + 9 = 14$.<br/>Note: Square numbers can be visualized as dots arranged in a perfect square grid."
-            });
-            qs.push({
-                text: "Which property states that $a + b = b + a$?",
-                correctAnswer: "Commutative Property",
-                options: ["Commutative Property", "Associative Property", "Distributive Property", "Identity Property"],
-                solution: "The <b>Commutative Property of Addition</b> states that changing the order of the numbers does not change the result. For example, $5 + 3$ gives the same sum as $3 + 5$. Think of 'commuting' as 'moving around'—the numbers can move, but the answer stays the same."
-            });
-
-            // --- LOGICAL REASONING (5 QS) ---
-            qs.push({
-                text: "If a secret number is doubled and then 5 is added, the result is 25. What is the number?",
-                correctAnswer: "10",
-                options: ["10", "15", "20", "5"],
-                solution: "To find the original number, we perform the inverse (opposite) operations in reverse order: <br/>1. The last step was 'add 5', so we subtract 5: $25 - 5 = 20$.<br/>2. The first step was 'doubled', so we divide by 2: $20 \div 2 = 10$.<br/>Verification: $(10 \times 2) + 5 = 20 + 5 = 25$. Correct!"
-            });
-            qs.push({
-                text: "Rule: 'If even, divide by 2. If odd, add 1'. Starting with 15, what is the result after 2 steps?",
-                correctAnswer: "8",
-                options: ["8", "16", "7", "9"],
-                solution: "We must follow the rule carefully step-by-step: <br/><b>Step 1</b>: 15 is ODD, so we add 1. $15 + 1 = 16$.<br/><b>Step 2</b>: 16 is EVEN, so we divide by 2. $16 \div 2 = 8$.<br/>The final result after two operations is 8."
-            });
-            qs.push({
-                text: "In a number tower, a block is the sum of the two below it. If the base blocks are $(5, 10, 5)$, what is at the top?",
-                correctAnswer: "30",
-                options: ["20", "25", "30", "40"],
-                solution: "Let's build the tower level by level from the bottom up:<br/>Level 1 (Base): [5, 10, 5]<br/>Level 2: [5+10, 10+5] = [15, 15]<br/>Level 3 (Top): [15+15] = 30.<br/>Working with towers requires keeping track of each pairwise sum carefully."
-            });
-            qs.push({
-                text: "Solve $195 + 155$ mentally by 'breaking apart' or compensation.",
-                correctAnswer: "350",
-                options: ["350", "340", "360", "345"],
-                solution: "Compensation involves moving a small amount from one number to another to make them 'friendly' or rounded. <br/>1. Take 5 from 155 and give it to 195.<br/>2. Now you have $200 + 150$.<br/>3. $200 + 150 = 350$.<br/>Alternatively, $(190 + 5) + (150 + 5) = 190 + 150 + 10 = 340 + 10 = 350$."
-            });
-            qs.push({
-                text: "Strategy: Double and Halve. $25 \times 12$ is equivalent to $50 \times ?$",
-                correctAnswer: "6",
-                options: ["6", "12", "24", "4"],
-                solution: "The <b>Double and Halve</b> strategy works because if you multiply one factor by 2 and divide the other by 2, the total product remains unchanged ($2 \times 0.5 = 1$).<br/>- Double 25 $\rightarrow$ 50.<br/>- Halve 12 $\rightarrow$ 6.<br/>So, $25 \times 12$ is the same as $50 \times 6$, which is 300. This makes long multiplication much simpler to do mentally."
-            });
-
-            return qs;
+            const qs = [
+                {
+                    text: "What is the standard unit of volume for measuring liquids like water or milk?",
+                    correctAnswer: "Liters or Milliliters",
+                    options: ["Liters or Milliliters", "Grams or Kilograms", "Meters or Centimeters", "Square Meters"],
+                    solution: "Volume of liquids is measured in liters (L) or milliliters (mL)."
+                },
+                {
+                    text: "A measuring cylinder contains $50 \\text{ ml}$ of water. A stone is dropped in, and the water level rises to $75 \\text{ ml}$. What is the volume of the stone?",
+                    correctAnswer: "25 ml",
+                    options: ["25 ml", "125 ml", "50 ml", "75 ml"],
+                    solution: "Volume of stone = Final water level - Initial water level.<br/>$75 \\text{ ml} - 50 \\text{ ml} = 25 \\text{ ml}$."
+                },
+                {
+                    text: "Which object takes up more space (has a greater volume)? An inflated balloon or a heavy iron ball of the same diameter?",
+                    correctAnswer: "They have the same volume",
+                    options: ["They have the same volume", "The iron ball", "The balloon", "Cannot be determined"],
+                    solution: "Volume is the amount of 3D space an object occupies. Since they have the same diameter, they are the same size, so their volume is identical, regardless of their weight (mass)."
+                },
+                {
+                    text: "How many 1 cm cubes are needed to build a larger cube with 3 cm sides?",
+                    correctAnswer: "27 cubes",
+                    options: ["27 cubes", "9 cubes", "6 cubes", "81 cubes"],
+                    solution: "Volume of a cube = $side \\times side \\times side$.<br/>$3 \\times 3 \\times 3 = 27$ cubic centimeters."
+                },
+                {
+                    text: "Convert 3.5 Kilograms (kg) to grams (g).",
+                    correctAnswer: "3500 g",
+                    options: ["3500 g", "350 g", "35000 g", "35 g"],
+                    solution: "1 kg = 1000 g.<br/>$3.5 \\times 1000 = 3500 \\text{ g}$."
+                },
+                {
+                    text: "A sack of onions weighs 12 kg. How many such sacks can be loaded into a mini-truck that can carry a maximum load of 600 kg?",
+                    correctAnswer: "50 sacks",
+                    options: ["50 sacks", "60 sacks", "40 sacks", "5 sacks"],
+                    solution: "Total max load $\\div$ weight of one sack = $600 \\div 12$.<br/>Since $12 \\times 5 = 60$, $12 \\times 50 = 600$. The answer is 50 sacks."
+                },
+                {
+                    text: "Which of the following describes Mass?",
+                    correctAnswer: "The amount of matter in an object",
+                    options: ["The amount of matter in an object", "The amount of space an object occupies", "The distance around the boundary", "The gravitational pull downwards"],
+                    solution: "Mass is how 'heavy' something is or the amount of matter it contains. Volume is how much space it takes up."
+                },
+                {
+                    text: "A matchbox has dimensions $5 \\text{ cm} \\times 3 \\text{ cm} \\times 2 \\text{ cm}$. What is its volume in unit cubes?",
+                    correctAnswer: "30 unit cubes",
+                    options: ["30 unit cubes", "10 unit cubes", "25 unit cubes", "15 unit cubes"],
+                    solution: "Volume of a cuboid = Length $\\times$ Width $\\times$ Height.<br/>$5 \\times 3 \\times 2 = 30$ cubic centimeters (or unit cubes)."
+                },
+                {
+                    text: "If 10 identical coins weigh 50 grams, what is the weight of one coin?",
+                    correctAnswer: "5 grams",
+                    options: ["5 grams", "10 grams", "25 grams", "500 grams"],
+                    solution: "Total weight $\\div$ number of coins = $50 \\div 10 = 5$ grams."
+                },
+                {
+                    text: "A rectangular carton can hold exactly 120 small unit cubes. If the base of the carton holds 20 cubes in one flat layer, how many layers high is the carton?",
+                    correctAnswer: "6 layers",
+                    options: ["6 layers", "5 layers", "20 layers", "10 layers"],
+                    solution: "Total Volume = Base Area (number in one layer) $\\times$ Height (number of layers).<br/>$120 = 20 \\times \\text{Height}$. Height = $120 \\div 20 = 6$ layers."
+                },
+                {
+                    text: "Which is heavier: 1 kilogram of iron nails or 1 kilogram of cotton?",
+                    correctAnswer: "They weigh the same",
+                    options: ["They weigh the same", "The iron nails", "The cotton", "It depends on the size"],
+                    solution: "Both have a mass of 1 kilogram! The cotton will take up much more space (volume), but their weight is identical."
+                },
+                {
+                    text: "A water tank holds $5 \\text{ Liters}$ of water. How many empty $250 \\text{ ml}$ cups can be fully filled from it?",
+                    correctAnswer: "20 cups",
+                    options: ["20 cups", "25 cups", "10 cups", "5 cups"],
+                    solution: "First, convert to milliliters: $5 \\text{ L} = 5000 \\text{ ml}$.<br/>Number of cups = $5000 \\div 250$. Wait, $1000 \\div 250 = 4$. So $5000 \\div 250 = 5 \\times 4 = 20$."
+                },
+                {
+                    text: "Estimate the volume of a standard shoebox.",
+                    correctAnswer: "About 6000 cubic centimeters",
+                    options: ["About 6000 cubic centimeters", "About 60 cubic centimeters", "About 600000 cubic centimeters", "About 6 cubic centimeters"],
+                    solution: "A shoebox might be roughly $30 \\text{ cm}$ long, $20 \\text{ cm}$ wide, and $10 \\text{ cm}$ high.<br/>$30 \\times 20 \\times 10 = 6000$ cubic centimeters."
+                },
+                {
+                    text: "Rahul has a block of modeling clay that has a volume of $100 \\text{ cm}^3$. He squashes it completely flat and makes a pancake shape. What is its new volume?",
+                    correctAnswer: "100 cm³",
+                    options: ["100 cm³", "More than 100 cm³", "Less than 100 cm³", "0 cm³"],
+                    solution: "Changing the shape of an object does not change its volume (the amount of space the clay takes up) or its mass. It remains $100 \\text{ cm}^3$."
+                },
+                {
+                    text: "A gold merchant has weights of 50g, 20g, 10g, 5g, 2g, and 1g. Which combination of weights should he use on one pan of the balance to weigh out exactly 37g of gold?",
+                    correctAnswer: "20g, 10g, 5g, 2g",
+                    options: ["20g, 10g, 5g, 2g", "20g, 10g, 7g", "50g, -10g, -3g", "30g, 5g, 2g"],
+                    solution: "Sum the chosen set: $20 + 10 + 5 + 2 = 37\\text{g}$. This is the correct combination of standard weights."
+                }
+            ];
+            return qs.map(q => ({
+                ...q,
+                shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
+            }));
         };
 
         setSessionQuestions(generateQuestions());
@@ -168,7 +166,7 @@ const ChapterTest = () => {
         if (sessionQuestions.length > 0) {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
-            setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
+            setShuffledOptions(qData.shuffledOptions);
             const previousAnswer = answers[qIndex];
             if (previousAnswer) {
                 setSelectedOption(previousAnswer.selected);
@@ -237,11 +235,6 @@ const ChapterTest = () => {
 
     const finalizeAssessment = async () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            // Re-calculate based on state since answers might not have the last update yet in async flow
-            // But state updates are queued, so we should be careful. 
-            // In assessment flow, we can just let showResults calculate from the latest answers state.
-        }
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
         setShowResults(true);
 
@@ -278,7 +271,7 @@ const ChapterTest = () => {
         return (
             <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
                 <header className="junior-practice-header results-header relative">
-                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Topics</button>
+                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Syllabus</button>
                     <div className="sun-timer-container">
                         <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
                     </div>
@@ -325,7 +318,14 @@ const ChapterTest = () => {
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
                                             <div className="flex-1">
-                                                <div className="text-lg font-bold text-[#31326F] mb-4"><LatexContent html={q.text} /></div>
+                                                <div className="text-lg font-bold text-[#31326F] mb-4">
+                                                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', gap: '1rem', width: '100%' }}>
+                                                        <span style={{ color: '#4FB7B3', fontWeight: 'bold', fontSize: '1.25rem', flexShrink: 0 }}>Q{idx + 1}.</span>
+                                                        <div style={{ textAlign: 'left', margin: 0 }}>
+                                                            <LatexContent html={q.text} />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Selection</span>
@@ -351,8 +351,8 @@ const ChapterTest = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Restart Test</button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Retry Test</button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Syllabus</button>
                     </div>
                 </main>
             </div>
@@ -374,7 +374,14 @@ const ChapterTest = () => {
                         <AnimatePresence mode="wait">
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.75rem', fontWeight: '400', textAlign: 'center' }}><LatexContent html={currentQuestion.text} /></h2></div>
+                                    <div className="question-header-modern">
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '1rem', width: '100%' }}>
+                                            <span style={{ color: '#4FB7B3', fontWeight: 'bold', fontSize: '1.75rem', flexShrink: 0 }}>{qIndex + 1}.</span>
+                                            <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.75rem', fontWeight: '400', textAlign: 'left', margin: 0 }}>
+                                                <LatexContent html={currentQuestion.text} />
+                                            </h2>
+                                        </div>
+                                    </div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
@@ -407,4 +414,4 @@ const ChapterTest = () => {
     );
 };
 
-export default ChapterTest;
+export default HowBigHowHeavyTest;

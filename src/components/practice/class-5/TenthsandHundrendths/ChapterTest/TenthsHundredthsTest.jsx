@@ -7,7 +7,7 @@ import LatexContent from '../../../../LatexContent';
 import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const ChapterTest = () => {
+const TenthsHundredthsTest = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -22,8 +22,8 @@ const ChapterTest = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 2000;
-    const SKILL_NAME = "Chapter Test: Can You See the Pattern?";
+    const SKILL_ID = 1062; // Assuming a new ID for the chapter test
+    const SKILL_NAME = "Chapter Test: Tenths and Hundredths";
 
     const TOTAL_QUESTIONS = 15;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -49,104 +49,102 @@ const ChapterTest = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const generateQuestions = () => {
-            const qs = [];
-            // --- PATTERN RECOGNITION (5 QS) ---
-            qs.push({
-                text: "What is the next number in this sequence of triangular numbers: $1, 3, 6, 10, \\dots$?",
-                correctAnswer: "15",
-                options: ["12", "15", "18", "20"],
-                solution: "Triangular numbers represent the number of dots in an equilateral triangle. The pattern is formed by adding consecutive integers: <br/>1st: $1$<br/>2nd: $1 + 2 = 3$<br/>3rd: $3 + 3 = 6$<br/>4th: $6 + 4 = 10$<br/>5th: $10 + 5 = 15$. <br/>Therefore, the next number is found by adding the next integer, which is 5."
-            });
-            qs.push({
-                text: "Identify the pattern to find the next term: $2, 6, 18, 54, \\dots$?",
-                correctAnswer: "162",
-                options: ["162", "108", "150", "120"],
-                solution: "This is a geometric sequence where each term is found by multiplying the previous term by a constant factor (common ratio). Let's check the ratio: <br/>$6 \\div 2 = 3$<br/>$18 \\div 6 = 3$<br/>$54 \\div 18 = 3$.<br/>Since the common ratio is 3, the next term is $54 \\times 3 = 162$."
-            });
-            qs.push({
-                text: "A square tile is turned $45^\\circ$ clockwise, then $90^\\circ$ clockwise, then $45^\\circ$ clockwise again. What is the total angle of rotation?",
-                correctAnswer: "$180^\\circ$",
-                options: ["$90^\\circ$", "$180^\\circ$", "$135^\\circ$", "$360^\\circ$"],
-                solution: "To find the total rotation, we simply sum up all individual clockwise turns: <br/>$45^\\circ + 90^\\circ + 45^\\circ = 180^\\circ$.<br/>A rotation of $180^\\circ$ is equivalent to a half-turn, meaning the tile will appear upside down relative to its starting position."
-            });
-            qs.push({
-                text: "In a $3 \\times 3$ grid, each row sums to 20. If Row 3 has $(?, 4, 9)$, what is '?'?",
-                correctAnswer: "7",
-                options: ["5", "7", "9", "10"],
-                solution: "This problem uses algebraic reasoning within a grid pattern. We are given that the sum of the row is 20. <br/>Row Sum = $? + 4 + 9 = 20$<br/>$? + 13 = 20$<br/>$? = 20 - 13$<br/>$? = 7$.<br/>Checking the work: $7 + 4 + 9 = 11 + 9 = 20$, which is correct."
-            });
-            qs.push({
-                text: "Which rule describes this sequence: $101, 202, 303, 404, \\dots$?",
-                correctAnswer: "Add 101",
-                options: ["Add 101", "Add 100", "Multiply by 2", "Add 1"],
-                solution: "Let's find the difference between consecutive terms:<br/>$202 - 101 = 101$<br/>$303 - 202 = 101$<br/>$404 - 303 = 101$.<br/>Since the difference is constant, the rule is to <b>add 101</b> to each term to get the next one. This is also called an arithmetic progression."
-            });
-
-            // --- NUMBER PROPERTIES (5 QS) ---
-            qs.push({
-                text: "Using properties of operations, $56 \\times 99$ is equivalent to:",
-                correctAnswer: "$56 \\times (100 - 1)$",
-                options: ["$56 \\times (100 - 1)$", "$56 \\times 100 + 1$", "$56 \\times 90 + 9$", "$56 \\times 100 - 56$"],
-                solution: "The <b>Distributive Property</b> allows us to break down a difficult multiplication into two easier ones. <br/>$56 \\times 99$ can be written as $56 \\times (100 - 1)$. <br/>In the next step, you would calculate $(56 \\times 100) - (56 \\times 1)$, which is $5600 - 56 = 5544$. This is much easier than multiplying by 99 directly."
-            });
-            qs.push({
-                text: "In the number 4,444, how many times greater is the 4 in the hundreds place than the 4 in the tens place?",
-                correctAnswer: "10 times",
-                options: ["10 times", "100 times", "5 times", "1,000 times"],
-                solution: "In our base-10 number system, each place value is exactly 10 times larger than the place to its immediate right. <br/>- The 4 in the hundreds place represents 400.<br/>- The 4 in the tens place represents 40.<br/>$400 \div 40 = 10$.<br/>Therefore, it is exactly 10 times greater."
-            });
-            qs.push({
-                text: "Identify which of the following is a number palindrome:",
-                correctAnswer: "10101",
-                options: ["10101", "12312", "11221", "404040"],
-                solution: "A palindrome is a sequence that reads the same forward and backward. <br/>- <b>10101</b>: Forward: 1-0-1-0-1 | Backward: 1-0-1-0-1. (Match!)<br/>- 11221: Forward: 1-1-2-2-1 | Backward: 1-2-2-1-1. (Mismatch)<br/>Palindromes are symmetric around their center digit."
-            });
-            qs.push({
-                text: "What is the sum of the first three square numbers?",
-                correctAnswer: "14",
-                options: ["9", "14", "10", "15"],
-                solution: "A square number is the result of multiplying a number by itself.<br/>1st square: $1 \times 1 = 1$<br/>2nd square: $2 \times 2 = 4$<br/>3rd square: $3 \times 3 = 9$<br/>Total Sum = $1 + 4 + 9 = 14$.<br/>Note: Square numbers can be visualized as dots arranged in a perfect square grid."
-            });
-            qs.push({
-                text: "Which property states that $a + b = b + a$?",
-                correctAnswer: "Commutative Property",
-                options: ["Commutative Property", "Associative Property", "Distributive Property", "Identity Property"],
-                solution: "The <b>Commutative Property of Addition</b> states that changing the order of the numbers does not change the result. For example, $5 + 3$ gives the same sum as $3 + 5$. Think of 'commuting' as 'moving around'—the numbers can move, but the answer stays the same."
-            });
-
-            // --- LOGICAL REASONING (5 QS) ---
-            qs.push({
-                text: "If a secret number is doubled and then 5 is added, the result is 25. What is the number?",
-                correctAnswer: "10",
-                options: ["10", "15", "20", "5"],
-                solution: "To find the original number, we perform the inverse (opposite) operations in reverse order: <br/>1. The last step was 'add 5', so we subtract 5: $25 - 5 = 20$.<br/>2. The first step was 'doubled', so we divide by 2: $20 \div 2 = 10$.<br/>Verification: $(10 \times 2) + 5 = 20 + 5 = 25$. Correct!"
-            });
-            qs.push({
-                text: "Rule: 'If even, divide by 2. If odd, add 1'. Starting with 15, what is the result after 2 steps?",
-                correctAnswer: "8",
-                options: ["8", "16", "7", "9"],
-                solution: "We must follow the rule carefully step-by-step: <br/><b>Step 1</b>: 15 is ODD, so we add 1. $15 + 1 = 16$.<br/><b>Step 2</b>: 16 is EVEN, so we divide by 2. $16 \div 2 = 8$.<br/>The final result after two operations is 8."
-            });
-            qs.push({
-                text: "In a number tower, a block is the sum of the two below it. If the base blocks are $(5, 10, 5)$, what is at the top?",
-                correctAnswer: "30",
-                options: ["20", "25", "30", "40"],
-                solution: "Let's build the tower level by level from the bottom up:<br/>Level 1 (Base): [5, 10, 5]<br/>Level 2: [5+10, 10+5] = [15, 15]<br/>Level 3 (Top): [15+15] = 30.<br/>Working with towers requires keeping track of each pairwise sum carefully."
-            });
-            qs.push({
-                text: "Solve $195 + 155$ mentally by 'breaking apart' or compensation.",
-                correctAnswer: "350",
-                options: ["350", "340", "360", "345"],
-                solution: "Compensation involves moving a small amount from one number to another to make them 'friendly' or rounded. <br/>1. Take 5 from 155 and give it to 195.<br/>2. Now you have $200 + 150$.<br/>3. $200 + 150 = 350$.<br/>Alternatively, $(190 + 5) + (150 + 5) = 190 + 150 + 10 = 340 + 10 = 350$."
-            });
-            qs.push({
-                text: "Strategy: Double and Halve. $25 \times 12$ is equivalent to $50 \times ?$",
-                correctAnswer: "6",
-                options: ["6", "12", "24", "4"],
-                solution: "The <b>Double and Halve</b> strategy works because if you multiply one factor by 2 and divide the other by 2, the total product remains unchanged ($2 \times 0.5 = 1$).<br/>- Double 25 $\rightarrow$ 50.<br/>- Halve 12 $\rightarrow$ 6.<br/>So, $25 \times 12$ is the same as $50 \times 6$, which is 300. This makes long multiplication much simpler to do mentally."
-            });
-
-            return qs;
+            const qs = [
+                {
+                    text: "Which of the following represents 'seven hundredths' as a decimal?",
+                    correctAnswer: "0.07",
+                    options: ["0.07", "0.7", "7.00", "0.007"],
+                    solution: "The first place after the decimal is tenths, the second is hundredths. So, seven hundredths is written as 0.07."
+                },
+                {
+                    text: "Convert the fraction $\\frac{45}{100}$ into a decimal.",
+                    correctAnswer: "0.45",
+                    options: ["0.45", "4.5", "45.0", "0.045"],
+                    solution: "When the denominator is 100, the numerator goes up to the hundredths place. So, $\\frac{45}{100} = 0.45$."
+                },
+                {
+                    text: "What is the place value of the digit 8 in the number 16.28?",
+                    correctAnswer: "Hundredths",
+                    options: ["Hundredths", "Tenths", "Tens", "Ones"],
+                    solution: "In 16.28, 2 is in the tenths place, and 8 is in the hundredths place."
+                },
+                {
+                    text: "Compare these two decimals: 0.5 and 0.50. Which is true?",
+                    correctAnswer: "0.5 = 0.50",
+                    options: ["0.5 = 0.50", "0.5 > 0.50", "0.5 < 0.50", "Cannot be compared"],
+                    solution: "Adding trailing zeros to the right of the decimal point does not change the value. Both represent five tenths."
+                },
+                {
+                    text: "Add the decimals: $2.34 + 1.25$",
+                    correctAnswer: "3.59",
+                    options: ["3.59", "3.69", "2.59", "4.59"],
+                    solution: "Align the decimal points: <br> $2.34$<br>+$1.25$<br>------<br> $3.59$"
+                },
+                {
+                    text: "Subtract the decimals: $5.8 - 2.45$",
+                    correctAnswer: "3.35",
+                    options: ["3.35", "3.45", "3.25", "3.15"],
+                    solution: "Align decimals and add a trailing zero if needed: <br> $5.80$<br>-$2.45$<br>------<br> $3.35$"
+                },
+                {
+                    text: "John has ₹50.75 and his sister has ₹30.50. How much money do they have total?",
+                    correctAnswer: "₹81.25",
+                    options: ["₹81.25", "₹80.25", "₹81.75", "₹82.25"],
+                    solution: "$50.75 + 30.50 = 81.25$. They have together ₹81.25."
+                },
+                {
+                    text: "How do you write ₹4 and 5 paise in decimals?",
+                    correctAnswer: "₹4.05",
+                    options: ["₹4.05", "₹4.50", "₹4.5", "₹4.005"],
+                    solution: "1 rupee = 100 paise. So, 5 paise is $\\frac{5}{100}$ of a rupee. This means it is written as ₹4.05."
+                },
+                {
+                    text: "A piece of cloth is 2.5 meters long. How many centimeters is this?",
+                    correctAnswer: "250 cm",
+                    options: ["25 cm", "250 cm", "2500 cm", "205 cm"],
+                    solution: "$1 \\text{ m} = 100 \\text{ cm}$.<br/>$2.5 \\text{ m} = 2.5 \\times 100 = 250 \\text{ cm}$."
+                },
+                {
+                    text: "Multiply the decimal: $1.2 \\times 3$",
+                    correctAnswer: "3.6",
+                    options: ["3.6", "3.2", "0.36", "36.0"],
+                    solution: "First, multiply ignoring the decimal: $12 \\times 3 = 36$.<br/>Since there is 1 decimal place in the original numbers, place the decimal to get 3.6."
+                },
+                {
+                    text: "Arrange in ascending order: 0.12, 0.2, 0.02, 0.21",
+                    correctAnswer: "0.02, 0.12, 0.2, 0.21",
+                    options: ["0.02, 0.12, 0.2, 0.21", "0.2, 0.02, 0.12, 0.21", "0.02, 0.2, 0.12, 0.21", "0.21, 0.2, 0.12, 0.02"],
+                    solution: "Aligning them with the same decimal places: $0.12, 0.20, 0.02, 0.21$.<br/>Ordering them from least to greatest: $0.02, 0.12, 0.20, 0.21$."
+                },
+                {
+                    text: "Rani's weight is 35.5 kg. Her brother is 4.2 kg heavier. What is her brother's weight?",
+                    correctAnswer: "39.7 kg",
+                    options: ["39.7 kg", "31.3 kg", "40.7 kg", "39.5 kg"],
+                    solution: "Add her brother's extra weight: $35.5 + 4.2 = 39.7$ kg."
+                },
+                {
+                    text: "Write the expanded form of 23.45.",
+                    correctAnswer: "$20 + 3 + 0.4 + 0.05$",
+                    options: ["$20 + 3 + 0.4 + 0.05$", "$20 + 3 + 4 + 5$", "$2 + 3 + 4 + 5$", "$20 + 30 + 0.4 + 0.5$"],
+                    solution: "2 is in tens (20), 3 is in ones (3), 4 is in tenths (0.4), and 5 is in hundredths (0.05)."
+                },
+                {
+                    text: "What must be added to 3.45 to make it 5.00?",
+                    correctAnswer: "1.55",
+                    options: ["1.55", "1.45", "2.55", "2.45"],
+                    solution: "Subtract the starting number from the target number: $5.00 - 3.45 = 1.55$."
+                },
+                {
+                    text: "Convert 0.8 to a fraction in its simplest form.",
+                    correctAnswer: "$\\frac{4}{5}$",
+                    options: ["$\\frac{4}{5}$", "$\\frac{8}{10}$", "$\\frac{1}{8}$", "$\\frac{8}{100}$"],
+                    solution: "$0.8 = \\frac{8}{10}$. By dividing the numerator and denominator by their greatest common factor (2), we get $\\frac{4}{5}$."
+                }
+            ];
+            return qs.map(q => ({
+                ...q,
+                shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
+            }));
         };
 
         setSessionQuestions(generateQuestions());
@@ -168,7 +166,7 @@ const ChapterTest = () => {
         if (sessionQuestions.length > 0) {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
-            setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
+            setShuffledOptions(qData.shuffledOptions);
             const previousAnswer = answers[qIndex];
             if (previousAnswer) {
                 setSelectedOption(previousAnswer.selected);
@@ -237,11 +235,6 @@ const ChapterTest = () => {
 
     const finalizeAssessment = async () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            // Re-calculate based on state since answers might not have the last update yet in async flow
-            // But state updates are queued, so we should be careful. 
-            // In assessment flow, we can just let showResults calculate from the latest answers state.
-        }
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
         setShowResults(true);
 
@@ -278,7 +271,7 @@ const ChapterTest = () => {
         return (
             <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
                 <header className="junior-practice-header results-header relative">
-                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Topics</button>
+                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Syllabus</button>
                     <div className="sun-timer-container">
                         <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
                     </div>
@@ -325,7 +318,14 @@ const ChapterTest = () => {
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
                                             <div className="flex-1">
-                                                <div className="text-lg font-bold text-[#31326F] mb-4"><LatexContent html={q.text} /></div>
+                                                <div className="text-lg font-bold text-[#31326F] mb-4">
+                                                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', gap: '1rem', width: '100%' }}>
+                                                        <span style={{ color: '#4FB7B3', fontWeight: 'bold', fontSize: '1.25rem', flexShrink: 0 }}>Q{idx + 1}.</span>
+                                                        <div style={{ textAlign: 'left', margin: 0 }}>
+                                                            <LatexContent html={q.text} />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Selection</span>
@@ -351,8 +351,8 @@ const ChapterTest = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Restart Test</button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Retry Test</button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Syllabus</button>
                     </div>
                 </main>
             </div>
@@ -374,7 +374,14 @@ const ChapterTest = () => {
                         <AnimatePresence mode="wait">
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.75rem', fontWeight: '400', textAlign: 'center' }}><LatexContent html={currentQuestion.text} /></h2></div>
+                                    <div className="question-header-modern">
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '1rem', width: '100%' }}>
+                                            <span style={{ color: '#4FB7B3', fontWeight: 'bold', fontSize: '1.75rem', flexShrink: 0 }}>{qIndex + 1}.</span>
+                                            <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.75rem', fontWeight: '400', textAlign: 'left', margin: 0 }}>
+                                                <LatexContent html={currentQuestion.text} />
+                                            </h2>
+                                        </div>
+                                    </div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
@@ -407,4 +414,4 @@ const ChapterTest = () => {
     );
 };
 
-export default ChapterTest;
+export default TenthsHundredthsTest;

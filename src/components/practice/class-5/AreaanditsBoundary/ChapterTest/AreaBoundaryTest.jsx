@@ -7,7 +7,7 @@ import LatexContent from '../../../../LatexContent';
 import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
-const ChapterTest = () => {
+const AreaBoundaryTest = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
@@ -22,8 +22,8 @@ const ChapterTest = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 2000;
-    const SKILL_NAME = "Chapter Test: Can You See the Pattern?";
+    const SKILL_ID = 1169; // Assuming a new ID for the chapter test
+    const SKILL_NAME = "Chapter Test: Area and its Boundary";
 
     const TOTAL_QUESTIONS = 15;
     const [sessionQuestions, setSessionQuestions] = useState([]);
@@ -49,104 +49,102 @@ const ChapterTest = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const generateQuestions = () => {
-            const qs = [];
-            // --- PATTERN RECOGNITION (5 QS) ---
-            qs.push({
-                text: "What is the next number in this sequence of triangular numbers: $1, 3, 6, 10, \\dots$?",
-                correctAnswer: "15",
-                options: ["12", "15", "18", "20"],
-                solution: "Triangular numbers represent the number of dots in an equilateral triangle. The pattern is formed by adding consecutive integers: <br/>1st: $1$<br/>2nd: $1 + 2 = 3$<br/>3rd: $3 + 3 = 6$<br/>4th: $6 + 4 = 10$<br/>5th: $10 + 5 = 15$. <br/>Therefore, the next number is found by adding the next integer, which is 5."
-            });
-            qs.push({
-                text: "Identify the pattern to find the next term: $2, 6, 18, 54, \\dots$?",
-                correctAnswer: "162",
-                options: ["162", "108", "150", "120"],
-                solution: "This is a geometric sequence where each term is found by multiplying the previous term by a constant factor (common ratio). Let's check the ratio: <br/>$6 \\div 2 = 3$<br/>$18 \\div 6 = 3$<br/>$54 \\div 18 = 3$.<br/>Since the common ratio is 3, the next term is $54 \\times 3 = 162$."
-            });
-            qs.push({
-                text: "A square tile is turned $45^\\circ$ clockwise, then $90^\\circ$ clockwise, then $45^\\circ$ clockwise again. What is the total angle of rotation?",
-                correctAnswer: "$180^\\circ$",
-                options: ["$90^\\circ$", "$180^\\circ$", "$135^\\circ$", "$360^\\circ$"],
-                solution: "To find the total rotation, we simply sum up all individual clockwise turns: <br/>$45^\\circ + 90^\\circ + 45^\\circ = 180^\\circ$.<br/>A rotation of $180^\\circ$ is equivalent to a half-turn, meaning the tile will appear upside down relative to its starting position."
-            });
-            qs.push({
-                text: "In a $3 \\times 3$ grid, each row sums to 20. If Row 3 has $(?, 4, 9)$, what is '?'?",
-                correctAnswer: "7",
-                options: ["5", "7", "9", "10"],
-                solution: "This problem uses algebraic reasoning within a grid pattern. We are given that the sum of the row is 20. <br/>Row Sum = $? + 4 + 9 = 20$<br/>$? + 13 = 20$<br/>$? = 20 - 13$<br/>$? = 7$.<br/>Checking the work: $7 + 4 + 9 = 11 + 9 = 20$, which is correct."
-            });
-            qs.push({
-                text: "Which rule describes this sequence: $101, 202, 303, 404, \\dots$?",
-                correctAnswer: "Add 101",
-                options: ["Add 101", "Add 100", "Multiply by 2", "Add 1"],
-                solution: "Let's find the difference between consecutive terms:<br/>$202 - 101 = 101$<br/>$303 - 202 = 101$<br/>$404 - 303 = 101$.<br/>Since the difference is constant, the rule is to <b>add 101</b> to each term to get the next one. This is also called an arithmetic progression."
-            });
-
-            // --- NUMBER PROPERTIES (5 QS) ---
-            qs.push({
-                text: "Using properties of operations, $56 \\times 99$ is equivalent to:",
-                correctAnswer: "$56 \\times (100 - 1)$",
-                options: ["$56 \\times (100 - 1)$", "$56 \\times 100 + 1$", "$56 \\times 90 + 9$", "$56 \\times 100 - 56$"],
-                solution: "The <b>Distributive Property</b> allows us to break down a difficult multiplication into two easier ones. <br/>$56 \\times 99$ can be written as $56 \\times (100 - 1)$. <br/>In the next step, you would calculate $(56 \\times 100) - (56 \\times 1)$, which is $5600 - 56 = 5544$. This is much easier than multiplying by 99 directly."
-            });
-            qs.push({
-                text: "In the number 4,444, how many times greater is the 4 in the hundreds place than the 4 in the tens place?",
-                correctAnswer: "10 times",
-                options: ["10 times", "100 times", "5 times", "1,000 times"],
-                solution: "In our base-10 number system, each place value is exactly 10 times larger than the place to its immediate right. <br/>- The 4 in the hundreds place represents 400.<br/>- The 4 in the tens place represents 40.<br/>$400 \div 40 = 10$.<br/>Therefore, it is exactly 10 times greater."
-            });
-            qs.push({
-                text: "Identify which of the following is a number palindrome:",
-                correctAnswer: "10101",
-                options: ["10101", "12312", "11221", "404040"],
-                solution: "A palindrome is a sequence that reads the same forward and backward. <br/>- <b>10101</b>: Forward: 1-0-1-0-1 | Backward: 1-0-1-0-1. (Match!)<br/>- 11221: Forward: 1-1-2-2-1 | Backward: 1-2-2-1-1. (Mismatch)<br/>Palindromes are symmetric around their center digit."
-            });
-            qs.push({
-                text: "What is the sum of the first three square numbers?",
-                correctAnswer: "14",
-                options: ["9", "14", "10", "15"],
-                solution: "A square number is the result of multiplying a number by itself.<br/>1st square: $1 \times 1 = 1$<br/>2nd square: $2 \times 2 = 4$<br/>3rd square: $3 \times 3 = 9$<br/>Total Sum = $1 + 4 + 9 = 14$.<br/>Note: Square numbers can be visualized as dots arranged in a perfect square grid."
-            });
-            qs.push({
-                text: "Which property states that $a + b = b + a$?",
-                correctAnswer: "Commutative Property",
-                options: ["Commutative Property", "Associative Property", "Distributive Property", "Identity Property"],
-                solution: "The <b>Commutative Property of Addition</b> states that changing the order of the numbers does not change the result. For example, $5 + 3$ gives the same sum as $3 + 5$. Think of 'commuting' as 'moving around'—the numbers can move, but the answer stays the same."
-            });
-
-            // --- LOGICAL REASONING (5 QS) ---
-            qs.push({
-                text: "If a secret number is doubled and then 5 is added, the result is 25. What is the number?",
-                correctAnswer: "10",
-                options: ["10", "15", "20", "5"],
-                solution: "To find the original number, we perform the inverse (opposite) operations in reverse order: <br/>1. The last step was 'add 5', so we subtract 5: $25 - 5 = 20$.<br/>2. The first step was 'doubled', so we divide by 2: $20 \div 2 = 10$.<br/>Verification: $(10 \times 2) + 5 = 20 + 5 = 25$. Correct!"
-            });
-            qs.push({
-                text: "Rule: 'If even, divide by 2. If odd, add 1'. Starting with 15, what is the result after 2 steps?",
-                correctAnswer: "8",
-                options: ["8", "16", "7", "9"],
-                solution: "We must follow the rule carefully step-by-step: <br/><b>Step 1</b>: 15 is ODD, so we add 1. $15 + 1 = 16$.<br/><b>Step 2</b>: 16 is EVEN, so we divide by 2. $16 \div 2 = 8$.<br/>The final result after two operations is 8."
-            });
-            qs.push({
-                text: "In a number tower, a block is the sum of the two below it. If the base blocks are $(5, 10, 5)$, what is at the top?",
-                correctAnswer: "30",
-                options: ["20", "25", "30", "40"],
-                solution: "Let's build the tower level by level from the bottom up:<br/>Level 1 (Base): [5, 10, 5]<br/>Level 2: [5+10, 10+5] = [15, 15]<br/>Level 3 (Top): [15+15] = 30.<br/>Working with towers requires keeping track of each pairwise sum carefully."
-            });
-            qs.push({
-                text: "Solve $195 + 155$ mentally by 'breaking apart' or compensation.",
-                correctAnswer: "350",
-                options: ["350", "340", "360", "345"],
-                solution: "Compensation involves moving a small amount from one number to another to make them 'friendly' or rounded. <br/>1. Take 5 from 155 and give it to 195.<br/>2. Now you have $200 + 150$.<br/>3. $200 + 150 = 350$.<br/>Alternatively, $(190 + 5) + (150 + 5) = 190 + 150 + 10 = 340 + 10 = 350$."
-            });
-            qs.push({
-                text: "Strategy: Double and Halve. $25 \times 12$ is equivalent to $50 \times ?$",
-                correctAnswer: "6",
-                options: ["6", "12", "24", "4"],
-                solution: "The <b>Double and Halve</b> strategy works because if you multiply one factor by 2 and divide the other by 2, the total product remains unchanged ($2 \times 0.5 = 1$).<br/>- Double 25 $\rightarrow$ 50.<br/>- Halve 12 $\rightarrow$ 6.<br/>So, $25 \times 12$ is the same as $50 \times 6$, which is 300. This makes long multiplication much simpler to do mentally."
-            });
-
-            return qs;
+            const qs = [
+                {
+                    text: "What is the area of a rectangle with length 8 cm and width 5 cm?",
+                    correctAnswer: "40 sq cm",
+                    options: ["40 sq cm", "13 sq cm", "26 sq cm", "85 sq cm"],
+                    solution: "Area of a rectangle = length \u00d7 width<br/>$8 \\times 5 = 40$. Standard unit is sq cm."
+                },
+                {
+                    text: "Calculate the perimeter of a regular hexagon with each side measuring 6 m.",
+                    correctAnswer: "36 m",
+                    options: ["36 m", "12 m", "24 m", "42 m"],
+                    solution: "A regular hexagon has 6 equal sides.<br/>Perimeter = $6 \\times \\text{side} = 6 \\times 6 = 36$ m."
+                },
+                {
+                    text: "If the area of a square board is $64 \\text{ cm}^2$, what is the length of its side?",
+                    correctAnswer: "8 cm",
+                    options: ["8 cm", "16 cm", "32 cm", "4 cm"],
+                    solution: "Area of a square = side \u00d7 side.<br/>Since $8 \\times 8 = 64$, the side is 8 cm long."
+                },
+                {
+                    text: "A rectangular field is 120 m long and 80 m wide. How much fencing is required to enclose it?",
+                    correctAnswer: "400 m",
+                    options: ["400 m", "200 m", "9600 m", "100 m"],
+                    solution: "Fencing goes around the boundary, so we need the perimeter.<br/>Perimeter = $2 \\times (length + width) = 2 \\times (120 + 80) = 2 \\times 200 = 400$ m."
+                },
+                {
+                    text: "Two rectangles have the same perimeter of 20 cm. Rectangle A is 6 cm by 4 cm. Rectangle B is 8 cm by 2 cm. Which has a larger area?",
+                    correctAnswer: "Rectangle A",
+                    options: ["Rectangle A", "Rectangle B", "Both have same area", "Cannot be determined"],
+                    solution: "Area of A = $6 \\times 4 = 24 \\text{ sq cm}$.<br/>Area of B = $8 \\times 2 = 16 \\text{ sq cm}$.<br/>Rectangle A has the larger area."
+                },
+                {
+                    text: "Find the missing side of a triangle if its perimeter is 35 cm and two given sides are 12 cm and 14 cm.",
+                    correctAnswer: "9 cm",
+                    options: ["9 cm", "7 cm", "11 cm", "19 cm"],
+                    solution: "Sum of known sides = $12 + 14 = 26$ cm.<br/>Missing side = Perimeter - Sum of known sides = $35 - 26 = 9$ cm."
+                },
+                {
+                    text: "Which appropriate unit would you use to measure the area of a country like India?",
+                    correctAnswer: "Square Kilometers (sq km)",
+                    options: ["Square Meters (sq m)", "Square Kilometers (sq km)", "Square Centimeters (sq cm)", "Acres"],
+                    solution: "A country is a very large landmass. The most appropriate standard metric unit for such large areas is square kilometers."
+                },
+                {
+                    text: "The cost of fencing a square park at ₹15 per metre is ₹3000. Find the length of each side of the park.",
+                    correctAnswer: "50 m",
+                    options: ["50 m", "200 m", "100 m", "25 m"],
+                    solution: "Total perimeter = Total Cost \u00f7 Rate = $3000 \\div 15 = 200$ m.<br/>Since it's a square (4 equal sides), Side = $200 \\div 4 = 50$ m."
+                },
+                {
+                    text: "A floor tile measures 20 cm by 20 cm. How many tiles are needed to cover a floor of area $4 \\text{ m}^2$?",
+                    correctAnswer: "100 tiles",
+                    options: ["100 tiles", "10 tiles", "1000 tiles", "20 tiles"],
+                    solution: "Area of one tile = $20 \\times 20 = 400 \\text{ cm}^2$.<br/>Floor area in sq cm = $4 \\times 10000 = 40000 \\text{ cm}^2$ (since $1 \\text{ m}^2 = 10000 \\text{ cm}^2$).<br/>Number of tiles = $40000 \\div 400 = 100$ tiles."
+                },
+                {
+                    text: "What is the perimeter of a rectangle if its area is $50 \\text{ cm}^2$ and its length is 10 cm?",
+                    correctAnswer: "30 cm",
+                    options: ["30 cm", "15 cm", "60 cm", "20 cm"],
+                    solution: "1. Find width: Area = length \u00d7 width \u2192 $50 = 10 \\times width$ \u2192 width = 5 cm.<br/>2. Find perimeter = $2 \\times (10 + 5) = 2 \\times 15 = 30$ cm."
+                },
+                {
+                    text: "Which shape encloses more area: a square with a 10 cm side or a rectangle measuring 12 cm by 8 cm? (Both have a perimeter of 40 cm)",
+                    correctAnswer: "The Square",
+                    options: ["The Square", "The Rectangle", "Both enclose equal area", "Perimeters must be different"],
+                    solution: "Square Area = $10 \\times 10 = 100 \\text{ cm}^2$.<br/>Rectangle Area = $12 \\times 8 = 96 \\text{ cm}^2$.<br/>For a given perimeter, a square encloses the maximum area for rectangles."
+                },
+                {
+                    text: "A playground is 50 m long. A boy runs 3 rounds along its boundary and covers 450 m. Find the width of the playground.",
+                    correctAnswer: "25 m",
+                    options: ["25 m", "50 m", "15 m", "100 m"],
+                    solution: "Distance of 3 rounds = 450 m \u2192 1 round (Perimeter) = $450 \\div 3 = 150$ m.<br/>Perimeter = $2 \\times (L + W) \\rightarrow 150 = 2 \\times (50 + W) \\rightarrow 75 = 50 + W \\rightarrow W = 25$ m."
+                },
+                {
+                    text: "Find the area of a square whose perimeter is 48 cm.",
+                    correctAnswer: "144 sq cm",
+                    options: ["144 sq cm", "12 sq cm", "48 sq cm", "24 sq cm"],
+                    solution: "Side of square = Perimeter \u00f7 4 = $48 \\div 4 = 12$ cm.<br/>Area = Side \u00d7 Side = $12 \\times 12 = 144$ sq cm."
+                },
+                {
+                    text: "Ravi wants to plant trees along the boundary of his rectangular garden (30m \u00d7 20m) leaving a 2m gap for a gate. What length of boundary needs trees?",
+                    correctAnswer: "98 m",
+                    options: ["98 m", "100 m", "58 m", "60 m"],
+                    solution: "Total perimeter = $2 \\times (30 + 20) = 100$ m.<br/>Length without the gap = $100 - 2 = 98$ m."
+                },
+                {
+                    text: "If you double the length and double the width of a rectangle, what happens to its area?",
+                    correctAnswer: "It becomes 4 times as large",
+                    options: ["It becomes 4 times as large", "It doubles", "It remains same", "It becomes 8 times as large"],
+                    solution: "Original Area = $L \\times W$.<br/>New Area = $(2L) \\times (2W) = 4 \\times (L \\times W) = 4 \\times$ Original Area."
+                }
+            ];
+            return qs.map(q => ({
+                ...q,
+                shuffledOptions: [...q.options].sort(() => Math.random() - 0.5)
+            }));
         };
 
         setSessionQuestions(generateQuestions());
@@ -168,7 +166,7 @@ const ChapterTest = () => {
         if (sessionQuestions.length > 0) {
             const qData = sessionQuestions[qIndex];
             setCurrentQuestion(qData);
-            setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
+            setShuffledOptions(qData.shuffledOptions);
             const previousAnswer = answers[qIndex];
             if (previousAnswer) {
                 setSelectedOption(previousAnswer.selected);
@@ -237,11 +235,6 @@ const ChapterTest = () => {
 
     const finalizeAssessment = async () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            // Re-calculate based on state since answers might not have the last update yet in async flow
-            // But state updates are queued, so we should be careful. 
-            // In assessment flow, we can just let showResults calculate from the latest answers state.
-        }
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
         setShowResults(true);
 
@@ -278,7 +271,7 @@ const ChapterTest = () => {
         return (
             <div className="junior-practice-page results-view overflow-y-auto" style={{ fontFamily: '"Open Sans", sans-serif' }}>
                 <header className="junior-practice-header results-header relative">
-                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Topics</button>
+                    <button onClick={() => navigate(-1)} className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm">Back to Syllabus</button>
                     <div className="sun-timer-container">
                         <div className="sun-timer"><div className="sun-rays"></div><span className="timer-text">Done!</span></div>
                     </div>
@@ -325,7 +318,14 @@ const ChapterTest = () => {
                                         <div className="flex items-start gap-4">
                                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>{idx + 1}</div>
                                             <div className="flex-1">
-                                                <div className="text-lg font-bold text-[#31326F] mb-4"><LatexContent html={q.text} /></div>
+                                                <div className="text-lg font-bold text-[#31326F] mb-4">
+                                                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', gap: '1rem', width: '100%' }}>
+                                                        <span style={{ color: '#4FB7B3', fontWeight: 'bold', fontSize: '1.25rem', flexShrink: 0 }}>Q{idx + 1}.</span>
+                                                        <div style={{ textAlign: 'left', margin: 0 }}>
+                                                            <LatexContent html={q.text} />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Selection</span>
@@ -351,8 +351,8 @@ const ChapterTest = () => {
                     </div>
 
                     <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
-                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Restart Test</button>
-                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Topics</button>
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}><RefreshCw size={24} /> Retry Test</button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate(-1)}>Back to Syllabus</button>
                     </div>
                 </main>
             </div>
@@ -374,7 +374,14 @@ const ChapterTest = () => {
                         <AnimatePresence mode="wait">
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
-                                    <div className="question-header-modern"><h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.75rem', fontWeight: '400', textAlign: 'center' }}><LatexContent html={currentQuestion.text} /></h2></div>
+                                    <div className="question-header-modern">
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '1rem', width: '100%' }}>
+                                            <span style={{ color: '#4FB7B3', fontWeight: 'bold', fontSize: '1.75rem', flexShrink: 0 }}>{qIndex + 1}.</span>
+                                            <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '1.75rem', fontWeight: '400', textAlign: 'left', margin: 0 }}>
+                                                <LatexContent html={currentQuestion.text} />
+                                            </h2>
+                                        </div>
+                                    </div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
                                             {shuffledOptions.map((option, idx) => (
@@ -407,4 +414,4 @@ const ChapterTest = () => {
     );
 };
 
-export default ChapterTest;
+export default AreaBoundaryTest;

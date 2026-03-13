@@ -625,6 +625,9 @@ const MiddleGradeSyllabus = () => {
             ],
             'Skill Application Problems': [
                 { skill_id: '1168', skill_name: 'Skill Application Problems', topic: 'Area and its Boundary', sub_topic: 'Skill Application Problems', isLocal: true, path: '/middle/grade/5/area-boundary/skill-application' }
+            ],
+            'Chapter Test': [
+                { skill_id: '1169', skill_name: 'Chapter Test', topic: 'Area and its Boundary', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/area-boundary/chapter-test' }
             ]
         };
 
@@ -703,6 +706,16 @@ const MiddleGradeSyllabus = () => {
                     sub_topic: 'Skill Application Problems',
                     isLocal: true,
                     path: '/middle/grade/5/tenths-hundredths/word-problems'
+                }
+            ],
+            'Chapter Test': [
+                {
+                    skill_id: '1062',
+                    skill_name: 'Chapter Test',
+                    topic: 'Tenths and Hundredths',
+                    sub_topic: 'Chapter Test',
+                    isLocal: true,
+                    path: '/middle/grade/5/tenths-hundredths/chapter-test'
                 }
             ]
         };
@@ -792,6 +805,16 @@ const MiddleGradeSyllabus = () => {
                     sub_topic: 'Skill Application Problems',
                     isLocal: true,
                     path: '/middle/practice/9012'
+                }
+            ],
+            'Chapter Test': [
+                {
+                    skill_id: '9013',
+                    skill_name: 'Chapter Test',
+                    topic: 'Ways to Multiply and Divide',
+                    sub_topic: 'Chapter Test',
+                    isLocal: true,
+                    path: '/middle/grade/5/multiply-divide/chapter-test'
                 }
             ]
         };
@@ -899,6 +922,16 @@ const MiddleGradeSyllabus = () => {
                     sub_topic: 'Skill Application Problems',
                     isLocal: true,
                     path: '/middle/grade/5/how-big-how-heavy/skill-application'
+                }
+            ],
+            'Chapter Test': [
+                {
+                    skill_id: '1224',
+                    skill_name: 'Chapter Test',
+                    topic: 'How Big? How Heavy?',
+                    sub_topic: 'Chapter Test',
+                    isLocal: true,
+                    path: '/middle/grade/5/how-big-how-heavy/chapter-test'
                 }
             ]
         };

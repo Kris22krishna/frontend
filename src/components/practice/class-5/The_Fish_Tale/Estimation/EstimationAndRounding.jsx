@@ -54,15 +54,31 @@ const EstimationAndRounding = () => {
                 (Math.round((num + roundPlace / 2) / roundPlace) * roundPlace).toLocaleString('en-IN')
             ];
 
-            opts = [...new Set(opts)].filter(o => o !== correctAns.toLocaleString('en-IN')).slice(0, 3);
+            let optSet = new Set([
+                (Math.floor(num / roundPlace) * roundPlace).toLocaleString('en-IN'),
+                (Math.ceil(num / roundPlace) * roundPlace).toLocaleString('en-IN'),
+                (Math.round((num + roundPlace / 2) / roundPlace) * roundPlace).toLocaleString('en-IN')
+            ]);
+            optSet.delete(correctAns.toLocaleString('en-IN'));
+
+            opts = [...optSet];
+            while (opts.length < 3) {
+                opts.push((Math.floor(Math.random() * 90000) + 10000).toLocaleString('en-IN'));
+                opts = [...new Set(opts)];
+                optSet = new Set(opts);
+                optSet.delete(correctAns.toLocaleString('en-IN'));
+                opts = [...optSet];
+            }
+
+            opts = opts.slice(0, 3);
             opts.push(correctAns.toLocaleString('en-IN'));
             opts.sort(() => Math.random() - 0.5);
 
-            generated.push({ 
-                text: qText, 
-                correctAnswer: correctAns.toLocaleString('en-IN'), 
-                solution: `To round ${num.toLocaleString('en-IN')} to the ${placeName}, we look at the digit to its right. The correct answer is ${correctAns.toLocaleString('en-IN')}.`, 
-                options: opts 
+            generated.push({
+                text: qText,
+                correctAnswer: correctAns.toLocaleString('en-IN'),
+                solution: `To round ${num.toLocaleString('en-IN')} to the ${placeName}, we look at the digit to its right. The correct answer is ${correctAns.toLocaleString('en-IN')}.`,
+                options: opts
             });
         }
         setSessionQuestions(generated);
@@ -79,7 +95,7 @@ const EstimationAndRounding = () => {
             }
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
-        
+
         generateQuestions();
 
         return () => {

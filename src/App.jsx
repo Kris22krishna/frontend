@@ -205,6 +205,10 @@ import VolumeByDisplacement from './components/practice/class-5/Howbighowheavy/v
 import UnitsOfVolume from './components/practice/class-5/Howbighowheavy/volume measurement/units-of-volume';
 import VolumeEstimation from './components/practice/class-5/Howbighowheavy/volume measurement/volume-estimation';
 import VolumeUsingUnitCubes from './components/practice/class-5/Howbighowheavy/volume measurement/volume-using-unit-cubes';
+import AreaBoundaryTest from './components/practice/class-5/AreaanditsBoundary/ChapterTest/AreaBoundaryTest';
+import TenthsHundredthsTest from './components/practice/class-5/TenthsandHundrendths/ChapterTest/TenthsHundredthsTest';
+import MultiplyDivideTest from './components/practice/class-5/WaystoMultiplyandDivide/ChapterTest/MultiplyDivideTest';
+import HowBigHowHeavyTest from './components/practice/class-5/Howbighowheavy/ChapterTest/HowBigHowHeavyTest';
 import UnitsOfMass from './components/practice/class-5/Howbighowheavy/mass measurement/units-of-mass';
 import MassConversion from './components/practice/class-5/Howbighowheavy/mass measurement/mass-conversion';
 import MassCalculation from './components/practice/class-5/Howbighowheavy/mass measurement/mass-calculation';
@@ -1776,6 +1780,10 @@ function App() {
         <Route path="/middle/grade/5/can-you-see-the-pattern/missing-numbers" element={<MissingNumberReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/mental-calculation" element={<MentalCalculationReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblemsPatterns />} />
+        <Route path="/middle/grade/5/area-boundary/chapter-test" element={<AreaBoundaryTest />} />
+        <Route path="/middle/grade/5/tenths-hundredths/chapter-test" element={<TenthsHundredthsTest />} />
+        <Route path="/middle/grade/5/multiply-divide/chapter-test" element={<MultiplyDivideTest />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/chapter-test" element={<HowBigHowHeavyTest />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
 
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
