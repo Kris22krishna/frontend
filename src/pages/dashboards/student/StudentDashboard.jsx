@@ -101,14 +101,6 @@ const StudentDashboard = () => {
                             <div className="text-cyan-100 text-sm">{profile?.grade || 'Grade 5'} Math</div>
                         </button>
 
-                        <button
-                            onClick={() => navigate('/math')}
-                            className="w-full group bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-left hover:shadow-xl hover:shadow-purple-200 transition-all"
-                        >
-                            <BookOpen className="h-10 w-10 text-white mb-3 group-hover:scale-110 transition-transform" />
-                            <div className="text-white font-bold text-lg">Explore Topics</div>
-                            <div className="text-purple-100 text-sm">Browse all subjects</div>
-                        </button>
                     </div>
                 </div>
             </div>
