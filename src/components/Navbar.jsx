@@ -60,7 +60,7 @@ const Navbar = () => {
             <div className="navbar-content">
                 <Link to="/" className="logo">
                     {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
-                    <span>{userType === 'student' ? 'IDM' : 'Skill100.ai'}</span>
+                    <span>{userType === 'student' ? 'skill100.ai' : 'Skill100.ai'}</span>
                 </Link>
 
                 <div className="nav-center hidden-mobile">
