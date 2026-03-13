@@ -652,6 +652,7 @@ function App() {
           <Route path="learn-to-learn" element={<ContentPage topic="learn-to-learn" />} />
           <Route path="math" element={<MathSelection />} />
           <Route path="practice" element={<PracticePage />} />
+          <Route path="diagnosis-test" element={<ProtectedRoute redirectTo="/login"><DiagnosisLanding /></ProtectedRoute>} />
           <Route path="math/grade/:grade" element={<GradeSyllabus />} />
           {/* Middle Routes (Grades 5-7 professional design) */}
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
