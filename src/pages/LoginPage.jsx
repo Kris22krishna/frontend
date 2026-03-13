@@ -64,7 +64,7 @@ const LoginPage = () => {
 
         if (userType === 'student') {
             console.log("Redirecting student to IDM dashboard as requested");
-            navigate('/idm-dashboard');
+            navigate('/student-dashboard');
         } else {
             const dashboardMap = {
                 'teacher': '/teacher-dashboard',
