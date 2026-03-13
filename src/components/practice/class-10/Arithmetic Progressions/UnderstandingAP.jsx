@@ -23,6 +23,7 @@ const UnderstandingAP = () => {
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
+    const [timeElapsed, setTimeElapsed] = useState(0);
     const isTabActive = useRef(true);
 
     const SKILL_ID = 1106; // Understanding Arithmetic Progressions
