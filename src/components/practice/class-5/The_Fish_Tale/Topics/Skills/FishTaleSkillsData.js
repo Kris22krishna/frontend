@@ -382,16 +382,16 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'The Indian System',
-                    f: '1,00,000 = 1\\text{ Lakh}',
+                    f: '$$1,00,000 = 1\\text{ Lakh}$$',
                     d: 'In the Indian system, we use commas after the Hundreds, then after every two digits.',
-                    ex: '5,42,109 \\text{ is Five Lakh Forty-Two Thousand One Hundred and Nine.}',
+                    ex: '$5,42,109$ is Five Lakh Forty-Two Thousand One Hundred and Nine.',
                     tip: 'Count from the right: 3 digits, then groups of 2!'
                 },
                 {
                     title: 'Expanded Form',
-                    f: '\\text{Value} = \\text{Digit} \\times \\text{Place}',
+                    f: '$$\\text{Value} = \\text{Digit} \\times \\text{Place}$$',
                     d: 'Expanded form shows the sum of the place values of each digit.',
-                    ex: '4,562 = 4000 + 500 + 60 + 2',
+                    ex: '$4,562 = 4000 + 500 + 60 + 2$',
                     tip: 'Zeroes in a number don\'t need to be shown in expanded form.'
                 }
             ]
@@ -411,9 +411,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Rounding Rule',
-                    f: '5 \\uparrow, <5 \\rightarrow',
+                    f: '$$5 \\uparrow, <5 \\rightarrow$$',
                     d: 'If the digit to the right is 5 or more, round up. If less than 5, keep it the same.',
-                    ex: '48 \\text{ rounded to nearest 10 is } 50.',
+                    ex: '$48$ rounded to nearest $10$ is $50$.',
                     tip: 'Always look at the digit immediately to the right of your target place!'
                 }
             ]
@@ -433,9 +433,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Words to Figures',
-                    f: '\\text{Five Lakh} = 5,00,000',
+                    f: '$$\\text{Five Lakh} = 5,00,000$$',
                     d: 'Convert written words into numerical figures by placing digits in their period blocks.',
-                    ex: 'Two Lakh Three Thousand = 2,03,000',
+                    ex: 'Two Lakh Three Thousand = $2,03,000$',
                     tip: 'Always check if you need a zero as a placeholder!'
                 }
             ]
@@ -455,9 +455,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Comparing Digits',
-                    f: '7,42,000 > 6,98,000',
+                    f: '$$7,42,000 > 6,98,000$$',
                     d: 'Start comparing from the highest place value (leftmost digit).',
-                    ex: '5,00,000 > 4,99,999',
+                    ex: '$5,00,000 > 4,99,999$',
                     tip: 'Count digits first! More digits mean a larger number.'
                 }
             ]
@@ -477,9 +477,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Shifting Zeros',
-                    f: 'n \\times 10^x \\rightarrow \\text{Add } x \\text{ zeros}',
+                    f: '$$n \\times 10^x \\rightarrow \\text{Add } x \\text{ zeros}$$',
                     d: 'When multiplying by 10, 100, or 1000, simply add the zeros to the end of the number.',
-                    ex: '45 \\times 100 = 4,500',
+                    ex: '$45 \\times 100 = 4,500$',
                     tip: 'Division is the opposite—remove the zeros!'
                 }
             ]
@@ -499,9 +499,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'The Speed Formula',
-                    f: 'S = D/T',
+                    f: '$$S = D/T$$',
                     d: 'Speed is distance divided by time.',
-                    ex: '20 \\text{ km in } 1 \\text{ hr} = 20 \\text{ km/h}',
+                    ex: '$20$ km in $1$ hr $= 20$ km/h',
                     tip: 'Distance = Speed × Time!'
                 }
             ]
@@ -521,9 +521,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Profit Calculation',
-                    f: 'P = SP - CP',
+                    f: '$$P = SP - CP$$',
                     d: 'Profit is Selling Price minus Cost Price.',
-                    ex: 'Buy at 10, Sell at 15 \\rightarrow Profit = 5',
+                    ex: 'Buy at $10$, Sell at $15 \\rightarrow \\text{Profit} = 5$',
                     tip: 'If SP < CP, it is a loss!'
                 }
             ]
@@ -543,7 +543,7 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Real World Scale',
-                    f: '1 \\text{ Crore} = 100 \\text{ Lakhs}',
+                    f: '$$1 \\text{ Crore} = 100 \\text{ Lakhs}$$',
                     d: 'Understanding how many zeros are in a Crore (7 zeros) or a Billion.',
                     ex: 'The population of a city can be in lakhs.',
                     tip: 'A Crore is ten million in the International system.'

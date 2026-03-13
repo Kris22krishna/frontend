@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../fishtale.css';
+import MathRenderer from '../../../../../MathRenderer';
 
 const QUESTIONS = [
     { label: 'WHAT', q: 'What is "The Fish Tale"?', icon: '🐟', color: '#0ea5e9', desc: 'A story of numbers, fishing, and real-world math application.' },
@@ -25,23 +26,39 @@ export default function FishTaleIntro5W1H() {
                 </div>
             </nav>
 
-            <div style={{ maxWidth: 1000, margin: '40px auto', padding: '0 24px' }}>
-                <h1 style={{ fontFamily: 'Outfit', fontSize: '2.5rem', fontWeight: 900, marginBottom: 8, color: '#0f172a' }}>Introduction: <span style={{ color: '#0ea5e9' }}>5W1H</span></h1>
-                <p style={{ color: '#64748b', fontSize: 18, marginBottom: 40 }}>Understanding the core of The Fish Tale through six big questions.</p>
+            <div className="ft-content" style={{ padding: '32px 24px 80px' }}>
+                <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+                    <div style={{ marginBottom: 32, borderBottom: '2px solid #e2e8f0', paddingBottom: 16 }}>
+                        <h1 style={{ fontFamily: 'Outfit', fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 900, marginBottom: 4, color: '#0f172a' }}>Introduction: <span style={{ color: '#0ea5e9' }}>5W1H</span></h1>
+                        <p style={{ color: '#64748b', fontSize: 16, fontWeight: 500 }}>Deep dive into the core concepts through six foundational questions.</p>
+                    </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
                     {QUESTIONS.map((item, i) => (
-                        <div key={i} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 24, padding: 32, transition: 'all 0.3s ease', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
-                                <div style={{ fontSize: 24, width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', background: `${item.color}10`, borderRadius: 12 }}>{item.icon}</div>
+                        <div key={i} style={{ 
+                            background: '#fff', 
+                            border: '1px solid #e2e8f0', 
+                            borderRadius: '20px', 
+                            padding: '24px', 
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 16,
+                            transition: 'all 0.3s ease', 
+                            boxShadow: '0 2px 10px rgba(0,0,0,0.03)' 
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                <div style={{ fontSize: 24, width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: `${item.color}15`, borderRadius: 12 }}>{item.icon}</div>
                                 <div>
-                                    <div style={{ fontSize: 10, fontWeight: 900, color: item.color, letterSpacing: 1 }}>{item.label}</div>
-                                    <div style={{ fontSize: 18, fontWeight: 800 }}>{item.q}</div>
+                                    <div style={{ fontSize: 10, fontWeight: 900, color: item.color, letterSpacing: 1, textTransform: 'uppercase' }}>{item.label}</div>
+                                    <h3 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: '#0f172a' }}>{item.q}</h3>
                                 </div>
                             </div>
-                            <p style={{ color: '#64748b', lineHeight: 1.6 }}>{item.desc}</p>
+                            <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.6, margin: 0 }}>
+                                <MathRenderer text={item.desc} />
+                            </p>
                         </div>
                     ))}
+                </div>
                 </div>
             </div>
         </div>

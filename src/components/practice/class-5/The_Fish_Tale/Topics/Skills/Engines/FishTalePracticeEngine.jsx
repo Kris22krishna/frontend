@@ -93,28 +93,28 @@ export default function FishTalePracticeEngine({ questionPool, sampleSize = 20, 
     }
 
     return (
-        <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px' }}>
-            <div style={{ marginBottom: 32 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+        <div style={{ maxWidth: 860, margin: '0 auto', padding: '10px 24px' }}>
+            <div style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                     <div>
-                        <div style={{ fontSize: 12, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 4 }}>Practice Session</div>
-                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 24, fontWeight: 800, color: '#0f172a', margin: 0 }}>{title}</h3>
+                        <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 2 }}>Practice Session</div>
+                        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 20, fontWeight: 800, color: '#0f172a', margin: 0 }}>{title}</h3>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 15, color, fontWeight: 900, background: `${color}10`, padding: '6px 14px', borderRadius: 10, display: 'inline-block', marginBottom: 6 }}>⏱️ {formatTime(timeTaken)}</div>
-                        <div style={{ fontSize: 14, color: '#64748b', fontWeight: 700 }}>Question <span style={{ color }}>{current + 1}</span> of {questions.length}</div>
+                        <div style={{ fontSize: 13, color, fontWeight: 900, background: `${color}10`, padding: '4px 10px', borderRadius: 8, display: 'inline-block', marginBottom: 4 }}>⏱️ {formatTime(timeTaken)}</div>
+                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700 }}>Question <span style={{ color }}>{current + 1}</span> of {questions.length}</div>
                     </div>
                 </div>
-                <div style={{ background: '#e2e8f0', borderRadius: 10, height: 8, overflow: 'hidden' }}>
+                <div style={{ background: '#e2e8f0', borderRadius: 10, height: 6, overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${progress}%`, background: color, borderRadius: 10, transition: 'width 0.4s cubic-bezier(0.1, 0.7, 1.0, 0.1)' }} />
                 </div>
             </div>
 
-            <div className="ft-quiz-card" style={{ padding: '32px' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${color}15`, padding: '6px 14px', borderRadius: 10, fontSize: 12, fontWeight: 800, color, marginBottom: 24 }}>
+            <div className="ft-quiz-card" style={{ padding: '24px' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${color}15`, padding: '4px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800, color, marginBottom: 16 }}>
                     QUESTION {current + 1}
                 </div>
-                <div style={{ fontSize: 19, fontWeight: 600, color: '#0f172a', lineHeight: 1.6, marginBottom: 32 }}>
+                <div style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', lineHeight: 1.5, marginBottom: 20 }}>
                     <MathRenderer text={q.question} />
                 </div>
 
@@ -129,17 +129,17 @@ export default function FishTalePracticeEngine({ questionPool, sampleSize = 20, 
                         return (
                             <button key={oi} onClick={() => handleSelect(oi)} disabled={answered}
                                 style={{ 
-                                    display: 'flex', alignItems: 'center', gap: 14, padding: '18px 20px', 
-                                    borderRadius: 16, border: `3px solid ${border}`, background: bg, 
+                                    display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', 
+                                    borderRadius: 14, border: `3px solid ${border}`, background: bg, 
                                     cursor: answered ? 'default' : 'pointer', textAlign: 'left', transition: 'all 0.2s',
-                                    boxShadow: selected === oi && !answered ? `0 8px 20px ${color}15` : 'none'
+                                    boxShadow: selected === oi && !answered ? `0 6px 16px ${color}10` : 'none'
                                 }}>
                                 <div style={{ 
-                                    width: 14, height: 14, borderRadius: '50%', 
+                                    width: 12, height: 12, borderRadius: '50%', 
                                     border: `2px solid ${dot}`,
                                     background: selected === oi || (answered && oi === q.correct) ? dot : 'transparent', flexShrink: 0 
                                 }} />
-                                <span style={{ fontSize: 16, fontWeight: weight, color: txtColor }}>
+                                <span style={{ fontSize: 15, fontWeight: weight, color: txtColor }}>
                                     <MathRenderer text={opt} />
                                 </span>
                             </button>
@@ -148,18 +148,18 @@ export default function FishTalePracticeEngine({ questionPool, sampleSize = 20, 
                 </div>
 
                 {answered && (
-                    <div style={{ marginTop: 24, padding: '20px', borderRadius: 16, background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', fontSize: 15, lineHeight: 1.6 }}>
+                    <div style={{ marginTop: 20, padding: '16px', borderRadius: 12, background: '#f8fafc', border: '1px solid #e2e8f0', color: '#64748b', fontSize: 14, lineHeight: 1.5 }}>
                         <strong style={{ color: '#0369a1' }}>💡 Explanation: </strong><MathRenderer text={q.explanation} />
                     </div>
                 )}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 32 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24 }}>
                 <button onClick={handleNext} disabled={!answered}
                     className="ft-btn-primary"
                     style={{ 
-                        padding: '14px 60px', borderRadius: 100, fontSize: 16, background: answered ? color : '#cbd5e1', 
-                        cursor: answered ? 'pointer' : 'not-allowed', boxShadow: answered ? `0 10px 25px ${color}30` : 'none'
+                        padding: '12px 48px', borderRadius: 100, fontSize: 15, background: answered ? color : '#cbd5e1', 
+                        cursor: answered ? 'pointer' : 'not-allowed', boxShadow: answered ? `0 8px 20px ${color}20` : 'none'
                     }}>
                     {current + 1 >= questions.length ? 'Finish Session' : 'Next Question →'}
                 </button>

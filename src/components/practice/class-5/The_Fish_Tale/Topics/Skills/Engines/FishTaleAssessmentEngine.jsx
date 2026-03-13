@@ -137,11 +137,11 @@ export default function FishTaleAssessmentEngine({ questions: questionPool, samp
                     </div>
                 </div>
 
-                <div className="ft-quiz-card" style={{ padding: '32px' }}>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: `${color}15`, padding: '6px 14px', borderRadius: 10, fontSize: 12, fontWeight: 800, color, marginBottom: 24 }}>
+                <div className="ft-quiz-card" style={{ padding: '24px' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${color}15`, padding: '4px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800, color, marginBottom: 16 }}>
                         QUESTION {current + 1} OF {questions.length}
                     </div>
-                    <div style={{ fontSize: 19, fontWeight: 600, color: '#0f172a', lineHeight: 1.6, marginBottom: 32 }}>
+                    <div style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', lineHeight: 1.5, marginBottom: 20 }}>
                         <MathRenderer text={q.question} />
                     </div>
 
@@ -151,18 +151,18 @@ export default function FishTaleAssessmentEngine({ questions: questionPool, samp
                             return (
                                 <button key={oi} onClick={() => handleSelect(oi)}
                                     style={{ 
-                                        display: 'flex', alignItems: 'center', gap: 14, padding: '18px 20px', 
-                                        borderRadius: 16, border: `3px solid ${isSelected ? color : 'rgba(0,0,0,0.05)'}`, 
+                                        display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', 
+                                        borderRadius: 14, border: `3px solid ${isSelected ? color : 'rgba(0,0,0,0.05)'}`, 
                                         background: isSelected ? `${color}05` : '#fff', 
                                         cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s',
-                                        boxShadow: isSelected ? `0 8px 20px ${color}15` : 'none'
+                                        boxShadow: isSelected ? `0 6px 16px ${color}10` : 'none'
                                     }}>
                                     <div style={{ 
-                                        width: 14, height: 14, borderRadius: '50%', 
+                                        width: 12, height: 12, borderRadius: '50%', 
                                         border: `2px solid ${isSelected ? color : '#cbd5e1'}`,
                                         background: isSelected ? color : 'transparent', flexShrink: 0 
                                     }} />
-                                    <span style={{ fontSize: 16, fontWeight: isSelected ? 700 : 500, color: isSelected ? color : '#334155' }}>
+                                    <span style={{ fontSize: 15, fontWeight: isSelected ? 700 : 500, color: isSelected ? color : '#334155' }}>
                                         <MathRenderer text={opt} />
                                     </span>
                                 </button>
@@ -171,16 +171,16 @@ export default function FishTaleAssessmentEngine({ questions: questionPool, samp
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 24 }}>
                     <button className="ft-btn-secondary" onClick={() => setCurrent(c => Math.max(0, c - 1))} disabled={current === 0}
-                        style={{ opacity: current === 0 ? 0 : 1 }}>← Previous Question</button>
+                        style={{ opacity: current === 0 ? 0 : 1, padding: '10px 24px' }}>← Previous</button>
                     {current + 1 === questions.length ? (
-                        <button className="ft-btn-primary" onClick={handleSubmit} style={{ background: '#ef4444', padding: '14px 40px' }}>
-                            Finish & Submit
+                        <button className="ft-btn-primary" onClick={handleSubmit} style={{ background: '#ef4444', padding: '10px 32px' }}>
+                            Submit Assessment
                         </button>
                     ) : (
-                        <button className="ft-btn-primary" onClick={() => setCurrent(c => c + 1)} style={{ background: color, padding: '14px 40px' }}>
-                            Save & Next →
+                        <button className="ft-btn-primary" onClick={() => setCurrent(c => c + 1)} style={{ background: color, padding: '10px 32px' }}>
+                            Next →
                         </button>
                     )}
                 </div>
@@ -189,7 +189,7 @@ export default function FishTaleAssessmentEngine({ questions: questionPool, samp
             <div className="ft-assessment-palette">
                 <div style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                    padding: '16px', borderRadius: 16, marginBottom: 24, fontWeight: 900, fontSize: 22,
+                    padding: '12px', borderRadius: 12, marginBottom: 16, fontWeight: 900, fontSize: 18,
                     background: timeLeft < 60 ? 'rgba(239,68,68,0.1)' : `${color}0D`,
                     color: timeLeft < 60 ? '#ef4444' : color,
                     border: `1px solid ${timeLeft < 60 ? 'rgba(239,68,68,0.2)' : 'rgba(0,0,0,0.05)'}`
@@ -197,7 +197,7 @@ export default function FishTaleAssessmentEngine({ questions: questionPool, samp
                     ⏱️ {formatTime(timeLeft)}
                 </div>
 
-                <div style={{ fontSize: 11, fontWeight: 900, marginBottom: 16, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1.5 }}>Question Navigator</div>
+                <div style={{ fontSize: 10, fontWeight: 900, marginBottom: 12, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1.2 }}>Navigator</div>
                 <div className="ft-palette-grid">
                     {questions.map((_, i) => {
                         const isAnswered = answers[i] !== null;
@@ -222,7 +222,7 @@ export default function FishTaleAssessmentEngine({ questions: questionPool, samp
                 </div>
 
                 <button onClick={handleSubmit}
-                    style={{ background: '#ef4444', width: '100%', padding: '14px', marginTop: 32, fontSize: 14, borderRadius: 14, color: '#fff', border: 'none', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s' }}>
+                    style={{ background: '#ef4444', width: '100%', padding: '12px', marginTop: 24, fontSize: 13, borderRadius: 12, color: '#fff', border: 'none', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s' }}>
                     Submit Test
                 </button>
             </div>
