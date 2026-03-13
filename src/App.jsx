@@ -112,6 +112,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Dashboards
 import StudentDashboard from './pages/dashboards/student/StudentDashboard';
+import IDMPage from './pages/IDMPage';
 import TeacherLayout from './pages/dashboards/teacher/TeacherLayout';
 import TeacherDashboard from './pages/dashboards/teacher/TeacherDashboard';
 import TeacherStudents from './pages/dashboards/teacher/TeacherStudents';
@@ -1695,7 +1696,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
 
         {/* Role-Based Dashboards */}
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/student-dashboard" element={<ProtectedRoute redirectTo="/login"><StudentDashboard /></ProtectedRoute>} />
+        <Route path="/idm-dashboard" element={<ProtectedRoute redirectTo="/login"><IDMPage /></ProtectedRoute>} />
 
         {/* Teacher Dashboard with Nested Layout */}
         <Route path="/teacher-dashboard" element={<TeacherLayout />}>

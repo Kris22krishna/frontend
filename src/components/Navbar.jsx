@@ -67,18 +67,18 @@ const Navbar = () => {
                     <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>Home</Link>
                     <Link to="/rapid-math" className={`nav-link-item ${isActive('/rapid-math') ? 'active' : ''}`}>Rapid Math</Link>
                     <Link to="/internship" className={`nav-link-item ${isActive('/internship') ? 'active' : ''}`}>Internship</Link>
-                    {isAuthenticated && (
-                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>
-                            {userType === 'student' ? 'IDM' : 'Portal'}
+
+                    {isAuthenticated && userType === 'student' && (
+                        <Link to="/idm-dashboard" className={`nav-link-item ${isActive('/idm-dashboard') ? 'active' : ''}`} >
+                            IDM 2026
                         </Link>
                     )}
                     <Link to="/neet" className={`nav-link-item ${isActive('/neet') ? 'active' : ''}`}>NEET</Link>
-                    {/* {isAuthenticated && (
-                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
+                    {isAuthenticated && (
+                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>
+                            Learn
+                        </Link>
                     )}
-                    {isAuthenticated && userType === 'student' && (
-                        <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnostic Test</Link>
-                    )} */}
                 </div>
 
                 <div className="nav-actions">
@@ -118,7 +118,10 @@ const Navbar = () => {
                         {isAuthenticated ? (
                             <>
                                 <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">
-                                    {userType === 'student' ? 'IDM' : 'Portal'}
+                                    Portal
+                                </Link>
+                                <Link to="/idm-dashboard" className="mobile-dropdown-item idm-link" style={{ color: '#4f46e5', fontWeight: 'bold' }}>
+                                    IDM 2026
                                 </Link>
                                 {userType === 'student' && (
                                     <Link to="/diagnosis-test" className={`mobile-dropdown-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
