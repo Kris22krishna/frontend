@@ -67,6 +67,7 @@ const Navbar = () => {
                     <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>Home</Link>
                     <Link to="/rapid-math" className={`nav-link-item ${isActive('/rapid-math') ? 'active' : ''}`}>Rapid Math</Link>
                     <Link to="/internship" className={`nav-link-item ${isActive('/internship') ? 'active' : ''}`}>Internship</Link>
+                    <Link to="/neet" className={`nav-link-item ${isActive('/neet') ? 'active' : ''}`}>NEET</Link>
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
                     )}
@@ -105,6 +106,9 @@ const Navbar = () => {
                         </Link>
                         <Link to="/internship" className={`mobile-dropdown-item ${isActive('/internship') ? 'active' : ''}`}>
                             Internship
+                        </Link>
+                        <Link to="/neet" className={`mobile-dropdown-item ${isActive('/neet') ? 'active' : ''}`}>
+                            NEET
                         </Link>
                         {isAuthenticated ? (
                             <>

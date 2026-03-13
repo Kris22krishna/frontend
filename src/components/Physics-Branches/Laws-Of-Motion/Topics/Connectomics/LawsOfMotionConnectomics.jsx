@@ -13,6 +13,13 @@ export default function LawsOfMotionConnectomics() {
                 <button className="lom-nav-back" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion')}>
                     ← Back to Dashboard
                 </button>
+                <div className="lom-nav-links">
+                    <button className="lom-nav-link active">🧠 Connectomics</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/introduction')}>🌟 Intro</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/terminology')}>📖 Terminology</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/skills')}>🎯 Skills</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/exam-edge')}>⚡ Exam Edge</button>
+                </div>
             </nav>
 
             <div className="lom-hero" style={{ background: 'linear-gradient(145deg, #0f172a 0%, #1e293b 100%)', color: '#fff' }}>
@@ -121,9 +128,14 @@ export default function LawsOfMotionConnectomics() {
                 <div style={{ marginTop: '60px', textAlign: 'center', background: '#f8fafc', padding: '40px', borderRadius: '32px', border: '2px dashed #e2e8f0' }}>
                     <Share2 size={48} color="#3b82f6" style={{ marginBottom: '16px' }} />
                     <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1e1b4b' }}>Infinite Connections</h3>
-                    <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b' }}>
+                    <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b', marginBottom: '32px' }}>
                         Newton's Laws aren't just a chapter — they're the backbone of engineering, sports science, and space exploration. Every time a car brakes or a rocket launches, these laws are at work.
                     </p>
+                    <div style={{ marginTop: 40, textAlign: 'center' }}>
+                        <button onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/introduction')} style={{ padding: '12px 32px', fontSize: 16, background: '#fff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                            Next Topic: Intro <span style={{ color: '#0f172a' }}>→</span>
+                        </button>
+                    </div>
                 </div>
             </main>
         </div>

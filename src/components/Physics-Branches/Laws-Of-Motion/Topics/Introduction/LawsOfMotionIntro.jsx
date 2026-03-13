@@ -98,9 +98,11 @@ export default function LawsOfMotionIntro() {
                     ← Back to Dashboard
                 </button>
                 <div className="lom-nav-links">
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/connectomics')}>🧠 Connectomics</button>
                     <button className="lom-nav-link active">🌟 Intro</button>
                     <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/terminology')}>📖 Terminology</button>
                     <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/skills')}>🎯 Skills</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/exam-edge')}>⚡ Exam Edge</button>
                 </div>
             </nav>
 

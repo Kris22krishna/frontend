@@ -646,8 +646,8 @@ export default function ShapesTerminology() {
                                 <div style={{ fontSize: 72, marginBottom: 12, animation: 'sauBounceIn 0.5s both' }}>
                                     {quizTotalScore >= 9 ? '🏆' : quizTotalScore >= 7 ? '🌟' : quizTotalScore >= 5 ? '👏' : '💪'}
                                 </div>
-                                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, margin: '0 0 8px' }}>Quiz Complete!</h2>
-                                <p style={{ color: '#64748b', fontSize: 18, margin: '0 0 8px' }}>Score: <span style={{ color: '#6366f1', fontWeight: 900 }}>{quizTotalScore}/10</span></p>
+                                <h2 style={{ color: '#060606ff', fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, margin: '0 0 8px' }}>Quiz Complete!</h2>
+                                <p style={{ color: '#060606ff', fontSize: 18, margin: '0 0 8px' }}>Score: <span style={{ color: '#6366f1', fontWeight: 900 }}>{quizTotalScore}/10</span></p>
                                 {bestStreak >= 2 && <p style={{ color: '#f59e0b', fontWeight: 800, margin: '0 0 24px' }}>🔥 Best streak: {bestStreak} in a row!</p>}
                                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                                     <button onClick={resetQuiz} style={{ padding: '12px 28px', background: 'linear-gradient(135deg, #6366f1, #a855f7)', color: '#fff', borderRadius: 100, border: 'none', fontWeight: 800, cursor: 'pointer', fontSize: 15, fontFamily: 'Outfit, sans-serif' }}>Play Again 🔄</button>
