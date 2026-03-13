@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../services/api';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import PracticeReportModal from '../PracticeReportModal';
+import { api } from '../../../../services/api';
+import { LatexText } from '../../../LatexText';
+import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
 import './NumberSystem.css';
 
-const OperationsOnSurds = () => {
+const Rationalisation = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -25,8 +25,8 @@ const OperationsOnSurds = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 1243;
-    const SKILL_NAME = "Operations on Surds";
+    const SKILL_ID = 1244;
+    const SKILL_NAME = "Rationalisation";
     const [answers, setAnswers] = useState({});
 
     const generateQuestions = () => {
@@ -36,64 +36,64 @@ const OperationsOnSurds = () => {
 
         return [
             createQuestion(1,
-                "Simplify: $\\sqrt{2} + \\sqrt{2}$",
-                ["$2\\sqrt{2}$", "$\\sqrt{4}$", "$2$", "$4$"],
-                "$2\\sqrt{2}$",
-                "Adding like surds is like adding variables: $x + x = 2x$. So, $\\sqrt{2} + \\sqrt{2} = 2\\sqrt{2}$."
+                "Rationalise the denominator of $\\frac{1}{\\sqrt{2}}$.",
+                ["$\\frac{\\sqrt{2}}{2}$", "$\\sqrt{2}$", "$\\frac{1}{2}$", "$2$"],
+                "$\\frac{\\sqrt{2}}{2}$",
+                "Multiply both numerator and denominator by $\\sqrt{2}$: $\\frac{1 \\times \\sqrt{2}}{\\sqrt{2} \\times \\sqrt{2}} = \\frac{\\sqrt{2}}{2}$."
             ),
             createQuestion(2,
-                "Find the product: $\\sqrt{3} \\times \\sqrt{3}$",
-                ["$3$", "$\\sqrt{9}$", "Both $3$ and $\\sqrt{9}$", "$9$"],
-                "Both $3$ and $\\sqrt{9}$",
-                "The square of a square root of a number is the number itself: $\\sqrt{a} \\times \\sqrt{a} = a$. Thus, $\\sqrt{3} \\times \\sqrt{3} = \\sqrt{9} = 3$."
+                "What is the rationalising factor for $\\sqrt{7}$?",
+                ["$\\sqrt{7}$", "$7$", "$\\frac{1}{7}$", "$\\sqrt{14}$"],
+                "$\\sqrt{7}$",
+                "A rationalising factor is a number that, when multiplied by a surd, makes it rational. $\\sqrt{7} \\times \\sqrt{7} = 7$, which is rational."
             ),
             createQuestion(3,
-                "Multiply: $\\sqrt{5} \\times \\sqrt{2}$",
-                ["$\\sqrt{7}$", "$10$", "$\\sqrt{10}$", "$7$"],
-                "$\\sqrt{10}$",
-                "Using the property $\\sqrt{a} \\times \\sqrt{b} = \\sqrt{a \\times b}$, we have $\\sqrt{5} \\times \\sqrt{2} = \\sqrt{5 \\times 2} = \\sqrt{10}$."
+                "Rationalise: $\\frac{1}{\\sqrt{5}}$",
+                ["$\\frac{\\sqrt{5}}{5}$", "$5\\sqrt{5}$", "$\\frac{5}{\\sqrt{5}}$", "$\\sqrt{5}$"],
+                "$\\frac{\\sqrt{5}}{5}$",
+                "Multiply numerator and denominator by $\\sqrt{5}$: $\\frac{1 \\times \\sqrt{5}}{\\sqrt{5} \\times \\sqrt{5}} = \\frac{\\sqrt{5}}{5}$."
             ),
             createQuestion(4,
-                "Evaluate: $(3 + \\sqrt{3})(3 - \\sqrt{3})$",
-                ["$6$", "$9$", "$0$", "$3$"],
-                "$6$",
-                "This is in the form $(a+b)(a-b) = a^2 - b^2$. So, $(3)^2 - (\\sqrt{3})^2 = 9 - 3 = 6$."
+                "Rationalise the denominator of $\\frac{1}{2+\\sqrt{3}}$.",
+                ["$2-\\sqrt{3}$", "$2+\\sqrt{3}$", "$\\frac{2-\\sqrt{3}}{7}$", "$\\frac{1}{2-\\sqrt{3}}$"],
+                "$2-\\sqrt{3}$",
+                "Multiply by the conjugate $(2-\\sqrt{3})$: $\\frac{1(2-\\sqrt{3})}{(2+\\sqrt{3})(2-\\sqrt{3})} = \\frac{2-\\sqrt{3}}{2^2 - (\\sqrt{3})^2} = \\frac{2-\\sqrt{3}}{4-3} = 2-\\sqrt{3}$."
             ),
             createQuestion(5,
-                "Simplify: $\\sqrt{50} + \\sqrt{18}$",
-                ["$\\sqrt{68}$", "$8\\sqrt{2}$", "$34\\sqrt{2}$", "$4\\sqrt{5}$"],
-                "$8\\sqrt{2}$",
-                "$\\sqrt{50} = \\sqrt{25 \\times 2} = 5\\sqrt{2}$ and $\\sqrt{18} = \\sqrt{9 \\times 2} = 3\\sqrt{2}$. Adding them gives $5\\sqrt{2} + 3\\sqrt{2} = 8\\sqrt{2}$."
+                "Rationalise the denominator of $\\frac{1}{\\sqrt{5}-\\sqrt{2}}$.",
+                ["$\\frac{\\sqrt{5}+\\sqrt{2}}{3}$", "$\\frac{\\sqrt{5}-\\sqrt{2}}{3}$", "$\\sqrt{5}+\\sqrt{2}$", "$\\frac{\\sqrt{5}+\\sqrt{2}}{7}$"],
+                "$\\frac{\\sqrt{5}+\\sqrt{2}}{3}$",
+                "Multiply by the conjugate $(\\sqrt{5}+\\sqrt{2})$: $\\frac{\\sqrt{5}+\\sqrt{2}}{(\\sqrt{5}-\\sqrt{2})(\\sqrt{5}+\\sqrt{2})} = \\frac{\\sqrt{5}+\\sqrt{2}}{5-2} = \\frac{\\sqrt{5}+\\sqrt{2}}{3}$."
             ),
             createQuestion(6,
-                "Expand: $(\\sqrt{5} + \\sqrt{2})^2$",
-                ["$7$", "$7 + 2\\sqrt{10}$", "$10 + \\sqrt{10}$", "$3$"],
-                "$7 + 2\\sqrt{10}$",
-                "Using $(a+b)^2 = a^2 + 2ab + b^2$: $(\\sqrt{5})^2 + 2(\\sqrt{5})(\\sqrt{2}) + (\\sqrt{2})^2 = 5 + 2\\sqrt{10} + 2 = 7 + 2\\sqrt{10}$."
+                "If $\\frac{1}{3+\\sqrt{8}} = a - \\sqrt{8}$, what is the value of $a$?",
+                ["$3$", "$1$", "$-3$", "$8$"],
+                "$3$",
+                "Rationalise: $\\frac{3-\\sqrt{8}}{(3+\\sqrt{8})(3-\\sqrt{8})} = \\frac{3-\\sqrt{8}}{9-8} = 3-\\sqrt{8}$. Comparing with $a-\\sqrt{8}$, we get $a=3$."
             ),
             createQuestion(7,
-                "Simplify: $\\sqrt{45} - 3\\sqrt{20} + 4\\sqrt{5}$",
-                ["$\\sqrt{5}$", "$3\\sqrt{5}$", "$\\sqrt{30}$", "$5\\sqrt{5}$"],
-                "$\\sqrt{5}$",
-                "$\\sqrt{45} = 3\\sqrt{5}$ and $3\\sqrt{20} = 3(2\\sqrt{5}) = 6\\sqrt{5}$. So, $3\\sqrt{5} - 6\\sqrt{5} + 4\\sqrt{5} = (3-6+4)\\sqrt{5} = 1\\sqrt{5}$."
+                "Simplify: $\\frac{2}{3\\sqrt{3}}$ by rationalising.",
+                ["$\\frac{2\\sqrt{3}}{9}$", "$\\frac{\\sqrt{3}}{3}$", "$\\frac{2}{3}$", "$\\frac{2\\sqrt{3}}{3}$"],
+                "$\\frac{2\\sqrt{3}}{9}$",
+                "Multiply numerator and denominator by $\\sqrt{3}$: $\\frac{2 \\times \\sqrt{3}}{3\\sqrt{3} \\times \\sqrt{3}} = \\frac{2\\sqrt{3}}{3 \\times 3} = \\frac{2\\sqrt{3}}{9}$."
             ),
             createQuestion(8,
-                "Calculate: $(2\\sqrt{2} + 3\\sqrt{3})(2\\sqrt{2} - 3\sqrt{3})$",
-                ["$19$", "$-19$", "$11$", "$-11$"],
-                "$-19$",
-                "$(a+b)(a-b) = a^2 - b^2$. $(2\\sqrt{2})^2 - (3\\sqrt{3})^2 = (4 \\times 2) - (9 \\times 3) = 8 - 27 = -19$."
+                "Identify the conjugate of $5 - 2\\sqrt{6}$.",
+                ["$5+2\\sqrt{6}$", "$-5-2\\sqrt{6}$", "$5-2\\sqrt{6}$", "None of these"],
+                "$5+2\\sqrt{6}$",
+                "The conjugate of $a - b$ is $a + b$. So, the conjugate of $5 - 2\\sqrt{6}$ is $5 + 2\\sqrt{6}$."
             ),
             createQuestion(9,
-                "Simplify: $\\frac{\\sqrt{24}}{\\sqrt{6}}$",
-                ["$2$", "$\\sqrt{4}$", "$4$", "Both $2$ and $\\sqrt{4}$"],
-                "Both $2$ and $\\sqrt{4}$",
-                "Using $\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$, we get $\\sqrt{\\frac{24}{6}} = \\sqrt{4} = 2$."
+                "Find $a$ and $b$ if $\\frac{3+\\sqrt{7}}{3-\\sqrt{7}} = a + b\\sqrt{7}$.",
+                ["$a=8, b=3$", "$a=8, b=\\sqrt{7}$", "$a=16, b=6$", "$a=8, b=6$"],
+                "$a=8, b=3$",
+                "Rationalise: $\\frac{(3+\\sqrt{7})^2}{9-7} = \\frac{9+7+6\\sqrt{7}}{2} = \\frac{16+6\\sqrt{7}}{2} = 8 + 3\\sqrt{7}$. So $a=8, b=3$."
             ),
             createQuestion(10,
-                "Evaluate: $\\sqrt{2}(\\sqrt{8} + \\sqrt{32})$",
-                ["$12$", "$\\sqrt{40}$", "$8$", "$10$"],
-                "$12$",
-                "$\\sqrt{2} \\times \\sqrt{8} = \\sqrt{16} = 4$. $\\sqrt{2} \\times \\sqrt{32} = \\sqrt{64} = 8$. So, $4 + 8 = 12$."
+                "Rationalise the denominator: $\\frac{1}{7+3\\sqrt{5}}$.",
+                ["$\\frac{7-3\\sqrt{5}}{4}$", "$\\frac{7+3\\sqrt{5}}{4}$", "$\\frac{7-3\\sqrt{5}}{94}$", "$7-3\\sqrt{5}$"],
+                "$\\frac{7-3\\sqrt{5}}{4}$",
+                "Multiply by $(7-3\\sqrt{5})$: $\\frac{7-3\\sqrt{5}}{49 - (3\\sqrt{5})^2} = \\frac{7-3\\sqrt{5}}{49 - 45} = \\frac{7-3\\sqrt{5}}{4}$."
             )
         ];
     };
@@ -141,7 +141,7 @@ const OperationsOnSurds = () => {
         const isRight = selectedOption === currentQ.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-        setFeedbackMessage(isRight ? "Perfectly done!" : "Not correct. Look at the steps above.");
+        setFeedbackMessage(isRight ? "Well done!" : "Not quite. Check the steps above.");
 
         setAnswers(prev => ({
             ...prev,
@@ -190,7 +190,7 @@ const OperationsOnSurds = () => {
                 <div className="practice-board-container">
                     <div className="question-card-modern">
                         <div className="question-text-modern">
-                            <h2 style={{ fontWeight: '800', marginBottom: '1rem', color: '#334155' }}>Operations on Surds</h2>
+                            <h2 style={{ fontWeight: '800', marginBottom: '1rem', color: '#334155' }}>Rationalisation</h2>
                             <LatexText text={currentQuestion.text} />
                         </div>
                         <div className="options-grid-modern">
@@ -243,4 +243,4 @@ const OperationsOnSurds = () => {
     );
 };
 
-export default OperationsOnSurds;
+export default Rationalisation;

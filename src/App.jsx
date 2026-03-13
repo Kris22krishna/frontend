@@ -304,16 +304,16 @@ import UnderstandingRotations from './components/practice/class-5/CanyouseethePa
 import GridPatternRecognition from './components/practice/class-5/CanyouseethePattern/PatternRecognition/grid-pattern-recognition';
 
 // Grade 9 Number System
-import NumberSystem from './components/practice/class-9/NumberSystem';
-import NumberSystemIntro5W1H from './components/practice/class-9/Topics/5W1H/NumberSystemIntro5W1H';
-import NumberSystemTerminology from './components/practice/class-9/Topics/Terminology/NumberSystemTerminology';
-import NumberSystemSkills from './components/practice/class-9/Topics/skills/NumberSystemSkills';
-import RealNumberClassification from './components/practice/class-9/RealNumberClassification';
-import DecimalExpansion from './components/practice/class-9/DecimalExpansion';
-import OperationsOnSurds from './components/practice/class-9/OperationsOnSurds';
-import Rationalisation from './components/practice/class-9/Rationalisation';
-import LawsOfExponents from './components/practice/class-9/LawsOfExponents';
-import NumberSystemTest from './components/practice/class-9/NumberSystemTest';
+import NumberSystem from './components/practice/class-9/number_system/NumberSystem';
+import NumberSystemIntro5W1H from './components/practice/class-9/number_system/Topics/5W1H/NumberSystemIntro5W1H';
+import NumberSystemTerminology from './components/practice/class-9/number_system/Topics/Terminology/NumberSystemTerminology';
+import NumberSystemSkills from './components/practice/class-9/number_system/Topics/Skills/NumberSystemSkills';
+import RealNumberClassification from './components/practice/class-9/number_system/RealNumberClassification';
+import DecimalExpansion from './components/practice/class-9/number_system/DecimalExpansion';
+import OperationsOnSurds from './components/practice/class-9/number_system/OperationsOnSurds';
+import Rationalisation from './components/practice/class-9/number_system/Rationalisation';
+import LawsOfExponents from './components/practice/class-9/number_system/LawsOfExponents';
+import NumberSystemTest from './components/practice/class-9/number_system/NumberSystemTest';
 import PropertiesOfOperation from './components/practice/class-5/CanyouseethePattern/NummberProperties/properties-of-operations';
 import DigitRelationships from './components/practice/class-5/CanyouseethePattern/NummberProperties/digit-relationships';
 import PalindromeRecognition from './components/practice/class-5/CanyouseethePattern/NummberProperties/palindrome-recognition';

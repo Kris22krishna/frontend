@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../NumberSystem.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './NumberSystemTerminologyData';
 
 export default function NumberSystemTerminology() {

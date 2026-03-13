@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MathRenderer from '../../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 
 export default function QuizEngine({ questions, title, onBack, color }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);

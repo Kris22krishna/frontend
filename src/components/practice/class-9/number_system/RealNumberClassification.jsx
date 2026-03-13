@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../services/api';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import PracticeReportModal from '../PracticeReportModal';
+import { api } from '../../../../services/api';
+import { LatexText } from '../../../LatexText';
+import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
 import './NumberSystem.css';
 
-const Rationalisation = () => {
+const RealNumberClassification = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -25,8 +25,8 @@ const Rationalisation = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 1244;
-    const SKILL_NAME = "Rationalisation";
+    const SKILL_ID = 1241;
+    const SKILL_NAME = "Real Number Classification & Representation";
     const [answers, setAnswers] = useState({});
 
     const generateQuestions = () => {
@@ -36,64 +36,64 @@ const Rationalisation = () => {
 
         return [
             createQuestion(1,
-                "Rationalise the denominator of $\\frac{1}{\\sqrt{2}}$.",
-                ["$\\frac{\\sqrt{2}}{2}$", "$\\sqrt{2}$", "$\\frac{1}{2}$", "$2$"],
-                "$\\frac{\\sqrt{2}}{2}$",
-                "Multiply both numerator and denominator by $\\sqrt{2}$: $\\frac{1 \\times \\sqrt{2}}{\\sqrt{2} \\times \\sqrt{2}} = \\frac{\\sqrt{2}}{2}$."
+                "Which of the following is a rational number?",
+                ["$\\sqrt{2}$", "$\\pi$", "$\\frac{2}{3}$", "$\\sqrt{3}$"],
+                "$\\frac{2}{3}$",
+                "A rational number can be expressed in the form $p/q$ where $q \\neq 0$. $\\frac{2}{3}$ fits this definition, while $\\sqrt{2}$, $\\sqrt{3}$, and $\\pi$ are irrational."
             ),
             createQuestion(2,
-                "What is the rationalising factor for $\\sqrt{7}$?",
-                ["$\\sqrt{7}$", "$7$", "$\\frac{1}{7}$", "$\\sqrt{14}$"],
+                "Identify the irrational number from the list:",
+                ["$\\sqrt{4}$", "$-5$", "$0.25$", "$\\sqrt{7}$"],
                 "$\\sqrt{7}$",
-                "A rationalising factor is a number that, when multiplied by a surd, makes it rational. $\\sqrt{7} \\times \\sqrt{7} = 7$, which is rational."
+                "$\\sqrt{4} = 2$ (rational), $-5$ is an integer (rational), and $0.25 = 1/4$ (rational). $\\sqrt{7}$ cannot be simplified to a ratio of integers and is thus irrational."
             ),
             createQuestion(3,
-                "Rationalise: $\\frac{1}{\\sqrt{5}}$",
-                ["$\\frac{\\sqrt{5}}{5}$", "$5\\sqrt{5}$", "$\\frac{5}{\\sqrt{5}}$", "$\\sqrt{5}$"],
-                "$\\frac{\\sqrt{5}}{5}$",
-                "Multiply numerator and denominator by $\\sqrt{5}$: $\\frac{1 \\times \\sqrt{5}}{\\sqrt{5} \\times \\sqrt{5}} = \\frac{\\sqrt{5}}{5}$."
+                "Is $0$ a rational number?",
+                ["Yes", "No", "Only if it is written as 0/0", "None of these"],
+                "Yes",
+                "$0$ can be written as $0/1$, $0/2$, etc., which fits the $p/q$ form where $q \\neq 0$. Thus, $0$ is a rational number."
             ),
             createQuestion(4,
-                "Rationalise the denominator of $\\frac{1}{2+\\sqrt{3}}$.",
-                ["$2-\\sqrt{3}$", "$2+\\sqrt{3}$", "$\\frac{2-\\sqrt{3}}{7}$", "$\\frac{1}{2-\\sqrt{3}}$"],
-                "$2-\\sqrt{3}$",
-                "Multiply by the conjugate $(2-\\sqrt{3})$: $\\frac{1(2-\\sqrt{3})}{(2+\\sqrt{3})(2-\\sqrt{3})} = \\frac{2-\\sqrt{3}}{2^2 - (\\sqrt{3})^2} = \\frac{2-\\sqrt{3}}{4-3} = 2-\\sqrt{3}$."
+                "Find an irrational number between 2 and 3.",
+                ["$2.5$", "$\\sqrt{5}$", "$\\frac{5}{2}$", "$2.1$"],
+                "$\\sqrt{5}$",
+                "$\\sqrt{4} = 2$ and $\\sqrt{9} = 3$. Since 5 is between 4 and 9 and is not a perfect square, $\\sqrt{5}$ is an irrational number between 2 and 3."
             ),
             createQuestion(5,
-                "Rationalise the denominator of $\\frac{1}{\\sqrt{5}-\\sqrt{2}}$.",
-                ["$\\frac{\\sqrt{5}+\\sqrt{2}}{3}$", "$\\frac{\\sqrt{5}-\\sqrt{2}}{3}$", "$\\sqrt{5}+\\sqrt{2}$", "$\\frac{\\sqrt{5}+\\sqrt{2}}{7}$"],
-                "$\\frac{\\sqrt{5}+\\sqrt{2}}{3}$",
-                "Multiply by the conjugate $(\\sqrt{5}+\\sqrt{2})$: $\\frac{\\sqrt{5}+\\sqrt{2}}{(\\sqrt{5}-\\sqrt{2})(\\sqrt{5}+\\sqrt{2})} = \\frac{\\sqrt{5}+\\sqrt{2}}{5-2} = \\frac{\\sqrt{5}+\\sqrt{2}}{3}$."
+                "The decimal representation of $0.666...$ (or $0.\\overline{6}$) in $p/q$ form is:",
+                ["$\\frac{1}{3}$", "$\\frac{2}{3}$", "$\\frac{6}{10}$", "$\\frac{2}{5}$"],
+                "$\\frac{2}{3}$",
+                "Let $x = 0.666...$, then $10x = 6.666...$. Subtracting gives $9x = 6$, so $x = 6/9 = 2/3$."
             ),
             createQuestion(6,
-                "If $\\frac{1}{3+\\sqrt{8}} = a - \\sqrt{8}$, what is the value of $a$?",
-                ["$3$", "$1$", "$-3$", "$8$"],
-                "$3$",
-                "Rationalise: $\\frac{3-\\sqrt{8}}{(3+\\sqrt{8})(3-\\sqrt{8})} = \\frac{3-\\sqrt{8}}{9-8} = 3-\\sqrt{8}$. Comparing with $a-\\sqrt{8}$, we get $a=3$."
+                "Which of the following numbers is rational?",
+                ["$(2+\\sqrt{3}) + (2-\\sqrt{3})$", "$\\sqrt{2} \\times \\sqrt{3}$", "$\\pi - 2$", "$\\sqrt{5}$"],
+                "$(2+\\sqrt{3}) + (2-\\sqrt{3})$",
+                "$(2+\\sqrt{3}) + (2-\\sqrt{3}) = 2 + 2 + \\sqrt{3} - \\sqrt{3} = 4$. Since 4 is an integer, it is a rational number."
             ),
             createQuestion(7,
-                "Simplify: $\\frac{2}{3\\sqrt{3}}$ by rationalising.",
-                ["$\\frac{2\\sqrt{3}}{9}$", "$\\frac{\\sqrt{3}}{3}$", "$\\frac{2}{3}$", "$\\frac{2\\sqrt{3}}{3}$"],
-                "$\\frac{2\\sqrt{3}}{9}$",
-                "Multiply numerator and denominator by $\\sqrt{3}$: $\\frac{2 \\times \\sqrt{3}}{3\\sqrt{3} \\times \\sqrt{3}} = \\frac{2\\sqrt{3}}{3 \\times 3} = \\frac{2\\sqrt{3}}{9}$."
+                "The sum of a rational number and an irrational number is always:",
+                ["Rational", "Irrational", "Zero", "An Integer"],
+                "Irrational",
+                "If you add a rational number (like 2) to an irrational number (like $\\sqrt{3}$), the result ($2+\\sqrt{3}$) remains non-terminating and non-repeating, making it irrational."
             ),
             createQuestion(8,
-                "Identify the conjugate of $5 - 2\\sqrt{6}$.",
-                ["$5+2\\sqrt{6}$", "$-5-2\\sqrt{6}$", "$5-2\\sqrt{6}$", "None of these"],
-                "$5+2\\sqrt{6}$",
-                "The conjugate of $a - b$ is $a + b$. So, the conjugate of $5 - 2\\sqrt{6}$ is $5 + 2\\sqrt{6}$."
+                "Which of the following is NOT a real number?",
+                ["$\\sqrt{-1}$", "$\\sqrt[3]{-8}$", "$-0.123...$", "$10^{10}$"],
+                "$\\sqrt{-1}$",
+                "Square roots of negative numbers are not defined in the set of real numbers; they are imaginary numbers. $\\sqrt[3]{-8} = -2$, which is real."
             ),
             createQuestion(9,
-                "Find $a$ and $b$ if $\\frac{3+\\sqrt{7}}{3-\\sqrt{7}} = a + b\\sqrt{7}$.",
-                ["$a=8, b=3$", "$a=8, b=\\sqrt{7}$", "$a=16, b=6$", "$a=8, b=6$"],
-                "$a=8, b=3$",
-                "Rationalise: $\\frac{(3+\\sqrt{7})^2}{9-7} = \\frac{9+7+6\\sqrt{7}}{2} = \\frac{16+6\\sqrt{7}}{2} = 8 + 3\\sqrt{7}$. So $a=8, b=3$."
+                "What type of number is $\\pi$?",
+                ["Rational", "Irrational", "Terminating Decimal", "Negative Integer"],
+                "Irrational",
+                "$\\pi$ is a mathematical constant whose decimal expansion is non-terminating and non-repeating, making it irrational."
             ),
             createQuestion(10,
-                "Rationalise the denominator: $\\frac{1}{7+3\\sqrt{5}}$.",
-                ["$\\frac{7-3\\sqrt{5}}{4}$", "$\\frac{7+3\\sqrt{5}}{4}$", "$\\frac{7-3\\sqrt{5}}{94}$", "$7-3\\sqrt{5}$"],
-                "$\\frac{7-3\\sqrt{5}}{4}$",
-                "Multiply by $(7-3\\sqrt{5})$: $\\frac{7-3\\sqrt{5}}{49 - (3\\sqrt{5})^2} = \\frac{7-3\\sqrt{5}}{49 - 45} = \\frac{7-3\\sqrt{5}}{4}$."
+                "Express $0.2\\overline{3}$ in the form $p/q$.",
+                ["$\\frac{23}{99}$", "$\\frac{21}{90}$", "$\\frac{7}{30}$", "$\\frac{23}{10}$"],
+                "$\\frac{7}{30}$",
+                "Let $x = 0.2333...$, then $10x = 2.333...$ and $100x = 23.333...$. Subtracting gives $90x = 21$, so $x = 21/90 = 7/30$."
             )
         ];
     };
@@ -141,7 +141,7 @@ const Rationalisation = () => {
         const isRight = selectedOption === currentQ.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-        setFeedbackMessage(isRight ? "Well done!" : "Not quite. Check the steps above.");
+        setFeedbackMessage(isRight ? "Excellent!" : "Not quite, look at the explanation.");
 
         setAnswers(prev => ({
             ...prev,
@@ -160,7 +160,7 @@ const Rationalisation = () => {
                 student_answer: selectedOption,
                 is_correct: isRight,
                 solution_text: currentQ.solution,
-                time_spent_seconds: 10
+                time_spent_seconds: 10 // Placeholder
             }).catch(console.error);
         }
     };
@@ -190,7 +190,7 @@ const Rationalisation = () => {
                 <div className="practice-board-container">
                     <div className="question-card-modern">
                         <div className="question-text-modern">
-                            <h2 style={{ fontWeight: '800', marginBottom: '1rem', color: '#334155' }}>Rationalisation</h2>
+                            <h2 style={{ fontWeight: '800', marginBottom: '1rem', color: '#334155' }}>Real Number Classification</h2>
                             <LatexText text={currentQuestion.text} />
                         </div>
                         <div className="options-grid-modern">
@@ -243,4 +243,4 @@ const Rationalisation = () => {
     );
 };
 
-export default Rationalisation;
+export default RealNumberClassification;

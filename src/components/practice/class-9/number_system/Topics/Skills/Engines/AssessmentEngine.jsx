@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MathRenderer from '../../../../../MathRenderer';
-import mascotImg from '../../../../../../assets/mascot.png';
+import MathRenderer from '../../../../../../MathRenderer';
+import mascotImg from '../../../../../../../assets/mascot.png';
 import '../../../NumberSystem.css';
 
 export default function AssessmentEngine({ questions, title, onBack, color }) {

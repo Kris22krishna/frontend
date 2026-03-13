@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../services/api';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import PracticeReportModal from '../PracticeReportModal';
+import { api } from '../../../../services/api';
+import { LatexText } from '../../../LatexText';
+import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
 import './NumberSystem.css';
 
 const LawsOfExponents = () => {

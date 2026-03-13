@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../services/api';
-import MathRenderer from '../../MathRenderer';
-import mascotImg from '../../../assets/mascot.png';
+import { api } from '../../../../services/api';
+import MathRenderer from '../../../MathRenderer';
+import mascotImg from '../../../../assets/mascot.png';
 import './NumberSystem.css';
 
 const SKILL_ID = 1246;

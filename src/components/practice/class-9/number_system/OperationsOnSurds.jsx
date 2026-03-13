@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../services/api';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import PracticeReportModal from '../PracticeReportModal';
+import { api } from '../../../../services/api';
+import { LatexText } from '../../../LatexText';
+import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
 import './NumberSystem.css';
 
-const RealNumberClassification = () => {
+const OperationsOnSurds = () => {
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
@@ -25,8 +25,8 @@ const RealNumberClassification = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
 
-    const SKILL_ID = 1241;
-    const SKILL_NAME = "Real Number Classification & Representation";
+    const SKILL_ID = 1243;
+    const SKILL_NAME = "Operations on Surds";
     const [answers, setAnswers] = useState({});
 
     const generateQuestions = () => {
@@ -36,64 +36,64 @@ const RealNumberClassification = () => {
 
         return [
             createQuestion(1,
-                "Which of the following is a rational number?",
-                ["$\\sqrt{2}$", "$\\pi$", "$\\frac{2}{3}$", "$\\sqrt{3}$"],
-                "$\\frac{2}{3}$",
-                "A rational number can be expressed in the form $p/q$ where $q \\neq 0$. $\\frac{2}{3}$ fits this definition, while $\\sqrt{2}$, $\\sqrt{3}$, and $\\pi$ are irrational."
+                "Simplify: $\\sqrt{2} + \\sqrt{2}$",
+                ["$2\\sqrt{2}$", "$\\sqrt{4}$", "$2$", "$4$"],
+                "$2\\sqrt{2}$",
+                "Adding like surds is like adding variables: $x + x = 2x$. So, $\\sqrt{2} + \\sqrt{2} = 2\\sqrt{2}$."
             ),
             createQuestion(2,
-                "Identify the irrational number from the list:",
-                ["$\\sqrt{4}$", "$-5$", "$0.25$", "$\\sqrt{7}$"],
-                "$\\sqrt{7}$",
-                "$\\sqrt{4} = 2$ (rational), $-5$ is an integer (rational), and $0.25 = 1/4$ (rational). $\\sqrt{7}$ cannot be simplified to a ratio of integers and is thus irrational."
+                "Find the product: $\\sqrt{3} \\times \\sqrt{3}$",
+                ["$3$", "$\\sqrt{9}$", "Both $3$ and $\\sqrt{9}$", "$9$"],
+                "Both $3$ and $\\sqrt{9}$",
+                "The square of a square root of a number is the number itself: $\\sqrt{a} \\times \\sqrt{a} = a$. Thus, $\\sqrt{3} \\times \\sqrt{3} = \\sqrt{9} = 3$."
             ),
             createQuestion(3,
-                "Is $0$ a rational number?",
-                ["Yes", "No", "Only if it is written as 0/0", "None of these"],
-                "Yes",
-                "$0$ can be written as $0/1$, $0/2$, etc., which fits the $p/q$ form where $q \\neq 0$. Thus, $0$ is a rational number."
+                "Multiply: $\\sqrt{5} \\times \\sqrt{2}$",
+                ["$\\sqrt{7}$", "$10$", "$\\sqrt{10}$", "$7$"],
+                "$\\sqrt{10}$",
+                "Using the property $\\sqrt{a} \\times \\sqrt{b} = \\sqrt{a \\times b}$, we have $\\sqrt{5} \\times \\sqrt{2} = \\sqrt{5 \\times 2} = \\sqrt{10}$."
             ),
             createQuestion(4,
-                "Find an irrational number between 2 and 3.",
-                ["$2.5$", "$\\sqrt{5}$", "$\\frac{5}{2}$", "$2.1$"],
-                "$\\sqrt{5}$",
-                "$\\sqrt{4} = 2$ and $\\sqrt{9} = 3$. Since 5 is between 4 and 9 and is not a perfect square, $\\sqrt{5}$ is an irrational number between 2 and 3."
+                "Evaluate: $(3 + \\sqrt{3})(3 - \\sqrt{3})$",
+                ["$6$", "$9$", "$0$", "$3$"],
+                "$6$",
+                "This is in the form $(a+b)(a-b) = a^2 - b^2$. So, $(3)^2 - (\\sqrt{3})^2 = 9 - 3 = 6$."
             ),
             createQuestion(5,
-                "The decimal representation of $0.666...$ (or $0.\\overline{6}$) in $p/q$ form is:",
-                ["$\\frac{1}{3}$", "$\\frac{2}{3}$", "$\\frac{6}{10}$", "$\\frac{2}{5}$"],
-                "$\\frac{2}{3}$",
-                "Let $x = 0.666...$, then $10x = 6.666...$. Subtracting gives $9x = 6$, so $x = 6/9 = 2/3$."
+                "Simplify: $\\sqrt{50} + \\sqrt{18}$",
+                ["$\\sqrt{68}$", "$8\\sqrt{2}$", "$34\\sqrt{2}$", "$4\\sqrt{5}$"],
+                "$8\\sqrt{2}$",
+                "$\\sqrt{50} = \\sqrt{25 \\times 2} = 5\\sqrt{2}$ and $\\sqrt{18} = \\sqrt{9 \\times 2} = 3\\sqrt{2}$. Adding them gives $5\\sqrt{2} + 3\\sqrt{2} = 8\\sqrt{2}$."
             ),
             createQuestion(6,
-                "Which of the following numbers is rational?",
-                ["$(2+\\sqrt{3}) + (2-\\sqrt{3})$", "$\\sqrt{2} \\times \\sqrt{3}$", "$\\pi - 2$", "$\\sqrt{5}$"],
-                "$(2+\\sqrt{3}) + (2-\\sqrt{3})$",
-                "$(2+\\sqrt{3}) + (2-\\sqrt{3}) = 2 + 2 + \\sqrt{3} - \\sqrt{3} = 4$. Since 4 is an integer, it is a rational number."
+                "Expand: $(\\sqrt{5} + \\sqrt{2})^2$",
+                ["$7$", "$7 + 2\\sqrt{10}$", "$10 + \\sqrt{10}$", "$3$"],
+                "$7 + 2\\sqrt{10}$",
+                "Using $(a+b)^2 = a^2 + 2ab + b^2$: $(\\sqrt{5})^2 + 2(\\sqrt{5})(\\sqrt{2}) + (\\sqrt{2})^2 = 5 + 2\\sqrt{10} + 2 = 7 + 2\\sqrt{10}$."
             ),
             createQuestion(7,
-                "The sum of a rational number and an irrational number is always:",
-                ["Rational", "Irrational", "Zero", "An Integer"],
-                "Irrational",
-                "If you add a rational number (like 2) to an irrational number (like $\\sqrt{3}$), the result ($2+\\sqrt{3}$) remains non-terminating and non-repeating, making it irrational."
+                "Simplify: $\\sqrt{45} - 3\\sqrt{20} + 4\\sqrt{5}$",
+                ["$\\sqrt{5}$", "$3\\sqrt{5}$", "$\\sqrt{30}$", "$5\\sqrt{5}$"],
+                "$\\sqrt{5}$",
+                "$\\sqrt{45} = 3\\sqrt{5}$ and $3\\sqrt{20} = 3(2\\sqrt{5}) = 6\\sqrt{5}$. So, $3\\sqrt{5} - 6\\sqrt{5} + 4\\sqrt{5} = (3-6+4)\\sqrt{5} = 1\\sqrt{5}$."
             ),
             createQuestion(8,
-                "Which of the following is NOT a real number?",
-                ["$\\sqrt{-1}$", "$\\sqrt[3]{-8}$", "$-0.123...$", "$10^{10}$"],
-                "$\\sqrt{-1}$",
-                "Square roots of negative numbers are not defined in the set of real numbers; they are imaginary numbers. $\\sqrt[3]{-8} = -2$, which is real."
+                "Calculate: $(2\\sqrt{2} + 3\\sqrt{3})(2\\sqrt{2} - 3\sqrt{3})$",
+                ["$19$", "$-19$", "$11$", "$-11$"],
+                "$-19$",
+                "$(a+b)(a-b) = a^2 - b^2$. $(2\\sqrt{2})^2 - (3\\sqrt{3})^2 = (4 \\times 2) - (9 \\times 3) = 8 - 27 = -19$."
             ),
             createQuestion(9,
-                "What type of number is $\\pi$?",
-                ["Rational", "Irrational", "Terminating Decimal", "Negative Integer"],
-                "Irrational",
-                "$\\pi$ is a mathematical constant whose decimal expansion is non-terminating and non-repeating, making it irrational."
+                "Simplify: $\\frac{\\sqrt{24}}{\\sqrt{6}}$",
+                ["$2$", "$\\sqrt{4}$", "$4$", "Both $2$ and $\\sqrt{4}$"],
+                "Both $2$ and $\\sqrt{4}$",
+                "Using $\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}$, we get $\\sqrt{\\frac{24}{6}} = \\sqrt{4} = 2$."
             ),
             createQuestion(10,
-                "Express $0.2\\overline{3}$ in the form $p/q$.",
-                ["$\\frac{23}{99}$", "$\\frac{21}{90}$", "$\\frac{7}{30}$", "$\\frac{23}{10}$"],
-                "$\\frac{7}{30}$",
-                "Let $x = 0.2333...$, then $10x = 2.333...$ and $100x = 23.333...$. Subtracting gives $90x = 21$, so $x = 21/90 = 7/30$."
+                "Evaluate: $\\sqrt{2}(\\sqrt{8} + \\sqrt{32})$",
+                ["$12$", "$\\sqrt{40}$", "$8$", "$10$"],
+                "$12$",
+                "$\\sqrt{2} \\times \\sqrt{8} = \\sqrt{16} = 4$. $\\sqrt{2} \\times \\sqrt{32} = \\sqrt{64} = 8$. So, $4 + 8 = 12$."
             )
         ];
     };
@@ -141,7 +141,7 @@ const RealNumberClassification = () => {
         const isRight = selectedOption === currentQ.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-        setFeedbackMessage(isRight ? "Excellent!" : "Not quite, look at the explanation.");
+        setFeedbackMessage(isRight ? "Perfectly done!" : "Not correct. Look at the steps above.");
 
         setAnswers(prev => ({
             ...prev,
@@ -160,7 +160,7 @@ const RealNumberClassification = () => {
                 student_answer: selectedOption,
                 is_correct: isRight,
                 solution_text: currentQ.solution,
-                time_spent_seconds: 10 // Placeholder
+                time_spent_seconds: 10
             }).catch(console.error);
         }
     };
@@ -190,7 +190,7 @@ const RealNumberClassification = () => {
                 <div className="practice-board-container">
                     <div className="question-card-modern">
                         <div className="question-text-modern">
-                            <h2 style={{ fontWeight: '800', marginBottom: '1rem', color: '#334155' }}>Real Number Classification</h2>
+                            <h2 style={{ fontWeight: '800', marginBottom: '1rem', color: '#334155' }}>Operations on Surds</h2>
                             <LatexText text={currentQuestion.text} />
                         </div>
                         <div className="options-grid-modern">
@@ -243,4 +243,4 @@ const RealNumberClassification = () => {
     );
 };
 
-export default RealNumberClassification;
+export default OperationsOnSurds;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../NumberSystem.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../MathRenderer';
 import { cards5W1H } from './NumberSystemIntroData';
 
 function W1HCard({ card }) {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../NumberSystem.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../MathRenderer';
 import QuizEngine from './engines/QuizEngine.jsx';
 import AssessmentEngine from './engines/AssessmentEngine.jsx';
 import CategorizedPracticeEngine from './engines/CategorizedPracticeEngine.jsx';
