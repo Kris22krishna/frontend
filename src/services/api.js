@@ -828,4 +828,23 @@ export const api = {
         });
         return handleResponse(response);
     },
+
+    // --- Diagnosis Test ---
+    submitDiagnosisTest: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/diagnosis/submit`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(data),
+        });
+        return handleResponse(response);
+    },
+
+    getAdminDiagnosisResults: async (limit = 200) => {
+        const params = new URLSearchParams();
+        if (limit) params.append('limit', limit);
+        const response = await fetch(`${BASE_URL}/api/v1/admin/diagnosis/results?${params.toString()}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
 };
