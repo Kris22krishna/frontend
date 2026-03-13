@@ -61,11 +61,16 @@ const EstimationSkills = () => {
                 correctAns + 200
             ];
 
-            opts = [...new Set(opts)].sort(() => Math.random() - 0.5);
-            generated.push({ 
-                text: qText, 
-                correctAnswer: String(correctAns), 
-                solution: `To estimate, we first round ${Math.max(num1, num2)} to ${Math.max(est1, est2)} and ${Math.min(num1, num2)} to ${Math.min(est1, est2)}, then ${isAdd ? 'add' : 'subtract'} them to get ${correctAns}.`, 
+            opts = [...new Set(opts)];
+            while (opts.length < 4) {
+                opts.push(correctAns + Math.floor(Math.random() * 5 + 3) * 100);
+                opts = [...new Set(opts)];
+            }
+            opts.sort(() => Math.random() - 0.5);
+            generated.push({
+                text: qText,
+                correctAnswer: String(correctAns),
+                solution: `To estimate, we first round ${Math.max(num1, num2)} to ${Math.max(est1, est2)} and ${Math.min(num1, num2)} to ${Math.min(est1, est2)}, then ${isAdd ? 'add' : 'subtract'} them to get ${correctAns}.`,
                 options: opts.map(String)
             });
         }
@@ -83,7 +88,7 @@ const EstimationSkills = () => {
             }
         };
         document.addEventListener("visibilitychange", handleVisibilityChange);
-        
+
         generateQuestions();
 
         return () => {

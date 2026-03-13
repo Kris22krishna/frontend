@@ -1,4 +1,27 @@
 export const cellConnectomicsData = {
+    chapterLink: "Biology Class XI - Chapter 8, NCERT 2026",
+    checkpoints: [
+        {
+            title: "Five Kingdom classification (Ch 2)",
+            desc: "Understanding the Monera, Protista, Fungi, Plantae, and Animalia groupings."
+        },
+        {
+            title: "Carbohydrates, lipids, proteins (Ch 9)",
+            desc: "Basic understanding of these biomolecules for cell membrane and wall structures."
+        },
+        {
+            title: "DNA as hereditary material (concept)",
+            desc: "Familiarity with the concept that DNA holds genetic information."
+        },
+        {
+            title: "Osmosis and diffusion (Class IX)",
+            desc: "Knowing passive transport mechanisms."
+        },
+        {
+            title: "Basic cell biology & differences",
+            desc: "General background on basic cell differences and organelles from earlier classes."
+        }
+    ],
     connections: [
         { 
             from: "The Cell (Ch.8)", 

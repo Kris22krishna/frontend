@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { lawsOfMotionExamEdgeData } from './LawsOfMotionExamEdgeData';
+import { lawsOfMotionExamEdgeData, lawsOfMotionFormulaSheet, lawsOfMotionQuickRevision } from './LawsOfMotionExamEdgeData';
 import '../../LawsOfMotionBranch.css';
 
 export default function LawsOfMotionExamEdge() {
@@ -99,6 +99,80 @@ export default function LawsOfMotionExamEdge() {
                         </div>
                     </div>
                 )}
+
+                {/* ═══════ FORMULA SHEET ═══════ */}
+                <div style={{ marginTop: 60 }}>
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', textAlign: 'center', marginBottom: 8 }}>
+                        📐 Formula Sheet
+                    </h2>
+                    <p style={{ textAlign: 'center', color: '#64748b', fontSize: 15, marginBottom: 28, maxWidth: 500, marginInline: 'auto' }}>
+                        All key formulae from Laws of Motion in one place.
+                    </p>
+                    <div style={{ background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ background: '#0f172a' }}>
+                                    <th style={{ padding: '14px 20px', textAlign: 'left', color: '#f59e0b', fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, borderBottom: '2px solid #f59e0b' }}>Quantity</th>
+                                    <th style={{ padding: '14px 20px', textAlign: 'left', color: '#f59e0b', fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, borderBottom: '2px solid #f59e0b' }}>Formula</th>
+                                    <th style={{ padding: '14px 20px', textAlign: 'center', color: '#f59e0b', fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, borderBottom: '2px solid #f59e0b' }}>Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {lawsOfMotionFormulaSheet.map((row, i) => (
+                                    <tr key={i} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                                        <td style={{ padding: '13px 20px', fontSize: 15, fontWeight: 700, color: '#0f172a' }}>{row.quantity}</td>
+                                        <td style={{ padding: '13px 20px', fontSize: 14, fontFamily: "'Courier New', monospace", color: '#c97b1a', fontWeight: 600 }}>{row.formula}</td>
+                                        <td style={{ padding: '13px 20px', fontSize: 13, textAlign: 'center', color: '#64748b', fontFamily: "'Courier New', monospace" }}>{row.unit}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* ═══════ QUICK REVISION ═══════ */}
+                <div style={{ marginTop: 60 }}>
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', textAlign: 'center', marginBottom: 8 }}>
+                        ⚡ Quick Revision Module
+                    </h2>
+                    <p style={{ textAlign: 'center', color: '#64748b', fontSize: 15, marginBottom: 28, maxWidth: 500, marginInline: 'auto' }}>
+                        Everything you need for last-minute revision. One card = one topic.
+                    </p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 20 }}>
+                        {lawsOfMotionQuickRevision.map((card, i) => (
+                            <div key={i} style={{
+                                background: '#fff', borderRadius: 20, padding: '22px 24px',
+                                border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)'
+                            }}>
+                                <h4 style={{ fontSize: 15, fontWeight: 800, color: '#c97b1a', textTransform: 'uppercase', letterSpacing: 0.5, margin: '0 0 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <span style={{ fontSize: 18 }}>{card.icon}</span> {card.title}
+                                </h4>
+                                <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                                    {card.points.map((pt, j) => (
+                                        <li key={j} style={{
+                                            fontSize: 14, color: '#334155', padding: '6px 0',
+                                            borderBottom: j < card.points.length - 1 ? '1px solid #f1f5f9' : 'none',
+                                            display: 'flex', alignItems: 'flex-start', gap: 8, lineHeight: 1.5
+                                        }}>
+                                            <span style={{ color: '#c97b1a', fontSize: 16, lineHeight: 1.2, flexShrink: 0 }}>›</span>
+                                            {pt}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Final Strategy Box */}
+                    <div style={{
+                        marginTop: 32, background: '#0f172a', borderRadius: 20, padding: '24px 28px'
+                    }}>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 10 }}>📌 Final Exam Strategy</div>
+                        <p style={{ margin: 0, fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7 }}>
+                            In Laws of Motion, <strong style={{ color: '#fff' }}>~60% questions are conceptual</strong> — about inertia types, action-reaction, centripetal vs centrifugal. Spend time mastering these rather than complex numericals. For numericals: always draw a free body diagram, identify all forces, resolve components, then apply F = ma. With a clean FBD, most problems become straightforward.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );

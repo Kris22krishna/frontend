@@ -105,8 +105,9 @@ export default function StructureOfAtomExamEdge() {
                     </div>
                 </div>
 
+                
                 {/* Pro Tips */}
-                <div style={{ marginTop: '40px', background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '40px', borderRadius: '32px', color: '#fff' }}>
+                <div style={{ marginTop: '40px', background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '40px', borderRadius: '32px', color: '#fff', marginBottom: '40px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
                         <Lightbulb size={32} color="#f59e0b" />
                         <h2 style={{ fontSize: '24px', fontWeight: 800, margin: 0 }}>Bonus Exam Tips</h2>
@@ -119,6 +120,84 @@ export default function StructureOfAtomExamEdge() {
                         ))}
                     </div>
                 </div>
+
+                {/* Formula Sheet & Quick Revision */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px' }}>
+                    {/* Formula Sheet */}
+                    <div style={{ background: '#fff', borderRadius: '32px', padding: '40px', boxShadow: '0 12px 32px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
+                        <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#1e1b4b', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <span style={{ background: '#fef3c7', padding: '10px', borderRadius: '12px', color: '#d97706' }}>📐</span>
+                            Master Formula Sheet
+                        </h2>
+                        
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
+                                <thead>
+                                    <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                                        <th style={{ padding: '16px', fontSize: '14px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', width: '35%' }}>Formula</th>
+                                        <th style={{ padding: '16px', fontSize: '14px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', width: '35%' }}>Meaning</th>
+                                        <th style={{ padding: '16px', fontSize: '14px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', width: '30%' }}>Key Values / Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {structureOfAtomExamEdgeData.formulaSheet && structureOfAtomExamEdgeData.formulaSheet.map((item, idx) => (
+                                        <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.2s' }}>
+                                            <td style={{ padding: '20px 16px', fontSize: '16px', fontWeight: 700, color: '#3b82f6', fontFamily: '"Fira Code", monospace' }}>
+                                                <MathRenderer text={item.formula} />
+                                            </td>
+                                            <td style={{ padding: '20px 16px', fontSize: '15px', color: '#334155', fontWeight: 600 }}>
+                                                <MathRenderer text={item.meaning} />
+                                            </td>
+                                            <td style={{ padding: '20px 16px', fontSize: '14px', color: '#64748b' }}>
+                                                <MathRenderer text={item.keyValues} />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Quick Revision Space */}
+                    <div style={{ background: '#fff', borderRadius: '32px', padding: '40px', boxShadow: '0 12px 32px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
+                        <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#1e1b4b', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <span style={{ background: '#fee2e2', padding: '10px', borderRadius: '12px', color: '#dc2626' }}>⚡</span>
+                            Quick Revision Module
+                        </h2>
+                        <p style={{ color: '#64748b', fontSize: '15px', marginBottom: '32px', paddingLeft: '56px' }}>Everything critical for last-minute review — formulas, rules, and NEET traps.</p>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+                            {structureOfAtomExamEdgeData.quickRevision && structureOfAtomExamEdgeData.quickRevision.map((card, idx) => (
+                                <div key={idx} style={{ background: '#f8fafc', borderRadius: '20px', padding: '24px', border: '1px solid #e2e8f0' }}>
+                                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#1e1b4b', marginBottom: '16px', paddingBottom: '12px', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        {card.title}
+                                    </h3>
+                                    <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+                                        {card.bulletPoints.map((pt, j) => (
+                                            <li key={j} style={{
+                                                fontSize: '14px', color: '#334155', padding: '8px 0',
+                                                borderBottom: j < card.bulletPoints.length - 1 ? '1px dashed #cbd5e1' : 'none',
+                                                display: 'flex', alignItems: 'flex-start', gap: '8px', lineHeight: 1.5
+                                            }}>
+                                                <span style={{ color: '#3b82f6', fontSize: '16px', lineHeight: 1.2, flexShrink: 0 }}>›</span>
+                                                <MathRenderer text={pt} />
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Final Strategy Box */}
+                        <div style={{ marginTop: '40px', background: '#0f172a', borderRadius: '20px', padding: '32px' }}>
+                            <div style={{ fontSize: '12px', fontWeight: 900, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '12px' }}>🎯 Final Exam Strategy</div>
+                            <p style={{ margin: 0, fontSize: '16px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.6 }}>
+                                In Structure of Atom, <strong style={{ color: '#fff' }}>Bohr Model formulas and Exceptions to electronic configurations (Cr & Cu)</strong> are the most recurring topics. Focus heavily on calculating energy transitions, spectral lines (Balmer visible, Lyman UV), and quantum numbers. Always double-check standard units — convert nm to m when using hν = hc/λ.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </main>
         </div>
     );

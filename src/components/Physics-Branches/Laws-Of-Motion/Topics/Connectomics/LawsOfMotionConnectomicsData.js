@@ -1,4 +1,15 @@
 export const lawsOfMotionConnectomicsData = {
+    checkpoints: [
+        'Distance, displacement, speed, velocity',
+        'Acceleration (uniform & non-uniform)',
+        'Equations of motion (v = u + at, etc.)',
+        'Scalar vs Vector quantities',
+        'Resolution of vectors into components',
+        'Concept of weight and mass (W = mg)',
+        'Free body diagrams (basic)',
+        "Newton's law of gravitation (concept)"
+    ],
+    chapterLink: "This chapter connects directly to Work, Energy & Power (Ch 6), Gravitation (Ch 8), and Rotational Motion (Ch 7). Force is the central idea — every subsequent chapter either applies or extends it.",
     connections: [
         {
             from: "Laws of Motion (Ch.5)",

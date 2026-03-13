@@ -80,16 +80,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 1209, skill_name: 'Pair of Linear Equations Chapter Assessment', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Pair of Linear Equations Chapter Assessment' },
 
-                        // Real Numbers
-                        { skill_id: 1111, skill_name: 'Understanding Real Numbers', topic: 'Real Numbers', subtopic: 'Real Number Foundations' },
-                        { skill_id: 1112, skill_name: 'Euclid’s Division Algorithm', topic: 'Real Numbers', subtopic: 'Euclid\'s Division Lemma' },
-                        { skill_id: 1113, skill_name: 'Prime Factorisation', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 1114, skill_name: 'Fundamental Theorem of Arithmetic', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 1115, skill_name: 'HCF and LCM Using Prime Factorisation', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 1116, skill_name: 'Applications of HCF and LCM', topic: 'Real Numbers', subtopic: 'The Fundamental Theorem of Arithmetic' },
-                        { skill_id: 1117, skill_name: 'Proving Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
-                        { skill_id: 1118, skill_name: 'Operations on Irrational Numbers', topic: 'Real Numbers', subtopic: 'Revisiting Irrational Numbers' },
-                        { skill_id: 1119, skill_name: 'Real Numbers Chapter Assessment', topic: 'Real Numbers', subtopic: 'Real Numbers Chapter Assessment' },
+
 
                         // Arithmetic Progressions
                         { skill_id: 1105, skill_name: 'Number Patterns Recognition', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
@@ -127,7 +118,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' },
 
                         // Probability
-                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' }
+                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' },
+
+                        // Real Numbers
+                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting

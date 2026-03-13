@@ -280,10 +280,12 @@ const VolumeUsingUnitCubes = () => {
                             <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -50, opacity: 0 }} transition={{ duration: 0.4, ease: "easeOut" }} style={{ height: '100%', width: '100%' }}>
                                 <div className="question-card-modern" style={{ paddingLeft: '2rem' }}>
                                     <div className="question-header-modern">
-                                        <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '400', textAlign: 'center' }}>
-                                            <span style={{ color: '#4FB7B3', fontWeight: 'bold', marginRight: '0.5rem' }}>{qIndex + 1}.</span>
-                                            <LatexContent html={currentQuestion.text} />
-                                        </h2>
+                                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '1rem', width: '100%' }}>
+                                            <span style={{ color: '#4FB7B3', fontWeight: 'bold', fontSize: '2.5rem', flexShrink: 0 }}>{qIndex + 1}.</span>
+                                            <h2 className="question-text-modern" style={{ fontFamily: '"Open Sans", sans-serif', fontSize: '2.5rem', fontWeight: '400', textAlign: 'left', margin: 0 }}>
+                                                <LatexContent html={currentQuestion.text} />
+                                            </h2>
+                                        </div>
                                     </div>
                                     <div className="interaction-area-modern">
                                         <div className="options-grid-modern">
