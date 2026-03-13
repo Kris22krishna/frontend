@@ -38,7 +38,7 @@ const IDMDashboard = ({ profile, getGradeNumber }) => {
                             </div>
                             <div className="idm-v2-card-info">
                                 <h3>Learn</h3>
-                                <p>Interactive modules and visual lessons to master concepts.</p>
+                                <p>Interactive content to master basics of algebra.</p>
                             </div>
                             <div className="idm-v2-card-arrow">
                                 <ArrowRight size={20} />
@@ -55,7 +55,7 @@ const IDMDashboard = ({ profile, getGradeNumber }) => {
                             </div>
                             <div className="idm-v2-card-info">
                                 <h3>Assessment</h3>
-                                <p>Test your logic with our specialized diagnostic tools.</p>
+                                <p>Test yourself on our algebra module.</p>
                             </div>
                             <div className="idm-v2-card-arrow">
                                 <ArrowRight size={20} />
