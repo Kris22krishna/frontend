@@ -119,6 +119,11 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1239, skill_name: 'Relationship Between Zeroes and Coefficients (Cubic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Cubic)' },
                         { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' }
                     ]);
+                } else if (grade === '9') {
+                    setSkills([
+                        // Number System Hub
+                        { skill_id: 1240, skill_name: 'Number System: Master Hub', topic: 'Number System', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/number-system' }
+                    ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
                     setSkills([

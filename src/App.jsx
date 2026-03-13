@@ -214,6 +214,18 @@ import PatternIdentification from './components/practice/class-5/CanyouseethePat
 import RuleBasedPatternCreation from './components/practice/class-5/CanyouseethePattern/PatternRecognition/rule-based-pattern-creation';
 import UnderstandingRotations from './components/practice/class-5/CanyouseethePattern/PatternRecognition/understanding-rotations';
 import GridPatternRecognition from './components/practice/class-5/CanyouseethePattern/PatternRecognition/grid-pattern-recognition';
+
+// Grade 9 Number System
+import NumberSystem from './components/practice/class-9/NumberSystem';
+import NumberSystemIntro5W1H from './components/practice/class-9/Topics/5W1H/NumberSystemIntro5W1H';
+import NumberSystemTerminology from './components/practice/class-9/Topics/Terminology/NumberSystemTerminology';
+import NumberSystemSkills from './components/practice/class-9/Topics/skills/NumberSystemSkills';
+import RealNumberClassification from './components/practice/class-9/RealNumberClassification';
+import DecimalExpansion from './components/practice/class-9/DecimalExpansion';
+import OperationsOnSurds from './components/practice/class-9/OperationsOnSurds';
+import Rationalisation from './components/practice/class-9/Rationalisation';
+import LawsOfExponents from './components/practice/class-9/LawsOfExponents';
+import NumberSystemTest from './components/practice/class-9/NumberSystemTest';
 import PropertiesOfOperation from './components/practice/class-5/CanyouseethePattern/NummberProperties/properties-of-operations';
 import DigitRelationships from './components/practice/class-5/CanyouseethePattern/NummberProperties/digit-relationships';
 import PalindromeRecognition from './components/practice/class-5/CanyouseethePattern/NummberProperties/palindrome-recognition';
@@ -1406,6 +1418,21 @@ function App() {
         <Route path="/high/practice/1117" element={<ProvingIrrationality />} />
         <Route path="/high/practice/1118" element={<IrrationalOperations />} />
         <Route path="/high/practice/1119" element={<RealNumbersTest />} />
+
+        {/* Class 9: Number System Routes */}
+        <Route path="/senior/grade/9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/number-system/introduction" element={<ProtectedRoute redirectTo="/login"><NumberSystemIntro5W1H /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/number-system/terminology" element={<ProtectedRoute redirectTo="/login"><NumberSystemTerminology /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/number-system/skills" element={<ProtectedRoute redirectTo="/login"><NumberSystemSkills /></ProtectedRoute>} />
+
+        {/* Legacy Classification/Direct Routes */}
+        <Route path="/practice/class-9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
+        <Route path="/practice/class-9/real-number-classification" element={<ProtectedRoute redirectTo="/login"><RealNumberClassification /></ProtectedRoute>} />
+        <Route path="/practice/class-9/decimal-expansion" element={<ProtectedRoute redirectTo="/login"><DecimalExpansion /></ProtectedRoute>} />
+        <Route path="/practice/class-9/operations-on-surds" element={<ProtectedRoute redirectTo="/login"><OperationsOnSurds /></ProtectedRoute>} />
+        <Route path="/practice/class-9/rationalisation" element={<ProtectedRoute redirectTo="/login"><Rationalisation /></ProtectedRoute>} />
+        <Route path="/practice/class-9/laws-of-exponents" element={<ProtectedRoute redirectTo="/login"><LawsOfExponents /></ProtectedRoute>} />
+        <Route path="/practice/class-9/chapter-test" element={<ProtectedRoute redirectTo="/login"><NumberSystemTest /></ProtectedRoute>} />
 
         {/* Class 12: Matrices � Legacy routes redirect to canonical deep-dive URLs */}
         <Route path="/senior/grade/12/matrices/who-uses" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/who-uses" replace /></ProtectedRoute>} />
