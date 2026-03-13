@@ -69,15 +69,7 @@ const IDMPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/50">
             <Navbar />
-            <div className="container mx-auto px-4 pt-28 pb-12 max-w-6xl">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
-                    <div>
-                        <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-3 tracking-tight">
-                            Happy IDM{profile?.first_name ? `, ${profile.first_name}` : ''}! 📐
-                        </h1>
-                        <p className="text-slate-500 text-lg">Celebrating the beauty of Mathematics world-wide.</p>
-                    </div>
-                </div>
+            <div className="container mx-auto px-4 pt-24 pb-8 max-w-6xl min-h-[calc(100vh-80px)] flex items-center justify-center">
                 <IDMDashboard profile={profile} getGradeNumber={getGradeNumber} />
             </div>
         </div>
