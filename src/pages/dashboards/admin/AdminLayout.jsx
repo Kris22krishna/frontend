@@ -52,6 +52,7 @@ const AdminLayout = () => {
             section: 'MONITORING',
             items: [
                 { name: 'Practice Results', icon: ClipboardList, path: '/admin/practice-results' },
+                { name: 'Diagnosis Results', icon: ClipboardList, path: '/admin/diagnosis-results' },
                 { name: 'Alerts', icon: AlertTriangle, path: '/admin/alerts' },
                 { name: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
                 { name: 'System Health', icon: Activity, path: '/admin/system-health' },

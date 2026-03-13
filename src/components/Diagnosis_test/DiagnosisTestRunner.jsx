@@ -20,6 +20,8 @@ const DiagnosisTestRunner = () => {
     const [error, setError] = useState(null);
     const [startTime, setStartTime] = useState(null);
 
+    const STORAGE_KEY = `diagnosis_test_g${grade}`;
+
     const maxViolations = 3;
     const {
         violationCount,
@@ -41,6 +43,27 @@ const DiagnosisTestRunner = () => {
         setLoading(true);
         setError(null);
         try {
+            // Check for existing state in localStorage first
+            const savedState = localStorage.getItem(STORAGE_KEY);
+            if (savedState) {
+                try {
+                    const parsed = JSON.parse(savedState);
+                    if (parsed.questions && parsed.questions.length > 0) {
+                        setQuestions(parsed.questions);
+                        setAnswers(parsed.answers || {});
+                        setCurrentIndex(parsed.currentIndex || 0);
+                        setTimeLeft(parsed.timeLeft !== undefined ? parsed.timeLeft : 30 * 60);
+                        setStartTime(parsed.startTime || Date.now());
+                        setIsSubmitted(parsed.isSubmitted || false);
+                        setLoading(false);
+                        return; // Successfully restored, skip loading new questions
+                    }
+                } catch (e) {
+                    console.error("Failed to parse saved state:", e);
+                    localStorage.removeItem(STORAGE_KEY);
+                }
+            }
+
             let module;
             // Using more explicit imports to help bundlers
             try {
@@ -120,6 +143,22 @@ const DiagnosisTestRunner = () => {
     useEffect(() => {
         loadQuestions();
     }, [loadQuestions]);
+
+    // Save state to localStorage whenever it changes
+    useEffect(() => {
+        if (!loading && questions.length > 0) {
+            const stateToSave = {
+                questions,
+                answers,
+                currentIndex,
+                timeLeft,
+                startTime,
+                isSubmitted,
+                lastUpdated: Date.now()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+        }
+    }, [questions, answers, currentIndex, timeLeft, startTime, isSubmitted, loading, STORAGE_KEY]);
 
     useEffect(() => {
         if (loading || isSubmitted || questions.length === 0) return;
@@ -232,61 +271,82 @@ const DiagnosisTestRunner = () => {
         );
     };
 
-    const handleSubmit = () => setIsSubmitted(true);
+    const handleSubmit = () => {
+        setIsSubmitted(true);
+        // We don't clear storage here yet because they might refresh on the results page
+    };
 
     const calculateDetailedResults = () => {
         let correctCount = 0;
+        let totalCorrect = 0;
+        let totalWrong = 0;
+        let totalPartial = 0;
+
         const questionResults = [];
 
         questions.forEach(q => {
             const userAnswer = answers[q.id];
             let isCorrect = false;
-            let displayAnswer = q.answer;
+            let qScore = 0;
 
             if (q.type === 'tableInput') {
                 try {
                     const expected = JSON.parse(q.answer);
-                    let allCorrect = true;
+                    let totalInputs = 0;
+                    let correctInputs = 0;
+
                     Object.keys(expected).forEach(rowIdx => {
                         const rowExpected = expected[rowIdx];
                         if (typeof rowExpected === 'object' && rowExpected !== null) {
                             Object.keys(rowExpected).forEach(key => {
+                                totalInputs++;
                                 const userVal = String(userAnswer?.[rowIdx]?.[key] || '').trim().toLowerCase();
                                 const expVal = String(rowExpected[key] || '').trim().toLowerCase();
-                                if (userVal !== expVal) allCorrect = false;
+                                if (userVal === expVal) correctInputs++;
                             });
                         } else {
+                            totalInputs++;
                             const userVal = String(userAnswer?.[rowIdx]?.["0"] || userAnswer?.[rowIdx] || '').trim().toLowerCase();
                             const expVal = String(rowExpected || '').trim().toLowerCase();
-                            if (userVal !== expVal) allCorrect = false;
+                            if (userVal === expVal) correctInputs++;
                         }
                     });
-                    if (allCorrect && userAnswer && Object.keys(userAnswer).length > 0) {
-                        isCorrect = true;
-                        correctCount++;
+
+                    if (totalInputs > 0 && correctInputs > 0) {
+                        qScore = correctInputs / totalInputs;
+                        correctCount += qScore;
+                        if (qScore === 1) isCorrect = true;
                     }
-                    displayAnswer = "Table completed correctly";
+                    displayAnswer = "Table completed";
                 } catch (e) {
                     console.error("Error parsing table answer:", e);
                 }
             } else if (q.type === 'factorTree') {
                 try {
                     const expected = JSON.parse(q.answer);
-                    let allCorrect = true;
+                    let totalNodes = 0;
+                    let correctNodes = 0;
+
                     Object.keys(expected).forEach(nodeId => {
-                        if (String(userAnswer?.[nodeId]) !== String(expected[nodeId])) allCorrect = false;
+                        totalNodes++;
+                        if (String(userAnswer?.[nodeId]) === String(expected[nodeId])) {
+                            correctNodes++;
+                        }
                     });
-                    if (allCorrect && userAnswer) {
-                        isCorrect = true;
-                        correctCount++;
+
+                    if (totalNodes > 0 && correctNodes > 0) {
+                        qScore = correctNodes / totalNodes;
+                        correctCount += qScore;
+                        if (qScore === 1) isCorrect = true;
                     }
-                    displayAnswer = "Factor tree completed correctly";
+                    displayAnswer = "Factor tree completed";
                 } catch (e) {
                     console.error("Error parsing factor tree answer:", e);
                 }
             } else {
-                if (userAnswer === q.answer) {
+                if (String(userAnswer || '').trim().toLowerCase() === String(q.answer || '').trim().toLowerCase()) {
                     isCorrect = true;
+                    qScore = 1;
                     correctCount++;
                 }
             }
@@ -295,11 +355,60 @@ const DiagnosisTestRunner = () => {
             let correctDisplay = q.answer;
 
             if (q.type === 'tableInput') {
-                userDisplay = isCorrect ? "Completed Correctly" : "Incorrectly Filled";
-                correctDisplay = "Check Table Properties";
+                try {
+                    const expected = JSON.parse(q.answer);
+                    const rows = q.rows || [];
+
+                    const formatRow = (row, ans) => {
+                        if (row.left !== undefined) {
+                            const f = (val) => (typeof val === 'object' && val.n !== undefined) ? `${val.n}/${val.d}` : val;
+                            let resStr = "";
+                            if (q.variant === 'fraction') {
+                                resStr = ans ? `${ans.num || '?'}/${ans.den || '?'}` : "None";
+                            } else {
+                                resStr = ans ? (ans["0"] || ans) : "None";
+                            }
+                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)} = ${resStr}$`;
+                        }
+                        return row.text || "Row";
+                    };
+
+                    const formatExpectedRow = (row, expVal) => {
+                        if (row.left !== undefined) {
+                            const f = (val) => (typeof val === 'object' && val.n !== undefined) ? `${val.n}/${val.d}` : val;
+                            let resStr = "";
+                            if (q.variant === 'fraction') {
+                                resStr = `${expVal.num}/${expVal.den}`;
+                            } else {
+                                resStr = expVal["0"] || expVal;
+                            }
+                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)} = ${resStr}$`;
+                        }
+                        return row.text || "Row";
+                    };
+
+                    userDisplay = rows.map((row, i) => formatRow(row, userAnswer?.[i])).join(', ');
+                    correctDisplay = rows.map((row, i) => formatExpectedRow(row, expected[i])).join(', ');
+                } catch (e) {
+                    console.error("Error formatting table results:", e);
+                    userDisplay = isCorrect ? "Completed Correctly" : "Incorrectly Filled";
+                    correctDisplay = "Check Table Properties";
+                }
             } else if (q.type === 'factorTree') {
-                userDisplay = isCorrect ? "Completed Correctly" : "Incorrectly Filled";
-                correctDisplay = "Check Factor Tree Nodes";
+                userDisplay = isCorrect ? "Nodes filled correctly" : "Missing or wrong nodes";
+                correctDisplay = "View factor tree branches";
+            }
+
+            let status = 'wrong';
+            if (qScore === 1) {
+                totalCorrect++;
+                status = 'correct';
+            } else if (qScore > 0) {
+                totalPartial++;
+                status = 'partial';
+            } else {
+                totalWrong++;
+                status = 'wrong';
             }
 
             questionResults.push({
@@ -307,6 +416,7 @@ const DiagnosisTestRunner = () => {
                 userAnswer: userDisplay,
                 correctAnswer: correctDisplay,
                 isCorrect,
+                status,
                 type: q.type,
                 topic: q.topic,
                 image: q.img || q.image
@@ -318,6 +428,9 @@ const DiagnosisTestRunner = () => {
         return {
             score: correctCount,
             total: questions.length,
+            totalCorrect,
+            totalWrong,
+            totalPartial,
             timeTaken,
             questionResults
         };
@@ -376,6 +489,7 @@ const DiagnosisTestRunner = () => {
                 results={results}
                 grade={grade}
                 onRetake={() => {
+                    localStorage.removeItem(STORAGE_KEY);
                     setIsSubmitted(false);
                     setAnswers({});
                     setCurrentIndex(0);
