@@ -42,7 +42,7 @@ const STATS = [
     { val: '6', label: 'Big Questions', color: '#0891b2' },
     { val: '7', label: 'Key Terms', color: '#7c3aed' },
     { val: '5', label: 'Rules', color: '#059669' },
-    { val: '5', label: 'Skills', color: '#0369a1' },
+    { val: '7', label: 'Skills', color: '#0369a1' },
 ];
 
 export default function Algebra() {
