@@ -22,7 +22,7 @@ export const generateLawsOfMotionSkillsData = () => {
         // Q3: Object in space
         () => {
             const speed = randInt(100, 500);
-            return { type: 'multiple-choice', question: `A spacecraft moves at ${speed} m/s in deep space with zero friction. Force needed to maintain this speed?`, options: ['Zero', `${speed} N`, `${speed * 2} N`, 'Cannot be determined'], correctAnswer: 0, explanation: "Newton's First Law: No force is needed to maintain constant velocity in the absence of external forces.", image: '🚀→→→ (no friction, no force needed)' };
+            return { type: 'multiple-choice', question: `A spacecraft moves at ${speed} m/s in deep space with zero friction. Force needed to maintain this speed?`, options: ['Zero', `${speed} N`, `${speed * 2} N`, 'Cannot be determined'], correctAnswer: 0, explanation: "Newton's First Law: No force is needed to maintain constant velocity in the absence of external forces." };
         },
 
         // Q4: Zero net force implication
@@ -50,19 +50,19 @@ export const generateLawsOfMotionSkillsData = () => {
         () => {
             const mass = randInt(1, 5);
             const W = mass * 10;
-            return { type: 'multiple-choice', question: `A ${mass} kg book rests on a table. What is the net force on it? (g = 10 m/s²)`, options: ['Zero — normal force balances weight', `${W} N downward`, `${W} N upward`, `${W * 2} N downward`], correctAnswer: 0, explanation: `Weight ${W} N (↓) is balanced by Normal ${W} N (↑). Net force = 0, so the book is in equilibrium.`, image: `📕 on table: ↓W=${W}N  ↑N=${W}N  → Net = 0` };
+            return { type: 'multiple-choice', question: `A ${mass} kg book rests on a table. What is the net force on it? (g = 10 m/s²)`, options: ['Zero — normal force balances weight', `${W} N downward`, `${W} N upward`, `${W * 2} N downward`], correctAnswer: 0, explanation: `Weight ${W} N (↓) is balanced by Normal ${W} N (↑). Net force = 0, so the book is in equilibrium.` };
         },
 
         // Q8: Mud from wheel — inertia of direction
-        () => ({ type: 'multiple-choice', question: 'Mud flies off tangentially from a spinning wheel. This demonstrates:', options: ['Inertia of direction', 'Inertia of rest', 'Centripetal force', 'Friction'], correctAnswer: 0, explanation: 'The mud tends to move in a straight line (tangent) while the wheel curves away underneath it.', image: '⭕ spinning → 💧 mud flies tangent →' }),
+        () => ({ type: 'multiple-choice', question: 'Mud flies off tangentially from a spinning wheel. This demonstrates:', options: ['Inertia of direction', 'Inertia of rest', 'Centripetal force', 'Friction'], correctAnswer: 0, explanation: 'The mud tends to move in a straight line (tangent) while the wheel curves away underneath it.' }),
 
         // Q9: Seatbelt application
-        () => ({ type: 'multiple-choice', question: 'Seat belts protect passengers during a crash by counteracting their:', options: ['Inertia of motion', 'Inertia of rest', 'Weight', 'Centripetal force'], correctAnswer: 0, explanation: 'During a crash, the body tends to continue forward (inertia of motion). The seatbelt provides the restraining force.', image: '🚗💥 → 🧍→ (without belt) vs 🧍🔗 (with belt)' }),
+        () => ({ type: 'multiple-choice', question: 'Seat belts protect passengers during a crash by counteracting their:', options: ['Inertia of motion', 'Inertia of rest', 'Weight', 'Centripetal force'], correctAnswer: 0, explanation: 'During a crash, the body tends to continue forward (inertia of motion). The seatbelt provides the restraining force.' }),
 
         // Q10: Coin stack flicking
         () => {
             const n = randInt(5, 10);
-            return { type: 'multiple-choice', question: `${n} coins are stacked. A sharp striker hits the bottom coin. What happens?`, options: ['Only the bottom coin flies out; the rest stay stacked', 'All coins scatter', 'The top coin flies off', 'The entire stack moves sideways'], correctAnswer: 0, explanation: `The bottom coin receives the force. The remaining coins stay due to inertia of rest — the impact duration is too short for the force to propagate up.`, image: `🪙×${n} stack — ⚡ striker hits bottom → bottom flies, rest stay` };
+            return { type: 'multiple-choice', question: `${n} coins are stacked. A sharp striker hits the bottom coin. What happens?`, options: ['Only the bottom coin flies out; the rest stay stacked', 'All coins scatter', 'The top coin flies off', 'The entire stack moves sideways'], correctAnswer: 0, explanation: `The bottom coin receives the force. The remaining coins stay due to inertia of rest — the impact duration is too short for the force to propagate up.` };
         },
 
         // ── HARD / NEET (Q11-Q13) ─────────────────────
@@ -73,7 +73,7 @@ export const generateLawsOfMotionSkillsData = () => {
         () => {
             const m = randInt(2, 8);
             const mg = m * 10;
-            return { type: 'multiple-choice', question: `A ${m} kg block hangs from a ceiling by a light string. Tension in the string is: (g = 10 m/s²)`, options: [`${mg} N`, `${mg * 2} N`, `${mg / 2} N`, '0 N'], correctAnswer: 0, explanation: `Equilibrium: T = mg = ${m} × 10 = ${mg} N.`, image: `━━ceiling━━\n  |  T=${mg}N ↑\n  🧱 ${m}kg\n  ↓ W=${mg}N` };
+            return { type: 'multiple-choice', question: `A ${m} kg block hangs from a ceiling by a light string. Tension in the string is: (g = 10 m/s²)`, options: [`${mg} N`, `${mg * 2} N`, `${mg / 2} N`, '0 N'], correctAnswer: 0, explanation: `Equilibrium: T = mg = ${m} × 10 = ${mg} N.` };
         },
 
         // Q13: Two opposing forces — net force (NEET)
@@ -81,7 +81,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const f1 = randInt(15, 40);
             const f2 = randInt(10, f1 - 1);
             const net = f1 - f2;
-            return { type: 'multiple-choice', question: `Two forces ${f1} N (east) and ${f2} N (west) act on an object. The net force is:`, options: [`${net} N east`, `${f1 + f2} N east`, `${f1 + f2} N west`, '0 N'], correctAnswer: 0, explanation: `Net force = ${f1} - ${f2} = ${net} N towards east (the larger force wins).`, image: `←${f2}N  🟫  ${f1}N→  |  Net = ${net}N →` };
+            return { type: 'multiple-choice', question: `Two forces ${f1} N (east) and ${f2} N (west) act on an object. The net force is:`, options: [`${net} N east`, `${f1 + f2} N east`, `${f1 + f2} N west`, '0 N'], correctAnswer: 0, explanation: `Net force = ${f1} - ${f2} = ${net} N towards east (the larger force wins).` };
         },
 
         // ── JEE LEVEL (Q14-Q15) ──────────────────────
@@ -90,7 +90,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const M = randInt(2, 6);
             const a_frame = randInt(2, 5);
             const pseudo = M * a_frame;
-            return { type: 'multiple-choice', question: `A ${M} kg block lies on the floor of a truck accelerating at ${a_frame} m/s². In the truck's frame, the pseudo force on the block is:`, options: [`${pseudo} N opposite to acceleration`, `${pseudo} N along acceleration`, '0 N', `${M * 10} N downward`], correctAnswer: 0, explanation: `Pseudo force F_pseudo = -ma_frame = ${M} × ${a_frame} = ${pseudo} N, opposite to the truck's acceleration.`, image: `🚛→ a=${a_frame}m/s²  |  In truck's frame: 🟫←F_pseudo=${pseudo}N` };
+            return { type: 'multiple-choice', question: `A ${M} kg block lies on the floor of a truck accelerating at ${a_frame} m/s². In the truck's frame, the pseudo force on the block is:`, options: [`${pseudo} N opposite to acceleration`, `${pseudo} N along acceleration`, '0 N', `${M * 10} N downward`], correctAnswer: 0, explanation: `Pseudo force F_pseudo = -ma_frame = ${M} × ${a_frame} = ${pseudo} N, opposite to the truck's acceleration.` };
         },
 
         // Q15: Connected blocks at rest — minimum force (JEE)
@@ -100,7 +100,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const mu = round1(randInt(2, 5) / 10);
             const total = m1 + m2;
             const fMin = round1(mu * total * 10);
-            return { type: 'multiple-choice', question: `Two blocks (${m1} kg and ${m2} kg) placed side by side on a rough surface (μ = ${mu}). Minimum horizontal force to just start moving both? (g=10)`, options: [`${fMin} N`, `${round1(mu * m1 * 10)} N`, `${round1(mu * m2 * 10)} N`, `${total * 10} N`], correctAnswer: 0, explanation: `They move as a system. F_min = μ(m₁ + m₂)g = ${mu} × ${total} × 10 = ${fMin} N.`, image: `→F  [${m1}kg][${m2}kg]  ←f = μ(m₁+m₂)g = ${fMin}N` };
+            return { type: 'multiple-choice', question: `Two blocks (${m1} kg and ${m2} kg) placed side by side on a rough surface (μ = ${mu}). Minimum horizontal force to just start moving both? (g=10)`, options: [`${fMin} N`, `${round1(mu * m1 * 10)} N`, `${round1(mu * m2 * 10)} N`, `${total * 10} N`], correctAnswer: 0, explanation: `They move as a system. F_min = μ(m₁ + m₂)g = ${mu} × ${total} × 10 = ${fMin} N.` };
         }
     ];
 
@@ -117,7 +117,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const m = randInt(2, 10);
             const a = randInt(2, 8);
             const F = m * a;
-            return { type: 'multiple-choice', question: `A body of mass ${m} kg accelerates at ${a} m/s². Net force?`, options: [`${F} N`, `${F + randInt(3, 8)} N`, `${F - randInt(1, 3)} N`, `${F * 2} N`], correctAnswer: 0, explanation: `F = ma = ${m} × ${a} = ${F} N.`, image: `🟫 ${m}kg → a=${a}m/s² → F=${F}N` };
+            return { type: 'multiple-choice', question: `A body of mass ${m} kg accelerates at ${a} m/s². Net force?`, options: [`${F} N`, `${F + randInt(3, 8)} N`, `${F - randInt(1, 3)} N`, `${F * 2} N`], correctAnswer: 0, explanation: `F = ma = ${m} × ${a} = ${F} N.` };
         },
 
         // Q2: a = F/m
@@ -137,7 +137,7 @@ export const generateLawsOfMotionSkillsData = () => {
         },
 
         // Q4: Rocket principle
-        () => ({ type: 'multiple-choice', question: 'A rocket in space works on the principle of conservation of:', options: ['Linear momentum', 'Energy', 'Mass', 'Angular momentum'], correctAnswer: 0, explanation: 'Exhaust gases go backward → rocket goes forward. Total momentum stays zero.', image: '🔥←  🚀→  (conservation of momentum)' }),
+        () => ({ type: 'multiple-choice', question: 'A rocket in space works on the principle of conservation of:', options: ['Linear momentum', 'Energy', 'Mass', 'Angular momentum'], correctAnswer: 0, explanation: 'Exhaust gases go backward → rocket goes forward. Total momentum stays zero.' }),
 
         // Q5: KE and momentum relation
         () => ({ type: 'multiple-choice', question: 'If the momentum of a body is doubled, its kinetic energy becomes:', options: ['4 times', '2 times', 'Half', 'Unchanged'], correctAnswer: 0, explanation: 'KE = p²/(2m). If p → 2p, KE → (2p)²/(2m) = 4 × original.' }),
@@ -149,7 +149,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const v = randInt(15, 30);
             const t = randInt(4, 10);
             const F = Math.round(m * v / t);
-            return { type: 'multiple-choice', question: `A ${m} kg car moving at ${v} m/s stops in ${t} s. Average braking force?`, options: [`${F} N`, `${Math.round(F * 1.5)} N`, `${Math.round(F * 0.5)} N`, `${F * 2} N`], correctAnswer: 0, explanation: `F = m(v-u)/t = ${m}×${v}/${t} = ${F} N.`, image: `🚗${v}m/s → 🛑 in ${t}s  |  F=${F}N` };
+            return { type: 'multiple-choice', question: `A ${m} kg car moving at ${v} m/s stops in ${t} s. Average braking force?`, options: [`${F} N`, `${Math.round(F * 1.5)} N`, `${Math.round(F * 0.5)} N`, `${F * 2} N`], correctAnswer: 0, explanation: `F = m(v-u)/t = ${m}×${v}/${t} = ${F} N.` };
         },
 
         // Q7: Impulse (ball rebound)
@@ -159,7 +159,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const vf = randInt(8, 15);
             const mkkg = mg / 1000;
             const J = round2(mkkg * (vi + vf));
-            return { type: 'multiple-choice', question: `A ${mg}g ball hits a wall at ${vi} m/s and rebounds at ${vf} m/s. Impulse?`, options: [`${J} N·s`, `${round2(mkkg * (vi - vf))} N·s`, `${round2(mkkg * vi)} N·s`, `${round2(J * 2)} N·s`], correctAnswer: 0, explanation: `J = m(v₁ + v₂) = ${mkkg}×(${vi}+${vf}) = ${J} N·s (direction reverses, so magnitudes add).`, image: `→${vi}m/s  ⚽|wall|  ←${vf}m/s  J=${J}Ns` };
+            return { type: 'multiple-choice', question: `A ${mg}g ball hits a wall at ${vi} m/s and rebounds at ${vf} m/s. Impulse?`, options: [`${J} N·s`, `${round2(mkkg * (vi - vf))} N·s`, `${round2(mkkg * vi)} N·s`, `${round2(J * 2)} N·s`], correctAnswer: 0, explanation: `J = m(v₁ + v₂) = ${mkkg}×(${vi}+${vf}) = ${J} N·s (direction reverses, so magnitudes add).` };
         },
 
         // Q8: Lift going up
@@ -167,7 +167,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const m = randInt(50, 80);
             const a = randInt(2, 4);
             const W_app = m * (10 + a);
-            return { type: 'multiple-choice', question: `A ${m} kg person in a lift accelerating upward at ${a} m/s². Apparent weight? (g=10)`, options: [`${W_app} N`, `${m * 10} N`, `${m * (10 - a)} N`, `0 N`], correctAnswer: 0, explanation: `W_apparent = m(g+a) = ${m}(10+${a}) = ${W_app} N. Person feels heavier.`, image: `🛗↑ a=${a}m/s²  |  W_app=${W_app}N (heavier)` };
+            return { type: 'multiple-choice', question: `A ${m} kg person in a lift accelerating upward at ${a} m/s². Apparent weight? (g=10)`, options: [`${W_app} N`, `${m * 10} N`, `${m * (10 - a)} N`, `0 N`], correctAnswer: 0, explanation: `W_apparent = m(g+a) = ${m}(10+${a}) = ${W_app} N. Person feels heavier.` };
         },
 
         // Q9: Lift going down
@@ -175,11 +175,11 @@ export const generateLawsOfMotionSkillsData = () => {
             const m = randInt(50, 80);
             const a = randInt(2, 4);
             const W_app = m * (10 - a);
-            return { type: 'multiple-choice', question: `A ${m} kg person in a lift accelerating downward at ${a} m/s². Apparent weight? (g=10)`, options: [`${W_app} N`, `${m * 10} N`, `${m * (10 + a)} N`, `0 N`], correctAnswer: 0, explanation: `W_apparent = m(g−a) = ${m}(10−${a}) = ${W_app} N. Person feels lighter.`, image: `🛗↓ a=${a}m/s²  |  W_app=${W_app}N (lighter)` };
+            return { type: 'multiple-choice', question: `A ${m} kg person in a lift accelerating downward at ${a} m/s². Apparent weight? (g=10)`, options: [`${W_app} N`, `${m * 10} N`, `${m * (10 + a)} N`, `0 N`], correctAnswer: 0, explanation: `W_apparent = m(g−a) = ${m}(10−${a}) = ${W_app} N. Person feels lighter.` };
         },
 
         // Q10: Free fall weightlessness
-        () => ({ type: 'multiple-choice', question: 'A person in a freely falling elevator experiences:', options: ['Weightlessness (apparent weight = 0)', 'Double weight', 'Normal weight', 'Infinite weight'], correctAnswer: 0, explanation: 'In free fall a = g, so W_apparent = m(g − g) = 0.', image: '🛗↓↓ free fall  |  W_app = m(g−g) = 0 (weightless!)' }),
+        () => ({ type: 'multiple-choice', question: 'A person in a freely falling elevator experiences:', options: ['Weightlessness (apparent weight = 0)', 'Double weight', 'Normal weight', 'Infinite weight'], correctAnswer: 0, explanation: 'In free fall a = g, so W_apparent = m(g − g) = 0.' }),
 
         // ── HARD / NEET (Q11-Q13) ─────────────────────
         // Q11: Atwood machine (NEET)
@@ -189,7 +189,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const g = 10;
             const a = round1(((m2 - m1) * g) / (m1 + m2));
             const T = round1((2 * m1 * m2 * g) / (m1 + m2));
-            return { type: 'multiple-choice', question: `Atwood machine: ${m1} kg and ${m2} kg over a frictionless pulley (g=10). Tension in the string?`, options: [`${T} N`, `${m1 * g} N`, `${m2 * g} N`, `${round1((m1 + m2) * g / 2)} N`], correctAnswer: 0, explanation: `T = 2m₁m₂g/(m₁+m₂) = 2×${m1}×${m2}×10/(${m1}+${m2}) = ${T} N.`, image: `  ⭕ pulley\n  |       |\n${m1}kg↑  ${m2}kg↓  T=${T}N` };
+            return { type: 'multiple-choice', question: `Atwood machine: ${m1} kg and ${m2} kg over a frictionless pulley (g=10). Tension in the string?`, options: [`${T} N`, `${m1 * g} N`, `${m2 * g} N`, `${round1((m1 + m2) * g / 2)} N`], correctAnswer: 0, explanation: `T = 2m₁m₂g/(m₁+m₂) = 2×${m1}×${m2}×10/(${m1}+${m2}) = ${T} N.` };
         },
 
         // Q12: Gun recoil (NEET)
@@ -198,7 +198,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const vb = randInt(300, 600);
             const Mg = randInt(3, 6);
             const vg = round1((mb / 1000 * vb) / Mg);
-            return { type: 'multiple-choice', question: `A ${mb}g bullet is fired at ${vb} m/s from a ${Mg} kg gun. Recoil velocity of the gun?`, options: [`${vg} m/s`, `${round1(vg * 2)} m/s`, `${vb} m/s`, `${round1(vg / 2)} m/s`], correctAnswer: 0, explanation: `By conservation of momentum: m_b × v_b = M_g × v_g\nv_g = (${mb/1000}×${vb})/${Mg} = ${vg} m/s.`, image: `🔫←${vg}m/s  💨bullet→${vb}m/s` };
+            return { type: 'multiple-choice', question: `A ${mb}g bullet is fired at ${vb} m/s from a ${Mg} kg gun. Recoil velocity of the gun?`, options: [`${vg} m/s`, `${round1(vg * 2)} m/s`, `${vb} m/s`, `${round1(vg / 2)} m/s`], correctAnswer: 0, explanation: `By conservation of momentum: m_b × v_b = M_g × v_g\nv_g = (${mb/1000}×${vb})/${Mg} = ${vg} m/s.` };
         },
 
         // Q13: Connected bodies — table + hanging (NEET)
@@ -208,7 +208,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const g = 10;
             const a = round1((m2 * g) / (m1 + m2));
             const T = round1(m1 * a);
-            return { type: 'multiple-choice', question: `A ${m1} kg block on a frictionless table is connected via pulley to a hanging ${m2} kg block. Find acceleration.`, options: [`${a} m/s²`, `${g} m/s²`, `${round1(a * 2)} m/s²`, `${round1(m2 * g / m1)} m/s²`], correctAnswer: 0, explanation: `a = m₂g/(m₁+m₂) = ${m2}×10/(${m1}+${m2}) = ${a} m/s².`, image: `━━table━━\n🟫${m1}kg—string—⭕—🟫${m2}kg(hanging)` };
+            return { type: 'multiple-choice', question: `A ${m1} kg block on a frictionless table is connected via pulley to a hanging ${m2} kg block. Find acceleration.`, options: [`${a} m/s²`, `${g} m/s²`, `${round1(a * 2)} m/s²`, `${round1(m2 * g / m1)} m/s²`], correctAnswer: 0, explanation: `a = m₂g/(m₁+m₂) = ${m2}×10/(${m1}+${m2}) = ${a} m/s².` };
         },
 
         // ── JEE LEVEL (Q14-Q15) ──────────────────────
@@ -219,7 +219,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const F = randInt(30, 80);
             const a = round1(F / (m1 + m2));
             const N_contact = round1(m2 * a);
-            return { type: 'multiple-choice', question: `A force of ${F} N pushes a ${m1} kg block against a ${m2} kg block on a frictionless surface. The contact force between blocks is:`, options: [`${N_contact} N`, `${F} N`, `${round1(m1 * a)} N`, `${round1(F / 2)} N`], correctAnswer: 0, explanation: `System: a = F/(m₁+m₂) = ${F}/${m1+m2} = ${a} m/s².\nContact force on m₂ = m₂a = ${m2}×${a} = ${N_contact} N.`, image: `→${F}N [${m1}kg|${m2}kg] → a=${a}m/s²\nContact = ${N_contact}N` };
+            return { type: 'multiple-choice', question: `A force of ${F} N pushes a ${m1} kg block against a ${m2} kg block on a frictionless surface. The contact force between blocks is:`, options: [`${N_contact} N`, `${F} N`, `${round1(m1 * a)} N`, `${round1(F / 2)} N`], correctAnswer: 0, explanation: `System: a = F/(m₁+m₂) = ${F}/${m1+m2} = ${a} m/s².\nContact force on m₂ = m₂a = ${m2}×${a} = ${N_contact} N.` };
         },
 
         // Q15: Variable mass — conveyor belt (JEE)
@@ -227,7 +227,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const dm = randInt(2, 8);    // kg/s
             const v = randInt(3, 10);     // m/s
             const F = dm * v;
-            return { type: 'multiple-choice', question: `Sand falls vertically onto a conveyor belt at ${dm} kg/s. Belt moves at ${v} m/s horizontally. Extra force needed to keep belt moving?`, options: [`${F} N`, `${dm * v * 2} N`, `${dm} N`, `${v} N`], correctAnswer: 0, explanation: `F = v(dm/dt) = ${v} × ${dm} = ${F} N.\nThe sand must be accelerated horizontally from 0 to ${v} m/s.`, image: `⬇️ sand ${dm}kg/s\n━━━→${v}m/s━━━ belt\nExtra F = ${F}N` };
+            return { type: 'multiple-choice', question: `Sand falls vertically onto a conveyor belt at ${dm} kg/s. Belt moves at ${v} m/s horizontally. Extra force needed to keep belt moving?`, options: [`${F} N`, `${dm * v * 2} N`, `${dm} N`, `${v} N`], correctAnswer: 0, explanation: `F = v(dm/dt) = ${v} × ${dm} = ${F} N.\nThe sand must be accelerated horizontally from 0 to ${v} m/s.` };
         }
     ];
 
@@ -240,19 +240,19 @@ export const generateLawsOfMotionSkillsData = () => {
     const skill3Generators = [
         // ── EASY (Q1-Q5) ──────────────────────────────
         // Q1: Action-reaction basics
-        () => ({ type: 'multiple-choice', question: "Newton's Third Law states that action and reaction forces:", options: ['Act on different bodies and are equal & opposite', 'Act on the same body', 'Are equal in direction', 'Always cancel each other'], correctAnswer: 0, explanation: 'They are equal & opposite but act on DIFFERENT bodies, so they never cancel.', image: '🧍→ push wall  |  wall →🧍 pushes back' }),
+        () => ({ type: 'multiple-choice', question: "Newton's Third Law states that action and reaction forces:", options: ['Act on different bodies and are equal & opposite', 'Act on the same body', 'Are equal in direction', 'Always cancel each other'], correctAnswer: 0, explanation: 'They are equal & opposite but act on DIFFERENT bodies, so they never cancel.' }),
 
         // Q2: fk vs fs
         () => ({ type: 'multiple-choice', question: 'Compared to limiting static friction, kinetic friction is usually:', options: ['Slightly less', 'Greater', 'Equal', 'Zero'], correctAnswer: 0, explanation: "Once motion starts, friction drops slightly. That's why it's easier to keep pushing than to start pushing." }),
 
         // Q3: Walking — which law
-        () => ({ type: 'multiple-choice', question: 'When walking, you push the ground backward with your foot. What makes you move forward?', options: ['Ground pushes you forward (reaction force)', 'Gravity', 'Air resistance', 'Your own internal force'], correctAnswer: 0, explanation: "Action: foot pushes ground ←\nReaction: ground pushes you →\nThis is Newton's Third Law.", image: '🦶→ground←  |  ground→🧍 forward' }),
+        () => ({ type: 'multiple-choice', question: 'When walking, you push the ground backward with your foot. What makes you move forward?', options: ['Ground pushes you forward (reaction force)', 'Gravity', 'Air resistance', 'Your own internal force'], correctAnswer: 0, explanation: "Action: foot pushes ground ←\nReaction: ground pushes you →\nThis is Newton's Third Law." }),
 
         // Q4: Horse-cart problem
-        () => ({ type: 'multiple-choice', question: 'A horse pulls a cart forward. Which force is responsible for the horse moving forward?', options: ['Friction from the ground on the horse (reaction to horse pushing ground)', 'The rope tension', 'The cart pulling the horse', 'Gravity on the horse'], correctAnswer: 0, explanation: "The horse pushes the ground backward → ground pushes horse forward (3rd Law). The horse's forward push > rope tension.", image: '🐴→push ground←  |  ground→🐴→rope→🛒' }),
+        () => ({ type: 'multiple-choice', question: 'A horse pulls a cart forward. Which force is responsible for the horse moving forward?', options: ['Friction from the ground on the horse (reaction to horse pushing ground)', 'The rope tension', 'The cart pulling the horse', 'Gravity on the horse'], correctAnswer: 0, explanation: "The horse pushes the ground backward → ground pushes horse forward (3rd Law). The horse's forward push > rope tension." }),
 
         // Q5: Centripetal force on level road
-        () => ({ type: 'multiple-choice', question: 'What provides centripetal force when a car turns on a flat road?', options: ['Static friction between tires and road', 'Gravity', 'Normal reaction', 'Engine torque'], correctAnswer: 0, explanation: 'Sideways static friction provides the inward (centripetal) force for circular motion.', image: '🚗→ ⭕turn  ←friction→center' }),
+        () => ({ type: 'multiple-choice', question: 'What provides centripetal force when a car turns on a flat road?', options: ['Static friction between tires and road', 'Gravity', 'Normal reaction', 'Engine torque'], correctAnswer: 0, explanation: 'Sideways static friction provides the inward (centripetal) force for circular motion.' }),
 
         // ── MEDIUM (Q6-Q10) ───────────────────────────
         // Q6: Limiting friction calculation
@@ -261,13 +261,13 @@ export const generateLawsOfMotionSkillsData = () => {
             const mu = round1(randInt(2, 7) / 10);
             const g = 10;
             const fs = round1(m * g * mu);
-            return { type: 'multiple-choice', question: `A ${m} kg block rests on a surface with μs = ${mu}. Limiting friction? (g=10)`, options: [`${fs} N`, `${fs + 10} N`, `${round1(fs / 2)} N`, `${m * g} N`], correctAnswer: 0, explanation: `fs = μs × N = μs × mg = ${mu} × ${m} × 10 = ${fs} N.`, image: `🟫${m}kg on surface: μ=${mu}  fs_max=${fs}N` };
+            return { type: 'multiple-choice', question: `A ${m} kg block rests on a surface with μs = ${mu}. Limiting friction? (g=10)`, options: [`${fs} N`, `${fs + 10} N`, `${round1(fs / 2)} N`, `${m * g} N`], correctAnswer: 0, explanation: `fs = μs × N = μs × mg = ${mu} × ${m} × 10 = ${fs} N.` };
         },
 
         // Q7: Angle of repose
         () => {
             const mu = round2(randInt(20, 70) / 100);
-            return { type: 'multiple-choice', question: `The coefficient of static friction between a block and an incline is ${mu}. The tangent of the angle of repose is:`, options: [`${mu}`, `${round2(parseFloat(mu) + 0.15)}`, `${round2(1 / parseFloat(mu))}`, `${round2(parseFloat(mu) * 2)}`], correctAnswer: 0, explanation: `At angle of repose, tan(θ) = μs = ${mu}.`, image: `  🟫\n / θ\n/____  tan(θ)=μ=${mu}` };
+            return { type: 'multiple-choice', question: `The coefficient of static friction between a block and an incline is ${mu}. The tangent of the angle of repose is:`, options: [`${mu}`, `${round2(parseFloat(mu) + 0.15)}`, `${round2(1 / parseFloat(mu))}`, `${round2(parseFloat(mu) * 2)}`], correctAnswer: 0, explanation: `At angle of repose, tan(θ) = μs = ${mu}.` };
         },
 
         // Q8: Self-adjusting friction
@@ -285,11 +285,11 @@ export const generateLawsOfMotionSkillsData = () => {
             const m = randInt(5, 20);
             const muk = round1(randInt(1, 4) / 10);
             const fk = round1(m * 10 * muk);
-            return { type: 'multiple-choice', question: `A ${m} kg block slides across a surface (μk = ${muk}). Kinetic friction? (g=10)`, options: [`${fk} N`, `${fk + 10} N`, `${m * 10} N`, `${round1(fk * 2)} N`], correctAnswer: 0, explanation: `fk = μk × mg = ${muk} × ${m} × 10 = ${fk} N.`, image: `🟫${m}kg sliding→  ←fk=${fk}N` };
+            return { type: 'multiple-choice', question: `A ${m} kg block slides across a surface (μk = ${muk}). Kinetic friction? (g=10)`, options: [`${fk} N`, `${fk + 10} N`, `${m * 10} N`, `${round1(fk * 2)} N`], correctAnswer: 0, explanation: `fk = μk × mg = ${muk} × ${m} × 10 = ${fk} N.` };
         },
 
         // Q10: Banking of roads concept
-        () => ({ type: 'multiple-choice', question: 'Banking of roads at curves is done to:', options: ['Provide centripetal force via normal force component, reducing friction dependence', 'Increase friction', 'Reduce speed of vehicles', 'Improve fuel efficiency'], correctAnswer: 0, explanation: 'On a banked road, Nsinθ provides centripetal force. Less friction is needed.', image: '  /🚗\\\n / θ  \\\n/______\\  N·sinθ → center' }),
+        () => ({ type: 'multiple-choice', question: 'Banking of roads at curves is done to:', options: ['Provide centripetal force via normal force component, reducing friction dependence', 'Increase friction', 'Reduce speed of vehicles', 'Improve fuel efficiency'], correctAnswer: 0, explanation: 'On a banked road, Nsinθ provides centripetal force. Less friction is needed.' }),
 
         // ── HARD / NEET (Q11-Q13) ─────────────────────
         // Q11: Max safe speed on flat turn (NEET)
@@ -298,7 +298,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const mu = round1(randInt(3, 7) / 10);
             const g = 10;
             const vmax = round1(Math.sqrt(mu * R * g));
-            return { type: 'multiple-choice', question: `Max speed for a car on a flat turn of radius ${R}m (μs=${mu}, g=10)?`, options: [`${vmax} m/s`, `${round1(vmax + 5)} m/s`, `${round1(vmax * 1.5)} m/s`, `${round1(vmax / 2)} m/s`], correctAnswer: 0, explanation: `v_max = √(μRg) = √(${mu}×${R}×10) = ${vmax} m/s.`, image: `🚗 on flat ⭕R=${R}m  v_max=${vmax}m/s` };
+            return { type: 'multiple-choice', question: `Max speed for a car on a flat turn of radius ${R}m (μs=${mu}, g=10)?`, options: [`${vmax} m/s`, `${round1(vmax + 5)} m/s`, `${round1(vmax * 1.5)} m/s`, `${round1(vmax / 2)} m/s`], correctAnswer: 0, explanation: `v_max = √(μRg) = √(${mu}×${R}×10) = ${vmax} m/s.` };
         },
 
         // Q12: Block on incline — component of gravity (NEET)
@@ -311,7 +311,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const cosA = cosVals[angle];
             const fPar = round1(m * 10 * sinA);
             const fPerp = round1(m * 10 * cosA);
-            return { type: 'multiple-choice', question: `A ${m} kg block is on a ${angle}° smooth incline. Force component along the incline? (g=10, sin${angle}°=${sinA})`, options: [`${fPar} N`, `${fPerp} N`, `${m * 10} N`, `${round1(fPar / 2)} N`], correctAnswer: 0, explanation: `F∥ = mgsinθ = ${m}×10×${sinA} = ${fPar} N.`, image: `  🟫\n /\n/ ${angle}° F∥=${fPar}N ↘` };
+            return { type: 'multiple-choice', question: `A ${m} kg block is on a ${angle}° smooth incline. Force component along the incline? (g=10, sin${angle}°=${sinA})`, options: [`${fPar} N`, `${fPerp} N`, `${m * 10} N`, `${round1(fPar / 2)} N`], correctAnswer: 0, explanation: `F∥ = mgsinθ = ${m}×10×${sinA} = ${fPar} N.` };
         },
 
         // Q13: Net force on rough surface — acceleration (NEET)
@@ -322,7 +322,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const fk = round1(m * 10 * muk);
             const Fnet = round1(F_app - fk);
             const a = round1(Fnet / m);
-            return { type: 'multiple-choice', question: `A ${m}kg block is pushed with ${F_app}N on a rough surface (μk=${muk}). Acceleration? (g=10)`, options: [`${a} m/s²`, `${round1(F_app / m)} m/s²`, `${round1(fk / m)} m/s²`, '0 m/s²'], correctAnswer: 0, explanation: `fk = ${muk}×${m}×10 = ${fk}N\nF_net = ${F_app} − ${fk} = ${Fnet}N\na = ${Fnet}/${m} = ${a} m/s².`, image: `→${F_app}N  🟫${m}kg  ←${fk}N(friction)  a=${a}m/s²` };
+            return { type: 'multiple-choice', question: `A ${m}kg block is pushed with ${F_app}N on a rough surface (μk=${muk}). Acceleration? (g=10)`, options: [`${a} m/s²`, `${round1(F_app / m)} m/s²`, `${round1(fk / m)} m/s²`, '0 m/s²'], correctAnswer: 0, explanation: `fk = ${muk}×${m}×10 = ${fk}N\nF_net = ${F_app} − ${fk} = ${Fnet}N\na = ${Fnet}/${m} = ${a} m/s².` };
         },
 
         // ── JEE LEVEL (Q14-Q15) ──────────────────────
@@ -334,7 +334,7 @@ export const generateLawsOfMotionSkillsData = () => {
             const tanA = tanVals[angle];
             const g = 10;
             const v = round1(Math.sqrt(R * g * tanA));
-            return { type: 'multiple-choice', question: `A road is banked at ${angle}° for a turn of radius ${R}m. Optimum speed for no friction needed? (g=10, tan${angle}°=${tanA})`, options: [`${v} m/s`, `${round1(v * 2)} m/s`, `${round1(v / 2)} m/s`, `${round1(Math.sqrt(R * g))} m/s`], correctAnswer: 0, explanation: `v = √(Rg tanθ) = √(${R}×10×${tanA}) = ${v} m/s.\nAt this speed, Nsinθ alone provides centripetal force.`, image: `⛰️ banked ${angle}°  R=${R}m\nv_opt = ${v}m/s (zero friction needed)` };
+            return { type: 'multiple-choice', question: `A road is banked at ${angle}° for a turn of radius ${R}m. Optimum speed for no friction needed? (g=10, tan${angle}°=${tanA})`, options: [`${v} m/s`, `${round1(v * 2)} m/s`, `${round1(v / 2)} m/s`, `${round1(Math.sqrt(R * g))} m/s`], correctAnswer: 0, explanation: `v = √(Rg tanθ) = √(${R}×10×${tanA}) = ${v} m/s.\nAt this speed, Nsinθ alone provides centripetal force.` };
         },
 
         // Q15: Two blocks with friction — tension in connecting rope (JEE)
@@ -351,7 +351,7 @@ export const generateLawsOfMotionSkillsData = () => {
                 return { type: 'multiple-choice', question: `Two blocks (3kg & 2kg) on a rough surface (μ=0.1) are pulled by 40N. Tension between blocks?`, options: ['14 N', '40 N', '10 N', '20 N'], correctAnswer: 0, explanation: 'a = (F − μ(m₁+m₂)g)/(m₁+m₂) = (40−5)/5 = 7 m/s².\nT = m₂(a + μg) = 2(7 + 1) = 16 N... ≈ 14 N.' };
             }
             const T = round1(m2 * (a + mu * g));
-            return { type: 'multiple-choice', question: `Two blocks (${m1}kg, ${m2}kg) on a rough surface (μ=${mu}) are pulled by ${F}N. Tension in connecting string?`, options: [`${T} N`, `${F} N`, `${round1(m2 * a)} N`, `${round1(F / 2)} N`], correctAnswer: 0, explanation: `System: a = (F − μ(m₁+m₂)g) / (m₁+m₂)\n= (${F} − ${frictionTotal}) / ${m1 + m2} = ${a} m/s².\nFor m₂: T − μm₂g = m₂a → T = m₂(a+μg) = ${T} N.`, image: `→${F}N [${m1}kg]—T—[${m2}kg]\n     friction μ=${mu}  T=${T}N` };
+            return { type: 'multiple-choice', question: `Two blocks (${m1}kg, ${m2}kg) on a rough surface (μ=${mu}) are pulled by ${F}N. Tension in connecting string?`, options: [`${T} N`, `${F} N`, `${round1(m2 * a)} N`, `${round1(F / 2)} N`], correctAnswer: 0, explanation: `System: a = (F − μ(m₁+m₂)g) / (m₁+m₂)\n= (${F} − ${frictionTotal}) / ${m1 + m2} = ${a} m/s².\nFor m₂: T − μm₂g = m₂a → T = m₂(a+μg) = ${T} N.` };
         }
     ];
 
@@ -598,8 +598,39 @@ export const generateLawsOfMotionSkillsData = () => {
     ];
 
     // Generate all questions from generators
-    const generateAll = (generators) => generators.map(gen => gen());
-
+    const generateAll = (generators) => generators.map(gen => {
+        const q = gen();
+        if (q.type === 'multiple-choice' && q.options) {
+            const seen = new Set();
+            const newOpts = [...q.options];
+            const correctIdx = q.correctAnswer;
+            if (correctIdx !== undefined && correctIdx >= 0 && correctIdx < newOpts.length) {
+                seen.add(newOpts[correctIdx]);
+            }
+            for (let i = 0; i < newOpts.length; i++) {
+                if (i === correctIdx) continue;
+                let opt = newOpts[i];
+                let attempts = 0;
+                while(seen.has(opt) && attempts < 20) {
+                    let match = String(opt).match(/^([^\d-]*)(-?[\d.]+)\s*(.*)$/);
+                    if (match) {
+                        let prefix = match[1];
+                        let val = parseFloat(match[2]);
+                        val = val === 0 ? 1 : val;
+                        val = Math.round((parseFloat(val) + (attempts+1)*2) * 10) / 10;
+                        opt = `${prefix}${val} ${match[3]}`.trim();
+                    } else {
+                        opt = `${opt} ${attempts+1}`;
+                    }
+                    attempts++;
+                }
+                seen.add(opt);
+                newOpts[i] = opt;
+            }
+            q.options = newOpts;
+        }
+        return q;
+    });
     return [
         {
             id: 'newtons-three-laws',

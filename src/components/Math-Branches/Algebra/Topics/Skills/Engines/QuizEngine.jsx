@@ -235,22 +235,27 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                                 key={oi}
                                 onClick={() => handleSelect(oi)}
                                 disabled={answered}
+                                className={`${prefix}-quiz-option`}
                                 style={{
-                                    display: 'flex', alignItems: 'center', gap: 12,
-                                    padding: '14px 16px', borderRadius: 12,
+                                    display: 'flex', alignItems: 'flex-start', gap: 12,
+                                    padding: '14px 16px', borderRadius: 16,
                                     border: `2.5px solid ${borderColor}`,
                                     background: bgColor, cursor: answered ? 'default' : 'pointer',
-                                    fontSize: 15, color: textColor, textAlign: 'left',
+                                    fontSize: 14, color: textColor, textAlign: 'left',
                                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                                     fontWeight: selected === oi ? 700 : 500,
-                                    boxShadow: selected === oi && !answered ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+                                    boxShadow: selected === oi && !answered ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
+                                    width: '100%',
+                                    minHeight: 78,
+                                    lineHeight: 1.55
                                 }}
                             >
                                 <div style={{
-                                    width: 10, height: 10, borderRadius: '50%', background: dotColor, flexShrink: 0,
-                                    transition: 'all 0.2s'
+                                    width: 8, height: 8, borderRadius: '50%', background: dotColor, flexShrink: 0,
+                                    transition: 'all 0.2s',
+                                    marginTop: 6
                                 }} />
-                                <span style={{ fontSize: '1.1rem' }}>
+                                <span style={{ display: 'block', minWidth: 0, maxWidth: '100%', fontSize: '1rem', lineHeight: 1.55, color: 'inherit' }}>
                                     <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
                                 </span>
                             </button>

@@ -726,29 +726,18 @@ export default function TheCellSkills() {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {cellSkillsData.map((skill) => (
-                                <div key={skill.id} style={{
-                                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                    background: '#fff', borderRadius: 16, padding: '24px 32px',
-                                    boxShadow: '0 4px 20px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9',
-                                    flexWrap: 'wrap', gap: '20px'
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 20, flex: '1 1 min-content' }}>
+                                <div key={skill.id} className="cell-skill-card">
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                                         <div style={{ background: `${skill.color}15`, color: skill.color, padding: '16px', borderRadius: '12px', fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{skill.icon}</div>
                                         <div>
-                                            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>{skill.title}</div>
-                                            <div style={{ fontSize: 14, color: '#64748b' }}>{skill.desc}</div>
+                                            <div className="cell-skill-title">{skill.title}</div>
+                                            <div className="cell-skill-desc">{skill.desc}</div>
                                         </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'flex-end', flex: '1 0 max-content' }}>
-                                        <button onClick={() => openMode(skill, 'learn')}
-                                            style={{ padding: '10px 20px', borderRadius: 12, background: '#f8fafc', border: '1px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8 }}
-                                        >📖 Learn</button>
-                                        <button onClick={() => openMode(skill, 'practice')}
-                                            style={{ padding: '10px 20px', borderRadius: 12, background: '#f8fafc', border: '1px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8 }}
-                                        >✏️ Practice</button>
-                                        <button onClick={() => openMode(skill, 'assess')}
-                                            style={{ padding: '10px 24px', borderRadius: 12, background: skill.color, border: 'none', color: '#fff', fontWeight: 800, cursor: 'pointer', boxShadow: `0 4px 12px ${skill.color}40`, transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 8 }}
-                                        >🏆 Assess</button>
+                                    <div className="cell-skill-actions">
+                                        <button onClick={() => openMode(skill, 'learn')} className="cell-btn cell-btn-outline">📖 Learn</button>
+                                        <button onClick={() => openMode(skill, 'practice')} className="cell-btn cell-btn-outline">✏️ Practice</button>
+                                        <button onClick={() => openMode(skill, 'assess')} className="cell-btn cell-btn-filled" style={{ '--skill-color': skill.color }}>🏆 Assess</button>
                                     </div>
                                 </div>
                             ))}

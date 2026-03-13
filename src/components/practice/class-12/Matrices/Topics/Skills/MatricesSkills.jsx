@@ -316,7 +316,7 @@ export default function MatricesSkills() {
   if (view !== "list" && skill) {
     return (
       <div
-        className="mat-skills-page"
+        className={`mat-page mat-skill-runtime ${view === "practice" ? "mat-skill-runtime--practice" : ""} ${view === "assessment" ? "mat-skill-runtime--assessment" : ""}`}
         style={{
           background: "#f8fafc",
           minHeight: "100vh",
@@ -363,7 +363,7 @@ export default function MatricesSkills() {
             </button>
           </div>
         </nav>
-        <div style={{ padding: "0 24px" }}>
+        <div className="mat-skill-runtime-body" style={{ padding: "0 24px" }}>
           {view === "learn" ? (
             <div
               className="mat-lexicon-container"

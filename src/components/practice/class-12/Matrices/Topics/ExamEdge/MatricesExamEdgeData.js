@@ -53,7 +53,9 @@ export const matricesExamEdgeData = {
             {
                 level: "Easy",
                 q: "If $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$, find $|A|$.",
-                options: ["-2", "2", "10", "4"]
+                options: ["-2", "2", "10", "4"],
+                correct: 0,
+                explanation: "For a $2 \\times 2$ matrix, $|A| = ad - bc = (1)(4) - (2)(3) = -2$."
             },
             {
                 level: "Easy",
@@ -63,7 +65,9 @@ export const matricesExamEdgeData = {
                     "$\\begin{bmatrix} 1 & 2 \\\\ 2 & 3 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 1 & 2 \\\\ 3 & 1 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 0 & 0 \\\\ 1 & 0 \\end{bmatrix}$"
-                ]
+                ],
+                correct: 1,
+                explanation: "A symmetric matrix satisfies $A^T = A$. Only $\\begin{bmatrix} 1 & 2 \\\\ 2 & 3 \\end{bmatrix}$ mirrors perfectly across the main diagonal."
             },
             {
                 level: "Medium",
@@ -73,7 +77,9 @@ export const matricesExamEdgeData = {
                     "System $AX=B$ trivially has a unique solution",
                     "$A$ is singular",
                     "$A$ is an identity matrix"
-                ]
+                ],
+                correct: 2,
+                explanation: "A zero determinant means the matrix is singular, so it is not invertible."
             },
             {
                 level: "Medium",
@@ -83,7 +89,9 @@ export const matricesExamEdgeData = {
                     "$\\text{diag}[4, 1, 9]$",
                     "$\\text{diag}[-2, -3, 6]$",
                     "$\\text{diag}[8, 9, 12]$"
-                ]
+                ],
+                correct: 0,
+                explanation: "First square $A$: $A^2 = \\text{diag}[4, 1, 9]$. Then multiply diagonal entries with $B$ to get $\\text{diag}[-4, 3, 18]$."
             }
         ],
         jee: [
@@ -95,12 +103,16 @@ export const matricesExamEdgeData = {
                     "$\\begin{bmatrix} 5 & 8 \\\\ 11 & 14 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 4 & 6 \\\\ 10 & 14 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 6 & 8 \\\\ 14 & 20 \\end{bmatrix}$"
-                ]
+                ],
+                correct: 0,
+                explanation: "Multiply $A$ by itself: $A^2 = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} = \\begin{bmatrix} 7 & 10 \\\\ 15 & 22 \\end{bmatrix}$."
             },
             {
                 level: "Easy",
                 q: "If $A = \\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$, then the trace of $A$ is",
-                options: ["5", "3", "4", "7"]
+                options: ["5", "3", "4", "7"],
+                correct: 0,
+                explanation: "The trace is the sum of the main diagonal entries: $1 + 4 = 5$."
             },
             {
                 level: "Easy",
@@ -110,32 +122,44 @@ export const matricesExamEdgeData = {
                     "$\\begin{bmatrix} 6 & 0 \\\\ 0 & 6 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 2 & 0 \\\\ 0 & 3 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 5 & 0 \\\\ 0 & 5 \\end{bmatrix}$"
-                ]
+                ],
+                correct: 0,
+                explanation: "Squaring a diagonal matrix means squaring each diagonal entry: $2^2 = 4$ and $3^2 = 9$."
             },
             {
                 level: "Medium",
                 q: "If $A = \\begin{bmatrix} 1 & 2 \\\\ 2 & 4 \\end{bmatrix}$, then $rank(A)$ is",
-                options: ["0", "1", "2", "3"]
+                options: ["0", "1", "2", "3"],
+                correct: 1,
+                explanation: "The second row is exactly twice the first row, so there is only one linearly independent row."
             },
             {
                 level: "Easy",
                 q: "If $A$ is a $2 \\times 3$ matrix and $B$ is a $3 \\times 4$ matrix, then $AB$ is",
-                options: ["$2 \\times 4$", "$3 \\times 3$", "$4 \\times 2$", "not defined"]
+                options: ["$2 \\times 4$", "$3 \\times 3$", "$4 \\times 2$", "not defined"],
+                correct: 0,
+                explanation: "Matrix multiplication uses matching inner dimensions. The product takes the outer dimensions, so $AB$ is $2 \\times 4$."
             },
             {
                 level: "Medium",
                 q: "If $A = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}$, then $A^5$ equals",
-                options: ["$I$", "$5I$", "$0$", "$A$"]
+                options: ["$I$", "$5I$", "$0$", "$2I$"],
+                correct: 0,
+                explanation: "The identity matrix stays unchanged under every positive power, so $I^5 = I$."
             },
             {
                 level: "Easy",
                 q: "If $A$ is an idempotent matrix, then",
-                options: ["$A^2 = 0$", "$A^2 = A$", "$A^2 = I$", "$A^3 = I$"]
+                options: ["$A^2 = 0$", "$A^2 = A$", "$A^2 = I$", "$A^3 = I$"],
+                correct: 1,
+                explanation: "Idempotent means the matrix reproduces itself when squared: $A^2 = A$."
             },
             {
                 level: "Medium",
                 q: "If $A = \\begin{bmatrix} 0 & 1 \\\\ 1 & 0 \\end{bmatrix}$, then $A^2$ equals",
-                options: ["$I$", "$0$", "$A$", "$2A$"]
+                options: ["$I$", "$0$", "$A$", "$2A$"],
+                correct: 0,
+                explanation: "Multiplying the swap matrix by itself swaps twice, which returns the identity matrix."
             },
             {
                 level: "Easy",
@@ -145,32 +169,44 @@ export const matricesExamEdgeData = {
                     "$\\begin{bmatrix} 4 & 3 \\\\ 2 & 1 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$",
                     "$\\begin{bmatrix} 2 & 1 \\\\ 4 & 3 \\end{bmatrix}$"
-                ]
+                ],
+                correct: 0,
+                explanation: "Transpose swaps rows and columns, so the first row becomes the first column."
             },
             {
                 level: "Easy",
                 q: "If $A$ is symmetric, then",
-                options: ["$A^T = A$", "$A^T = -A$", "$A^{-1} = A$", "$A^2 = A$"]
+                options: ["$A^T = A$", "$A^T = -A$", "$A^{-1} = A$", "$A^2 = A$"],
+                correct: 0,
+                explanation: "Symmetric matrices are exactly those equal to their transpose."
             },
             {
                 level: "Easy",
                 q: "If $A$ is skew-symmetric, then",
-                options: ["$A^T = A$", "$A^T = -A$", "$A^2 = I$", "$A = I$"]
+                options: ["$A^T = A$", "$A^T = -A$", "$A^2 = I$", "$A = I$"],
+                correct: 1,
+                explanation: "Skew-symmetric means the transpose changes the sign: $A^T = -A$."
             },
             {
                 level: "Easy",
                 q: "If $A$ is a zero matrix, then",
-                options: ["$A^2 = I$", "$A^2 = A$", "$A^2 = 0$", "$A^2 = -A$"]
+                options: ["$A^2 = I$", "$A^2 = 0$", "$A^{-1}$ exists", "$A$ is non-singular"],
+                correct: 1,
+                explanation: "Every entry remains zero after multiplication, so the square of the zero matrix is still the zero matrix."
             },
             {
                 level: "Easy",
                 q: "If $AB = BA$, matrices are called",
-                options: ["Symmetric", "Idempotent", "Commutative", "Orthogonal"]
+                options: ["Symmetric", "Idempotent", "Commutative", "Orthogonal"],
+                correct: 2,
+                explanation: "When the order does not matter in multiplication, the matrices are said to commute."
             },
             {
                 level: "Medium",
                 q: "If $A$ is invertible then",
-                options: ["$|A| = 0$", "$|A| \\neq 0$", "$A^2 = I$", "$A = 0$"]
+                options: ["$|A| = 0$", "$|A| \\neq 0$", "$A^2 = I$", "$A = 0$"],
+                correct: 1,
+                explanation: "An inverse exists exactly when the determinant is non-zero."
             },
             {
                 level: "Hard",
@@ -180,7 +216,9 @@ export const matricesExamEdgeData = {
                     "$\\begin{bmatrix} n & 1 \\\\ 0 & n \\end{bmatrix}$",
                     "$\\begin{bmatrix} 1 & 1 \\\\ 0 & n \\end{bmatrix}$",
                     "$\\begin{bmatrix} n & n \\\\ 0 & 1 \\end{bmatrix}$"
-                ]
+                ],
+                correct: 0,
+                explanation: "This Jordan block has the pattern $A^n = \\begin{bmatrix} 1 & n \\\\ 0 & 1 \\end{bmatrix}$."
             }
         ],
         jeeAdvanced: [

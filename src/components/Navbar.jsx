@@ -72,9 +72,13 @@ const Navbar = () => {
                             {userType === 'student' ? 'IDM' : 'Portal'}
                         </Link>
                     )}
-                    {isAuthenticated && userType === 'student' && (
-                        <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnosis Test</Link>
+                    <Link to="/neet" className={`nav-link-item ${isActive('/neet') ? 'active' : ''}`}>NEET</Link>
+                    {/* {isAuthenticated && (
+                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
                     )}
+                    {isAuthenticated && userType === 'student' && (
+                        <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnostic Test</Link>
+                    )} */}
                 </div>
 
                 <div className="nav-actions">
@@ -107,6 +111,9 @@ const Navbar = () => {
                         </Link>
                         <Link to="/internship" className={`mobile-dropdown-item ${isActive('/internship') ? 'active' : ''}`}>
                             Internship
+                        </Link>
+                        <Link to="/neet" className={`mobile-dropdown-item ${isActive('/neet') ? 'active' : ''}`}>
+                            NEET
                         </Link>
                         {isAuthenticated ? (
                             <>

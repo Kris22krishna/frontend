@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { generateLGScenarios, GraphMini } from './LinearGraphUtils';
+import '../../graphs.css';
 
 /**
  * LinearGraphPracticeEngine
@@ -143,7 +144,7 @@ export default function LinearGraphPracticeEngine({ color, onBack }) {
     const mq = sc.mcqs[mcqStep];
 
     return (
-        <div style={{ maxWidth: 920, margin: '0 auto' }}>
+        <div className="lg-practice-root">
             {/* Header + Timer */}
             <div style={{ marginBottom: 20 }}>
                 <div className="grph-score-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
@@ -167,63 +168,69 @@ export default function LinearGraphPracticeEngine({ color, onBack }) {
 
             {/* ── PLOT PHASE ─────────────────────────────────────────────────── */}
             {phase === 'plot' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 410px', gap: 20, alignItems: 'start' }}>
-                    <div style={{ background: '#fff', borderRadius: 20, padding: '22px 24px', boxShadow: '0 6px 20px rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.05)' }}>
-                        <h3 style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 800, color: '#0f172a' }}>{sc.title}</h3>
-                        <div style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>Select your scale, then click each point on the graph to plot it.</div>
-                        <div style={{ overflowX: 'auto', marginBottom: 18 }}>
-                            <table style={{ borderCollapse: 'collapse', fontSize: 13, width: '100%' }}>
-                                <tbody>
-                                    <tr>
-                                        <th style={{ background: `${color}15`, color, padding: '8px 12px', textAlign: 'left', border: `1px solid ${color}25`, fontWeight: 800, whiteSpace: 'nowrap', fontSize: 12 }}>{sc.xLabel}</th>
-                                        {sc.points.map((p, i) => <td key={i} style={{ background: `${color}08`, color, padding: '8px 14px', border: `1px solid ${color}20`, fontWeight: 700, textAlign: 'center' }}>{p.x}</td>)}
-                                    </tr>
-                                    <tr>
-                                        <th style={{ background: '#f8fafc', padding: '8px 12px', border: '1px solid #e2e8f0', fontWeight: 800, color: '#374151', whiteSpace: 'nowrap', textAlign: 'left', fontSize: 12 }}>{sc.yLabel}</th>
-                                        {sc.points.map((p, i) => <td key={i} style={{ background: '#fff', padding: '8px 14px', border: '1px solid #e2e8f0', textAlign: 'center', fontWeight: 700, color: '#0f172a' }}>{p.y}</td>)}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div style={{ marginBottom: 14 }}>
-                            <div style={{ fontSize: 12, fontWeight: 800, color: '#374151', marginBottom: 7 }}>X-axis: 1 unit = ?</div>
-                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                {sc.xScaleOpts.map((opt, i) => {
-                                    const isSelected = xScale === opt.v;
-                                    const valid = isSelected ? sc.points.every(p => Math.abs((p.x - sc.xMin) % opt.v) < 0.001) : null;
-                                    return (
-                                        <button key={i} onClick={() => setXScale(opt.v)}
-                                            style={{ padding: '8px 15px', borderRadius: 10, border: `2px solid ${isSelected ? (valid === false ? '#f59e0b' : color) : '#e2e8f0'}`, background: isSelected ? (valid === false ? '#fffbeb' : `${color}12`) : '#f8fafc', color: isSelected ? (valid === false ? '#b45309' : color) : '#374151', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
-                                            {isSelected ? '✓ ' : ''}{opt.label}{isSelected && valid === false ? ' ⚠️' : ''}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                            {isXScaleValid === false && <div style={{ marginTop: 5, fontSize: 11, color: '#b45309', fontWeight: 600 }}>⚠️ Some X values don't align to grid lines with this scale.</div>}
-                        </div>
-                        <div style={{ marginBottom: 16 }}>
-                            <div style={{ fontSize: 12, fontWeight: 800, color: '#374151', marginBottom: 7 }}>Y-axis: 1 unit = ?</div>
-                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                {sc.yScaleOpts.map((opt, i) => {
-                                    const isSelected = yScale === opt.v;
-                                    const valid = isSelected ? sc.points.every(p => Math.abs((p.y - sc.yMin) % opt.v) < 0.001) : null;
-                                    return (
-                                        <button key={i} onClick={() => setYScale(opt.v)}
-                                            style={{ padding: '8px 15px', borderRadius: 10, border: `2px solid ${isSelected ? (valid === false ? '#f59e0b' : color) : '#e2e8f0'}`, background: isSelected ? (valid === false ? '#fffbeb' : `${color}12`) : '#f8fafc', color: isSelected ? (valid === false ? '#b45309' : color) : '#374151', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
-                                            {isSelected ? '✓ ' : ''}{opt.label}{isSelected && valid === false ? ' ⚠️' : ''}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                            {isYScaleValid === false && <div style={{ marginTop: 5, fontSize: 11, color: '#b45309', fontWeight: 600 }}>⚠️ Some Y values don't align to grid lines with this scale.</div>}
-                        </div>
-                        {xScale && yScale
-                            ? <div style={{ background: `${color}15`, padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 800, color, display: 'inline-block' }}>Points: {placedPoints.length} / {sc.points.length}</div>
-                            : <div style={{ fontSize: 12, color: '#94a3b8', fontStyle: 'italic' }}>Select both scales to start plotting on the graph →</div>}
+                <div style={{ background: '#fff', borderRadius: 16, padding: '16px 20px', boxShadow: '0 4px 16px rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                    {/* Step badge */}
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${color}15`, padding: '3px 10px', borderRadius: 8, fontSize: 11, fontWeight: 800, color, marginBottom: 12 }}>
+                        GRAPH PLOT — Scenario {scenarioIdx + 1}
                     </div>
-                    <div>
-                        {toast && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626', padding: '7px 14px', borderRadius: 10, fontSize: 12, fontWeight: 600, marginBottom: 8 }}>{toast}</div>}
-                        <div style={{ background: '#fff', borderRadius: 16, border: '1.5px solid #e2e8f0', padding: '10px', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
+                    <div className="grph-assess-plot-layout">
+                        {/* Left: info + table + scales */}
+                        <div style={{ overflowY: 'auto' }}>
+                            <h4 style={{ margin: '0 0 2px', fontSize: 14, fontWeight: 800, color: '#0f172a' }}>{sc.title}</h4>
+                            <div style={{ fontSize: 11, color: '#64748b', marginBottom: 10 }}>Select your scale, then click each point on the graph to plot it. <span style={{ fontWeight: 700, color }}>Swipe to plot the graph.</span></div>
+                            <div style={{ overflowX: 'auto', marginBottom: 12 }}>
+                                <table style={{ borderCollapse: 'collapse', fontSize: 12, minWidth: 400 }}>
+                                    <tbody>
+                                        <tr>
+                                            <th style={{ background: `${color}15`, color, padding: '6px 10px', textAlign: 'left', border: `1px solid ${color}25`, fontWeight: 800, fontSize: 11, whiteSpace: 'nowrap' }}>{sc.xLabel}</th>
+                                            {sc.points.map((p, i) => <td key={i} style={{ background: `${color}08`, color, padding: '6px 10px', border: `1px solid ${color}20`, fontWeight: 700, textAlign: 'center' }}>{p.x}</td>)}
+                                        </tr>
+                                        <tr>
+                                            <th style={{ background: '#f8fafc', padding: '6px 10px', border: '1px solid #e2e8f0', fontWeight: 800, color: '#374151', fontSize: 11, whiteSpace: 'nowrap', textAlign: 'left' }}>{sc.yLabel}</th>
+                                            {sc.points.map((p, i) => <td key={i} style={{ background: '#fff', padding: '6px 10px', border: '1px solid #e2e8f0', textAlign: 'center', fontWeight: 700, color: '#0f172a' }}>{p.y}</td>)}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style={{ marginBottom: 10 }}>
+                                <div style={{ fontSize: 11, fontWeight: 800, color: '#374151', marginBottom: 5 }}>X-axis: 1 unit = ?</div>
+                                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                                    {sc.xScaleOpts.map((opt, i) => {
+                                        const isSelected = xScale === opt.v;
+                                        const valid = isSelected ? sc.points.every(p => Math.abs((p.x - sc.xMin) % opt.v) < 0.001) : null;
+                                        return (
+                                            <button key={i} onClick={() => setXScale(opt.v)}
+                                                style={{ padding: '5px 11px', borderRadius: 8, border: `2px solid ${isSelected ? (valid === false ? '#f59e0b' : color) : '#e2e8f0'}`, background: isSelected ? (valid === false ? '#fffbeb' : `${color}12`) : '#f8fafc', color: isSelected ? (valid === false ? '#b45309' : color) : '#374151', fontWeight: 700, fontSize: 11, cursor: 'pointer' }}>
+                                                {isSelected ? '✓ ' : ''}{opt.label}{isSelected && valid === false ? ' ⚠️' : ''}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                {isXScaleValid === false && <div style={{ marginTop: 5, fontSize: 11, color: '#b45309', fontWeight: 600 }}>⚠️ Some X values don't align to grid lines with this scale.</div>}
+                            </div>
+                            <div style={{ marginBottom: 10 }}>
+                                <div style={{ fontSize: 11, fontWeight: 800, color: '#374151', marginBottom: 5 }}>Y-axis: 1 unit = ?</div>
+                                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                                    {sc.yScaleOpts.map((opt, i) => {
+                                        const isSelected = yScale === opt.v;
+                                        const valid = isSelected ? sc.points.every(p => Math.abs((p.y - sc.yMin) % opt.v) < 0.001) : null;
+                                        return (
+                                            <button key={i} onClick={() => setYScale(opt.v)}
+                                                style={{ padding: '5px 11px', borderRadius: 8, border: `2px solid ${isSelected ? (valid === false ? '#f59e0b' : color) : '#e2e8f0'}`, background: isSelected ? (valid === false ? '#fffbeb' : `${color}12`) : '#f8fafc', color: isSelected ? (valid === false ? '#b45309' : color) : '#374151', fontWeight: 700, fontSize: 11, cursor: 'pointer' }}>
+                                                {isSelected ? '✓ ' : ''}{opt.label}{isSelected && valid === false ? ' ⚠️' : ''}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                {isYScaleValid === false && <div style={{ marginTop: 5, fontSize: 11, color: '#b45309', fontWeight: 600 }}>⚠️ Some Y values don't align to grid lines with this scale.</div>}
+                            </div>
+                            {xScale && yScale
+                                ? <div style={{ background: `${color}15`, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 800, color, display: 'inline-block' }}>Points placed: {placedPoints.length} / {sc.points.length}</div>
+                                : <div style={{ fontSize: 11, color: '#94a3b8', fontStyle: 'italic' }}>Select both scales to start plotting →</div>}
+                            {toast && <div style={{ marginTop: 8, background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626', padding: '6px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600 }}>{toast}</div>}
+                        </div>
+                        {/* Right: SVG graph */}
+                        <div style={{ background: '#f8fafc', borderRadius: 12, border: '1.5px solid #e2e8f0', padding: 6, alignSelf: 'start', overflowX: 'auto' }}>
                             <svg width={SVG_W} height={SVG_H} viewBox={`0 0 ${SVG_W} ${SVG_H}`}
                                 style={{ cursor: xScale && yScale ? 'crosshair' : 'default', display: 'block', maxWidth: '100%' }}
                                 onClick={handleSvgClick}>
@@ -260,42 +267,52 @@ export default function LinearGraphPracticeEngine({ color, onBack }) {
 
             {/* ── MCQ PHASE ─────────────────────────────────────────────────────── */}
             {phase === 'mcq' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: 20, alignItems: 'start' }}>
-                    <div style={{ background: '#fff', borderRadius: 14, padding: '14px', border: '1.5px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
-                        <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.5 }}>📊 {sc.title}</div>
-                        <GraphMini scenario={sc} xGridStep={xScale} yGridStep={yScale} color={color} />
-                        <div style={{ margin: '10px 0 0', padding: '8px 12px', background: `${color}0d`, borderRadius: 8, fontSize: 12, color: '#64748b', fontWeight: 600 }}>
-                            <span style={{ color, fontWeight: 800 }}>Equation: </span>{sc.eq}
-                        </div>
+                <div style={{ background: '#fff', borderRadius: 16, padding: '16px 20px', boxShadow: '0 4px 16px rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                    {/* Step badge */}
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${color}15`, padding: '3px 10px', borderRadius: 8, fontSize: 11, fontWeight: 800, color, marginBottom: 12 }}>
+                        QUESTION {globalStep + 1}
                     </div>
-                    <div style={{ background: '#fff', borderRadius: 20, padding: '24px 28px', boxShadow: '0 8px 24px rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.05)' }}>
-                        <div style={{ fontSize: 17, fontWeight: 600, color: '#0f172a', lineHeight: 1.6, marginBottom: 20 }}>{mq.q}</div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                            {mq.opts.map((opt, oi) => {
-                                let borderC = 'rgba(0,0,0,0.06)', bgC = '#fff', textC = '#0f172a';
-                                if (answered) {
-                                    if (oi === mq.ans) { borderC = '#059669'; bgC = 'rgba(5,150,105,0.06)'; textC = '#059669'; }
-                                    else if (oi === selected) { borderC = '#ef4444'; bgC = 'rgba(239,68,68,0.05)'; textC = '#ef4444'; }
-                                } else if (selected === oi) { borderC = color; bgC = `${color}06`; }
-                                return (
-                                    <button key={oi} onClick={() => handleMcqSelect(oi)} disabled={answered}
-                                        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px', borderRadius: 12, border: `2.5px solid ${borderC}`, background: bgC, cursor: answered ? 'default' : 'pointer', fontSize: 15, color: textC, textAlign: 'left', fontWeight: selected === oi ? 700 : 500 }}>
-                                        <div style={{ width: 9, height: 9, borderRadius: '50%', background: answered && oi === mq.ans ? '#059669' : answered && oi === selected ? '#ef4444' : borderC, flexShrink: 0 }} />
-                                        {opt}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                        {answered && (
-                            <div style={{ marginTop: 16, padding: '14px 18px', borderRadius: 12, background: 'rgba(5,150,105,0.05)', border: '1px solid rgba(5,150,105,0.12)', fontSize: 13.5, color: '#475569', lineHeight: 1.6 }}>
-                                <strong style={{ color: '#059669' }}>💡 </strong>{mq.exp}
+                    <div className="grph-assess-mcq-layout">
+                        {/* Left: mini graph */}
+                        <div className="lg-practice-minigraph" style={{ background: '#f8fafc', borderRadius: 12, border: '1.5px solid #e2e8f0', padding: '10px', alignSelf: 'start' }}>
+                            <div style={{ fontSize: 10, fontWeight: 800, color, textTransform: 'uppercase', marginBottom: 6 }}>📊 {sc.title}</div>
+                            <div style={{ overflowX: 'auto' }}>
+                                <GraphMini scenario={sc} xGridStep={xScale} yGridStep={yScale} color={color} />
                             </div>
-                        )}
-                        <div style={{ marginTop: 20 }}>
-                            <button onClick={handleNext} disabled={!answered} className="grph-btn-primary"
-                                style={{ background: color, opacity: answered ? 1 : 0.4, cursor: answered ? 'pointer' : 'not-allowed', padding: '12px 36px' }}>
-                                {scenarioIdx === scenarios.length - 1 && mcqStep === 2 ? 'See Final Score' : mcqStep < 2 ? 'Next Question →' : 'Next Graph →'}
-                            </button>
+                            <div style={{ marginTop: 6, padding: '6px 10px', background: `${color}0d`, borderRadius: 8, fontSize: 11, color: '#64748b', fontWeight: 600 }}>
+                                <span style={{ color, fontWeight: 800 }}>Eq: </span>{sc.eq}
+                            </div>
+                        </div>
+                        {/* Right: question + options + feedback + next */}
+                        <div className="lg-practice-mcqcard" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            <div style={{ fontSize: 15, fontWeight: 600, color: '#0f172a', lineHeight: 1.5 }}>{mq.q}</div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                {mq.opts.map((opt, oi) => {
+                                    let borderC = 'rgba(0,0,0,0.06)', bgC = '#fff', textC = '#0f172a';
+                                    if (answered) {
+                                        if (oi === mq.ans) { borderC = '#059669'; bgC = 'rgba(5,150,105,0.06)'; textC = '#059669'; }
+                                        else if (oi === selected) { borderC = '#ef4444'; bgC = 'rgba(239,68,68,0.05)'; textC = '#ef4444'; }
+                                    } else if (selected === oi) { borderC = color; bgC = `${color}06`; }
+                                    return (
+                                        <button key={oi} onClick={() => handleMcqSelect(oi)} disabled={answered}
+                                            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', borderRadius: 12, border: `2.5px solid ${borderC}`, background: bgC, cursor: answered ? 'default' : 'pointer', fontSize: 14, color: textC, textAlign: 'left', fontWeight: selected === oi ? 700 : 500 }}>
+                                            <div style={{ width: 9, height: 9, borderRadius: '50%', background: answered && oi === mq.ans ? '#059669' : answered && oi === selected ? '#ef4444' : borderC, flexShrink: 0 }} />
+                                            {opt}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            {answered && (
+                                <div style={{ padding: '12px 16px', borderRadius: 12, background: 'rgba(5,150,105,0.05)', border: '1px solid rgba(5,150,105,0.12)', fontSize: 13, color: '#475569', lineHeight: 1.6 }}>
+                                    <strong style={{ color: '#059669' }}>💡 </strong>{mq.exp}
+                                </div>
+                            )}
+                            <div>
+                                <button onClick={handleNext} disabled={!answered} className="grph-btn-primary"
+                                    style={{ background: color, opacity: answered ? 1 : 0.4, cursor: answered ? 'pointer' : 'not-allowed', padding: '11px 32px' }}>
+                                    {scenarioIdx === scenarios.length - 1 && mcqStep === 2 ? 'See Final Score' : mcqStep < 2 ? 'Next Question →' : 'Next Graph →'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

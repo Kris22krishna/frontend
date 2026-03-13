@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
+import DeterminantsTopNav from "../../DeterminantsTopNav";
 
 const cards5W1H = [
   {
@@ -142,7 +143,8 @@ export default function DeterminantsIntro5W1H() {
 
   return (
     <div className="det-intro-page">
-      <nav className="det-intro-nav">
+      <DeterminantsTopNav active="introduction" />
+      {false && <nav className="det-intro-nav">
         <button
           className="det-intro-nav-back"
           onClick={() => navigate("/senior/grade/12/determinants")}
@@ -173,7 +175,7 @@ export default function DeterminantsIntro5W1H() {
             🎯 Skills
           </button>
         </div>
-      </nav>
+      </nav>}
 
       <div className="det-intro-hero" style={{ padding: "16px 24px 20px" }}>
         <div className="det-intro-hero-deco det-intro-hero-deco-a" />

@@ -17,6 +17,13 @@ export default function StructureOfAtomExamEdge() {
                 <button className="atom-nav-back" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom')}>
                     ← Back to Dashboard
                 </button>
+                <div className="atom-nav-links">
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/connectomics')}>🧠 Connectomics</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/introduction')}>🌟 Intro</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/terminology')}>📖 Terminology</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/skills')}>🎯 Skills</button>
+                    <button className="atom-nav-link active" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/exam-edge')}>⚡ Exam Edge</button>
+                </div>
             </nav>
 
             <div className="atom-hero" style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)', padding: '60px 24px', textAlign: 'center', marginBottom: '40px' }}>
@@ -198,6 +205,11 @@ export default function StructureOfAtomExamEdge() {
                     </div>
                 </div>
 
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                    <button onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom')} style={{ padding: '12px 32px', fontSize: 16, background: '#10b981', color: '#fff', border: 'none', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 14px rgba(16,185,129,0.4)', transition: 'all 0.2s' }}>
+                        Finish Topic <span style={{ color: '#fff' }}>✓</span>
+                    </button>
+                </div>
             </main>
         </div>
     );

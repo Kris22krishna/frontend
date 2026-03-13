@@ -16,9 +16,11 @@ export default function LawsOfMotionExamEdge() {
                     ← Back to Dashboard
                 </button>
                 <div className="lom-nav-links">
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/connectomics')}>🧠 Connectomics</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/introduction')}>🌟 Intro</button>
                     <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/terminology')}>📖 Terminology</button>
                     <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/skills')}>🎯 Skills</button>
-                    <button className="lom-nav-link active">🏆 Exam Edge</button>
+                    <button className="lom-nav-link active" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/exam-edge')}>⚡ Exam Edge</button>
                 </div>
             </nav>
 
@@ -172,6 +174,12 @@ export default function LawsOfMotionExamEdge() {
                             In Laws of Motion, <strong style={{ color: '#fff' }}>~60% questions are conceptual</strong> — about inertia types, action-reaction, centripetal vs centrifugal. Spend time mastering these rather than complex numericals. For numericals: always draw a free body diagram, identify all forces, resolve components, then apply F = ma. With a clean FBD, most problems become straightforward.
                         </p>
                     </div>
+                </div>
+
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                    <button onClick={() => navigate('/senior/grade/11/physics/laws-of-motion')} style={{ padding: '12px 32px', fontSize: 16, background: '#10b981', color: '#fff', border: 'none', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 14px rgba(16,185,129,0.4)', transition: 'all 0.2s' }}>
+                        Finish Topic <span style={{ color: '#fff' }}>✓</span>
+                    </button>
                 </div>
             </div>
         </div>

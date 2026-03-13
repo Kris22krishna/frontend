@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Matrices.css";
+import "../../MatricesPages.css";
 import MathRenderer from "../../../../../MathRenderer";
 
 // ─── DATA SECTIONS ─────────────────────────────────────────────────────────
@@ -388,6 +389,9 @@ export default function MatricesTerminology() {
                 .mat-term-btn-mini.active { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 2; }
                 .mat-term-btn-mini.active::before { opacity: 0; }
                 .mat-term-btn-mini > * { position: relative; z-index: 1; }
+                .mat-tab { display: flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 100px; border: 2px solid #e2e8f0; background: #f8fafc; color: #64748b; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.25s ease; }
+                .mat-tab:hover { border-color: #0891b2; color: #0891b2; background: #f0fdfa; transform: translateY(-2px); }
+                .mat-tab.active { background: linear-gradient(135deg, #0891b2, #06b6d4); border-color: transparent; color: #fff !important; box-shadow: 0 4px 16px rgba(8, 145, 178, 0.35); transform: translateY(-2px); }
                 @media (max-width: 1024px) { .mat-lexicon-grid { grid-template-columns: 1fr !important; } .mat-selector-container { max-width: 600px; margin: 0 auto 16px; } }
             `}</style>
 
@@ -489,19 +493,19 @@ export default function MatricesTerminology() {
           }}
         >
           <button
-            className={`mat-vocab-tab ${activeTab === "terms" ? "active" : ""}`}
+            className={`mat-tab ${activeTab === "terms" ? "active" : ""}`}
             onClick={() => setActiveTab("terms")}
           >
             📚 Terminology
           </button>
           <button
-            className={`mat-vocab-tab ${activeTab === "rules" ? "active" : ""}`}
+            className={`mat-tab ${activeTab === "rules" ? "active" : ""}`}
             onClick={() => setActiveTab("rules")}
           >
             📏 6 Golden Rules
           </button>
           <button
-            className={`mat-vocab-tab ${activeTab === "quiz" ? "active" : ""}`}
+            className={`mat-tab ${activeTab === "quiz" ? "active" : ""}`}
             onClick={() => setActiveTab("quiz")}
           >
             🧪 Test Prep
