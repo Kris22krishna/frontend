@@ -14,17 +14,21 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
+import { getFirestore } from "firebase/firestore";
+
 // Initialize Firebase
 let app;
 let auth = null;
 let googleProvider = null;
 let analytics = null;
+let db = null;
 
 try {
     if (firebaseConfig.projectId) {
         app = initializeApp(firebaseConfig);
         analytics = getAnalytics(app);
         auth = getAuth(app);
+        db = getFirestore(app);
         googleProvider = new GoogleAuthProvider();
     } else {
         console.warn("Firebase projectId is missing. Google Login will be disabled.");
@@ -33,4 +37,4 @@ try {
     console.error("Firebase initialization failed:", error);
 }
 
-export { auth, googleProvider, signInWithPopup, analytics };
+export { auth, googleProvider, signInWithPopup, analytics, db };

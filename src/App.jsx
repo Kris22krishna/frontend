@@ -26,6 +26,7 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import AlgebraMasteryTest from './components/IDM/assessment_idm/AlgebraMasteryTest';
 import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
 import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
 import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
@@ -706,6 +707,7 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="algebra-mastery" element={<ProtectedRoute redirectTo="/login"><AlgebraMasteryTest /></ProtectedRoute>} />
           {/* The Fish Tale Topic Pages */}
           <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
           <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />

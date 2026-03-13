@@ -1,0 +1,323 @@
+.alg-mastery-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    width: 100%;
+    min-height: 100vh;
+    background: #f8fafc !important;
+    /* Force light background */
+    /* Refined light background */
+    color: #1e293b !important;
+    /* Force dark text */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    box-sizing: border-box;
+}
+
+.alg-mastery-main {
+    flex: 1;
+    min-width: 0;
+    max-width: 800px;
+}
+
+/* Palette Sidebar */
+.alg-mastery-palette-sidebar {
+    width: 320px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.alg-mastery-palette-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.alg-mastery-palette-item {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    border: none;
+    background: #f1f5f9;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alg-mastery-palette-item.answered {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.alg-mastery-palette-item.current {
+    box-shadow: 0 0 0 3px #fff, 0 0 0 5px #4f46e5;
+}
+
+/* Mobile Specific */
+.alg-mastery-mobile-toggle {
+    display: none;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+    z-index: 100;
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .alg-mastery-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .alg-mastery-palette-sidebar {
+        display: none;
+    }
+
+    .alg-mastery-palette-sidebar.mobile-open {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 24px 24px 0 0;
+        z-index: 1000;
+        height: auto;
+        max-height: 80vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .alg-mastery-mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .alg-mastery-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Common Components */
+.alg-mastery-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.alg-mastery-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* Timer Highlights */
+.timer-display {
+    padding: 8px 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    font-size: 1.1rem !important;
+    font-weight: 700;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.timer-warning {
+    background: #fffbeb;
+    border-color: #f59e0b;
+    color: #f59e0b !important;
+    font-weight: 900 !important;
+}
+
+.timer-critical {
+    background: #fef2f2;
+    border-color: #ef4444;
+    color: #ef4444 !important;
+    font-weight: 900 !important;
+    animation: pulse-red 1s infinite alternate;
+}
+
+@keyframes pulse-red {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+.alg-mastery-btn-back {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.alg-mastery-btn-primary {
+    background: #4f46e5;
+    color: #fff;
+}
+
+/* Fraction Input Styles */
+.fraction-input-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: middle;
+    gap: 8px;
+}
+
+.fraction-line {
+    width: 100%;
+    height: 2px;
+    background: #64748b;
+    border-radius: 1px;
+}
+
+.fraction-box {
+    width: 80px;
+    height: 50px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.2s;
+    color: #1e293b;
+}
+
+.fraction-box:focus {
+    border-color: #4f46e5;
+    background: #4f46e508;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.fraction-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 2px dashed #e2e8f0;
+}
+
+/* Violation & Fullscreen Styles */
+.vs-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.vs-modal {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 32px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.vs-icon {
+    width: 80px;
+    height: 80px;
+    background: #fef2f2;
+    color: #ef4444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.vs-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.vs-text {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.vs-count {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background: #f1f5f9;
+    border-radius: 99px;
+    font-weight: 700;
+    color: #ef4444;
+    margin-bottom: 1.5rem;
+}
+
+.fullscreen-promo {
+    background: #4f46e5;
+    color: #fff;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fullscreen-promo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+}

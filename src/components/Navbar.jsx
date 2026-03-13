@@ -60,7 +60,7 @@ const Navbar = () => {
             <div className="navbar-content">
                 <Link to="/" className="logo">
                     {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
-                    <span>Skill100.ai</span>
+                    <span>{userType === 'student' ? 'IDM' : 'Skill100.ai'}</span>
                 </Link>
 
                 <div className="nav-center hidden-mobile">
@@ -68,7 +68,9 @@ const Navbar = () => {
                     <Link to="/rapid-math" className={`nav-link-item ${isActive('/rapid-math') ? 'active' : ''}`}>Rapid Math</Link>
                     <Link to="/internship" className={`nav-link-item ${isActive('/internship') ? 'active' : ''}`}>Internship</Link>
                     {isAuthenticated && (
-                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
+                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>
+                            {userType === 'student' ? 'IDM' : 'Portal'}
+                        </Link>
                     )}
                     {isAuthenticated && userType === 'student' && (
                         <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnosis Test</Link>
@@ -108,7 +110,9 @@ const Navbar = () => {
                         </Link>
                         {isAuthenticated ? (
                             <>
-                                <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">Portal</Link>
+                                <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">
+                                    {userType === 'student' ? 'IDM' : 'Portal'}
+                                </Link>
                                 {userType === 'student' && (
                                     <Link to="/diagnosis-test" className={`mobile-dropdown-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
                                         Diagnosis Test
