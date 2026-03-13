@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   BadgeCheck,
@@ -10,11 +9,12 @@ import {
   Target,
   Trophy,
 } from "lucide-react";
-import { matricesExamEdgeData as data } from "./MatricesExamEdgeData";
+import "../../Determinants.css";
+import MathRenderer from "../../../../../MathRenderer";
+import DeterminantsTopNav from "../../DeterminantsTopNav";
 import InteractiveExamQuestionCard from "../../../shared/InteractiveExamQuestionCard";
 import { pickQuestionDeskItems } from "../../../shared/examDeskUtils";
-import "../../MatricesPages.css";
-import MathRenderer from "../../../../../MathRenderer";
+import { determinantsExamEdgeData as data } from "./DeterminantsExamEdgeData";
 
 const EXAM_TABS = [
   { id: "kcet", name: "KCET", color: "#0d9488", icon: BadgeCheck },
@@ -22,8 +22,7 @@ const EXAM_TABS = [
   { id: "jeeAdvanced", name: "JEE Advanced", color: "#ef4444", icon: Brain },
 ];
 
-export default function MatricesExamEdge() {
-  const navigate = useNavigate();
+export default function DeterminantsExamEdge() {
   const [activeTab, setActiveTab] = useState("kcet");
   const [questionSeed, setQuestionSeed] = useState(1);
 
@@ -43,109 +42,18 @@ export default function MatricesExamEdge() {
   }, [activeTab]);
 
   return (
-    <div className="mat-page">
-      <nav className="mat-nav">
-        <button
-          className="mat-nav-back"
-          onClick={() => navigate("/senior/grade/12/matrices")}
-        >
-          ← Back to Matrices
-        </button>
+    <div className="det-page">
+      <DeterminantsTopNav active="exam-edge" />
 
-        <div className="sets-nav-links" style={{ display: "flex", gap: "8px" }}>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/introduction")}
-          >
-            🌟 Introduction
-          </button>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/terminology")}
-          >
-            📖 Terminology
-          </button>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/skills")}
-          >
-            🎯 Skills
-          </button>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
-          >
-            🌐 Connectomics
-          </button>
-          <button
-            className="sets-nav-link active"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "linear-gradient(135deg, #1e1b4b, #312e81)",
-              color: "#fff",
-              border: "none",
-              boxShadow: "0 4px 14px rgba(30, 27, 75, 0.3)",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
-          >
-            ⚔️ Exam Edge
-          </button>
-        </div>
-      </nav>
-
-      <div className="mat-intro-hero">
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-a" />
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-b" />
-        <div className="mat-intro-hero-inner">
-          <h1 className="mat-intro-hero-title">
-            Matrices <span className="mat-intro-hero-highlight">Exam Edge</span>
+      <div className="det-intro-hero">
+        <div className="det-intro-hero-deco det-intro-hero-deco-a" />
+        <div className="det-intro-hero-deco det-intro-hero-deco-b" />
+        <div className="det-intro-hero-inner">
+          <h1 className="det-intro-hero-title">
+            Determinants <span className="det-intro-hero-highlight">Exam Edge</span>
           </h1>
-          <p className="mat-intro-hero-sub">
-            Strategic insights and high-weightage topics for competitive exams.
+          <p className="det-intro-hero-sub">
+            High-yield topics, exam patterns, and fast revision support for determinant-heavy questions.
           </p>
         </div>
       </div>
@@ -177,10 +85,10 @@ export default function MatricesExamEdge() {
                   color: isActive ? tab.color : "#64748b",
                   fontWeight: 800,
                   cursor: "pointer",
-                  transition: "all 0.2s ease",
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
+                  transition: "all 0.2s ease",
                 }}
               >
                 <Icon size={18} />
@@ -278,19 +186,13 @@ export default function MatricesExamEdge() {
                   lineHeight: 1.6,
                 }}
               >
-                {currentStrategy ? (
-                  <ul style={{ margin: 0, paddingLeft: 20 }}>
-                    {currentStrategy.points.map((point) => (
-                      <li key={point} style={{ marginBottom: 8 }}>
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p style={{ margin: 0 }}>
-                    Combine JEE Main and Advanced strategies for comprehensive preparation.
-                  </p>
-                )}
+                <ul style={{ margin: 0, paddingLeft: 20 }}>
+                  {(currentStrategy?.points || []).map((point) => (
+                    <li key={point} style={{ marginBottom: 8 }}>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 

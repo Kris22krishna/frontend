@@ -1,117 +1,24 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { AlertTriangle, ArrowRight, Share2 } from "lucide-react";
-import { matricesConnectomicsData as data } from "./MatricesConnectomicsData";
-import "../../MatricesPages.css";
+import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
+import DeterminantsTopNav from "../../DeterminantsTopNav";
+import { determinantsConnectomicsData as data } from "./DeterminantsConnectomicsData";
 
-export default function MatricesConnectomics() {
-  const navigate = useNavigate();
-
+export default function DeterminantsConnectomics() {
   return (
-    <div className="mat-page">
-      <nav className="mat-nav">
-        <button
-          className="mat-nav-back"
-          onClick={() => navigate("/senior/grade/12/matrices")}
-        >
-          ← Back to Matrices
-        </button>
+    <div className="det-page">
+      <DeterminantsTopNav active="connectomics" />
 
-        <div className="sets-nav-links" style={{ display: "flex", gap: "8px" }}>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/introduction")}
-          >
-            🌟 Introduction
-          </button>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/terminology")}
-          >
-            📖 Terminology
-          </button>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/skills")}
-          >
-            🎯 Skills
-          </button>
-          <button
-            className="sets-nav-link active"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "linear-gradient(135deg, #1e1b4b, #312e81)",
-              color: "#fff",
-              border: "none",
-              boxShadow: "0 4px 14px rgba(30, 27, 75, 0.3)",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/connectomics")}
-          >
-            🌐 Connectomics
-          </button>
-          <button
-            className="sets-nav-link"
-            style={{
-              padding: "8px 18px",
-              borderRadius: "100px",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
-              background: "#f8fafc",
-              color: "#64748b",
-              border: "1.5px solid #e2e8f0",
-            }}
-            onClick={() => navigate("/senior/grade/12/matrices/exam-edge")}
-          >
-            ⚔️ Exam Edge
-          </button>
-        </div>
-      </nav>
-
-      <div className="mat-intro-hero">
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-a" />
-        <div className="mat-intro-hero-deco mat-intro-hero-deco-b" />
-        <div className="mat-intro-hero-inner">
-          <h1 className="mat-intro-hero-title">
-            Matrices <span className="mat-intro-hero-highlight">Connectomics</span>
+      <div className="det-intro-hero">
+        <div className="det-intro-hero-deco det-intro-hero-deco-a" />
+        <div className="det-intro-hero-deco det-intro-hero-deco-b" />
+        <div className="det-intro-hero-inner">
+          <h1 className="det-intro-hero-title">
+            Determinants <span className="det-intro-hero-highlight">Connectomics</span>
           </h1>
-          <p className="mat-intro-hero-sub">
-            Discover the hidden threads linking Matrices to the entire world of science.
+          <p className="det-intro-hero-sub">
+            See how determinants connect matrices, geometry, transformations, and system solving.
           </p>
         </div>
       </div>
@@ -127,7 +34,7 @@ export default function MatricesConnectomics() {
             color: "#1e1b4b",
           }}
         >
-          The Web of Mathematics
+          The Web of Determinants
         </h2>
 
         <div
@@ -141,7 +48,6 @@ export default function MatricesConnectomics() {
           {data.conceptMap.links.map((link, index) => {
             const fromNode = data.conceptMap.nodes.find((node) => node.id === link.from);
             const toNode = data.conceptMap.nodes.find((node) => node.id === link.to);
-
             if (!fromNode || !toNode) return null;
 
             return (
@@ -167,7 +73,6 @@ export default function MatricesConnectomics() {
                     background: fromNode.color,
                   }}
                 />
-
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                   <div style={{ fontSize: 24 }}>{fromNode.icon}</div>
                   <div
@@ -183,7 +88,6 @@ export default function MatricesConnectomics() {
                     Connection {index + 1}
                   </div>
                 </div>
-
                 <div
                   style={{
                     display: "flex",
@@ -197,7 +101,6 @@ export default function MatricesConnectomics() {
                   <ArrowRight size={16} color="#94a3b8" />
                   <span style={{ fontWeight: 800, color: fromNode.color }}>{toNode.label}</span>
                 </div>
-
                 <p style={{ margin: 0, fontSize: 14, color: "#64748b", lineHeight: 1.6 }}>
                   <MathRenderer text={link.tooltip} />
                 </p>
@@ -354,8 +257,8 @@ export default function MatricesConnectomics() {
             Infinite Connections
           </h3>
           <p style={{ maxWidth: 640, margin: 0, color: "#64748b", lineHeight: 1.7 }}>
-            Matrices are not just a chapter. They are the computational backbone of computer
-            graphics, machine learning, data science, and quantum mechanics.
+            Determinants are not isolated computations. They sit at the center of invertibility,
+            geometry, transformations, and system solving.
           </p>
         </div>
       </main>

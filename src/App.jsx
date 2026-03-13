@@ -490,6 +490,8 @@ import DeterminantsHub from './components/practice/class-12/Determinants/Determi
 import DeterminantsIntro5W1H from './components/practice/class-12/Determinants/Topics/5W1H/DeterminantsIntro5W1H';
 import DeterminantsTerminology from './components/practice/class-12/Determinants/Topics/Terminology/DeterminantsTerminology';
 import DeterminantsSkills from './components/practice/class-12/Determinants/Topics/Skills/DeterminantsSkills';
+import DeterminantsConnectomics from './components/practice/class-12/Determinants/Topics/Connectomics/DeterminantsConnectomics';
+import DeterminantsExamEdge from './components/practice/class-12/Determinants/Topics/ExamEdge/DeterminantsExamEdge';
 import DeterminantsEasyTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsEasyTest';
 import DeterminantsMediumTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsMediumTest';
 import DeterminantsHardTest from './components/practice/class-12/Determinants/DeepDive/Tests/DeterminantsHardTest';
@@ -499,7 +501,8 @@ import RelationsHub from './components/practice/class-12/Relations/Relations';
 import RelationsIntro5W1H from './components/practice/class-12/Relations/Topics/5W1H/RelationsIntro5W1H';
 import RelationsTerminology from './components/practice/class-12/Relations/Topics/Terminology/RelationsTerminology';
 import RelationsSkills from './components/practice/class-12/Relations/Topics/Skills/RelationsSkills';
-import RelationsExams from './components/practice/class-12/Relations/Topics/Exams/RelationsExams';
+import RelationsConnectomics from './components/practice/class-12/Relations/Topics/Connectomics/RelationsConnectomics';
+import RelationsExamEdge from './components/practice/class-12/Relations/Topics/ExamEdge/RelationsExamEdge';
 
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
@@ -828,6 +831,8 @@ function App() {
           <Route path="senior/grade/12/determinants/introduction" element={<ProtectedRoute redirectTo="/login"><DeterminantsIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/terminology" element={<ProtectedRoute redirectTo="/login"><DeterminantsTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/skills" element={<ProtectedRoute redirectTo="/login"><DeterminantsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/connectomics" element={<ProtectedRoute redirectTo="/login"><DeterminantsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/determinants/exam-edge" element={<ProtectedRoute redirectTo="/login"><DeterminantsExamEdge /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DeterminantsEasyTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DeterminantsMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/12/determinants/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DeterminantsHardTest /></ProtectedRoute>} />
@@ -837,7 +842,8 @@ function App() {
           <Route path="senior/grade/12/relations/introduction" element={<ProtectedRoute redirectTo="/login"><RelationsIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/12/relations/terminology" element={<ProtectedRoute redirectTo="/login"><RelationsTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/12/relations/skills" element={<ProtectedRoute redirectTo="/login"><RelationsSkills /></ProtectedRoute>} />
-          <Route path="senior/grade/12/relations/exams" element={<ProtectedRoute redirectTo="/login"><RelationsExams /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/connectomics" element={<ProtectedRoute redirectTo="/login"><RelationsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/relations/exam-edge" element={<ProtectedRoute redirectTo="/login"><RelationsExamEdge /></ProtectedRoute>} />
 
           {/* Class 7: Integers */}
           <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />

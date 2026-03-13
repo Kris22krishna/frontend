@@ -1,175 +1,152 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpenText,
+  ChevronRight,
+  Network,
+  Sparkles,
+  Target,
+  Trophy,
+} from "lucide-react";
 import "./Relations.css";
 
 const MODULES = [
-    {
-        id: "introduction",
-        path: "/senior/grade/12/relations/introduction",
-        label: "Introduction",
-        emoji: "🌟",
-        tagline: "5W1H Exploration",
-        desc: "6 Big Questions about Relations — What, Why, Who, When, Where and How.",
-        gradFrom: "#0891b2",
-        gradTo: "#06b6d4",
-        shadow: "rgba(6,182,212,0.4)",
-    },
-    {
-        id: "terminology",
-        path: "/senior/grade/12/relations/terminology",
-        label: "Terminology",
-        emoji: "📖",
-        tagline: "Key Terms · Rules",
-        desc: "Master the language of Relations — reflexive, symmetric, transitive & equivalence.",
-        gradFrom: "#7c3aed",
-        gradTo: "#a855f7",
-        shadow: "rgba(168,85,247,0.4)",
-    },
-    {
-        id: "skills",
-        path: "/senior/grade/12/relations/skills",
-        label: "Skills",
-        emoji: "🎯",
-        tagline: "Practice & Assessment",
-        desc: "Core skills, practice questions and assessment questions for each topic.",
-        gradFrom: "#0369a1",
-        gradTo: "#3b82f6",
-        shadow: "rgba(59,130,246,0.4)",
-    },
-    {
-        id: "exams",
-        path: "/senior/grade/12/relations/exams",
-        label: "Chapter Tests",
-        emoji: "📝",
-        tagline: "Exam Preparation",
-        desc: "Take full chapter tests based on KCET, JEE Main, and Previous Year patterns.",
-        gradFrom: "#ef4444",
-        gradTo: "#f87171",
-        shadow: "rgba(239,68,68,0.4)",
-    },
+  {
+    id: "introduction",
+    path: "/senior/grade/12/relations/introduction",
+    label: "Introduction",
+    icon: Sparkles,
+    tagline: "5W1H Exploration",
+    desc: "6 big questions about Relations - what, why, who, when, where and how.",
+    color: "#0891b2",
+  },
+  {
+    id: "terminology",
+    path: "/senior/grade/12/relations/terminology",
+    label: "Terminology",
+    icon: BookOpenText,
+    tagline: "Key Terms and Rules",
+    desc: "Master the language of relations - domain, range, properties, and equivalence.",
+    color: "#7c3aed",
+  },
+  {
+    id: "skills",
+    path: "/senior/grade/12/relations/skills",
+    label: "Skills",
+    icon: Target,
+    tagline: "Practice and Assessment",
+    desc: "Targeted skill builders for Cartesian products, counting, domain-range, and proofs.",
+    color: "#0369a1",
+  },
+  {
+    id: "connectomics",
+    path: "/senior/grade/12/relations/connectomics",
+    label: "Connectomics",
+    icon: Network,
+    tagline: "Big Picture",
+    desc: "See how relations connect to functions, graphs, databases, and real-world systems.",
+    color: "#d97706",
+  },
+  {
+    id: "exam-edge",
+    path: "/senior/grade/12/relations/exam-edge",
+    label: "Exam Edge",
+    icon: Trophy,
+    tagline: "Test Ready",
+    desc: "Exam patterns, high-yield ideas, and question desk practice for Relations.",
+    color: "#ef4444",
+  },
 ];
 
 const STATS = [
-    { val: "6", label: "Big Questions", color: "#0891b2" },
-    { val: "10", label: "Key Terms", color: "#7c3aed" },
-    { val: "4", label: "Properties", color: "#059669" },
-    { val: "5", label: "Skills", color: "#0369a1" },
-    { val: "50+", label: "Practice Qs", color: "#b45309" },
+  { label: "Core Topics", num: "4" },
+  { label: "Practice Problems", num: "4" },
+  { label: "Chapter Links", num: "5" },
+  { label: "Mastery", num: "0%" },
 ];
 
 export default function Relations() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <div className="rel-fullpage" style={{ position: "relative" }}>
-            {/* Back Button */}
-            <button
-                onClick={() => navigate("/senior/grade/12")}
-                style={{
-                    position: "absolute",
-                    top: "24px",
-                    left: "24px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    background: "rgba(255, 255, 255, 0.9)",
-                    color: "#1E293B",
-                    border: "1px solid #E2E8F0",
-                    padding: "8px 16px",
-                    borderRadius: "12px",
-                    fontWeight: "600",
-                    fontSize: "0.9rem",
-                    cursor: "pointer",
-                    zIndex: 50,
-                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                    backdropFilter: "blur(12px)",
-                    transition: "all 0.2s ease"
-                }}
-                onMouseOver={(e) => {
-                    e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.transform = "translateY(-1px)";
-                    e.currentTarget.style.boxShadow = "0 6px 8px -1px rgba(0, 0, 0, 0.15)";
-                }}
-                onMouseOut={(e) => {
-                    e.currentTarget.style.background = "rgba(255, 255, 255, 0.9)";
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
-                }}
-            >
-                <ArrowLeft size={18} /> Back to Grade 12
-            </button>
+  React.useEffect(() => {
+    const footer = document.querySelector(".main-footer");
+    if (footer) footer.style.display = "none";
+    return () => {
+      if (footer) footer.style.display = "block";
+    };
+  }, []);
 
-            {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
-            <div className="rel-left">
-                <div className="rel-deco rel-deco-a" />
-                <div className="rel-deco rel-deco-b" />
-                <div className="rel-deco rel-deco-c" />
+  return (
+    <div className="rel-fullpage">
+      <div className="rel-left">
+        <div className="rel-deco rel-deco-a" />
+        <div className="rel-deco rel-deco-b" />
+        <div className="rel-deco rel-deco-c" />
 
-                <div className="rel-left-content">
-                    <h1 className="rel-main-title">
-                        Master
-                        <br />
-                        <span className="rel-title-accent">Relations</span>
-                    </h1>
+        <div className="rel-left-content">
+          <button className="rel-back-link" onClick={() => navigate("/senior/grade/12")}>
+            <ArrowLeft size={16} />
+            <span>Grade 12</span>
+          </button>
 
-                    <p className="rel-main-sub">
-                        From Cartesian products to Equivalence Classes —
-                        learn Relations the way they were meant to be taught.
-                    </p>
+          <h1 className="rel-main-title">
+            Master
+            <br />
+            <span className="rel-title-accent">Relations</span>
+          </h1>
 
-                    <div className="rel-stats-grid">
-                        {STATS.map((s, i) => (
-                            <div className="rel-stat" key={i}>
-                                <span className="rel-stat-num" style={{ color: s.color }}>
-                                    {s.val}
-                                </span>
-                                <span className="rel-stat-lbl">{s.label}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+          <p className="rel-main-sub">
+            From ordered pairs to equivalence classes and functions, learn Relations with the
+            same clear flow as the strongest chapters.
+          </p>
 
-            {/* ══ RIGHT PANEL — Topic Cards ═══════════════════ */}
-            <div className="rel-right">
-                <p className="rel-right-eyebrow">Choose a topic to explore</p>
-                <div className="rel-cards-col">
-                    {MODULES.map((mod) => (
-                        <button
-                            key={mod.id}
-                            className="rel-card-btn"
-                            onClick={() => navigate(mod.path)}
-                        >
-                            <div
-                                className="rel-card-strip"
-                                style={{
-                                    background: `linear-gradient(180deg, ${mod.gradFrom}, ${mod.gradTo})`,
-                                }}
-                            />
-                            <div
-                                className="rel-card-icon"
-                                style={{
-                                    background: `linear-gradient(135deg, ${mod.gradFrom}, ${mod.gradTo})`,
-                                    boxShadow: `0 6px 20px ${mod.shadow}`,
-                                }}
-                            >
-                                {mod.emoji}
-                            </div>
-                            <div className="rel-card-text">
-                                <div className="rel-card-label" style={{ color: mod.gradFrom }}>
-                                    {mod.label}
-                                </div>
-                                <div className="rel-card-tagline">{mod.tagline}</div>
-                                <div className="rel-card-desc">{mod.desc}</div>
-                            </div>
-                            <div className="rel-card-chevron" style={{ color: mod.gradFrom }}>
-                                ›
-                            </div>
-                        </button>
-                    ))}
-                </div>
-            </div>
+          <div className="rel-stats-row">
+            {STATS.map((stat) => (
+              <div key={stat.label} className="rel-stat-chip">
+                <span className="rel-stat-chip-val">{stat.num}</span>
+                <span className="rel-stat-chip-lbl">{stat.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
-    );
+      </div>
+
+      <div className="rel-right">
+        <div className="rel-right-inner">
+          <div className="rel-right-eyebrow">CHOOSE YOUR PATH</div>
+
+          <div className="rel-cards-col">
+            {MODULES.map((mod) => {
+              const Icon = mod.icon;
+
+              return (
+                <button
+                  key={mod.id}
+                  className="rel-module-card"
+                  onClick={() => navigate(mod.path)}
+                >
+                  <div className="rel-module-strip" style={{ background: mod.color }} />
+                  <div
+                    className="rel-module-icon"
+                    style={{ background: `${mod.color}15`, color: mod.color }}
+                  >
+                    <Icon size={24} />
+                  </div>
+                  <div className="rel-module-text">
+                    <div className="rel-module-tagline">{mod.tagline}</div>
+                    <div className="rel-module-label">{mod.label}</div>
+                    <div className="rel-module-desc">{mod.desc}</div>
+                  </div>
+                  <div className="rel-module-chevron" style={{ color: mod.color }}>
+                    <ChevronRight size={32} />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
