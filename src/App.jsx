@@ -150,6 +150,7 @@ import AdminSystemHealthPage from './pages/dashboards/admin/pages/SystemHealthPa
 import AdminActivityLogPage from './pages/dashboards/admin/pages/ActivityLogPage';
 import AdminSettingsPage from './pages/dashboards/admin/pages/SettingsPage';
 import AdminPracticeResultsPage from './pages/dashboards/admin/pages/PracticeResultsPage';
+import AdminDiagnosisResultsPage from './pages/dashboards/admin/pages/DiagnosisResultsPage';
 
 import UploaderDashboard from './pages/uploader/UploaderDashboard';
 import AssessmentUploaderLogin from './pages/AssessmentUploaderLogin';
@@ -662,7 +663,7 @@ function App() {
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
-          
+
           {/* Class 11 Biology */}
           <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
           <Route path="senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
@@ -1719,6 +1720,7 @@ function App() {
           <Route path="generated-questions" element={<AdminGeneratedQuestionsPage />} />
           {/* Monitoring */}
           <Route path="practice-results" element={<AdminPracticeResultsPage />} />
+          <Route path="diagnosis-results" element={<AdminDiagnosisResultsPage />} />
           <Route path="alerts" element={<AdminAlertsPage />} />
           <Route path="analytics" element={<AdminAnalyticsPage />} />
           <Route path="system-health" element={<AdminSystemHealthPage />} />
