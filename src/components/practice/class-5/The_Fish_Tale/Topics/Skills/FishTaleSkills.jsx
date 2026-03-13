@@ -22,9 +22,9 @@ export default function FishTaleSkills() {
                         <button className="ft-back-link" onClick={() => { setView('list'); setSelectedLearnIdx(0); }}>← Back to Skills</button>
                     </div>
                     <div style={{ display: 'flex', gap: 16 }}>
-                        <span style={{ cursor: 'pointer', color: '#94a3b8' }} onClick={() => navigate('/the-fish-tale/introduction')}>🌟 Intro</span>
-                        <span style={{ cursor: 'pointer', color: '#94a3b8' }} onClick={() => navigate('/the-fish-tale/terminology')}>📖 Terminology</span>
-                        <span style={{ fontWeight: 800, color: '#0ea5e9' }}>🎯 Skills</span>
+                        <span style={{ cursor: 'pointer', color: '#64748b', fontWeight: 600 }} onClick={() => navigate('/the-fish-tale/introduction')}>🌟 Intro</span>
+                        <span style={{ cursor: 'pointer', color: '#64748b', fontWeight: 600 }} onClick={() => navigate('/the-fish-tale/terminology')}>📖 Terminology</span>
+                        <span style={{ fontWeight: 800, color: '#0369a1' }}>🎯 Skills</span>
                     </div>
                 </nav>
                 <div style={{ padding: '40px 24px 0' }}>
@@ -121,9 +121,9 @@ export default function FishTaleSkills() {
             <nav className="ft-topic-nav">
                 <div className="ft-back-link" onClick={() => navigate('/the-fish-tale')}>← Back to Chapter</div>
                 <div style={{ display: 'flex', gap: 16 }}>
-                    <span style={{ cursor: 'pointer', color: '#94a3b8' }} onClick={() => navigate('/the-fish-tale/introduction')}>🌟 Intro</span>
-                    <span style={{ cursor: 'pointer', color: '#94a3b8' }} onClick={() => navigate('/the-fish-tale/terminology')}>📖 Terminology</span>
-                    <span style={{ fontWeight: 800, color: '#0ea5e9' }}>🎯 Skills</span>
+                    <span style={{ cursor: 'pointer', color: '#64748b', fontWeight: 600 }} onClick={() => navigate('/the-fish-tale/introduction')}>🌟 Intro</span>
+                    <span style={{ cursor: 'pointer', color: '#64748b', fontWeight: 600 }} onClick={() => navigate('/the-fish-tale/terminology')}>📖 Terminology</span>
+                    <span style={{ fontWeight: 800, color: '#0369a1' }}>🎯 Skills</span>
                 </div>
             </nav>
 

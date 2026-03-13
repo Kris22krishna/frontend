@@ -10,7 +10,7 @@ const MODULES = [
         emoji: '🌟',
         tagline: '5W1H Exploration',
         desc: '6 Big Questions about The Fish Tale — What, Why, Who, When, Where and How.',
-        color: '#0ea5e9'
+        color: '#0284c7'
     },
     {
         id: 'terminology',
@@ -19,7 +19,7 @@ const MODULES = [
         emoji: '📖',
         tagline: 'Key Terms & Concepts',
         desc: 'Master the language of large numbers and nautical measurements.',
-        color: '#0284c7'
+        color: '#0369a1'
     },
     {
         id: 'skills',
@@ -28,7 +28,7 @@ const MODULES = [
         emoji: '🎯',
         tagline: 'Learn, Practice & Assess',
         desc: 'Targeted practice for mastering place value and real-life data.',
-        color: '#0369a1'
+        color: '#075985'
     }
 ];
 

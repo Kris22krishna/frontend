@@ -19,14 +19,14 @@ export default function FishTaleIntro5W1H() {
             <nav className="ft-topic-nav">
                 <div className="ft-back-link" onClick={() => navigate('/the-fish-tale')}>← Back to Chapter</div>
                 <div style={{ display: 'flex', gap: 16 }}>
-                    <span style={{ fontWeight: 800, color: '#0ea5e9' }}>🌟 Intro</span>
-                    <span style={{ cursor: 'pointer', color: '#94a3b8' }} onClick={() => navigate('/the-fish-tale/terminology')}>📖 Terminology</span>
-                    <span style={{ cursor: 'pointer', color: '#94a3b8' }} onClick={() => navigate('/the-fish-tale/skills')}>🎯 Skills</span>
+                    <span style={{ fontWeight: 800, color: '#0369a1' }}>🌟 Intro</span>
+                    <span style={{ cursor: 'pointer', color: '#64748b', fontWeight: 600 }} onClick={() => navigate('/the-fish-tale/terminology')}>📖 Terminology</span>
+                    <span style={{ cursor: 'pointer', color: '#64748b', fontWeight: 600 }} onClick={() => navigate('/the-fish-tale/skills')}>🎯 Skills</span>
                 </div>
             </nav>
 
             <div style={{ maxWidth: 1000, margin: '40px auto', padding: '0 24px' }}>
-                <h1 style={{ fontFamily: 'Outfit', fontSize: '2.5rem', fontWeight: 900, marginBottom: 8 }}>Introduction: <span style={{ color: '#0ea5e9' }}>5W1H</span></h1>
+                <h1 style={{ fontFamily: 'Outfit', fontSize: '2.5rem', fontWeight: 900, marginBottom: 8, color: '#0f172a' }}>Introduction: <span style={{ color: '#0ea5e9' }}>5W1H</span></h1>
                 <p style={{ color: '#64748b', fontSize: 18, marginBottom: 40 }}>Understanding the core of The Fish Tale through six big questions.</p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
