@@ -439,7 +439,7 @@ function makeQuestions() {
     // ── BIRTH CERTIFICATE HELPERS & DATA ──────────────────────────────────────
     const bMonthIdx = randomInt(3, 8); // Apr to Sep to leave room for future dates in same year
     const bDay = randomInt(2, 25);
-    const bYear = randomInt(currYr - 12, currYr - 8); // kid is 8-12 yrs old now
+    const bYear = randomInt(yr - 12, yr - 8); // kid is 8-12 yrs old now
     const regDay = bDay + randomInt(1, 5); // registered a few days later
     const issueDay = regDay + randomInt(1, 15);
     const issueMonth = bMonthIdx + (issueDay > daysIn(bMonthIdx, bYear) ? 1 : 0);
