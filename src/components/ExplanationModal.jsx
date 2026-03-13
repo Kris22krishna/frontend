@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircle2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LatexText } from './LatexText';
+import LatexContent from './LatexContent';
 import mascotImg from '../assets/mascot.png';
 import './ExplanationModal.css';
 
@@ -54,7 +54,7 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
                                                 <div className="w-2 h-2 lg:w-2.5 lg:h-2.5 bg-[#4FB7B3] rounded-full" />
                                             </div>
                                             <span className="text-base lg:text-lg font-bold text-[#31326F] dark:text-white">
-                                                {React.isValidElement(correctAnswer) ? correctAnswer : <LatexText text={correctAnswer} />}
+                                                {React.isValidElement(correctAnswer) ? correctAnswer : <LatexContent html={correctAnswer} />}
                                             </span>
                                         </div>
                                     </div>
@@ -62,8 +62,8 @@ const ExplanationModal = ({ isOpen, isCorrect, correctAnswer, explanation, onClo
 
                                 <div className="mb-2">
                                     <p className="text-blue-400 text-[10px] lg:text-xs font-black uppercase tracking-widest mb-2">Why is this correct?</p>
-                                    <div className="explanation-text-container text-gray-600 text-sm lg:text-base leading-loose whitespace-pre-line">
-                                        <LatexText text={explanation || "Great effort! Keep practicing to master this concept."} />
+                                    <div className="explanation-text-container text-gray-600 text-sm lg:text-base leading-normal whitespace-pre-line [&>p]:mb-0 [&>p]:mt-1">
+                                        <LatexContent html={explanation || "Great effort! Keep practicing to master this concept."} />
                                     </div>
                                 </div>
                             </div>

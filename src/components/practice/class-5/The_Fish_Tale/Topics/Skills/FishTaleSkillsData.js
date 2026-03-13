@@ -5,7 +5,7 @@ const getNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const generatePlaceValueQuestions = () => {
     const questions = [];
     for (let i = 0; i < 10; i++) {
-        const num = getNum(100000, 999999);
+        let num = getNum(100000, 999999);
         const type = i % 3;
         let q, options, explanation;
 
@@ -17,9 +17,18 @@ const generatePlaceValueQuestions = () => {
             explanation = `$${num.toLocaleString('en-IN')}$ is written as ${correct}.`;
         } else if (type === 1) {
             // Digit Place Value
-            const digits = num.toString().split('');
-            const pos = getNum(0, 5);
-            const digit = digits[pos];
+            let digits = num.toString().split('');
+            let pos = getNum(0, 5);
+            let digit = digits[pos];
+
+            // Ensure the chosen digit is unique in the number to avoid ambiguity
+            while (num.toString().indexOf(digit) !== num.toString().lastIndexOf(digit)) {
+                num = getNum(100000, 999999);
+                digits = num.toString().split('');
+                pos = getNum(0, 5);
+                digit = digits[pos];
+            }
+
             const places = ['Lakhs', 'Ten Thousands', 'Thousands', 'Hundreds', 'Tens', 'Ones'];
             const actualPlace = places[pos];
             const value = parseInt(digit) * Math.pow(10, 5 - pos);
@@ -192,6 +201,172 @@ const generateRealLifeDataQuestions = () => {
     return questions;
 };
 
+const generateEstimationQuestions = () => {
+    const questions = [];
+    for (let i = 0; i < 10; i++) {
+        const type = i % 2;
+        let q, options, explanation;
+
+        if (type === 0) {
+            // Rounding
+            const num = getNum(1000, 9999);
+            const roundTo = 1000;
+            const rounded = Math.round(num / roundTo) * roundTo;
+            q = `Round $${num.toLocaleString('en-IN')}$ to the nearest Thousand.`;
+            options = [`$${rounded.toLocaleString('en-IN')}$`, `$${(rounded + 1000).toLocaleString('en-IN')}$`, `$${(rounded - 1000).toLocaleString('en-IN')}$`, `$${(num - (num % 100)).toLocaleString('en-IN')}$`];
+            explanation = `Look at the Hundreds digit. If it is 5 or more, round up. So $${num}$ rounds to $${rounded}$.`;
+        } else {
+            // Estimating sums
+            const n1 = getNum(2000, 8000);
+            const n2 = getNum(2000, 8000);
+            const r1 = Math.round(n1 / 1000) * 1000;
+            const r2 = Math.round(n2 / 1000) * 1000;
+            const sum = r1 + r2;
+            q = `Estimate the sum: $${n1.toLocaleString('en-IN')} + ${n2.toLocaleString('en-IN')}$ by rounding each to the nearest thousand.`;
+            options = [`$${sum.toLocaleString('en-IN')}$`, `$${(sum + 1000).toLocaleString('en-IN')}$`, `$${Math.abs(sum - 1000).toLocaleString('en-IN')}$`, `$${(sum + 500).toLocaleString('en-IN')}$`];
+            explanation = `$${n1}$ rounds to $${r1}$ and $${n2}$ rounds to $${r2}$. Their sum is $${sum}$.`;
+        }
+
+        let shuffled = [...new Set(options)].sort(() => Math.random() - 0.5);
+        while (shuffled.length < 4) shuffled.push(`$${getNum(1000, 20000).toLocaleString('en-IN')}$`);
+
+        questions.push({
+            question: q,
+            options: shuffled.slice(0, 4),
+            correct: shuffled.slice(0, 4).indexOf(options[0]),
+            explanation
+        });
+    }
+    return questions;
+};
+
+const generateComparisonQuestions = () => {
+    const questions = [];
+    for (let i = 0; i < 10; i++) {
+        const type = i % 2;
+        let q, options, explanation;
+
+        if (type === 0) {
+            // Which is larger
+            const n1 = getNum(100000, 999999);
+            let n2, n3, n4;
+            do { n2 = getNum(100000, 999999); } while (n1 === n2);
+            do { n3 = getNum(100000, 999999); } while (n1 === n3 || n2 === n3);
+            do { n4 = getNum(100000, 999999); } while (n1 === n4 || n2 === n4 || n3 === n4);
+            const arr = [n1, n2, n3, n4];
+            const max = Math.max(...arr);
+
+            q = `Which number is the largest?`;
+            options = [`$${max.toLocaleString('en-IN')}$`];
+            arr.filter(x => x !== max).forEach(x => options.push(`$${x.toLocaleString('en-IN')}$`));
+
+            explanation = `Compare the digits from left to right. The number with the greatest digit in the highest place value is the largest. $${max.toLocaleString('en-IN')}$ is the largest.`;
+        } else {
+            // True or false inequality
+            const n1 = getNum(100000, 999999);
+            const n2 = getNum(100000, 999999);
+            const isLess = n1 < n2;
+            const op = isLess ? '<' : '>';
+
+            q = `True or False: $${n1.toLocaleString('en-IN')} ${op} ${n2.toLocaleString('en-IN')}$`;
+            options = ['True', 'False'];
+            explanation = `Comparing the digits from left to right, we see that $${n1.toLocaleString('en-IN')}$ is ${isLess ? 'less' : 'greater'} than $${n2.toLocaleString('en-IN')}$. Thus, it is True.`;
+        }
+
+        let shuffled = [...new Set(options)];
+        if (type === 0) shuffled = shuffled.sort(() => Math.random() - 0.5);
+
+        questions.push({
+            question: q,
+            options: shuffled.slice(0, 4),
+            correct: shuffled.indexOf(options[0]),
+            explanation
+        });
+    }
+    return questions;
+};
+
+const generateLogisticsQuestions = () => {
+    const questions = [];
+    for (let i = 0; i < 10; i++) {
+        const type = i % 2;
+        let q, options, explanation;
+
+        if (type === 0) {
+            // Distance
+            const speed = getNum(10, 50);
+            const time = getNum(2, 6);
+            const distance = speed * time;
+
+            q = `A boat travels at $${speed}$ km/h. How far will it go in $${time}$ hours?`;
+            options = [`$${distance}$ km`, `$${distance + speed}$ km`, `$${distance - speed}$ km`, `$${speed + time}$ km`];
+            explanation = `Distance = Speed $\\times$ Time. So, $${speed} \\times ${time} = ${distance}$ km.`;
+        } else {
+            // Speed
+            const speed = getNum(15, 60);
+            const time = getNum(2, 5);
+            const distance = speed * time;
+
+            q = `If a boat travels $${distance}$ km in $${time}$ hours, what is its speed?`;
+            options = [`$${speed}$ km/h`, `$${speed + 10}$ km/h`, `$${Math.max(10, speed - 10)}$ km/h`, `$${distance - time}$ km/h`];
+            explanation = `Speed = Distance $\\div$ Time. So, $${distance} \\div ${time} = ${speed}$ km/h.`;
+        }
+
+        let shuffled = [...new Set(options)].sort(() => Math.random() - 0.5);
+        questions.push({
+            question: q,
+            options: shuffled,
+            correct: shuffled.indexOf(options[0]),
+            explanation
+        });
+    }
+    return questions;
+};
+
+const generateLargeNumbersQuestions = () => {
+    const questions = [];
+    for (let i = 0; i < 10; i++) {
+        const type = i % 2;
+        let q, options, explanation;
+
+        if (type === 0) {
+            // How many zeros
+            const choices = [
+                { name: '1 Lakh', zeros: 5, num: '1,00,000' },
+                { name: '10 Lakhs', zeros: 6, num: '10,00,000' },
+                { name: '1 Crore', zeros: 7, num: '1,00,00,000' },
+                { name: '10 Crores', zeros: 8, num: '10,00,00,000' }
+            ];
+            const item = choices[getNum(0, 3)];
+
+            q = `How many zeros are in ${item.name}?`;
+            options = [`$${item.zeros}$`, `$${item.zeros - 1}$`, `$${item.zeros + 1}$`, `$${item.zeros + 2}$`];
+            explanation = `${item.name} is written as $${item.num}$, which has ${item.zeros} zeros.`;
+        } else {
+            // Conversions
+            const conversions = [
+                { q: 'What is 100 Lakhs called in the Indian system?', ans: '1 Crore', opts: ['10 Lakh', '1 Billion', '1 Million'] },
+                { q: 'What is 100 Thousands called in the Indian system?', ans: '1 Lakh', opts: ['1 Crore', '10 Lakh', '10 Thousand'] },
+                { q: 'How many Lakhs make a Crore?', ans: '100', opts: ['10', '1000', '1'] }
+            ];
+            const item = conversions[getNum(0, 2)];
+
+            q = item.q;
+            options = [item.ans, ...item.opts];
+            explanation = `In the Indian numbering system, ${item.ans} is the correct equivalent.`;
+        }
+
+        let shuffled = [...options].sort(() => Math.random() - 0.5);
+        questions.push({
+            question: q,
+            options: shuffled,
+            correct: shuffled.indexOf(options[0]),
+            explanation
+        });
+    }
+    return questions;
+};
+
 // ─── SKILLS CONFIG ──────────────────────────────────────────────────────────
 
 export const SKILLS = [
@@ -207,16 +382,16 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'The Indian System',
-                    f: '1,00,000 = 1\\text{ Lakh}',
+                    f: '$$1,00,000 = 1\\text{ Lakh}$$',
                     d: 'In the Indian system, we use commas after the Hundreds, then after every two digits.',
-                    ex: '5,42,109 \\text{ is Five Lakh Forty-Two Thousand One Hundred and Nine.}',
+                    ex: '$5,42,109$ is Five Lakh Forty-Two Thousand One Hundred and Nine.',
                     tip: 'Count from the right: 3 digits, then groups of 2!'
                 },
                 {
                     title: 'Expanded Form',
-                    f: '\\text{Value} = \\text{Digit} \\times \\text{Place}',
+                    f: '$$\\text{Value} = \\text{Digit} \\times \\text{Place}$$',
                     d: 'Expanded form shows the sum of the place values of each digit.',
-                    ex: '4,562 = 4000 + 500 + 60 + 2',
+                    ex: '$4,562 = 4000 + 500 + 60 + 2$',
                     tip: 'Zeroes in a number don\'t need to be shown in expanded form.'
                 }
             ]
@@ -236,19 +411,15 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Rounding Rule',
-                    f: '5 \\uparrow, <5 \\rightarrow',
+                    f: '$$5 \\uparrow, <5 \\rightarrow$$',
                     d: 'If the digit to the right is 5 or more, round up. If less than 5, keep it the same.',
-                    ex: '48 \\text{ rounded to nearest 10 is } 50.',
+                    ex: '$48$ rounded to nearest $10$ is $50$.',
                     tip: 'Always look at the digit immediately to the right of your target place!'
                 }
             ]
         },
-        practice: () => [
-            { question: 'Round 4,562 to the nearest Thousand.', options: ['$5,000$', '$4,000$', '$4,600$', '$4,500$'], correct: 0, explanation: 'The Hundreds digit is 5, so we round up the Thousand digit from 4 to 5.' }
-        ],
-        assessment: () => [
-            { question: 'Estimate the sum: $4,200 + 5,800$ by rounding to the nearest thousand.', options: ['$10,000$', '$9,000$', '$11,000$', '$10,500$'], correct: 0, explanation: '$4,000 + 6,000 = 10,000$.' }
-        ]
+        practice: generateEstimationQuestions,
+        assessment: generateEstimationQuestions
     },
     {
         id: 'ft-03',
@@ -262,9 +433,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Words to Figures',
-                    f: '\\text{Five Lakh} = 5,00,000',
+                    f: '$$\\text{Five Lakh} = 5,00,000$$',
                     d: 'Convert written words into numerical figures by placing digits in their period blocks.',
-                    ex: 'Two Lakh Three Thousand = 2,03,000',
+                    ex: 'Two Lakh Three Thousand = $2,03,000$',
                     tip: 'Always check if you need a zero as a placeholder!'
                 }
             ]
@@ -284,19 +455,15 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Comparing Digits',
-                    f: '7,42,000 > 6,98,000',
+                    f: '$$7,42,000 > 6,98,000$$',
                     d: 'Start comparing from the highest place value (leftmost digit).',
-                    ex: '5,00,000 > 4,99,999',
+                    ex: '$5,00,000 > 4,99,999$',
                     tip: 'Count digits first! More digits mean a larger number.'
                 }
             ]
         },
-        practice: () => [
-            { question: 'Which number is larger?', options: ['$5,42,109$', '$5,41,999$', '$5,42,090$', '$4,99,999$'], correct: 0, explanation: 'Comparing the thousands place: $2 > 1$.' }
-        ],
-        assessment: () => [
-            { question: 'True or False: $1,25,000 < 1,02,500$', options: ['False', 'True'], correct: 0, explanation: '$1,25,000$ is larger because the ten-thousands digit (2) is greater than (0).' }
-        ]
+        practice: generateComparisonQuestions,
+        assessment: generateComparisonQuestions
     },
     {
         id: 'ft-05',
@@ -310,9 +477,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Shifting Zeros',
-                    f: 'n \\times 10^x \\rightarrow \\text{Add } x \\text{ zeros}',
+                    f: '$$n \\times 10^x \\rightarrow \\text{Add } x \\text{ zeros}$$',
                     d: 'When multiplying by 10, 100, or 1000, simply add the zeros to the end of the number.',
-                    ex: '45 \\times 100 = 4,500',
+                    ex: '$45 \\times 100 = 4,500$',
                     tip: 'Division is the opposite—remove the zeros!'
                 }
             ]
@@ -332,19 +499,15 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'The Speed Formula',
-                    f: 'S = D/T',
+                    f: '$$S = D/T$$',
                     d: 'Speed is distance divided by time.',
-                    ex: '20 \\text{ km in } 1 \\text{ hr} = 20 \\text{ km/h}',
+                    ex: '$20$ km in $1$ hr $= 20$ km/h',
                     tip: 'Distance = Speed × Time!'
                 }
             ]
         },
-        practice: () => [
-            { question: 'A motor boat travels at $25$ km/h. How far will it go in $3$ hours?', options: ['$75$ km', '$50$ km', '$100$ km', '$28$ km'], correct: 0, explanation: 'Distance = $25 \\times 3 = 75$ km.' }
-        ],
-        assessment: () => [
-            { question: 'If a boat travels $60$ km in $2$ hours, what is its speed?', options: ['$30$ km/h', '$120$ km/h', '$62$ km/h', '$58$ km/h'], correct: 0, explanation: 'Speed = $60 / 2 = 30$ km/h.' }
-        ]
+        practice: generateLogisticsQuestions,
+        assessment: generateLogisticsQuestions
     },
     {
         id: 'ft-07',
@@ -358,9 +521,9 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Profit Calculation',
-                    f: 'P = SP - CP',
+                    f: '$$P = SP - CP$$',
                     d: 'Profit is Selling Price minus Cost Price.',
-                    ex: 'Buy at 10, Sell at 15 \\rightarrow Profit = 5',
+                    ex: 'Buy at $10$, Sell at $15 \\rightarrow \\text{Profit} = 5$',
                     tip: 'If SP < CP, it is a loss!'
                 }
             ]
@@ -380,18 +543,14 @@ export const SKILLS = [
             rules: [
                 {
                     title: 'Real World Scale',
-                    f: '1 \\text{ Crore} = 100 \\text{ Lakhs}',
+                    f: '$$1 \\text{ Crore} = 100 \\text{ Lakhs}$$',
                     d: 'Understanding how many zeros are in a Crore (7 zeros) or a Billion.',
                     ex: 'The population of a city can be in lakhs.',
                     tip: 'A Crore is ten million in the International system.'
                 }
             ]
         },
-        practice: () => [
-            { question: 'How many zeros are in one Crore?', options: ['$7$', '$6$', '$8$', '$5$'], correct: 0, explanation: '1 Crore = 1,00,00,000 (7 zeros).' }
-        ],
-        assessment: () => [
-            { question: 'What is 100 Lakhs called?', options: ['1 Crore', '10 Lakh', '1 Billion', '1 Million'], correct: 0, explanation: 'In the Indian system, 100 lakhs equals 1 crore.' }
-        ]
+        practice: generateLargeNumbersQuestions,
+        assessment: generateLargeNumbersQuestions
     }
 ];

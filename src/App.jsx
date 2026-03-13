@@ -150,6 +150,7 @@ import AdminSystemHealthPage from './pages/dashboards/admin/pages/SystemHealthPa
 import AdminActivityLogPage from './pages/dashboards/admin/pages/ActivityLogPage';
 import AdminSettingsPage from './pages/dashboards/admin/pages/SettingsPage';
 import AdminPracticeResultsPage from './pages/dashboards/admin/pages/PracticeResultsPage';
+import AdminDiagnosisResultsPage from './pages/dashboards/admin/pages/DiagnosisResultsPage';
 
 import UploaderDashboard from './pages/uploader/UploaderDashboard';
 import AssessmentUploaderLogin from './pages/AssessmentUploaderLogin';
@@ -205,6 +206,10 @@ import VolumeByDisplacement from './components/practice/class-5/Howbighowheavy/v
 import UnitsOfVolume from './components/practice/class-5/Howbighowheavy/volume measurement/units-of-volume';
 import VolumeEstimation from './components/practice/class-5/Howbighowheavy/volume measurement/volume-estimation';
 import VolumeUsingUnitCubes from './components/practice/class-5/Howbighowheavy/volume measurement/volume-using-unit-cubes';
+import AreaBoundaryTest from './components/practice/class-5/AreaanditsBoundary/ChapterTest/AreaBoundaryTest';
+import TenthsHundredthsTest from './components/practice/class-5/TenthsandHundrendths/ChapterTest/TenthsHundredthsTest';
+import MultiplyDivideTest from './components/practice/class-5/WaystoMultiplyandDivide/ChapterTest/MultiplyDivideTest';
+import HowBigHowHeavyTest from './components/practice/class-5/Howbighowheavy/ChapterTest/HowBigHowHeavyTest';
 import UnitsOfMass from './components/practice/class-5/Howbighowheavy/mass measurement/units-of-mass';
 import MassConversion from './components/practice/class-5/Howbighowheavy/mass measurement/mass-conversion';
 import MassCalculation from './components/practice/class-5/Howbighowheavy/mass measurement/mass-calculation';
@@ -429,16 +434,7 @@ import DiscriminantAnalysis from './components/practice/class-10/Quadratic Equat
 import RealLifeApplications from './components/practice/class-10/Quadratic Equations/RealLifeApplications';
 import QuadraticEquationsTest from './components/practice/class-10/Quadratic Equations/QuadraticEquationsTest';
 
-// Class 10: Real Numbers
-import RealNumberFoundations from './components/practice/class-10/Real Numbers/RealNumberFoundations';
-import EuclidsDivision from './components/practice/class-10/Real Numbers/EuclidsDivision';
-import PrimeFactorisation from './components/practice/class-10/Real Numbers/PrimeFactorisation';
-import FundamentalTheoremArithmetic from './components/practice/class-10/Real Numbers/FundamentalTheoremArithmetic';
-import HCFandLCM from './components/practice/class-10/Real Numbers/HCFandLCM';
-import HCFLCMApplications from './components/practice/class-10/Real Numbers/HCFLCMApplications';
-import ProvingIrrationality from './components/practice/class-10/Real Numbers/ProvingIrrationality';
-import IrrationalOperations from './components/practice/class-10/Real Numbers/IrrationalOperations';
-import RealNumbersTest from './components/practice/class-10/Real Numbers/RealNumbersTest';
+
 
 // Class 10: Probability
 import Probability from './components/practice/class-10/Probability/Probability';
@@ -448,6 +444,14 @@ import ProbabilitySkills from './components/practice/class-10/Probability/Topics
 import ProbabilityEasyTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityEasyTest';
 import ProbabilityMediumTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityMediumTest';
 import ProbabilityHardTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityHardTest';
+
+// Class 10: Real Numbers
+import RealNumbersDashboard from './components/practice/class-10/RealNumbers/RealNumbersDashboard';
+import RealNumbersIntro from './components/practice/class-10/RealNumbers/Topics/Introduction/RealNumbersIntro';
+import RealNumbersTerminology from './components/practice/class-10/RealNumbers/Topics/Terminology/RealNumbersTerminology';
+import RealNumbersSkills from './components/practice/class-10/RealNumbers/Topics/Skills/RealNumbersSkills';
+import RealNumbersConnectomics from './components/practice/class-10/RealNumbers/Topics/Connectomics/RealNumbersConnectomics';
+import RealNumbersExamEdge from './components/practice/class-10/RealNumbers/Topics/ExamEdge/RealNumbersExamEdge';
 
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
@@ -656,12 +660,13 @@ function App() {
           <Route path="learn-to-learn" element={<ContentPage topic="learn-to-learn" />} />
           <Route path="math" element={<MathSelection />} />
           <Route path="practice" element={<PracticePage />} />
+          <Route path="diagnosis-test" element={<ProtectedRoute redirectTo="/login"><DiagnosisLanding /></ProtectedRoute>} />
           <Route path="math/grade/:grade" element={<GradeSyllabus />} />
           {/* Middle Routes (Grades 5-7 professional design) */}
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
-          
+
           {/* Class 11 Biology */}
           <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
           <Route path="senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
@@ -810,6 +815,14 @@ function App() {
           <Route path="senior/grade/10/probability/terminology" element={<ProtectedRoute redirectTo="/login"><ProbabilityTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/skills" element={<ProtectedRoute redirectTo="/login"><ProbabilitySkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><ProbabilityEasyTest /></ProtectedRoute>} />
+
+          {/* Class 10: Real Numbers */}
+          <Route path="senior/grade/10/real-numbers" element={<ProtectedRoute redirectTo="/login"><RealNumbersDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/introduction" element={<ProtectedRoute redirectTo="/login"><RealNumbersIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/terminology" element={<ProtectedRoute redirectTo="/login"><RealNumbersTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/skills" element={<ProtectedRoute redirectTo="/login"><RealNumbersSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/connectomics" element={<ProtectedRoute redirectTo="/login"><RealNumbersConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/10/real-numbers/exam-edge" element={<ProtectedRoute redirectTo="/login"><RealNumbersExamEdge /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><ProbabilityMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><ProbabilityHardTest /></ProtectedRoute>} />
 
@@ -1713,6 +1726,7 @@ function App() {
           <Route path="generated-questions" element={<AdminGeneratedQuestionsPage />} />
           {/* Monitoring */}
           <Route path="practice-results" element={<AdminPracticeResultsPage />} />
+          <Route path="diagnosis-results" element={<AdminDiagnosisResultsPage />} />
           <Route path="alerts" element={<AdminAlertsPage />} />
           <Route path="analytics" element={<AdminAnalyticsPage />} />
           <Route path="system-health" element={<AdminSystemHealthPage />} />
@@ -1775,6 +1789,10 @@ function App() {
         <Route path="/middle/grade/5/can-you-see-the-pattern/missing-numbers" element={<MissingNumberReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/mental-calculation" element={<MentalCalculationReasoning />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/skill-application" element={<SkillApplicationProblemsPatterns />} />
+        <Route path="/middle/grade/5/area-boundary/chapter-test" element={<AreaBoundaryTest />} />
+        <Route path="/middle/grade/5/tenths-hundredths/chapter-test" element={<TenthsHundredthsTest />} />
+        <Route path="/middle/grade/5/multiply-divide/chapter-test" element={<MultiplyDivideTest />} />
+        <Route path="/middle/grade/5/how-big-how-heavy/chapter-test" element={<HowBigHowHeavyTest />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
 
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
@@ -1820,16 +1838,7 @@ function App() {
         <Route path="/high/practice/1240" element={<PolynomialsTest />} />
 
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
-        {/* Class 10: Real Numbers Routes */}
-        <Route path="/high/practice/1111" element={<RealNumberFoundations />} />
-        <Route path="/high/practice/1112" element={<EuclidsDivision />} />
-        <Route path="/high/practice/1113" element={<PrimeFactorisation />} />
-        <Route path="/high/practice/1114" element={<FundamentalTheoremArithmetic />} />
-        <Route path="/high/practice/1115" element={<HCFandLCM />} />
-        <Route path="/high/practice/1116" element={<HCFLCMApplications />} />
-        <Route path="/high/practice/1117" element={<ProvingIrrationality />} />
-        <Route path="/high/practice/1118" element={<IrrationalOperations />} />
-        <Route path="/high/practice/1119" element={<RealNumbersTest />} />
+
 
         {/* Class 12: Matrices � Legacy routes redirect to canonical deep-dive URLs */}
         <Route path="/senior/grade/12/matrices/who-uses" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/who-uses" replace /></ProtectedRoute>} />
