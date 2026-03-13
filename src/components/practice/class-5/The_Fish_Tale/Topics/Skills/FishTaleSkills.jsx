@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../fishtale.css';
 import MathRenderer from '../../../../../MathRenderer';
-import QuizEngine from '../../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine';
+import FishTalePracticeEngine from './Engines/FishTalePracticeEngine';
+import FishTaleAssessmentEngine from './Engines/FishTaleAssessmentEngine';
 import { SKILLS } from './FishTaleSkillsData';
 
 export default function FishTaleSkills() {
@@ -93,20 +93,18 @@ export default function FishTaleSkills() {
                             </div>
                         </div>
                     ) : view === 'practice' ? (
-                        <QuizEngine
-                            questions={skill.practice}
-                            title={`Practice: ${skill.title}`}
+                        <FishTalePracticeEngine
+                            questionPool={skill.practice}
+                            sampleSize={20}
+                            title={skill.title}
                             color={skill.color}
-                            prefix="ft"
                             onBack={() => setView('list')}
-                            onSecondaryBack={() => navigate('/the-fish-tale')}
                         />
                     ) : (
-                        <AssessmentEngine
+                        <FishTaleAssessmentEngine
                             questions={skill.assessment}
                             title={skill.title}
                             color={skill.color}
-                            prefix="ft"
                             onBack={() => setView('list')}
                             onSecondaryBack={() => navigate('/the-fish-tale')}
                         />
