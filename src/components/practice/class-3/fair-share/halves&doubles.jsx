@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, Pencil, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, Pencil, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
@@ -81,6 +81,8 @@ const FairShareHalvesDoubles = () => {
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
+    const [showResults, setShowResults] = useState(false);
+    const [sessionQuestions, setSessionQuestions] = useState([]);
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -90,9 +92,12 @@ const FairShareHalvesDoubles = () => {
             }).catch(err => console.error("Failed to start session", err));
         }
 
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
+        let timer;
+        if (!showResults) {
+            timer = setInterval(() => {
+                setTimeElapsed(prev => prev + 1);
+            }, 1000);
+        }
 
         const handleVisibilityChange = () => {
             if (document.hidden) {
@@ -106,122 +111,157 @@ const FairShareHalvesDoubles = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
-            clearInterval(timer);
+            if (timer) clearInterval(timer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [showResults]);
 
     useEffect(() => {
-        generateQuestion(qIndex);
+        if (!sessionQuestions[qIndex]) {
+            generateQuestion(qIndex);
+        } else {
+            setCurrentQuestion(sessionQuestions[qIndex]);
+            setShuffledOptions(sessionQuestions[qIndex].shuffledOptions);
+            const saved = answers[qIndex];
+            if (saved) {
+                setSelectedOption(saved.selected);
+                setIsSubmitted(true);
+                setIsCorrect(saved.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
+        }
     }, [qIndex]);
 
     const generateQuestion = (index) => {
-        // Alternate between Text (Halves/Doubles) and Visual (Grid)
-        // Or randomly mix. Let's do random but ensure coverage.
-        const type = Math.random() < 0.5 ? 'text' : 'visual';
-
         let questionText, correctAnswer, solution, options;
+        let type;
+        let isUnique = false;
+        let attempts = 0;
 
-        if (type === 'text') {
-            // "4 marbles are ___ of 8 marbles"
-            // "10 marbles are ___ of 5 marbles"
-            const styles = ['half', 'double'];
-            const chosenStyle = styles[randomInt(0, 1)];
+        while (!isUnique && attempts < 100) {
+            // Alternate between Text (Halves/Doubles) and Visual (Grid)
+            // Or randomly mix. Let's do random but ensure coverage.
+            type = Math.random() < 0.5 ? 'text' : 'visual';
 
-            // Generate base numbers
-            // For half: A = small, B = 2*A. "A is half of B"
-            // For double: B = 2*A, A = small. "B is double of A"
+            if (type === 'text') {
+                // "4 marbles are ___ of 8 marbles"
+                // "10 marbles are ___ of 5 marbles"
+                const styles = ['half', 'double'];
+                const chosenStyle = styles[randomInt(0, 1)];
 
-            const small = randomInt(2, 20);
-            const big = small * 2;
-            const itemNames = ['marbles', 'chocolates', 'cookies', 'stars', 'coins'];
-            const item = itemNames[randomInt(0, itemNames.length - 1)];
+                // Generate base numbers
+                // For half: A = small, B = 2*A. "A is half of B"
+                // For double: B = 2*A, A = small. "B is double of A"
 
-            if (chosenStyle === 'half') {
-                // "small are ___ of big"
+                const small = randomInt(2, 20);
+                const big = small * 2;
+                const itemNames = ['marbles', 'chocolates', 'cookies', 'stars', 'coins'];
+                const item = itemNames[randomInt(0, itemNames.length - 1)];
+
+                if (chosenStyle === 'half') {
+                    // "small are ___ of big"
+                    questionText = `
+                        <div class='question-container text-center text-2xl'>
+                            <p>${small} ${item} are <span class="annotation-box">_______</span> of ${big} ${item}.</p>
+                        </div>
+                    `;
+                    correctAnswer = "Half";
+                    solution = `${small} is exactly half of ${big}, because ${small} + ${small} = ${big}.`;
+                    options = ["Half", "Double", "Equal", "Quarter"];
+                } else {
+                    // "big are ___ of small"
+                    questionText = `
+                        <div class='question-container text-center text-2xl'>
+                            <p>${big} ${item} are <span class="annotation-box">_______</span> of ${small} ${item}.</p>
+                        </div>
+                    `;
+                    correctAnswer = "Double";
+                    solution = `${big} is double of ${small}, because ${small} × 2 = ${big}.`;
+                    options = ["Double", "Half", "Equal", "Triple"];
+                }
+
+            } else {
+                // Visual Grid Chikki Question
+                // "Shabnam has eaten some chikki... Tick how much is left/shaded?"
+                const rows = randomInt(2, 4);
+                const cols = randomInt(3, 5);
+                const total = rows * cols;
+                const half = total / 2;
+
+                // Decide target: Less, More, or Equal
+                // Ensure half is possible (total must be even for exact half possibility, which it naturally might not be if R*C is odd)
+                // If total is odd, exact half is impossible.
+                const isTotalEven = total % 2 === 0;
+                const targets = ['more', 'less'];
+                if (isTotalEven) targets.push('half');
+
+                const target = targets[randomInt(0, targets.length - 1)];
+
+                let filledCount = 0;
+                let displayTarget = "";
+                let displayAnswer = "";
+
+                if (target === 'half') {
+                    filledCount = half;
+                    displayAnswer = "Exactly Half";
+                    displayTarget = "Equal to half";
+                } else if (target === 'less') {
+                    filledCount = randomInt(1, Math.floor(total / 2) - (isTotalEven && total / 2 === Math.floor(total / 2) ? 1 : 0));
+                    // Make sure filledCount is at least 1 and strictly less than half
+                    if (filledCount < 1) filledCount = 1;
+                    displayAnswer = "Less than Half";
+                    displayTarget = "Less than half";
+                } else {
+                    // more
+                    filledCount = randomInt(Math.ceil(total / 2) + (isTotalEven && total / 2 === Math.ceil(total / 2) ? 1 : 0), total - 1);
+                    displayAnswer = "More than Half";
+                    displayTarget = "More than half";
+                }
+
+                const svg = generateGridSVG(rows, cols, filledCount);
+
                 questionText = `
-                    <div class='question-container text-center text-2xl'>
-                        <p>${small} ${item} are <span class="annotation-box">_______</span> of ${big} ${item}.</p>
+                    <div class='question-container'>
+                        <p>Look at the shaded part of the chocolate.</p>
+                        ${svg}
+                        <p>How much is shaded?</p>
                     </div>
                 `;
-                correctAnswer = "Half";
-                solution = `${small} is exactly half of ${big}, because ${small} + ${small} = ${big}.`;
-                options = ["Half", "Double", "Equal", "Quarter"];
-            } else {
-                // "big are ___ of small"
-                questionText = `
-                    <div class='question-container text-center text-2xl'>
-                        <p>${big} ${item} are <span class="annotation-box">_______</span> of ${small} ${item}.</p>
-                    </div>
-                `;
-                correctAnswer = "Double";
-                solution = `${big} is double of ${small}, because ${small} × 2 = ${big}.`;
-                options = ["Double", "Half", "Equal", "Triple"];
+                correctAnswer = displayAnswer;
+                solution = `There are ${total} blocks total. Half of ${total} is ${total / 2}. <br/>Since ${filledCount} is ${displayTarget.toLowerCase()}, the answer is <strong>${displayAnswer}</strong>.`;
+
+                options = ["Less than Half", "More than Half", "Exactly Half", "Full"];
+                // If total is odd, 'Exactly Half' is a valid distractor but impossible.
             }
 
-        } else {
-            // Visual Grid Chikki Question
-            // "Shabnam has eaten some chikki... Tick how much is left/shaded?"
-            const rows = randomInt(2, 4);
-            const cols = randomInt(3, 5);
-            const total = rows * cols;
-            const half = total / 2;
+            // Check uniqueness against previous questions in the session
+            // solution is detailed enough to be a unique identifier
+            const isDuplicate = sessionQuestions.slice(0, index).some(q => q.solution === solution);
 
-            // Decide target: Less, More, or Equal
-            // Ensure half is possible (total must be even for exact half possibility, which it naturally might not be if R*C is odd)
-            // If total is odd, exact half is impossible.
-            const isTotalEven = total % 2 === 0;
-            const targets = ['more', 'less'];
-            if (isTotalEven) targets.push('half');
-
-            const target = targets[randomInt(0, targets.length - 1)];
-
-            let filledCount = 0;
-            let displayTarget = "";
-            let displayAnswer = "";
-
-            if (target === 'half') {
-                filledCount = half;
-                displayAnswer = "Exactly Half";
-                displayTarget = "Equal to half";
-            } else if (target === 'less') {
-                filledCount = randomInt(1, Math.floor(total / 2) - (isTotalEven && total / 2 === Math.floor(total / 2) ? 1 : 0));
-                // Make sure filledCount is at least 1 and strictly less than half
-                if (filledCount < 1) filledCount = 1;
-                displayAnswer = "Less than Half";
-                displayTarget = "Less than half";
-            } else {
-                // more
-                filledCount = randomInt(Math.ceil(total / 2) + (isTotalEven && total / 2 === Math.ceil(total / 2) ? 1 : 0), total - 1);
-                displayAnswer = "More than Half";
-                displayTarget = "More than half";
+            if (!isDuplicate) {
+                isUnique = true;
             }
-
-            const svg = generateGridSVG(rows, cols, filledCount);
-
-            questionText = `
-                <div class='question-container'>
-                    <p>Look at the shaded part of the chocolate.</p>
-                    ${svg}
-                    <p>How much is shaded?</p>
-                </div>
-            `;
-            correctAnswer = displayAnswer;
-            const filledStr = `${filledCount} out of ${total}`;
-            solution = `There are ${total} blocks total. Half of ${total} is ${total / 2}. <br/>Since ${filledCount} is ${displayTarget.toLowerCase()}, the answer is <strong>${displayAnswer}</strong>.`;
-
-            options = ["Less than Half", "More than Half", "Exactly Half", "Full"];
-            // If total is odd, 'Exactly Half' is a valid distractor but impossible.
+            attempts++;
         }
 
         const qData = {
             text: questionText,
             correctAnswer: correctAnswer,
             solution: solution,
-            options: options
+            options: options,
+            shuffledOptions: [...options].sort(() => Math.random() - 0.5)
         };
 
-        setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
+        setSessionQuestions(prev => {
+            const next = [...prev];
+            next[index] = qData;
+            return next;
+        });
+
+        setShuffledOptions(qData.shuffledOptions);
         setCurrentQuestion(qData);
         setSelectedOption(null);
         setIsSubmitted(false);
@@ -239,7 +279,7 @@ const FairShareHalvesDoubles = () => {
         const isRight = selectedOption === currentQuestion.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-        setAnswers(prev => ({ ...prev, [qIndex]: isRight }));
+        setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
         if (isRight) {
             setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
@@ -282,7 +322,7 @@ const FairShareHalvesDoubles = () => {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val === true).length;
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
                 api.createReport({
                     title: SKILL_NAME,
                     type: 'practice',
@@ -298,7 +338,14 @@ const FairShareHalvesDoubles = () => {
                     user_id: parseInt(userId, 10)
                 }).catch(console.error);
             }
-            navigate(-1);
+            setShowResults(true);
+        }
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(prev => prev - 1);
+            setShowExplanationModal(false);
         }
     };
 
@@ -307,7 +354,153 @@ const FairShareHalvesDoubles = () => {
         setSelectedOption(option);
     };
 
-    if (!currentQuestion) return <div>Loading...</div>;
+    const stats = (() => {
+        let correct = 0;
+        const total = TOTAL_QUESTIONS;
+        Object.values(answers).forEach(ans => {
+            if (ans.isCorrect) correct++;
+        });
+        return { correct, total };
+    })();
+
+    if (!currentQuestion && !showResults) return <div>Loading...</div>;
+
+    if (showResults) {
+        const score = stats.correct;
+        const total = stats.total;
+        const percentage = Math.round((score / total) * 100);
+
+        return (
+            <div className="junior-practice-page results-view overflow-y-auto">
+                <header className="junior-practice-header results-header relative">
+                    <button
+                        onClick={() => navigate('/junior/grade/3/topic/fair-share')}
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                    >
+                        Back to Topics
+                    </button>
+                    <div className="sun-timer-container">
+                        <div className="sun-timer">
+                            <div className="sun-rays"></div>
+                            <span className="timer-text">Done!</span>
+                        </div>
+                    </div>
+                    <div className="title-area">
+                        <h1 className="results-title">Adventure Report</h1>
+                    </div>
+                </header>
+
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}
+                                >
+                                    <Star
+                                        size={60}
+                                        fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
+                                        color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{total}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Total Score</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <div className="space-y-4">
+                            {sessionQuestions.map((q, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                                {idx + 1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
+                                                    <LatexContent html={q.text} />
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                            {ans.selected}
+                                                        </span>
+                                                    </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                {q.correctAnswer}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
+                                                        <LatexContent html={q.solution} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Practice Again
+                        </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate('/junior/grade/3/topic/Fair Share')}>
+                            Back to Topics
+                        </button>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="junior-practice-page fair-share-theme" style={{ fontFamily: '"Open Sans", sans-serif' }}>
@@ -408,7 +601,12 @@ const FairShareHalvesDoubles = () => {
                         )}
                     </div>
                     <div className="bottom-right">
-                        <div className="nav-buttons-group">
+                        <div className="nav-buttons-group flex items-center gap-3">
+                            {qIndex > 0 && (
+                                <button className="nav-pill-prev-btn px-6 py-3 rounded-2xl border-2 border-[#31326F] text-[#31326F] font-bold flex items-center gap-2 hover:bg-gray-50 transition-all" onClick={handlePrevious}>
+                                    <ChevronLeft size={24} /> Previous
+                                </button>
+                            )}
                             {isSubmitted ? (
                                 <button className="nav-pill-next-btn" onClick={handleNext}>
                                     {qIndex < TOTAL_QUESTIONS - 1 ? (

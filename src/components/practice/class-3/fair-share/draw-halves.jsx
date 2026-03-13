@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Check, Eye, ChevronRight, RotateCcw, Trash2, X } from 'lucide-react';
+import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, RotateCcw, Trash2, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
@@ -107,6 +107,23 @@ const FairShareDraw = () => {
     const SKILL_NAME = "Fair Share - Symmetry Drawing";
     const TOTAL_QUESTIONS = SHAPE_PATHS.length;
 
+    const [answers, setAnswers] = useState({});
+    const [showResults, setShowResults] = useState(false);
+
+    useEffect(() => {
+        // Restore state for current index
+        const saved = answers[qIndex];
+        if (saved) {
+            setUserLines(saved.userLines || []);
+            setIsSubmitted(true);
+            setIsCorrect(saved.isCorrect);
+        } else {
+            setUserLines([]);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+        }
+    }, [qIndex]);
+
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -114,9 +131,12 @@ const FairShareDraw = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(console.error);
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showResults) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, []);
+    }, [showResults]);
 
     // Derived State
     const currentLeftPath = SHAPE_PATHS[qIndex];
@@ -245,6 +265,18 @@ const FairShareDraw = () => {
 
         setIsCorrect(correct);
         setIsSubmitted(true);
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                isCorrect: correct,
+                selected: correct ? "Perfect Symmetry" : "Needs work",
+                correctAnswer: "Perfect Symmetry",
+                text: `Symmetry Drawing #${qIndex + 1}`,
+                solution: "Make sure the right side looks exactly like the left side mirrored!",
+                userLines: userLines
+            }
+        }));
+
         if (correct) {
             setFeedbackMessage("✨ Symmetry Mastered! ✨");
         } else {
@@ -298,7 +330,39 @@ const FairShareDraw = () => {
             setShowExplanationModal(false);
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            navigate(-1);
+            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            if (userId) {
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                try {
+                    await api.createReport({
+                        title: SKILL_NAME,
+                        type: 'practice',
+                        score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                        parameters: {
+                            skill_id: SKILL_ID,
+                            skill_name: SKILL_NAME,
+                            total_questions: TOTAL_QUESTIONS,
+                            correct_answers: totalCorrect,
+                            timestamp: new Date().toISOString(),
+                            time_taken_seconds: timeElapsed
+                        },
+                        user_id: parseInt(userId, 10)
+                    });
+                } catch (err) {
+                    console.error("Failed to create report", err);
+                }
+            }
+            setShowResults(true);
+        }
+    };
+
+    const prevQuestion = () => {
+        if (qIndex > 0) {
+            setQIndex(p => p - 1);
+            setUserLines([]);
+            setIsSubmitted(false);
+            setIsCorrect(false);
+            setShowExplanationModal(false);
         }
     };
 
@@ -308,6 +372,151 @@ const FairShareDraw = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const stats = (() => {
+        let correct = 0;
+        const total = TOTAL_QUESTIONS;
+        Object.values(answers).forEach(ans => {
+            if (ans.isCorrect) correct++;
+        });
+        return { correct, total };
+    })();
+
+    if (showResults) {
+        const score = stats.correct;
+        const total = stats.total;
+        const percentage = Math.round((score / total) * 100);
+
+        return (
+            <div className="junior-practice-page results-view overflow-y-auto">
+                <header className="junior-practice-header results-header relative">
+                    <button
+                        onClick={() => navigate('/junior/grade/3/topic/Fair Share')}
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                    >
+                        Back to Topics
+                    </button>
+                    <div className="sun-timer-container">
+                        <div className="sun-timer">
+                            <div className="sun-rays"></div>
+                            <span className="timer-text">Done!</span>
+                        </div>
+                    </div>
+                    <div className="title-area">
+                        <h1 className="results-title">Adventure Report</h1>
+                    </div>
+                </header>
+
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}
+                                >
+                                    <Star
+                                        size={60}
+                                        fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
+                                        color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{total}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Total Score</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <div className="space-y-4">
+                            {Array.from({ length: TOTAL_QUESTIONS }).map((_, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                                {idx + 1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
+                                                    {ans.text}
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                            {ans.selected}
+                                                        </span>
+                                                    </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                {ans.correctAnswer}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
+                                                        {ans.solution}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Practice Again
+                        </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate('/junior/grade/3/topic/fair-share')}>
+                            Back to Topics
+                        </button>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="junior-practice-page fair-share-theme font-sans lg:h-screen lg:overflow-hidden flex flex-col">
@@ -487,16 +696,26 @@ const FairShareDraw = () => {
 
             <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
                 {isSubmitted ? (
-                    <button
-                        className="pointer-events-auto bg-[#FF6B6B] text-white px-8 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#EE5253] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#EE5253] active:translate-y-[2px] active:shadow-[0_2px_0_#EE5253] transition-all flex items-center gap-2"
-                        onClick={nextQuestion}
-                    >
-                        {qIndex < TOTAL_QUESTIONS - 1 ? (
-                            <>Next <ChevronRight size={28} strokeWidth={4} /></>
-                        ) : (
-                            <>Done <Check size={28} strokeWidth={4} /></>
+                    <div className="flex items-center gap-4">
+                        {qIndex > 0 && (
+                            <button
+                                className="pointer-events-auto bg-white text-[#31326F] px-8 py-4 rounded-2xl font-black text-xl border-4 border-[#31326F] shadow-lg hover:bg-gray-50 transition-all flex items-center gap-2"
+                                onClick={prevQuestion}
+                            >
+                                <ChevronLeft size={28} strokeWidth={4} /> Previous
+                            </button>
                         )}
-                    </button>
+                        <button
+                            className="pointer-events-auto bg-[#FF6B6B] text-white px-8 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#EE5253] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#EE5253] active:translate-y-[2px] active:shadow-[0_2px_0_#EE5253] transition-all flex items-center gap-2"
+                            onClick={nextQuestion}
+                        >
+                            {qIndex < TOTAL_QUESTIONS - 1 ? (
+                                <>Next <ChevronRight size={28} strokeWidth={4} /></>
+                            ) : (
+                                <>Done <Check size={28} strokeWidth={4} /></>
+                            )}
+                        </button>
+                    </div>
                 ) : (
                     <button
                         className="pointer-events-auto bg-[#4FB7B3] text-white px-8 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#3A8C89] hover:translate-y-[-2px] hover:shadow-[0_8px_0_#3A8C89] active:translate-y-[2px] active:shadow-[0_2px_0_#3A8C89] transition-all flex items-center gap-2 disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none"

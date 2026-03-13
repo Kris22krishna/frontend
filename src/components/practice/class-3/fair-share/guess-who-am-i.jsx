@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, X } from 'lucide-react';
+import { Check, Eye, ChevronRight, ChevronLeft, X, Star, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
@@ -65,6 +65,8 @@ const FairShareGuesswho = () => {
     const SKILL_NAME = "Fair Share - Guess Who Am I";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
+    const [showResults, setShowResults] = useState(false);
+    const [sessionQuestions, setSessionQuestions] = useState([]);
 
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
@@ -73,20 +75,40 @@ const FairShareGuesswho = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(console.error);
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        let timer;
+        if (!showResults) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
         return () => clearInterval(timer);
-    }, []);
+    }, [showResults]);
 
     useEffect(() => {
-        generateQuestion();
+        if (!sessionQuestions[qIndex]) {
+            generateQuestion(qIndex);
+        } else {
+            setCurrentQuestion(sessionQuestions[qIndex]);
+            setShuffledOptions(sessionQuestions[qIndex].shuffledOptions);
+            const saved = answers[qIndex];
+            if (saved) {
+                setSelectedOption(saved.selected);
+                setIsSubmitted(true);
+                setIsCorrect(saved.isCorrect);
+            } else {
+                setSelectedOption(null);
+                setIsSubmitted(false);
+                setIsCorrect(false);
+            }
+        }
     }, [qIndex]);
 
-    const generateQuestion = () => {
+    const generateQuestion = (index) => {
         // Retry loop to ensure valid range
         let valid = false;
         let qData = {};
+        let attemptsOverall = 0;
 
-        while (!valid) {
+        while (!valid && attemptsOverall < 100) {
+            attemptsOverall++;
             // Pick two distinct base types, e.g. one min constraint and one max constraint to form a range
             // Or just two random ones and see if intersection exists.
 
@@ -97,6 +119,10 @@ const FairShareGuesswho = () => {
             //    Make them involving Half/Double.
 
             const target = randomInt(3, 15);
+
+            // Ensure target is unique for this session
+            const isDuplicate = sessionQuestions.some(q => q.correctAnswer === target);
+            if (isDuplicate) continue;
 
             // Possible Constraints satisfied by target
             const satisfiedConstraints = [];
@@ -176,12 +202,19 @@ const FairShareGuesswho = () => {
                 correctAnswer: target,
                 options: options, // Numbers
                 constraints: picked,
-                solution: solutionText
+                solution: solutionText,
+                shuffledOptions: [...options].sort(() => Math.random() - 0.5)
             };
             valid = true;
         }
 
-        setShuffledOptions([...qData.options].sort(() => Math.random() - 0.5));
+        setSessionQuestions(prev => {
+            const next = [...prev];
+            next[index] = qData;
+            return next;
+        });
+
+        setShuffledOptions(qData.shuffledOptions);
         setCurrentQuestion(qData);
         setSelectedOption(null);
         setIsSubmitted(false);
@@ -193,7 +226,7 @@ const FairShareGuesswho = () => {
         const isRight = selectedOption === currentQuestion.correctAnswer;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-        setAnswers(p => ({ ...p, [qIndex]: isRight }));
+        setAnswers(p => ({ ...p, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
 
         if (isRight) {
             setFeedbackMessage("✨ You found me! ✨");
@@ -223,7 +256,36 @@ const FairShareGuesswho = () => {
             setShowExplanationModal(false);
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            navigate(-1);
+            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+            if (userId) {
+                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
+                try {
+                    await api.createReport({
+                        title: SKILL_NAME,
+                        type: 'practice',
+                        score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                        parameters: {
+                            skill_id: SKILL_ID,
+                            skill_name: SKILL_NAME,
+                            total_questions: TOTAL_QUESTIONS,
+                            correct_answers: totalCorrect,
+                            timestamp: new Date().toISOString(),
+                            time_taken_seconds: timeElapsed
+                        },
+                        user_id: parseInt(userId, 10)
+                    });
+                } catch (err) {
+                    console.error("Failed to create report", err);
+                }
+            }
+            setShowResults(true);
+        }
+    };
+
+    const handlePrevious = () => {
+        if (qIndex > 0) {
+            setQIndex(p => p - 1);
+            setShowExplanationModal(false);
         }
     };
 
@@ -233,7 +295,153 @@ const FairShareGuesswho = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    if (!currentQuestion) return <div>Loading...</div>;
+    const stats = (() => {
+        let correct = 0;
+        const total = TOTAL_QUESTIONS;
+        Object.values(answers).forEach(ans => {
+            if (ans.isCorrect) correct++;
+        });
+        return { correct, total };
+    })();
+
+    if (!currentQuestion && !showResults) return <div>Loading...</div>;
+
+    if (showResults) {
+        const score = stats.correct;
+        const total = stats.total;
+        const percentage = Math.round((score / total) * 100);
+
+        return (
+            <div className="junior-practice-page results-view overflow-y-auto w-full h-full">
+                <header className="junior-practice-header results-header relative">
+                    <button
+                        onClick={() => navigate('/junior/grade/3/topic/Fair Share')}
+                        className="back-topics-top absolute top-8 right-8 px-10 py-4 bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xl transition-all flex items-center gap-3 z-50 border-4 border-white/30 shadow-2xl backdrop-blur-sm"
+                    >
+                        Back to Topics
+                    </button>
+                    <div className="sun-timer-container">
+                        <div className="sun-timer">
+                            <div className="sun-rays"></div>
+                            <span className="timer-text">Done!</span>
+                        </div>
+                    </div>
+                    <div className="title-area">
+                        <h1 className="results-title">Adventure Report</h1>
+                    </div>
+                </header>
+
+                <main className="practice-content results-content max-w-5xl mx-auto w-full px-4">
+                    <div className="results-hero-section flex flex-col items-center mb-8">
+                        <h2 className="text-4xl font-black text-[#31326F] mb-2">Adventure Complete! 🎉</h2>
+
+                        <div className="stars-container flex gap-4 my-6">
+                            {[1, 2, 3].map(i => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: i * 0.2 }}
+                                    className={`star-wrapper ${percentage >= (i * 33) ? 'active' : ''}`}
+                                >
+                                    <Star
+                                        size={60}
+                                        fill={percentage >= (i * 33) ? "#FFD700" : "#EDF2F7"}
+                                        color={percentage >= (i * 33) ? "#F6AD55" : "#CBD5E0"}
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="results-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-3xl">
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}/{total}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Time</span>
+                                <span className="text-3xl font-black text-[#31326F]">{formatTime(timeElapsed)}</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Accuracy</span>
+                                <span className="text-3xl font-black text-[#31326F]">{percentage}%</span>
+                            </div>
+                            <div className="stat-card bg-white p-6 rounded-3xl shadow-sm border-2 border-[#E0FBEF] text-center">
+                                <span className="block text-xs font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Total Score</span>
+                                <span className="text-3xl font-black text-[#31326F]">{score}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="detailed-breakdown w-full mb-12">
+                        <h3 className="text-2xl font-black text-[#31326F] mb-6 px-4">Quest Log 📜</h3>
+                        <div className="space-y-4">
+                            {sessionQuestions.map((q, idx) => {
+                                const ans = answers[idx];
+                                if (!ans) return null;
+                                return (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        className={`p-6 rounded-[2rem] border-4 ${ans.isCorrect ? 'border-[#E0FBEF] bg-white' : 'border-red-50 bg-white'} relative`}
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white shrink-0 ${ans.isCorrect ? 'bg-[#4FB7B3]' : 'bg-red-400'}`}>
+                                                {idx + 1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="text-lg font-bold text-[#31326F] mb-4 breakdown-question">
+                                                    <LatexContent html={q.text} />
+                                                </div>
+
+                                                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                                                    <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
+                                                        <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                            {ans.selected}
+                                                        </span>
+                                                    </div>
+                                                    {!ans.isCorrect && (
+                                                        <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
+                                                            <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                {q.correctAnswer}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
+                                                    <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
+                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
+                                                        <LatexContent html={q.solution} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="shrink-0 pt-2 text-[#4FB7B3]">
+                                                {ans.isCorrect ? <Check size={32} strokeWidth={3} /> : <X size={32} strokeWidth={3} className="text-red-400" />}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="results-actions flex flex-col md:flex-row justify-center gap-4 py-8 border-t-4 border-dashed border-gray-100">
+                        <button className="magic-pad-btn play-again px-12 py-4 rounded-2xl bg-[#31326F] text-white font-black text-xl shadow-xl hover:-translate-y-1 transition-all" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Practice Again
+                        </button>
+                        <button className="px-12 py-4 rounded-2xl border-4 border-[#31326F] text-[#31326F] font-black text-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-3" onClick={() => navigate('/junior/grade/3/topic/Fair Share')}>
+                            Back to Topics
+                        </button>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="junior-practice-page fair-share-theme font-sans">
@@ -303,98 +511,60 @@ const FairShareGuesswho = () => {
                 </div>
             </main>
 
-            <footer className="junior-bottom-bar">
-                <div className="desktop-footer-controls w-full flex justify-between px-8 py-4">
-                    <button
-                        className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2"
-                        onClick={async () => {
-                            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                            navigate(-1);
-                        }}
-                    >
-                        <StickerExit size={20} className="hidden" />
-                        Exit
-                    </button>
-
-                    <div className="bottom-center">
-                        {isSubmitted && (
-                            <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={20} /> View Explanation
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="nav-buttons-group">
-                        {isSubmitted ? (
-                            <button className="nav-pill-next-btn bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full text-xl font-bold flex items-center gap-2 shadow-lg transition-all transform hover:scale-105" onClick={handleNext}>
-                                {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                    <>Next <ChevronRight size={28} strokeWidth={3} /></>
-                                ) : (
-                                    <>Done <Check size={28} strokeWidth={3} /></>
-                                )}
-                            </button>
-                        ) : (
-                            <button
-                                className="nav-pill-submit-btn bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-xl font-bold flex items-center gap-2 shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                                onClick={handleCheck}
-                                disabled={selectedOption === null}
-                            >
-                                Submit <Check size={28} strokeWidth={3} />
-                            </button>
-                        )}
-                    </div>
-                </div>
-
-                <div className="mobile-footer-controls">
-                    <div className="flex items-center gap-2">
-                        <button
-                            className="bg-red-50 text-red-500 p-2 rounded-lg border border-red-100"
-                            onClick={async () => {
-                                if (sessionId) await api.finishSession(sessionId).catch(console.error);
-                                navigate(-1);
-                            }}
-                        >
-                            <X size={20} />
-                        </button>
-
-                        {isSubmitted && (
-                            <button className="bg-white text-[#00695C] border-2 border-[#00BFA5] p-2 rounded-lg font-bold flex items-center gap-1" onClick={() => setShowExplanationModal(true)}>
-                                <Eye size={18} /> Explain
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="mobile-footer-right" style={{ width: 'auto' }}>
-                        <div className="nav-buttons-group">
-                            {isSubmitted ? (
-                                <button className="nav-pill-next-btn bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full text-lg font-bold flex items-center gap-2" onClick={handleNext}>
-                                    {qIndex < TOTAL_QUESTIONS - 1 ? (
-                                        <>Next <ChevronRight size={24} strokeWidth={3} /></>
-                                    ) : (
-                                        <>Done <Check size={24} strokeWidth={3} /></>
-                                    )}
-                                </button>
-                            ) : (
-                                <button
-                                    className="nav-pill-submit-btn bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full text-lg font-bold flex items-center gap-2 disabled:opacity-50"
-                                    onClick={handleCheck}
-                                    disabled={selectedOption === null}
-                                >
-                                    Submit <Check size={24} strokeWidth={3} />
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </footer>
-
             <ExplanationModal
                 isOpen={showExplanationModal}
                 isCorrect={isCorrect}
                 correctAnswer={currentQuestion.correctAnswer}
                 explanation={currentQuestion.solution}
                 onClose={() => setShowExplanationModal(false)}
+                onNext={() => setShowExplanationModal(false)}
             />
+
+            <div className="fixed bottom-8 left-8 right-8 flex justify-between items-center pointer-events-none">
+                <div className="flex gap-4 pointer-events-auto">
+                    <button
+                        className="bg-red-50 text-red-500 p-4 rounded-2xl border-2 border-red-100 font-bold transition-all shadow-lg active:scale-95 flex items-center gap-2"
+                        onClick={async () => {
+                            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+                            navigate(-1);
+                        }}
+                    >
+                        <X size={24} /> <span className="hidden md:inline">Exit</span>
+                    </button>
+
+                    {qIndex > 0 && (
+                        <button
+                            className="bg-white text-[#31326F] px-8 py-4 rounded-2xl border-2 border-[#31326F] font-bold shadow-lg flex items-center gap-2 active:scale-95 transition-all"
+                            onClick={handlePrevious}
+                        >
+                            <ChevronLeft size={24} /> <span className="hidden md:inline">Previous</span>
+                        </button>
+                    )}
+                </div>
+
+                <div className="pointer-events-auto flex gap-4">
+                    {isSubmitted ? (
+                        <button
+                            className="nav-pill-next-btn bg-[#FF6B6B] text-white px-10 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#EE5253] flex items-center gap-2 transition-all active:translate-y-1 active:shadow-none"
+                            onClick={handleNext}
+                        >
+                            {qIndex < TOTAL_QUESTIONS - 1 ? (
+                                <>Next <ChevronRight size={28} strokeWidth={4} /></>
+                            ) : (
+                                <>Done <Check size={28} strokeWidth={4} /></>
+                            )}
+                        </button>
+                    ) : (
+                        <button
+                            className="nav-pill-submit-btn bg-[#4FB7B3] text-white px-10 py-4 rounded-2xl font-black text-xl shadow-[0_6px_0_#3A8C89] flex items-center gap-2 transition-all active:translate-y-1 active:shadow-none disabled:opacity-50"
+                            onClick={handleCheck}
+                            disabled={selectedOption === null}
+                        >
+                            Submit <Check size={28} strokeWidth={4} />
+                        </button>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
