@@ -143,7 +143,7 @@ export default function AlgebraTerminology() {
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
                     <button className={`alg-tab ${activeTab === 'terms' ? 'active' : ''}`} onClick={() => setActiveTab('terms')}>📚 Terminology</button>
                     <button className={`alg-tab ${activeTab === 'rules' ? 'active' : ''}`} onClick={() => setActiveTab('rules')}>📏 5 Golden Rules</button>
-                    <button className={`alg-tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>🧪 Vocabulary Check</button>
+                    <button className={`alg-tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>🧪 Vocabulary Quiz</button>
                 </div>
 
                 {activeTab !== 'quiz' ? (
