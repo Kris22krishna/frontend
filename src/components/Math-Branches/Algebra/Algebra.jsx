@@ -7,9 +7,9 @@ const MODULES = [
         id: 'introduction',
         path: '/algebra/introduction',
         label: 'Introduction',
-        emoji: '🌟',
+        emoji: '\uD83C\uDF1F',
         tagline: '5W1H Exploration',
-        desc: '6 Big Questions about Algebra — What, Why, Who, When, Where and How.',
+        desc: '6 big questions about Algebra: what, why, who, when, where, and how.',
         gradFrom: '#0891b2',
         gradTo: '#06b6d4',
         shadow: 'rgba(6,182,212,0.4)',
@@ -18,9 +18,9 @@ const MODULES = [
         id: 'terminology',
         path: '/algebra/terminology',
         label: 'Terminology',
-        emoji: '�',
-        tagline: '7 Key Terms · 5 Rules',
-        desc: 'Master the language of Algebra — variables, constants, coefficients & the 5 golden rules.',
+        emoji: '\uD83D\uDCD8',
+        tagline: '7 Key Terms and 5 Rules',
+        desc: 'Master the language of Algebra: variables, constants, coefficients, and the five golden rules.',
         gradFrom: '#7c3aed',
         gradTo: '#a855f7',
         shadow: 'rgba(168,85,247,0.4)',
@@ -29,9 +29,9 @@ const MODULES = [
         id: 'skills',
         path: '/algebra/skills',
         label: 'Skills',
-        emoji: '🎯',
-        tagline: 'Learn, Practice & Assess',
-        desc: '7 core skills, 10 practice questions and 10 assessment questions for each skill.',
+        emoji: '\uD83C\uDFAF',
+        tagline: 'Learn, Practice and Assess',
+        desc: 'Core skills with dedicated learn, practice, and assessment flows.',
         gradFrom: '#0369a1',
         gradTo: '#3b82f6',
         shadow: 'rgba(59,130,246,0.4)',
@@ -43,7 +43,6 @@ const STATS = [
     { val: '7', label: 'Key Terms', color: '#7c3aed' },
     { val: '5', label: 'Rules', color: '#059669' },
     { val: '5', label: 'Skills', color: '#0369a1' },
-    // { val: '100', label: 'Practice Qs', color: '#b45309' },
 ];
 
 export default function Algebra() {
@@ -51,87 +50,70 @@ export default function Algebra() {
 
     return (
         <div className="alg-fullpage">
-
-            {/* ══ LEFT PANEL — Hero ══════════════════════════ */}
             <div className="alg-left">
-                {/* Decorative circles */}
                 <div className="alg-deco alg-deco-a" />
                 <div className="alg-deco alg-deco-b" />
                 <div className="alg-deco alg-deco-c" />
 
                 <div className="alg-left-content">
                     <h1 className="alg-main-title">
-                        Master<br />
+                        Master
+                        <br />
                         <span className="alg-title-accent">Algebra</span>
                     </h1>
 
                     <p className="alg-main-sub">
-                        From mystery unknowns to powerful equations — learn Algebra
-                        the way it was meant to be taught.
+                        From mystery unknowns to powerful equations, learn Algebra the way it was meant to be taught.
                     </p>
 
-                    {/* Stats grid */}
                     <div className="alg-stats-grid">
-                        {STATS.map((s, i) => (
-                            <div className="alg-stat" key={i}>
-                                <span
-                                    className="alg-stat-num"
-                                    style={{ color: s.color }}
-                                >
-                                    {s.val}
+                        {STATS.map((item) => (
+                            <div className="alg-stat" key={item.label}>
+                                <span className="alg-stat-num" style={{ color: item.color }}>
+                                    {item.val}
                                 </span>
-                                <span className="alg-stat-lbl">{s.label}</span>
+                                <span className="alg-stat-lbl">{item.label}</span>
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            {/* ══ RIGHT PANEL — Topic Cards ═══════════════════ */}
             <div className="alg-right">
                 <p className="alg-right-eyebrow">Choose a topic to explore</p>
+
                 <div className="alg-cards-col">
-                    {MODULES.map(mod => (
+                    {MODULES.map((moduleItem) => (
                         <button
-                            key={mod.id}
+                            key={moduleItem.id}
                             className="alg-card-btn"
-                            onClick={() => navigate(mod.path)}
+                            onClick={() => navigate(moduleItem.path)}
                         >
-                            {/* Gradient left strip */}
                             <div
                                 className="alg-card-strip"
-                                style={{ background: `linear-gradient(180deg, ${mod.gradFrom}, ${mod.gradTo})` }}
+                                style={{ background: `linear-gradient(180deg, ${moduleItem.gradFrom}, ${moduleItem.gradTo})` }}
                             />
 
-                            {/* Icon */}
                             <div
                                 className="alg-card-icon"
                                 style={{
-                                    background: `linear-gradient(135deg, ${mod.gradFrom}, ${mod.gradTo})`,
-                                    boxShadow: `0 6px 20px ${mod.shadow}`,
+                                    background: `linear-gradient(135deg, ${moduleItem.gradFrom}, ${moduleItem.gradTo})`,
+                                    boxShadow: `0 6px 20px ${moduleItem.shadow}`,
                                 }}
                             >
-                                {mod.emoji}
+                                {moduleItem.emoji}
                             </div>
 
-                            {/* Text */}
                             <div className="alg-card-text">
-                                <div
-                                    className="alg-card-label"
-                                    style={{ color: mod.gradFrom }}
-                                >
-                                    {mod.label}
+                                <div className="alg-card-label" style={{ color: moduleItem.gradFrom }}>
+                                    {moduleItem.label}
                                 </div>
-                                <div className="alg-card-tagline">{mod.tagline}</div>
-                                <div className="alg-card-desc">{mod.desc}</div>
+                                <div className="alg-card-tagline">{moduleItem.tagline}</div>
+                                <div className="alg-card-desc">{moduleItem.desc}</div>
                             </div>
 
-                            {/* Arrow */}
-                            <div
-                                className="alg-card-chevron"
-                                style={{ color: mod.gradFrom }}
-                            >
-                                ›
+                            <div className="alg-card-chevron" style={{ color: moduleItem.gradFrom }}>
+                                {'>'}
                             </div>
                         </button>
                     ))}

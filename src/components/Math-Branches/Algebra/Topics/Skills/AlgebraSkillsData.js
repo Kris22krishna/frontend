@@ -442,9 +442,13 @@ export const SKILLS = [
         practice: generateExponentQuestions,
         assessment: generateExponentAssessment,
         learn: {
-            concept: 'Master the rules of powers.',
+            concept: 'Exponents follow a small set of powerful rules. Once you know when to add, subtract, multiply, or flip the base, large expressions become short and manageable.',
             rules: [
-                { title: 'Product Law', f: 'x^a \\cdot x^b = x^{a+b}', d: 'Add exponents.', ex: 'x^2 \\cdot x^3 = x^5', tip: 'Multiplication turns into addition.' }
+                { title: 'Product Law', f: 'x^a \\cdot x^b = x^{a+b}', d: 'When the base is the same and the terms are multiplied, keep the base and add the exponents.', ex: 'x^2 \\cdot x^3 = x^{2+3} = x^5', tip: 'Same base plus multiplication means add the powers.' },
+                { title: 'Quotient Law', f: '\\frac{x^a}{x^b} = x^{a-b}', d: 'For division with the same base, keep the base and subtract the lower exponent from the upper exponent.', ex: '\\frac{x^7}{x^2} = x^{7-2} = x^5', tip: 'Division with the same base means subtract the exponents.' },
+                { title: 'Power of a Power', f: '(x^a)^b = x^{ab}', d: 'When one exponent is raised to another exponent, multiply the exponents together.', ex: '(x^3)^4 = x^{12}', tip: 'Bracket on top of a power means multiply exponents, not add them.' },
+                { title: 'Zero and Negative Powers', f: 'x^0 = 1,\\; x^{-a} = \\frac{1}{x^a}', d: 'Any non-zero base to the power zero is 1. A negative exponent sends the base to the denominator with a positive power.', ex: '5^0 = 1,\\; x^{-3} = \\frac{1}{x^3}', tip: 'Negative power means flip the base; zero power means 1.' },
+                { title: 'Fractional Power', f: 'x^{\\frac{a}{b}} = \\sqrt[b]{x^a}', d: 'A fractional exponent means root and power together. The denominator is the root index and the numerator is the power.', ex: 'x^{\\frac{3}{2}} = \\sqrt{x^3}', tip: 'Bottom of the fraction is the root, top is the power.' }
             ]
         }
     },
@@ -457,7 +461,15 @@ export const SKILLS = [
         desc: 'Identify and combine matching terms.',
         practice: likeTermsQuestions,
         assessment: likeTermsAssessment,
-        learn: { concept: 'Only siblings play together.', rules: [{ title: 'Variables', f: '3x + 2x = 5x', d: 'Match letters.', ex: 'x + x = 2x', tip: 'Count them!' }] }
+        learn: {
+            concept: 'Like terms are algebra pieces with exactly the same variable part. Only their coefficients may differ. If the letters or powers change, the terms cannot be combined directly.',
+            rules: [
+                { title: 'Like Terms', f: 'ax^n + bx^n = (a+b)x^n', d: 'Two terms are like terms only if the variables and their powers match exactly.', ex: '3x^2 + 5x^2 = 8x^2', tip: 'Match both the letter and the power before combining.' },
+                { title: 'Unlike Terms', f: '3x + 3y \\neq 6xy', d: 'If the variable part is different, the terms must stay separate.', ex: '4a + 2b \\text{ cannot be simplified further}', tip: 'Different letters or different powers means do not combine.' },
+                { title: 'Combine Coefficients', f: 'ax - bx = (a-b)x', d: 'When terms are like, add or subtract only the coefficients and keep the variable part unchanged.', ex: '7m - 2m = 5m', tip: 'The number changes, the variable part stays the same.' },
+                { title: 'Constant Terms', f: 'a+b = \\text{constant}', d: 'Plain numbers with no variables are also like terms and can be combined together.', ex: '6 + 9 - 4 = 11', tip: 'Constants belong in the same family because they have no variable part.' }
+            ]
+        }
     },
     {
         id: 'expressions',
@@ -468,7 +480,15 @@ export const SKILLS = [
         desc: 'Multi-step algebraic cleanup.',
         practice: expressionQuestions,
         assessment: expressionAssessment,
-        learn: { concept: 'Clean up the mess.', rules: [{ title: 'PEMDAS', f: '2(x+1)', d: 'Order matters.', ex: '2x+2', tip: 'Distribute first.' }] }
+        learn: {
+            concept: 'Simplifying an expression means rewriting it in a cleaner equivalent form. The value does not change, but the expression becomes easier to read or solve.',
+            rules: [
+                { title: 'Distribute into Brackets', f: 'a(b+c)=ab+ac', d: 'Multiply the outside term by every term inside the bracket.', ex: '3(x+4)=3x+12', tip: 'Touch every term inside the bracket.' },
+                { title: 'Negative before Brackets', f: '-(a+b)=-a-b', d: 'A minus sign outside a bracket changes the sign of every term inside the bracket.', ex: '-(x-5)=-x+5', tip: 'A minus in front flips all signs inside.' },
+                { title: 'Combine Like Terms', f: '3x+2x-4=5x-4', d: 'After expanding, group like terms and combine their coefficients.', ex: '2x+x+7-3 = 3x+4', tip: 'Expand first, then combine.' },
+                { title: 'Order of Operations', f: '\\text{Brackets} \\rightarrow \\text{Multiply} \\rightarrow \\text{Add/Subtract}', d: 'Follow the correct order so the expression is simplified logically and accurately.', ex: '2(x+1)+3 = 2x+2+3 = 2x+5', tip: 'Do not combine terms before removing brackets properly.' }
+            ]
+        }
     },
     {
         id: 'solving',
@@ -483,7 +503,15 @@ export const SKILLS = [
             { id: 'linear2', title: 'Linear 2-Var', questions: generateEquationQuestionsLinear2 },
             { id: 'quadratic', title: 'Quadratic', questions: generateEquationQuestionsQuadratic }
         ],
-        learn: { concept: 'Balance the scale.', rules: [{ title: 'Balance', f: 'x+2=5', d: 'Do same to both sides.', ex: 'x=3', tip: 'Inverse ops!' }] }
+        learn: {
+            concept: 'Solving an equation means finding the value of the variable that makes both sides equal. Every step must preserve balance, so whatever you do to one side must also be done to the other.',
+            rules: [
+                { title: 'Keep Both Sides Balanced', f: 'a=b \\Rightarrow a+c=b+c', d: 'The equation stays true only if the same operation is applied to both sides.', ex: 'x+2=5 \\Rightarrow x+2-2=5-2', tip: 'Same move on both sides, every single time.' },
+                { title: 'Use Inverse Operations', f: 'x+a=b \\Rightarrow x=b-a', d: 'Undo addition with subtraction, multiplication with division, and so on, to isolate the variable.', ex: '3x=21 \\Rightarrow x=7', tip: 'Undo the outermost operation first.' },
+                { title: 'Variables on Both Sides', f: 'ax+b=cx+d', d: 'Move variable terms to one side and constants to the other side before simplifying.', ex: '5x+2=2x+11 \\Rightarrow 3x=9', tip: 'Collect x terms together before the final step.' },
+                { title: 'Quadratic Equations', f: 'x^2-5x+6=0', d: 'Quadratics are solved by factorisation, square roots, or other methods depending on the form.', ex: 'x^2-5x+6=(x-2)(x-3)', tip: 'First check whether the quadratic can be factored neatly.' }
+            ]
+        }
     },
     {
         id: 'subject',
@@ -494,7 +522,15 @@ export const SKILLS = [
         desc: 'Rearrange formulas.',
         practice: subjectQuestions,
         assessment: subjectAssessment,
-        learn: { concept: 'Rearrange the furniture.', rules: [{ title: 'Isolate', f: 'y=mx+c', d: 'Get x alone.', ex: 'x=(y-c)/m', tip: 'Backwards PEMDAS.' }] }
+        learn: {
+            concept: 'Changing the subject of a formula means rewriting the formula so a different variable stands alone. The relationship stays the same, but the spotlight moves to a new variable.',
+            rules: [
+                { title: 'Isolate the Target Variable', f: 'y=mx+c \\Rightarrow x=\\frac{y-c}{m}', d: 'Your goal is to get the required variable alone on one side of the equation.', ex: 'A=lb \\Rightarrow b=\\frac{A}{l}', tip: 'Keep asking: what is still attached to the target variable?' },
+                { title: 'Reverse the Operations', f: '\\text{undo in reverse order}', d: 'Undo operations in the opposite order in which they act on the variable.', ex: 'v=u+at \\Rightarrow v-u=at \\Rightarrow a=\\frac{v-u}{t}', tip: 'Think backwards through the formula.' },
+                { title: 'Clear Fractions Carefully', f: '\\frac{x}{a}=b \\Rightarrow x=ab', d: 'If the target variable is in a fraction, use multiplication to remove the denominator first.', ex: '\\frac{r}{2}=5 \\Rightarrow r=10', tip: 'Fractions become easier once the denominator is removed.' },
+                { title: 'Roots and Powers', f: 'A=\\pi r^2 \\Rightarrow r=\\sqrt{\\frac{A}{\\pi}}', d: 'If the variable is squared, isolate the square first and then take the square root.', ex: 'x^2=49 \\Rightarrow x=\\pm 7', tip: 'Do not jump to the root before isolating the powered term.' }
+            ]
+        }
     },
     {
         id: 'wordproblems',
@@ -505,7 +541,15 @@ export const SKILLS = [
         desc: 'Words to Math.',
         practice: wordProblemQuestions,
         assessment: wordProblemAssessment,
-        learn: { concept: 'Translate the story.', rules: [{ title: 'Code Words', f: '"sum" = +', d: 'Keywords.', ex: '3n+1', tip: 'Read carefully.' }] }
+        learn: {
+            concept: 'Word problems test translation. The main task is to turn a verbal situation into an algebraic equation and then solve it carefully in context.',
+            rules: [
+                { title: 'Define the Variable', f: 'x = \\text{unknown quantity}', d: 'Start by deciding what the variable represents before writing any equation.', ex: 'Let x = the number of apples', tip: 'If the variable is unclear, the whole equation becomes shaky.' },
+                { title: 'Translate Key Phrases', f: '\\text{sum}=+,\\; \\text{difference}=-,\\; \\text{times}=\\cdot', d: 'Convert everyday language into mathematical operations.', ex: '"three more than a number" \\Rightarrow x+3', tip: 'Read the sentence slowly and translate one phrase at a time.' },
+                { title: 'Build the Equation', f: '\\text{statement} \\Rightarrow \\text{equation}', d: 'Use the relationships in the story to form an equation that matches the situation.', ex: '"nine more than three times a number is 24" \\Rightarrow 3x+9=24', tip: 'The word "is" usually marks the equals sign.' },
+                { title: 'Check in Context', f: '\\text{solution} \\rightarrow \\text{story check}', d: 'After solving, verify that the answer makes sense in the original situation.', ex: 'If x=5, then 3x+9=24 is true', tip: 'Always substitute the answer back into the story meaning, not just the equation.' }
+            ]
+        }
     },
     {
         id: 'reallife',
@@ -516,6 +560,14 @@ export const SKILLS = [
         desc: 'Realistic challenges.',
         practice: generateRealLifeQuestions,
         assessment: generateRealLifeAssessment,
-        learn: { concept: 'Real world math.', rules: [{ title: 'Stories', f: '...', d: 'Real life.', ex: '...', tip: 'Check context.' }] }
+        learn: {
+            concept: 'Algebra is useful because real situations often have unknown quantities. It helps us model costs, distances, patterns, rates, and comparisons with a clear mathematical structure.',
+            rules: [
+                { title: 'Identify the Unknown', f: 'x = \\text{quantity to find}', d: 'In any real-world situation, start by deciding exactly what is unknown.', ex: 'x = cost of one notebook', tip: 'A precise unknown makes the model precise.' },
+                { title: 'Model the Relationship', f: '\\text{real situation} \\Rightarrow \\text{equation}', d: 'Turn the information in the problem into an algebraic relationship.', ex: '\\text{pizza cost} + 2 = \\text{total bill}', tip: 'Write the equation exactly as the situation describes it.' },
+                { title: 'Substitute and Solve', f: '\\text{known values} \\rightarrow \\text{solve for } x', d: 'Insert the given numbers into the model and solve the resulting equation.', ex: 'x+2=11 \\Rightarrow x=9', tip: 'Real-life algebra is still algebra after the model is built.' },
+                { title: 'Interpret the Result', f: '\\text{answer with units}', d: 'The final answer should be written with meaning and units, not as a bare number.', ex: 'The pizza costs 9 rupees', tip: 'A number alone is incomplete unless you say what it represents.' }
+            ]
+        }
     }
 ];
