@@ -72,7 +72,7 @@ const Navbar = () => {
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
                     )}
                     {isAuthenticated && userType === 'student' && (
-                        <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnosis Test</Link>
+                        <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnostic Test</Link>
                     )}
                 </div>
 
