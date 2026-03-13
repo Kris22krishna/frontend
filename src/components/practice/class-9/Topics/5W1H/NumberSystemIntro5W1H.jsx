@@ -4,118 +4,90 @@ import '../../NumberSystem.css';
 import MathRenderer from '../../../../MathRenderer';
 import { cards5W1H } from './NumberSystemIntroData';
 
-/* ─── Single card ─────────────────────────────────── */
 function W1HCard({ card }) {
     const [open, setOpen] = useState(false);
 
     return (
         <div
-            className={`intro-card${open ? ' intro-card--open' : ''}`}
-            onClick={() => setOpen(o => !o)}
+            className="ns-5w1h-card"
             style={{
                 borderColor: open ? card.gradFrom + '60' : '#e2e8f0',
                 boxShadow: open ? `0 8px 32px ${card.shadow}` : '0 2px 10px rgba(0,0,0,0.07)',
             }}
         >
-            {/* Gradient top strip */}
             <div
-                className="intro-card-strip"
-                style={{ background: `linear-gradient(90deg, ${card.gradFrom}, ${card.gradTo})` }}
-            />
-
-            {/* Header row */}
-            <div className="intro-card-header">
-                {/* Icon */}
+                className="ns-5w1h-header"
+                onClick={() => setOpen(o => !o)}
+                style={{ background: open ? `${card.gradFrom}08` : 'transparent' }}
+            >
                 <div
-                    className="intro-card-icon"
+                    className="ns-5w1h-icon"
                     style={{
                         background: `linear-gradient(135deg, ${card.gradFrom}, ${card.gradTo})`,
+                        color: '#fff',
                         boxShadow: `0 4px 14px ${card.shadow}`,
                     }}
                 >
                     {card.icon}
                 </div>
-
-                {/* Q + label */}
-                <div className="intro-card-title-block">
-                    <div
-                        className="intro-card-q"
-                        style={{ color: card.gradFrom }}
-                    >
-                        {card.q}
-                    </div>
-                    <div className="intro-card-sublabel">{card.label}</div>
+                <div style={{ flex: 1 }}>
+                    <div className="ns-5w1h-label" style={{ color: card.gradFrom }}>{card.label}</div>
+                    <div className="ns-5w1h-q">{card.q}</div>
                 </div>
-
-                {/* Chevron */}
-                <div
-                    className="intro-card-chevron"
-                    style={{
-                        color: open ? card.gradFrom : '#94a3b8',
-                        transform: open ? 'rotate(180deg)' : 'none',
-                    }}
-                >
-                    ▼
-                </div>
+                <div className={`ns-5w1h-chevron ${open ? 'ns-5w1h-chevron--open' : ''}`} style={{ color: card.gradFrom }}>▼</div>
             </div>
 
-            {/* Collapsed hint */}
-            {!open && (
-                <div className="intro-card-hint">Tap to explore →</div>
-            )}
-
-            {/* Expanded content */}
             {open && (
-                <div className="intro-card-body">
-                    <div className="intro-card-content">
-                        <MathRenderer text={card.content} />
-                    </div>
-                    <div
-                        className="intro-card-fact"
-                        style={{
-                            background: `linear-gradient(135deg, ${card.gradFrom}12, ${card.gradTo}18)`,
-                            borderColor: card.gradFrom + '30',
-                        }}
-                    >
-                        <MathRenderer text={card.fact} />
-                    </div>
+                <div className="ns-5w1h-body">
+                    <ul className="ns-5w1h-list">
+                        <li className="ns-5w1h-item"><MathRenderer text={card.content} /></li>
+                        <li className="ns-5w1h-item" style={{ borderBottom: 'none' }}>
+                            <div style={{
+                                background: `linear-gradient(135deg, ${card.gradFrom}12, ${card.gradTo}18)`,
+                                padding: '12px',
+                                borderRadius: '8px',
+                                fontSize: '14px',
+                                marginTop: '8px'
+                            }}>
+                                <span style={{ fontWeight: 800, color: card.gradFrom }}>💡 Fact: </span>
+                                <MathRenderer text={card.fact} />
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             )}
         </div>
     );
 }
 
-/* ─── Main page ───────────────────────────────────── */
 export default function NumberSystemIntro5W1H() {
     const navigate = useNavigate();
 
     return (
-        <div className="intro-page">
-
+        <div className="ns-page">
             {/* ── TOP NAV BAR ──────────────────────────────── */}
-            <nav className="intro-nav">
+            <nav className="ns-nav">
                 <button
-                    className="intro-nav-back"
+                    className="ns-nav-back"
                     onClick={() => navigate('/senior/grade/9/number-system')}
                 >
                     ← Back to Hub
                 </button>
-
-                <div className="intro-nav-links">
+                <div className="ns-nav-links">
                     <button
-                        className="intro-nav-link intro-nav-link--active"
+                        className="ns-nav-link ns-nav-link--active"
                         onClick={() => navigate('/senior/grade/9/number-system/introduction')}
                     >
                         🌟 Introduction
                     </button>
                     <button
-                        className="intro-nav-link"
+                        className="ns-nav-link"
                         onClick={() => navigate('/senior/grade/9/number-system/terminology')}
                     >
                         📖 Terminology
                     </button>
                     <button
-                        className="intro-nav-link"
+                        className="ns-nav-link"
                         onClick={() => navigate('/senior/grade/9/number-system/skills')}
                     >
                         🎯 Skills
@@ -124,34 +96,29 @@ export default function NumberSystemIntro5W1H() {
             </nav>
 
             {/* ── HERO BANNER ──────────────────────────────── */}
-            <div className="intro-hero" style={{ padding: '16px 24px 20px' }}>
-                <div className="intro-hero-deco intro-hero-deco-a" />
-                <div className="intro-hero-deco intro-hero-deco-b" />
-                <div className="intro-hero-inner">
-                    <h1 className="intro-hero-title">
-                        Explore the <span className="intro-hero-highlight">Number System</span>
-                    </h1>
-                    <p className="intro-hero-sub">
-                        Master the foundations of real numbers ✨
-                    </p>
-                </div>
+            <div className="ns-module-hero">
+                <h1 className="ns-module-title">
+                    Explore the <span className="ns-accent-text">Number System</span>
+                </h1>
+                <p className="ns-module-subtitle">
+                    Master the foundations of real numbers ✨
+                </p>
             </div>
 
             {/* ── 5W1H CARDS GRID ──────────────────────────── */}
-            <div className="intro-content" style={{ padding: '10px 24px 20px' }}>
-                <div className="intro-grid">
+            <div className="ns-section">
+                <div className="ns-5w1h-grid" style={{ marginTop: '24px' }}>
                     {cards5W1H.map((card, idx) => (
                         <W1HCard key={idx} card={card} />
                     ))}
                 </div>
 
-                {/* Compact next-step strip */}
-                <div className="intro-cta-strip">
-                    <p className="intro-cta-sub" style={{ margin: 0 }}>
+                <div style={{ marginTop: '32px', textAlign: 'center' }}>
+                    <p style={{ color: '#64748b', fontWeight: 600, fontSize: '14px', marginBottom: '12px' }}>
                         Up next: Key terms & classification rules
                     </p>
                     <button
-                        className="intro-cta-btn"
+                        className="ns-btn-primary"
                         onClick={() => navigate('/senior/grade/9/number-system/terminology')}
                     >
                         Terminology →

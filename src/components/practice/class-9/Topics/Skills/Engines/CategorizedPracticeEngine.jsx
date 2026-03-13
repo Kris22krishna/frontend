@@ -6,12 +6,12 @@ const CategorizedPracticeEngine = ({ skill, onBack }) => {
     const category = skill.practiceCategories[activeCat];
 
     return (
-        <div className="alg-practice-layout">
-            <aside className="alg-learn-sidebar">
-                <button onClick={onBack} style={{ marginBottom: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--alg-muted)', textAlign: 'left', fontWeight: 'bold' }}>← Back to Skills</button>
+        <div className="ns-practice-layout">
+            <aside className="ns-learn-sidebar">
+                <button onClick={onBack} style={{ marginBottom: 16, background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', textAlign: 'left', fontWeight: 'bold' }}>← Back to Skills</button>
                 <h3 style={{ margin: '0 0 12px 0', fontSize: 16, textTransform: 'uppercase', letterSpacing: 1, color: skill.color }}>Categories</h3>
                 {skill.practiceCategories.map((c, i) => (
-                    <button key={i} onClick={() => setActiveCat(i)} className={`alg-sidebar-btn ${activeCat === i ? 'active' : ''}`} style={{
+                    <button key={i} onClick={() => setActiveCat(i)} className={`ns-sidebar-btn ${activeCat === i ? 'active' : ''}`} style={{
                         '--skill-color': skill.color,
                         '--skill-color-15': `${skill.color}15`,
                         '--skill-color-40': `${skill.color}40`,

@@ -80,15 +80,15 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
         const pct = Math.round((score / questionSet.length) * 100);
 
         return (
-            <div className="alg-quiz-finished" style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
+            <div className="ns-quiz-finished" style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: 'var(--alg-text)' }}>Assessment Complete</h2>
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a' }}>Assessment Complete</h2>
                     <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questionSet.length}</div>
-                    <div style={{ fontSize: 18, color: 'var(--alg-muted)', fontWeight: 600 }}>Score: {pct}%</div>
-                    <button className="alg-btn-secondary" onClick={onBack} style={{ marginTop: 20, padding: '10px 20px' }}>Return to Skills</button>
+                    <div style={{ fontSize: 18, color: '#64748b', fontWeight: 600 }}>Score: {pct}%</div>
+                    <button className="ns-btn-secondary" onClick={onBack} style={{ marginTop: 20, padding: '10px 20px' }}>Return to Skills</button>
                 </div>
 
-                <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: 'var(--alg-text)' }}>Summary Report</h3>
+                <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: '#0f172a' }}>Summary Report</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     {questionSet.map((question, i) => {
                         const isCorrect = answers[i] === question.correct;
@@ -97,7 +97,7 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                         const userOptText = !isSkipped ? question.options[answers[i]] : 'Skipped';
 
                         const statusText = isCorrect ? 'Correct' : (isSkipped ? 'Skipped' : 'Incorrect');
-                        const statusColor = isCorrect ? 'var(--alg-teal)' : (isSkipped ? '#94a3b8' : 'var(--alg-red)');
+                        const statusColor = isCorrect ? '#0d9488' : (isSkipped ? '#94a3b8' : '#e11d48');
 
                         return (
                             <div key={i} style={{
@@ -106,15 +106,15 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                                 background: isCorrect ? 'rgba(16,185,129,0.05)' : (isSkipped ? 'rgba(148,163,184,0.05)' : 'rgba(239,68,68,0.05)')
                             }}>
                                 <div style={{ fontWeight: 800, marginBottom: 8, color: statusColor }}>Question {i + 1} - {statusText}</div>
-                                <div className="alg-quiz-question-text" style={{ fontSize: 16, marginBottom: 16, color: 'var(--alg-text)', fontWeight: 600 }}>
+                                <div className="ns-quiz-question-text" style={{ fontSize: 16, marginBottom: 16, color: '#0f172a', fontWeight: 600 }}>
                                     <MathRenderer text={question.question} />
                                 </div>
-                                <div className="alg-summary-split">
-                                    <div className="alg-summary-item">
-                                        <strong style={{ color: 'var(--alg-teal)' }}>Correct Answer:</strong>
+                                <div className="ns-summary-split">
+                                    <div className="ns-summary-item">
+                                        <strong style={{ color: '#0d9488' }}>Correct Answer:</strong>
                                         <div style={{ marginTop: 6 }}><MathRenderer text={correctOptText.includes('$') || correctOptText.includes('^') ? (correctOptText.includes('$') ? correctOptText : `$${correctOptText}$`) : correctOptText} /></div>
                                     </div>
-                                    <div className="alg-summary-item user-ans">
+                                    <div className="ns-summary-item user-ans">
                                         <strong style={{ color: statusColor }}>Your Answer:</strong>
                                         <div style={{ marginTop: 6 }}>{isSkipped ? 'Skipped' : <MathRenderer text={userOptText.includes('$') || userOptText.includes('^') ? (userOptText.includes('$') ? userOptText : `$${userOptText}$`) : userOptText} />}</div>
                                     </div>
@@ -128,15 +128,15 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
     }
 
     return (
-        <div className="alg-quiz-active alg-assessment-layout">
+        <div className="ns-quiz-active ns-assessment-layout">
             {/* Left Main Question Area */}
             <div style={{ flex: 1 }} ref={topRef}>
-                <div className="alg-score-header">
+                <div className="ns-score-header">
                     <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Assessment</div>
-                    <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, margin: 0, color: 'var(--alg-text)' }}>{title}</h3>
+                    <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, margin: 0, color: '#0f172a' }}>{title}</h3>
                 </div>
 
-                <div className="alg-quiz-card">
+                <div className="ns-quiz-card">
                     <div style={{
                         display: 'inline-flex', alignItems: 'center', gap: 6,
                         background: `${color}15`, padding: '4px 12px', borderRadius: 8,
@@ -144,7 +144,7 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                     }}>
                         <span>QUESTION</span> {current + 1}
                     </div>
-                    <div className="alg-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: 'var(--alg-text)', lineHeight: 1.6, marginBottom: 24 }}>
+                    <div className="ns-quiz-question-text" style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', lineHeight: 1.6, marginBottom: 24 }}>
                         <MathRenderer text={q.question} />
                     </div>
 
@@ -161,7 +161,7 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                                         border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
                                         background: isSelected ? `${color}05` : '#fff',
                                         cursor: 'pointer', fontSize: 15, textAlign: 'left',
-                                        transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: 'var(--alg-text)'
+                                        transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: '#0f172a'
                                     }}
                                 >
                                     <div style={{
@@ -179,11 +179,11 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
                     <div style={{ display: 'flex', gap: 12 }}>
-                        <button onClick={handlePrev} disabled={current === 0} className="alg-btn-secondary" style={{ visibility: current === 0 ? 'hidden' : 'visible' }}>← Previous</button>
+                        <button onClick={handlePrev} disabled={current === 0} className="ns-btn-secondary" style={{ visibility: current === 0 ? 'hidden' : 'visible' }}>← Previous</button>
                         <button
                             onClick={handleNext}
                             disabled={current + 1 === questionSet.length}
-                            className="alg-btn-secondary"
+                            className="ns-btn-secondary"
                             style={{
                                 display: current + 1 === questionSet.length ? 'none' : 'block',
                                 border: '1px solid #cbd5e1'
@@ -193,25 +193,25 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                         </button>
                     </div>
                     {current + 1 === questionSet.length ? (
-                        <button onClick={handleSubmit} className="alg-btn-primary" style={{ background: 'var(--alg-red)', border: 'none', color: '#fff' }}>Submit Assessment</button>
+                        <button onClick={handleSubmit} className="ns-btn-primary" style={{ background: '#e11d48', border: 'none', color: '#fff' }}>Submit Assessment</button>
                     ) : (
-                        <button onClick={handleNext} className="alg-btn-primary" style={{ background: color, border: 'none', color: '#fff' }}>Next →</button>
+                        <button onClick={handleNext} className="ns-btn-primary" style={{ background: color, border: 'none', color: '#fff' }}>Next →</button>
                     )}
                 </div>
             </div>
 
             {/* Right Question Palette */}
-            <div className="alg-assessment-palette">
+            <div className="ns-assessment-palette">
                 <div style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     padding: '12px', background: timeLeft < 60 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(8, 145, 178, 0.05)',
-                    color: timeLeft < 60 ? 'var(--alg-red)' : 'var(--alg-text)',
+                    color: timeLeft < 60 ? '#e11d48' : '#0f172a',
                     borderRadius: 12, marginBottom: 24, fontWeight: 800, fontSize: 20
                 }}>
                     ⏱️ {formatTime(timeLeft)}
                 </div>
 
-                <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 16, color: 'var(--alg-text)' }}>Question Palette</div>
+                <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 16, color: '#0f172a' }}>Question Palette</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
                     {questionSet.map((_, i) => {
                         const isAnswered = answers[i] !== null;
@@ -223,8 +223,8 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                                 style={{
                                     aspectRatio: '1/1', borderRadius: 8, fontSize: 14, fontWeight: 700,
                                     background: isAnswered ? color : '#f1f5f9',
-                                    color: isAnswered ? '#fff' : 'var(--alg-muted)',
-                                    border: isCurrent ? `3px solid var(--alg-text)` : 'none',
+                                    color: isAnswered ? '#fff' : '#64748b',
+                                    border: isCurrent ? `3px solid #0f172a` : 'none',
                                     cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center'
                                 }}
                             >
@@ -233,11 +233,11 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                         );
                     })}
                 </div>
-                <div style={{ marginTop: 20, fontSize: 12, color: 'var(--alg-muted)' }}>
+                <div style={{ marginTop: 20, fontSize: 12, color: '#64748b' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><div style={{ width: 12, height: 12, background: color, borderRadius: 3 }} /> Answered</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}><div style={{ width: 12, height: 12, background: '#f1f5f9', borderRadius: 3 }} /> Not Answered</div>
                 </div>
-                <button onClick={handleSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: 'var(--alg-red)', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>Submit Assessment</button>
+                <button onClick={handleSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: '#e11d48', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>Submit Assessment</button>
             </div>
         </div>
     );
