@@ -151,54 +151,32 @@ export default function QuizEngine({ questions, title, onBack, color }) {
                 </div>
 
                 {/* Options */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
+                <div className="ns-quiz-options">
                     {q.options.map((opt, oi) => {
-                        let borderColor = 'rgba(0,0,0,0.04)';
-                        let bgColor = '#fff';
-                        let textColor = '#0f172a';
-                        let dotColor = '#f1f5f9';
-
-                        if (answered) {
-                            if (oi === q.correct) {
-                                borderColor = '#0d9488';
-                                bgColor = 'rgba(16,185,129,0.05)';
-                                textColor = '#0d9488';
-                                dotColor = '#0d9488';
-                            }
-                            else if (oi === selected) {
-                                borderColor = '#e11d48';
-                                bgColor = 'rgba(239,68,68,0.05)';
-                                textColor = '#e11d48';
-                                dotColor = '#e11d48';
-                            }
-                        } else if (selected === oi) {
-                            borderColor = color;
-                            bgColor = `${color}05`;
-                            dotColor = color;
-                        }
+                        const isCorrect = oi === q.correct;
+                        const isWrong = oi === selected && !isCorrect;
 
                         return (
                             <button
                                 key={oi}
                                 onClick={() => handleSelect(oi)}
                                 disabled={answered}
+                                className={`ns-option-btn ${selected === oi ? 'selected' : ''}`}
                                 style={{
-                                    display: 'flex', alignItems: 'center', gap: 12,
-                                    padding: '14px 16px', borderRadius: 12,
-                                    border: `2.5px solid ${borderColor}`,
-                                    background: bgColor, cursor: answered ? 'default' : 'pointer',
-                                    fontSize: 15, color: textColor, textAlign: 'left',
-                                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    fontWeight: selected === oi ? 700 : 500,
-                                    boxShadow: selected === oi && !answered ? '0 4px 12px rgba(0,0,0,0.05)' : 'none'
+                                    '--skill-color': color,
+                                    borderColor: answered ? (isCorrect ? '#0d9488' : (isWrong ? '#e11d48' : '#f1f5f9')) : (selected === oi ? color : '#f1f5f9'),
+                                    background: answered ? (isCorrect ? 'rgba(16,185,129,0.05)' : (isWrong ? 'rgba(239,68,68,0.05)' : '#fff')) : (selected === oi ? `${color}05` : '#fff'),
+                                    color: answered ? (isCorrect ? '#0d9488' : (isWrong ? '#e11d48' : '#1e293b')) : (selected === oi ? color : '#1e293b'),
+                                    opacity: answered && !isCorrect && !isWrong ? 0.7 : 1
                                 }}
                             >
                                 <div style={{
-                                    width: 10, height: 10, borderRadius: '50%', background: dotColor, flexShrink: 0,
-                                    transition: 'all 0.2s'
+                                    width: 10, height: 10, borderRadius: '50%',
+                                    background: answered ? (isCorrect ? '#0d9488' : (isWrong ? '#e11d48' : '#f1f5f9')) : (selected === oi ? color : '#f1f5f9'),
+                                    flexShrink: 0, transition: 'all 0.2s'
                                 }} />
                                 <span style={{ fontSize: '1.1rem' }}>
-                                    <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
+                                    <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') || opt.includes('\\frac') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
                                 </span>
                             </button>
                         );

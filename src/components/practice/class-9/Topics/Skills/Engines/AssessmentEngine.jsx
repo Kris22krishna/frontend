@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
+import mascotImg from '../../../../../../assets/mascot.png';
+import '../../../NumberSystem.css';
 
 export default function AssessmentEngine({ questions, title, onBack, color }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
@@ -80,12 +82,30 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
         const pct = Math.round((score / questionSet.length) * 100);
 
         return (
-            <div className="ns-quiz-finished" style={{ maxWidth: 900, margin: '0 auto', padding: '40px 20px' }}>
+            <div className="ns-quiz-finished" style={{ maxWidth: 900, margin: '40px auto', padding: '40px' }}>
                 <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <img
+                        src={mascotImg}
+                        alt="Mascot"
+                        style={{
+                            width: 120,
+                            height: 'auto',
+                            marginBottom: 20,
+                            filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.1))'
+                        }}
+                    />
                     <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a' }}>Assessment Complete</h2>
-                    <div style={{ fontSize: 48, fontWeight: 900, color }}>{score} / {questionSet.length}</div>
-                    <div style={{ fontSize: 18, color: '#64748b', fontWeight: 600 }}>Score: {pct}%</div>
-                    <button className="ns-btn-secondary" onClick={onBack} style={{ marginTop: 20, padding: '10px 20px' }}>Return to Skills</button>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginTop: 24 }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: 40, fontWeight: 900, color }}>{score} / {questionSet.length}</div>
+                            <div style={{ fontSize: 14, color: '#64748b', fontWeight: 600 }}>Score</div>
+                        </div>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: 40, fontWeight: 900, color: '#0d9488' }}>{pct}%</div>
+                            <div style={{ fontSize: 14, color: '#64748b', fontWeight: 600 }}>Accuracy</div>
+                        </div>
+                    </div>
+                    <button className="ns-btn-secondary" onClick={onBack} style={{ marginTop: 32, padding: '10px 32px' }}>Return to Skills</button>
                 </div>
 
                 <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: '#0f172a' }}>Summary Report</h3>
@@ -112,13 +132,19 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                                 <div className="ns-summary-split">
                                     <div className="ns-summary-item">
                                         <strong style={{ color: '#0d9488' }}>Correct Answer:</strong>
-                                        <div style={{ marginTop: 6 }}><MathRenderer text={correctOptText.includes('$') || correctOptText.includes('^') ? (correctOptText.includes('$') ? correctOptText : `$${correctOptText}$`) : correctOptText} /></div>
+                                        <div style={{ marginTop: 6 }}><MathRenderer text={correctOptText.includes('$') || correctOptText.includes('^') || correctOptText.includes('/') || correctOptText.includes('\\frac') ? (correctOptText.includes('$') ? correctOptText : `$${correctOptText}$`) : correctOptText} /></div>
                                     </div>
                                     <div className="ns-summary-item user-ans">
                                         <strong style={{ color: statusColor }}>Your Answer:</strong>
-                                        <div style={{ marginTop: 6 }}>{isSkipped ? 'Skipped' : <MathRenderer text={userOptText.includes('$') || userOptText.includes('^') ? (userOptText.includes('$') ? userOptText : `$${userOptText}$`) : userOptText} />}</div>
+                                        <div style={{ marginTop: 6 }}>{isSkipped ? 'Skipped' : <MathRenderer text={userOptText.includes('$') || userOptText.includes('^') || userOptText.includes('/') || userOptText.includes('\\frac') ? (userOptText.includes('$') ? userOptText : `$${userOptText}$`) : userOptText} />}</div>
                                     </div>
                                 </div>
+                                {question.explanation && (
+                                    <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px dashed #e2e8f0' }}>
+                                        <div style={{ fontSize: 13, fontWeight: 800, color: '#312e81', textTransform: 'uppercase', marginBottom: 4 }}>Solution</div>
+                                        <div style={{ fontSize: 14, color: '#475569', lineHeight: 1.5 }}><MathRenderer text={question.explanation} /></div>
+                                    </div>
+                                )}
                             </div>
                         );
                     })}
@@ -148,28 +174,22 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
                         <MathRenderer text={q.question} />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
+                    <div className="ns-quiz-options">
                         {q.options.map((opt, oi) => {
                             const isSelected = answers[current] === oi;
                             return (
                                 <button
                                     key={oi}
                                     onClick={() => handleSelect(oi)}
-                                    style={{
-                                        display: 'flex', alignItems: 'center', gap: 12,
-                                        padding: '14px 16px', borderRadius: 12,
-                                        border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
-                                        background: isSelected ? `${color}05` : '#fff',
-                                        cursor: 'pointer', fontSize: 15, textAlign: 'left',
-                                        transition: 'all 0.2s', fontWeight: isSelected ? 700 : 500, color: '#0f172a'
-                                    }}
+                                    className={`ns-option-btn ${isSelected ? 'selected' : ''}`}
+                                    style={{ '--skill-color': color }}
                                 >
                                     <div style={{
                                         width: 10, height: 10, borderRadius: '50%',
                                         background: isSelected ? color : '#f1f5f9', flexShrink: 0
                                     }} />
                                     <span>
-                                        <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
+                                        <MathRenderer text={opt.includes('^') || opt.includes('=') || opt.includes('/') || opt.includes('\\frac') ? (opt.includes('$') ? opt : `$${opt}$`) : opt} />
                                     </span>
                                 </button>
                             );

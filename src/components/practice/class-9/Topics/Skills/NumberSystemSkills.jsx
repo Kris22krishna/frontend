@@ -78,7 +78,7 @@ export default function NumberSystemSkills() {
 
                                             <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: '16px', borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
                                                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: '#64748b' }}>
-                                                    <span style={{ fontWeight: 800, color: '#0d9488' }}>🛡️ Survival Tip: </span>
+                                                    <span style={{ fontWeight: 800, color: '#0d9488' }}>🛡️ Pro Tip: </span>
                                                     <MathRenderer text={skill.learn.rules[selectedLearnIdx].tip} />
                                                 </p>
                                             </div>
@@ -155,16 +155,18 @@ export default function NumberSystemSkills() {
                 <div className="ns-skills-grid">
                     {SKILLS.map((s, i) => (
                         <div key={s.id} className="ns-skill-card" style={{ '--skill-color': s.color }}>
-                            <div className="ns-skill-icon" style={{ background: `${s.color}10`, color: s.color }}>
-                                {s.icon}
-                            </div>
-
-                            <div className="ns-skill-content">
-                                <div className="ns-skill-text-stack">
-                                    <span style={{ fontSize: 11, fontWeight: 900, color: s.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{s.subtitle}</span>
-                                    <h3 style={{ fontSize: 22, fontWeight: 900, color: '#0f172a', margin: 0 }}>{s.title}</h3>
+                            <div className="ns-skill-info">
+                                <div className="ns-skill-icon" style={{ background: `${s.color}10`, color: s.color }}>
+                                    {s.icon}
                                 </div>
-                                <p style={{ fontSize: 14, color: '#64748b', fontWeight: 500, margin: 0, opacity: 0.85 }}>{s.desc}</p>
+
+                                <div className="ns-skill-content">
+                                    <div className="ns-skill-text-stack">
+                                        <span style={{ fontSize: 11, fontWeight: 900, color: s.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{s.subtitle}</span>
+                                        <h3 style={{ fontSize: 22, fontWeight: 900, color: '#0f172a', margin: 0 }}>{s.title}</h3>
+                                    </div>
+                                    <p style={{ fontSize: 14, color: '#64748b', fontWeight: 500, margin: 0, opacity: 0.85 }}>{s.desc}</p>
+                                </div>
                             </div>
 
                             <div className="ns-skill-actions" style={(!s.learn && !s.practice) ? { justifyContent: 'center' } : {}}>

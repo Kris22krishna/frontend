@@ -1,77 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../services/api';
-import { LatexText } from '../../LatexText';
+import MathRenderer from '../../MathRenderer';
+import mascotImg from '../../../assets/mascot.png';
 import './NumberSystem.css';
 
-const BLUE_THEME_CSS = `
-    .option-btn-modern.selected {
-        border-color: #3B82F6 !important;
-        background-color: #EFF6FF !important;
-        color: #1E40AF !important;
-        box-shadow: 0 4px 0 #2563EB !important;
-    }
-    .option-btn-modern {
-        min-height: 52px;
-        min-width: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem 1rem !important;
-        text-align: center;
-        font-size: 0.95rem;
-    }
-    .grey-selection-theme {
-        --selected-border: #3B82F6;
-        --selected-bg: #EFF6FF;
-    }
-    .exam-report-container {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    }
-    .status-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-    .status-correct { background: #DCFCE7; color: #166534; }
-    .status-wrong { background: #FEE2E2; color: #991B1B; }
-    .status-skipped { background: #F1F5F9; color: #475569; }
-
-    .nav-pastel-btn {
-        background: linear-gradient(135deg, #3B82F6, #2563EB) !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
-        transition: all 0.3s ease !important;
-        font-weight: 800 !important;
-    }
-    .solution-accordion {
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        margin-bottom: 1rem;
-        overflow: hidden;
-    }
-    .solution-header {
-        padding: 1rem;
-        background: #F8FAFC;
-        cursor: pointer;
-    }
-    .solution-content {
-        padding: 1rem;
-        border-top: 1px solid #E2E8F0;
-    }
-`;
-
 const SKILL_ID = 1246;
-const SKILL_NAME = "Number System - Chapter Test";
+const SKILL_NAME = "Chapter Test";
 
 const NumberSystemTest = () => {
     const navigate = useNavigate();
@@ -80,10 +16,11 @@ const NumberSystemTest = () => {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isTestOver, setIsTestOver] = useState(false);
     const [responses, setResponses] = useState({});
-
-    const questionStartTime = useRef(Date.now());
     const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
+    const questionStartTime = useRef(Date.now());
+    const topRef = useRef(null);
+    const THEME_COLOR = '#312e81';
 
     const generateQuestions = () => {
         const pool = [
@@ -173,8 +110,8 @@ const NumberSystemTest = () => {
         if (userId) {
             const correctCount = Object.values(responses).filter(r => r.isCorrect).length;
             await api.createReport({
-                title: SKILL_NAME, type: 'practice', score: (correctCount / 20) * 100,
-                parameters: { skill_id: SKILL_ID, correct_answers: correctCount, total_questions: 20 },
+                title: SKILL_NAME, type: 'test', score: (correctCount / questions.length) * 100,
+                parameters: { skill_id: SKILL_ID, correct_answers: correctCount, total_questions: questions.length },
                 user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
             });
         }
@@ -185,88 +122,160 @@ const NumberSystemTest = () => {
     if (questions.length === 0) return <div>Loading...</div>;
 
     if (isTestOver) {
-        const correct = Object.values(responses).filter(r => r.isCorrect).length;
+        const correctCount = Object.values(responses).filter(r => r.isCorrect).length;
+        const score = correctCount; // Assuming score is just correctCount for display
+        const totalQuestions = questions.length;
+
         return (
-            <div className="junior-practice-page" style={{ overflowY: 'auto', padding: '2rem' }}>
-                <style>{BLUE_THEME_CSS}</style>
-                <div className="exam-report-container">
-                    <h1 style={{ fontSize: '2.5rem', fontWeight: '900', color: '#1E3A8A', textAlign: 'center' }}>Test Report</h1>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', margin: '2rem 0' }}>
-                        <div style={{ background: '#EFF6FF', padding: '1.5rem', borderRadius: '1rem', textAlign: 'center' }}>
-                            <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: '800' }}>SCORE</span>
-                            <span style={{ fontSize: '2rem', fontWeight: '900' }}>{correct * 5}%</span>
+            <div className="ns-quiz-finished" style={{ maxWidth: 1000, margin: '40px auto', padding: '40px' }}>
+                <div style={{ textAlign: 'center', marginBottom: 40, position: 'relative' }}>
+                    <img
+                        src={mascotImg}
+                        alt="Mascot"
+                        style={{
+                            width: 140,
+                            height: 'auto',
+                            marginBottom: 20,
+                            filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))'
+                        }}
+                    />
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, color: '#0f172a', marginBottom: 8 }}>Test Complete!</h2>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginTop: 24 }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: 48, fontWeight: 900, color: '#312e81' }}>{score} / {totalQuestions}</div>
+                            <div style={{ fontSize: 16, color: '#64748b', fontWeight: 600 }}>Total Score</div>
                         </div>
-                        <div style={{ background: '#DCFCE7', padding: '1.5rem', borderRadius: '1rem', textAlign: 'center' }}>
-                            <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: '800' }}>CORRECT</span>
-                            <span style={{ fontSize: '2rem', fontWeight: '900' }}>{correct}</span>
-                        </div>
-                        <div style={{ background: '#F1F5F9', padding: '1.5rem', borderRadius: '1rem', textAlign: 'center' }}>
-                            <span style={{ display: 'block', fontSize: '0.8rem', fontWeight: '800' }}>TIME</span>
-                            <span style={{ fontSize: '2rem', fontWeight: '900' }}>{formatTime(timeElapsed)}</span>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: 48, fontWeight: 900, color: '#0d9488' }}>{Math.round((score / totalQuestions) * 100)}%</div>
+                            <div style={{ fontSize: 16, color: '#64748b', fontWeight: 600 }}>Accuracy</div>
                         </div>
                     </div>
-                    <button onClick={() => navigate(-1)} className="nav-pill-next-btn" style={{ margin: '0 auto 2rem' }}>Back to Topics</button>
-                    {questions.map((q, i) => (
-                        <details key={i} className="solution-accordion">
-                            <summary className="solution-header">
-                                Ques {i + 1}: {responses[i]?.isCorrect ? "✅" : "❌"}
-                            </summary>
-                            <div className="solution-content">
-                                <LatexText text={q.text} /><br />
-                                <strong>Correct:</strong> <LatexText text={q.correctAnswer} /><br />
-                                <strong>Solution:</strong> <LatexText text={q.solution} />
+                </div>
+                <button className="ns-btn-secondary" onClick={() => navigate(-1)} style={{ padding: '12px 32px', display: 'block', margin: '0 auto 40px auto' }}>Back to Skills</button>
+
+                <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 24, borderBottom: '2px solid #f1f5f9', paddingBottom: 12 }}>Detailed Report</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    {questions.map((q, i) => {
+                        const res = responses[i] || { selectedOption: null, isCorrect: false };
+                        const isCorrect = res.isCorrect;
+                        const isSkipped = res.selectedOption === null;
+                        const statusColor = isCorrect ? '#0d9488' : (isSkipped ? '#94a3b8' : '#e11d48');
+
+                        return (
+                            <div key={i} style={{ padding: 24, borderRadius: 16, border: `2px solid ${statusColor}20`, background: isCorrect ? '#f0fdf9' : (isSkipped ? '#f8fafc' : '#fff1f2') }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                                    <span style={{ fontWeight: 800, color: statusColor }}>QUESTION {i + 1}</span>
+                                    <span style={{ fontWeight: 800, color: statusColor }}>{isCorrect ? '✓ Correct' : (isSkipped ? '⚠ Skipped' : '✗ Incorrect')}</span>
+                                </div>
+                                <div style={{ fontSize: 17, fontWeight: 600, color: '#0f172a', marginBottom: 16 }}>
+                                    <MathRenderer text={q.text} />
+                                </div>
+                                <div className="ns-summary-split">
+                                    <div style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                                        <div style={{ fontSize: 12, fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: 4 }}>Your Answer</div>
+                                        <div style={{ fontSize: 15, fontWeight: 700, color: statusColor }}>{isSkipped ? 'No Answer' : <MathRenderer text={res.selectedOption} />}</div>
+                                    </div>
+                                    <div style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                                        <div style={{ fontSize: 12, fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: 4 }}>Correct Answer</div>
+                                        <div style={{ fontSize: 15, fontWeight: 700, color: '#0d9488' }}><MathRenderer text={q.correctAnswer} /></div>
+                                    </div>
+                                </div>
+                                <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px dashed #e2e8f0' }}>
+                                    <div style={{ fontSize: 12, fontWeight: 800, color: '#312e81', textTransform: 'uppercase', marginBottom: 4 }}>Solution</div>
+                                    <div style={{ fontSize: 14, color: '#475569', lineHeight: 1.5 }}><MathRenderer text={q.solution} /></div>
+                                </div>
                             </div>
-                        </details>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         );
     }
 
+    const currentQ = questions[qIndex];
+
     return (
-        <div className="junior-practice-page grey-selection-theme" style={{ height: '100vh', overflow: 'hidden' }}>
-            <style>{BLUE_THEME_CSS}</style>
-            <header className="junior-practice-header">
-                <div style={{ fontWeight: '800' }}>Chapter Test</div>
-                <div className="bg-white/90 px-6 py-2 rounded-full border-2 border-blue-100 font-black text-xl">
-                    {qIndex + 1} / 20
+        <div className="ns-page" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <nav className="ns-nav">
+                <button className="ns-nav-back" onClick={() => navigate(-1)}>Exit Test</button>
+                <div style={{ fontSize: 18, fontWeight: 900, color: '#0f172a' }}>Number System: Chapter Test</div>
+                <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: '#64748b' }}>{qIndex + 1} / {questions.length}</div>
+                    <div style={{ padding: '4px 12px', background: '#f1f5f9', borderRadius: 8, fontWeight: 800, color: '#0f172a' }}>⏱ {formatTime(timeElapsed)}</div>
                 </div>
-                <div>{formatTime(timeElapsed)}</div>
-            </header>
+            </nav>
 
-            <main className="practice-content-wrapper" style={{ flex: 1, padding: '2rem', display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem' }}>
-                <div className="question-card-modern">
-                    <div className="question-text-modern">
-                        <LatexText text={questions[qIndex].text} />
-                    </div>
-                    <div className="options-grid-modern" style={{ gridTemplateColumns: '1fr 1fr' }}>
-                        {questions[qIndex].options.map((opt, i) => (
-                            <button key={i} className={`option-btn-modern ${selectedOption === opt ? 'selected' : ''}`} onClick={() => setSelectedOption(opt)}>
-                                <LatexText text={opt} />
-                            </button>
-                        ))}
+            <div className="ns-assessment-layout" style={{ flex: 1, padding: '20px 40px' }}>
+                <div style={{ flex: 1 }}>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={qIndex}
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <div className="ns-quiz-card" style={{ padding: 40, minHeight: 400 }}>
+                                <div style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', lineHeight: 1.6, marginBottom: 32 }}>
+                                    <MathRenderer text={currentQ.text} />
+                                </div>
+                                <div className="ns-quiz-options">
+                                    {currentQ.options.map((opt, i) => {
+                                        const isSelected = selectedOption === opt;
+                                        return (
+                                            <button
+                                                key={i}
+                                                className={`ns-option-btn ${isSelected ? 'selected' : ''}`}
+                                                onClick={() => setSelectedOption(opt)}
+                                                style={{ '--skill-color': THEME_COLOR }}
+                                            >
+                                                <MathRenderer text={opt} />
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
+                        <button className="ns-btn-secondary" onClick={() => qIndex > 0 && navigateToQuestion(qIndex - 1)} disabled={qIndex === 0} style={{ opacity: qIndex === 0 ? 0.5 : 1 }}>← Previous</button>
+                        <div style={{ display: 'flex', gap: 12 }}>
+                            <button className="ns-btn-secondary" onClick={() => qIndex < questions.length - 1 ? navigateToQuestion(qIndex + 1) : (handleRecordResponse(), finalizeTest())}>{qIndex === questions.length - 1 ? 'Skip & Finish' : 'Skip Question'}</button>
+                            <button className="ns-btn-primary" onClick={() => qIndex < questions.length - 1 ? navigateToQuestion(qIndex + 1) : (handleRecordResponse(), finalizeTest())} style={{ background: THEME_COLOR }}>{qIndex === questions.length - 1 ? 'Submit Test ✓' : 'Next Question →'}</button>
+                        </div>
                     </div>
                 </div>
 
-                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '1.5rem', border: '1px solid #E2E8F0' }}>
-                    <h3 style={{ marginBottom: '1rem', fontWeight: '800' }}>Palette</h3>
-                    <div className="palette-grid">
-                        {questions.map((_, i) => (
-                            <button key={i} onClick={() => navigateToQuestion(i)} style={{ background: qIndex === i ? '#EFF6FF' : responses[i] ? '#DCFCE7' : '#F8FAFC', border: qIndex === i ? '2px solid #3B82F6' : '1px solid #E2E8F0', height: '40px', borderRadius: '8px', fontWeight: '700' }}>{i + 1}</button>
-                        ))}
+                <div className="ns-assessment-palette">
+                    <div style={{ fontSize: 13, fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Question Palette</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+                        {questions.map((_, i) => {
+                            const isAnswered = responses[i] && responses[i].selectedOption !== null;
+                            const isCurrent = qIndex === i;
+                            return (
+                                <button
+                                    key={i}
+                                    onClick={() => navigateToQuestion(i)}
+                                    style={{
+                                        aspectRatio: '1', borderRadius: 8, fontSize: 14, fontWeight: 800,
+                                        background: isCurrent ? THEME_COLOR : (isAnswered ? '#0d9488' : '#f1f5f9'),
+                                        color: (isCurrent || isAnswered) ? '#fff' : '#64748b',
+                                        border: 'none', cursor: 'pointer', transition: 'all 0.2s'
+                                    }}
+                                >
+                                    {i + 1}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    <div style={{ marginTop: 24, fontSize: 12, borderTop: '1px solid #f1f5f9', paddingTop: 16 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}><div style={{ width: 10, height: 10, borderRadius: '50%', background: THEME_COLOR }} /> Current</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}><div style={{ width: 10, height: 10, borderRadius: '50%', background: '#0d9488' }} /> Answered</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 10, height: 10, borderRadius: '50%', background: '#f1f5f9' }} /> Unvisited</div>
                     </div>
                 </div>
-            </main>
-
-            <footer className="junior-bottom-bar">
-                <button className="nav-pill-next-btn" style={{ background: '#64748B' }} onClick={() => navigate(-1)}>Exit</button>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className="nav-pill-next-btn" onClick={() => qIndex > 0 && navigateToQuestion(qIndex - 1)} disabled={qIndex === 0}>Prev</button>
-                    <button className="nav-pill-next-btn" onClick={() => qIndex < 19 ? navigateToQuestion(qIndex + 1) : (handleRecordResponse(), finalizeTest())}>
-                        {qIndex === 19 ? "Finish" : "Next"}
-                    </button>
-                </div>
-            </footer>
+            </div>
         </div>
     );
 };
