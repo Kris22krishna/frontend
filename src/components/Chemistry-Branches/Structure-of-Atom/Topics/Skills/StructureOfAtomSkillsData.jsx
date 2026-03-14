@@ -34,14 +34,20 @@ const generateSubAtomicQuestions = () => {
         const n = mass - el.z;
         if (t === 0) {
             const opts = shuffleArray([...new Set([n, n+2, n-1, el.z])].slice(0,4));
-            while(opts.length<4) opts.push(getRandomInt(1,40));
+            while(opts.length<4) {
+                const r = getRandomInt(1,40);
+                if (!opts.includes(r)) opts.push(r);
+            }
             questions.push({ type:'mcq', difficulty:'Basic', question:`Calculate the number of neutrons in ${el.name}-${mass} (${el.symbol}, Z=${el.z}).`, options:opts.map(String), answer:opts.indexOf(n), explanation:`Neutrons = A - Z = ${mass} - ${el.z} = ${n}.` });
         } else if (t === 1) {
             const ch = getRandomFromValue([1,-1,2,-2,3]);
             const elec = el.z - ch;
             const cs = ch>0?`+${ch}`:`${ch}`;
             const opts = shuffleArray([...new Set([elec, el.z+ch, el.z, el.z+2])].slice(0,4));
-            while(opts.length<4) opts.push(getRandomInt(1,40));
+            while(opts.length<4) {
+                const r = getRandomInt(1,40);
+                if (!opts.includes(r)) opts.push(r);
+            }
             questions.push({ type:'mcq', difficulty:'Intermediate', question:`How many electrons in ${el.symbol}${cs} ion? (Z=${el.z})`, options:opts.map(String), answer:opts.indexOf(elec), explanation:`Electrons = Z - charge = ${el.z} - (${ch}) = ${elec}.` });
         } else if (t === 2) {
             const iso = Math.random()>0.5;
@@ -231,11 +237,17 @@ const generateOrbitalQuestions = () => {
         const total = orb.n - 1;
         if (t === 0) {
             const opts = shuffleArray([String(radial), String(radial+1), String(angular), String(total)].filter((v,i,a)=>a.indexOf(v)===i));
-            while(opts.length<4) opts.push(String(getRandomInt(0,5)));
+            while(opts.length<4) {
+                const r = String(getRandomInt(0,5));
+                if (!opts.includes(r)) opts.push(r);
+            }
             questions.push({ type:'mcq', difficulty:'Intermediate', question:`Radial nodes in ${orb.name} orbital?`, options:opts.slice(0,4), answer:opts.indexOf(String(radial)), explanation:`Radial nodes = n-l-1 = ${orb.n}-${orb.l}-1 = ${radial}.` });
         } else if (t === 1) {
             const opts = shuffleArray([String(angular), String(angular+1), String(radial), String(total)].filter((v,i,a)=>a.indexOf(v)===i));
-            while(opts.length<4) opts.push(String(getRandomInt(0,5)));
+            while(opts.length<4) {
+                const r = String(getRandomInt(0,5));
+                if (!opts.includes(r)) opts.push(r);
+            }
             questions.push({ type:'mcq', difficulty:'Intermediate', question:`Angular nodes in ${orb.name} orbital?`, options:opts.slice(0,4), answer:opts.indexOf(String(angular)), explanation:`Angular nodes = l = ${orb.l}.` });
         } else if (t === 2) {
             questions.push({ type:'mcq', difficulty:'Basic', question:'s orbital shape is:', options:['Spherical','Dumbbell','Cloverleaf','Complex'], answer:0, explanation:'s orbital (l=0) is spherically symmetrical. p is dumbbell, d is cloverleaf.' });

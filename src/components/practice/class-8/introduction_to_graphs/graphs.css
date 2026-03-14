@@ -305,6 +305,7 @@
     background: #f8fafc;
     color: var(--grph-text);
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* ── NAV BAR ─────────────────────────────────────────── */
@@ -1006,5 +1007,207 @@
 
     .grph-rule-split {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ── RESPONSIVE SPECIFIC LAYOUTS ─────────────────────── */
+.grph-engine-plot-layout {
+    display: grid;
+    grid-template-columns: 1fr 410px;
+    gap: 20px;
+    align-items: start;
+}
+
+.grph-engine-mcq-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.grph-assess-plot-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 16px;
+    overflow: hidden;
+    align-items: start;
+}
+
+.grph-assess-mcq-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+    overflow: hidden;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .grph-engine-plot-layout,
+    .grph-engine-mcq-layout,
+    .grph-assess-plot-layout,
+    .grph-assess-mcq-layout {
+        grid-template-columns: 1fr;
+        overflow: visible;
+    }
+}
+
+/* ── LINEAR GRAPH ASSESSMENT ENGINE ────────────────────── */
+.lg-assess-root {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 120px);
+    overflow: hidden;
+    align-items: stretch;
+    position: relative;
+}
+
+.lg-assess-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Desktop: palette always visible as sidebar */
+.lg-assess-palette {
+    width: 180px;
+    flex-shrink: 0;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 8px;
+    overflow-y: auto;
+}
+
+/* Close button hidden on desktop */
+.lg-assess-palette-close {
+    display: none;
+}
+
+/* FAB hidden on desktop */
+.lg-assess-fab {
+    display: none;
+}
+
+/* Overlay hidden on desktop */
+.lg-assess-palette-overlay {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .lg-assess-root {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        overflow-x: hidden;
+    }
+
+    .lg-assess-main {
+        overflow: visible;
+    }
+
+    /* Palette becomes a slide-up sheet on mobile */
+    .lg-assess-palette {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 60vh;
+        margin: 0;
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+
+    .lg-assess-palette.open {
+        transform: translateY(0);
+    }
+
+    /* Show close button on mobile */
+    .lg-assess-palette-close {
+        display: block;
+        align-self: flex-end;
+        background: none;
+        border: none;
+        font-size: 13px;
+        font-weight: 700;
+        color: #64748b;
+        cursor: pointer;
+        padding: 0 0 6px 0;
+    }
+
+    /* Overlay on mobile */
+    .lg-assess-palette-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.3);
+        z-index: 199;
+    }
+
+    /* Floating palette button */
+    .lg-assess-fab {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        position: fixed;
+        bottom: 24px;
+        right: 20px;
+        z-index: 198;
+        padding: 12px 20px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 800;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+}
+
+/* ── LINEAR GRAPH PRACTICE ENGINE ──────────────────────── */
+.lg-practice-root {
+    max-width: 920px;
+    margin: 0 auto;
+    overflow-x: hidden;
+}
+
+/* MCQ phase: desktop keeps grid, items in DOM order (mini-graph left, question right) */
+.grph-engine-mcq-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* On mobile, the mcq grid becomes a single column flex column
+   so we can reorder mini-graph to show BELOW the question card */
+@media (max-width: 900px) {
+    .grph-engine-mcq-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Question card appears first */
+    .lg-practice-mcqcard {
+        order: 1;
+    }
+
+    /* Mini graph appears below question */
+    .lg-practice-minigraph {
+        order: 2;
     }
 }

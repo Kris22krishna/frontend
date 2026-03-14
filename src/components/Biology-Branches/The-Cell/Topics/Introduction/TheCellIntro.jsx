@@ -83,9 +83,11 @@ export default function TheCellIntro() {
                     ← Back to Dashboard
                 </button>
                 <div className="cell-nav-links">
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/connectomics')}>🧠 Connectomics</button>
                     <button className="cell-nav-link active" onClick={() => navigate('/senior/grade/11/biology/the-cell/introduction')}>🌟 Intro</button>
                     <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/terminology')}>📖 Terminology</button>
                     <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/skills')}>🎯 Skills</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/exam-edge')}>⚡ Exam Edge</button>
                 </div>
             </nav>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Relations.css";
 import MathRenderer from "../../../../../MathRenderer";
+import RelationsTopNav from "../../RelationsTopNav";
 
 // ─── DATA SECTIONS ─────────────────────────────────────────────────────────
 
@@ -365,7 +366,11 @@ export default function RelationsTerminology() {
             `}</style>
 
             {/* ── TOP NAV BAR ──────────────────────────────── */}
-            <nav className="rel-intro-nav">
+            <RelationsTopNav
+                active="terminology"
+                backLabel="Back to Relations"
+            />
+            {false && <nav className="rel-intro-nav">
                 <button
                     className="rel-intro-nav-back"
                     onClick={() => navigate("/senior/grade/12/relations")}
@@ -391,7 +396,7 @@ export default function RelationsTerminology() {
                         🎯 Skills
                     </button>
                 </div>
-            </nav>
+            </nav>}
 
             {/* ── MAIN CONTENT ──────────────────────────────── */}
             <div

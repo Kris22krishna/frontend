@@ -123,6 +123,11 @@ const SeniorGradeSyllabus = () => {
                         // Real Numbers
                         { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' }
                     ]);
+                } else if (grade === '9') {
+                    setSkills([
+                        // Number System Hub
+                        { skill_id: 1240, skill_name: 'Number System: Master Hub', topic: 'Number System', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/number-system' }
+                    ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting
                     setSkills([

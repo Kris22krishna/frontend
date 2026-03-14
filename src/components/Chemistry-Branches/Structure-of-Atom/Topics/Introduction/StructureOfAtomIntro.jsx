@@ -83,9 +83,11 @@ export default function StructureOfAtomIntro() {
                     ← Back to Dashboard
                 </button>
                 <div className="atom-nav-links">
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/connectomics')}>🧠 Connectomics</button>
                     <button className="atom-nav-link active" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/introduction')}>🌟 Intro</button>
                     <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/terminology')}>📖 Terminology</button>
                     <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/skills')}>🎯 Skills</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/exam-edge')}>⚡ Exam Edge</button>
                 </div>
             </nav>
 

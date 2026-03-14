@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { generateLGScenarios, GraphMini } from './LinearGraphUtils';
+import '../../graphs.css';
 
 /**
  * LinearGraphAssessmentEngine
@@ -41,6 +42,7 @@ export default function LinearGraphAssessmentEngine({ color, onBack }) {
     const [current, setCurrent] = useState(0);
     // answers[i]: null | 'done' (plot — any points placed) | number (mcq choice)
     const [answers, setAnswers] = useState(() => Array(TOTAL).fill(null));
+    const [paletteOpen, setPaletteOpen] = useState(false);
 
     // Per-scenario: xScale, yScale, placedPoints
     const [xScaleArr, setXScaleArr] = useState(() => scenarios.map(() => null));
@@ -296,9 +298,9 @@ export default function LinearGraphAssessmentEngine({ color, onBack }) {
     const sortedUser = [...userPlottedPoints].sort((a, b) => a.x - b.x);
 
     return (
-        <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 120px)', overflow: 'hidden', alignItems: 'stretch' }}>
+        <div className="lg-assess-root">
             {/* ── LEFT: Main Panel ─────────────────────────────────── */}
-            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div className="lg-assess-main">
                 {/* Header */}
                 <div style={{ marginBottom: 10, flexShrink: 0 }}>
                     <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Assessment</div>
@@ -316,12 +318,12 @@ export default function LinearGraphAssessmentEngine({ color, onBack }) {
 
                     {/* ── PLOT STEP ───────────────────────────────────── */}
                     {step.type === 'plot' && (
-                        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 380px', gap: 16, overflow: 'hidden', alignItems: 'start' }}>
+                        <div className="grph-assess-plot-layout">
                             <div style={{ overflowY: 'auto' }}>
                                 <h4 style={{ margin: '0 0 2px', fontSize: 14, fontWeight: 800, color: '#0f172a' }}>{sc.title}</h4>
-                                <div style={{ fontSize: 11, color: '#64748b', marginBottom: 10 }}>Plot the graph. You can place any point — accuracy will be checked in the report.</div>
+                                <div style={{ fontSize: 11, color: '#64748b', marginBottom: 10 }}>Plot the graph. You can place any point — accuracy will be checked in the report. <span style={{fontWeight: 700, color: color}}>Swipe to plot the graph.</span></div>
                                 <div style={{ overflowX: 'auto', marginBottom: 12 }}>
-                                    <table style={{ borderCollapse: 'collapse', fontSize: 12, width: '100%' }}>
+                                    <table style={{ borderCollapse: 'collapse', fontSize: 12, minWidth: 400 }}>
                                         <tbody>
                                             <tr>
                                                 <th style={{ background: `${color}15`, color, padding: '6px 10px', textAlign: 'left', border: `1px solid ${color}25`, fontWeight: 800, fontSize: 11, whiteSpace: 'nowrap' }}>{sc.xLabel}</th>
@@ -391,7 +393,7 @@ export default function LinearGraphAssessmentEngine({ color, onBack }) {
 
                     {/* ── MCQ STEP ─────────────────────────────────────── */}
                     {step.type === 'mcq' && mq && (
-                        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '240px 1fr', gap: 16, overflow: 'hidden', alignItems: 'start' }}>
+                        <div className="grph-assess-mcq-layout">
                             {/* Left: user's plotted graph or placeholder */}
                             <div style={{ background: '#f8fafc', borderRadius: 12, border: '1.5px solid #e2e8f0', padding: '10px', alignSelf: 'start' }}>
                                 <div style={{ fontSize: 10, fontWeight: 800, color, textTransform: 'uppercase', marginBottom: 6 }}>Your Graph — {sc.title}</div>
@@ -460,7 +462,13 @@ export default function LinearGraphAssessmentEngine({ color, onBack }) {
             </div>
 
             {/* ── RIGHT: Palette Sidebar ──────────────────────────────── */}
-            <div style={{ width: 180, flexShrink: 0, background: '#fff', borderRadius: 16, padding: '16px', boxShadow: '0 4px 16px rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 12, marginLeft: 8 }}>
+            {/* Desktop: always visible | Mobile: toggled via floating button */}
+            {paletteOpen && (
+                <div className="lg-assess-palette-overlay" onClick={() => setPaletteOpen(false)} />
+            )}
+            <div className={`lg-assess-palette${paletteOpen ? ' open' : ''}`}>
+                {/* Close button shown only on mobile */}
+                <button className="lg-assess-palette-close" onClick={() => setPaletteOpen(false)}>✕ Close</button>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '10px', borderRadius: 12, fontWeight: 800, fontSize: 20, background: timeLeft < 60 ? 'rgba(239,68,68,0.1)' : `${color}0D`, color: timeLeft < 60 ? '#ef4444' : color }}>
                     ⏱️ {formatTime(timeLeft)}
                 </div>
@@ -489,6 +497,11 @@ export default function LinearGraphAssessmentEngine({ color, onBack }) {
                     Submit Assessment
                 </button>
             </div>
+
+            {/* ── Mobile Palette FAB ─── */}
+            <button className="lg-assess-fab" onClick={() => setPaletteOpen(o => !o)} style={{ background: color }}>
+                🗂 Palette
+            </button>
         </div>
     );
 }

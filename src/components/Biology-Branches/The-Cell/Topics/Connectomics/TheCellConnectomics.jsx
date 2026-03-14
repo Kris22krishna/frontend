@@ -14,6 +14,13 @@ export default function TheCellConnectomics() {
                 <button className="cell-nav-back" onClick={() => navigate('/senior/grade/11/biology/the-cell')}>
                     ← Back to Dashboard
                 </button>
+                <div className="cell-nav-links">
+                    <button className="cell-nav-link active">🧠 Connectomics</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/introduction')}>🌟 Intro</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/terminology')}>📖 Terminology</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/skills')}>🎯 Skills</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/exam-edge')}>⚡ Exam Edge</button>
+                </div>
             </nav>
 
             <div className="cell-hero">
@@ -121,9 +128,14 @@ export default function TheCellConnectomics() {
                 <div style={{ marginTop: '60px', textAlign: 'center', background: '#f8fafc', padding: '40px', borderRadius: '32px', border: '2px dashed #e2e8f0' }}>
                     <Share2 size={48} color="#6366f1" style={{ marginBottom: '16px' }} />
                     <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1e1b4b' }}>Infinite Connections</h3>
-                    <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b' }}>
+                    <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b', marginBottom: '32px' }}>
                         The cell isn't just a chapter; it's the fundamental structural and functional unit for all organisms. Mastering it essentially explains every higher-order function of life.
                     </p>
+                    <div style={{ marginTop: 40, textAlign: 'center' }}>
+                        <button onClick={() => navigate('/senior/grade/11/biology/the-cell/introduction')} style={{ padding: '12px 32px', fontSize: 16, background: '#fff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                            Next Topic: Intro <span style={{ color: 'var(--cell-indigo)' }}>→</span>
+                        </button>
+                    </div>
                 </div>
             </main>
         </div>

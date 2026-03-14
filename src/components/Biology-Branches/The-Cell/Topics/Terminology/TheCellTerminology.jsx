@@ -60,9 +60,11 @@ export default function TheCellTerminology() {
                     ← Back to Dashboard
                 </button>
                 <div className="cell-nav-links">
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/connectomics')}>🧠 Connectomics</button>
                     <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/introduction')}>🌟 Intro</button>
                     <button className="cell-nav-link active" onClick={() => navigate('/senior/grade/11/biology/the-cell/terminology')}>📖 Terminology</button>
                     <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/skills')}>🎯 Skills</button>
+                    <button className="cell-nav-link" onClick={() => navigate('/senior/grade/11/biology/the-cell/exam-edge')}>⚡ Exam Edge</button>
                 </div>
             </nav>
 
@@ -270,8 +272,8 @@ export default function TheCellTerminology() {
 
                 {/* Footer CTA */}
                 <div style={{ marginTop: 40, textAlign: 'center' }}>
-                    <button className="cell-btn-filled" onClick={() => navigate('/senior/grade/11/biology/the-cell/skills')} style={{ padding: '12px 32px', fontSize: 15, '--skill-color': 'var(--cell-indigo)' }}>
-                        I've mastered the language! 🎯
+                    <button onClick={() => navigate('/senior/grade/11/biology/the-cell/skills')} style={{ padding: '12px 32px', fontSize: 16, background: '#fff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                        Next Topic: Skills <span style={{ color: 'var(--cell-indigo)' }}>→</span>
                     </button>
                 </div>
             </div>

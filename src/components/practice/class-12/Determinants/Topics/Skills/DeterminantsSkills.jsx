@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
+import DeterminantsTopNav from "../../DeterminantsTopNav";
 import {
   generateFundamentalsQuestions,
   generateFundamentalsAssessment,
@@ -301,14 +302,22 @@ export default function DeterminantsSkills() {
   if (view !== "list" && skill) {
     return (
       <div
-        className="det-skills-page"
+        className={`det-page det-skill-runtime ${view === "practice" ? "det-skill-runtime--practice" : ""} ${view === "assessment" ? "det-skill-runtime--assessment" : ""}`}
         style={{
           background: "#f8fafc",
           minHeight: "100vh",
           padding: "20px 0 60px",
         }}
       >
-        <nav className="det-intro-nav">
+        <DeterminantsTopNav
+          active="skills"
+          backLabel="Back to Skills"
+          onBack={() => {
+            setView("list");
+            setSelectedLearnIdx(0);
+          }}
+        />
+        {false && <nav className="det-intro-nav">
           <button
             className="det-intro-nav-back"
             onClick={() => {
@@ -339,8 +348,8 @@ export default function DeterminantsSkills() {
               🎯 Skills
             </button>
           </div>
-        </nav>
-        <div style={{ padding: "0 24px" }}>
+        </nav>}
+        <div className="det-skill-runtime-body" style={{ padding: "0 24px" }}>
           {view === "learn" ? (
             <div
               className="det-lexicon-container"
@@ -678,7 +687,8 @@ export default function DeterminantsSkills() {
 
   return (
     <div className="det-skills-page">
-      <nav className="det-intro-nav">
+      <DeterminantsTopNav active="skills" />
+      {false && <nav className="det-intro-nav">
         <button
           className="det-intro-nav-back"
           onClick={() => navigate("/senior/grade/12/determinants")}
@@ -709,7 +719,7 @@ export default function DeterminantsSkills() {
             🎯 Skills
           </button>
         </div>
-      </nav>
+      </nav>}
 
       <div
         className="det-lexicon-container"

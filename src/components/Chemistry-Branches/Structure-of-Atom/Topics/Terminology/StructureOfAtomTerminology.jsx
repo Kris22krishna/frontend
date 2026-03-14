@@ -60,9 +60,11 @@ export default function StructureOfAtomTerminology() {
                     ← Back to Dashboard
                 </button>
                 <div className="atom-nav-links">
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/connectomics')}>🧠 Connectomics</button>
                     <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/introduction')}>🌟 Intro</button>
                     <button className="atom-nav-link active" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/terminology')}>📖 Terminology</button>
                     <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/skills')}>🎯 Skills</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/exam-edge')}>⚡ Exam Edge</button>
                 </div>
             </nav>
 
@@ -283,13 +285,9 @@ export default function StructureOfAtomTerminology() {
                 )}
                 
                 {/* Footer CTA */}
-                <div style={{ marginTop: 60, textAlign: 'center' }}>
-                    <button 
-                        className="atom-btn-filled" 
-                        onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/skills')}
-                        style={{ padding: '16px 40px', fontSize: 18, '--skill-color': 'var(--atom-indigo)' }}
-                    >
-                        I've mastered the language! 🎯
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                    <button onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/skills')} style={{ padding: '12px 32px', fontSize: 16, background: '#fff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                        Next Topic: Skills <span style={{ color: 'var(--atom-indigo)' }}>→</span>
                     </button>
                 </div>
             </div>
