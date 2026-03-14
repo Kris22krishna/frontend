@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
-import {
-    Play,
-    BookOpen,
-    Loader2,
-} from 'lucide-react';
+import { Loader2, BookOpen, Trophy, Sparkles, ArrowRight, GraduationCap } from 'lucide-react';
 import { api } from '../../../services/api';
 
 const StudentDashboard = () => {
@@ -35,8 +31,16 @@ const StudentDashboard = () => {
     // Helper to get grade number from grade string (e.g., "Grade 5" -> 5)
     const getGradeNumber = () => {
         if (!profile?.grade) return 5; // Default to grade 5
-        const match = profile.grade.match(/\d+/);
+        const match = profile.grade.toString().match(/\d+/);
         return match ? parseInt(match[0]) : 5;
+    };
+
+    const getGradePath = () => {
+        const gradeNum = getGradeNumber();
+        if (gradeNum >= 1 && gradeNum <= 4) return `/junior/grade/${gradeNum}`;
+        if (gradeNum >= 5 && gradeNum <= 7) return `/middle/grade/${gradeNum}`;
+        if (gradeNum >= 8) return `/senior/grade/${gradeNum}`;
+        return `/junior/grade/5`;
     };
 
     if (loading) {
@@ -46,7 +50,7 @@ const StudentDashboard = () => {
                 <div className="flex items-center justify-center min-h-[80vh]">
                     <div className="text-center">
                         <Loader2 className="h-12 w-12 animate-spin text-cyan-500 mx-auto mb-4" />
-                        <p className="text-slate-500">Loading your dashboard...</p>
+                        <p className="text-slate-500">Loading your personal dashboard...</p>
                     </div>
                 </div>
             </div>
@@ -73,34 +77,83 @@ const StudentDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50/50 via-white to-blue-50/50">
             <Navbar />
 
-            <div className="container mx-auto px-4 pt-24 pb-12 max-w-5xl">
+            <div className="container mx-auto px-4 pt-28 pb-12 max-w-6xl">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
+                        <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-3 tracking-tight">
                             Welcome back{profile?.first_name ? `, ${profile.first_name}` : ''}! 👋
                         </h1>
-                        <p className="text-slate-500">Ready to learn something new today?</p>
+                        <p className="text-slate-500 text-lg">Your mathematics journey continues here.</p>
                     </div>
                 </div>
 
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Dashboard Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {/* My Class Card */}
+                    <div
+                        onClick={() => navigate(getGradePath())}
+                        className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 group-hover:bg-indigo-100 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-indigo-500 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:rotate-6 transition-transform">
+                                <GraduationCap size={28} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800 mb-3">My Class</h3>
+                            <p className="text-slate-500 mb-6 leading-relaxed">
+                                Access your Grade {getGradeNumber()} syllabus, lessons, and practice materials.
+                            </p>
+                            <div className="flex items-center text-indigo-600 font-bold">
+                                <span>Go to Class</span>
+                                <ArrowRight size={18} className="ml-2 group-hover:ml-4 transition-all" />
+                            </div>
+                        </div>
+                    </div>
 
-                    {/* Quick Actions */}
-                    <div className="space-y-4">
-                        <button
-                            onClick={() => navigate(`/math/grade/${getGradeNumber()}`)}
-                            className="w-full group bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-6 text-left hover:shadow-xl hover:shadow-cyan-200 transition-all"
-                        >
-                            <Play className="h-10 w-10 text-white mb-3 group-hover:scale-110 transition-transform" />
-                            <div className="text-white font-bold text-lg">Start Practice</div>
-                            <div className="text-cyan-100 text-sm">{profile?.grade || 'Grade 5'} Math</div>
-                        </button>
+                    {/* Rapid Math Card */}
+                    <div
+                        onClick={() => navigate('/rapid-math')}
+                        className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-full -mr-16 -mt-16 group-hover:bg-amber-100 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:rotate-6 transition-transform">
+                                <Trophy size={28} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800 mb-3">Rapid Math</h3>
+                            <p className="text-slate-500 mb-6 leading-relaxed">
+                                Test your speed and accuracy with daily challenges and climb the leaderboard.
+                            </p>
+                            <div className="flex items-center text-amber-600 font-bold">
+                                <span>Start Challenge</span>
+                                <ArrowRight size={18} className="ml-2 group-hover:ml-4 transition-all" />
+                            </div>
+                        </div>
+                    </div>
 
+                    {/* IDM 2026 Special Card */}
+                    <div
+                        onClick={() => navigate('/idm-dashboard')}
+                        className="bg-gradient-to-br from-indigo-600 to-blue-700 p-8 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden text-white"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:bg-white/20 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition-transform border border-white/20">
+                                <Sparkles size={28} />
+                            </div>
+                            <h3 className="text-2xl font-bold mb-3">IDM 2026</h3>
+                            <p className="text-blue-100 mb-6 leading-relaxed">
+                                International Mathematics Day special content, puzzles, and hidden treasures!
+                            </p>
+                            <div className="flex items-center font-bold">
+                                <span>Explore IDM</span>
+                                <ArrowRight size={18} className="ml-2 group-hover:ml-4 transition-all" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

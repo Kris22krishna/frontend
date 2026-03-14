@@ -27,6 +27,7 @@ import Algebra from './components/Math-Branches/Algebra/Algebra';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
+import AlgebraMasteryTest from './components/IDM/assessment_idm/AlgebraMasteryTest';
 import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
 import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
 import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
@@ -111,6 +112,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Dashboards
 import StudentDashboard from './pages/dashboards/student/StudentDashboard';
+import IDMPage from './pages/IDMPage';
 import TeacherLayout from './pages/dashboards/teacher/TeacherLayout';
 import TeacherDashboard from './pages/dashboards/teacher/TeacherDashboard';
 import TeacherStudents from './pages/dashboards/teacher/TeacherStudents';
@@ -722,6 +724,7 @@ function App() {
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="algebra-mastery" element={<ProtectedRoute redirectTo="/login"><AlgebraMasteryTest /></ProtectedRoute>} />
           {/* The Fish Tale Topic Pages */}
           <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
           <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />
@@ -1693,7 +1696,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
 
         {/* Role-Based Dashboards */}
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/student-dashboard" element={<ProtectedRoute redirectTo="/login"><StudentDashboard /></ProtectedRoute>} />
+        <Route path="/idm-dashboard" element={<ProtectedRoute redirectTo="/login"><IDMPage /></ProtectedRoute>} />
 
         {/* Teacher Dashboard with Nested Layout */}
         <Route path="/teacher-dashboard" element={<TeacherLayout />}>

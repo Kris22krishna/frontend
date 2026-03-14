@@ -63,24 +63,7 @@ const LoginPage = () => {
         console.log("Detected User Type:", userType);
 
         if (userType === 'student') {
-            const grade = response.grade || response.class_name;
-            if (grade) {
-                const gradeNum = parseInt(grade.toString().replace(/\D/g, ''), 10);
-                if (!isNaN(gradeNum)) {
-                    if (gradeNum >= 1 && gradeNum <= 4) {
-                        navigate(`/junior/grade/${gradeNum}`);
-                        return;
-                    } else if (gradeNum >= 5 && gradeNum <= 7) {
-                        navigate(`/middle/grade/${gradeNum}`);
-                        return;
-                    } else if (gradeNum >= 8) {
-                        navigate(`/senior/grade/${gradeNum}`);
-                        return;
-                    }
-                }
-            }
-            // If grade logic fails or no grade present
-            console.log("Redirecting to default student dashboard");
+            console.log("Redirecting student to IDM dashboard as requested");
             navigate('/student-dashboard');
         } else {
             const dashboardMap = {
