@@ -806,6 +806,15 @@ export const api = {
         return handleResponse(response);
     },
 
+    saveIDMScore: async (scoreData) => {
+        const response = await fetch(`${BASE_URL}/api/v1/idm/scores`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(scoreData),
+        });
+        return handleResponse(response);
+    },
+
     getMyRapidMathScores: async () => {
         const response = await fetch(`${BASE_URL}/api/v1/rapid-math/my-scores`, {
             headers: getHeaders(),

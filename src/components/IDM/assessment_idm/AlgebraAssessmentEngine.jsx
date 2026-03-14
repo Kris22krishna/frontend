@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../MathRenderer';
-import { LayoutGrid, X, AlertTriangle, Monitor } from 'lucide-react';
-import { db } from '../../../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { LayoutGrid, X, AlertTriangle, Monitor, CheckCircle, Home } from 'lucide-react';
+import { api } from '../../../services/api';
 import './AlgebraAssessment.css';
 
 export default function AlgebraAssessmentEngine({ questions, title, onBack, color, prefix = 'alg-mastery' }) {
@@ -39,14 +38,14 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
     const [violations, setViolations] = useState(0);
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [showViolationModal, setShowViolationModal] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const topRef = useRef(null);
     const containerRef = useRef(null);
 
     useEffect(() => {
         if (finished) return;
         if (timeLeft <= 0) {
-            setFinished(true);
-            logToFirebase(violations); // Log on timer completion
+            handleSubmit(true); // Auto-submit on time out
             return;
         }
         const timer = setInterval(() => {
@@ -63,8 +62,7 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
             setViolations(prev => {
                 const next = prev + 1;
                 if (next >= 3) {
-                    setFinished(true);
-                    logToFirebase(next); // Log immediately on violation limit
+                    handleSubmit(true, next); // Auto-submit on violation limit
                     return next;
                 }
                 setShowViolationModal(true);
@@ -129,18 +127,18 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
         setAnswers(newAns);
     };
 
-    const logToFirebase = async (currentViolations) => {
+    const logScore = async (currentViolations) => {
         try {
             const studentName = sessionStorage.getItem('studentName') || sessionStorage.getItem('userName') || 'Anonymous';
             const studentEmail = sessionStorage.getItem('userEmail') || 'N/A';
             const studentToken = sessionStorage.getItem('studentToken') || 'N/A';
             const studentGrade = sessionStorage.getItem('studentGrade') || 'N/A';
 
-            let score = 0;
+            let scoreCount = 0;
             const detailedLogs = questionSet.map((q, i) => {
                 const ans = answers[i];
                 const correct = isAnswerCorrect(q, ans);
-                if (correct) score++;
+                if (correct) scoreCount++;
                 return {
                     question_id: i + 1,
                     question_text: q.question,
@@ -150,83 +148,69 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
                 };
             });
 
-            await addDoc(collection(db, "IDM"), {
+            const scoreData = {
                 username: studentName,
                 email: studentEmail,
                 token: studentToken,
                 grade: studentGrade,
-                score: `${score} / ${questionSet.length}`,
-                percentage: Math.round((score / questionSet.length) * 100),
+                score: `${scoreCount} / ${questionSet.length}`,
+                percentage: Math.round((scoreCount / questionSet.length) * 100),
                 results: detailedLogs,
-                timestamp: serverTimestamp(),
                 violations: currentViolations !== undefined ? currentViolations : violations,
                 time_remaining: formatTime(timeLeft),
-                submission_type: currentViolations >= 3 ? 'auto_submit_violation' : (timeLeft <= 0 ? 'auto_submit_timer' : 'manual'),
+                submission_type: (currentViolations || violations) >= 3 ? 'auto_submit_violation' : (timeLeft <= 0 ? 'auto_submit_timer' : 'manual'),
                 assessment_type: 'Algebra Mastery'
-            });
-            console.log("Results logged to Firebase successfully.");
+            };
+
+            await api.saveIDMScore(scoreData);
+            console.log("Results logged to Supabase successfully.");
         } catch (error) {
-            console.error("Error logging to Firebase:", error);
+            console.error("Error logging results:", error);
         }
     };
 
-    const handleSubmit = async () => {
-        if (answers.includes(null)) {
+    const handleSubmit = async (isAuto = false, violationCount) => {
+        if (isSubmitting || finished) return;
+
+        if (!isAuto && answers.includes(null)) {
             if (!window.confirm("You have unanswered questions. Submit anyway?")) return;
         }
-        await logToFirebase(violations);
-        setFinished(true);
-    };
 
+        setIsSubmitting(true);
+        try {
+            await logScore(violationCount);
+            setFinished(true);
+        } catch (error) {
+            alert("There was an error submitting your test. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
     const answeredCount = answers.filter((a, i) => isAnswerComplete(questionSet[i], a)).length;
 
     if (finished) {
-        let score = 0;
-        answers.forEach((ans, i) => {
-            if (isAnswerCorrect(questionSet[i], ans)) score++;
-        });
         return (
-            <div className="alg-mastery-container" style={{ background: '#f8fafc' }}>
-                <div className="assessment-results" style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-                    <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                        <h2 style={{ fontSize: '32px', fontWeight: '800', color: '#1e293b' }}>Test Results</h2>
-                        <div style={{ fontSize: '64px', fontWeight: '900', color }}>{score} / {questionSet.length}</div>
-                        <button
-                            onClick={onBack}
-                            className="alg-mastery-btn alg-mastery-btn-primary"
-                            style={{ marginTop: '20px' }}
-                        >
-                            Back to Dashboard
-                        </button>
+            <div className="alg-mastery-container" style={{ background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="alg-mastery-card" style={{ maxWidth: '600px', textAlign: 'center', padding: '60px 40px', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)' }}>
+                    <div style={{ background: '#ecfdf5', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 30px', color: '#10b981' }}>
+                        <CheckCircle size={48} />
                     </div>
-                    <div style={{ display: 'grid', gap: '20px' }}>
-                        {questionSet.map((q, i) => (
-                            <div key={i} style={{ padding: '20px', borderRadius: '16px', border: `2px solid ${isAnswerCorrect(q, answers[i]) ? '#10b981' : '#ef4444'}`, background: '#fff' }}>
-                                <div style={{ fontWeight: '800', marginBottom: '10px', color: isAnswerCorrect(q, answers[i]) ? '#059669' : '#dc2626' }}>
-                                    Question {i + 1}
-                                </div>
-                                <div style={{ marginBottom: '15px' }}><MathRenderer text={q.question} /></div>
-                                <div style={{ fontSize: '14px' }}>
-                                    <strong>Your Answer:</strong> {
-                                        getQuestionType(q) === 'mcq'
-                                            ? (answers[i] !== null ? <MathRenderer text={q.options[answers[i]]} /> : 'None')
-                                            : (q.format === 'fraction' && answers[i]
-                                                ? <MathRenderer text={`$\\frac{${answers[i].split('/')[0] || ""}}{${answers[i].split('/')[1] || ""}}$`} />
-                                                : <MathRenderer text={answers[i] || 'None'} />)
-                                    }
-                                </div>
-                                <div style={{ fontSize: '14px', marginTop: '5px' }}>
-                                    <strong>Correct Answer:</strong> {
-                                        getQuestionType(q) === 'mcq'
-                                            ? <MathRenderer text={q.options[q.correct]} />
-                                            : (q.format === 'fraction'
-                                                ? <MathRenderer text={`$\\frac{${q.answer.split('/')[0]}}{${q.answer.split('/')[1]}}$`} />
-                                                : <MathRenderer text={q.answer} />)
-                                    }
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <h2 style={{ fontSize: '32px', fontWeight: '900', color: '#1e293b', marginBottom: '16px' }}>Assessment Completed!</h2>
+                    <p style={{ fontSize: '18px', color: '#64748b', lineHeight: '1.6', marginBottom: '40px' }}>
+                        Thank you for participating in the International Day of Mathematics (IDM) Algebra Assessment.
+                        Your responses have been successfully recorded.
+                    </p>
+                    <button
+                        onClick={() => window.location.href = '/student-dashboard'}
+                        className="alg-mastery-btn alg-mastery-btn-primary"
+                        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', height: '56px', fontSize: '18px' }}
+                    >
+                        <Home size={20} />
+                        Return to Dashboard
+                    </button>
+                    <p style={{ marginTop: '24px', fontSize: '14px', color: '#94a3b8' }}>
+                        You will be redirected shortly...
+                    </p>
                 </div>
             </div>
         );

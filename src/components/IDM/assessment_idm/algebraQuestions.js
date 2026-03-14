@@ -907,7 +907,7 @@ const genCostModel = () => {
     return {
         id: 28,
         skill: "Algebra in Action",
-        question: `A phone plan charges a fixed fee of ₹${F} + ₹${p} per minute. Which equation gives the total cost $C$ for $m$ minutes?`,
+        question: `A phone plan charges a fixed fee of ₹${F} and ₹${p} per minute. Which equation gives the total cost $C$ for $m$ minutes?`,
         options,
         correct: options.indexOf(correctAns),
         type: "mcq"
