@@ -129,9 +129,9 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
 
     const logScore = async (currentViolations) => {
         try {
-            const studentName = sessionStorage.getItem('studentName') || sessionStorage.getItem('userName') || 'Anonymous';
-            const studentEmail = sessionStorage.getItem('userEmail') || 'N/A';
-            const studentToken = sessionStorage.getItem('studentToken') || 'N/A';
+            const firstName = sessionStorage.getItem('firstName');
+            const userId = sessionStorage.getItem('userId');
+            const studentEmail = sessionStorage.getItem('userEmail') || sessionStorage.getItem('email') || 'N/A';
             const studentGrade = sessionStorage.getItem('studentGrade') || 'N/A';
 
             let scoreCount = 0;
@@ -149,9 +149,9 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
             });
 
             const scoreData = {
-                username: studentName,
+                username: firstName || 'Anonymous',
                 email: studentEmail,
-                token: studentToken,
+                user_id: userId || 'N/A',
                 grade: studentGrade,
                 score: `${scoreCount} / ${questionSet.length}`,
                 percentage: Math.round((scoreCount / questionSet.length) * 100),
