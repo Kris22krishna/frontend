@@ -467,6 +467,11 @@ import RealNumbersTerminology from './components/practice/class-10/RealNumbers/T
 import RealNumbersSkills from './components/practice/class-10/RealNumbers/Topics/Skills/RealNumbersSkills';
 import RealNumbersConnectomics from './components/practice/class-10/RealNumbers/Topics/Connectomics/RealNumbersConnectomics';
 import RealNumbersExamEdge from './components/practice/class-10/RealNumbers/Topics/ExamEdge/RealNumbersExamEdge';
+import TrianglesDashboard from './components/practice/class-10/Triangles/TrianglesDashboard';
+import TrianglesIntro from './components/practice/class-10/Triangles/Topics/Introduction/TrianglesIntro';
+import TrianglesTerminology from './components/practice/class-10/Triangles/Topics/Terminology/TrianglesTerminology';
+import TrianglesSkills from './components/practice/class-10/Triangles/Topics/Skills/TrianglesSkills';
+import TrianglesConnectomics from './components/practice/class-10/Triangles/Topics/Connectomics/TrianglesConnectomics';
 
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
@@ -839,6 +844,12 @@ function App() {
           <Route path="senior/grade/10/real-numbers/skills" element={<ProtectedRoute redirectTo="/login"><RealNumbersSkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/real-numbers/connectomics" element={<ProtectedRoute redirectTo="/login"><RealNumbersConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/10/real-numbers/exam-edge" element={<ProtectedRoute redirectTo="/login"><RealNumbersExamEdge /></ProtectedRoute>} />
+
+          <Route path="senior/grade/10/triangles" element={<ProtectedRoute redirectTo="/login"><TrianglesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/introduction" element={<ProtectedRoute redirectTo="/login"><TrianglesIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><TrianglesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/skills" element={<ProtectedRoute redirectTo="/login"><TrianglesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/connectomics" element={<ProtectedRoute redirectTo="/login"><TrianglesConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><ProbabilityMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><ProbabilityHardTest /></ProtectedRoute>} />
 

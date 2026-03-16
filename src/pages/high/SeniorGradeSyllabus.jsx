@@ -121,7 +121,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' },
 
                         // Real Numbers
-                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' }
+                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' },
+
+                        // Triangles
+                        { skill_id: 10150, skill_name: 'Triangles: Interactive Chapter', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/triangles' }
                     ]);
                 } else if (grade === '9') {
                     setSkills([
