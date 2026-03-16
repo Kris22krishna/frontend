@@ -59,9 +59,11 @@ export default function LawsOfMotionTerminology() {
                     ← Back to Dashboard
                 </button>
                 <div className="lom-nav-links">
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/connectomics')}>🧠 Connectomics</button>
                     <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/introduction')}>🌟 Intro</button>
                     <button className="lom-nav-link active" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/terminology')}>📖 Terminology</button>
                     <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/skills')}>🎯 Skills</button>
+                    <button className="lom-nav-link" onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/exam-edge')}>⚡ Exam Edge</button>
                 </div>
             </nav>
 
@@ -271,8 +273,8 @@ export default function LawsOfMotionTerminology() {
 
                 {/* Footer CTA */}
                 <div style={{ marginTop: 40, textAlign: 'center' }}>
-                    <button onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/skills')} style={{ padding: '12px 32px', fontSize: 15, background: 'var(--lom-indigo)', color: '#fff', border: 'none', borderRadius: 100, fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s ease' }}>
-                        I've mastered the language! 🎯
+                    <button onClick={() => navigate('/senior/grade/11/physics/laws-of-motion/skills')} style={{ padding: '12px 32px', fontSize: 16, background: '#fff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                        Next Topic: Skills <span style={{ color: 'var(--lom-indigo)' }}>→</span>
                     </button>
                 </div>
             </div>

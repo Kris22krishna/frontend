@@ -18,6 +18,13 @@ export default function StructureOfAtomConnectomics() {
                 <button className="atom-nav-back" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom')}>
                     ← Back to Dashboard
                 </button>
+                <div className="atom-nav-links">
+                    <button className="atom-nav-link active">🧠 Connectomics</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/introduction')}>🌟 Intro</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/terminology')}>📖 Terminology</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/skills')}>🎯 Skills</button>
+                    <button className="atom-nav-link" onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/exam-edge')}>⚡ Exam Edge</button>
+                </div>
             </nav>
 
             <div className="atom-hero">
@@ -127,9 +134,14 @@ export default function StructureOfAtomConnectomics() {
                 <div style={{ marginTop: '60px', textAlign: 'center', background: '#f8fafc', padding: '40px', borderRadius: '32px', border: '2px dashed #e2e8f0' }}>
                     <Share2 size={48} color="#6366f1" style={{ marginBottom: '16px', display: 'inline-block' }} />
                     <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#1e1b4b' }}>Infinite Connections</h3>
-                    <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b', lineHeight: 1.6 }}>
+                    <p style={{ maxWidth: '600px', margin: '0 auto', color: '#64748b', lineHeight: 1.6, marginBottom: '32px' }}>
                         Structure of Atom isn't just a chapter; its principles ripple outward, forming the foundation of modern technology, medicine, and the universe itself. Every time you turn on a computer, you're looking at atomic properties applied!
                     </p>
+                    <div style={{ marginTop: 40, textAlign: 'center' }}>
+                        <button onClick={() => navigate('/senior/grade/11/chemistry/structure-of-atom/introduction')} style={{ padding: '12px 32px', fontSize: 16, background: '#fff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 100, fontWeight: 800, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                            Next Topic: Intro <span style={{ color: 'var(--atom-indigo)' }}>→</span>
+                        </button>
+                    </div>
                 </div>
             </main>
         </div>

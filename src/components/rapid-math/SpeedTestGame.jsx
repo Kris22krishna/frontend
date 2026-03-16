@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from "react-router-dom";
+import { api } from "../../services/api";
 import { SpeedTestQuestionCard } from "./SpeedTestQuestionCard";
 import { SpeedTestLeaderboard } from "./SpeedTestLeaderboard";
 import { Button } from "../ui/button";
@@ -63,10 +64,11 @@ export function SpeedTestGame() {
     const [rankFeedback, setRankFeedback] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const [lastLeaderboardUpdate, setLastLeaderboardUpdate] = useState(0);
+    const [operationQueue, setOperationQueue] = useState([]);
 
-    const generateQuestion = useCallback(() => {
+    const generateQuestion = useCallback((forcedOp) => {
         const ops = ["+", "-", "*", "/"];
-        const operation = ops[Math.floor(Math.random() * ops.length)];
+        const operation = forcedOp || ops[Math.floor(Math.random() * ops.length)];
 
         let num1 = 0, num2 = 0, correctAnswer = 0;
 
@@ -117,7 +119,7 @@ export function SpeedTestGame() {
         };
     }, [selectedDifficulty]);
 
-    const startGame = () => {
+    const startGame = (forcedOps = []) => {
         setStats({
             totalQuestions: 0,
             totalTime: 0,
@@ -126,7 +128,11 @@ export function SpeedTestGame() {
             skips: 0,
             results: []
         });
-        setCurrentQuestion(generateQuestion());
+
+        const [firstOp, ...rest] = forcedOps;
+        setOperationQueue(rest || []);
+        setCurrentQuestion(generateQuestion(firstOp));
+
         const now = Date.now();
         setQuestionStartTime(now);
         setGameStartTime(now);
@@ -158,7 +164,9 @@ export function SpeedTestGame() {
         if (newStats.totalQuestions >= questionCount) {
             finishGame();
         } else {
-            setCurrentQuestion(generateQuestion());
+            const [nextOp, ...remaining] = operationQueue;
+            setOperationQueue(remaining || []);
+            setCurrentQuestion(generateQuestion(nextOp));
             setQuestionStartTime(Date.now());
         }
     };
@@ -166,8 +174,29 @@ export function SpeedTestGame() {
     const [saveStatus, setSaveStatus] = useState("idle");
 
     const saveScore = async (currentUser) => {
-        setSaveStatus("saved (mock)");
-        setRankFeedback("Leaderboard temporarily disabled during migration.");
+        setIsSaving(true);
+        try {
+            const accuracy = Math.round((stats.correctAnswers / stats.totalQuestions) * 100) || 0;
+            const scoreData = {
+                difficulty: selectedDifficulty,
+                question_count: questionCount,
+                correct_answers: stats.correctAnswers,
+                total_time: stats.totalTime,
+                avg_time: stats.avgTime,
+                accuracy: accuracy
+            };
+
+            await api.saveRapidMathScore(scoreData);
+            setSaveStatus("saved");
+            setRankFeedback("Your score has been saved to your personal leaderboard!");
+            setLastLeaderboardUpdate(Date.now());
+        } catch (error) {
+            console.error("Failed to save score:", error);
+            setSaveStatus("error");
+            setRankFeedback("Failed to save score. Please try again.");
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const finishGame = useCallback(async () => {
@@ -203,10 +232,12 @@ export function SpeedTestGame() {
         if (newStats.totalQuestions >= questionCount) {
             finishGame();
         } else {
-            setCurrentQuestion(generateQuestion());
+            const [nextOp, ...remaining] = operationQueue;
+            setOperationQueue(remaining || []);
+            setCurrentQuestion(generateQuestion(nextOp));
             setQuestionStartTime(Date.now());
         }
-    }, [stats, currentQuestion, questionStartTime, questionCount, finishGame, generateQuestion]);
+    }, [stats, currentQuestion, questionStartTime, questionCount, finishGame, generateQuestion, operationQueue]);
 
     const handleLoginAndSave = async () => {
         setRankFeedback("Login temporarily disabled during migration. Use the main login button.");
@@ -358,7 +389,19 @@ export function SpeedTestGame() {
                                 onClick={() => {
                                     setQuestionCount(10);
                                     setSelectedDifficulty('standard');
-                                    startGame();
+
+                                    const ops = ["+", "-", "*", "/"];
+                                    // Guarantee each op appears at least twice (8 questions)
+                                    // + 2 random ops (total 10)
+                                    const pool = [
+                                        "+", "+", "-", "-", "*", "*", "/", "/",
+                                        ops[Math.floor(Math.random() * 4)],
+                                        ops[Math.floor(Math.random() * 4)]
+                                    ];
+
+                                    // Shuffle the pool
+                                    const shuffled = pool.sort(() => Math.random() - 0.5);
+                                    startGame(shuffled);
                                 }}
                                 variant="outline"
                                 className="w-full py-4 lg:py-6 rounded-xl border-orange-200 text-orange-600 hover:bg-orange-50 font-bold text-base lg:text-lg flex items-center justify-center gap-2"
@@ -366,6 +409,11 @@ export function SpeedTestGame() {
                                 <Zap className="w-5 h-5" /> Speed Test Challenge
                             </Button>
                         </div>
+                    </div>
+
+                    {/* Personal Leaderboard Section */}
+                    <div className="w-full max-w-6xl mt-12 pb-12">
+                        <SpeedTestLeaderboard lastUpdated={lastLeaderboardUpdate} />
                     </div>
                 </div>
             </div>

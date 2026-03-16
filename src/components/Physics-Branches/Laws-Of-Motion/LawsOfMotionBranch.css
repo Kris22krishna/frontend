@@ -589,8 +589,13 @@
 }
 
 .lom-skill-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
+  min-width: 250px;
+}
+.lom-skill-actions > button:last-child {
+  grid-column: 1 / -1;
 }
 
 .lom-btn {
@@ -600,6 +605,10 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .lom-btn-outline {
@@ -917,5 +926,88 @@
 @media (max-width: 768px) {
   .lom-lexicon-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── RESPONSIVE UPGRADES ── */
+@media (max-width: 1024px) {
+  .lom-fullpage {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+  }
+  .lom-left {
+    padding: 40px 24px;
+    flex: none;
+  }
+  .lom-right {
+    padding: 30px 20px;
+    flex: none;
+  }
+  .lom-main-title {
+    font-size: 2.5rem;
+  }
+  .lom-nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .lom-nav {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    align-items: center;
+    position: static;
+  }
+  .lom-grid {
+    grid-template-columns: 1fr;
+  }
+  .lom-term-grid {
+    grid-template-columns: 1fr;
+  }
+  .lom-skill-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  .lom-skill-actions {
+    justify-content: center;
+  }
+  .lom-hero {
+    padding: 40px 20px;
+  }
+  .lom-hero-title {
+    font-size: 2rem;
+  }
+  .lom-assess-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lom-stats-grid {
+    justify-content: center;
+  }
+  .lom-card-btn {
+    flex-direction: column;
+    text-align: center;
+  }
+  .lom-card-icon {
+    margin: 20px auto 10px;
+  }
+  .lom-card-chevron {
+    transform: none;
+    padding: 10px;
+  }
+  .lom-nav-back {
+    width: 100%;
+    justify-content: center;
+  }
+  .lom-intro-card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .lom-palette-grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
+import DeterminantsTopNav from "../../DeterminantsTopNav";
 
 // ─── DATA SECTIONS ─────────────────────────────────────────────────────────
 
@@ -344,7 +345,8 @@ export default function DeterminantsTerminology() {
                 @media (max-width: 1024px) { .det-lexicon-grid { grid-template-columns: 1fr !important; } .det-selector-container { max-width: 600px; margin: 0 auto 16px; } }
             `}</style>
 
-      <nav className="det-intro-nav">
+      <DeterminantsTopNav active="terminology" />
+      {false && <nav className="det-intro-nav">
         <button
           className="det-intro-nav-back"
           onClick={() => navigate("/senior/grade/12/determinants")}
@@ -375,7 +377,7 @@ export default function DeterminantsTerminology() {
             🎯 Skills
           </button>
         </div>
-      </nav>
+      </nav>}
 
       <div
         className="det-lexicon-container"

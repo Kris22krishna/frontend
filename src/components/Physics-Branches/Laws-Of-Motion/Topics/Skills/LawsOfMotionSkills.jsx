@@ -725,30 +725,18 @@ export default function LawsOfMotionSkills() {
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: 900, margin: '0 auto' }}>
                             {cellSkillsData.map((skill) => (
-                                <div key={skill.id} style={{
-                                    display: 'flex', alignItems: 'center',
-                                    background: '#fff', borderRadius: 20, padding: '20px 28px',
-                                    boxShadow: '0 2px 12px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9',
-                                    transition: 'all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                                    gap: '20px', flexWrap: 'wrap'
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: '1 1 auto', minWidth: 0 }}>
+                                <div key={skill.id} className="lom-skill-card">
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                         <div style={{ background: `${skill.color}15`, color: skill.color, width: 52, height: 52, borderRadius: 14, fontSize: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{skill.icon}</div>
                                         <div style={{ minWidth: 0 }}>
-                                            <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 18, fontWeight: 800, color: '#0f172a', marginBottom: 2, lineHeight: 1.1 }}>{skill.title}</div>
-                                            <div style={{ fontSize: 13, color: '#64748b', lineHeight: 1.55, maxWidth: 400 }}>{skill.desc}</div>
+                                            <div className="lom-skill-title">{skill.title}</div>
+                                            <div className="lom-skill-desc">{skill.desc}</div>
                                         </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
-                                        <button onClick={() => openMode(skill, 'learn')}
-                                            style={{ padding: '9px 18px', borderRadius: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}
-                                        >📖 Learn</button>
-                                        <button onClick={() => openMode(skill, 'practice')}
-                                            style={{ padding: '9px 18px', borderRadius: 10, background: '#f8fafc', border: '1.5px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}
-                                        >✏️ Practice</button>
-                                        <button onClick={() => openMode(skill, 'assess')}
-                                            style={{ padding: '9px 22px', borderRadius: 10, background: skill.color, border: 'none', color: '#fff', fontWeight: 800, cursor: 'pointer', boxShadow: `0 4px 12px ${skill.color}40`, transition: 'all 0.2s', fontSize: 14, display: 'flex', alignItems: 'center', gap: 6 }}
-                                        >🏆 Assess</button>
+                                    <div className="lom-skill-actions">
+                                        <button onClick={() => openMode(skill, 'learn')} className="lom-btn lom-btn-outline">📖 Learn</button>
+                                        <button onClick={() => openMode(skill, 'practice')} className="lom-btn lom-btn-outline">✏️ Practice</button>
+                                        <button onClick={() => openMode(skill, 'assess')} className="lom-btn lom-btn-filled" style={{ '--skill-color': skill.color }}>🏆 Assess</button>
                                     </div>
                                 </div>
                             ))}

@@ -582,8 +582,13 @@
 }
 
 .cell-skill-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
+  min-width: 250px;
+}
+.cell-skill-actions > button:last-child {
+  grid-column: 1 / -1;
 }
 
 .cell-btn {
@@ -593,6 +598,10 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .cell-btn-outline {
@@ -842,5 +851,88 @@
 @media (max-width: 1024px) {
   .cell-assess-layout {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── RESPONSIVE UPGRADES ── */
+@media (max-width: 1024px) {
+  .cell-fullpage {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+  }
+  .cell-left {
+    padding: 40px 24px;
+    flex: none;
+  }
+  .cell-right {
+    padding: 30px 20px;
+    flex: none;
+  }
+  .cell-main-title {
+    font-size: 2.5rem;
+  }
+  .cell-nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cell-nav {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    align-items: center;
+    position: static;
+  }
+  .cell-grid {
+    grid-template-columns: 1fr;
+  }
+  .cell-term-grid {
+    grid-template-columns: 1fr;
+  }
+  .cell-skill-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  .cell-skill-actions {
+    justify-content: center;
+  }
+  .cell-hero {
+    padding: 40px 20px;
+  }
+  .cell-hero-title {
+    font-size: 2rem;
+  }
+  .cell-assess-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cell-stats-grid {
+    justify-content: center;
+  }
+  .cell-card-btn {
+    flex-direction: column;
+    text-align: center;
+  }
+  .cell-card-icon {
+    margin: 20px auto 10px;
+  }
+  .cell-card-chevron {
+    transform: none;
+    padding: 10px;
+  }
+  .cell-nav-back {
+    width: 100%;
+    justify-content: center;
+  }
+  .cell-intro-card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .cell-palette-grid {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
