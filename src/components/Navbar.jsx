@@ -6,6 +6,7 @@ import './Navbar.css';
 
 // import { api } from '../services/api'; // No longer needed directly for auth state
 import { useAuth } from '../contexts/AuthContext';
+import logo from '../assets/logo.jpg';
 
 const Navbar = () => {
     // Consume AuthContext
@@ -60,7 +61,7 @@ const Navbar = () => {
             <div className="navbar-content">
                 <Link to="/" className="logo">
                     {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
-                    <span>{userType === 'student' ? 'skill100.ai' : 'Skill100.ai'}</span>
+                    <span>{userType === 'student' ? 'Skill100.ai' : 'Skill100.ai'}</span>
                 </Link>
 
                 <div className="nav-center hidden-mobile">
