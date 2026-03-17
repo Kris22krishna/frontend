@@ -6,7 +6,7 @@ import {
     BarChart2, TrendingUp, Trophy, Menu, X, Settings, Users, Eye, MinusCircle, XCircle, Clock
 } from 'lucide-react';
 import { api } from '../../services/api';
-import logo from '../../assets/logo.jpg';
+
 
 const AssessmentUploaderDashboard = () => {
     const navigate = useNavigate();
@@ -184,7 +184,7 @@ const AssessmentUploaderDashboard = () => {
                                 <Menu className="h-6 w-6" />
                             </button>
                             <div className="flex items-center gap-3">
-                                <img src={logo} alt="Logo" className="h-8 w-8 rounded-full shadow-sm" />
+                                
                                 <span className="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-green-500">
                                     skill100.ai
                                 </span>

@@ -4,7 +4,7 @@ import { Clock, ChevronLeft, ChevronRight, CheckCircle, AlertTriangle, Menu, X, 
 import { api } from '../services/api';
 import MathRenderer from '../components/MathRenderer';
 import Whiteboard from '../components/Whiteboard';
-import logo from '../assets/logo.jpg';
+
 import renderMathInElement from 'katex/dist/contrib/auto-render.mjs';
 import 'katex/dist/katex.min.css';
 
@@ -180,7 +180,7 @@ const AssessmentRunner = () => {
                         <Menu className="h-6 w-6" />
                     </button>
                     <div className="flex items-center gap-3">
-                        <img src={logo} alt="skill100" className="h-8 w-auto rounded-full" />
+                        
                         <span className="text-xl font-bold text-gray-900 tracking-tight">
                             skill100
                         </span>

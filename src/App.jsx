@@ -610,6 +610,10 @@ import DataHandlingClass4 from './components/practice/class-4/Data_Handling/Data
 import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
 import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
 import DataHandlingSkillsClass4 from './components/practice/class-4/Data_Handling/Topics/Skills/DataHandlingSkillsClass4';
+import ThousandsAroundUs from './components/practice/class-4/Thousands_Around_Us/ThousandsAroundUs';
+import ThousandsAroundUsIntro from './components/practice/class-4/Thousands_Around_Us/Topics/5W1H/ThousandsAroundUsIntro';
+import ThousandsAroundUsTerminology from './components/practice/class-4/Thousands_Around_Us/Topics/Terminology/ThousandsAroundUsTerminology';
+import ThousandsAroundUsSkills from './components/practice/class-4/Thousands_Around_Us/Topics/Skills/ThousandsAroundUsSkills';
 import DiagnosisLanding from './components/Diagnosis_test/DiagnosisLanding';
 import DiagnosisTestRunner from './components/Diagnosis_test/DiagnosisTestRunner';
 
@@ -739,6 +743,11 @@ function App() {
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Thousands Around Us Chapter Pages */}
+          <Route path="junior/grade/4/thousands-around-us" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsIntro /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsSkills /></ProtectedRoute>} />
           {/* Grade 4: Patterns Around Us Chapter Pages */}
           <Route path="junior/grade/4/patterns-around-us" element={<ProtectedRoute redirectTo="/login"><PatternsAroundUs /></ProtectedRoute>} />
           <Route path="junior/grade/4/patterns-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><PatternsIntro5W1H /></ProtectedRoute>} />

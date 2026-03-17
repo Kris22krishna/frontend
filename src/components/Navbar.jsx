@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import './Navbar.css';
-import logo from '../assets/logo.jpg';
+
 // import { api } from '../services/api'; // No longer needed directly for auth state
 import { useAuth } from '../contexts/AuthContext';
 
@@ -59,7 +59,6 @@ const Navbar = () => {
         <nav className={`navbar ${isTransparent ? 'navbar-transparent' : ''}`}>
             <div className="navbar-content">
                 <Link to="/" className="logo">
-                    {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
                     <span>Skill100.ai</span>
                 </Link>
 

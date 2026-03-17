@@ -298,6 +298,11 @@ export const TOPIC_CONFIGS = {
             { id: "HAS-01", name: "Introduction", route: "hide-and-seek-hero" },
             { id: "HAS-02", name: "Terminology", route: "hide-and-seek-hero" },
             { id: "HAS-03", name: "Skills", route: "hide-and-seek-hero" }
+        ],
+        'Thousands Around Us': [
+            { id: "TAU-01", name: "Introduction", route: "thousands-around-us-hero" },
+            { id: "TAU-02", name: "Terminology", route: "thousands-around-us-hero" },
+            { id: "TAU-03", name: "Skills", route: "thousands-around-us-hero" }
         ]
     }
 };
