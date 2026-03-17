@@ -207,10 +207,10 @@ function LearnView({ skill, onPractice, mobileLearnDetailView, setMobileLearnDet
                                     <div key={idx} className="sl-example-box" style={{ padding: 20, marginBottom: 16 }}>
                                         <div style={{ color: skill.color, fontWeight: 800, fontSize: 13, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.8px' }}>Example {idx + 1}</div>
                                         <div style={{ color: '#1e293b', fontWeight: 700, fontSize: 15, marginBottom: 12 }}>
-                                            Q: <MathRenderer text={ex.q.includes('$') ? ex.q : `$$${ex.q}$$`} />
+                                            Q: <MathRenderer text={ex.q} />
                                         </div>
                                         <div style={{ color: '#475569', fontSize: 14, padding: '12px', background: '#fff', borderRadius: '10px', border: '1px solid #f1f5f9', fontWeight: 500 }}>
-                                            A: <MathRenderer text={ex.a.includes('$') ? ex.a : `$$${ex.a}$$`} />
+                                            A: <MathRenderer text={ex.a} />
                                         </div>
                                     </div>
                                 ))}
