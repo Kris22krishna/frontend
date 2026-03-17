@@ -90,7 +90,12 @@ const InterpretingRealLifeData = () => {
                 detailedSolution = `This is a subtraction problem.\n\nStep 1: Identify the values\n• Higher cost (motor boat)\n• Lower cost (long tail boat)\n\nStep 2: Find the difference\n• Difference = Higher cost − Lower cost\n• Difference = ${formattedCorrect}\n\nThe motor boat costs Rs ${formattedCorrect} more.`;
             }
 
-            opts = [...new Set(opts)].sort(() => Math.random() - 0.5);
+            opts = [...new Set(opts)];
+            while (opts.length < 4) {
+                opts.push((correctAns + Math.floor(Math.random() * 5000) + 100).toLocaleString('en-IN'));
+                opts = [...new Set(opts)];
+            }
+            opts.sort(() => Math.random() - 0.5);
             generated.push({
                 text: qText,
                 correctAnswer: formattedCorrect,

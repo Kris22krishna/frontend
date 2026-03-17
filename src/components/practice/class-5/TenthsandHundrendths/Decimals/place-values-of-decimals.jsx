@@ -68,8 +68,8 @@ const PlaceValuesOfDecimals = () => {
             const type = types[idx % types.length];
             let decimal, digitVal, placeName, questionText, correctAnswer, solution, options;
 
-            const n = randomInt(1, 99);
-            const d = randomInt(1, 9);
+            let n = randomInt(1, 99);
+            let d = randomInt(1, 9);
             decimal = (n + d / 10).toFixed(1);
 
             if (type === 'identifyDigit') {
@@ -79,10 +79,24 @@ const PlaceValuesOfDecimals = () => {
                 questionText = `What digit is in the <strong>${placeName}</strong> place of $${decimal}$?`;
                 correctAnswer = digitVal.toString();
                 solution = `In the decimal $${decimal}$, the digit to the right of the decimal point is the tenths place, and the digit to the left is the ones place.<br/>So, the digit in the <strong>${placeName}</strong> place is <strong>${correctAnswer}</strong>.`;
-                options = [correctAnswer, ...new Set([randomInt(0, 9).toString(), randomInt(0, 9).toString(), randomInt(0, 9).toString()])].slice(0, 4);
+
+                let optSet = new Set([correctAnswer]);
+                while (optSet.size < 4) {
+                    optSet.add(randomInt(0, 9).toString());
+                }
+                options = [...optSet].sort(() => Math.random() - 0.5);
             } else if (type === 'identifyPlace') {
-                const isTenths = Math.random() > 0.5;
+                let isTenths = Math.random() > 0.5;
                 digitVal = isTenths ? d : (n % 10);
+
+                // Ensure digitVal is unique in the decimal string
+                while (decimal.toString().indexOf(digitVal.toString()) !== decimal.toString().lastIndexOf(digitVal.toString())) {
+                    n = randomInt(1, 99);
+                    d = randomInt(1, 9);
+                    decimal = (n + d / 10).toFixed(1);
+                    digitVal = isTenths ? d : (n % 10);
+                }
+
                 questionText = `In the number $${decimal}$, what is the place value of the digit <strong>${digitVal}</strong>?`;
                 correctAnswer = isTenths ? 'Tenths' : 'Ones';
                 solution = `The digit <strong>${digitVal}</strong> is in the <strong>${correctAnswer}</strong> place.`;
@@ -102,15 +116,26 @@ const PlaceValuesOfDecimals = () => {
             const type = types[idx % types.length];
             let decimal, digitVal, placeVal, questionText, correctAnswer, solution, options;
 
-            const n = randomInt(1, 9);
-            const d1 = randomInt(1, 9);
-            const d2 = randomInt(1, 9);
+            let n = randomInt(1, 9);
+            let d1 = randomInt(1, 9);
+            let d2 = randomInt(1, 9);
             decimal = `${n}.${d1}${d2}`;
 
             if (type === 'valueOfDigit') {
-                const isHundredths = Math.random() > 0.5;
+                let isHundredths = Math.random() > 0.5;
                 digitVal = isHundredths ? d2 : d1;
                 placeVal = isHundredths ? (d2 / 100).toFixed(2) : (d1 / 10).toFixed(1);
+
+                // Ensure digitVal is unique in the decimal string
+                while (decimal.replace('.', '').indexOf(digitVal.toString()) !== decimal.replace('.', '').lastIndexOf(digitVal.toString())) {
+                    n = randomInt(1, 9);
+                    d1 = randomInt(1, 9);
+                    d2 = randomInt(1, 9);
+                    decimal = `${n}.${d1}${d2}`;
+                    digitVal = isHundredths ? d2 : d1;
+                    placeVal = isHundredths ? (d2 / 100).toFixed(2) : (d1 / 10).toFixed(1);
+                }
+
                 questionText = `What is the value of the digit <strong>${digitVal}</strong> in $${decimal}$?`;
                 correctAnswer = `$${placeVal}$`;
                 solution = `The digit <strong>${digitVal}</strong> is in the ${isHundredths ? 'hundredths' : 'tenths'} place, so its value is $${placeVal}$.`;
@@ -138,10 +163,18 @@ const PlaceValuesOfDecimals = () => {
             let decimal, questionText, correctAnswer, solution, options;
 
             if (type === 'thousandths') {
-                const d1 = randomInt(1, 9);
-                const d2 = randomInt(1, 9);
-                const d3 = randomInt(1, 9);
+                let d1 = randomInt(1, 9);
+                let d2 = randomInt(1, 9);
+                let d3 = randomInt(1, 9);
                 decimal = `0.${d1}${d2}${d3}`;
+
+                while (decimal.indexOf(d3.toString()) !== decimal.lastIndexOf(d3.toString())) {
+                    d1 = randomInt(1, 9);
+                    d2 = randomInt(1, 9);
+                    d3 = randomInt(1, 9);
+                    decimal = `0.${d1}${d2}${d3}`;
+                }
+
                 questionText = `What is the place value of <strong>${d3}</strong> in $${decimal}$?`;
                 correctAnswer = 'Thousandths';
                 solution = `In $${decimal}$, <strong>${d1}</strong> is tenths, <strong>${d2}</strong> is hundredths, and <strong>${d3}</strong> is <strong>thousandths</strong>.`;

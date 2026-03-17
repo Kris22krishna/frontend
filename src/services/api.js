@@ -796,6 +796,39 @@ export const api = {
         return handleResponse(response);
     },
 
+    // --- Rapid Math ---
+    saveRapidMathScore: async (scoreData) => {
+        const response = await fetch(`${BASE_URL}/api/v1/rapid-math/scores`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(scoreData),
+        });
+        return handleResponse(response);
+    },
+
+    saveIDMScore: async (scoreData) => {
+        const response = await fetch(`${BASE_URL}/api/v1/idm/scores`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(scoreData),
+        });
+        return handleResponse(response);
+    },
+
+    getMyRapidMathScores: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/rapid-math/my-scores`, {
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
+    getMyBestRapidMathScores: async () => {
+        const response = await fetch(`${BASE_URL}/api/v1/rapid-math/my-best`, {
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
 
 
     finishSession: async (sessionId) => {
@@ -825,6 +858,25 @@ export const api = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
+        });
+        return handleResponse(response);
+    },
+
+    // --- Diagnosis Test ---
+    submitDiagnosisTest: async (data) => {
+        const response = await fetch(`${BASE_URL}/api/v1/practice/diagnosis/submit`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(data),
+        });
+        return handleResponse(response);
+    },
+
+    getAdminDiagnosisResults: async (limit = 200) => {
+        const params = new URLSearchParams();
+        if (limit) params.append('limit', limit);
+        const response = await fetch(`${BASE_URL}/api/v1/admin/diagnosis/results?${params.toString()}`, {
+            headers: getHeaders()
         });
         return handleResponse(response);
     },

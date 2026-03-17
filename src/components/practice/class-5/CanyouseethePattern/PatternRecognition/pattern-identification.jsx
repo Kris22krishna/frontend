@@ -327,12 +327,16 @@ const PatternIdentification = () => {
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="answer-box p-4 rounded-2xl bg-gray-50 border-2 border-gray-100">
                                                         <span className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Your Answer</span>
-                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>{ans.selected}</span>
+                                                        <span className={`text-lg font-black ${ans.isCorrect ? 'text-[#4FB7B3]' : 'text-red-500'}`}>
+                                                            {q.isCustomOptions ? q.optionVisuals[q.options.indexOf(ans.selected)] : ans.selected}
+                                                        </span>
                                                     </div>
                                                     {!ans.isCorrect && (
                                                         <div className="answer-box p-4 rounded-2xl bg-[#E0FBEF] border-2 border-[#4FB7B3]/20">
                                                             <span className="block text-[10px] font-black uppercase tracking-widest text-[#4FB7B3] mb-1">Correct Answer</span>
-                                                            <span className="text-lg font-black text-[#31326F]">{q.correctAnswer}</span>
+                                                            <span className="text-lg font-black text-[#31326F]">
+                                                                {q.isCustomOptions ? q.optionVisuals[q.options.indexOf(q.correctAnswer)] : q.correctAnswer}
+                                                            </span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -416,12 +420,12 @@ const PatternIdentification = () => {
                 </div>
             </main>
 
-            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
+            <ExplanationModal isOpen={showExplanationModal} isCorrect={isCorrect} correctAnswer={currentQuestion.isCustomOptions ? currentQuestion.optionVisuals[currentQuestion.options.indexOf(currentQuestion.correctAnswer)] : currentQuestion.correctAnswer} explanation={currentQuestion.solution} onClose={() => setShowExplanationModal(false)} onNext={() => setShowExplanationModal(false)} />
 
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>Exit Quest</button>
+                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={() => navigate(-1)}>Exit</button>
                     </div>
                     <div className="bottom-center">
                         {isSubmitted && <button className="view-explanation-btn" onClick={() => setShowExplanationModal(true)}><Eye size={20} /> View Explanation</button>}

@@ -59,19 +59,25 @@ const Navbar = () => {
         <nav className={`navbar ${isTransparent ? 'navbar-transparent' : ''}`}>
             <div className="navbar-content">
                 <Link to="/" className="logo">
-                    <span>Skill100.ai</span>
+                    {!isTransparent && <img src={logo} alt="skill100.ai Logo" className="navbar-logo-img" />}
+                    <span>{userType === 'student' ? 'skill100.ai' : 'Skill100.ai'}</span>
                 </Link>
 
                 <div className="nav-center hidden-mobile">
                     <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>Home</Link>
                     <Link to="/rapid-math" className={`nav-link-item ${isActive('/rapid-math') ? 'active' : ''}`}>Rapid Math</Link>
                     <Link to="/internship" className={`nav-link-item ${isActive('/internship') ? 'active' : ''}`}>Internship</Link>
+
+                    {isAuthenticated && userType === 'student' && (
+                        <Link to="/idm-dashboard" className={`nav-link-item ${isActive('/idm-dashboard') ? 'active' : ''}`} >
+                            IDM 2026
+                        </Link>
+                    )}
                     <Link to="/neet" className={`nav-link-item ${isActive('/neet') ? 'active' : ''}`}>NEET</Link>
                     {isAuthenticated && (
-                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>Portal</Link>
-                    )}
-                    {isAuthenticated && userType === 'student' && (
-                        <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>Diagnosis Test</Link>
+                        <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>
+                            Learn
+                        </Link>
                     )}
                 </div>
 
@@ -111,7 +117,12 @@ const Navbar = () => {
                         </Link>
                         {isAuthenticated ? (
                             <>
-                                <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">Portal</Link>
+                                <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">
+                                    Portal
+                                </Link>
+                                <Link to="/idm-dashboard" className="mobile-dropdown-item idm-link" style={{ color: '#4f46e5', fontWeight: 'bold' }}>
+                                    IDM 2026
+                                </Link>
                                 {userType === 'student' && (
                                     <Link to="/diagnosis-test" className={`mobile-dropdown-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
                                         Diagnosis Test

@@ -594,8 +594,8 @@ const JuniorPracticeSession = () => {
 
                                                 <div className="explanation-box p-4 rounded-2xl bg-blue-50/50 border-2 border-blue-100">
                                                     <span className="block text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Explain? 💡</span>
-                                                    <div className="text-sm font-medium text-gray-600 leading-relaxed">
-                                                        <LatexContent html={q.solution} />
+                                                    <div className="text-sm font-medium text-gray-600 leading-normal [&>p]:mb-0 [&>p]:mt-1">
+                                                        <LatexText html={q.solution} />
                                                     </div>
                                                 </div>
                                             </div>
