@@ -273,6 +273,12 @@ import ComparingQuantitiesIntro5W1H from './components/practice/class-8/comparin
 import ComparingQuantitiesTerminology from './components/practice/class-8/comparing_quantities/Topics/Terminology/ComparingQuantitiesTerminology';
 import ComparingQuantitiesSkills from './components/practice/class-8/comparing_quantities/Topics/Skills/ComparingQuantitiesSkills';
 
+// Grade 8 Data Handling
+import Grade8DataHandling from './components/practice/class-8/data_handling/DataHandling';
+import Grade8DataHandlingIntro5W1H from './components/practice/class-8/data_handling/Topics/5W1H/DataHandlingIntro5W1H';
+import Grade8DataHandlingTerminology from './components/practice/class-8/data_handling/Topics/Terminology/DataHandlingTerminology';
+import Grade8DataHandlingSkills from './components/practice/class-8/data_handling/Topics/Skills/DataHandlingSkills';
+
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
 import Grade1Numbers1to9 from './components/practice/grade-1/numbers-1-9';
@@ -794,6 +800,12 @@ function App() {
           <Route path="senior/grade/8/direct-and-inverse-proportions/introduction" element={<ProtectedRoute redirectTo="/login"><ProportionsIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/8/direct-and-inverse-proportions/terminology" element={<ProtectedRoute redirectTo="/login"><ProportionsTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/8/direct-and-inverse-proportions/skills" element={<ProtectedRoute redirectTo="/login"><ProportionsSkills /></ProtectedRoute>} />
+
+          {/* Grade 8: Data Handling Chapter Pages */}
+          <Route path="senior/grade/8/data-handling" element={<ProtectedRoute redirectTo="/login"><Grade8DataHandling /></ProtectedRoute>} />
+          <Route path="senior/grade/8/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><Grade8DataHandlingIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><Grade8DataHandlingTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><Grade8DataHandlingSkills /></ProtectedRoute>} />
 
           {/* Grade 8: Comparing Quantities Chapter Pages */}
           <Route path="senior/grade/8/comparing-quantities" element={<ProtectedRoute redirectTo="/login"><ComparingQuantities /></ProtectedRoute>} />
