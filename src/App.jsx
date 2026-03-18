@@ -99,6 +99,11 @@ import PatternsIntro5W1H from './components/practice/class-4/Patterns_Around_Us/
 import PatternsTerminology from './components/practice/class-4/Patterns_Around_Us/Topics/Terminology/Terminology';
 import PatternsSkills from './components/practice/class-4/Patterns_Around_Us/Topics/Skills/Skills';
 
+import SharingAndMeasuring from './components/practice/class-4/Sharing_and_Measuring/SharingAndMeasuring';
+import SharingAndMeasuringIntro from './components/practice/class-4/Sharing_and_Measuring/Topics/5W1H/SharingAndMeasuringIntro';
+import SharingAndMeasuringTerminology from './components/practice/class-4/Sharing_and_Measuring/Topics/Terminology/SharingAndMeasuringTerminology';
+import SharingAndMeasuringSkills from './components/practice/class-4/Sharing_and_Measuring/Topics/Skills/SharingAndMeasuringSkills';
+
 import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
 import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
 import HideAndSeekTerminology from './components/practice/class-4/Hide_and_Seek/Topics/Terminology/HideAndSeekTerminology';
@@ -631,6 +636,10 @@ import DataHandlingClass4 from './components/practice/class-4/Data_Handling/Data
 import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
 import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
 import DataHandlingSkillsClass4 from './components/practice/class-4/Data_Handling/Topics/Skills/DataHandlingSkillsClass4';
+import ThousandsAroundUs from './components/practice/class-4/Thousands_Around_Us/ThousandsAroundUs';
+import ThousandsAroundUsIntro from './components/practice/class-4/Thousands_Around_Us/Topics/5W1H/ThousandsAroundUsIntro';
+import ThousandsAroundUsTerminology from './components/practice/class-4/Thousands_Around_Us/Topics/Terminology/ThousandsAroundUsTerminology';
+import ThousandsAroundUsSkills from './components/practice/class-4/Thousands_Around_Us/Topics/Skills/ThousandsAroundUsSkills';
 import DiagnosisLanding from './components/Diagnosis_test/DiagnosisLanding';
 import DiagnosisTestRunner from './components/Diagnosis_test/DiagnosisTestRunner';
 
@@ -762,6 +771,11 @@ function App() {
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Thousands Around Us Chapter Pages */}
+          <Route path="junior/grade/4/thousands-around-us" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsIntro /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsSkills /></ProtectedRoute>} />
           {/* Grade 4: Patterns Around Us Chapter Pages */}
           <Route path="junior/grade/4/patterns-around-us" element={<ProtectedRoute redirectTo="/login"><PatternsAroundUs /></ProtectedRoute>} />
           <Route path="junior/grade/4/patterns-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><PatternsIntro5W1H /></ProtectedRoute>} />
@@ -772,11 +786,16 @@ function App() {
           <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
-          {/* Grade 4: Hide and Seek Chapter Pages */}
           <Route path="junior/grade/4/hide-and-seek" element={<ProtectedRoute redirectTo="/login"><HideAndSeek /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/introduction" element={<ProtectedRoute redirectTo="/login"><HideAndSeekIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/terminology" element={<ProtectedRoute redirectTo="/login"><HideAndSeekTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/skills" element={<ProtectedRoute redirectTo="/login"><HideAndSeekSkills /></ProtectedRoute>} />
+
+          {/* Grade 4: Sharing and Measuring Chapter Pages */}
+          <Route path="junior/grade/4/sharing-and-measuring" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuring /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/introduction" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringIntro /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/terminology" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/skills" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringSkills /></ProtectedRoute>} />
 
           {/* Grade 8: Linear Equations Chapter Pages */}
           <Route path="senior/grade/8/linear-equations" element={<ProtectedRoute redirectTo="/login"><LinearEquations /></ProtectedRoute>} />
