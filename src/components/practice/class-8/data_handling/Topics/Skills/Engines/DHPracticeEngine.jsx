@@ -1,18 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { LatexText } from '../../../../../../LatexText';
 import styles from '../../../data_handling.module.css';
+import DHChartRenderer from './DHChartRenderer';
 
-function sample(arr, n) {
-    const copy = [...arr];
-    for (let i = copy.length - 1; i > 0; i--) {
+// ── Shuffle helper ─────────────────────────────────────────────────────────
+function shuffle(arr) {
+    const c = [...arr];
+    for (let i = c.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
+        [c[i], c[j]] = [c[j], c[i]];
     }
-    return copy.slice(0, n);
+    return c;
+}
+
+// ── Interleaved sampler: alternates chart & non-chart questions ────────────
+function interleaved(pool, n) {
+    const chart = shuffle(pool.filter((q) => q.chart));
+    const plain = shuffle(pool.filter((q) => !q.chart));
+    const result = [];
+    let ci = 0, pi = 0;
+    while (result.length < n && (ci < chart.length || pi < plain.length)) {
+        // insert a chart question roughly every 3rd position
+        if (ci < chart.length && (result.length === 0 || result.length % 3 === 2)) {
+            result.push(chart[ci++]);
+        } else if (pi < plain.length) {
+            result.push(plain[pi++]);
+        } else {
+            result.push(chart[ci++]);
+        }
+    }
+    return result.slice(0, n);
 }
 
 export default function DHPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack }) {
-    const [questions, setQuestions] = useState(() => sample(questionPool, sampleSize));
+    const [questions, setQuestions] = useState(() => interleaved(questionPool, sampleSize));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [fillValue, setFillValue] = useState('');
@@ -38,6 +59,7 @@ export default function DHPracticeEngine({ questionPool, sampleSize = 20, title,
     const isFill = q.type === 'fill';
     const isTF = q.type === 'truefalse';
     const isMCQ = q.type === 'mcq' || q.type === 'multiStep';
+    const hasChart = !!q.chart;
     const progress = ((current + (finished ? 1 : 0)) / questions.length) * 100;
 
     const handleSelect = (idx) => {
@@ -62,10 +84,11 @@ export default function DHPracticeEngine({ questionPool, sampleSize = 20, title,
     };
 
     const handleRetry = () => {
-        setQuestions(sample(questionPool, sampleSize));
+        setQuestions(interleaved(questionPool, sampleSize));
         setCurrent(0); setSelected(null); setFillValue(''); setAnswered(false); setFillCorrect(false); setScore(0); setFinished(false); setTimeTaken(0);
     };
 
+    // ── Finished screen ────────────────────────────────────────────────────
     if (finished) {
         const pct = Math.round((score / questions.length) * 100);
         const msg = pct >= 90 ? 'Mastered!' : pct >= 75 ? 'Great Job!' : pct >= 50 ? 'Keep it up!' : 'Keep Learning!';
@@ -96,8 +119,30 @@ export default function DHPracticeEngine({ questionPool, sampleSize = 20, title,
         );
     }
 
+    // ── Options renderer ───────────────────────────────────────────────────
+    const renderOptions = () => (
+        <div className={styles['dh-quiz-options']}>
+            {q.options.map((opt, oi) => {
+                let border = 'rgba(0,0,0,0.06)', bg = '#fff', txtColor = '#0f172a', dot = '#f1f5f9';
+                if (answered) {
+                    if (oi === q.correct) { border = '#10b981'; bg = 'rgba(16,185,129,0.05)'; txtColor = '#059669'; dot = '#10b981'; }
+                    else if (oi === selected) { border = '#ef4444'; bg = 'rgba(239,68,68,0.05)'; txtColor = '#ef4444'; dot = '#ef4444'; }
+                } else if (selected === oi) { border = color; bg = `${color}05`; dot = color; }
+                return (
+                    <button key={oi} onClick={() => handleSelect(oi)} disabled={answered}
+                        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: isTF ? '16px' : '12px 14px', borderRadius: 12, border: `2.5px solid ${border}`, background: bg, cursor: answered ? 'default' : 'pointer', fontSize: 14, color: txtColor, textAlign: 'left', transition: 'all 0.2s', fontWeight: selected === oi ? 700 : 500, justifyContent: isTF ? 'center' : 'flex-start', fontFamily: 'Open Sans, sans-serif' }}>
+                        {!isTF && <div style={{ width: 8, height: 8, borderRadius: '50%', background: dot, flexShrink: 0 }} />}
+                        <span><LatexText text={opt} /></span>
+                    </button>
+                );
+            })}
+        </div>
+    );
+
+    // ── Main render ────────────────────────────────────────────────────────
     return (
         <div className={styles['dh-quiz-container']}>
+            {/* Progress bar header */}
             <div style={{ marginBottom: 20 }}>
                 <div className={styles['dh-score-header']}>
                     <div>
@@ -115,57 +160,65 @@ export default function DHPracticeEngine({ questionPool, sampleSize = 20, title,
             </div>
 
             <div className={styles['dh-quiz-card']}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${color}15`, padding: '4px 12px', borderRadius: 8, fontSize: 12, fontWeight: 800, color, marginBottom: 16 }}>
+                {/* Question type badge */}
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${color}15`, padding: '4px 12px', borderRadius: 8, fontSize: 12, fontWeight: 800, color, marginBottom: 14 }}>
                     {q.type === 'fill' ? 'FILL IN THE BLANK' : q.type === 'truefalse' ? 'TRUE OR FALSE' : q.type === 'multiStep' ? 'MULTI-STEP' : 'QUESTION'} {current + 1}
                 </div>
-                <div style={{ fontSize: 17, fontWeight: 600, color: '#0f172a', lineHeight: 1.65, marginBottom: 20, whiteSpace: 'pre-line' }}>
+
+                {/* Question text — full width */}
+                <div style={{ fontSize: 16, fontWeight: 600, color: '#0f172a', lineHeight: 1.65, marginBottom: 18, whiteSpace: 'pre-line' }}>
                     <LatexText text={q.question} />
                 </div>
 
-                {isFill && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                        <input
-                            type="number"
-                            className={styles['dh-fill-input']}
-                            value={fillValue}
-                            onChange={(e) => setFillValue(e.target.value)}
-                            disabled={answered}
-                            placeholder="?"
-                            onKeyDown={(e) => { if (e.key === 'Enter' && !answered) handleFillSubmit(); }}
-                        />
-                        {!answered && (
-                            <button onClick={handleFillSubmit} disabled={fillValue === ''}
-                                style={{ padding: '12px 24px', background: color, color: '#fff', border: 'none', borderRadius: 50, fontSize: 14, fontWeight: 800, cursor: fillValue === '' ? 'not-allowed' : 'pointer', opacity: fillValue === '' ? 0.5 : 1, fontFamily: 'Open Sans, sans-serif' }}>
-                                Submit
-                            </button>
-                        )}
-                        {answered && (
-                            <div style={{ padding: '12px 18px', borderRadius: 12, background: fillCorrect ? 'rgba(16,185,129,0.06)' : 'rgba(239,68,68,0.06)', border: `2px solid ${fillCorrect ? '#10b981' : '#ef4444'}`, fontSize: 15, fontWeight: 700, color: fillCorrect ? '#059669' : '#ef4444' }}>
-                                <LatexText text={fillCorrect ? `Correct! Answer: $${q.correctValue}$` : `Wrong. Correct answer: $${q.correctValue}$`} />
+                {/* Split layout for chart questions: chart left, options right */}
+                {hasChart && (isMCQ || isTF) ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'start' }}>
+                        {/* Left: chart */}
+                        <div>
+                            <DHChartRenderer chart={q.chart} />
+                        </div>
+                        {/* Right: 2×2 options */}
+                        <div>
+                            {renderOptions()}
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {/* Chart above options for fill-in questions with chart */}
+                        {hasChart && <DHChartRenderer chart={q.chart} />}
+
+                        {/* Fill in blank */}
+                        {isFill && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                                <input
+                                    type="number"
+                                    className={styles['dh-fill-input']}
+                                    value={fillValue}
+                                    onChange={(e) => setFillValue(e.target.value)}
+                                    disabled={answered}
+                                    placeholder="?"
+                                    onKeyDown={(e) => { if (e.key === 'Enter' && !answered) handleFillSubmit(); }}
+                                />
+                                {!answered && (
+                                    <button onClick={handleFillSubmit} disabled={fillValue === ''}
+                                        style={{ padding: '12px 24px', background: color, color: '#fff', border: 'none', borderRadius: 50, fontSize: 14, fontWeight: 800, cursor: fillValue === '' ? 'not-allowed' : 'pointer', opacity: fillValue === '' ? 0.5 : 1, fontFamily: 'Open Sans, sans-serif' }}>
+                                        Submit
+                                    </button>
+                                )}
+                                {answered && (
+                                    <div style={{ padding: '12px 18px', borderRadius: 12, background: fillCorrect ? 'rgba(16,185,129,0.06)' : 'rgba(239,68,68,0.06)', border: `2px solid ${fillCorrect ? '#10b981' : '#ef4444'}`, fontSize: 15, fontWeight: 700, color: fillCorrect ? '#059669' : '#ef4444' }}>
+                                        <LatexText text={fillCorrect ? `Correct! Answer: $${q.correctValue}$` : `Wrong. Correct answer: $${q.correctValue}$`} />
+                                    </div>
+                                )}
                             </div>
                         )}
-                    </div>
+
+                        {/* MCQ / T-F without chart */}
+                        {(isMCQ || isTF) && renderOptions()}
+                    </>
                 )}
 
-                {(isMCQ || isTF) && (
-                    <div className={styles['dh-quiz-options']}>
-                        {q.options.map((opt, oi) => {
-                            let border = 'rgba(0,0,0,0.06)', bg = '#fff', txtColor = '#0f172a', dot = '#f1f5f9';
-                            if (answered) {
-                                if (oi === q.correct) { border = '#10b981'; bg = 'rgba(16,185,129,0.05)'; txtColor = '#059669'; dot = '#10b981'; }
-                                else if (oi === selected) { border = '#ef4444'; bg = 'rgba(239,68,68,0.05)'; txtColor = '#ef4444'; dot = '#ef4444'; }
-                            } else if (selected === oi) { border = color; bg = `${color}05`; dot = color; }
-                            return (
-                                <button key={oi} onClick={() => handleSelect(oi)} disabled={answered}
-                                    style={{ display: 'flex', alignItems: 'center', gap: 12, padding: isTF ? '16px' : '14px 16px', borderRadius: 12, border: `2.5px solid ${border}`, background: bg, cursor: answered ? 'default' : 'pointer', fontSize: 15, color: txtColor, textAlign: 'left', transition: 'all 0.2s', fontWeight: selected === oi ? 700 : 500, justifyContent: isTF ? 'center' : 'flex-start', fontFamily: 'Open Sans, sans-serif' }}>
-                                    {!isTF && <div style={{ width: 10, height: 10, borderRadius: '50%', background: dot, flexShrink: 0 }} />}
-                                    <span><LatexText text={opt} /></span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                )}
-
+                {/* Explanation */}
                 {answered && (
                     <div style={{ marginTop: 20, padding: '14px 18px', borderRadius: 12, background: 'rgba(15,118,110,0.05)', border: '1px solid rgba(15,118,110,0.1)', color: '#64748b', fontSize: 13.5, lineHeight: 1.65, whiteSpace: 'pre-line' }}>
                         <strong style={{ color }}>Explanation: </strong><LatexText text={q.explanation} />

@@ -662,8 +662,10 @@
     gap: 12px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     .dh-quiz-options { grid-template-columns: 1fr; }
+    /* Collapse chart + options side-by-side into a stacked layout on mobile */
+    .dh-chart-split { grid-template-columns: 1fr !important; }
 }
 
 .dh-score-header {

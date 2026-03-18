@@ -123,10 +123,41 @@ export default function DataHandlingSkills() {
     const navigate = useNavigate();
     const [view, setView] = useState('list'); // 'list' | 'learn' | 'practice' | 'assess'
     const [activeSkill, setActiveSkill] = useState(null);
+    const [splitPool, setSplitPool] = useState({ practice: [], assess: [] });
 
     useEffect(() => { window.scrollTo(0, 0); }, []);
 
+    // Shuffle helper
+    const shuffleArr = (arr) => {
+        const c = [...arr];
+        for (let i = c.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [c[i], c[j]] = [c[j], c[i]];
+        }
+        return c;
+    };
+
     const openSkill = (skill, mode) => {
+        // Only re-shuffle when a NEW skill is selected, so practice & assess
+        // stay on their own non-overlapping slices within the same session.
+        if (!activeSkill || activeSkill.id !== skill.id) {
+            // Assessment Engine requires option-based questions (no 'fill' type)
+            const optionBased = skill.pool.filter(q => q.type !== 'fill');
+            const fillBased = skill.pool.filter(q => q.type === 'fill');
+            
+            // Assessment gets exactly 10 option-based questions drawn randomly
+            const shuffledOptionBased = shuffleArr(optionBased);
+            const assessSet = shuffledOptionBased.slice(0, 10);
+            
+            // Practice gets the remaining option-based questions PLUS all the fill questions
+            const practicePool = [...shuffledOptionBased.slice(10), ...fillBased];
+            const practiceSet = shuffleArr(practicePool);
+
+            setSplitPool({
+                practice: practiceSet, // exactly 20 questions
+                assess:   assessSet,   // exactly 10 MCQ/TF questions
+            });
+        }
         setActiveSkill(skill);
         setView(mode);
         window.scrollTo(0, 0);
@@ -258,7 +289,7 @@ export default function DataHandlingSkills() {
                 </div>
                 <div className={styles['dh-section']}>
                     <DHPracticeEngine
-                        questionPool={activeSkill.pool}
+                        questionPool={splitPool.practice}
                         sampleSize={20}
                         title={activeSkill.label}
                         color={activeSkill.color}
@@ -287,7 +318,7 @@ export default function DataHandlingSkills() {
                 </div>
                 <div className={styles['dh-section']}>
                     <DHAssessmentEngine
-                        questionPool={activeSkill.pool}
+                        questionPool={splitPool.assess}
                         sampleSize={10}
                         title={activeSkill.label}
                         color={activeSkill.color}
