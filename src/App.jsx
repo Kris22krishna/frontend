@@ -473,6 +473,13 @@ import TrianglesTerminology from './components/practice/class-10/Triangles/Topic
 import TrianglesSkills from './components/practice/class-10/Triangles/Topics/Skills/TrianglesSkills';
 import TrianglesConnectomics from './components/practice/class-10/Triangles/Topics/Connectomics/TrianglesConnectomics';
 
+// Class 10: Coordinate Geometry
+import CoordinateGeometryDashboard from './components/practice/class-10/CoordinateGeometry/CoordinateGeometryDashboard';
+import CoordinateGeometryIntro from './components/practice/class-10/CoordinateGeometry/Topics/Introduction/CoordinateGeometryIntro';
+import CoordinateGeometryTerminology from './components/practice/class-10/CoordinateGeometry/Topics/Terminology/CoordinateGeometryTerminology';
+import CoordinateGeometrySkills from './components/practice/class-10/CoordinateGeometry/Topics/Skills/CoordinateGeometrySkills';
+import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
+
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
 import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
@@ -850,6 +857,14 @@ function App() {
           <Route path="senior/grade/10/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><TrianglesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/10/triangles/skills" element={<ProtectedRoute redirectTo="/login"><TrianglesSkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/triangles/connectomics" element={<ProtectedRoute redirectTo="/login"><TrianglesConnectomics /></ProtectedRoute>} />
+
+          {/* Class 10: Coordinate Geometry */}
+          <Route path="senior/grade/10/coordinate-geometry" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/introduction" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/skills" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometrySkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/connectomics" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryConnectomics /></ProtectedRoute>} />
+
           <Route path="senior/grade/10/probability/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><ProbabilityMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><ProbabilityHardTest /></ProtectedRoute>} />
 
