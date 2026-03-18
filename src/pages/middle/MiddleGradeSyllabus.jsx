@@ -631,6 +631,17 @@ const MiddleGradeSyllabus = () => {
             ]
         };
 
+        skillsByTopic['Shapes and Angles'] = {
+            'Learn': [
+                { skill_id: 'SA-5W1H', skill_name: '5W1H Introduction', topic: 'Shapes and Angles', sub_topic: 'Learn', isLocal: true, path: '/shapes-and-angles/introduction' },
+                { skill_id: 'SA-TERM', skill_name: 'Terminology', topic: 'Shapes and Angles', sub_topic: 'Learn', isLocal: true, path: '/shapes-and-angles/terminology' },
+                { skill_id: 'SA-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Shapes and Angles', sub_topic: 'Learn', isLocal: true, path: '/shapes-and-angles/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'SA-TEST', skill_name: 'Chapter Test', topic: 'Shapes and Angles', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/shapes-angles/chapter-test' }
+            ]
+        };
+
         skillsByTopic['Tenths and Hundredths'] = {
             'Decimals': [
                 {

@@ -90,14 +90,20 @@ import ProportionsTerminology from './components/practice/class-8/direct_and_inv
 import ProportionsSkills from './components/practice/class-8/direct_and_inverse_proportions/Topics/Skills/ProportionsSkills';
 
 import ShapesAroundUs from './components/practice/class-4/Shapes_Around_Us/ShapesAroundUs';
-import ShapesIntro5W1H from './components/practice/class-4/Shapes_Around_Us/Topics/5W1H/ShapesIntro5W1H';
-import ShapesTerminology from './components/practice/class-4/Shapes_Around_Us/Topics/Terminology/ShapesTerminology';
-import ShapesSkills from './components/practice/class-4/Shapes_Around_Us/Topics/Skills/ShapesSkills';
+import ShapesAroundUsIntro from './components/practice/class-4/Shapes_Around_Us/Topics/5W1H/ShapesIntro5W1H';
+import ShapesAroundUsTerminology from './components/practice/class-4/Shapes_Around_Us/Topics/Terminology/ShapesTerminology';
+import ShapesAroundUsSkills from './components/practice/class-4/Shapes_Around_Us/Topics/Skills/ShapesSkills';
 
 import PatternsAroundUs from './components/practice/class-4/Patterns_Around_Us/PatternsAroundUs';
 import PatternsIntro5W1H from './components/practice/class-4/Patterns_Around_Us/Topics/Introduction/Introduction';
 import PatternsTerminology from './components/practice/class-4/Patterns_Around_Us/Topics/Terminology/Terminology';
 import PatternsSkills from './components/practice/class-4/Patterns_Around_Us/Topics/Skills/Skills';
+
+import ShapesAndAnglesLanding from './components/practice/class-5/Shapes_and_Angles/ShapesAndAngles';
+import ShapesAndAnglesIntro from './components/practice/class-5/Shapes_and_Angles/Topics/5W1H/ShapesIntro5W1H';
+import ShapesAndAnglesTerminology from './components/practice/class-5/Shapes_and_Angles/Topics/Terminology/ShapesTerminology';
+import ShapesAndAnglesSkills from './components/practice/class-5/Shapes_and_Angles/Topics/Skills/ShapesSkills';
+import ShapesAndAnglesTest from './components/practice/class-5/Shapes_and_Angles/ShapesAndAnglesTest';
 
 import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
 import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
@@ -731,6 +737,13 @@ function App() {
           <Route path="the-fish-tale/terminology" element={<ProtectedRoute redirectTo="/login"><FishTaleTerminology /></ProtectedRoute>} />
           <Route path="the-fish-tale/skills" element={<ProtectedRoute redirectTo="/login"><FishTaleSkills /></ProtectedRoute>} />
 
+          {/* Chapter 2: Shapes and Angles */}
+          <Route path="shapes-and-angles" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesLanding /></ProtectedRoute>} />
+          <Route path="shapes-and-angles/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesIntro /></ProtectedRoute>} />
+          <Route path="shapes-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesTerminology /></ProtectedRoute>} />
+          <Route path="shapes-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/5/shapes-angles/chapter-test" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesTest /></ProtectedRoute>} />
+
 
           {/* Surface Areas and Volumes Routes */}
           <Route path="surface-areas-and-volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
@@ -769,9 +782,9 @@ function App() {
           <Route path="junior/grade/4/patterns-around-us/skills" element={<ProtectedRoute redirectTo="/login"><PatternsSkills /></ProtectedRoute>} />
           {/* Grade 4: Shapes Around Us Chapter Pages */}
           <Route path="junior/grade/4/shapes-around-us" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUs /></ProtectedRoute>} />
-          <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
-          <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
-          <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUsIntro /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUsTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUsSkills /></ProtectedRoute>} />
           {/* Grade 4: Hide and Seek Chapter Pages */}
           <Route path="junior/grade/4/hide-and-seek" element={<ProtectedRoute redirectTo="/login"><HideAndSeek /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/introduction" element={<ProtectedRoute redirectTo="/login"><HideAndSeekIntro5W1H /></ProtectedRoute>} />
