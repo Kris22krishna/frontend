@@ -33,7 +33,7 @@ const SeniorGradeSyllabus = () => {
     };
 
     const handleSkillClick = (skill) => {
-        if (!isAuthenticated && grade === '10') {
+        if (!isAuthenticated && (grade === '10' || grade === '8')) {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
