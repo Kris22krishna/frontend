@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import 'katex/dist/katex.min.css';
-import renderMathInElement from 'katex/dist/contrib/auto-render.mjs';
+import renderMathInElement from 'katex/dist/contrib/auto-render';
 
 const LatexContent = ({ html, className, block = false }) => {
     const containerRef = useRef(null);
