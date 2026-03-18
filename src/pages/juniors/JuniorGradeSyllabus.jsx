@@ -32,6 +32,7 @@ const topicIcons = {
     'The Transport Museum': { emoji: '🚌', color: '#0EA5E9', gradient: 'linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%)' },
     'House of Hundreds': { emoji: '🏠', color: '#FFCCBC', gradient: 'linear-gradient(135deg, #FFCCBC 0%, #FFAB91 100%)' },
     'Thousands': { emoji: '🔢', color: '#3B82F6', gradient: 'linear-gradient(135deg, #93C5FD 0%, #BFDBFE 100%)' },
+    'Sharing and Measuring': { emoji: '🍕', color: '#E11D48', gradient: 'linear-gradient(135deg, #Fce7f3 0%, #Fecdd3 100%)' },
     'default': { emoji: '⭐', color: '#FFE66D', gradient: 'linear-gradient(135deg, #FFE66D 0%, #FFF4A3 100%)' }
 };
 
@@ -75,7 +76,7 @@ const JuniorGradeSyllabus = () => {
                         return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii");
                     }
                     if (isGrade4) {
-                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling");
+                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling") || topicName.includes("sharing and measuring");
                     }
                     if (isGrade1 || isGrade2) {
                         return false; // Strictly hide all API topics for Grade 1 and Grade 2
@@ -225,6 +226,8 @@ const JuniorGradeSyllabus = () => {
                                             navigate('/junior/grade/4/hide-and-seek');
                                         } else if (topic.name === 'Thousands Around Us') {
                                             navigate('/junior/grade/4/thousands-around-us');
+                                        } else if (topic.name === 'Sharing and Measuring') {
+                                            navigate('/junior/grade/4/sharing-and-measuring');
                                         } else {
                                             navigate(`/junior/grade/${grade}/topic/${encodeURIComponent(topic.name)}`);
                                         }

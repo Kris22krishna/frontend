@@ -99,6 +99,11 @@ import PatternsIntro5W1H from './components/practice/class-4/Patterns_Around_Us/
 import PatternsTerminology from './components/practice/class-4/Patterns_Around_Us/Topics/Terminology/Terminology';
 import PatternsSkills from './components/practice/class-4/Patterns_Around_Us/Topics/Skills/Skills';
 
+import SharingAndMeasuring from './components/practice/class-4/Sharing_and_Measuring/SharingAndMeasuring';
+import SharingAndMeasuringIntro from './components/practice/class-4/Sharing_and_Measuring/Topics/5W1H/SharingAndMeasuringIntro';
+import SharingAndMeasuringTerminology from './components/practice/class-4/Sharing_and_Measuring/Topics/Terminology/SharingAndMeasuringTerminology';
+import SharingAndMeasuringSkills from './components/practice/class-4/Sharing_and_Measuring/Topics/Skills/SharingAndMeasuringSkills';
+
 import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
 import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
 import HideAndSeekTerminology from './components/practice/class-4/Hide_and_Seek/Topics/Terminology/HideAndSeekTerminology';
@@ -781,11 +786,16 @@ function App() {
           <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
-          {/* Grade 4: Hide and Seek Chapter Pages */}
           <Route path="junior/grade/4/hide-and-seek" element={<ProtectedRoute redirectTo="/login"><HideAndSeek /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/introduction" element={<ProtectedRoute redirectTo="/login"><HideAndSeekIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/terminology" element={<ProtectedRoute redirectTo="/login"><HideAndSeekTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/skills" element={<ProtectedRoute redirectTo="/login"><HideAndSeekSkills /></ProtectedRoute>} />
+
+          {/* Grade 4: Sharing and Measuring Chapter Pages */}
+          <Route path="junior/grade/4/sharing-and-measuring" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuring /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/introduction" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringIntro /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/terminology" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/skills" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringSkills /></ProtectedRoute>} />
 
           {/* Grade 8: Linear Equations Chapter Pages */}
           <Route path="senior/grade/8/linear-equations" element={<ProtectedRoute redirectTo="/login"><LinearEquations /></ProtectedRoute>} />

@@ -303,6 +303,11 @@ export const TOPIC_CONFIGS = {
             { id: "TAU-01", name: "Introduction", route: "thousands-around-us-hero" },
             { id: "TAU-02", name: "Terminology", route: "thousands-around-us-hero" },
             { id: "TAU-03", name: "Skills", route: "thousands-around-us-hero" }
+        ],
+        'Sharing and Measuring': [
+            { id: "SAM-01", name: "Introduction", route: "sharing-and-measuring-hero" },
+            { id: "SAM-02", name: "Terminology", route: "sharing-and-measuring-hero" },
+            { id: "SAM-03", name: "Skills", route: "sharing-and-measuring-hero" }
         ]
     }
 };
