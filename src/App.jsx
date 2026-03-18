@@ -473,6 +473,13 @@ import TrianglesTerminology from './components/practice/class-10/Triangles/Topic
 import TrianglesSkills from './components/practice/class-10/Triangles/Topics/Skills/TrianglesSkills';
 import TrianglesConnectomics from './components/practice/class-10/Triangles/Topics/Connectomics/TrianglesConnectomics';
 
+// Class 10: Circles
+import CirclesDashboard from './components/practice/class-10/Circles/CirclesDashboard';
+import CirclesIntro from './components/practice/class-10/Circles/Topics/Introduction/CirclesIntro';
+import CirclesTerminology from './components/practice/class-10/Circles/Topics/Terminology/CirclesTerminology';
+import CirclesSkills from './components/practice/class-10/Circles/Topics/Skills/CirclesSkills';
+import CirclesConnectomics from './components/practice/class-10/Circles/Topics/Connectomics/CirclesConnectomics';
+
 // Class 10: Coordinate Geometry
 import CoordinateGeometryDashboard from './components/practice/class-10/CoordinateGeometry/CoordinateGeometryDashboard';
 import CoordinateGeometryIntro from './components/practice/class-10/CoordinateGeometry/Topics/Introduction/CoordinateGeometryIntro';
@@ -857,6 +864,13 @@ function App() {
           <Route path="senior/grade/10/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><TrianglesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/10/triangles/skills" element={<ProtectedRoute redirectTo="/login"><TrianglesSkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/triangles/connectomics" element={<ProtectedRoute redirectTo="/login"><TrianglesConnectomics /></ProtectedRoute>} />
+
+          {/* Class 10: Circles */}
+          <Route path="senior/grade/10/circles" element={<ProtectedRoute redirectTo="/login"><CirclesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/introduction" element={<ProtectedRoute redirectTo="/login"><CirclesIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/terminology" element={<ProtectedRoute redirectTo="/login"><CirclesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/skills" element={<ProtectedRoute redirectTo="/login"><CirclesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/connectomics" element={<ProtectedRoute redirectTo="/login"><CirclesConnectomics /></ProtectedRoute>} />
 
           {/* Class 10: Coordinate Geometry */}
           <Route path="senior/grade/10/coordinate-geometry" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryDashboard /></ProtectedRoute>} />
