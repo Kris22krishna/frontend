@@ -331,6 +331,7 @@ import ChapterTestPatterns from './components/practice/class-5/CanyouseethePatte
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
+import Class7Syllabus from './components/practice/class-7/Class7Syllabus';
 import RectanglePractice from './components/practice/grade-6/Perimeter and Area/Rectangle';
 import SquarePractice from './components/practice/grade-6/Perimeter and Area/Square';
 import TrianglePractice from './components/practice/grade-6/Perimeter and Area/Triangle';
@@ -678,6 +679,7 @@ function App() {
           <Route path="diagnosis-test" element={<ProtectedRoute redirectTo="/login"><DiagnosisLanding /></ProtectedRoute>} />
           <Route path="math/grade/:grade" element={<GradeSyllabus />} />
           {/* Middle Routes (Grades 5-7 professional design) */}
+          <Route path="middle/grade/7" element={<Class7Syllabus />} />
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
