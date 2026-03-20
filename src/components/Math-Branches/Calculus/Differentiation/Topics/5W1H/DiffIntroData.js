@@ -6,7 +6,7 @@ export const diffCards5W1H = [
         gradFrom: "#f43f5e", // calc-rose
         gradTo: "#fb7185",
         shadow: "rgba(244,63,94,0.3)",
-        content: "Differentiation is the mathematical process of finding the **derivative** of a function. It calculates the *instantaneous rate of change* of a quantity with respect to another.",
+        content: "Differentiation is the mathematical process of finding the **derivative** of a function. It calculates the **instantaneous rate of change** of a quantity with respect to another.",
         fact: "**Deep Thought:** While algebra only gives you average speeds over a duration, differentiation gives you the exact speed at a frozen instant in time!"
     },
     {
@@ -16,7 +16,7 @@ export const diffCards5W1H = [
         gradFrom: "#8b5cf6", // calc-violet
         gradTo: "#a78bfa",
         shadow: "rgba(139,92,246,0.3)",
-        content: "We differentiate to understand how things are changing *right now*. In the real world, nothing is perfectly linear. Derivatives let us analyze curves, optimize functions to find maximums and minimums, and predict future states.",
+        content: "We differentiate to understand how things are changing **right now**. In the real world, nothing is perfectly linear. Derivatives let us analyze curves, optimize functions to find maximums and minimums, and predict future states.",
         fact: "**Reality Check:** Without differentiation, we wouldn't have modern physics, economics, or machine learning algorithms like gradient descent."
     },
     {
@@ -46,7 +46,7 @@ export const diffCards5W1H = [
         gradFrom: "#10b981", // calc-success
         gradTo: "#34d399",
         shadow: "rgba(16,185,129,0.3)",
-        content: "The derivative is born from **Limits**. It's the limit of the slope of a secant line as the two points get infinitely close together. This is known as *First Principles*.",
+        content: "The derivative is born from **Limits**. It's the limit of the slope of a secant line as the two points get infinitely close together. This is known as **First Principles**.",
         fact: "**Equation:** $$\\frac{d}{dx}f(x) = \\lim_{{h \\to 0}} \\frac{f(x+h) - f(x)}{h}$$"
     },
     {
