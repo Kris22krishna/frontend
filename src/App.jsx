@@ -28,6 +28,22 @@ import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/Alg
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
 import AlgebraMasteryTest from './components/IDM/assessment_idm/AlgebraMasteryTest';
+import CalculusMainDashboard from './components/Math-Branches/Calculus/CalculusMainDashboard';
+// Limits
+import LimitsDashboard from './components/Math-Branches/Calculus/Limits/LimitsDashboard';
+import LimitsIntro5W1H from './components/Math-Branches/Calculus/Limits/Topics/5W1H/LimitsIntro5W1H';
+import LimitsTerminology from './components/Math-Branches/Calculus/Limits/Topics/Terminology/LimitsTerminology';
+import LimitsSkills from './components/Math-Branches/Calculus/Limits/Topics/Skills/LimitsSkills';
+// Differentiation
+import DiffDashboard from './components/Math-Branches/Calculus/Differentiation/DiffDashboard';
+import DiffIntro5W1H from './components/Math-Branches/Calculus/Differentiation/Topics/5W1H/DiffIntro5W1H';
+import DiffTerminology from './components/Math-Branches/Calculus/Differentiation/Topics/Terminology/DiffTerminology';
+import DiffSkills from './components/Math-Branches/Calculus/Differentiation/Topics/Skills/DiffSkills';
+// Integration
+import IntDashboard from './components/Math-Branches/Calculus/Integration/IntDashboard';
+import IntIntro5W1H from './components/Math-Branches/Calculus/Integration/Topics/5W1H/IntIntro5W1H';
+import IntTerminology from './components/Math-Branches/Calculus/Integration/Topics/Terminology/IntTerminology';
+import IntSkills from './components/Math-Branches/Calculus/Integration/Topics/Skills/IntSkills';
 import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
 import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
 import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
@@ -753,6 +769,26 @@ function App() {
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra-mastery" element={<ProtectedRoute redirectTo="/login"><AlgebraMasteryTest /></ProtectedRoute>} />
+          {/* Calculus Master Dashboard */}
+          <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
+          
+          {/* Calculus: Limits */}
+          <Route path="calculus/limits" element={<ProtectedRoute redirectTo="/login"><LimitsDashboard /></ProtectedRoute>} />
+          <Route path="calculus/limits/introduction" element={<ProtectedRoute redirectTo="/login"><LimitsIntro5W1H /></ProtectedRoute>} />
+          <Route path="calculus/limits/terminology" element={<ProtectedRoute redirectTo="/login"><LimitsTerminology /></ProtectedRoute>} />
+          <Route path="calculus/limits/skills" element={<ProtectedRoute redirectTo="/login"><LimitsSkills /></ProtectedRoute>} />
+
+          {/* Calculus: Differentiation */}
+          <Route path="calculus/differentiation" element={<ProtectedRoute redirectTo="/login"><DiffDashboard /></ProtectedRoute>} />
+          <Route path="calculus/differentiation/introduction" element={<ProtectedRoute redirectTo="/login"><DiffIntro5W1H /></ProtectedRoute>} />
+          <Route path="calculus/differentiation/terminology" element={<ProtectedRoute redirectTo="/login"><DiffTerminology /></ProtectedRoute>} />
+          <Route path="calculus/differentiation/skills" element={<ProtectedRoute redirectTo="/login"><DiffSkills /></ProtectedRoute>} />
+
+          {/* Calculus: Integration */}
+          <Route path="calculus/integration" element={<ProtectedRoute redirectTo="/login"><IntDashboard /></ProtectedRoute>} />
+          <Route path="calculus/integration/introduction" element={<ProtectedRoute redirectTo="/login"><IntIntro5W1H /></ProtectedRoute>} />
+          <Route path="calculus/integration/terminology" element={<ProtectedRoute redirectTo="/login"><IntTerminology /></ProtectedRoute>} />
+          <Route path="calculus/integration/skills" element={<ProtectedRoute redirectTo="/login"><IntSkills /></ProtectedRoute>} />
           {/* The Fish Tale Topic Pages */}
           <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
           <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />
