@@ -104,6 +104,11 @@ import ShapesAndAnglesIntro from './components/practice/class-5/Shapes_and_Angle
 import ShapesAndAnglesTerminology from './components/practice/class-5/Shapes_and_Angles/Topics/Terminology/ShapesTerminology';
 import ShapesAndAnglesSkills from './components/practice/class-5/Shapes_and_Angles/Topics/Skills/ShapesSkills';
 import ShapesAndAnglesTest from './components/practice/class-5/Shapes_and_Angles/ShapesAndAnglesTest';
+import HowManySquares from './components/practice/class-5/howmanysquares/HowManySquares';
+import HowManySquaresTest from './components/practice/class-5/howmanysquares/HowManySquaresTest';
+import HowManySquaresSkills from './components/practice/class-5/howmanysquares/Topics/Skills/HowManySquaresSkills';
+import HowManySquaresIntro5W1H from './components/practice/class-5/howmanysquares/Topics/5W1H/HowManySquaresIntro5W1H';
+import HowManySquaresTerminology from './components/practice/class-5/howmanysquares/Topics/Terminology/HowManySquaresTerminology';
 
 import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
 import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
@@ -1078,6 +1083,13 @@ function App() {
         <Route path="/middle/grade/5/the-fish-tale/estimation-skills" element={<ProtectedRoute redirectTo="/login"><EstimationSkills /></ProtectedRoute>} />
         <Route path="/middle/grade/5/the-fish-tale/interpreting-real-life-data" element={<ProtectedRoute redirectTo="/login"><InterpretingRealLifeData /></ProtectedRoute>} />
         <Route path="/middle/grade/5/the-fish-tale/chapter-test" element={<ProtectedRoute redirectTo="/login"><TheFishTaleTest /></ProtectedRoute>} />
+
+        {/* Grade 5 - How Many Squares? */}
+        <Route path="/middle/grade/5/how-many-squares" element={<ProtectedRoute redirectTo="/login"><HowManySquares /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/how-many-squares/introduction" element={<ProtectedRoute redirectTo="/login"><HowManySquaresIntro5W1H /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/how-many-squares/terminology" element={<ProtectedRoute redirectTo="/login"><HowManySquaresTerminology /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/how-many-squares/skills" element={<ProtectedRoute redirectTo="/login"><HowManySquaresSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/how-many-squares/chapter-test" element={<ProtectedRoute redirectTo="/login"><HowManySquaresTest /></ProtectedRoute>} />
 
         {/* Grade 5 - Tenths and Hundredths */}
         <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
