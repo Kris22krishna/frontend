@@ -28,6 +28,22 @@ import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/Alg
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
 import AlgebraMasteryTest from './components/IDM/assessment_idm/AlgebraMasteryTest';
+import CalculusMainDashboard from './components/Math-Branches/Calculus/CalculusMainDashboard';
+// Limits
+import LimitsDashboard from './components/Math-Branches/Calculus/Limits/LimitsDashboard';
+import LimitsIntro5W1H from './components/Math-Branches/Calculus/Limits/Topics/5W1H/LimitsIntro5W1H';
+import LimitsTerminology from './components/Math-Branches/Calculus/Limits/Topics/Terminology/LimitsTerminology';
+import LimitsSkills from './components/Math-Branches/Calculus/Limits/Topics/Skills/LimitsSkills';
+// Differentiation
+import DiffDashboard from './components/Math-Branches/Calculus/Differentiation/DiffDashboard';
+import DiffIntro5W1H from './components/Math-Branches/Calculus/Differentiation/Topics/5W1H/DiffIntro5W1H';
+import DiffTerminology from './components/Math-Branches/Calculus/Differentiation/Topics/Terminology/DiffTerminology';
+import DiffSkills from './components/Math-Branches/Calculus/Differentiation/Topics/Skills/DiffSkills';
+// Integration
+import IntDashboard from './components/Math-Branches/Calculus/Integration/IntDashboard';
+import IntIntro5W1H from './components/Math-Branches/Calculus/Integration/Topics/5W1H/IntIntro5W1H';
+import IntTerminology from './components/Math-Branches/Calculus/Integration/Topics/Terminology/IntTerminology';
+import IntSkills from './components/Math-Branches/Calculus/Integration/Topics/Skills/IntSkills';
 import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
 import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
 import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
@@ -98,6 +114,11 @@ import PatternsAroundUs from './components/practice/class-4/Patterns_Around_Us/P
 import PatternsIntro5W1H from './components/practice/class-4/Patterns_Around_Us/Topics/Introduction/Introduction';
 import PatternsTerminology from './components/practice/class-4/Patterns_Around_Us/Topics/Terminology/Terminology';
 import PatternsSkills from './components/practice/class-4/Patterns_Around_Us/Topics/Skills/Skills';
+
+import SharingAndMeasuring from './components/practice/class-4/Sharing_and_Measuring/SharingAndMeasuring';
+import SharingAndMeasuringIntro from './components/practice/class-4/Sharing_and_Measuring/Topics/5W1H/SharingAndMeasuringIntro';
+import SharingAndMeasuringTerminology from './components/practice/class-4/Sharing_and_Measuring/Topics/Terminology/SharingAndMeasuringTerminology';
+import SharingAndMeasuringSkills from './components/practice/class-4/Sharing_and_Measuring/Topics/Skills/SharingAndMeasuringSkills';
 
 import HideAndSeek from './components/practice/class-4/Hide_and_Seek/HideAndSeek';
 import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/Topics/5W1H/HideAndSeekIntro5W1H';
@@ -467,6 +488,25 @@ import RealNumbersTerminology from './components/practice/class-10/RealNumbers/T
 import RealNumbersSkills from './components/practice/class-10/RealNumbers/Topics/Skills/RealNumbersSkills';
 import RealNumbersConnectomics from './components/practice/class-10/RealNumbers/Topics/Connectomics/RealNumbersConnectomics';
 import RealNumbersExamEdge from './components/practice/class-10/RealNumbers/Topics/ExamEdge/RealNumbersExamEdge';
+import TrianglesDashboard from './components/practice/class-10/Triangles/TrianglesDashboard';
+import TrianglesIntro from './components/practice/class-10/Triangles/Topics/Introduction/TrianglesIntro';
+import TrianglesTerminology from './components/practice/class-10/Triangles/Topics/Terminology/TrianglesTerminology';
+import TrianglesSkills from './components/practice/class-10/Triangles/Topics/Skills/TrianglesSkills';
+import TrianglesConnectomics from './components/practice/class-10/Triangles/Topics/Connectomics/TrianglesConnectomics';
+
+// Class 10: Circles
+import CirclesDashboard from './components/practice/class-10/Circles/CirclesDashboard';
+import CirclesIntro from './components/practice/class-10/Circles/Topics/Introduction/CirclesIntro';
+import CirclesTerminology from './components/practice/class-10/Circles/Topics/Terminology/CirclesTerminology';
+import CirclesSkills from './components/practice/class-10/Circles/Topics/Skills/CirclesSkills';
+import CirclesConnectomics from './components/practice/class-10/Circles/Topics/Connectomics/CirclesConnectomics';
+
+// Class 10: Coordinate Geometry
+import CoordinateGeometryDashboard from './components/practice/class-10/CoordinateGeometry/CoordinateGeometryDashboard';
+import CoordinateGeometryIntro from './components/practice/class-10/CoordinateGeometry/Topics/Introduction/CoordinateGeometryIntro';
+import CoordinateGeometryTerminology from './components/practice/class-10/CoordinateGeometry/Topics/Terminology/CoordinateGeometryTerminology';
+import CoordinateGeometrySkills from './components/practice/class-10/CoordinateGeometry/Topics/Skills/CoordinateGeometrySkills';
+import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
@@ -631,6 +671,10 @@ import DataHandlingClass4 from './components/practice/class-4/Data_Handling/Data
 import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
 import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
 import DataHandlingSkillsClass4 from './components/practice/class-4/Data_Handling/Topics/Skills/DataHandlingSkillsClass4';
+import ThousandsAroundUs from './components/practice/class-4/Thousands_Around_Us/ThousandsAroundUs';
+import ThousandsAroundUsIntro from './components/practice/class-4/Thousands_Around_Us/Topics/5W1H/ThousandsAroundUsIntro';
+import ThousandsAroundUsTerminology from './components/practice/class-4/Thousands_Around_Us/Topics/Terminology/ThousandsAroundUsTerminology';
+import ThousandsAroundUsSkills from './components/practice/class-4/Thousands_Around_Us/Topics/Skills/ThousandsAroundUsSkills';
 import DiagnosisLanding from './components/Diagnosis_test/DiagnosisLanding';
 import DiagnosisTestRunner from './components/Diagnosis_test/DiagnosisTestRunner';
 
@@ -725,6 +769,26 @@ function App() {
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra-mastery" element={<ProtectedRoute redirectTo="/login"><AlgebraMasteryTest /></ProtectedRoute>} />
+          {/* Calculus Master Dashboard */}
+          <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
+          
+          {/* Calculus: Limits */}
+          <Route path="calculus/limits" element={<ProtectedRoute redirectTo="/login"><LimitsDashboard /></ProtectedRoute>} />
+          <Route path="calculus/limits/introduction" element={<ProtectedRoute redirectTo="/login"><LimitsIntro5W1H /></ProtectedRoute>} />
+          <Route path="calculus/limits/terminology" element={<ProtectedRoute redirectTo="/login"><LimitsTerminology /></ProtectedRoute>} />
+          <Route path="calculus/limits/skills" element={<ProtectedRoute redirectTo="/login"><LimitsSkills /></ProtectedRoute>} />
+
+          {/* Calculus: Differentiation */}
+          <Route path="calculus/differentiation" element={<ProtectedRoute redirectTo="/login"><DiffDashboard /></ProtectedRoute>} />
+          <Route path="calculus/differentiation/introduction" element={<ProtectedRoute redirectTo="/login"><DiffIntro5W1H /></ProtectedRoute>} />
+          <Route path="calculus/differentiation/terminology" element={<ProtectedRoute redirectTo="/login"><DiffTerminology /></ProtectedRoute>} />
+          <Route path="calculus/differentiation/skills" element={<ProtectedRoute redirectTo="/login"><DiffSkills /></ProtectedRoute>} />
+
+          {/* Calculus: Integration */}
+          <Route path="calculus/integration" element={<ProtectedRoute redirectTo="/login"><IntDashboard /></ProtectedRoute>} />
+          <Route path="calculus/integration/introduction" element={<ProtectedRoute redirectTo="/login"><IntIntro5W1H /></ProtectedRoute>} />
+          <Route path="calculus/integration/terminology" element={<ProtectedRoute redirectTo="/login"><IntTerminology /></ProtectedRoute>} />
+          <Route path="calculus/integration/skills" element={<ProtectedRoute redirectTo="/login"><IntSkills /></ProtectedRoute>} />
           {/* The Fish Tale Topic Pages */}
           <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
           <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />
@@ -762,6 +826,11 @@ function App() {
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/skills" element={<ProtectedRoute redirectTo="/login"><DataHandlingSkillsClass4 /></ProtectedRoute>} />
+          {/* Grade 4: Thousands Around Us Chapter Pages */}
+          <Route path="junior/grade/4/thousands-around-us" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUs /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsIntro /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/thousands-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ThousandsAroundUsSkills /></ProtectedRoute>} />
           {/* Grade 4: Patterns Around Us Chapter Pages */}
           <Route path="junior/grade/4/patterns-around-us" element={<ProtectedRoute redirectTo="/login"><PatternsAroundUs /></ProtectedRoute>} />
           <Route path="junior/grade/4/patterns-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><PatternsIntro5W1H /></ProtectedRoute>} />
@@ -772,11 +841,16 @@ function App() {
           <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
-          {/* Grade 4: Hide and Seek Chapter Pages */}
           <Route path="junior/grade/4/hide-and-seek" element={<ProtectedRoute redirectTo="/login"><HideAndSeek /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/introduction" element={<ProtectedRoute redirectTo="/login"><HideAndSeekIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/terminology" element={<ProtectedRoute redirectTo="/login"><HideAndSeekTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/skills" element={<ProtectedRoute redirectTo="/login"><HideAndSeekSkills /></ProtectedRoute>} />
+
+          {/* Grade 4: Sharing and Measuring Chapter Pages */}
+          <Route path="junior/grade/4/sharing-and-measuring" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuring /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/introduction" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringIntro /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/terminology" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringTerminology /></ProtectedRoute>} />
+          <Route path="junior/grade/4/sharing-and-measuring/skills" element={<ProtectedRoute redirectTo="/login"><SharingAndMeasuringSkills /></ProtectedRoute>} />
 
           {/* Grade 8: Linear Equations Chapter Pages */}
           <Route path="senior/grade/8/linear-equations" element={<ProtectedRoute redirectTo="/login"><LinearEquations /></ProtectedRoute>} />
@@ -839,6 +913,27 @@ function App() {
           <Route path="senior/grade/10/real-numbers/skills" element={<ProtectedRoute redirectTo="/login"><RealNumbersSkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/real-numbers/connectomics" element={<ProtectedRoute redirectTo="/login"><RealNumbersConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/10/real-numbers/exam-edge" element={<ProtectedRoute redirectTo="/login"><RealNumbersExamEdge /></ProtectedRoute>} />
+
+          <Route path="senior/grade/10/triangles" element={<ProtectedRoute redirectTo="/login"><TrianglesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/introduction" element={<ProtectedRoute redirectTo="/login"><TrianglesIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><TrianglesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/skills" element={<ProtectedRoute redirectTo="/login"><TrianglesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/triangles/connectomics" element={<ProtectedRoute redirectTo="/login"><TrianglesConnectomics /></ProtectedRoute>} />
+
+          {/* Class 10: Circles */}
+          <Route path="senior/grade/10/circles" element={<ProtectedRoute redirectTo="/login"><CirclesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/introduction" element={<ProtectedRoute redirectTo="/login"><CirclesIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/terminology" element={<ProtectedRoute redirectTo="/login"><CirclesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/skills" element={<ProtectedRoute redirectTo="/login"><CirclesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/circles/connectomics" element={<ProtectedRoute redirectTo="/login"><CirclesConnectomics /></ProtectedRoute>} />
+
+          {/* Class 10: Coordinate Geometry */}
+          <Route path="senior/grade/10/coordinate-geometry" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/introduction" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/skills" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometrySkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/coordinate-geometry/connectomics" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryConnectomics /></ProtectedRoute>} />
+
           <Route path="senior/grade/10/probability/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><ProbabilityMediumTest /></ProtectedRoute>} />
           <Route path="senior/grade/10/probability/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><ProbabilityHardTest /></ProtectedRoute>} />
 

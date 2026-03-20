@@ -141,6 +141,16 @@ function PracticeMode({ skill, onBack }) {
     const [answersMap, setAnswersMap] = useState({});
     const [finished, setFinished] = useState(false);
     const startTime = useRef(Date.now());
+    const [elapsedMs, setElapsedMs] = useState(0);
+
+    // Live timer
+    useEffect(() => {
+        if (finished) return;
+        const timer = setInterval(() => {
+            setElapsedMs(Date.now() - startTime.current);
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [finished]);
 
     const questions = skill.practice;
     const q = questions[qIdx];
@@ -195,7 +205,13 @@ function PracticeMode({ skill, onBack }) {
         <div className="sau-detail-anim" style={{ maxWidth: 700, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer' }}>← Exit Practice</button>
-                <div style={{ fontWeight: 800, color: skill.color }}>Practice {qIdx + 1}/{questions.length}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div style={{ fontWeight: 700, color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span>⏱️</span>
+                        <span style={{ fontVariantNumeric: 'tabular-nums' }}>{fmtTime(elapsedMs)}</span>
+                    </div>
+                    <div style={{ fontWeight: 800, color: skill.color }}>Practice {qIdx + 1}/{questions.length}</div>
+                </div>
             </div>
             <QuestionCard key={qIdx} type={q.type} question={q.question} options={q.options} answer={q.correctAnswer} onAnswer={handleAnswer} disabled={answered} selectedOption={selectedOpt} image={q.image} />
             {answered && (
