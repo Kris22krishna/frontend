@@ -13,16 +13,27 @@ export default function AlgebraSkills() {
     const [view, setView] = useState('list');
     const [activeSkill, setActiveSkill] = useState(null);
     const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
+    const [lawView, setLawView] = useState(null); // null | 'practice' | 'assessment'
 
     const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
 
     const openSkill = (index, nextView) => {
         setActiveSkill(index);
         setSelectedLearnIdx(0);
+        setLawView(null);
         setView(nextView);
     };
 
+    // When switching law, reset mini-quiz
+    const selectLaw = (idx) => {
+        setSelectedLearnIdx(idx);
+        setLawView(null);
+    };
+
     if (view !== 'list' && skill) {
+        const rule = skill?.learn?.rules?.[selectedLearnIdx];
+        const hasLawQuiz = rule?.practice && rule?.assessment;
+
         return (
             <div className="skills-page alg-skills-stage" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
                 <nav className="intro-nav">
@@ -31,6 +42,7 @@ export default function AlgebraSkills() {
                         onClick={() => {
                             setView('list');
                             setSelectedLearnIdx(0);
+                            setLawView(null);
                         }}
                     >
                         Back to Skills
@@ -67,10 +79,10 @@ export default function AlgebraSkills() {
 
                             <div className="alg-learn-grid">
                                 <aside className="alg-learn-sidebar">
-                                    {skill.learn.rules.map((rule, index) => (
+                                    {skill.learn.rules.map((r, index) => (
                                         <button
-                                            key={rule.title}
-                                            onClick={() => setSelectedLearnIdx(index)}
+                                            key={r.title}
+                                            onClick={() => selectLaw(index)}
                                             className={`alg-sidebar-btn ${selectedLearnIdx === index ? 'active' : ''}`}
                                             style={{
                                                 '--skill-color': skill.color,
@@ -80,97 +92,154 @@ export default function AlgebraSkills() {
                                             }}
                                         >
                                             <div className="alg-sidebar-btn-num">{index + 1}</div>
-                                            <span className="alg-sidebar-btn-title">{rule.title}</span>
+                                            <span className="alg-sidebar-btn-title">{r.title}</span>
                                         </button>
                                     ))}
                                 </aside>
 
-                                <main className="alg-details-window-anim alg-details-window" key={`${skill.id}-${selectedLearnIdx}`}>
-                                    <div className="alg-learn-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                                <main className="alg-details-window-anim alg-details-window" key={`${skill.id}-${selectedLearnIdx}-${lawView}`}>
+                                    {/* ── per-law mini quiz overlay ── */}
+                                    {lawView && hasLawQuiz ? (
                                         <div>
-                                            <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>
-                                                {skill.learn.rules[selectedLearnIdx].title}
-                                            </h3>
-                                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--alg-muted)' }}>
-                                                RULE {selectedLearnIdx + 1} OF {skill.learn.rules.length}
+                                            <button
+                                                onClick={() => setLawView(null)}
+                                                style={{ marginBottom: 20, background: 'none', border: `1px solid ${skill.color}`, color: skill.color, borderRadius: 8, padding: '6px 16px', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}
+                                            >
+                                                ← Back to {rule.title}
+                                            </button>
+                                            {lawView === 'practice' ? (
+                                                <QuizEngine
+                                                    key={`law-prac-${selectedLearnIdx}`}
+                                                    questions={rule.practice}
+                                                    title={`Practice: ${rule.title}`}
+                                                    color={skill.color}
+                                                    onBack={() => setLawView(null)}
+                                                    prefix="algtest"
+                                                />
+                                            ) : (
+                                                <AssessmentEngine
+                                                    key={`law-ass-${selectedLearnIdx}`}
+                                                    questions={rule.assessment}
+                                                    title={`Assess: ${rule.title}`}
+                                                    color={skill.color}
+                                                    onBack={() => setLawView(null)}
+                                                    prefix="algtest"
+                                                />
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="alg-learn-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                                                <div>
+                                                    <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>
+                                                        {rule.title}
+                                                    </h3>
+                                                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--alg-muted)' }}>
+                                                        RULE {selectedLearnIdx + 1} OF {skill.learn.rules.length}
+                                                    </div>
+                                                </div>
+                                                <div style={{ fontSize: 32 }}>{skill.icon}</div>
                                             </div>
-                                        </div>
-                                        <div style={{ fontSize: 32 }}>{skill.icon}</div>
-                                    </div>
 
-                                    <div
-                                        style={{
-                                            marginBottom: 24,
-                                            padding: '18px 20px',
-                                            borderRadius: 18,
-                                            background: 'linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.9))',
-                                            border: '1px solid rgba(148,163,184,0.16)'
-                                        }}
-                                    >
-                                        <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.2, textTransform: 'uppercase', color: skill.color, marginBottom: 8 }}>
-                                            Big Idea
-                                        </div>
-                                        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--alg-text)' }}>
-                                            <MathRenderer text={skill.learn.concept} />
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        style={{
-                                            background: `${skill.color}05`,
-                                            padding: 24,
-                                            borderRadius: 20,
-                                            border: `2px solid ${skill.color}15`,
-                                            marginBottom: 32,
-                                            textAlign: 'center'
-                                        }}
-                                    >
-                                        <div className="formula-text" style={{ fontSize: 42, fontWeight: 800, color: skill.color }}>
-                                            <MathRenderer text={`$$${skill.learn.rules[selectedLearnIdx].f}$$`} />
-                                        </div>
-                                    </div>
-
-                                    <div className="alg-rule-split">
-                                        <div>
-                                            <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>
-                                                Explanation
-                                            </h4>
-                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
-                                                <MathRenderer text={skill.learn.rules[selectedLearnIdx].d} />
-                                            </p>
-
-                                            <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: 16, borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
-                                                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
-                                                    <span style={{ fontWeight: 800, color: 'var(--alg-teal)' }}>Tip: </span>
-                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].tip} />
+                                            <div
+                                                style={{
+                                                    marginBottom: 24,
+                                                    padding: '18px 20px',
+                                                    borderRadius: 18,
+                                                    background: 'linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.9))',
+                                                    border: '1px solid rgba(148,163,184,0.16)'
+                                                }}
+                                            >
+                                                <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.2, textTransform: 'uppercase', color: skill.color, marginBottom: 8 }}>
+                                                    Big Idea
+                                                </div>
+                                                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--alg-text)' }}>
+                                                    <MathRenderer text={skill.learn.concept} />
                                                 </p>
                                             </div>
-                                        </div>
 
-                                        <div>
-                                            <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>
-                                                Practical Example
-                                            </h4>
-                                            <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
-                                                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)' }}>
-                                                    <MathRenderer
-                                                        text={skill.learn.rules[selectedLearnIdx].ex.includes('$')
-                                                            ? skill.learn.rules[selectedLearnIdx].ex
-                                                            : `$${skill.learn.rules[selectedLearnIdx].ex}$`}
-                                                    />
+                                            <div
+                                                style={{
+                                                    background: `${skill.color}05`,
+                                                    padding: 24,
+                                                    borderRadius: 20,
+                                                    border: `2px solid ${skill.color}15`,
+                                                    marginBottom: 32,
+                                                    textAlign: 'center'
+                                                }}
+                                            >
+                                                <div className="formula-text" style={{ fontSize: 42, fontWeight: 800, color: skill.color }}>
+                                                    <MathRenderer text={`$$${rule.f}$$`} />
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <div className="alg-learn-footer" style={{ marginTop: 40, display: 'flex', gap: 16 }}>
-                                        <button className="alg-skill-btn-filled" style={{ '--skill-color': skill.color }} onClick={() => setView('practice')}>
-                                            Practice
-                                        </button>
-                                        <button className="alg-skill-btn-outline" onClick={() => setView('assessment')}>
-                                            Assess
-                                        </button>
-                                    </div>
+                                            <div className="alg-rule-split">
+                                                <div>
+                                                    <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>
+                                                        Explanation
+                                                    </h4>
+                                                    <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
+                                                        <MathRenderer text={rule.d} />
+                                                    </p>
+
+                                                    <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: 16, borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
+                                                        <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
+                                                            <span style={{ fontWeight: 800, color: 'var(--alg-teal)' }}>Tip: </span>
+                                                            <MathRenderer text={rule.tip} />
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>
+                                                        Practical Example
+                                                    </h4>
+                                                    <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
+                                                        <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)' }}>
+                                                            <MathRenderer
+                                                                text={rule.ex.includes('$')
+                                                                    ? rule.ex
+                                                                    : `$${rule.ex}$`}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="alg-learn-footer" style={{ marginTop: 40, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                                                <button className="alg-skill-btn-filled" style={{ '--skill-color': skill.color }} onClick={() => setView('practice')}>
+                                                    Practice All Laws
+                                                </button>
+                                                <button className="alg-skill-btn-outline" onClick={() => setView('assessment')}>
+                                                    Assess All Laws
+                                                </button>
+                                                {hasLawQuiz && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => setLawView('practice')}
+                                                            style={{
+                                                                padding: '10px 20px', borderRadius: 100, fontWeight: 800, fontSize: 14,
+                                                                background: `${skill.color}15`, color: skill.color,
+                                                                border: `1.5px solid ${skill.color}40`, cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            ⚡ Practice This Law (5 Qs)
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setLawView('assessment')}
+                                                            style={{
+                                                                padding: '10px 20px', borderRadius: 100, fontWeight: 800, fontSize: 14,
+                                                                background: '#f8fafc', color: '#475569',
+                                                                border: '1.5px solid #e2e8f0', cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            📝 Assess This Law (5 Qs)
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
                                 </main>
                             </div>
                         </div>
