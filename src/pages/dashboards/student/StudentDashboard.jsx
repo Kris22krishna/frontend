@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../../components/Navbar';
-import { Loader2, BookOpen, Trophy, Sparkles, ArrowRight, GraduationCap } from 'lucide-react';
+import { Loader2, BookOpen, Trophy, Sparkles, ArrowRight, GraduationCap, Activity } from 'lucide-react';
 import { api } from '../../../services/api';
 
 const StudentDashboard = () => {
@@ -151,6 +151,48 @@ const StudentDashboard = () => {
                             </p>
                             <div className="flex items-center font-bold">
                                 <span>Explore IDM</span>
+                                <ArrowRight size={18} className="ml-2 group-hover:ml-4 transition-all" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Diagnosis Test Card */}
+                    <div
+                        onClick={() => navigate('/diagnosis-test')}
+                        className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 group-hover:bg-emerald-100 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:rotate-6 transition-transform">
+                                <Activity size={28} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800 mb-3">Diagnosis Test</h3>
+                            <p className="text-slate-500 mb-6 leading-relaxed">
+                                Take a diagnosis test to evaluate your current understanding and get personalized recommendations.
+                            </p>
+                            <div className="flex items-center text-emerald-600 font-bold">
+                                <span>Start Test</span>
+                                <ArrowRight size={18} className="ml-2 group-hover:ml-4 transition-all" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Diagnosis Results Card */}
+                    <div
+                        onClick={() => navigate('/student/diagnosis-results')}
+                        className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all cursor-pointer group relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-full -mr-16 -mt-16 group-hover:bg-teal-100 transition-colors" />
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-teal-500 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:rotate-6 transition-transform">
+                                <BookOpen size={28} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800 mb-3">Diagnosis Results</h3>
+                            <p className="text-slate-500 mb-6 leading-relaxed">
+                                View your past diagnosis tests, detailed analysis, and track your overall improvement.
+                            </p>
+                            <div className="flex items-center text-teal-600 font-bold">
+                                <span>View Results</span>
                                 <ArrowRight size={18} className="ml-2 group-hover:ml-4 transition-all" />
                             </div>
                         </div>
