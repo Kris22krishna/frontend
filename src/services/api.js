@@ -880,4 +880,14 @@ export const api = {
         });
         return handleResponse(response);
     },
+
+    getStudentDiagnosisResults: async (limit = 50) => {
+        const params = new URLSearchParams();
+        if (limit) params.append('limit', limit);
+        params.append('_t', Date.now()); // Prevent browser caching
+        const response = await fetch(`${BASE_URL}/api/v1/student/diagnosis/results?${params.toString()}`, {
+            headers: getHeaders()
+        });
+        return handleResponse(response);
+    },
 };
