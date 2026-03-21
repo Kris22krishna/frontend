@@ -695,7 +695,10 @@ const SKILLS = [
         ],
         learn: {
             concept: "Subtraction is the key. When a shape is 'hollowed' or 'scooped' out, we subtract its volume but often ADD its curved surface to the total area.",
-            details: "1. For Volume: $V_{total} = V_{outer} - V_{removed}$.\n2. For Surface Area: $A_{total} = A_{outer} + A_{exposed\\_inner} - A_{base\\_removed}$."
+            rules: [
+                { title: 'Volume Subtraction', f: 'V = V_{total} - V_{rem}', d: 'Subtract the volume of the removed part from the original solid.', ex: 'V = V_{cyl} - V_{cone}', tip: 'Material removal always reduces total volume.' },
+                { title: 'Surface Area Addition', f: 'TSA = A_{ext} + A_{int} - A_{base}', d: 'Hidden internal surfaces become exposed, adding to the total area.', ex: 'Cylinder TSA + Cone CSA', tip: 'The hollow creates more surface area to touch!' }
+            ]
         }
     },
     {
@@ -741,7 +744,10 @@ const SKILLS = [
         ],
         learn: {
             concept: "Capacity is volume expressed as the amount of substance (usually liquid) a container can hold.",
-            details: "1. $1 \\text{ Liter} = 1000 \\text{ cm}^3$.\n2. $1 \\text{ m}^3 = 1000 \\text{ Liters} = 1 \\text{ kiloliter}$.\n3. Displaced Volume = Volume of submerged object."
+            rules: [
+                { title: 'Liquid Units', f: '1 L = 1000 cm^3', d: 'Standard conversion between cubic volume and liquid capacity.', ex: '3080 cm^3 = 3.08 Liters', tip: 'Always convert dimensions to cm for easy liter conversion.' },
+                { title: 'Displacement', f: 'V_{obj} = \pi r^2 \Delta h', d: 'A submerged object displaces its own volume in liquid.', ex: 'Stone raises water level by h', tip: 'The rise in height depends on the jar radius.' }
+            ]
         }
     },
     {

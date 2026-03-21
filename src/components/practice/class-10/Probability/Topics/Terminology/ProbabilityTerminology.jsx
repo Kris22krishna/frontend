@@ -454,7 +454,7 @@ export default function ProbabilityTerminology() {
                             ) : (
                                 <div style={{ textAlign: 'center', padding: '12px 0' }}>
                                     <div style={{ fontSize: 48, marginBottom: 12 }}>{score >= 8 ? '🏆' : score >= 5 ? '🌟' : '💪'}</div>
-                                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 24, fontWeight: 900, marginBottom: 6 }}>Test Complete!</h2>
+                                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 24, fontWeight: 900, marginBottom: 6, color: 'var(--prob-text)' }}>Test Complete!</h2>
                                     <p style={{ color: '#64748b', fontSize: 16, marginBottom: 24 }}>Your Vocabulary Score: <span style={{ color: 'var(--prob-secondary)', fontWeight: 900 }}>{score} / {QUIZ.length}</span></p>
                                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                                         <button className="prob-btn-primary" style={{ padding: '6px 16px', borderRadius: 100, fontSize: '13px' }} onClick={() => { setFinished(false); setQuizIdx(0); setScore(0); setAnswered(false); setAnsSelected(null); }}>Try Again</button>

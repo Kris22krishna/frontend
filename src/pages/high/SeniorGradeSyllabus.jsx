@@ -33,7 +33,7 @@ const SeniorGradeSyllabus = () => {
     };
 
     const handleSkillClick = (skill) => {
-        if (!isAuthenticated && grade === '10') {
+        if (!isAuthenticated && (grade === '10' || grade === '8')) {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
@@ -121,7 +121,16 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' },
 
                         // Real Numbers
-                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' }
+                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' },
+
+                        // Triangles
+                        { skill_id: 10150, skill_name: 'Triangles: Interactive Chapter', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/triangles' },
+
+                        // Coordinate Geometry
+                        { skill_id: 10151, skill_name: 'Coordinate Geometry: Interactive Chapter', topic: 'Coordinate Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/coordinate-geometry' },
+
+                        // Circles
+                        { skill_id: 10152, skill_name: 'Circles: Interactive Chapter', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/circles' }
                     ]);
                 } else if (grade === '9') {
                     setSkills([
@@ -169,6 +178,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: '1254', skill_name: 'Square Root of Decimals', topic: 'Squares and Square Roots' },
                         { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' },
                         { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Chapter', topic: 'Introduction to Graphs' },
+                        { skill_id: 'local-8-dh-landing', skill_name: 'Data Handling Chapter', topic: 'Data Handling' },
                         { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
                         { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
                         { skill_id: 'local-8-leq-landing', skill_name: 'Linear Equations Chapter', topic: 'Linear Equations in One Variable' },
@@ -541,6 +551,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Direct & Inverse Proportion',
                 isLocal: true,
                 path: '/senior/grade/8/direct-and-inverse-proportions'
+            }
+        ];
+
+        // Data Handling (NCERT Ch. 5 — Grade 8)
+        skillsByTopic['Data Handling'] = [
+            {
+                skill_id: 'local-8-dh-landing',
+                skill_name: 'Data Handling Chapter',
+                topic: 'Data Handling',
+                subtopic: 'Organising Data, Charts, Probability',
+                isLocal: true,
+                path: '/senior/grade/8/data-handling'
             }
         ];
 

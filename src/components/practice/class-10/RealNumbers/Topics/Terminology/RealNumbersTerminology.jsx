@@ -263,7 +263,7 @@ export default function RealNumbersTerminology() {
                         ) : (
                             <div style={{ textAlign: 'center', padding: '24px 0' }}>
                                 <div style={{ fontSize: 72, marginBottom: 20 }}>{quizTotalScore >= 4 ? '🏆' : '💪'}</div>
-                                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, marginBottom: 12 }}>Great effort!</h2>
+                                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, marginBottom: 12, color: 'var(--rn-text)' }}>Great effort!</h2>
                                 <p style={{ color: 'var(--rn-muted)', fontSize: 20, marginBottom: 40 }}>You scored <span style={{ color: 'var(--rn-indigo)', fontWeight: 900 }}>{quizTotalScore} / {VOCAB_QUIZ.length}</span></p>
                                 <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
                                     <button className="rn-btn-outline" onClick={resetQuiz} style={{ padding: '14px 32px' }}>Try Again</button>
