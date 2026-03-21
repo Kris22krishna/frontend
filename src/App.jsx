@@ -866,9 +866,6 @@ function App() {
           <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUsTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUsSkills /></ProtectedRoute>} />
           {/* Grade 4: Hide and Seek Chapter Pages */}
-          <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
-          <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
-          <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek" element={<ProtectedRoute redirectTo="/login"><HideAndSeek /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/introduction" element={<ProtectedRoute redirectTo="/login"><HideAndSeekIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/terminology" element={<ProtectedRoute redirectTo="/login"><HideAndSeekTerminology /></ProtectedRoute>} />
