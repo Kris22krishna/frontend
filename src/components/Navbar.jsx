@@ -70,9 +70,14 @@ const Navbar = () => {
                     <Link to="/internship" className={`nav-link-item ${isActive('/internship') ? 'active' : ''}`}>Internship</Link>
 
                     {isAuthenticated && userType === 'student' && (
-                        <Link to="/idm-dashboard" className={`nav-link-item ${isActive('/idm-dashboard') ? 'active' : ''}`} >
-                            IDM 2026
-                        </Link>
+                        <>
+                            <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
+                                Diagnosis Test
+                            </Link>
+                            <Link to="/idm-dashboard" className={`nav-link-item ${isActive('/idm-dashboard') ? 'active' : ''}`} >
+                                IDM 2026
+                            </Link>
+                        </>
                     )}
                     <Link to="/neet" className={`nav-link-item ${isActive('/neet') ? 'active' : ''}`}>NEET</Link>
                     {isAuthenticated && (
