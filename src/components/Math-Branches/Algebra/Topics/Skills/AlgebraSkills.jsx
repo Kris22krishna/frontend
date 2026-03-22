@@ -57,56 +57,54 @@ export default function AlgebraSkills() {
                 <div className="alg-skills-stage-body">
                     {view === 'learn' ? (
                         <div className="alg-lexicon-container">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
-                                <div
-                                    style={{
-                                        width: 44,
-                                        height: 44,
-                                        borderRadius: 12,
-                                        background: `${skill.color}15`,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: 22
-                                    }}
-                                >
-                                    {skill.icon}
+                            <div className="alg-skill-learn-header">
+                            <h1 style={{ 
+                                fontFamily: 'Outfit, sans-serif', 
+                                fontSize: 'clamp(1.4rem, 5.5vw, 2.5rem)', 
+                                fontWeight: 900, 
+                                color: 'var(--alg-text)', 
+                                margin: 0,
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '100%'
+                            }}>
+                                Learn: {skill.title}
+                            </h1>
+                            <div style={{ display: 'flex', gap: 12, flexWrap: 'nowrap' }}>
+                                    <button 
+                                        className="alg-skill-btn-outline" 
+                                        onClick={() => setView('practice')}
+                                        style={{ whiteSpace: 'nowrap', padding: '10px 20px', fontSize: 13, minWidth: 'fit-content' }}
+                                    >
+                                        Practice All
+                                    </button>
+                                    <button 
+                                        className="alg-skill-btn-filled" 
+                                        style={{ '--skill-color': skill.color, whiteSpace: 'nowrap', padding: '10px 20px', fontSize: 13, minWidth: 'fit-content' }} 
+                                        onClick={() => setView('assessment')}
+                                    >
+                                        Assess All
+                                    </button>
                                 </div>
-                                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.5rem', fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>
-                                    Learn: {skill.title}
-                                </h1>
-                                <span style={{ display: 'flex', gap: 16 }}>
-                                    <button className="alg-skill-btn-outline" onClick={() => setView('practice')}>
-                                        Practice All Laws
-                                    </button>
-                                    <button className="alg-skill-btn-filled" style={{ '--skill-color': skill.color }} onClick={() => setView('assessment')}>
-                                        Assess All Laws
-                                    </button>
-                                </span>
                             </div>
 
                             <div className="alg-learn-grid">
-                                <aside className="alg-learn-sidebar">
-                                    {skill.learn.rules.map((r, index) => (
+                                <aside className="alg-learn-sidebar" style={{ gap: 10 }}>
+                                    {skill.learn.rules.map((rule, idx) => (
                                         <button
-                                            key={r.title}
-                                            onClick={() => selectLaw(index)}
-                                            className={`alg-sidebar-btn ${selectedLearnIdx === index ? 'active' : ''}`}
-                                            style={{
-                                                '--skill-color': skill.color,
-                                                '--skill-color-15': `${skill.color}15`,
-                                                '--skill-color-40': `${skill.color}40`,
-                                                '--skill-color-05': `${skill.color}05`
-                                            }}
+                                            key={idx}
+                                            className={`alg-sidebar-btn ${selectedLearnIdx === idx ? 'active' : ''}`}
+                                            onClick={() => selectLaw(idx)}
+                                            style={{ '--skill-color': skill.color, '--skill-color-15': `${skill.color}15`, '--skill-color-40': `${skill.color}40` }}
                                         >
-                                            <div className="alg-sidebar-btn-num">{index + 1}</div>
-                                            <span className="alg-sidebar-btn-title">{r.title}</span>
+                                            <div className="alg-sidebar-btn-num">{idx + 1}</div>
+                                            <div className="alg-sidebar-btn-title">{rule.title}</div>
                                         </button>
                                     ))}
                                 </aside>
 
                                 <main className="alg-details-window-anim alg-details-window" key={`${skill.id}-${selectedLearnIdx}-${lawView}`}>
-                                    {/* ── per-law mini quiz overlay ── */}
                                     {lawView && hasLawQuiz ? (
                                         <div>
                                             <button
@@ -137,38 +135,45 @@ export default function AlgebraSkills() {
                                         </div>
                                     ) : (
                                         <>
-                                            <div className="alg-learn-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                                                <h3 style={{ margin: 0, fontSize: 32, fontWeight: 900, color: skill.color }}>
+                                            <div className="alg-law-header">
+                                                <h3 style={{ 
+                                                    margin: 0, 
+                                                    fontSize: 'clamp(20px, 6vw, 28px)', 
+                                                    fontWeight: 900, 
+                                                    color: skill.color
+                                                }}>
                                                     {rule.title} 
                                                 </h3>
                                                 {hasLawQuiz && (
-                                                    <div style={{ display: 'flex', gap: 12 }}>
+                                                    <div style={{ display: 'flex', gap: 10, flexWrap: 'nowrap', flexShrink: 0 }}>
                                                         <button
                                                             onClick={() => setLawView('practice')}
                                                             style={{
-                                                                padding: '10px 24px', borderRadius: 100, fontWeight: 800, fontSize: 14,
+                                                                padding: '10px 20px', borderRadius: 100, fontWeight: 800, fontSize: 13,
                                                                 background: `${skill.color}12`, color: skill.color,
                                                                 border: `1.5px solid ${skill.color}30`, cursor: 'pointer',
-                                                                transition: 'all 0.2s ease'
+                                                                transition: 'all 0.2s ease', whiteSpace: 'nowrap',
+                                                                flexShrink: 0
                                                             }}
                                                         >
-                                                            Practice This Law
+                                                            Practice Law
                                                         </button>
                                                         <button
                                                             onClick={() => setLawView('assessment')}
                                                             style={{
-                                                                padding: '10px 24px', borderRadius: 100, fontWeight: 800, fontSize: 14,
+                                                                padding: '10px 20px', borderRadius: 100, fontWeight: 800, fontSize: 13,
                                                                 background: '#f8fafc', color: '#475569',
                                                                 border: '1.5px solid #e2e8f0', cursor: 'pointer',
-                                                                transition: 'all 0.2s ease'
+                                                                transition: 'all 0.2s ease', whiteSpace: 'nowrap',
+                                                                flexShrink: 0
                                                             }}
                                                         >
-                                                            Assess This Law
+                                                            Assess Law
                                                         </button>
                                                     </div>
                                                 )}
                                             </div>
-                                            <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--alg-muted)', marginBottom: 24, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+                                            <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--alg-muted)', marginBottom: 24, letterSpacing: 1, textTransform: 'uppercase', opacity: 0.8 }}>
                                                 RULE {selectedLearnIdx + 1} OF {skill.learn.rules.length}
                                             </div>
 
@@ -192,19 +197,20 @@ export default function AlgebraSkills() {
                                             <div
                                                 style={{
                                                     background: `${skill.color}05`,
-                                                    padding: 24,
+                                                    padding: '24px 16px',
                                                     borderRadius: 20,
                                                     border: `2px solid ${skill.color}15`,
                                                     marginBottom: 32,
-                                                    textAlign: 'center'
+                                                    textAlign: 'center',
+                                                    overflowX: 'auto'
                                                 }}
                                             >
-                                                <div className="formula-text" style={{ fontSize: 42, fontWeight: 800, color: skill.color }}>
+                                                <div className="formula-text" style={{ fontSize: 'clamp(28px, 8vw, 42px)', fontWeight: 800, color: skill.color }}>
                                                     <MathRenderer text={`$$${rule.f}$$`} />
                                                 </div>
                                             </div>
 
-                                            <div className="alg-rule-split">
+                                            <div className="alg-rule-split" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 32 }}>
                                                 <div>
                                                     <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>
                                                         Explanation
@@ -237,9 +243,70 @@ export default function AlgebraSkills() {
                                                 </div>
                                             </div>
 
-                                            <div className="alg-learn-footer" style={{ marginTop: 40, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                                                
+                                            <div 
+                                                className="alg-learn-footer" 
+                                                style={{ 
+                                                    marginTop: 48, 
+                                                    display: 'flex', 
+                                                    justifyContent: 'space-between', 
+                                                    alignItems: 'center', 
+                                                    flexWrap: 'wrap', 
+                                                    gap: 16,
+                                                    paddingTop: 32,
+                                                    borderTop: '1px solid #eef2f6'
+                                                }}
+                                            >
+                                               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                                                   {hasLawQuiz && (
+                                                       <>
+                                                           <button
+                                                               onClick={() => setLawView('practice')}
+                                                               className="alg-skill-btn-outline"
+                                                               style={{ padding: '10px 24px', fontSize: 14 }}
+                                                           >
+                                                               Practice Law
+                                                           </button>
+                                                           <button
+                                                               onClick={() => setLawView('assessment')}
+                                                               className="alg-skill-btn-outline"
+                                                               style={{ padding: '10px 24px', fontSize: 14 }}
+                                                           >
+                                                               Assess Law
+                                                           </button>
+                                                       </>
+                                                   )} 
+                                               </div>
                                                
+                                               <div style={{ display: 'flex', gap: 12, marginLeft: 'auto' }}>
+                                                   {selectedLearnIdx > 0 && (
+                                                        <button
+                                                            onClick={() => setSelectedLearnIdx(selectedLearnIdx - 1)}
+                                                            style={{
+                                                                padding: '10px 24px', borderRadius: 12, fontWeight: 800, fontSize: 14,
+                                                                background: '#fff', color: '#475569',
+                                                                border: '1.5px solid #e2e8f0', cursor: 'pointer',
+                                                                transition: 'all 0.2s ease'
+                                                            }}
+                                                        >
+                                                            ← Prev
+                                                        </button>
+                                                    )}
+                                                    {selectedLearnIdx < skill.learn.rules.length - 1 && (
+                                                        <button
+                                                            onClick={() => setSelectedLearnIdx(selectedLearnIdx + 1)}
+                                                            style={{
+                                                                padding: '10px 24px', borderRadius: 12, fontWeight: 800, fontSize: 14,
+                                                                background: skill.color,
+                                                                color: '#fff',
+                                                                border: 'none', cursor: 'pointer',
+                                                                transition: 'all 0.2s ease',
+                                                                boxShadow: `0 4px 12px ${skill.color}30`
+                                                            }}
+                                                        >
+                                                            Next →
+                                                        </button>
+                                                    )}
+                                               </div>
                                             </div>
                                         </>
                                     )}
