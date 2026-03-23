@@ -435,6 +435,15 @@ import IntegersEasyTest from './components/practice/class-7/Integers/DeepDive/Te
 import IntegersMediumTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersMediumTest';
 import IntegersHardTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersHardTest';
 
+// Class 7 - The Triangle and its Properties
+import TheTriangleAndItsPropertiesHub from './components/practice/class-7/TheTriangleAndItsProperties/TheTriangleAndItsProperties';
+import TheTriangleAndItsPropertiesIntro5W1H from './components/practice/class-7/TheTriangleAndItsProperties/Topics/5W1H/TheTriangleAndItsPropertiesIntro5W1H';
+import TheTriangleAndItsPropertiesTerminology from './components/practice/class-7/TheTriangleAndItsProperties/Topics/Terminology/TheTriangleAndItsPropertiesTerminology';
+import TheTriangleAndItsPropertiesSkills from './components/practice/class-7/TheTriangleAndItsProperties/Topics/Skills/TheTriangleAndItsPropertiesSkills';
+import TheTriangleAndItsPropertiesEasyTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesEasyTest';
+import TheTriangleAndItsPropertiesMediumTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesMediumTest';
+import TheTriangleAndItsPropertiesHardTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesHardTest';
+
 // Class 7 - Fractions and Decimals
 import FractionsAndDecimalsHub from './components/practice/class-7/FractionsAndDecimals/FractionsAndDecimals';
 import FractionsAndDecimalsIntro5W1H from './components/practice/class-7/FractionsAndDecimals/Topics/5W1H/FractionsAndDecimalsIntro5W1H';
@@ -997,6 +1006,15 @@ function App() {
           <Route path="middle/grade/7/integers/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><IntegersEasyTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/integers/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><IntegersMediumTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/integers/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><IntegersHardTest /></ProtectedRoute>} />
+
+          {/* Class 7: The Triangle and its Properties */}
+          <Route path="middle/grade/7/the-triangle-and-its-properties" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/introduction" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/terminology" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/skills" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesHardTest /></ProtectedRoute>} />
 
           {/* Class 7: Fractions and Decimals */}
           <Route path="middle/grade/7/fractions-and-decimals" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHub /></ProtectedRoute>} />
