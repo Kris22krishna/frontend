@@ -64,7 +64,7 @@ export default function DiffSkills() {
                                 </h1>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 320px) 1fr', gap: 16, alignItems: 'start', overflow: 'hidden' }}>
+                            <div className="calc-learn-grid">
                                 <aside style={{
                                     background: 'rgba(255,255,255,0.7)', padding: '14px', borderRadius: 20,
                                     border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8,
@@ -160,7 +160,7 @@ export default function DiffSkills() {
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
+                                    <div className="calc-learn-content-grid">
                                         <div>
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--calc-muted)', marginBottom: 10 }}>
                                                 Explanation
