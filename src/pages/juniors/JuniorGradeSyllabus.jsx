@@ -144,7 +144,38 @@ const JuniorGradeSyllabus = () => {
                     });
                 }
 
-                setTopics(Object.values(topicMap));
+                let fetchedTopics = Object.values(topicMap);
+                
+                if (isGrade4) {
+                    const grade4Order = [
+                        'Shapes Around Us',
+                        'Hide and Seek',
+                        'Thousands Around Us',
+                        'Patterns Around Us',
+                        'Sharing and Measuring',
+                        'Measuring Length',
+                        'The Cleanest Village',
+                        'Weigh It, Pour It',
+                        'Equal Groups',
+                        'Elephants, Tigers, and Leopards',
+                        'Fun with Symmetry',
+                        'Ticking Clocks and Turning Calendars',
+                        'The Transport Museum',
+                        'Data Handling'
+                    ];
+
+                    fetchedTopics.sort((a, b) => {
+                        const idxA = grade4Order.indexOf(a.name);
+                        const idxB = grade4Order.indexOf(b.name);
+                        
+                        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                        if (idxA !== -1) return -1;
+                        if (idxB !== -1) return 1;
+                        return a.name.localeCompare(b.name);
+                    });
+                }
+
+                setTopics(fetchedTopics);
             } catch (error) {
                 console.error('Error fetching topics:', error);
             } finally {

@@ -986,7 +986,7 @@ export default function MeasuringLengthSkills() {
 
             <nav className="ml-nav">
                 <button className="ml-nav-back" onClick={() => mode !== 'menu' ? onBack() : navigate('/measuring-length')}>
-                    {mode !== 'menu' ? '← Back to Skills' : '← Back to Transport Museum'}
+                    {mode !== 'menu' ? '← Back to Skills' : '← Back to Measuring Length'}
                 </button>
                 {mode === 'menu' && (
                     <div className="ml-nav-links">
@@ -1002,7 +1002,7 @@ export default function MeasuringLengthSkills() {
                     <>
                         <div style={{ textAlign: 'center', marginBottom: 32 }}>
                             <h1 style={{ fontFamily: 'Outfit', fontSize: '2.6rem', fontWeight: 900, margin: '0 0 8px', color: '#0f172a' }}>
-                                Master <span style={{ background: 'linear-gradient(135deg, #0ea5e9, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{SKILLS.length} Transport Skills</span>
+                                Master <span style={{ background: 'linear-gradient(135deg, #0ea5e9, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{SKILLS.length} Length Skills</span>
                             </h1>
                             <p style={{ color: '#64748b', fontSize: 16 }}>Interactive challenges — count, type, split & solve! 🎮</p>
                         </div>
