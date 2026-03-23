@@ -653,6 +653,11 @@ import MuseumIntro5W1H from './components/practice/class-4/The_Transport_Museum/
 import MuseumTerminology from './components/practice/class-4/The_Transport_Museum/Topics/Terminology/MuseumTerminology';
 import MuseumSkills from './components/practice/class-4/The_Transport_Museum/Topics/Skills/MuseumSkills';
 
+import MeasuringLengthDashboard from './components/practice/class-4/Measuring_Length/MeasuringLengthDashboard';
+import MeasuringLengthIntro from './components/practice/class-4/Measuring_Length/Topics/5W1H/MeasuringLengthIntro';
+import MeasuringLengthTerms from './components/practice/class-4/Measuring_Length/Topics/Terminology/MeasuringLengthTerms';
+import MeasuringLengthSkills from './components/practice/class-4/Measuring_Length/Topics/Skills/InteractiveModules/MeasuringLengthSkills';
+
 import DataHandlingClass4 from './components/practice/class-4/Data_Handling/DataHandlingClass4';
 import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
 import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
@@ -814,6 +819,10 @@ function App() {
           <Route path="the-transport-museum/introduction" element={<ProtectedRoute redirectTo="/login"><MuseumIntro5W1H /></ProtectedRoute>} />
           <Route path="the-transport-museum/terminology" element={<ProtectedRoute redirectTo="/login"><MuseumTerminology /></ProtectedRoute>} />
           <Route path="the-transport-museum/skills" element={<ProtectedRoute redirectTo="/login"><MuseumSkills /></ProtectedRoute>} />
+          <Route path="measuring-length" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthDashboard /></ProtectedRoute>} />
+          <Route path="measuring-length/introduction" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthIntro /></ProtectedRoute>} />
+          <Route path="measuring-length/terminology" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthTerms /></ProtectedRoute>} />
+          <Route path="measuring-length/skills" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthSkills /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />

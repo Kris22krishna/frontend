@@ -30,6 +30,7 @@ const topicIcons = {
     'Equal Groups': { emoji: '👥', color: '#FFDAB9', gradient: 'linear-gradient(135deg, #FFDAB9 0%, #FFE5CC 100%)' },
     'Ticking Clocks': { emoji: '🕐', color: '#F59E0B', gradient: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)' },
     'The Transport Museum': { emoji: '🚌', color: '#0EA5E9', gradient: 'linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%)' },
+    'Measuring Length': { emoji: '📏', color: '#10B981', gradient: 'linear-gradient(135deg, #34D399 0%, #059669 100%)' },
     'House of Hundreds': { emoji: '🏠', color: '#FFCCBC', gradient: 'linear-gradient(135deg, #FFCCBC 0%, #FFAB91 100%)' },
     'Thousands': { emoji: '🔢', color: '#3B82F6', gradient: 'linear-gradient(135deg, #93C5FD 0%, #BFDBFE 100%)' },
     'Sharing and Measuring': { emoji: '🍕', color: '#E11D48', gradient: 'linear-gradient(135deg, #Fce7f3 0%, #Fecdd3 100%)' },
@@ -76,7 +77,7 @@ const JuniorGradeSyllabus = () => {
                         return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii");
                     }
                     if (isGrade4) {
-                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling") || topicName.includes("sharing and measuring");
+                        return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling") || topicName.includes("sharing and measuring") || topicName.includes("measuring length") || topicName.includes("transport museum");
                     }
                     if (isGrade1 || isGrade2) {
                         return false; // Strictly hide all API topics for Grade 1 and Grade 2
@@ -216,6 +217,8 @@ const JuniorGradeSyllabus = () => {
                                             navigate('/ticking-clocks');
                                         } else if (topic.name === 'The Transport Museum') {
                                             navigate('/the-transport-museum');
+                                        } else if (topic.name === 'Measuring Length') {
+                                            navigate('/measuring-length');
                                         } else if (topic.name === 'Data Handling' && grade === '4') {
                                             navigate('/junior/grade/4/data-handling');
                                         } else if (topic.name === 'Shapes Around Us') {
