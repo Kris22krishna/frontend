@@ -39,8 +39,9 @@ const MathRenderer = ({ text, inline = true }) => {
                     const content = part.slice(1, -1);
                     return <InlineMath key={index} math={content} />;
                 } else {
-                    // Render as HTML to support <div>, <br/>, <img> etc. from generators
-                    return <span key={index} dangerouslySetInnerHTML={{ __html: part }} />;
+                    // Convert markdown bold **text** to <strong> before rendering
+                    const htmlPart = part.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    return <span key={index} dangerouslySetInnerHTML={{ __html: htmlPart }} />;
                 }
             })}
         </span>

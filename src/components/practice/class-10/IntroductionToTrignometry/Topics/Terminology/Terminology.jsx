@@ -537,7 +537,7 @@ export default function Terminology() {
                         ) : (
                             <div style={{ textAlign: 'center', padding: '20px 0' }}>
                                 <div style={{ fontSize: 60, marginBottom: 16 }}>{score >= 8 ? '🏆' : score >= 5 ? '🌟' : '💪'}</div>
-                                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, marginBottom: 8 }}>Test Complete!</h2>
+                                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, marginBottom: 8, color: 'var(--trig-text)' }}>Test Complete!</h2>
                                 <p style={{ color: '#64748b', fontSize: 18, marginBottom: 32 }}>Your Vocabulary Score: <span style={{ color: 'var(--trig-secondary)', fontWeight: 900 }}>{score} / {QUIZ.length}</span></p>
                                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                                     <button className="trig-btn-primary" style={{ padding: '8px 16px', borderRadius: 10 }} onClick={() => { setFinished(false); setQuizIdx(0); setScore(0); setAnswered(false); setAnsSelected(null); }}>Try Again</button>

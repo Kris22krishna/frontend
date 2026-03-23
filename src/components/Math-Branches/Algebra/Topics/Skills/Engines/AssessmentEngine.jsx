@@ -61,6 +61,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
+    const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
     const [finished, setFinished] = useState(false);
     const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
@@ -70,6 +71,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         setQuestionSet(newQs);
         setCurrent(0);
         setAnswers(Array(newQs.length).fill(null));
+        setMarkedForReview(Array(newQs.length).fill(false));
         setTimeLeft(newQs.length * 60);
         setFinished(false);
         setPaletteOpen(false);
@@ -138,6 +140,15 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
 
     const handlePrev = () => {
         if (current > 0) setCurrent((index) => index - 1);
+    };
+
+    const toggleMarkForReview = () => {
+        if (finished) return;
+        setMarkedForReview(prev => {
+            const newMarks = [...prev];
+            newMarks[current] = !newMarks[current];
+            return newMarks;
+        });
     };
 
     const handleSubmit = () => {
@@ -291,20 +302,36 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                 {questionSet.map((_, index) => {
                     const isAnswered = isAnswerComplete(questionSet[index], answers[index]);
                     const isCurrent = current === index;
+                    const isMarked = markedForReview[index];
+                    
+                    let bg = isAnswered ? color : '#fff';
+                    let txt = isAnswered ? '#fff' : `var(--${prefix}-muted)`;
+                    let border = '1px solid rgba(148, 163, 184, 0.2)';
+                    
+                    if (isMarked) {
+                        border = '2px solid #f59e0b';
+                        if (!isAnswered) {
+                            txt = '#f59e0b';
+                        }
+                    }
+                    if (isCurrent) {
+                        border = `2px solid var(--${prefix}-text, #0f172a)`;
+                    }
+
                     return (
                         <button
                             key={index}
                             onClick={() => setCurrent(index)}
-                            className={`${prefix}-palette-cell ${isCurrent ? 'is-current' : ''} ${isAnswered ? 'is-answered' : ''}`}
+                            className={`${prefix}-palette-cell`}
                             style={{
                                 width: '42px',
                                 height: '42px',
-                                borderRadius: 12,
+                                borderRadius: 8,
                                 fontSize: 13,
                                 fontWeight: 700,
-                                background: isAnswered ? color : '#f1f5f9',
-                                color: isAnswered ? '#fff' : `var(--${prefix}-muted)`,
-                                border: isCurrent ? `2px solid var(--${prefix}-text)` : '1px solid rgba(148, 163, 184, 0.14)',
+                                background: bg,
+                                color: txt,
+                                border: border,
                                 cursor: 'pointer',
                                 padding: 0,
                                 display: 'flex',
@@ -319,11 +346,14 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
             </div>
 
             <div style={{ marginTop: 20, fontSize: 12, color: `var(--${prefix}-muted)` }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <div style={{ width: 12, height: 12, background: color, borderRadius: 3 }} /> Answered
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 14, height: 14, background: color, borderRadius: 3 }} /> Answered
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <div style={{ width: 14, height: 14, background: '#fff', border: '1px solid #cbd5e1', borderRadius: 3 }} /> Not Answered
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                    <div style={{ width: 12, height: 12, background: '#f1f5f9', borderRadius: 3 }} /> Not Answered
+                    <div style={{ width: 14, height: 14, background: '#fff', border: '2px solid #f59e0b', borderRadius: 3 }} /> Marked for Review
                 </div>
             </div>
 
@@ -471,15 +501,29 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         onClick={handlePrev}
                         disabled={current === 0}
                         className={`${prefix}-btn-secondary`}
-                        style={{ visibility: current === 0 ? 'hidden' : 'visible', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200 }}
+                        style={{ visibility: current === 0 ? 'hidden' : 'visible', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, background: '#fff', border: '1px solid #e2e8f0', color: `var(--${prefix}-text)`, fontWeight: 600 }}
                     >
-                        Previous
+                        ← Previous
+                    </button>
+                    
+                    <button
+                        onClick={toggleMarkForReview}
+                        className={`${prefix}-btn-secondary`}
+                        style={{ 
+                            padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, margin: '0 auto',
+                            background: '#fff',
+                            border: `1px solid ${markedForReview[current] ? '#f59e0b' : '#e2e8f0'}`,
+                            color: markedForReview[current] ? '#d97706' : `var(--${prefix}-text)`,
+                            fontWeight: 600
+                        }}
+                    >
+                        {markedForReview[current] ? 'Marked for Review' : 'Mark for Review'}
                     </button>
                     {current + 1 === questionSet.length ? (
                         <button
                             onClick={handleSubmit}
                             className={`${prefix}-btn-primary`}
-                            style={{ background: `var(--${prefix}-red)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200 }}
+                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, fontWeight: 600 }}
                         >
                             Submit Assessment
                         </button>
@@ -487,9 +531,9 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         <button
                             onClick={handleNext}
                             className={`${prefix}-btn-primary`}
-                            style={{ background: color, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200 }}
+                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, fontWeight: 600 }}
                         >
-                            Next
+                            Next →
                         </button>
                     )}
                 </div>

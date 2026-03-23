@@ -48,7 +48,7 @@ const renderObject = (type, isSubmitted) => {
             content = (
                 <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md">
                     <circle cx="50" cy="50" r="45" fill="#E0F2FE" />
-                    <g stroke="#0284C7" strokeWidth="4" strokeLinecap="round">
+                    <g stroke="#287ea9ff" strokeWidth="4" strokeLinecap="round">
                         <line x1="50" y1="10" x2="50" y2="90" />
                         <line x1="10" y1="50" x2="90" y2="50" />
                         <line x1="22" y1="22" x2="78" y2="78" />
