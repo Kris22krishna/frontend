@@ -498,6 +498,16 @@ import ProbabilityEasyTest from './components/practice/class-10/Probability/Deep
 import ProbabilityMediumTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityMediumTest';
 import ProbabilityHardTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityHardTest';
 
+// Class 11 Physics: Work, Energy and Power
+import WorkEnergyPowerDashboard from './components/practice/class-11/physics/WorkEnergyPower/WorkEnergyPowerDashboard';
+import WorkEnergyPowerIntro from './components/practice/class-11/physics/WorkEnergyPower/Topics/Introduction/WorkEnergyPowerIntro';
+import WorkEnergyPowerTerminology from './components/practice/class-11/physics/WorkEnergyPower/Topics/Terminology/WorkEnergyPowerTerminology';
+import WorkEnergyPowerSkills from './components/practice/class-11/physics/WorkEnergyPower/Topics/Skills/WorkEnergyPowerSkills';
+import WorkEnergyPowerConnectomics from './components/practice/class-11/physics/WorkEnergyPower/Topics/Connectomics/WorkEnergyPowerConnectomics';
+import WorkEnergyPowerExamEdge from './components/practice/class-11/physics/WorkEnergyPower/Topics/ExamEdge/WorkEnergyPowerExamEdge';
+import WorkEnergyPowerMindMap from './components/practice/class-11/physics/WorkEnergyPower/Topics/MindMap/WorkEnergyPowerMindMap';
+import WorkEnergyPowerDerivations from './components/practice/class-11/physics/WorkEnergyPower/Topics/DerivationsNumericals/WorkEnergyPowerDerivations';
+
 // Class 10: Real Numbers
 import RealNumbersDashboard from './components/practice/class-10/RealNumbers/RealNumbersDashboard';
 import RealNumbersIntro from './components/practice/class-10/RealNumbers/Topics/Introduction/RealNumbersIntro';
@@ -770,6 +780,14 @@ function App() {
           <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
           <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
           <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
+          <Route path="senior/grade/11/physics/work-energy-power" element={<WorkEnergyPowerDashboard />} />
+          <Route path="senior/grade/11/physics/work-energy-power/introduction" element={<WorkEnergyPowerIntro />} />
+          <Route path="senior/grade/11/physics/work-energy-power/terminology" element={<WorkEnergyPowerTerminology />} />
+          <Route path="senior/grade/11/physics/work-energy-power/skills" element={<WorkEnergyPowerSkills />} />
+          <Route path="senior/grade/11/physics/work-energy-power/connectomics" element={<WorkEnergyPowerConnectomics />} />
+          <Route path="senior/grade/11/physics/work-energy-power/exam-edge" element={<WorkEnergyPowerExamEdge />} />
+          <Route path="senior/grade/11/physics/work-energy-power/mind-map" element={<WorkEnergyPowerMindMap />} />
+          <Route path="senior/grade/11/physics/work-energy-power/derivations" element={<WorkEnergyPowerDerivations />} />
 
           {/* Class 11 Chemistry */}
           <Route path="senior/grade/11/chemistry" element={<ChemistryChapters />} />
