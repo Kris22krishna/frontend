@@ -4,6 +4,17 @@ import './calculus.css';
 
 const BRANCHES = [
     {
+        id: 'functions',
+        path: '/calculus/functions',
+        label: 'Functions',
+        emoji: '📈',
+        tagline: 'The Core of Calculus',
+        desc: 'Understand the primary objects of mathematical interest. Before limits, there are functions.',
+        gradFrom: '#10b981',
+        gradTo: '#34d399',
+        shadow: 'rgba(16,185,129,0.4)',
+    },
+    {
         id: 'limits',
         path: '/calculus/limits',
         label: 'Limits',
@@ -39,8 +50,8 @@ const BRANCHES = [
 ];
 
 const STATS = [
-    { val: '3', label: 'Branches', color: '#0ea5e9' },
-    { val: '19', label: 'Chapters', color: '#f43f5e' },
+    { val: '4', label: 'Branches', color: '#0ea5e9' },
+    { val: '22', label: 'Chapters', color: '#f43f5e' },
     { val: '∞', label: 'Possibilities', color: '#8b5cf6' },
 ];
 
