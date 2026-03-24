@@ -154,6 +154,9 @@ const JuniorSubtopics = () => {
                     } else if (decodedTopic === "The Transport Museum") {
                         navigate('/the-transport-museum');
                         return;
+                    } else if (decodedTopic === "Measuring Length") {
+                        navigate('/measuring-length');
+                        return;
                     }
                 }
             }
@@ -274,6 +277,8 @@ const JuniorSubtopics = () => {
                                 navigate('/ticking-clocks');
                             } else if (decodedTopic === "The Transport Museum") {
                                 navigate('/the-transport-museum');
+                            } else if (decodedTopic === "Measuring Length") {
+                                navigate('/measuring-length');
                             }
                             setPendingSubtopic(null);
                             return;
