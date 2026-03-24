@@ -642,6 +642,17 @@ const MiddleGradeSyllabus = () => {
             ]
         };
 
+        skillsByTopic['Parts and Wholes'] = {
+            'Learn': [
+                { skill_id: 'PW-5W1H', skill_name: '5W1H Introduction', topic: 'Parts and Wholes', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/parts-and-wholes/introduction' },
+                { skill_id: 'PW-TERM', skill_name: 'Terminology', topic: 'Parts and Wholes', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/parts-and-wholes/terminology' },
+                { skill_id: 'PW-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Parts and Wholes', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/parts-and-wholes/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'PW-TEST', skill_name: 'Chapter Test', topic: 'Parts and Wholes', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/parts-and-wholes/chapter-test' }
+            ]
+        };
+
         skillsByTopic['How Many Squares?'] = {
             'Learn': [
                 { skill_id: 'HMS-5W1H', skill_name: '5W1H Introduction', topic: 'How Many Squares?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/how-many-squares/introduction' },

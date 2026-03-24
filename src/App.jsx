@@ -125,6 +125,13 @@ import HowManySquaresTest from './components/practice/class-5/howmanysquares/How
 import HowManySquaresSkills from './components/practice/class-5/howmanysquares/Topics/Skills/HowManySquaresSkills';
 import HowManySquaresIntro5W1H from './components/practice/class-5/howmanysquares/Topics/5W1H/HowManySquaresIntro5W1H';
 import HowManySquaresTerminology from './components/practice/class-5/howmanysquares/Topics/Terminology/HowManySquaresTerminology';
+
+import PartsAndWholesLanding from './components/practice/class-5/partsandwholes/PartsAndWholes';
+import PartsAndWholesIntro from './components/practice/class-5/partsandwholes/Topics/5W1H/FractionsIntro5W1H';
+import PartsAndWholesTerminology from './components/practice/class-5/partsandwholes/Topics/Terminology/FractionsTerminology';
+import PartsAndWholesSkills from './components/practice/class-5/partsandwholes/Topics/Skills/FractionsSkills';
+import PartsAndWholesTest from './components/practice/class-5/partsandwholes/PartsAndWholesTest';
+
 import SharingAndMeasuring from './components/practice/class-4/Sharing_and_Measuring/SharingAndMeasuring';
 import SharingAndMeasuringIntro from './components/practice/class-4/Sharing_and_Measuring/Topics/5W1H/SharingAndMeasuringIntro';
 import SharingAndMeasuringTerminology from './components/practice/class-4/Sharing_and_Measuring/Topics/Terminology/SharingAndMeasuringTerminology';
@@ -818,6 +825,12 @@ function App() {
           <Route path="shapes-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesSkills /></ProtectedRoute>} />
           <Route path="middle/grade/5/shapes-angles/chapter-test" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesTest /></ProtectedRoute>} />
 
+          {/* Chapter 4: Parts and Wholes */}
+          <Route path="/middle/grade/5/parts-and-wholes" element={<ProtectedRoute redirectTo="/login"><PartsAndWholesLanding /></ProtectedRoute>} />
+          <Route path="/middle/grade/5/parts-and-wholes/introduction" element={<ProtectedRoute redirectTo="/login"><PartsAndWholesIntro /></ProtectedRoute>} />
+          <Route path="/middle/grade/5/parts-and-wholes/terminology" element={<ProtectedRoute redirectTo="/login"><PartsAndWholesTerminology /></ProtectedRoute>} />
+          <Route path="/middle/grade/5/parts-and-wholes/skills" element={<ProtectedRoute redirectTo="/login"><PartsAndWholesSkills /></ProtectedRoute>} />
+          <Route path="/middle/grade/5/parts-and-wholes/chapter-test" element={<ProtectedRoute redirectTo="/login"><PartsAndWholesTest /></ProtectedRoute>} />
 
           {/* Surface Areas and Volumes Routes */}
           <Route path="surface-areas-and-volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes /></ProtectedRoute>} />
@@ -865,9 +878,6 @@ function App() {
           <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUsTerminology /></ProtectedRoute>} />
           <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesAroundUsSkills /></ProtectedRoute>} />
           {/* Grade 4: Hide and Seek Chapter Pages */}
-          <Route path="junior/grade/4/shapes-around-us/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesIntro5W1H /></ProtectedRoute>} />
-          <Route path="junior/grade/4/shapes-around-us/terminology" element={<ProtectedRoute redirectTo="/login"><ShapesTerminology /></ProtectedRoute>} />
-          <Route path="junior/grade/4/shapes-around-us/skills" element={<ProtectedRoute redirectTo="/login"><ShapesSkills /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek" element={<ProtectedRoute redirectTo="/login"><HideAndSeek /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/introduction" element={<ProtectedRoute redirectTo="/login"><HideAndSeekIntro5W1H /></ProtectedRoute>} />
           <Route path="junior/grade/4/hide-and-seek/terminology" element={<ProtectedRoute redirectTo="/login"><HideAndSeekTerminology /></ProtectedRoute>} />
