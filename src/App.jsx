@@ -536,6 +536,14 @@ import CoordinateGeometryTerminology from './components/practice/class-10/Coordi
 import CoordinateGeometrySkills from './components/practice/class-10/CoordinateGeometry/Topics/Skills/CoordinateGeometrySkills';
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
+// Class 10 Science: Chemical Reactions
+import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactionsDashboard';
+import ChemReactionsIntro from './components/science/grade10/Topics/Introduction/ChemReactionsIntro';
+import ChemReactionsTerminology from './components/science/grade10/Topics/Terminology/ChemReactionsTerminology';
+import ChemReactionsSkills from './components/science/grade10/Topics/Skills/ChemReactionsSkills';
+import ChemReactionsConnectomics from './components/science/grade10/Topics/Connectomics/ChemReactionsConnectomics';
+import ChemReactionsExamEdge from './components/science/grade10/Topics/ExamEdge/ChemReactionsExamEdge';
+
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
 import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
@@ -795,6 +803,15 @@ function App() {
           <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
+          
+          {/* Grade 10 Science */}
+          <Route path="/senior/grade/10/science/chemical-reactions" element={<ChemicalReactionsDashboard />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/introduction" element={<ChemReactionsIntro />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/terminology" element={<ChemReactionsTerminology />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/skills" element={<ChemReactionsSkills />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/connectomics" element={<ChemReactionsConnectomics />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
+
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
           {/* Algebra Topic Pages */}

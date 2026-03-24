@@ -15,6 +15,7 @@ const SeniorGradeSyllabus = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const [skills, setSkills] = useState([]);
+    const [activeSubject, setActiveSubject] = useState('mathematics'); // For Grade 10 only
     const [loading, setLoading] = useState(true);
 
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -700,17 +701,53 @@ const SeniorGradeSyllabus = () => {
                     </nav>
 
                     <div className="page-title">
-                        <span style={{
-                            fontSize: '0.75rem',
-                            fontWeight: '700',
-                            color: '#4F46E5',
-                            background: '#EEF2FF',
-                            padding: '4px 12px',
-                            borderRadius: '20px',
-                            marginBottom: '10px',
-                            display: 'inline-block',
-                            letterSpacing: '0.05em'
-                        }}>HIGH SCHOOL MATHEMATICS</span>
+                        {grade === '10' ? (
+                            <div className="subjToggleWrap" style={{
+                                display: 'flex', alignItems: 'center', gap: '6px',
+                                background: '#f1f5f9', borderRadius: '100px', padding: '4px', marginBottom: '16px', width: 'fit-content'
+                            }}>
+                                <button
+                                    onClick={() => setActiveSubject('mathematics')}
+                                    style={{
+                                        fontFamily: 'Inter, system-ui, sans-serif', fontSize: '0.8rem', fontWeight: '700',
+                                        padding: '8px 22px', borderRadius: '100px', border: 'none', cursor: 'pointer',
+                                        transition: 'all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)', letterSpacing: '0.03em',
+                                        background: activeSubject === 'mathematics' ? 'linear-gradient(135deg, #4F46E5, #7C3AED)' : 'transparent',
+                                        color: activeSubject === 'mathematics' ? '#fff' : '#64748b',
+                                        boxShadow: activeSubject === 'mathematics' ? '0 4px 14px rgba(79,70,229,0.4)' : 'none',
+                                        transform: activeSubject === 'mathematics' ? 'scale(1.04)' : 'scale(1)'
+                                    }}
+                                >
+                                    Mathematics
+                                </button>
+                                <button
+                                    onClick={() => setActiveSubject('science')}
+                                    style={{
+                                        fontFamily: 'Inter, system-ui, sans-serif', fontSize: '0.8rem', fontWeight: '700',
+                                        padding: '8px 22px', borderRadius: '100px', border: 'none', cursor: 'pointer',
+                                        transition: 'all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)', letterSpacing: '0.03em',
+                                        background: activeSubject === 'science' ? 'linear-gradient(135deg, #0891b2, #059669)' : 'transparent',
+                                        color: activeSubject === 'science' ? '#fff' : '#64748b',
+                                        boxShadow: activeSubject === 'science' ? '0 4px 14px rgba(8,145,178,0.4)' : 'none',
+                                        transform: activeSubject === 'science' ? 'scale(1.04)' : 'scale(1)'
+                                    }}
+                                >
+                                    Science
+                                </button>
+                            </div>
+                        ) : (
+                            <span style={{
+                                fontSize: '0.75rem',
+                                fontWeight: '700',
+                                color: '#4F46E5',
+                                background: '#EEF2FF',
+                                padding: '4px 12px',
+                                borderRadius: '20px',
+                                marginBottom: '10px',
+                                display: 'inline-block',
+                                letterSpacing: '0.05em'
+                            }}>HIGH SCHOOL MATHEMATICS</span>
+                        )}
                         <h1>Grade {grade} Curriculum</h1>
                     </div>
 
@@ -723,30 +760,66 @@ const SeniorGradeSyllabus = () => {
 
             {/* Main Content - Grid Layout */}
             <main className="senior-content-grid">
-                <div className="topics-grid-container">
-                    {topics.map(topic => (
+                {grade === '10' && activeSubject === 'science' ? (
+                    <div className="science-chapter-grid" style={{
+                        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', animation: 'chemFadeIn 0.35s ease'
+                    }}>
                         <div
-                            key={topic}
-                            className="topic-card"
-                            onClick={() => {
-                                const topicSkills = skillsByTopic[topic];
-                                if (topicSkills.length === 1 && topicSkills[0].path) {
-                                    handleSkillClick(topicSkills[0]);
-                                } else {
-                                    setSelectedTopic(topic);
-                                }
+                            className="science-chapter-card"
+                            onClick={() => handleSkillClick({ isLocal: true, path: '/senior/grade/10/science/chemical-reactions' })}
+                            style={{
+                                background: 'linear-gradient(135deg, #0a1628, #0c2240)', border: '1px solid rgba(8,145,178,0.3)',
+                                borderRadius: '20px', padding: '24px', cursor: 'pointer', transition: 'all 0.25s',
+                                position: 'relative', overflow: 'hidden'
                             }}
                         >
-                            <div className="topic-card-icon">
-                                <Layout size={32} />
+                            <span style={{
+                                display: 'inline-block', fontSize: '0.62rem', fontWeight: '700', letterSpacing: '0.16em',
+                                textTransform: 'uppercase', background: 'rgba(8,145,178,0.15)', color: '#38bdf8',
+                                border: '1px solid rgba(56,189,248,0.3)', padding: '3px 12px', borderRadius: '100px', marginBottom: '14px'
+                            }}>Chapter 1</span>
+                            <span style={{ fontSize: '2.4rem', marginBottom: '12px', display: 'block' }}>⚗️</span>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#e6edf3', marginBottom: '6px', fontFamily: '"Outfit", sans-serif' }}>
+                                Chemical Reactions & Equations
+                            </h3>
+                            <p style={{ fontSize: '0.8rem', color: '#7d8590', marginBottom: '16px', lineHeight: '1.5' }}>
+                                Master equations, experiments, and reaction types with the interactive virtual lab.
+                            </p>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+                                <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Virtual Lab</span>
+                                <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Balancer</span>
                             </div>
-                            <h3><LatexText text={capitalizeFirstLetter(topic)} /></h3>
-                            <div className="topic-meta">
-                                {skillsByTopic[topic].length} {skillsByTopic[topic].length === 1 ? 'Skill' : 'Skills'}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <span style={{ fontSize: '0.82rem', fontWeight: '700', color: '#38bdf8' }}>Enter Module →</span>
                             </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ) : (
+                    <div className="topics-grid-container">
+                        {topics.map(topic => (
+                            <div
+                                key={topic}
+                                className="topic-card"
+                                onClick={() => {
+                                    const topicSkills = skillsByTopic[topic];
+                                    if (topicSkills.length === 1 && topicSkills[0].path) {
+                                        handleSkillClick(topicSkills[0]);
+                                    } else {
+                                        setSelectedTopic(topic);
+                                    }
+                                }}
+                            >
+                                <div className="topic-card-icon">
+                                    <Layout size={32} />
+                                </div>
+                                <h3><LatexText text={capitalizeFirstLetter(topic)} /></h3>
+                                <div className="topic-meta">
+                                    {skillsByTopic[topic].length} {skillsByTopic[topic].length === 1 ? 'Skill' : 'Skills'}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </main>
 
             {/* Modal Overlay */}
