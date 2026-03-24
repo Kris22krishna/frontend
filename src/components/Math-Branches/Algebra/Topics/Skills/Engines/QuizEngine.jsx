@@ -1,13 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function QuizEngine({ 
+    questions, 
+    title, 
+    onBack, 
+    onSecondaryBack, 
+    color, 
+    prefix = 'alg',
+    nodeId,
+    sessionType = 'practice'
+}) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
 
     useEffect(() => {
         setQuestionSet(typeof questions === 'function' ? questions() : questions);
@@ -29,6 +43,14 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         return () => clearInterval(timer);
     }, [finished]);
 
+    // Start session on mount/questions change
+    useEffect(() => {
+        if (nodeId) {
+            startSession(nodeId, sessionType);
+            answersPayload.current = [];
+        }
+    }, [nodeId, sessionType, questions]);
+
     // Format time (MM:SS)
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -39,16 +61,34 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
     const q = questionSet[current];
     const progress = ((current + (finished ? 1 : 0)) / questionSet.length) * 100;
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (answered) return;
         setSelected(optIdx);
         setAnswered(true);
-        if (optIdx === q.correct) setScore(s => s + 1);
+        
+        const isCorrect = optIdx === q.correct;
+        if (isCorrect) setScore(s => s + 1);
+
+        // v4 Log
+        if (nodeId) {
+            const answerData = {
+                question: q.question,
+                selectedAnswer: q.options[optIdx],
+                correctAnswer: q.options[q.correct],
+                isCorrect,
+                timeSpent: 0 // We don't have per-question timer here easily, but could add
+            };
+            answersPayload.current.push(answerData);
+            await logAnswer(answerData);
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
             setFinished(true);
+            if (nodeId) {
+                await finishSession(answersPayload.current);
+            }
         } else {
             setCurrent(c => c + 1);
             setSelected(null);

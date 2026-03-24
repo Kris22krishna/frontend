@@ -7,6 +7,7 @@ import QuizEngine from './Engines/QuizEngine';
 import AssessmentEngine from './Engines/AssessmentEngine';
 import AlgebraCategorizedPracticeEngine from './AlgebraCategorizedPracticeEngine';
 import { SKILLS } from './AlgebraSkillsData';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function AlgebraSkills() {
     const navigate = useNavigate();
@@ -15,7 +16,18 @@ export default function AlgebraSkills() {
     const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
     const [lawView, setLawView] = useState(null); // null | 'practice' | 'assessment'
 
+    const skillMap = {
+        exponents: NODE_IDS.g8MathAlgebraExponents,
+        liketerms: NODE_IDS.g8MathAlgebraLikeTerms,
+        expressions: NODE_IDS.g8MathAlgebraExpressions,
+        solving: NODE_IDS.g8MathAlgebraSolving,
+        subject: NODE_IDS.g8MathAlgebraSubject,
+        wordproblems: NODE_IDS.g8MathAlgebraWordProblems,
+        reallife: NODE_IDS.g8MathAlgebraRealLife
+    };
+
     const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
+    const nodeId = skill ? skillMap[skill.id] : null;
 
     const openSkill = (index, nextView) => {
         setActiveSkill(index);
@@ -121,6 +133,7 @@ export default function AlgebraSkills() {
                                                     color={skill.color}
                                                     onBack={() => setLawView(null)}
                                                     prefix="algtest"
+                                                    nodeId={nodeId}
                                                 />
                                             ) : (
                                                 <AssessmentEngine
@@ -130,6 +143,7 @@ export default function AlgebraSkills() {
                                                     color={skill.color}
                                                     onBack={() => setLawView(null)}
                                                     prefix="algtest"
+                                                    nodeId={nodeId}
                                                 />
                                             )}
                                         </div>
@@ -318,6 +332,7 @@ export default function AlgebraSkills() {
                             <AlgebraCategorizedPracticeEngine
                                 skill={skill}
                                 onBack={() => setView('list')}
+                                nodeId={nodeId}
                             />
                         ) : (
                             <QuizEngine
@@ -326,6 +341,7 @@ export default function AlgebraSkills() {
                                 color={skill.color}
                                 onBack={() => setView('list')}
                                 prefix="algtest"
+                                nodeId={nodeId}
                             />
                         )
                     ) : (
@@ -335,6 +351,7 @@ export default function AlgebraSkills() {
                             color={skill.color}
                             onBack={() => setView('list')}
                             prefix="algtest"
+                            nodeId={nodeId}
                         />
                     )}
                 </div>

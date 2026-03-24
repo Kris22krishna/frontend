@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function AssessmentEngine({ 
+    questions, 
+    title, 
+    onBack, 
+    onSecondaryBack, 
+    color, 
+    prefix = 'alg',
+    nodeId,
+    sessionType = 'assessment'
+}) {
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -66,6 +76,10 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+
     useEffect(() => {
         const newQs = typeof questions === 'function' ? questions() : questions;
         setQuestionSet(newQs);
@@ -75,7 +89,13 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         setTimeLeft(newQs.length * 60);
         setFinished(false);
         setPaletteOpen(false);
-    }, [questions]);
+
+        // v4 Start
+        if (nodeId) {
+            startSession(nodeId, sessionType);
+            answersPayload.current = Array(newQs.length).fill(null);
+        }
+    }, [questions, nodeId, sessionType]);
 
     useEffect(() => {
         if (topRef.current) {
@@ -109,21 +129,49 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
 
     const q = questionSet[current];
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished) return;
         const newAns = [...answers];
         newAns[current] = optIdx;
         setAnswers(newAns);
+
+        // v4 Log
+        if (nodeId) {
+            const isCorrect = isAnswerCorrect(q, optIdx);
+            const answerData = {
+                question: q.question,
+                selectedAnswer: q.options[optIdx],
+                correctAnswer: q.options[q.correct],
+                isCorrect,
+                timeSpent: 0
+            };
+            answersPayload.current[current] = answerData;
+            await logAnswer(answerData);
+        }
     };
 
-    const handleTextAnswerChange = (value) => {
+    const handleTextAnswerChange = async (value) => {
         if (finished) return;
         const newAns = [...answers];
         newAns[current] = value;
         setAnswers(newAns);
+
+        // v4 Log
+        if (nodeId) {
+            const isCorrect = isAnswerCorrect(q, value);
+            const answerData = {
+                question: q.question,
+                selectedAnswer: value,
+                correctAnswer: q.answer,
+                isCorrect,
+                timeSpent: 0
+            };
+            answersPayload.current[current] = answerData;
+            await logAnswer(answerData);
+        }
     };
 
-    const handleMsqToggle = (optIdx) => {
+    const handleMsqToggle = async (optIdx) => {
         if (finished) return;
         const currentAnswer = Array.isArray(answers[current]) ? answers[current] : [];
         const nextAnswer = currentAnswer.includes(optIdx)
@@ -132,6 +180,20 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         const newAns = [...answers];
         newAns[current] = nextAnswer;
         setAnswers(newAns);
+
+        // v4 Log
+        if (nodeId) {
+            const isCorrect = isAnswerCorrect(q, nextAnswer);
+            const answerData = {
+                question: q.question,
+                selectedAnswer: JSON.stringify(nextAnswer),
+                correctAnswer: JSON.stringify(q.correct),
+                isCorrect,
+                timeSpent: 0
+            };
+            answersPayload.current[current] = answerData;
+            await logAnswer(answerData);
+        }
     };
 
     const handleNext = () => {
@@ -151,12 +213,18 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         setFinished(true);
         setPaletteOpen(false);
+
+        // v4 Finish
+        if (nodeId) {
+            const finalPayload = answersPayload.current.filter(Boolean);
+            await finishSession(finalPayload);
+        }
     };
 
     const answeredCount = questionSet.reduce((count, question, index) => (

@@ -26,7 +26,7 @@ import {
     ResponsiveContainer
 } from 'recharts';
 
-const ChapterAccordion = ({ chapter, skills }) => {
+const ChapterAccordion = ({ chapter, skills, mode }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -42,17 +42,24 @@ const ChapterAccordion = ({ chapter, skills }) => {
                 <div className="p-4 space-y-4">
                     {skills.map((skill, idx) => {
                         const minutes = Math.round(skill.time_spent / 60);
-                        // Assuming max time per skill is around 60 mins for full visual bar
-                        const progress = Math.min((minutes / 60) * 100, 100);
+                        const displayAccuracy = mode === 'best' ? skill.best_accuracy : skill.latest_accuracy;
+                        const progress = displayAccuracy; // Use accuracy as progress in v4
                         return (
-                            <div key={idx} className="space-y-1">
+                            <div key={idx} className="space-y-1 group/skill">
                                 <div className="flex justify-between text-sm text-slate-600">
-                                    <span className="font-medium">{skill.skill_name}</span>
-                                    <span>{minutes} minutes</span>
+                                    <span className="font-medium group-hover/skill:text-cyan-600 transition-colors">{skill.skill_name}</span>
+                                    <div className="flex gap-3">
+                                        <span className="text-slate-400">{minutes}m</span>
+                                        <span className={`font-bold ${displayAccuracy >= 80 ? 'text-emerald-500' : displayAccuracy >= 50 ? 'text-amber-500' : 'text-slate-400'}`}>
+                                            {displayAccuracy}%
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="w-full bg-slate-100 rounded-full h-2">
+                                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                                     <div
-                                        className="bg-cyan-500 h-2 rounded-full transition-all duration-500"
+                                        className={`h-full transition-all duration-700 ease-out ${
+                                            displayAccuracy >= 80 ? 'bg-emerald-400' : displayAccuracy >= 50 ? 'bg-amber-400' : 'bg-cyan-400'
+                                        }`}
                                         style={{ width: `${progress}%` }}
                                     />
                                 </div>
@@ -71,6 +78,7 @@ const StudentDashboard = () => {
     const [error, setError] = useState(null);
     const [profile, setProfile] = useState(null);
     const [analytics, setAnalytics] = useState(null);
+    const [mode, setMode] = useState('latest'); // 'latest' | 'best'
 
     useEffect(() => {
         fetchDashboardData();
@@ -158,7 +166,6 @@ const StudentDashboard = () => {
         minutes: Math.round(c.time_spent / 60)
     }));
 
-    // Recharts custom tooltip
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
@@ -301,7 +308,7 @@ const StudentDashboard = () => {
                             </div>
                             <div className="text-sm text-indigo-600 font-medium mt-2">
                                 {learning_insights?.most_practiced?.total
-                                    ? `${learning_insights.most_practiced.total} questions`
+                                    ? `${learning_insights.most_practiced.total} attempts`
                                     : 'Start practicing to see insights'}
                             </div>
                         </div>
@@ -340,16 +347,42 @@ const StudentDashboard = () => {
 
                 {/* SECTION 4: Chapter-wise Skill Breakdown */}
                 <div className="bg-white p-6 md:p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 mt-8">
-                    <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <BookOpen className="h-5 w-5 text-cyan-500" />
-                        Time Spent by Chapter
-                    </h2>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <BookOpen className="h-5 w-5 text-cyan-500" />
+                            Curriculum Progress
+                        </h2>
+                        
+                        {/* Latest/Best Toggle */}
+                        <div className="flex bg-slate-100 p-1 rounded-xl">
+                            <button
+                                onClick={() => setMode('latest')}
+                                className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                                    mode === 'latest' 
+                                    ? 'bg-white text-cyan-600 shadow-sm' 
+                                    : 'text-slate-500 hover:text-slate-700'
+                                }`}
+                            >
+                                Latest Attempt
+                            </button>
+                            <button
+                                onClick={() => setMode('best')}
+                                className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                                    mode === 'best' 
+                                    ? 'bg-white text-cyan-600 shadow-sm' 
+                                    : 'text-slate-500 hover:text-slate-700'
+                                }`}
+                            >
+                                Best Score
+                            </button>
+                        </div>
+                    </div>
 
                     {chapter_wise && Object.keys(chapter_wise).length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                             {Object.entries(chapter_wise)
                                 .map(([chapter, skills]) => (
-                                    <ChapterAccordion key={chapter} chapter={chapter} skills={skills} />
+                                    <ChapterAccordion key={chapter} chapter={chapter} skills={skills} mode={mode} />
                                 ))
                             }
                         </div>
