@@ -458,17 +458,17 @@ export const generateIdentifyMoney = () => {
 
   // Convert to array and create MCQ options with images
   const optionsArray = Array.from(uniqueOptions).map(value => ({
-    value: `/src/assets/grade2/rupee_${value}.jpg`,
+    value: `/assets/grade2/rupee_${value}.jpg`,
     // label: `₹${value}`,
-    image: `/src/assets/grade2/rupee_${value}.jpg`
+    image: `/assets/grade2/rupee_${value}.jpg`
   }));
 
   return {
     type: "mcq",
     question: question,
     topic: "Money / Basics",
-    answer: `/src/assets/grade2/rupee_${note}.jpg`,
-    // image: `/src/assets/grade2/rupee_${note}.jpg`,
+    answer: `/assets/grade2/rupee_${note}.jpg`,
+    // image: `/assets/grade2/rupee_${note}.jpg`,
     options: shuffleArray(optionsArray)
   };
 };

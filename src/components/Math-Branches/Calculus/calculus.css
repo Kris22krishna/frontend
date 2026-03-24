@@ -32,7 +32,8 @@
   display: flex;
   min-height: calc(100vh - 64px);
   font-family: 'Inter', system-ui, sans-serif;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* ── LEFT: Hero panel ──────────────────────────────── */
@@ -403,7 +404,7 @@
 /* ── 5W1H GRID ──────────────────────────────────────── */
 .calc-5w1h-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: 24px;
 }
 
@@ -470,7 +471,7 @@
 /* ── TERMINOLOGY ──────────────────────────────────────── */
 .calc-term-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 20px;
 }
 
@@ -628,6 +629,20 @@
 
 .calc-skills-stage {
     min-height: 100vh;
+}
+
+/* ── SKILLS LEARN VIEW ──────────────────────────────────────── */
+.calc-learn-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.calc-learn-content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 20px;
 }
 
 .calc-lexicon-container {
@@ -910,6 +925,21 @@
 
 /* ── Responsive Overrides ────────────────────────── */
 @media (max-width: 991px) {
+  .calc-fullpage {
+    flex-direction: column;
+    height: auto;
+  }
+  .calc-left {
+    flex: none;
+    width: 100%;
+    padding: 40px 24px;
+  }
+  .calc-right {
+    flex: none;
+    width: 100%;
+    padding: 40px 24px;
+  }
+
   .calc-assessment-layout {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
@@ -921,9 +951,42 @@
     max-width: none;
     width: 100%;
   }
+
+  .calc-learn-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
+  .calc-main-title {
+    font-size: 2.5rem;
+  }
+  .calc-right {
+    padding: 32px 16px;
+  }
+  .calc-card-btn {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .calc-card-strip {
+    width: 100%;
+    height: 6px;
+  }
+  .calc-card-icon {
+    margin: 16px 16px 0 16px;
+  }
+  .calc-card-text {
+    padding: 16px;
+    width: 100%;
+  }
+  .calc-card-chevron {
+    display: none;
+  }
+
+  .calc-section {
+    padding: 40px 16px;
+  }
+
   .calc-quiz-active {
     display: flex;
     flex-direction: column;

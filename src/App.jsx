@@ -29,6 +29,11 @@ import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Termin
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
 import AlgebraMasteryTest from './components/IDM/assessment_idm/AlgebraMasteryTest';
 import CalculusMainDashboard from './components/Math-Branches/Calculus/CalculusMainDashboard';
+// Functions
+import FunctionsDashboard from './components/Math-Branches/Calculus/Functions/FunctionsDashboard';
+import FunctionsIntro5W1H from './components/Math-Branches/Calculus/Functions/Topics/5W1H/FunctionsIntro5W1H';
+import FunctionsTerminology from './components/Math-Branches/Calculus/Functions/Topics/Terminology/FunctionsTerminology';
+import FunctionsSkills from './components/Math-Branches/Calculus/Functions/Topics/Skills/FunctionsSkills';
 // Limits
 import LimitsDashboard from './components/Math-Branches/Calculus/Limits/LimitsDashboard';
 import LimitsIntro5W1H from './components/Math-Branches/Calculus/Limits/Topics/5W1H/LimitsIntro5W1H';
@@ -349,6 +354,12 @@ import NumberSystem from './components/practice/class-9/number_system/NumberSyst
 import NumberSystemIntro5W1H from './components/practice/class-9/number_system/Topics/5W1H/NumberSystemIntro5W1H';
 import NumberSystemTerminology from './components/practice/class-9/number_system/Topics/Terminology/NumberSystemTerminology';
 import NumberSystemSkills from './components/practice/class-9/number_system/Topics/Skills/NumberSystemSkills';
+
+// Grade 9 Polynomials
+import PolynomialsGrade9 from './components/practice/class-9/polynomials/PolynomialsGrade9';
+import PolynomialsGrade9Intro from './components/practice/class-9/polynomials/Topics/5W1H/PolynomialsGrade9Intro';
+import PolynomialsGrade9Terminology from './components/practice/class-9/polynomials/Topics/Terminology/PolynomialsGrade9Terminology';
+import PolynomialsGrade9Skills from './components/practice/class-9/polynomials/Topics/Skills/PolynomialsGrade9Skills';
 import RealNumberClassification from './components/practice/class-9/number_system/RealNumberClassification';
 import DecimalExpansion from './components/practice/class-9/number_system/DecimalExpansion';
 import OperationsOnSurds from './components/practice/class-9/number_system/OperationsOnSurds';
@@ -684,6 +695,11 @@ import MuseumIntro5W1H from './components/practice/class-4/The_Transport_Museum/
 import MuseumTerminology from './components/practice/class-4/The_Transport_Museum/Topics/Terminology/MuseumTerminology';
 import MuseumSkills from './components/practice/class-4/The_Transport_Museum/Topics/Skills/MuseumSkills';
 
+import MeasuringLengthDashboard from './components/practice/class-4/Measuring_Length/MeasuringLengthDashboard';
+import MeasuringLengthIntro from './components/practice/class-4/Measuring_Length/Topics/5W1H/MeasuringLengthIntro';
+import MeasuringLengthTerms from './components/practice/class-4/Measuring_Length/Topics/Terminology/MeasuringLengthTerms';
+import MeasuringLengthSkills from './components/practice/class-4/Measuring_Length/Topics/Skills/InteractiveModules/MeasuringLengthSkills';
+
 import DataHandlingClass4 from './components/practice/class-4/Data_Handling/DataHandlingClass4';
 import DataHandlingIntro5W1HClass4 from './components/practice/class-4/Data_Handling/Topics/5W1H/DataHandlingIntro5W1HClass4';
 import DataHandlingTerminologyClass4 from './components/practice/class-4/Data_Handling/Topics/Terminology/DataHandlingTerminologyClass4';
@@ -789,6 +805,12 @@ function App() {
           {/* Calculus Master Dashboard */}
           <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
           
+          {/* Calculus: Functions */}
+          <Route path="calculus/functions" element={<ProtectedRoute redirectTo="/login"><FunctionsDashboard /></ProtectedRoute>} />
+          <Route path="calculus/functions/introduction" element={<ProtectedRoute redirectTo="/login"><FunctionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="calculus/functions/terminology" element={<ProtectedRoute redirectTo="/login"><FunctionsTerminology /></ProtectedRoute>} />
+          <Route path="calculus/functions/skills" element={<ProtectedRoute redirectTo="/login"><FunctionsSkills /></ProtectedRoute>} />
+
           {/* Calculus: Limits */}
           <Route path="calculus/limits" element={<ProtectedRoute redirectTo="/login"><LimitsDashboard /></ProtectedRoute>} />
           <Route path="calculus/limits/introduction" element={<ProtectedRoute redirectTo="/login"><LimitsIntro5W1H /></ProtectedRoute>} />
@@ -846,6 +868,10 @@ function App() {
           <Route path="the-transport-museum/introduction" element={<ProtectedRoute redirectTo="/login"><MuseumIntro5W1H /></ProtectedRoute>} />
           <Route path="the-transport-museum/terminology" element={<ProtectedRoute redirectTo="/login"><MuseumTerminology /></ProtectedRoute>} />
           <Route path="the-transport-museum/skills" element={<ProtectedRoute redirectTo="/login"><MuseumSkills /></ProtectedRoute>} />
+          <Route path="measuring-length" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthDashboard /></ProtectedRoute>} />
+          <Route path="measuring-length/introduction" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthIntro /></ProtectedRoute>} />
+          <Route path="measuring-length/terminology" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthTerms /></ProtectedRoute>} />
+          <Route path="measuring-length/skills" element={<ProtectedRoute redirectTo="/login"><MeasuringLengthSkills /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1HClass4 /></ProtectedRoute>} />
           <Route path="junior/grade/4/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminologyClass4 /></ProtectedRoute>} />
@@ -1997,6 +2023,12 @@ function App() {
         <Route path="/senior/grade/9/number-system/introduction" element={<ProtectedRoute redirectTo="/login"><NumberSystemIntro5W1H /></ProtectedRoute>} />
         <Route path="/senior/grade/9/number-system/terminology" element={<ProtectedRoute redirectTo="/login"><NumberSystemTerminology /></ProtectedRoute>} />
         <Route path="/senior/grade/9/number-system/skills" element={<ProtectedRoute redirectTo="/login"><NumberSystemSkills /></ProtectedRoute>} />
+
+        {/* Class 9: Polynomials Routes */}
+        <Route path="/senior/grade/9/polynomials" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9 /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/polynomials/introduction" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Intro /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/polynomials/terminology" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Terminology /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/polynomials/skills" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Skills /></ProtectedRoute>} />
 
         {/* Legacy Classification/Direct Routes */}
         <Route path="/practice/class-9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
