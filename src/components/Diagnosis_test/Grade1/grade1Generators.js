@@ -419,21 +419,21 @@ export const generateSpatial = () => {
       question: "In the Picture below, is the cat inside or outside the box?",
       answer: "Inside",
       other: "Outside",
-      img: "/src/assets/grade1/cat_inside.jpg"
+      img: "/assets/grade1/cat_inside.jpg"
     },
     {
       type: "Left/Right",
       question: "In the Picture below, which side is the Yellow Flower?",
       answer: "Left",
       other: "Right",
-      img: "/src/assets/grade1/Flower_left.png"
+      img: "/assets/grade1/Flower_left.png"
     },
     {
       type: "Top/Bottom",
       question: "Is the sky above (top) or below (bottom) us?",
       answer: "Top",
       other: "Bottom",
-      img: "/src/assets/grade1/sky_top.jpg"
+      img: "/assets/grade1/sky_top.jpg"
     }
   ];
 
@@ -485,10 +485,10 @@ export const generateLengthComparison = () => {
 
 export const generateWeightComparison = () => {
   const comparisons = [
-    { heavy: "Elephant", light: "Mouse", img: "/src/assets/grade1/elephant_mouse.png" },
-    { heavy: "Car", light: "Bicycle", img: "/src/assets/grade1/car_bicycle.png" },
-    { heavy: "Watermelon", light: "Apple", img: "/src/assets/grade1/watermelon_apple.png" },
-    { heavy: "Book", light: "Feather", img: "/src/assets/grade1/book_feather.png" }
+    { heavy: "Elephant", light: "Mouse", img: "/assets/grade1/elephant_mouse.png" },
+    { heavy: "Car", light: "Bicycle", img: "/assets/grade1/car_bicycle.png" },
+    { heavy: "Watermelon", light: "Apple", img: "/assets/grade1/watermelon_apple.png" },
+    { heavy: "Book", light: "Feather", img: "/assets/grade1/book_feather.png" }
   ];
 
   const comp = comparisons[getRandomInt(0, comparisons.length - 1)];
@@ -516,10 +516,10 @@ export const generateWeightComparison = () => {
 
 export const generateCapacityComparison = () => {
   const comparisons = [
-    { more: "Bucket", less: "Cup", img: "/src/assets/grade1/bucket_cup.png" },
-    { more: "Jug", less: "Spoon", img: "/src/assets/grade1/jug_spoon.png" },
-    { more: "Pool", less: "Bathtub", img: "/src/assets/grade1/pool_bathtub.png" },
-    { more: "Bottle", less: "Glass", img: "/src/assets/grade1/bottle_glass.png" }
+    { more: "Bucket", less: "Cup", img: "/assets/grade1/bucket_cup.png" },
+    { more: "Jug", less: "Spoon", img: "/assets/grade1/jug_spoon.png" },
+    { more: "Pool", less: "Bathtub", img: "/assets/grade1/pool_bathtub.png" },
+    { more: "Bottle", less: "Glass", img: "/assets/grade1/bottle_glass.png" }
   ];
 
   const comp = comparisons[getRandomInt(0, comparisons.length - 1)];

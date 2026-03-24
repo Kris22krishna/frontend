@@ -279,6 +279,11 @@ export const TOPIC_CONFIGS = {
             { id: "TM-02", name: "Terminology", route: "the-transport-museum-hero" },
             { id: "TM-03", name: "Skills", route: "the-transport-museum-hero" }
         ],
+        'Measuring Length': [
+            { id: "ML-01", name: "Introduction", route: "measuring-length-hero" },
+            { id: "ML-02", name: "Terminology", route: "measuring-length-hero" },
+            { id: "ML-03", name: "Skills", route: "measuring-length-hero" }
+        ],
         'Data Handling': [
             { id: "DH-01", name: "Introduction", route: "data-handling-hero" },
             { id: "DH-02", name: "Terminology", route: "data-handling-hero" },
