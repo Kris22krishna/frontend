@@ -225,7 +225,8 @@ const Class7Syllabus = () => {
                     { skill_id: '1099', skill_name: 'Finding the Value of an Expression', topic: 'Algebraic Expressions', sub_topic: 'Main', isLocal: true, path: '/middle/grade/7/algebraic-expressions/finding-value' },
                     { skill_id: '1100', skill_name: 'Chapter Test', topic: 'Algebraic Expressions', sub_topic: 'Main', isLocal: true, path: '/middle/grade/7/algebraic-expressions/chapter-test' },
                     { skill_id: 'local-data-handling-chapter', skill_name: 'Data Handling: Interactive Chapter', topic: 'Data Handling', sub_topic: 'Main', isLocal: true, path: '/middle/grade/7/data-handling' },
-                    { skill_id: 'local-triangles-chapter', skill_name: 'The Triangle and its Properties: Interactive Chapter', topic: 'The Triangle and its Properties', sub_topic: 'Main', isLocal: true, path: '/middle/grade/7/the-triangle-and-its-properties' }
+                    { skill_id: 'local-triangles-chapter', skill_name: 'The Triangle and its Properties: Interactive Chapter', topic: 'The Triangle and its Properties', sub_topic: 'Main', isLocal: true, path: '/middle/grade/7/the-triangle-and-its-properties' },
+                    { skill_id: 'local-simple-equations-chapter', skill_name: 'Simple Equations: Interactive Chapter', topic: 'Simple Equations', sub_topic: 'Main', isLocal: true, path: '/middle/grade/7/simple-equations' }
                 ];
 
                 setSkills(fetched);
@@ -242,8 +243,8 @@ const Class7Syllabus = () => {
     const skillsByTopic = skills.reduce((acc, skill) => {
         const topicName = (skill.topic || 'General').toLowerCase();
 
-        if (topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling" && topicName !== "the triangle and its properties") return acc;
-        if ((topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling" || topicName === "the triangle and its properties") && !skill.isLocal) return acc;
+        if (topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling" && topicName !== "the triangle and its properties" && topicName !== "simple equations") return acc;
+        if ((topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling" || topicName === "the triangle and its properties" || topicName === "simple equations") && !skill.isLocal) return acc;
 
         const topic = skill.topic || 'General';
         const subTopic = skill.sub_topic || 'Main';
