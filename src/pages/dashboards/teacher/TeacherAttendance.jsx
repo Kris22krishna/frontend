@@ -64,7 +64,7 @@ const TeacherAttendance = () => {
                         {attendanceData.map((s, i) => (
                             <tr key={s.id} className="border-b border-gray-50 hover:bg-gray-50">
                                 <td className="py-4 px-6 text-gray-600">{i + 1}</td>
-                                <td className="py-4 px-6"><div className="flex items-center gap-3"><div className="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-medium text-sm">{s.name.split(' ').map(n => n[0]).join('')}</div><span className="font-medium text-gray-800">{s.name}</span></div></td>
+                                <td className="py-4 px-6"><div className="flex items-center gap-3"><div className="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-medium text-sm">{(s.name || '').split(' ').filter(Boolean).map(n => n[0]).join('') || '?'}</div><span className="font-medium text-gray-800">{s.name}</span></div></td>
                                 <td className="py-4 px-6"><span className={`px-3 py-1 rounded-full text-sm font-medium capitalize ${getStatusStyle(s.status)}`}>{s.status}</span></td>
                                 <td className="py-4 px-6"><div className="flex gap-2">
                                     <button onClick={() => setStatus(s.id, 'present')} className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200">P</button>
