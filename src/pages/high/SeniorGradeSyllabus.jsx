@@ -126,7 +126,10 @@ const SeniorGradeSyllabus = () => {
                 } else if (grade === '9') {
                     setSkills([
                         // Number System Hub
-                        { skill_id: 1240, skill_name: 'Number System: Master Hub', topic: 'Number System', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/number-system' }
+                        { skill_id: 1240, skill_name: 'Number System: Master Hub', topic: 'Number System', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/number-system' },
+                        
+                        // Polynomials Hub
+                        { skill_id: 1241, skill_name: 'Polynomials: Master Hub', topic: 'Polynomials', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/polynomials' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting

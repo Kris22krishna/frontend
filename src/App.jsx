@@ -337,6 +337,12 @@ import NumberSystem from './components/practice/class-9/number_system/NumberSyst
 import NumberSystemIntro5W1H from './components/practice/class-9/number_system/Topics/5W1H/NumberSystemIntro5W1H';
 import NumberSystemTerminology from './components/practice/class-9/number_system/Topics/Terminology/NumberSystemTerminology';
 import NumberSystemSkills from './components/practice/class-9/number_system/Topics/Skills/NumberSystemSkills';
+
+// Grade 9 Polynomials
+import PolynomialsGrade9 from './components/practice/class-9/polynomials/PolynomialsGrade9';
+import PolynomialsGrade9Intro from './components/practice/class-9/polynomials/Topics/5W1H/PolynomialsGrade9Intro';
+import PolynomialsGrade9Terminology from './components/practice/class-9/polynomials/Topics/Terminology/PolynomialsGrade9Terminology';
+import PolynomialsGrade9Skills from './components/practice/class-9/polynomials/Topics/Skills/PolynomialsGrade9Skills';
 import RealNumberClassification from './components/practice/class-9/number_system/RealNumberClassification';
 import DecimalExpansion from './components/practice/class-9/number_system/DecimalExpansion';
 import OperationsOnSurds from './components/practice/class-9/number_system/OperationsOnSurds';
@@ -1938,6 +1944,12 @@ function App() {
         <Route path="/senior/grade/9/number-system/introduction" element={<ProtectedRoute redirectTo="/login"><NumberSystemIntro5W1H /></ProtectedRoute>} />
         <Route path="/senior/grade/9/number-system/terminology" element={<ProtectedRoute redirectTo="/login"><NumberSystemTerminology /></ProtectedRoute>} />
         <Route path="/senior/grade/9/number-system/skills" element={<ProtectedRoute redirectTo="/login"><NumberSystemSkills /></ProtectedRoute>} />
+
+        {/* Class 9: Polynomials Routes */}
+        <Route path="/senior/grade/9/polynomials" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9 /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/polynomials/introduction" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Intro /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/polynomials/terminology" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Terminology /></ProtectedRoute>} />
+        <Route path="/senior/grade/9/polynomials/skills" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Skills /></ProtectedRoute>} />
 
         {/* Legacy Classification/Direct Routes */}
         <Route path="/practice/class-9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
