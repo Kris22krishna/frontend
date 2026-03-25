@@ -292,7 +292,7 @@ const ChronologicalSummary = ({ sessions }) => {
     );
 };
 
-const StudentDashboard = () => {
+const StudentDashboard = ({ studentId, isEmbedded = false }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -303,7 +303,7 @@ const StudentDashboard = () => {
 
     useEffect(() => {
         fetchDashboardData();
-    }, []);
+    }, [studentId]); // Refetch if studentId changes
 
     const fetchDashboardData = async () => {
         try {
@@ -311,7 +311,7 @@ const StudentDashboard = () => {
             setError(null);
             const [profileData, analyticsData, sessionsData] = await Promise.all([
                 api.getStudentProfile(),
-                api.getStudentDashboardAnalytics(),
+                api.getStudentDashboardAnalytics(studentId),
                 api.getStudentSessionHistory(100)
             ]);
             setProfile(profileData);
@@ -405,9 +405,9 @@ const StudentDashboard = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 pb-12">
-            <Navbar />
+            {!isEmbedded && <Navbar />}
 
-            <div className="container mx-auto px-4 pt-24 max-w-6xl space-y-8">
+            <div className={`container mx-auto px-4 max-w-6xl space-y-8 ${isEmbedded ? 'pt-4' : 'pt-24'}`}>
 
                 {/* SECTION 1: Welcome Header */}
                 <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-gradient-to-br from-white to-cyan-50/50 border border-slate-100">

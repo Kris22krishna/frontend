@@ -176,15 +176,26 @@ export const api = {
     },
 
     // --- Student ---
-    getStudentProfile: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/profile`, {
+    getStudentProfile: async (studentId = null) => {
+        const params = new URLSearchParams();
+        if (studentId) params.append('user_id', studentId);
+        const response = await fetch(`${BASE_URL}/api/v1/student/profile?${params.toString()}`, {
             headers: getHeaders(),
         });
         return handleResponse(response);
     },
 
-    getStudentDashboardAnalytics: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/dashboard-analytics`, {
+    getStudentDashboardAnalytics: async (studentId = null) => {
+        const params = new URLSearchParams();
+        if (studentId) params.append('user_id', studentId);
+        const response = await fetch(`${BASE_URL}/api/v1/student/dashboard-analytics?${params.toString()}`, {
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
+    getMentorDailyInsights: async (date) => {
+        const response = await fetch(`${BASE_URL}/api/v1/mentor/daily-insights?date=${date}`, {
             headers: getHeaders(),
         });
         return handleResponse(response);
