@@ -1179,6 +1179,7 @@ const MiddleGradeSyllabus = () => {
                     <div className="header-decoration">
                         <div className="geo-shape shape-1"></div>
                         <div className="geo-shape shape-2"></div>
+                        <div className="geo-shape shape-3"></div>
                     </div>
                     <div className="header-content">
                         <div className="grade-badge">GRADE {grade.replace('grade', '')}</div>
