@@ -1961,7 +1961,7 @@ function App() {
         <Route path="/assessment-runner" element={<AssessmentRunner />} />
 
         {/* Full Screen Practice Sessions */}
-        <Route path="/practice/:templateId" element={<PracticeSession />} />
+        <Route path="/practice/:templateId" element={<ProtectedRoute redirectTo="/login"><PracticeSession /></ProtectedRoute>} />
         <Route path="/middle/practice/9003" element={<MultiplicationPractice />} />
         <Route path="/middle/practice/9004" element={<MultiplicationPractice3D />} />
         <Route path="/middle/practice/9005" element={<MultiplicationPracticeMultiple />} />
@@ -2006,7 +2006,7 @@ function App() {
         <Route path="/middle/grade/5/how-big-how-heavy/chapter-test" element={<HowBigHowHeavyTest />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
 
-        <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
+        <Route path="/middle/practice/:skillId" element={<ProtectedRoute redirectTo="/login"><MiddlePracticeSession /></ProtectedRoute>} />
         {/* Class 10: Pair of Linear Equations Routes */}
         <Route path="/high/practice/10011" element={<ProtectedRoute redirectTo="/login"><GraphicalMethod /></ProtectedRoute>} />
         <Route path="/high/practice/10012" element={<ProtectedRoute redirectTo="/login"><GraphicalMethod /></ProtectedRoute>} />
@@ -2048,7 +2048,7 @@ function App() {
         <Route path="/high/practice/1239" element={<ProtectedRoute redirectTo="/login"><RelationshipCubic /></ProtectedRoute>} />
         <Route path="/high/practice/1240" element={<ProtectedRoute redirectTo="/login"><PolynomialsTest /></ProtectedRoute>} />
 
-        <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
+        <Route path="/high/practice/:skillId" element={<ProtectedRoute redirectTo="/login"><HighPracticeSession /></ProtectedRoute>} />
 
 
         {/* Class 12: Matrices � Legacy routes redirect to canonical deep-dive URLs */}

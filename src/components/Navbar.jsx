@@ -41,7 +41,7 @@ const Navbar = () => {
         if (!userType) return '/guest-dashboard';
 
         switch (userType) {
-            case 'parent': return '/parent-dashboard';
+            case 'parent': return '/parent-dashboard';          //need to change it back to /parent-dashboard once it has been implemented correctly
             case 'student': return '/student-dashboard';
             case 'teacher': return '/teacher-dashboard';
             case 'admin': return '/admin';
@@ -124,7 +124,7 @@ const Navbar = () => {
                         {isAuthenticated ? (
                             <>
                                 <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">
-                                    Portal
+                                    Dashboard
                                 </Link>
                                 <Link to="/idm-dashboard" className="mobile-dropdown-item idm-link" style={{ color: '#4f46e5', fontWeight: 'bold' }}>
                                     IDM 2026
