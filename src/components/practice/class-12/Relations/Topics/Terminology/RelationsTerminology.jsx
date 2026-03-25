@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Relations.css";
 import MathRenderer from "../../../../../MathRenderer";
 import RelationsTopNav from "../../RelationsTopNav";
 
-// ─── DATA SECTIONS ─────────────────────────────────────────────────────────
+// â”€â”€â”€ DATA SECTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const TERMS = [
     {
         name: "Ordered Pair",
         color: "#6366f1",
-        icon: "👫",
+        icon: "ðŸ‘«",
         def: "Two objects $a$ and $b$ listed in a specific order. The first object $a$ is the first coordinate, and the second object $b$ is the second coordinate.",
         examples: ["$(x, y)$", "$(1, 2) \\neq (2, 1)$", "$(a, b)$"],
         inUse: "In the coordinate plane, $(3, 4)$ means move 3 on X-axis and 4 on Y-axis. The order is crucial!",
-        memory: "It's like an address — House Number then Street Name. The order matters!",
+        memory: "It's like an address â€” House Number then Street Name. The order matters!",
     },
     {
         name: "Cartesian Product",
         color: "#0891b2",
-        icon: "✖️",
+        icon: "âœ–ï¸",
         def: "The set of all possible ordered pairs $(x, y)$ where $x \\in A$ and $y \\in B$. Denoted by $A \\times B$.",
         examples: ["$A \\times B = \\{(x, y) \\mid x \\in A, y \\in B\\}$", "$n(A \\times B) = mn$"],
         inUse: "If $A = \\{1, 2\\}$ and $B = \\{x, y\\}$, then $A \\times B = \\{(1, x), (1, y), (2, x), (2, y)\\}$.",
@@ -28,7 +28,7 @@ const TERMS = [
     {
         name: "Relation",
         color: "#f59e0b",
-        icon: "🔗",
+        icon: "ðŸ”—",
         def: "A subset of the Cartesian product $A \\times B$. Any set of ordered pairs from $A$ to $B$ is a relation.",
         examples: ["$R \\subseteq A \\times B$", "$R = \\{(1, 2), (3, 4)\\}$"],
         inUse: "If $R \\subseteq A \\times B$, we say $R$ is a relation from $A$ into $B$.",
@@ -37,7 +37,7 @@ const TERMS = [
     {
         name: "Domain",
         color: "#ec4899",
-        icon: "📥",
+        icon: "ðŸ“¥",
         def: "The set of all first coordinates from the ordered pairs in a relation $R$.",
         examples: ["$\\text{Domain of } R = \\{x \\in A \\mid (x, y) \\in R\\}$", "$\\text{Domain}(R) \\subseteq A$"],
         inUse: "If $R = \\{(1, a), (2, b)\\}$, the Domain is $\\{1, 2\\}$.",
@@ -46,7 +46,7 @@ const TERMS = [
     {
         name: "Range",
         color: "#7c3aed",
-        icon: "📤",
+        icon: "ðŸ“¤",
         def: "The set of all second coordinates from the ordered pairs in a relation $R$.",
         examples: ["$\\text{Range of } R = \\{y \\in B \\mid (x, y) \\in R\\}$", "$\\text{Range}(R) \\subseteq B$"],
         inUse: "If $R = \\{(1, a), (2, b)\\}$, the Range is $\\{a, b\\}$.",
@@ -55,7 +55,7 @@ const TERMS = [
     {
         name: "Inverse Relation",
         color: "#10b981",
-        icon: "🔄",
+        icon: "ðŸ”„",
         def: "The relation obtained by swapping the coordinates of every ordered pair in $R$. Denoted $R^{-1}$.",
         examples: ["$R^{-1} = \\{(y, x) \\mid (x, y) \\in R\\}$"],
         inUse: "If $R = \\{(1, a), (2, b)\\}$, then $R^{-1} = \\{(a, 1), (b, 2)\\}$.",
@@ -64,34 +64,34 @@ const TERMS = [
     {
         name: "Identity Relation",
         color: "#ef4444",
-        icon: "🪞",
+        icon: "ðŸªž",
         def: "A relation in set $A$ where every element relates ONLY to itself.",
         examples: ["$I_A = \\{(x, x) \\mid x \\in A\\}$"],
         inUse: "If $A = \\{1, 2\\}$, the Identity relation is EXACTLY $\\{(1, 1), (2, 2)\\}$.",
-        memory: "Looking in a perfect mirror — you only see yourself and nobody else.",
+        memory: "Looking in a perfect mirror â€” you only see yourself and nobody else.",
     },
     {
         name: "Universal Relation",
         color: "#6366f1",
-        icon: "🌌",
+        icon: "ðŸŒŒ",
         def: "The relation containing all possible ordered pairs. It is the entire Cartesian product.",
         examples: ["$R = A \\times A$"],
         inUse: "Every single element is related to every other element.",
-        memory: "The biggest possible relation — everything is connected!",
+        memory: "The biggest possible relation â€” everything is connected!",
     },
     {
         name: "Empty Relation",
         color: "#06b6d4",
-        icon: "🕳️",
+        icon: "ðŸ•³ï¸",
         def: "A relation containing no ordered pairs. It is the empty set $\\emptyset$.",
         examples: ["$R = \\emptyset \\subseteq A \\times A$"],
         inUse: "No element in $A$ is related to any element.",
-        memory: "The smallest possible relation — complete isolation.",
+        memory: "The smallest possible relation â€” complete isolation.",
     },
     {
         name: "Composite Relation",
         color: "#8b5cf6",
-        icon: "🚂",
+        icon: "ðŸš‚",
         def: "Combining two relations $f$ and $g$ such that if $(x, y) \\in f$ and $(y, z) \\in g$, then $(x, z) \\in g \\circ f$.",
         examples: ["$g \\circ f = \\{(x, z) \\mid (x, y) \\in f \\text{ and } (y, z) \\in g \\text{ for some } y\\}$"],
         inUse: "Like taking a flight with a layover. Fly from X to Y, then Y to Z. The composite is the ticket from X to Z.",
@@ -104,25 +104,29 @@ const SIX_RULES = [
         num: 1,
         title: "Reflexive Property",
         rule: "Every element must be related to itself.",
-        emoji: "🧍",
+        emoji: "RF",
         color: "#6366f1",
-        detail: "A relation $R$ on set $A$ is reflexive if $(x, x) \\in R$ for ALL $x \\in A$. Missing even one means it's not reflexive!",
+        detail: "A relation $R$ on set $A$ is reflexive if $(x, x) \\in R$ for ALL $x \\in A$. The fastest check is to inspect whether every diagonal pair from the set is present.",
         examples: [
-            "$\\{(1,1), (2,2), (3,3)\\}$ on $A=\\{1,2,3\\}$ ✓",
-            "$\\{(1,1), (2,2)\\}$ on $A=\\{1,2,3\\}$ ✗ (missing 3)",
+            "$\\{(1,1), (2,2), (3,3)\\}$ on $A=\\{1,2,3\\}$ (reflexive)",
+            "$\\{(1,1), (2,2)\\}$ on $A=\\{1,2,3\\}$ (not reflexive: missing 3)",
+            "If $A=\\{a,b,c\\}$, then $\\{(a,a),(b,b),(c,c),(a,b)\\}$ is reflexive because all self-pairs are present.",
+            "If $A=\\{p,q,r\\}$ and $(r,r)$ is missing, the relation is not reflexive even if many other pairs are present.",
         ],
-        tip: "Every element needs its own self-loop. Check the roll call — is everyone present?",
+        tip: "Every element needs its own self-loop. Check the roll call - is everyone present?",
     },
     {
         num: 2,
         title: "Symmetric Property",
         rule: "If x relates to y, then y MUST relate to x.",
-        emoji: "🤝",
+        emoji: "SY",
         color: "#0891b2",
-        detail: "A relation $R$ is symmetric if whenever $(x, y) \\in R$, then $(y, x) \\in R$ must also be there.",
+        detail: "A relation $R$ is symmetric if whenever $(x, y) \\in R$, then $(y, x) \\in R$ must also be there. This is easiest to remember as a two-way relation.",
         examples: [
-            "$\\{(1,2), (2,1)\\}$ ✓",
-            "$\\{(1,2), (2,3), (3,2)\\}$ ✗ (missing (2,1))",
+            "$\\{(1,2), (2,1)\\}$ (symmetric)",
+            "$\\{(1,2), (2,3), (3,2)\\}$ (not symmetric: missing (2,1))",
+            "\"Is classmate of\" is symmetric: if Riya is a classmate of Asha, then Asha is a classmate of Riya.",
+            "\"Is sibling of\" is symmetric: if Arun is a sibling of Meera, then Meera is a sibling of Arun.",
         ],
         tip: "It's a two-way street. If an arrow goes out, one must come back!",
     },
@@ -130,12 +134,14 @@ const SIX_RULES = [
         num: 3,
         title: "Transitive Property",
         rule: "If x relates to y, and y to z, then x MUST relate to z.",
-        emoji: "⏭️",
+        emoji: "TR",
         color: "#f59e0b",
-        detail: "A relation $R$ is transitive if $(x, y) \\in R$ and $(y, z) \\in R$ implies $(x, z) \\in R$.",
+        detail: "A relation $R$ is transitive if $(x, y) \\in R$ and $(y, z) \\in R$ implies $(x, z) \\in R$. Look for a two-step chain and then check whether the shortcut pair is present.",
         examples: [
-            "$\\{(1,2), (2,3), (1,3)\\}$ ✓",
-            "$\\{(1,2), (2,3)\\}$ ✗ (missing (1,3))",
+            "$\\{(1,2), (2,3), (1,3)\\}$ (transitive)",
+            "$\\{(1,2), (2,3)\\}$ (not transitive: missing (1,3))",
+            "\"Is an ancestor of\" is transitive: if Anita is an ancestor of Bala and Bala is an ancestor of Charan, then Anita is an ancestor of Charan.",
+            "\"Is taller than\" is transitive: if Neha is taller than Priya and Priya is taller than Kavya, then Neha is taller than Kavya.",
         ],
         tip: "If there's a two-step path, there MUST be a direct shortcut!",
     },
@@ -143,7 +149,7 @@ const SIX_RULES = [
         num: 4,
         title: "Equivalence Relation",
         rule: "Must be Reflexive, Symmetric, AND Transitive.",
-        emoji: "👑",
+        emoji: "EQ",
         color: "#10b981",
         detail: "The holy trinity of relations. If a relation satisfies all three properties, it is an Equivalence Relation. It partitions the set into disjoint equivalence classes.",
         examples: ["Equality ($=$) is an equivalence relation.", "Similarity of triangles is an equivalence relation."],
@@ -153,17 +159,17 @@ const SIX_RULES = [
         num: 5,
         title: "Anti-Symmetric Property",
         rule: "If x relates to y, and y relates to x, then x MUST equal y.",
-        emoji: "🛡️",
+        emoji: "AS",
         color: "#ec4899",
         detail: "A relation is anti-symmetric if $(x, y) \\in R$ and $(y, x) \\in R$ implies $x = y$. It means no two distinct elements can relate to each other.",
-        examples: ["Less than or equal to ($\\leq$) ✓", "Subset ($\\subseteq$) ✓"],
+        examples: ["Less than or equal to ($\\leq$) (anti-symmetric)", "Subset ($\\subseteq$) (anti-symmetric)"],
         tip: "Two-way streets are ONLY allowed if you're standing in the exact same spot (self-loops).",
     },
     {
         num: 6,
         title: "Total Relations Formula",
         rule: "The number of relations from A to B is $2^{mn}$.",
-        emoji: "🧮",
+        emoji: "R",
         color: "#7c3aed",
         detail: "If $n(A) = m$ and $n(B) = n$, the Cartesian product $A \\times B$ has $mn$ elements. A relation is any subset, and the number of subsets of a set with $k$ elements is $2^k$.",
         examples: [
@@ -172,7 +178,6 @@ const SIX_RULES = [
         tip: "Multiply the sizes of the sets, then put it as a power of 2!",
     },
 ];
-
 const VOCAB_QUIZ = [
     {
         question: "If A has 3 elements and B has 4 elements, how many possible relations exist from A into B?",
@@ -251,7 +256,7 @@ const VOCAB_QUIZ = [
     },
 ];
 
-// ─── MAIN COMPONENT ────────────────────────────────────────────────────────
+// â”€â”€â”€ MAIN COMPONENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function RelationsTerminology() {
     const navigate = useNavigate();
@@ -365,7 +370,7 @@ export default function RelationsTerminology() {
                 }
             `}</style>
 
-            {/* ── TOP NAV BAR ──────────────────────────────── */}
+            {/* â”€â”€ TOP NAV BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <RelationsTopNav
                 active="terminology"
                 backLabel="Back to Relations"
@@ -375,30 +380,30 @@ export default function RelationsTerminology() {
                     className="rel-intro-nav-back"
                     onClick={() => navigate("/senior/grade/12/relations")}
                 >
-                    ← Back to Relations HUB
+                    â† Back to Relations HUB
                 </button>
                 <div className="rel-intro-nav-links">
                     <button
                         className="rel-intro-nav-link"
                         onClick={() => navigate("/senior/grade/12/relations/introduction")}
                     >
-                        🌟 Introduction
+                        ðŸŒŸ Introduction
                     </button>
                     <button
                         className="rel-intro-nav-link rel-intro-nav-link--active"
                     >
-                        📖 Terminology
+                        ðŸ“– Terminology
                     </button>
                     <button
                         className="rel-intro-nav-link"
                         onClick={() => navigate("/senior/grade/12/relations/skills")}
                     >
-                        🎯 Skills
+                        ðŸŽ¯ Skills
                     </button>
                 </div>
             </nav>}
 
-            {/* ── MAIN CONTENT ──────────────────────────────── */}
+            {/* â”€â”€ MAIN CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div
                 className="rel-lexicon-container"
                 style={{ maxWidth: 1100, margin: "40px auto 20px", padding: "0 24px" }}
@@ -461,24 +466,24 @@ export default function RelationsTerminology() {
                         className={`rel-tab ${activeTab === "terms" ? "active" : ""}`}
                         onClick={() => setActiveTab("terms")}
                     >
-                        📚 Terminology
+                        ðŸ“š Terminology
                     </button>
                     <button
                         className={`rel-tab ${activeTab === "rules" ? "active" : ""}`}
                         onClick={() => setActiveTab("rules")}
                     >
-                        📏 Properties
+                        ðŸ“ Properties
                     </button>
                     <button
                         className={`rel-tab ${activeTab === "quiz" ? "active" : ""}`}
                         onClick={() => setActiveTab("quiz")}
                     >
-                        🧪 Test Prep
+                        ðŸ§ª Test Prep
                     </button>
                 </div>
 
                 {activeTab !== "quiz" ? (
-                    /* ── MASTER-DETAIL VIEW (Terms or Rules) ── */
+                    /* â”€â”€ MASTER-DETAIL VIEW (Terms or Rules) â”€â”€ */
                     <div
                         className="rel-lexicon-grid"
                         style={{
@@ -785,7 +790,7 @@ export default function RelationsTerminology() {
                                                     gap: 12,
                                                 }}
                                             >
-                                                <div style={{ fontSize: 20 }}>🧠</div>
+                                                <div style={{ fontSize: 20 }}>ðŸ§ </div>
                                                 <p
                                                     style={{
                                                         margin: 0,
@@ -949,7 +954,7 @@ export default function RelationsTerminology() {
                         </main>
                     </div>
                 ) : (
-                    /* ── QUIZ VIEW ── */
+                    /* â”€â”€ QUIZ VIEW â”€â”€ */
                     <div
                         className="rel-quiz-container"
                         style={{
@@ -966,10 +971,10 @@ export default function RelationsTerminology() {
                             <div style={{ textAlign: "center", padding: "40px 20px" }}>
                                 <div style={{ fontSize: 60, marginBottom: 16 }}>
                                     {quizTotalScore >= 8
-                                        ? "🏆"
+                                        ? "ðŸ†"
                                         : quizTotalScore >= 5
-                                            ? "👍"
-                                            : "📚"}
+                                            ? "ðŸ‘"
+                                            : "ðŸ“š"}
                                 </div>
                                 <h2
                                     style={{
@@ -1119,9 +1124,9 @@ export default function RelationsTerminology() {
                                                 }}
                                             >
                                                 <MathRenderer text={opt} />
-                                                {quizAnswered && isCorrect && <span>✓</span>}
+                                                {quizAnswered && isCorrect && <span>âœ“</span>}
                                                 {quizAnswered && isSelected && !isCorrect && (
-                                                    <span>✗</span>
+                                                    <span>âœ—</span>
                                                 )}
                                             </button>
                                         );
@@ -1161,7 +1166,7 @@ export default function RelationsTerminology() {
                                         >
                                             {quizIdx + 1 === VOCAB_QUIZ.length
                                                 ? "Finish Quiz"
-                                                : "Next Question →"}
+                                                : "Next Question â†’"}
                                         </button>
                                     </div>
                                 )}
@@ -1173,3 +1178,4 @@ export default function RelationsTerminology() {
         </div>
     );
 }
+

@@ -93,6 +93,21 @@ const TERMS = [
     memory: "Everything off the diagonal is wiped clean to zero!",
   },
   {
+    name: "Scalar Matrix",
+    color: "#14b8a6",
+    icon: "🔷",
+    def: "A diagonal matrix in which all diagonal elements are equal to the same scalar $k$.",
+    examples: [
+      "$\\begin{bmatrix} 3 & 0 \\\\ 0 & 3 \\end{bmatrix}$",
+      "$\\begin{bmatrix} -2 & 0 & 0 \\\\ 0 & -2 & 0 \\\\ 0 & 0 & -2 \\end{bmatrix}$",
+    ],
+    inUse: [
+      "Every scalar matrix is diagonal because all off-diagonal elements are zero.",
+      "$I_n$ is a scalar matrix with scalar $k = 1$."
+    ],
+    memory: "Scalar matrix = diagonal matrix with the same number repeated on the main diagonal.",
+  },
+  {
     name: "Identity Matrix",
     color: "#ef4444",
     icon: "🆔",
@@ -203,17 +218,17 @@ const SIX_RULES = [
   },
   {
     num: 6,
-    title: "Invertibility",
-    rule: "A matrix is invertible only if it is square and its determinant is non-zero.",
+    title: "Inverse Matrix",
+    rule: "The inverse of a square matrix $A$ is a matrix $A^{-1}$ such that $AA^{-1} = A^{-1}A = I$.",
     emoji: "🔓",
     color: "#7c3aed",
     detail:
-      "$A^{-1}$ exists if and only if $|A| \\neq 0$. A matrix with $|A| = 0$ is called singular and has no inverse.",
+      "An inverse matrix undoes the action of $A$. When you multiply a matrix by its inverse from either side, you get the identity matrix.",
     examples: [
-      "$|A| \\neq 0 \\Rightarrow A^{-1}$ exists",
-      "$|A| = 0 \\Rightarrow$ singular (no inverse)",
+      "$AA^{-1} = I$",
+      "$A^{-1}A = I$",
     ],
-    tip: "Always check the determinant first before trying to find an inverse!",
+    tip: "Think of the inverse as the matrix version of a reciprocal: it brings you back to identity.",
   },
 ];
 
