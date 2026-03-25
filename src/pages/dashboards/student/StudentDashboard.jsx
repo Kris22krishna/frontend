@@ -450,7 +450,7 @@ const StudentDashboard = ({ studentId, isEmbedded = false }) => {
                         </h2>
                         {chartData.length > 0 ? (
                             <div className="h-[380px] w-full">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                                     <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 90 }}>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                         <XAxis

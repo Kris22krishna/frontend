@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../../services/api';
 import Navbar from '../../../components/Navbar';
 import StudentDashboard from '../student/StudentDashboard';
+import { useAuth } from '../../../contexts/AuthContext';
 import {
     Users, 
     Loader2, 
@@ -20,23 +21,34 @@ import {
 
 const MentorDashboard = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
-    const [mentorName, setMentorName] = useState('');
+    // Get initial name from storage if available
+    const [mentorName, setMentorName] = useState(sessionStorage.getItem('firstName') || 'Mentor');
     const [students, setStudents] = useState([]);
     const [selectedStudentId, setSelectedStudentId] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [insights, setInsights] = useState({ total_time_seconds: 0, active_mentees: [], follow_up_mentees: [] });
     const [error, setError] = useState(null);
 
+    // Sync name whenever user object is updated
     useEffect(() => {
-        fetchInitialData();
-    }, []);
+        if (user?.first_name) {
+            setMentorName(user.first_name);
+        } else if (user?.name) {
+             setMentorName(user.name.split(' ')[0]);
+        }
+    }, [user]);
 
     useEffect(() => {
         if (!selectedStudentId) {
             fetchDailyInsights();
         }
     }, [selectedDate, selectedStudentId]);
+
+    useEffect(() => {
+        fetchInitialData();
+    }, []);
 
     const fetchInitialData = async () => {
         try {
@@ -45,16 +57,14 @@ const MentorDashboard = () => {
                 api.getMentorProfile(),
                 api.getMentorStudents()
             ]);
-            setMentorName(profile?.name || 'Mentor');
             setStudents(studentList || []);
         } catch (err) {
             console.error('Error fetching initial mentor data:', err);
-            setError("Failed to load mentor profile.");
+            setError('Failed to load dashboard data. Please try again.');
         } finally {
             setLoading(false);
         }
     };
-
     const fetchDailyInsights = async () => {
         try {
             const data = await api.getMentorDailyInsights(selectedDate);
@@ -172,7 +182,7 @@ const MentorDashboard = () => {
                                 <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-tight">
                                     Welcome, {mentorName}! 👋
                                 </h1>
-                                <p className="text-slate-500 mt-2 text-lg">Guiding {students.length} students towards excellence.</p>
+                                <p className="text-slate-500 mt-2 text-lg">Guiding {insights.active_mentees.length+insights.follow_up_mentees.length} students towards excellence.</p>
                             </div>
                             
                             {/* Date Selector */}
@@ -183,11 +193,19 @@ const MentorDashboard = () => {
                                 >
                                     <ChevronLeft size={20} />
                                 </button>
-                                <div className="flex items-center gap-2 px-3">
+                                <div className="flex items-center gap-2 px-3 relative cursor-pointer hover:bg-white rounded-xl py-1.5 transition-colors">
                                     <Calendar className="h-4 w-4 text-indigo-500" />
                                     <span className="font-bold text-slate-700 text-sm whitespace-nowrap">
                                         {selectedDate === new Date().toISOString().split('T')[0] ? 'Today' : selectedDate}
                                     </span>
+                                    <input 
+                                        type="date" 
+                                        className="absolute inset-0 opacity-0 cursor-pointer" 
+                                        max={new Date().toISOString().split('T')[0]}
+                                        value={selectedDate}
+                                        onChange={(e) => setSelectedDate(e.target.value)}
+                                        title="Select Date"
+                                    />
                                 </div>
                                 <button 
                                     onClick={() => handleDateChange(1)}
