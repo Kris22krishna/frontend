@@ -535,6 +535,13 @@ import CoordinateGeometryTerminology from './components/practice/class-10/Coordi
 import CoordinateGeometrySkills from './components/practice/class-10/CoordinateGeometry/Topics/Skills/CoordinateGeometrySkills';
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
+// Class 10: Areas Related to Circles
+import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
+import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
+import AreasRelatedToCirclesTerminology from './components/practice/class-10/AreasRelatedToCircles/Topics/Terminology/AreasRelatedToCirclesTerminology';
+import AreasRelatedToCirclesSkills from './components/practice/class-10/AreasRelatedToCircles/Topics/Skills/AreasRelatedToCirclesSkills';
+import AreasRelatedToCirclesConnectomics from './components/practice/class-10/AreasRelatedToCircles/Topics/Connectomics/AreasRelatedToCirclesConnectomics';
+
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
 import EvaluatingAndIdentifying from './components/practice/class-10/Polynomials/EvaluatingAndIdentifying';
@@ -975,6 +982,13 @@ function App() {
           <Route path="senior/grade/10/circles/terminology" element={<ProtectedRoute redirectTo="/login"><CirclesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/10/circles/skills" element={<ProtectedRoute redirectTo="/login"><CirclesSkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/circles/connectomics" element={<ProtectedRoute redirectTo="/login"><CirclesConnectomics /></ProtectedRoute>} />
+
+          {/* Class 10: Areas Related to Circles */}
+          <Route path="senior/grade/10/areas-related-to-circles" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/introduction" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/terminology" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/skills" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/connectomics" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesConnectomics /></ProtectedRoute>} />
 
           {/* Class 10: Coordinate Geometry */}
           <Route path="senior/grade/10/coordinate-geometry" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryDashboard /></ProtectedRoute>} />
