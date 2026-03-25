@@ -1,0 +1,324 @@
+.dils_test_page {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.dils_test_nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 32px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.dils_test_title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.dils_test_timer {
+    font-weight: 800;
+    color: #4f46e5;
+    font-size: 14px;
+    background: #eef2ff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dils_test_layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
+    padding: 32px 24px;
+}
+
+.dils_test_main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dils_test_card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 32px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.dils_test_card:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 12px 30px rgba(79, 70, 229, 0.05);
+}
+
+.dils_test_q_header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.dils_test_q_num {
+    font-size: 12px;
+    font-weight: 900;
+    color: #4f46e5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dils_test_q_text {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    color: #0f172a;
+}
+
+.dils_test_options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.dils_test_opt_btn {
+    text-align: left;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 3px solid #f1f5f9;
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dils_test_opt_btn:hover {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+}
+
+.dils_test_opt_btn_active {
+    border-color: #4f46e5;
+    background: #eef2ff;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+.dils_test_opt_label {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.dils_test_opt_btn_active .dils_test_opt_label {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.dils_test_sidebar {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.dils_test_summary_card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.dils_palette_title {
+    font-size: 11px;
+    font-weight: 900;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+}
+
+.dils_q_nav_grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.dils_q_nav_btn {
+    aspect-ratio: 1/1;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 12px;
+    color: #64748b;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dils_q_nav_btn:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+}
+
+.dils_q_nav_btn_answered {
+    background: #4f46e5;
+    color: #fff;
+    border-color: #4f46e5;
+}
+
+.dils_submit_btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    border: none;
+    background: #0f172a;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+}
+
+.dils_submit_btn:hover {
+    background: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dils_exit_btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.dils_exit_btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+/* Modal Styles */
+.dils_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+}
+
+.dils_modal_content {
+    background: #fff;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 600px;
+    padding: 48px 32px;
+    text-align: center;
+}
+
+.dils_modal_badge {
+    width: 80px;
+    height: 80px;
+    background: #f0fdf4;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+}
+
+.dils_results_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+}
+
+.dils_res_box {
+    padding: 20px;
+    border-radius: 20px;
+    background: #f8fafc;
+}
+
+.dils_res_val {
+    display: block;
+    font-size: 24px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.dils_res_lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.dils_modal_footer {
+    display: flex;
+    gap: 12px;
+}
+
+.dils_btn_primary {
+    flex: 1;
+    padding: 16px;
+    border-radius: 100px;
+    border: none;
+    background: #4f46e5;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.dils_btn_secondary {
+    flex: 1;
+    padding: 16px;
+    border-radius: 100px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #0f172a;
+    font-weight: 800;
+    cursor: pointer;
+}

@@ -132,6 +132,12 @@ import PartsAndWholesTerminology from './components/practice/class-5/partsandwho
 import PartsAndWholesSkills from './components/practice/class-5/partsandwholes/Topics/Skills/FractionsSkills';
 import PartsAndWholesTest from './components/practice/class-5/partsandwholes/PartsAndWholesTest';
 
+import DoesItLookSameLanding from './components/practice/class-5/doesitlooksame/DoesItLookSameLandingPage.jsx';
+import DoesItLookSameIntro from './components/practice/class-5/doesitlooksame/Topics/5W1H/DoesItLookSameIntro5W1H.jsx';
+import DoesItLookSameTerminology from './components/practice/class-5/doesitlooksame/Topics/Terminology/DoesItLookSameTerminology.jsx';
+import DoesItLookSameSkills from './components/practice/class-5/doesitlooksame/Topics/Skills/DoesItLookSameSkills.jsx';
+import DoesItLookSameTest from './components/practice/class-5/doesitlooksame/DoesItLookSameTest.jsx';
+
 import SharingAndMeasuring from './components/practice/class-4/Sharing_and_Measuring/SharingAndMeasuring';
 import SharingAndMeasuringIntro from './components/practice/class-4/Sharing_and_Measuring/Topics/5W1H/SharingAndMeasuringIntro';
 import SharingAndMeasuringTerminology from './components/practice/class-4/Sharing_and_Measuring/Topics/Terminology/SharingAndMeasuringTerminology';
@@ -1208,7 +1214,14 @@ function App() {
         <Route path="/middle/grade/5/how-many-squares" element={<ProtectedRoute redirectTo="/login"><HowManySquares /></ProtectedRoute>} />
         <Route path="/middle/grade/5/how-many-squares/introduction" element={<ProtectedRoute redirectTo="/login"><HowManySquaresIntro5W1H /></ProtectedRoute>} />
         <Route path="/middle/grade/5/how-many-squares/terminology" element={<ProtectedRoute redirectTo="/login"><HowManySquaresTerminology /></ProtectedRoute>} />
-        <Route path="/middle/grade/5/how-many-squares/skills" element={<ProtectedRoute redirectTo="/login"><HowManySquaresSkills /></ProtectedRoute>} />
+        <Route path="middle/grade/5/how-many-squares/skills" element={<HowManySquaresSkills />} />
+
+        {/* Does it Look the Same? Routes */}
+        <Route path="/middle/grade/5/does-it-look-same" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameLanding /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/does-it-look-same/introduction" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameIntro /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/does-it-look-same/terminology" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameTerminology /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/does-it-look-same/skills" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/does-it-look-same/chapter-test" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameTest /></ProtectedRoute>} />
         <Route path="/middle/grade/5/how-many-squares/chapter-test" element={<ProtectedRoute redirectTo="/login"><HowManySquaresTest /></ProtectedRoute>} />
 
         {/* Grade 5 - Tenths and Hundredths */}

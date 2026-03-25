@@ -664,6 +664,17 @@ const MiddleGradeSyllabus = () => {
             ]
         };
 
+        skillsByTopic['Does it Look the Same?'] = {
+            'Learn': [
+                { skill_id: 'DILS-5W1H', skill_name: '5W1H Introduction', topic: 'Does it Look the Same?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/does-it-look-same/introduction' },
+                { skill_id: 'DILS-TERM', skill_name: 'Terminology', topic: 'Does it Look the Same?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/does-it-look-same/terminology' },
+                { skill_id: 'DILS-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Does it Look the Same?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/does-it-look-same/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'DILS-TEST', skill_name: 'Chapter Test', topic: 'Does it Look the Same?', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/does-it-look-same/chapter-test' }
+            ]
+        };
+
         skillsByTopic['Tenths and Hundredths'] = {
             'Decimals': [
                 {
