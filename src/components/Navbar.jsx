@@ -82,7 +82,7 @@ const Navbar = () => {
                     <Link to="/neet" className={`nav-link-item ${isActive('/neet') ? 'active' : ''}`}>NEET</Link>
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>
-                            Learn
+                            Dashboard
                         </Link>
                     )}
                 </div>

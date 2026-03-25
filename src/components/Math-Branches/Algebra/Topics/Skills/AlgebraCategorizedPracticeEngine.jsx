@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import QuizEngine from './Engines/QuizEngine';
 
-export default function AlgebraCategorizedPracticeEngine({ skill, onBack }) {
+export default function AlgebraCategorizedPracticeEngine({ skill, onBack, nodeId }) {
     const [activeCategory, setActiveCategory] = useState(0);
     const category = skill.practiceCategories[activeCategory];
 
@@ -47,6 +47,7 @@ export default function AlgebraCategorizedPracticeEngine({ skill, onBack }) {
                     onBack={onBack}
                     color={skill.color}
                     prefix="algtest"
+                    nodeId={nodeId}
                 />
             </main>
         </div>

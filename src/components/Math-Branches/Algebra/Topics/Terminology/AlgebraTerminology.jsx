@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import '../../algebra.css';
 import MathRenderer from '../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './AlgebraTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function AlgebraTerminology() {
     const navigate = useNavigate();
@@ -14,12 +16,16 @@ export default function AlgebraTerminology() {
     const [selectedIdx, setSelectedIdx] = useState(0);
     const [selectedRuleIdx, setSelectedRuleIdx] = useState(0);
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     // Quiz state
     const [quizIdx, setQuizIdx] = useState(0);
     const [quizSelected, setQuizSelected] = useState(null);
     const [quizAnswered, setQuizAnswered] = useState(false);
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
+    const quizPayload = useRef([]);
 
     const activeTerm = TERMS[selectedIdx];
     const activeRule = FIVE_RULES[selectedRuleIdx];
@@ -31,15 +37,34 @@ export default function AlgebraTerminology() {
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        quizPayload.current = [];
+        startSession({ nodeId: NODE_IDS.mathBranchAlgebraTerminologyQuiz, sessionType: 'practice' });
     };
 
     const handleQuizSelect = (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
+        const correct = optIdx === activeQuiz.correct;
+        if (correct) {
             setQuizTotalScore(s => s + 1);
         }
+        
+        const answerData = {
+            question_index: quizIdx + 1,
+            answer_json: { selected: optIdx, text: activeQuiz.options[optIdx] },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1
+        };
+        quizPayload.current.push(answerData);
+
+        // Log to v4
+        logAnswer({
+            questionIndex: answerData.question_index,
+            answerJson: answerData.answer_json,
+            isCorrect: answerData.is_correct
+        });
     };
 
     const nextQuiz = () => {
@@ -49,6 +74,11 @@ export default function AlgebraTerminology() {
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                questionsAnswered: quizIdx + 1,
+                answersPayload: quizPayload.current
+            });
         }
     };
 
@@ -143,7 +173,10 @@ export default function AlgebraTerminology() {
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
                     <button className={`alg-tab ${activeTab === 'terms' ? 'active' : ''}`} onClick={() => setActiveTab('terms')}>📚 Terminology</button>
                     <button className={`alg-tab ${activeTab === 'rules' ? 'active' : ''}`} onClick={() => setActiveTab('rules')}>📏 5 Golden Rules</button>
-                    <button className={`alg-tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>🧪 Vocabulary Quiz</button>
+                    <button className={`alg-tab ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => {
+                        setActiveTab('quiz');
+                        resetQuiz();
+                    }}>🧪 Vocabulary Quiz</button>
                 </div>
 
                 {activeTab !== 'quiz' ? (

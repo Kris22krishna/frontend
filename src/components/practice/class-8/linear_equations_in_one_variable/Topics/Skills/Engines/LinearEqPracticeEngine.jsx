@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { LatexText } from '../../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 function sample(arr, n) {
     const a = [...arr];
@@ -12,9 +13,9 @@ function sample(arr, n) {
 
 /**
  * LinearEqPracticeEngine
- * Props: questionPool, sampleSize, title, color, onBack
+ * Props: questionPool, sampleSize, title, color, onBack, nodeId
  */
-export default function LinearEqPracticeEngine({ questionPool, sampleSize = 10, title, color = '#7c3aed', onBack }) {
+export default function LinearEqPracticeEngine({ questionPool, sampleSize = 10, title, color = '#7c3aed', onBack, nodeId }) {
     const [questions, setQuestions] = useState(() => sample(questionPool, sampleSize));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -22,6 +23,17 @@ export default function LinearEqPracticeEngine({ questionPool, sampleSize = 10, 
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+
+    useEffect(() => {
+        if (nodeId) {
+            startSession(nodeId, 'practice');
+            answersPayload.current = Array(questions.length).fill(null);
+        }
+    }, [nodeId, questions]);
 
     useEffect(() => {
         if (finished) return;
@@ -37,15 +49,29 @@ export default function LinearEqPracticeEngine({ questionPool, sampleSize = 10, 
 
     const q = questions[current];
 
-    const handleSelect = (idx) => {
+    const handleSelect = async (idx) => {
         if (answered) return;
         setSelected(idx);
         setAnswered(true);
         if (idx === q.correct) setScore(s => s + 1);
+
+        // v4 Log
+        const answerData = {
+            question: q.question,
+            selectedAnswer: q.options[idx],
+            correctAnswer: q.options[q.correct],
+            isCorrect: idx === q.correct,
+            timeSpent: 0
+        };
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questions.length) {
+            // v4 Finish
+            const finalPayload = answersPayload.current.filter(Boolean);
+            await finishSession(finalPayload);
             setFinished(true);
         } else {
             setCurrent(c => c + 1);
