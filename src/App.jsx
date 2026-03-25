@@ -386,6 +386,12 @@ import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation
 import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
 import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
 
+// Grade 6 Patterns
+import Grade6PatternsInMathematics from './components/practice/grade-6/PatternsInMathematics/PatternsInMathematics';
+import Grade6PatternsIntro5W1H from './components/practice/grade-6/PatternsInMathematics/Topics/5W1H/PatternsIntro5W1H';
+import Grade6PatternsTerminology from './components/practice/grade-6/PatternsInMathematics/Topics/Terminology/PatternsTerminology';
+import Grade6PatternsSkills from './components/practice/grade-6/PatternsInMathematics/Topics/Skills/PatternsSkills';
+
 // Grade 6 Symmetry
 import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
 import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
@@ -999,6 +1005,13 @@ function App() {
           <Route path="practice/class-9/rationalisation" element={<ProtectedRoute redirectTo="/login"><Rationalisation /></ProtectedRoute>} />
           <Route path="practice/class-9/laws-of-exponents" element={<ProtectedRoute redirectTo="/login"><LawsOfExponents /></ProtectedRoute>} />
           <Route path="practice/class-9/chapter-test" element={<ProtectedRoute redirectTo="/login"><NumberSystemTest /></ProtectedRoute>} />
+
+
+          {/* Grade 6 Patterns in Mathematics Module */}
+          <Route path="middle/grade/6/patterns-in-mathematics" element={<Grade6PatternsInMathematics />} />
+          <Route path="middle/grade/6/patterns-in-mathematics/introduction" element={<Grade6PatternsIntro5W1H />} />
+          <Route path="middle/grade/6/patterns-in-mathematics/terminology" element={<Grade6PatternsTerminology />} />
+          <Route path="middle/grade/6/patterns-in-mathematics/skills" element={<Grade6PatternsSkills />} />
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
@@ -1728,6 +1741,9 @@ function App() {
         <Route path="/middle/grade/6/perimeter-area/triangle" element={<TrianglePractice />} />
         <Route path="/middle/grade/6/perimeter-area/regular-polygon" element={<RegularPolygonPractice />} />
         <Route path="/middle/grade/6/perimeter-area/mixed-bag" element={<MixedBagPractice />} />
+
+
+
         <Route path="/middle/grade/6/patterns-math/intro" element={<VisualisingNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/relations" element={<RelationsAmongNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/shapes" element={<PatternsInShapes />} />
