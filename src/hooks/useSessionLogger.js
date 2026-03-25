@@ -25,6 +25,12 @@ export function useSessionLogger() {
   const sessionRef = useRef(null); // { sessionId, nodeId, sessionType, userId, startedAt }
   const logginRef  = useRef(false);
 
+  const isLoggingAvailable = useCallback(() => {
+    if (supabase) return true;
+    console.warn('[useSessionLogger] Supabase is not configured - skipping session logging');
+    return false;
+  }, []);
+
   /** ── startSession ─────────────────────────────────────────────────────── */
   const startSession = useCallback(({ nodeId, sessionType }) => {
     const userId = sessionStorage.getItem('userId');
@@ -54,7 +60,7 @@ export function useSessionLogger() {
     timeTakenMs = null,
   }) => {
     const s = sessionRef.current;
-    if (!s) return;
+    if (!s || !isLoggingAvailable()) return;
 
     const payload = {
       session_id:     s.sessionId,
@@ -90,7 +96,7 @@ export function useSessionLogger() {
     if (error) {
       console.error('[useSessionLogger] logAnswer error', error);
     }
-  }, []);
+  }, [isLoggingAvailable]);
 
   /** ── finishSession ────────────────────────────────────────────────────── */
   const finishSession = useCallback(async ({
@@ -102,6 +108,10 @@ export function useSessionLogger() {
   }) => {
     const s = sessionRef.current;
     if (!s || logginRef.current) return null;
+    if (!isLoggingAvailable()) {
+      sessionRef.current = null;
+      return null;
+    }
     logginRef.current = true;
 
     try {
@@ -215,7 +225,7 @@ export function useSessionLogger() {
       logginRef.current = false;
       return null;
     }
-  }, []);
+  }, [isLoggingAvailable]);
 
   /** ── abandonSession ───────────────────────────────────────────────────── */
   const abandonSession = useCallback(async ({ answersPayload = [], totalQuestions = 0 } = {}) => {
