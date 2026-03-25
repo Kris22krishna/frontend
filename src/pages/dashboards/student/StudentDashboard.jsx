@@ -292,7 +292,7 @@ const ChronologicalSummary = ({ sessions }) => {
     );
 };
 
-const StudentDashboard = () => {
+const StudentDashboard = ({ studentId, isEmbedded = false }) => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -303,16 +303,16 @@ const StudentDashboard = () => {
 
     useEffect(() => {
         fetchDashboardData();
-    }, []);
+    }, [studentId]); // Refetch if studentId changes
 
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
             setError(null);
             const [profileData, analyticsData, sessionsData] = await Promise.all([
-                api.getStudentProfile(),
-                api.getStudentDashboardAnalytics(),
-                api.getStudentSessionHistory(100)
+                api.getStudentProfile(studentId),
+                api.getStudentDashboardAnalytics(studentId),
+                api.getStudentSessionHistory(100, studentId)
             ]);
             setProfile(profileData);
             setAnalytics(analyticsData);
@@ -405,9 +405,9 @@ const StudentDashboard = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 pb-12">
-            <Navbar />
+            {!isEmbedded && <Navbar />}
 
-            <div className="container mx-auto px-4 pt-24 max-w-6xl space-y-8">
+            <div className={`container mx-auto px-4 max-w-6xl space-y-8 ${isEmbedded ? 'pt-4' : 'pt-24'}`}>
 
                 {/* SECTION 1: Welcome Header */}
                 <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-gradient-to-br from-white to-cyan-50/50 border border-slate-100">
@@ -450,7 +450,7 @@ const StudentDashboard = () => {
                         </h2>
                         {chartData.length > 0 ? (
                             <div className="h-[380px] w-full">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                                     <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 90 }}>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                         <XAxis
