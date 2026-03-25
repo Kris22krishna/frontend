@@ -642,6 +642,17 @@ const MiddleGradeSyllabus = () => {
             ]
         };
 
+        skillsByTopic['Parts and Wholes'] = {
+            'Learn': [
+                { skill_id: 'PW-5W1H', skill_name: '5W1H Introduction', topic: 'Parts and Wholes', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/parts-and-wholes/introduction' },
+                { skill_id: 'PW-TERM', skill_name: 'Terminology', topic: 'Parts and Wholes', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/parts-and-wholes/terminology' },
+                { skill_id: 'PW-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Parts and Wholes', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/parts-and-wholes/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'PW-TEST', skill_name: 'Chapter Test', topic: 'Parts and Wholes', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/parts-and-wholes/chapter-test' }
+            ]
+        };
+
         skillsByTopic['How Many Squares?'] = {
             'Learn': [
                 { skill_id: 'HMS-5W1H', skill_name: '5W1H Introduction', topic: 'How Many Squares?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/how-many-squares/introduction' },
@@ -650,6 +661,17 @@ const MiddleGradeSyllabus = () => {
             ],
             'Chapter Test': [
                 { skill_id: 'HMS-TEST', skill_name: 'Chapter Test', topic: 'How Many Squares?', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/how-many-squares/chapter-test' }
+            ]
+        };
+
+        skillsByTopic['Does it Look the Same?'] = {
+            'Learn': [
+                { skill_id: 'DILS-5W1H', skill_name: '5W1H Introduction', topic: 'Does it Look the Same?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/does-it-look-same/introduction' },
+                { skill_id: 'DILS-TERM', skill_name: 'Terminology', topic: 'Does it Look the Same?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/does-it-look-same/terminology' },
+                { skill_id: 'DILS-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Does it Look the Same?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/does-it-look-same/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'DILS-TEST', skill_name: 'Chapter Test', topic: 'Does it Look the Same?', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/does-it-look-same/chapter-test' }
             ]
         };
 
@@ -1157,6 +1179,7 @@ const MiddleGradeSyllabus = () => {
                     <div className="header-decoration">
                         <div className="geo-shape shape-1"></div>
                         <div className="geo-shape shape-2"></div>
+                        <div className="geo-shape shape-3"></div>
                     </div>
                     <div className="header-content">
                         <div className="grade-badge">GRADE {grade.replace('grade', '')}</div>
