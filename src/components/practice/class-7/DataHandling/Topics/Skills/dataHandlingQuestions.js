@@ -243,7 +243,7 @@ export function generateRangeAssessment() {
                 makeQ('Range measures:', 'The spread of data', ['The average', 'The most frequent value', 'The middle value'], 'Range = Highest − Lowest, indicating how spread out the data is.'),
                 makeQ('If the range is 0, it means:', 'All values are equal', ['All values are 0', 'There is no data', 'The mean is 0'], 'Range = 0 implies max = min, so every value is the same.'),
                 makeQ('Adding an outlier to a dataset will:', 'Increase the range', ['Decrease the range', 'Keep the range the same', 'Make range negative'], 'An outlier extends the highest or lowest value, increasing the gap.'),
-                makeQ('The range of $77, 77, 77, 77$ is:', '$0$', ['$77$', ['$308$'], '$4$'], 'All values identical → Range = 77 − 77 = 0.'),
+                makeQ('The range of $77, 77, 77, 77$ is:', '$0$', ['$77$', '$308$', '$4$'], 'All values identical → Range = 77 − 77 = 0.'),
             ];
             qs.push(concepts[i - 6]);
         }

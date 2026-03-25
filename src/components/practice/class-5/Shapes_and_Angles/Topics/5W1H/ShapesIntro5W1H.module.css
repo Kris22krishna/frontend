@@ -1,0 +1,83 @@
+.sa_intro_header {
+    margin-bottom: 32px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 16px;
+}
+
+.sa_intro_title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 900;
+    margin-bottom: 4px;
+    color: #0f172a;
+}
+
+.sa_intro_title_accent {
+    color: #6366f1;
+}
+
+.sa_intro_subtitle {
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.sa_intro_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.sa_intro_card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.sa_intro_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+.sa_card_header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sa_card_icon_box {
+    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.sa_card_label {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.sa_card_q {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: #0f172a;
+}
+
+.sa_card_desc {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}

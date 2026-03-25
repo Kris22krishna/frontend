@@ -41,7 +41,7 @@ const Navbar = () => {
         if (!userType) return '/guest-dashboard';
 
         switch (userType) {
-            case 'parent': return '/parent-dashboard';
+            case 'parent': return '/parent-dashboard';          //need to change it back to /parent-dashboard once it has been implemented correctly
             case 'student': return '/student-dashboard';
             case 'teacher': return '/teacher-dashboard';
             case 'admin': return '/admin';
@@ -70,14 +70,19 @@ const Navbar = () => {
                     <Link to="/internship" className={`nav-link-item ${isActive('/internship') ? 'active' : ''}`}>Internship</Link>
 
                     {isAuthenticated && userType === 'student' && (
-                        <Link to="/idm-dashboard" className={`nav-link-item ${isActive('/idm-dashboard') ? 'active' : ''}`} >
-                            IDM 2026
-                        </Link>
+                        <>
+                            <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
+                                Diagnosis Test
+                            </Link>
+                            <Link to="/idm-dashboard" className={`nav-link-item ${isActive('/idm-dashboard') ? 'active' : ''}`} >
+                                IDM 2026
+                            </Link>
+                        </>
                     )}
                     <Link to="/neet" className={`nav-link-item ${isActive('/neet') ? 'active' : ''}`}>NEET</Link>
                     {isAuthenticated && (
                         <Link to={getPortalPath()} className={`nav-link-item portal-link ${isActive(getPortalPath()) ? 'active' : ''}`}>
-                            Learn
+                            Dashboard
                         </Link>
                     )}
                 </div>
@@ -119,7 +124,7 @@ const Navbar = () => {
                         {isAuthenticated ? (
                             <>
                                 <Link to={getPortalPath()} className="mobile-dropdown-item portal-link">
-                                    Portal
+                                    Dashboard
                                 </Link>
                                 <Link to="/idm-dashboard" className="mobile-dropdown-item idm-link" style={{ color: '#4f46e5', fontWeight: 'bold' }}>
                                     IDM 2026

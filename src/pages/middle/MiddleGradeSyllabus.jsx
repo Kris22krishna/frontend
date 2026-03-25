@@ -590,8 +590,6 @@ const MiddleGradeSyllabus = () => {
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling"].some(t => topicName.includes(t))) return acc;
-        if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
-        if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
 
 
 
@@ -641,6 +639,28 @@ const MiddleGradeSyllabus = () => {
             ],
             'Chapter Test': [
                 { skill_id: '1169', skill_name: 'Chapter Test', topic: 'Area and its Boundary', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/area-boundary/chapter-test' }
+            ]
+        };
+
+        skillsByTopic['Shapes and Angles'] = {
+            'Learn': [
+                { skill_id: 'SA-5W1H', skill_name: '5W1H Introduction', topic: 'Shapes and Angles', sub_topic: 'Learn', isLocal: true, path: '/shapes-and-angles/introduction' },
+                { skill_id: 'SA-TERM', skill_name: 'Terminology', topic: 'Shapes and Angles', sub_topic: 'Learn', isLocal: true, path: '/shapes-and-angles/terminology' },
+                { skill_id: 'SA-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Shapes and Angles', sub_topic: 'Learn', isLocal: true, path: '/shapes-and-angles/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'SA-TEST', skill_name: 'Chapter Test', topic: 'Shapes and Angles', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/shapes-angles/chapter-test' }
+            ]
+        };
+
+        skillsByTopic['How Many Squares?'] = {
+            'Learn': [
+                { skill_id: 'HMS-5W1H', skill_name: '5W1H Introduction', topic: 'How Many Squares?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/how-many-squares/introduction' },
+                { skill_id: 'HMS-TERM', skill_name: 'Terminology', topic: 'How Many Squares?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/how-many-squares/terminology' },
+                { skill_id: 'HMS-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'How Many Squares?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/how-many-squares/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'HMS-TEST', skill_name: 'Chapter Test', topic: 'How Many Squares?', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/how-many-squares/chapter-test' }
             ]
         };
 

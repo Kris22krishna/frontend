@@ -18,8 +18,8 @@ import {
     generateDoubleBarAssessment,
 } from "./dataHandlingQuestions";
 
-import QuizEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine";
-import AssessmentEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine";
+import QuizEngine from "./Engines/QuizEngine";
+import AssessmentEngine from "./Engines/AssessmentEngine";
 
 // ─── SKILLS DATA ───────────────────────────────────────────────────────────
 const SKILLS = [

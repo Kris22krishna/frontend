@@ -13,7 +13,7 @@ const ParentsPage = () => {
         setError(null);
         try {
             const data = await api.getAdminParents();
-            setParents(data || []);
+            setParents(data?.parents || []);
         } catch (err) {
             console.error('Failed to fetch parents:', err);
             setError('Failed to load parents');
@@ -140,7 +140,7 @@ const ParentsPage = () => {
                                     <td className="py-4 px-6">
                                         <div className="flex items-center gap-3">
                                             <div className="h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-medium">
-                                                {parent.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
+                                                {(parent.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2) || '?'}
                                             </div>
                                             <span className="font-medium text-gray-900">{parent.name || 'Unknown'}</span>
                                         </div>

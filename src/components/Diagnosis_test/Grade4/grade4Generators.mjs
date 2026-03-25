@@ -508,7 +508,7 @@ export const generateProperImproperFractions = () => {
     if (type === "Proper Fraction") {
         // Select random proper fraction image (1-4)
         const imageNum = getRandomInt(1, 4);
-        imagePath = `/src/assets/grade4/proper_fraction_${imageNum}.png`;
+        imagePath = `/assets/grade4/proper_fraction_${imageNum}.png`;
 
         question = `Identify the type of fraction shown in the image:`;
         answer = "Proper Fraction";
@@ -516,7 +516,7 @@ export const generateProperImproperFractions = () => {
     } else { // Improper Fraction
         // Select random improper fraction image (1-3)
         const imageNum = getRandomInt(1, 3);
-        imagePath = `/src/assets/grade4/improper_fraction_${imageNum}.png`;
+        imagePath = `/assets/grade4/improper_fraction_${imageNum}.png`;
 
         question = `Identify the type of fraction shown in the image:`;
         answer = "Improper Fraction";
@@ -548,7 +548,7 @@ export const generateMixedUnitFractions = () => {
     if (type === "Mixed Fraction") {
         // Select random mixed fraction image (1-3)
         const imageNum = getRandomInt(1, 3);
-        imagePath = `/src/assets/grade4/mixed_fraction_${imageNum}.png`;
+        imagePath = `/assets/grade4/mixed_fraction_${imageNum}.png`;
 
         question = `Identify the type of fraction shown in the image`;
         answer = "Mixed Fraction";
@@ -556,7 +556,7 @@ export const generateMixedUnitFractions = () => {
     } else { // Unit Fraction
         // Select random unit fraction image (1-4)
         const imageNum = getRandomInt(1, 4);
-        imagePath = `/src/assets/grade4/unit_fraction_${imageNum}.png`;
+        imagePath = `/assets/grade4/unit_fraction_${imageNum}.png`;
 
         question = `Identify the type of fraction shown in the image`;
         answer = "Unit Fraction";
@@ -628,24 +628,24 @@ export const generateAngles = () => {
     if (type === "Acute") {
         // 3 acute angle images available
         const imageNum = getRandomInt(1, 3);
-        imagePath = `/src/assets/grade4/acute_angle_${imageNum}.png`;
+        imagePath = `/assets/grade4/acute_angle_${imageNum}.png`;
         question = `Identify the type of angle shown in the image`;
 
     } else if (type === "Obtuse") {
         // 3 obtuse angle images available
         const imageNum = getRandomInt(1, 3);
-        imagePath = `/src/assets/grade4/obtuse_angle_${imageNum}.png`;
+        imagePath = `/assets/grade4/obtuse_angle_${imageNum}.png`;
         question = `Identify the type of angle shown in the image`;
 
     } else if (type === "Right") {
         // 2 right angle images available
         const imageNum = getRandomInt(1, 2);
-        imagePath = `/src/assets/grade4/right_angle_${imageNum}.png`;
+        imagePath = `/assets/grade4/right_angle_${imageNum}.png`;
         question = `Identify the type of angle shown in the image`;
 
     } else { // Straight
         // 1 straight angle image available
-        imagePath = `/src/assets/grade4/straight_angle_1.png`;
+        imagePath = `/assets/grade4/straight_angle_1.png`;
         question = `Identify the type of angle shown in the image`;
     }
 
@@ -675,11 +675,11 @@ export const generateTriangles = () => {
     const imageNum = getRandomInt(1, 2);
 
     if (type === "Equilateral") {
-        imagePath = `/src/assets/grade4/triangle_equilateral_${imageNum}.svg`;
+        imagePath = `/assets/grade4/triangle_equilateral_${imageNum}.svg`;
     } else if (type === "Isosceles") {
-        imagePath = `/src/assets/grade4/triangle_isosceles_${imageNum}.svg`;
+        imagePath = `/assets/grade4/triangle_isosceles_${imageNum}.svg`;
     } else {
-        imagePath = `/src/assets/grade4/triangle_scalene_${imageNum}.svg`;
+        imagePath = `/assets/grade4/triangle_scalene_${imageNum}.svg`;
     }
 
     const question = "Identify the type of triangle based on the side lengths shown in the image:";
