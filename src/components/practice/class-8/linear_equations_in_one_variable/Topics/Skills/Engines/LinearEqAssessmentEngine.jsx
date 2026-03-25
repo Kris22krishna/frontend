@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { LatexText } from '../../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 function sample(arr, n) {
     const a = [...arr];
@@ -14,15 +15,26 @@ const PALETTE_STATUS = { unanswered: '#e2e8f0', correct: '#10b981', wrong: '#ef4
 
 /**
  * LinearEqAssessmentEngine
- * Props: questionPool, title, color, onBack, questionCount (default 10)
+ * Props: questionPool, title, color, onBack, questionCount (default 10), nodeId
  */
-export default function LinearEqAssessmentEngine({ questionPool, title, color = '#7c3aed', onBack, questionCount = 10 }) {
+export default function LinearEqAssessmentEngine({ questionPool, title, color = '#7c3aed', onBack, questionCount = 10, nodeId }) {
     const [questions] = useState(() => sample(questionPool, questionCount));
     const [current, setCurrent] = useState(0);
     const [responses, setResponses] = useState(Array(questionCount).fill(null)); // selected option index or null
     const [submitted, setSubmitted] = useState(false);
     const [timeLeft, setTimeLeft] = useState(600); // 10-minute countdown
     const [timeTaken, setTimeTaken] = useState(0);
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+
+    useEffect(() => {
+        if (nodeId) {
+            startSession(nodeId, 'assessment');
+            answersPayload.current = Array(questions.length).fill(null);
+        }
+    }, [nodeId, questions]);
 
     // Countdown timer
     useEffect(() => {
@@ -44,17 +56,33 @@ export default function LinearEqAssessmentEngine({ questionPool, title, color = 
 
     const q = questions[current];
 
-    const handleSelect = (idx) => {
+    const handleSelect = async (idx) => {
         if (submitted) return;
         const newResp = [...responses];
         newResp[current] = idx;
         setResponses(newResp);
+
+        // v4 Log
+        const answerData = {
+            question: q.question,
+            selectedAnswer: q.options[idx],
+            correctAnswer: q.options[q.correct],
+            isCorrect: idx === q.correct,
+            timeSpent: 0
+        };
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
     const handleJump = (i) => setCurrent(i);
     const handleNext = () => { if (current + 1 < questionCount) setCurrent(c => c + 1); };
     const handlePrev = () => { if (current > 0) setCurrent(c => c - 1); };
-    const handleFinalSubmit = () => setSubmitted(true);
+    const handleFinalSubmit = async () => {
+        // v4 Finish
+        const finalPayload = answersPayload.current.filter(Boolean);
+        await finishSession(finalPayload);
+        setSubmitted(true);
+    };
 
     // Score
     const score = questions.reduce((acc, q, i) => acc + (responses[i] === q.correct ? 1 : 0), 0);

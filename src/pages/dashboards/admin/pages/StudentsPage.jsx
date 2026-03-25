@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, MoreVertical, Download, Filter, Loader2, RefreshCw } from 'lucide-react';
+import { Search, Plus, MoreVertical, Download, Filter, Loader2, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { api } from '../../../../services/api';
 
 const StudentsPage = () => {
     const [loading, setLoading] = useState(true);
     const [students, setStudents] = useState([]);
+    const [totalStudents, setTotalStudents] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedGrade, setSelectedGrade] = useState('All');
     const [error, setError] = useState(null);
+    const [page, setPage] = useState(1);
+    const limit = 15;
 
-    const fetchStudents = async () => {
+    const fetchStudents = async (targetPage = page) => {
         setLoading(true);
         setError(null);
         try {
-            const data = await api.getAdminStudents();
-            setStudents(data || []);
+            const skip = (targetPage - 1) * limit;
+            const data = await api.getAdminStudents(skip, limit, searchTerm, selectedGrade);
+            setStudents(data?.students || []);
+            setTotalStudents(data?.total || 0);
+            setPage(targetPage);
         } catch (err) {
             console.error('Failed to fetch students:', err);
             setError('Failed to load students');
@@ -23,24 +29,29 @@ const StudentsPage = () => {
         }
     };
 
+    // Trigger fetch on search or grade filter changes (debounced)
     useEffect(() => {
-        fetchStudents();
-    }, []);
+        const timer = setTimeout(() => {
+            fetchStudents(1); // Back to page 1 on search change
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchTerm, selectedGrade]);
+
+    // Handle initial load and page changes
+    useEffect(() => {
+        const timer = setTimeout(() => fetchStudents(page), 0);
+        return () => clearTimeout(timer);
+    }, [page]);
 
     // Calculate stats from real data
     const stats = [
-        { label: 'Total Students', value: students.length },
-        { label: 'Active', value: students.filter(s => s.status === 'active').length },
-        { label: 'Inactive', value: students.filter(s => s.status !== 'active').length },
+        { label: 'Total Students', value: totalStudents },
+        { label: 'Active', value: (students || []).filter(s => s.status === 'active').length }, // Approximated per page
+        { label: 'Inactive', value: (students || []).filter(s => s.status !== 'active').length },
     ];
 
-    // Filter students
-    const filteredStudents = students.filter(student => {
-        const matchesSearch = student.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.email?.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesGrade = selectedGrade === 'All' || student.grade === selectedGrade;
-        return matchesSearch && matchesGrade;
-    });
+    const totalPages = Math.ceil(totalStudents / limit);
+    const filteredStudents = students || [];
 
     const getStatusColor = (status) => {
         switch (status?.toLowerCase()) {
@@ -158,7 +169,7 @@ const StudentsPage = () => {
                                 <td className="py-4 px-6">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-medium">
-                                            {student.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
+                                            {(student.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').slice(0, 2) || '?'}
                                         </div>
                                         <span className="font-medium text-gray-900">{student.name || 'Unknown'}</span>
                                     </div>
@@ -187,6 +198,55 @@ const StudentsPage = () => {
                         )}
                     </tbody>
                 </table>
+
+                {/* Pagination Controls */}
+                {totalStudents > 0 && (
+                    <div className="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
+                        <div className="text-sm text-gray-600">
+                            Showing <span className="font-bold text-gray-900">{(page - 1) * limit + 1}</span> to <span className="font-bold text-gray-900">{Math.min(page * limit, totalStudents)}</span> of <span className="font-bold text-gray-900">{totalStudents}</span> students
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setPage(p => Math.max(1, p - 1))}
+                                disabled={page === 1 || loading}
+                                className="p-2 border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed bg-white shadow-sm transition-colors"
+                            >
+                                <ChevronLeft className="h-4 w-4 text-gray-600" />
+                            </button>
+
+                            <div className="flex items-center gap-1">
+                                {[...Array(Math.min(5, totalPages))].map((_, idx) => {
+                                    let pageNum = page;
+                                    if (totalPages <= 5) pageNum = idx + 1;
+                                    else if (page <= 3) pageNum = idx + 1;
+                                    else if (page >= totalPages - 2) pageNum = totalPages - 4 + idx;
+                                    else pageNum = page - 2 + idx;
+
+                                    return (
+                                        <button
+                                            key={pageNum}
+                                            onClick={() => setPage(pageNum)}
+                                            disabled={loading}
+                                            className={`w-8 h-8 rounded-lg text-sm font-bold transition-colors ${page === pageNum
+                                                ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+                                                : 'text-gray-600 hover:bg-gray-200 bg-transparent'}`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            <button
+                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                disabled={page === totalPages || loading}
+                                className="p-2 border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed bg-white shadow-sm transition-colors"
+                            >
+                                <ChevronRight className="h-4 w-4 text-gray-600" />
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

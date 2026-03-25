@@ -10,6 +10,8 @@ import Class8PracticeReportModal from '../Class8PracticeReportModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -43,9 +45,12 @@ const ComparingLargeSmallNumbers = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const history = useRef({});
+    const answersPayload = useRef([]); // v4 answers collection
     const isTabActive = useRef(true);
     const SKILL_ID = 8004; // Grade 8 - Comparing Large and Small Numbers
     const SKILL_NAME = "Exponents - Comparing Large and Small Numbers";
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
@@ -53,9 +58,11 @@ const ComparingLargeSmallNumbers = () => {
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            }).catch(err => console.error("Failed to start session", err));
+            const sid = startSession({
+                nodeId: NODE_IDS.g8MathAlgebraExponentsComparing,
+                sessionType: 'practice'
+            });
+            if (sid) setSessionId(sid);
         }
 
         const timer = setInterval(() => {
@@ -386,8 +393,27 @@ const ComparingLargeSmallNumbers = () => {
         if (isTabActive.current) {
             timeSpent += Date.now() - questionStartTime.current;
         }
-        const seconds = Math.round(timeSpent / 1000);
+        const timeTakenMs = timeSpent;
 
+        // v4 Logging
+        await logAnswer({
+            questionIndex: qIndex + 1,
+            answerJson: { selected },
+            isCorrect: isCorrect ? 1.0 : 0.0,
+            timeTakenMs
+        });
+
+        // Add to payload for finishSession
+        answersPayload.current.push({
+            question_index: qIndex + 1,
+            answer_json: { selected },
+            is_correct: isCorrect,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: timeTakenMs
+        });
+
+        // Legacy compat (legacy stats/reports)
         try {
             await api.recordAttempt({
                 user_id: parseInt(userId, 10),
@@ -400,10 +426,10 @@ const ComparingLargeSmallNumbers = () => {
                 student_answer: String(selected || ''),
                 is_correct: isCorrect,
                 solution_text: String(question.solution || ''),
-                time_spent_seconds: seconds >= 0 ? seconds : 0
+                time_spent_seconds: Math.round(timeTakenMs / 1000)
             });
         } catch (e) {
-            console.error("Failed to record attempt", e);
+            console.error("Failed to record legacy attempt", e);
         }
     };
 
@@ -445,6 +471,14 @@ const ComparingLargeSmallNumbers = () => {
             questionStartTime.current = Date.now();
         } else {
             if (sessionId) {
+                // v4 compile
+                await finishSession({
+                    totalQuestions: TOTAL_QUESTIONS,
+                    questionsAnswered: answersPayload.current.length,
+                    answersPayload: answersPayload.current
+                });
+                
+                // legacy finish
                 await api.finishSession(sessionId).catch(console.error);
             }
 
@@ -468,7 +502,7 @@ const ComparingLargeSmallNumbers = () => {
                         user_id: parseInt(userId, 10)
                     });
                 } catch (err) {
-                    console.error("Failed to create report", err);
+                    console.error("Failed to create legacy report", err);
                 }
             }
             setShowReportModal(true);

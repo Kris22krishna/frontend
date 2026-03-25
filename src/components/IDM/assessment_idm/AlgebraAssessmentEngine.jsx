@@ -3,6 +3,8 @@ import MathRenderer from '../../MathRenderer';
 import { LayoutGrid, X, AlertTriangle, Monitor, CheckCircle, Home } from 'lucide-react';
 import { api } from '../../../services/api';
 import './AlgebraAssessment.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function AlgebraAssessmentEngine({ questions, title, onBack, color, prefix = 'alg-mastery' }) {
     const getQuestionType = (question) => {
@@ -41,6 +43,15 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
     const [isSubmitting, setIsSubmitting] = useState(false);
     const topRef = useRef(null);
     const containerRef = useRef(null);
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+
+    useEffect(() => {
+        startSession(NODE_IDS.g8MathAlgebra, 'assessment');
+        answersPayload.current = Array(questionSet.length).fill(null);
+    }, []);
 
     useEffect(() => {
         if (finished) return;
@@ -115,16 +126,40 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
-    const handleSelect = (idx) => {
+    const handleSelect = async (idx) => {
         const newAns = [...answers];
         newAns[current] = idx;
         setAnswers(newAns);
+
+        // v4 Log
+        const isCorrect = isAnswerCorrect(q, idx);
+        const answerData = {
+            question: q.question,
+            selectedAnswer: q.options[idx],
+            correctAnswer: q.options[q.correct],
+            isCorrect,
+            timeSpent: 0
+        };
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
-    const handleTextChange = (val) => {
+    const handleTextChange = async (val) => {
         const newAns = [...answers];
         newAns[current] = val;
         setAnswers(newAns);
+
+        // v4 Log
+        const isCorrect = isAnswerCorrect(q, val);
+        const answerData = {
+            question: q.question,
+            selectedAnswer: val,
+            correctAnswer: q.answer,
+            isCorrect,
+            timeSpent: 0
+        };
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
     const logScore = async (currentViolations) => {
@@ -179,6 +214,11 @@ export default function AlgebraAssessmentEngine({ questions, title, onBack, colo
         setIsSubmitting(true);
         try {
             await logScore(violationCount);
+            
+            // v4 Finish
+            const finalPayload = answersPayload.current.filter(Boolean);
+            await finishSession(finalPayload);
+
             setFinished(true);
         } catch (error) {
             alert("There was an error submitting your test. Please try again.");

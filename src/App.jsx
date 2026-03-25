@@ -1867,13 +1867,13 @@ function App() {
         <Route path="/middle/grade/7/symmetry/chapter-test" element={<SymmetryTest />} />
 
         {/* Algebraic Expressions */}
-        <Route path="/middle/grade/7/algebraic-expressions/formation" element={<Formation />} />
-        <Route path="/middle/grade/7/algebraic-expressions/terms-factors" element={<TermsFactors />} />
-        <Route path="/middle/grade/7/algebraic-expressions/coefficients" element={<Coefficients />} />
-        <Route path="/middle/grade/7/algebraic-expressions/like-unlike" element={<LikeUnlikeTerms />} />
-        <Route path="/middle/grade/7/algebraic-expressions/polynomials" element={<Polynomials />} />
-        <Route path="/middle/grade/7/algebraic-expressions/finding-value" element={<FindingValue />} />
-        <Route path="/middle/grade/7/algebraic-expressions/chapter-test" element={<AlgebraicExpressionsTest />} />
+        <Route path="/middle/grade/7/algebraic-expressions/formation" element={<ProtectedRoute redirectTo="/login"><Formation /></ProtectedRoute>} />
+        <Route path="/middle/grade/7/algebraic-expressions/terms-factors" element={<ProtectedRoute redirectTo="/login"><TermsFactors /></ProtectedRoute>} />
+        <Route path="/middle/grade/7/algebraic-expressions/coefficients" element={<ProtectedRoute redirectTo="/login"><Coefficients /></ProtectedRoute>} />
+        <Route path="/middle/grade/7/algebraic-expressions/like-unlike" element={<ProtectedRoute redirectTo="/login"><LikeUnlikeTerms /></ProtectedRoute>} />
+        <Route path="/middle/grade/7/algebraic-expressions/polynomials" element={<ProtectedRoute redirectTo="/login"><Polynomials /></ProtectedRoute>} />
+        <Route path="/middle/grade/7/algebraic-expressions/finding-value" element={<ProtectedRoute redirectTo="/login"><FindingValue /></ProtectedRoute>} />
+        <Route path="/middle/grade/7/algebraic-expressions/chapter-test" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsTest /></ProtectedRoute>} />
 
 
 
@@ -1948,7 +1948,7 @@ function App() {
 
 
         <Route path="/guest-dashboard" element={<GuestDashboard />} />
-        <Route path="/mentor-dashboard" element={<MentorDashboard />} />
+        <Route path="/mentor-dashboard" element={<ProtectedRoute redirectTo="/login"><MentorDashboard /></ProtectedRoute>} />
 
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/uploader-login" element={<UploaderLogin />} />
@@ -2008,45 +2008,45 @@ function App() {
 
         <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
         {/* Class 10: Pair of Linear Equations Routes */}
-        <Route path="/high/practice/10011" element={<GraphicalMethod />} />
-        <Route path="/high/practice/10012" element={<GraphicalMethod />} />
-        <Route path="/high/practice/10021" element={<GraphicalMethod />} />
-        <Route path="/high/practice/10022" element={<ConditionsForConsistency />} />
-        <Route path="/high/practice/10031" element={<IntroductionToLinearEquations />} />
-        <Route path="/high/practice/10041" element={<StandardFormEquations />} />
-        <Route path="/high/practice/10051" element={<AlgebraicMethods />} />
-        <Route path="/high/practice/10052" element={<AlgebraicMethods />} />
-        <Route path="/high/practice/10053" element={<AlgebraicMethods />} />
-        <Route path="/high/practice/10054" element={<AlgebraicMethods />} />
-        <Route path="/high/practice/10055" element={<AlgebraicMethods />} />
-        <Route path="/high/practice/1209" element={<PairOfLinearEquationsTest />} />
+        <Route path="/high/practice/10011" element={<ProtectedRoute redirectTo="/login"><GraphicalMethod /></ProtectedRoute>} />
+        <Route path="/high/practice/10012" element={<ProtectedRoute redirectTo="/login"><GraphicalMethod /></ProtectedRoute>} />
+        <Route path="/high/practice/10021" element={<ProtectedRoute redirectTo="/login"><GraphicalMethod /></ProtectedRoute>} />
+        <Route path="/high/practice/10022" element={<ProtectedRoute redirectTo="/login"><ConditionsForConsistency /></ProtectedRoute>} />
+        <Route path="/high/practice/10031" element={<ProtectedRoute redirectTo="/login"><IntroductionToLinearEquations /></ProtectedRoute>} />
+        <Route path="/high/practice/10041" element={<ProtectedRoute redirectTo="/login"><StandardFormEquations /></ProtectedRoute>} />
+        <Route path="/high/practice/10051" element={<ProtectedRoute redirectTo="/login"><AlgebraicMethods /></ProtectedRoute>} />
+        <Route path="/high/practice/10052" element={<ProtectedRoute redirectTo="/login"><AlgebraicMethods /></ProtectedRoute>} />
+        <Route path="/high/practice/10053" element={<ProtectedRoute redirectTo="/login"><AlgebraicMethods /></ProtectedRoute>} />
+        <Route path="/high/practice/10054" element={<ProtectedRoute redirectTo="/login"><AlgebraicMethods /></ProtectedRoute>} />
+        <Route path="/high/practice/10055" element={<ProtectedRoute redirectTo="/login"><AlgebraicMethods /></ProtectedRoute>} />
+        <Route path="/high/practice/1209" element={<ProtectedRoute redirectTo="/login"><PairOfLinearEquationsTest /></ProtectedRoute>} />
         {/* Class 10: Arithmetic Progressions Routes */}
-        <Route path="/high/practice/1105" element={<RecognisingPatterns />} />
-        <Route path="/high/practice/1106" element={<UnderstandingAP />} />
-        <Route path="/high/practice/1107" element={<IdentifyingTerms />} />
-        <Route path="/high/practice/1108" element={<FindingSpecificTerms />} />
-        <Route path="/high/practice/1109" element={<SumOfTerms />} />
-        <Route path="/high/practice/1110" element={<ArithmeticProgressionsTest />} />
+        <Route path="/high/practice/1105" element={<ProtectedRoute redirectTo="/login"><RecognisingPatterns /></ProtectedRoute>} />
+        <Route path="/high/practice/1106" element={<ProtectedRoute redirectTo="/login"><UnderstandingAP /></ProtectedRoute>} />
+        <Route path="/high/practice/1107" element={<ProtectedRoute redirectTo="/login"><IdentifyingTerms /></ProtectedRoute>} />
+        <Route path="/high/practice/1108" element={<ProtectedRoute redirectTo="/login"><FindingSpecificTerms /></ProtectedRoute>} />
+        <Route path="/high/practice/1109" element={<ProtectedRoute redirectTo="/login"><SumOfTerms /></ProtectedRoute>} />
+        <Route path="/high/practice/1110" element={<ProtectedRoute redirectTo="/login"><ArithmeticProgressionsTest /></ProtectedRoute>} />
         {/* Class 10: Quadratic Equations Routes */}
-        <Route path="/high/practice/1120" element={<FoundationsQuadratic />} />
-        <Route path="/high/practice/1121" element={<RepresentingSituations />} />
-        <Route path="/high/practice/1122" element={<IdentifyingQuadratic />} />
-        <Route path="/high/practice/1123" element={<RootsByFactorisation />} />
-        <Route path="/high/practice/1124" element={<WordProblemsFactorisation />} />
-        <Route path="/high/practice/1125" element={<NatureOfRoots />} />
-        <Route path="/high/practice/1126" element={<DiscriminantAnalysis />} />
-        <Route path="/high/practice/1127" element={<RealLifeApplications />} />
-        <Route path="/high/practice/1128" element={<QuadraticEquationsTest />} />
+        <Route path="/high/practice/1120" element={<ProtectedRoute redirectTo="/login"><FoundationsQuadratic /></ProtectedRoute>} />
+        <Route path="/high/practice/1121" element={<ProtectedRoute redirectTo="/login"><RepresentingSituations /></ProtectedRoute>} />
+        <Route path="/high/practice/1122" element={<ProtectedRoute redirectTo="/login"><IdentifyingQuadratic /></ProtectedRoute>} />
+        <Route path="/high/practice/1123" element={<ProtectedRoute redirectTo="/login"><RootsByFactorisation /></ProtectedRoute>} />
+        <Route path="/high/practice/1124" element={<ProtectedRoute redirectTo="/login"><WordProblemsFactorisation /></ProtectedRoute>} />
+        <Route path="/high/practice/1125" element={<ProtectedRoute redirectTo="/login"><NatureOfRoots /></ProtectedRoute>} />
+        <Route path="/high/practice/1126" element={<ProtectedRoute redirectTo="/login"><DiscriminantAnalysis /></ProtectedRoute>} />
+        <Route path="/high/practice/1127" element={<ProtectedRoute redirectTo="/login"><RealLifeApplications /></ProtectedRoute>} />
+        <Route path="/high/practice/1128" element={<ProtectedRoute redirectTo="/login"><QuadraticEquationsTest /></ProtectedRoute>} />
 
         {/* Class 10: Polynomials Routes */}
-        <Route path="/high/practice/1233" element={<TypesAndDegrees />} />
-        <Route path="/high/practice/1234" element={<EvaluatingAndIdentifying />} />
-        <Route path="/high/practice/1235" element={<GeometricalInterpretation />} />
-        <Route path="/high/practice/1236" element={<NumberFromGraphicalBehaviour />} />
-        <Route path="/high/practice/1237" element={<RelationshipQuadratic />} />
-        <Route path="/high/practice/1238" element={<ConstructingQuadratic />} />
-        <Route path="/high/practice/1239" element={<RelationshipCubic />} />
-        <Route path="/high/practice/1240" element={<PolynomialsTest />} />
+        <Route path="/high/practice/1233" element={<ProtectedRoute redirectTo="/login"><TypesAndDegrees /></ProtectedRoute>} />
+        <Route path="/high/practice/1234" element={<ProtectedRoute redirectTo="/login"><EvaluatingAndIdentifying /></ProtectedRoute>} />
+        <Route path="/high/practice/1235" element={<ProtectedRoute redirectTo="/login"><GeometricalInterpretation /></ProtectedRoute>} />
+        <Route path="/high/practice/1236" element={<ProtectedRoute redirectTo="/login"><NumberFromGraphicalBehaviour /></ProtectedRoute>} />
+        <Route path="/high/practice/1237" element={<ProtectedRoute redirectTo="/login"><RelationshipQuadratic /></ProtectedRoute>} />
+        <Route path="/high/practice/1238" element={<ProtectedRoute redirectTo="/login"><ConstructingQuadratic /></ProtectedRoute>} />
+        <Route path="/high/practice/1239" element={<ProtectedRoute redirectTo="/login"><RelationshipCubic /></ProtectedRoute>} />
+        <Route path="/high/practice/1240" element={<ProtectedRoute redirectTo="/login"><PolynomialsTest /></ProtectedRoute>} />
 
         <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
 
