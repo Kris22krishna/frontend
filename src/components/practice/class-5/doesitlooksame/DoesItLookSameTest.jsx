@@ -77,6 +77,16 @@ const DoesItLookSameTest = () => {
                         <div className={styles.dils_test_q_text}>
                             <MathRenderer text={q.question} />
                         </div>
+
+                        {(q.svg || q.image) && (
+                            <div className={styles.dils_test_q_illus}>
+                                {q.svg ? (
+                                    <div style={{ width: '100%', maxWidth: 400 }}>{q.svg}</div>
+                                ) : (
+                                    <img src={q.image} alt="Question Diagram" />
+                                )}
+                            </div>
+                        )}
                         <div className={styles.dils_test_options}>
                             {q.options.map((opt, oi) => (
                                 <button key={oi} onClick={() => handleSelect(current, oi)}

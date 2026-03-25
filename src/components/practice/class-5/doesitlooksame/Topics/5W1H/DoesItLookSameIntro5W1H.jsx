@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../doesitlooksame.css';
 import MathRenderer from '@/components/MathRenderer';
+import tajMahalImg from '@/assets/class-5/doesitlooksame/tajmahal.png';
 import butterflyImg from '@/assets/class-5/doesitlooksame/butterfly.png';
 import reflectionImg from '@/assets/class-5/doesitlooksame/reflection.png';
 
@@ -21,9 +22,11 @@ const QUESTIONS = [
         desc: 'Artists, architects, and engineers use it to create balance and stability in everything from paintings to skyscrapers.',
         illus: (
             <svg viewBox="0 0 100 60" style={{ width: '100%' }}>
-                <rect x="10" y="10" width="80" height="40" fill="#fbcfe8" rx="4" />
-                <line x1="20" y1="20" x2="80" y2="40" stroke="#ec4899" strokeWidth="2" />
-                <line x1="20" y1="40" x2="80" y2="20" stroke="#ec4899" strokeWidth="2" />
+                {/* Building / Architecture SVG */}
+                <rect x="20" y="45" width="60" height="10" fill="#fbcfe8" />
+                <rect x="30" y="20" width="40" height="25" fill="#f9a8d4" stroke="#ec4899" strokeWidth="1" />
+                <path d="M30,20 L50,5 L70,20 Z" fill="#ec4899" />
+                <line x1="50" y1="5" x2="50" y2="55" stroke="#fff" strokeWidth="0.5" strokeDasharray="2,1" />
             </svg>
         )
     },
@@ -41,21 +44,16 @@ const QUESTIONS = [
     { 
         label: 'WHERE', q: 'Where is it seen?', icon: '🏙️', color: '#8b5cf6', 
         desc: 'From the **Taj Mahal** to a butterfly\'s wings, symmetry is a signature pattern found throughout the universe.',
-        illus: (
-            <svg viewBox="0 0 100 60" style={{ width: '100%' }}>
-                <path d="M20,50 L50,10 L80,50 Z" fill="#ddd6fe" stroke="#8b5cf6" strokeWidth="2" />
-                <line x1="50" y1="10" x2="50" y2="50" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="3,3" />
-            </svg>
-        )
+        illus: <img src={tajMahalImg} alt="Taj Mahal Symmetry" style={{ width: '100%', borderRadius: 8, height: 120, objectFit: 'cover' }} />
     },
     { 
         label: 'HOW', q: 'How to check it?', icon: '🪞', color: '#ec4899', 
         desc: 'Use the **Mirror Test**: place a mirror on the line of symmetry. The reflection should complete the shape perfectly.',
         illus: (
             <svg viewBox="0 0 100 60" style={{ width: '100%' }}>
-                <rect x="45" y="5" width="10" height="50" fill="#fbcfe8" />
-                <rect x="15" y="20" width="30" height="20" fill="#fdf2f8" stroke="#ec4899" />
-                <rect x="55" y="20" width="30" height="20" fill="#fdf2f8" stroke="#ec4899" strokeDasharray="2,2" />
+                <rect x="48" y="5" width="4" height="50" fill="#94a3b8" rx="2" />
+                <path d="M15,20 L40,20 L30,40 Z" fill="#fdf2f8" stroke="#ec4899" strokeWidth="1.5" />
+                <path d="M85,20 L60,20 L70,40 Z" fill="#fdf2f8" stroke="#ec4899" strokeWidth="1.5" opacity="0.4" strokeDasharray="2,1" />
             </svg>
         )
     }

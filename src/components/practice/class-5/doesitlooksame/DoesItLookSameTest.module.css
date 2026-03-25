@@ -82,8 +82,30 @@
     font-size: 20px;
     font-weight: 700;
     line-height: 1.5;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     color: #0f172a;
+}
+
+.dils_test_q_illus {
+    margin-bottom: 32px;
+    padding: 32px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dils_test_q_illus svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.dils_test_q_illus img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 12px;
 }
 
 .dils_test_options {
