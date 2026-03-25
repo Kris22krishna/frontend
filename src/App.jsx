@@ -543,6 +543,16 @@ import ProbabilityEasyTest from './components/practice/class-10/Probability/Deep
 import ProbabilityMediumTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityMediumTest';
 import ProbabilityHardTest from './components/practice/class-10/Probability/DeepDive/Tests/ProbabilityHardTest';
 
+// Class 11 Physics: Work, Energy and Power
+import WorkEnergyPowerDashboard from './components/practice/class-11/physics/WorkEnergyPower/WorkEnergyPowerDashboard';
+import WorkEnergyPowerIntro from './components/practice/class-11/physics/WorkEnergyPower/Topics/Introduction/WorkEnergyPowerIntro';
+import WorkEnergyPowerTerminology from './components/practice/class-11/physics/WorkEnergyPower/Topics/Terminology/WorkEnergyPowerTerminology';
+import WorkEnergyPowerSkills from './components/practice/class-11/physics/WorkEnergyPower/Topics/Skills/WorkEnergyPowerSkills';
+import WorkEnergyPowerConnectomics from './components/practice/class-11/physics/WorkEnergyPower/Topics/Connectomics/WorkEnergyPowerConnectomics';
+import WorkEnergyPowerExamEdge from './components/practice/class-11/physics/WorkEnergyPower/Topics/ExamEdge/WorkEnergyPowerExamEdge';
+import WorkEnergyPowerMindMap from './components/practice/class-11/physics/WorkEnergyPower/Topics/MindMap/WorkEnergyPowerMindMap';
+import WorkEnergyPowerDerivations from './components/practice/class-11/physics/WorkEnergyPower/Topics/DerivationsNumericals/WorkEnergyPowerDerivations';
+
 // Class 10: Real Numbers
 import RealNumbersDashboard from './components/practice/class-10/RealNumbers/RealNumbersDashboard';
 import RealNumbersIntro from './components/practice/class-10/RealNumbers/Topics/Introduction/RealNumbersIntro';
@@ -569,6 +579,13 @@ import CoordinateGeometryIntro from './components/practice/class-10/CoordinateGe
 import CoordinateGeometryTerminology from './components/practice/class-10/CoordinateGeometry/Topics/Terminology/CoordinateGeometryTerminology';
 import CoordinateGeometrySkills from './components/practice/class-10/CoordinateGeometry/Topics/Skills/CoordinateGeometrySkills';
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
+
+// Class 10: Areas Related to Circles
+import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
+import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
+import AreasRelatedToCirclesTerminology from './components/practice/class-10/AreasRelatedToCircles/Topics/Terminology/AreasRelatedToCirclesTerminology';
+import AreasRelatedToCirclesSkills from './components/practice/class-10/AreasRelatedToCircles/Topics/Skills/AreasRelatedToCirclesSkills';
+import AreasRelatedToCirclesConnectomics from './components/practice/class-10/AreasRelatedToCircles/Topics/Connectomics/AreasRelatedToCirclesConnectomics';
 
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
@@ -821,6 +838,14 @@ function App() {
           <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
           <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
           <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
+          <Route path="senior/grade/11/physics/work-energy-power" element={<WorkEnergyPowerDashboard />} />
+          <Route path="senior/grade/11/physics/work-energy-power/introduction" element={<WorkEnergyPowerIntro />} />
+          <Route path="senior/grade/11/physics/work-energy-power/terminology" element={<WorkEnergyPowerTerminology />} />
+          <Route path="senior/grade/11/physics/work-energy-power/skills" element={<WorkEnergyPowerSkills />} />
+          <Route path="senior/grade/11/physics/work-energy-power/connectomics" element={<WorkEnergyPowerConnectomics />} />
+          <Route path="senior/grade/11/physics/work-energy-power/exam-edge" element={<WorkEnergyPowerExamEdge />} />
+          <Route path="senior/grade/11/physics/work-energy-power/mind-map" element={<WorkEnergyPowerMindMap />} />
+          <Route path="senior/grade/11/physics/work-energy-power/derivations" element={<WorkEnergyPowerDerivations />} />
 
           {/* Class 11 Chemistry */}
           <Route path="senior/grade/11/chemistry" element={<ChemistryChapters />} />
@@ -1018,6 +1043,13 @@ function App() {
           <Route path="senior/grade/10/circles/terminology" element={<ProtectedRoute redirectTo="/login"><CirclesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/10/circles/skills" element={<ProtectedRoute redirectTo="/login"><CirclesSkills /></ProtectedRoute>} />
           <Route path="senior/grade/10/circles/connectomics" element={<ProtectedRoute redirectTo="/login"><CirclesConnectomics /></ProtectedRoute>} />
+
+          {/* Class 10: Areas Related to Circles */}
+          <Route path="senior/grade/10/areas-related-to-circles" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/introduction" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/terminology" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/skills" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/10/areas-related-to-circles/connectomics" element={<ProtectedRoute redirectTo="/login"><AreasRelatedToCirclesConnectomics /></ProtectedRoute>} />
 
           {/* Class 10: Coordinate Geometry */}
           <Route path="senior/grade/10/coordinate-geometry" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryDashboard /></ProtectedRoute>} />
