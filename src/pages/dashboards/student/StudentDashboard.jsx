@@ -33,43 +33,77 @@ import {
 const ChapterAccordion = ({ chapter, skills, mode }) => {
     const [isOpen, setIsOpen] = useState(false);
 
+    // Filter to hide skills with NO attempts
+    const attemptedSkills = (skills || []).filter(s => s.attempts > 0);
+    
+    // Simple average of all skills in the chapter
+    const accuracies = (skills || []).map(s => mode === 'best' ? s.best_accuracy : s.latest_accuracy);
+    const chapterProgress = accuracies.length > 0 
+        ? Math.round(accuracies.reduce((a, b) => a + b, 0) / accuracies.length) 
+        : 0;
+
     return (
-        <div className="border border-slate-200 rounded-xl mb-3 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+        <div className="border border-slate-200 rounded-2xl mb-4 overflow-hidden bg-white shadow-sm hover:shadow-md transition-all group/chapter">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition-colors"
+                className={`w-full flex justify-between items-center p-5 transition-colors ${isOpen ? 'bg-slate-50' : 'bg-white'}`}
             >
-                <div className="font-bold text-slate-700 text-left">{chapter}</div>
-                {isOpen ? <ChevronUp className="h-5 w-5 text-slate-500" /> : <ChevronDown className="h-5 w-5 text-slate-500" />}
+                <div className="flex flex-col items-start gap-1">
+                    <div className="font-extrabold text-slate-800 text-left text-base group-hover/chapter:text-cyan-600 transition-colors">{chapter}</div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-24 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                            <div 
+                                className="h-full bg-cyan-500 rounded-full transition-all duration-700" 
+                                style={{ width: `${chapterProgress}%` }} 
+                            />
+                        </div>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">{chapterProgress}% Total</span>
+                    </div>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="hidden sm:flex flex-col items-end">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Skills</span>
+                        <span className="text-sm font-bold text-slate-600">{attemptedSkills.length} of {skills.length}</span>
+                    </div>
+                    {isOpen ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
+                </div>
             </button>
             {isOpen && (
-                <div className="p-4 space-y-4">
-                    {skills.map((skill, idx) => {
-                        const minutes = Math.round(skill.time_spent / 60);
-                        const displayAccuracy = mode === 'best' ? skill.best_accuracy : skill.latest_accuracy;
-                        const progress = displayAccuracy; // Use accuracy as progress in v4
-                        return (
-                            <div key={idx} className="space-y-1 group/skill">
-                                <div className="flex justify-between text-sm text-slate-600">
-                                    <span className="font-medium group-hover/skill:text-cyan-600 transition-colors">{skill.skill_name}</span>
-                                    <div className="flex gap-3">
-                                        <span className="text-slate-400">{minutes}m</span>
-                                        <span className={`font-bold ${displayAccuracy >= 80 ? 'text-emerald-500' : displayAccuracy >= 50 ? 'text-amber-500' : 'text-slate-400'}`}>
-                                            {displayAccuracy}%
-                                        </span>
+                <div className="p-5 space-y-5 bg-white border-t border-slate-50">
+                    {attemptedSkills.length > 0 ? (
+                        attemptedSkills.map((skill, idx) => {
+                            const minutes = Math.round(skill.time_spent / 60);
+                            const displayAccuracy = mode === 'best' ? skill.best_accuracy : skill.latest_accuracy;
+                            return (
+                                <div key={idx} className="space-y-1.5 group/skill">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="font-bold text-slate-700 group-hover/skill:text-cyan-600 transition-colors">{skill.skill_name}</span>
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
+                                                <Clock className="h-3 w-3" />
+                                                {minutes}m
+                                            </div>
+                                            <span className={`font-black text-xs ${displayAccuracy >= 80 ? 'text-emerald-500' : displayAccuracy >= 50 ? 'text-amber-500' : 'text-slate-400'}`}>
+                                                {displayAccuracy}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                                        <div
+                                            className={`h-full transition-all duration-1000 ease-out rounded-full ${
+                                                displayAccuracy >= 80 ? 'bg-gradient-to-r from-emerald-400 to-emerald-500' 
+                                                : displayAccuracy >= 50 ? 'bg-gradient-to-r from-amber-400 to-amber-500' 
+                                                : 'bg-gradient-to-r from-cyan-400 to-blue-400'
+                                            }`}
+                                            style={{ width: `${displayAccuracy}%` }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                                    <div
-                                        className={`h-full transition-all duration-700 ease-out ${
-                                            displayAccuracy >= 80 ? 'bg-emerald-400' : displayAccuracy >= 50 ? 'bg-amber-400' : 'bg-cyan-400'
-                                        }`}
-                                        style={{ width: `${progress}%` }}
-                                    />
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })
+                    ) : (
+                        <div className="text-center py-4 text-xs text-slate-400 italic">No progress recorded for these skills yet.</div>
+                    )}
                 </div>
             )}
         </div>
@@ -412,7 +446,7 @@ const StudentDashboard = () => {
                     <div className="lg:col-span-2 bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
                         <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
                             <Clock className="h-5 w-5 text-blue-500" />
-                            Time Spent by Chapter
+                            Time Spent by Chapter & Module
                         </h2>
                         {chartData.length > 0 ? (
                             <div className="h-[380px] w-full">
