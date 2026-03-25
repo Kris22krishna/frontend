@@ -22,6 +22,11 @@ const MentorDashboard = () => {
     const [selectedGrade, setSelectedGrade] = useState('All');
     const [selectedStatsDate, setSelectedStatsDate] = useState(new Date());
 
+    // New State for Student Time Tracker
+    const [studentTimes, setStudentTimes] = useState([]);
+    const [timeFilter, setTimeFilter] = useState('today'); // 'today' or 'yesterday'
+    const [loadingTimes, setLoadingTimes] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -43,6 +48,15 @@ const MentorDashboard = () => {
                     console.warn("Failed to fetch stats", e);
                 }
 
+                // Initial fetch for student times (today)
+                try {
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    const timeData = await api.getMentorStudentTimes(todayStr);
+                    setStudentTimes(timeData?.students || []);
+                } catch (e) {
+                    console.warn("Failed to fetch initial student times", e);
+                }
+
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
                 setError(err.message);
@@ -54,6 +68,31 @@ const MentorDashboard = () => {
 
         fetchData();
     }, []);
+
+    // Refetch student times when filter changes
+    useEffect(() => {
+        const fetchTimes = async () => {
+            setLoadingTimes(true);
+            try {
+                const targetDate = new Date();
+                if (timeFilter === 'yesterday') {
+                    targetDate.setDate(targetDate.getDate() - 1);
+                }
+                const dateStr = targetDate.toISOString().split('T')[0];
+                const timeData = await api.getMentorStudentTimes(dateStr);
+                setStudentTimes(timeData?.students || []);
+            } catch (err) {
+                console.error("Failed to fetch filtered times:", err);
+            } finally {
+                setLoadingTimes(false);
+            }
+        };
+
+        // Don't fetch on mount again (handled by main fetchData)
+        if (mentorName) {
+            fetchTimes();
+        }
+    }, [timeFilter]);
 
     // Helper to format time
     const formatTime = (seconds) => {
@@ -362,6 +401,76 @@ const MentorDashboard = () => {
                                         ? `No results for "${searchTerm}" in ${selectedGrade}`
                                         : `No students assigned in ${selectedGrade}.`}
                                 </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Student Time Tracker Table */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-8">
+                    <div className="p-6 border-b border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/30">
+                        <div className="flex items-center gap-3">
+                            <Clock className="h-5 w-5 text-[#4FB7B3]" />
+                            <h2 className="text-xl font-bold text-[#31326F]">Student Time Tracker</h2>
+                        </div>
+                        <div className="flex bg-slate-100 p-1 rounded-lg">
+                            <button
+                                onClick={() => setTimeFilter('today')}
+                                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${timeFilter === 'today' ? 'bg-white text-[#31326F] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                Today
+                            </button>
+                            <button
+                                onClick={() => setTimeFilter('yesterday')}
+                                className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${timeFilter === 'yesterday' ? 'bg-white text-[#31326F] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                Yesterday
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                        {loadingTimes ? (
+                            <div className="flex justify-center items-center py-12">
+                                <Loader2 className="h-8 w-8 animate-spin text-[#4FB7B3]" />
+                            </div>
+                        ) : studentTimes && studentTimes.length > 0 ? (
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-50/50 text-slate-500 text-sm border-b border-slate-100">
+                                        <th className="px-6 py-4 font-semibold">Student Name</th>
+                                        <th className="px-6 py-4 font-semibold">Grade</th>
+                                        <th className="px-6 py-4 font-semibold text-center">Questions Solved</th>
+                                        <th className="px-6 py-4 font-semibold text-right">Time Spent ({timeFilter === 'today' ? 'Today' : 'Yesterday'})</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 text-[#31326F]">
+                                    {studentTimes.map((student) => (
+                                        <tr key={student.user_id} className="hover:bg-slate-50/30 transition-colors">
+                                            <td className="px-6 py-4 font-medium flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
+                                                    {student.name.charAt(0)}
+                                                </div>
+                                                {student.name}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className="text-xs bg-slate-100 px-2 py-1 rounded text-slate-600 font-medium">
+                                                    Grade {student.grade || 'N/A'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-center font-medium">
+                                                {student.total_questions || 0}
+                                            </td>
+                                            <td className="px-6 py-4 text-right font-bold text-[#4FB7B3]">
+                                                {formatTime(student.total_time_seconds || 0)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div className="py-12 text-center text-slate-500">
+                                No time tracking data found for {timeFilter}.
                             </div>
                         )}
                     </div>

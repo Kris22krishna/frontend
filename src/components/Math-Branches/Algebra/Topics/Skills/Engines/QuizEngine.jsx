@@ -1,7 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function QuizEngine({ 
+    questions, 
+    title, 
+    onBack, 
+    onSecondaryBack, 
+    color, 
+    prefix = 'alg',
+    nodeId,
+    sessionType = 'practice'
+}) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -9,6 +19,17 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    // Sync state for cleanup
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    // Initialize Question Set
     useEffect(() => {
         setQuestionSet(typeof questions === 'function' ? questions() : questions);
         setCurrent(0);
@@ -18,7 +39,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         setFinished(false);
     }, [questions]);
 
-    // Timer state for Practice: Starts at 0, counts up
+    // Timer state for Practice
     const [timeTaken, setTimeTaken] = useState(0);
 
     useEffect(() => {
@@ -28,6 +49,24 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         }, 1000);
         return () => clearInterval(timer);
     }, [finished]);
+
+    // Start session on mount/questions change
+    useEffect(() => {
+        if (!nodeId) return;
+        
+        startSession({ nodeId, sessionType });
+        answersPayload.current = [];
+
+        return () => {
+            // Only abandon if we haven't finished and we have some actual answers
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ 
+                    answersPayload: answersPayload.current, 
+                    totalQuestions: questionSet.length 
+                });
+            }
+        };
+    }, [nodeId, sessionType]); // Only start once per nodeId
 
     // Format time (MM:SS)
     const formatTime = (seconds) => {
@@ -39,16 +78,44 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
     const q = questionSet[current];
     const progress = ((current + (finished ? 1 : 0)) / questionSet.length) * 100;
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (answered) return;
         setSelected(optIdx);
         setAnswered(true);
-        if (optIdx === q.correct) setScore(s => s + 1);
+        
+        const isCorrect = optIdx === q.correct;
+        if (isCorrect) setScore(s => s + 1);
+
+        // v4 Log
+        if (nodeId) {
+            const answerData = {
+                question_index: current + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+            answersPayload.current.push(answerData);
+            
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
             setFinished(true);
+            if (nodeId) {
+                await finishSession({
+                    totalQuestions: questionSet.length,
+                    questionsAnswered: answersPayload.current.length,
+                    answersPayload: answersPayload.current
+                });
+            }
         } else {
             setCurrent(c => c + 1);
             setSelected(null);
