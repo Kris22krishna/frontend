@@ -13,6 +13,15 @@ const chapters = [
         gradient: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)',
         shadow: 'rgba(30,60,114,0.35)',
     },
+    {
+        key: 'work-energy-power',
+        title: 'Work, Energy and Power',
+        desc: 'Work-energy theorem, conservative forces, potential energy, mechanical energy conservation, and collisions.',
+        icon: '⚡',
+        questions: 80,
+        gradient: 'linear-gradient(135deg, #0f172a 0%, #334155 100%)',
+        shadow: 'rgba(15, 23, 42, 0.35)',
+    },
     // Future chapters can be added here
 ];
 
