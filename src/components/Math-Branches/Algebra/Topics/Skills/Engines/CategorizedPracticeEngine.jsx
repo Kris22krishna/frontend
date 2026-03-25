@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import QuizEngine from './QuizEngine';
 
-const CategorizedPracticeEngine = ({ skill, onBack }) => {
+const CategorizedPracticeEngine = ({ skill, onBack, nodeId }) => {
     const [activeCat, setActiveCat] = useState(0);
     const category = skill.practiceCategories[activeCat];
 
@@ -31,6 +31,7 @@ const CategorizedPracticeEngine = ({ skill, onBack }) => {
                     title={`Practice: ${category.title}`}
                     onBack={onBack}
                     color={skill.color}
+                    nodeId={nodeId}
                 />
             </main>
         </div>

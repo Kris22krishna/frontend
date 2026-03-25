@@ -7,6 +7,7 @@ import QuizEngine from './Engines/QuizEngine';
 import AssessmentEngine from './Engines/AssessmentEngine';
 import AlgebraCategorizedPracticeEngine from './AlgebraCategorizedPracticeEngine';
 import { SKILLS } from './AlgebraSkillsData';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function AlgebraSkills() {
     const navigate = useNavigate();
@@ -15,7 +16,37 @@ export default function AlgebraSkills() {
     const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
     const [lawView, setLawView] = useState(null); // null | 'practice' | 'assessment'
 
+    const skillMap = {
+        exponents: NODE_IDS.mathBranchAlgebraExponents,
+        liketerms: NODE_IDS.mathBranchAlgebraLikeTerms,
+        expressions: NODE_IDS.mathBranchAlgebraExpressions,
+        solving: NODE_IDS.mathBranchAlgebraSolving,
+        subject: NODE_IDS.mathBranchAlgebraSubject,
+        wordproblems: NODE_IDS.mathBranchAlgebraWordProblems,
+        reallife: NODE_IDS.mathBranchAlgebraRealLife
+    };
+
+    // Sub-node mapping for Exponent Laws
+    const exponentLawIds = [
+        NODE_IDS.mathBranchAlgebraExponentsProductLaw,
+        NODE_IDS.mathBranchAlgebraExponentsQuotientLaw,
+        NODE_IDS.mathBranchAlgebraExponentsPowerLaw,
+        NODE_IDS.mathBranchAlgebraExponentsPowerOfProduct,
+        NODE_IDS.mathBranchAlgebraExponentsPowerOfQuotient,
+        NODE_IDS.mathBranchAlgebraExponentsZeroLaw,
+        NODE_IDS.mathBranchAlgebraExponentsIdentityLaw,
+        NODE_IDS.mathBranchAlgebraExponentsNegativeLaw,
+        NODE_IDS.mathBranchAlgebraExponentsFractionalLaw,
+        NODE_IDS.mathBranchAlgebraExponentsStandardForm,
+        NODE_IDS.mathBranchAlgebraExponentsComparing
+    ];
+
     const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
+    
+    // Choose specific law node if in lawView, otherwise use main skill node
+    const nodeId = (skill?.id === 'exponents' && lawView)
+        ? exponentLawIds[selectedLearnIdx]
+        : (skill ? skillMap[skill.id] : null);
 
     const openSkill = (index, nextView) => {
         setActiveSkill(index);
@@ -121,6 +152,7 @@ export default function AlgebraSkills() {
                                                     color={skill.color}
                                                     onBack={() => setLawView(null)}
                                                     prefix="algtest"
+                                                    nodeId={nodeId}
                                                 />
                                             ) : (
                                                 <AssessmentEngine
@@ -130,6 +162,7 @@ export default function AlgebraSkills() {
                                                     color={skill.color}
                                                     onBack={() => setLawView(null)}
                                                     prefix="algtest"
+                                                    nodeId={nodeId}
                                                 />
                                             )}
                                         </div>
@@ -318,6 +351,7 @@ export default function AlgebraSkills() {
                             <AlgebraCategorizedPracticeEngine
                                 skill={skill}
                                 onBack={() => setView('list')}
+                                nodeId={nodeId}
                             />
                         ) : (
                             <QuizEngine
@@ -326,6 +360,7 @@ export default function AlgebraSkills() {
                                 color={skill.color}
                                 onBack={() => setView('list')}
                                 prefix="algtest"
+                                nodeId={nodeId}
                             />
                         )
                     ) : (
@@ -335,6 +370,7 @@ export default function AlgebraSkills() {
                             color={skill.color}
                             onBack={() => setView('list')}
                             prefix="algtest"
+                            nodeId={nodeId}
                         />
                     )}
                 </div>

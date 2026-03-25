@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function AssessmentEngine({ 
+    questions, 
+    title, 
+    onBack, 
+    onSecondaryBack, 
+    color, 
+    prefix = 'alg',
+    nodeId,
+    sessionType = 'assessment'
+}) {
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -66,7 +76,14 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     useEffect(() => {
+        if (isFinishedRef.current) return;
+
         const newQs = typeof questions === 'function' ? questions() : questions;
         setQuestionSet(newQs);
         setCurrent(0);
@@ -75,7 +92,28 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         setTimeLeft(newQs.length * 60);
         setFinished(false);
         setPaletteOpen(false);
-    }, [questions]);
+
+        // v4 Start
+        if (nodeId) {
+            startSession({ nodeId, sessionType });
+            answersPayload.current = Array(newQs.length).fill(null);
+        }
+
+        return () => {
+            // Use refs for cleanup to avoid stale state issues
+            if (!isFinishedRef.current && answersPayload.current.some(a => a !== null)) {
+                abandonSession({ 
+                    answersPayload: answersPayload.current.filter(Boolean), 
+                    totalQuestions: newQs.length 
+                });
+            }
+        };
+    }, [questions, nodeId, sessionType]);
+
+    // Sync finished state to ref
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
 
     useEffect(() => {
         if (topRef.current) {
@@ -109,21 +147,61 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
 
     const q = questionSet[current];
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished) return;
         const newAns = [...answers];
         newAns[current] = optIdx;
         setAnswers(newAns);
+
+        // v4 Log
+        if (nodeId) {
+            const isCorrect = isAnswerCorrect(q, optIdx);
+            const answerData = {
+                question_index: current + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+            answersPayload.current[current] = answerData;
+
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
+        }
     };
 
-    const handleTextAnswerChange = (value) => {
+    const handleTextAnswerChange = async (value) => {
         if (finished) return;
         const newAns = [...answers];
         newAns[current] = value;
         setAnswers(newAns);
+
+        // v4 Log
+        if (nodeId) {
+            const isCorrect = isAnswerCorrect(q, value);
+            const answerData = {
+                question_index: current + 1,
+                answer_json: { text: value },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+            answersPayload.current[current] = answerData;
+
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
+        }
     };
 
-    const handleMsqToggle = (optIdx) => {
+    const handleMsqToggle = async (optIdx) => {
         if (finished) return;
         const currentAnswer = Array.isArray(answers[current]) ? answers[current] : [];
         const nextAnswer = currentAnswer.includes(optIdx)
@@ -132,6 +210,26 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         const newAns = [...answers];
         newAns[current] = nextAnswer;
         setAnswers(newAns);
+
+        // v4 Log
+        if (nodeId) {
+            const isCorrect = isAnswerCorrect(q, nextAnswer);
+            const answerData = {
+                question_index: current + 1,
+                answer_json: { selected: nextAnswer },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+            answersPayload.current[current] = answerData;
+
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
+        }
     };
 
     const handleNext = () => {
@@ -151,12 +249,22 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         setFinished(true);
         setPaletteOpen(false);
+
+        // v4 Finish
+        if (nodeId) {
+            const fPayload = answersPayload.current.filter(Boolean);
+            await finishSession({
+                totalQuestions: questionSet.length,
+                questionsAnswered: fPayload.length,
+                answersPayload: fPayload
+            });
+        }
     };
 
     const answeredCount = questionSet.reduce((count, question, index) => (

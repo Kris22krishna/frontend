@@ -6,6 +6,8 @@ import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import '../../../../pages/high/class8/Grade8ChapterTests.css';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 
 const SKILL_ID = 1210;
 const SKILL_NAME = "Chapter Test";
@@ -30,6 +32,8 @@ const ExponentsAndPowersTest = () => {
     const questionStartTime = useRef(Date.now());
     const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const [questions, setQuestions] = useState([]);
+    const answersPayload = useRef([]); // v4 answers collection
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     const generateQuestions = () => {
         const pool = [
@@ -205,9 +209,11 @@ const ExponentsAndPowersTest = () => {
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid) && !sessionId) {
-            api.createPracticeSession(uid, SKILL_ID, 'test').then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
+            const sid = startSession({
+                nodeId: NODE_IDS.g8MathAlgebraExponents,
+                sessionType: 'assessment'
             });
+            if (sid) setSessionId(sid);
         }
     }, []);
 
@@ -233,21 +239,45 @@ const ExponentsAndPowersTest = () => {
         return () => clearInterval(timer);
     }, [isTestOver]);
 
-    const handleRecordResponse = () => {
+    const handleRecordResponse = async () => {
         if (!questions[qIndex]) return;
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
-        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const timeSpentMs = Date.now() - questionStartTime.current;
         const isSkipped = !selectedOption;
 
         const responseData = {
             selectedOption,
             isCorrect,
-            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent,
+            timeTaken: (responses[qIndex]?.timeTaken || 0) + Math.round(timeSpentMs / 1000),
             isSkipped
         };
 
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
+
+        // v4 Logging
+        await logAnswer({
+            questionIndex: qIndex + 1,
+            answerJson: { selected: selectedOption, isSkipped },
+            isCorrect: isCorrect === true ? 1.0 : 0.0,
+            timeTakenMs: timeSpentMs
+        });
+
+        // Add to payload
+        const existingIdx = answersPayload.current.findIndex(a => a.question_index === qIndex + 1);
+        const pld = {
+            question_index: qIndex + 1,
+            answer_json: { selected: selectedOption, isSkipped },
+            is_correct: isCorrect === true,
+            marks_awarded: isCorrect === true ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: timeSpentMs
+        };
+        if (existingIdx >= 0) {
+            answersPayload.current[existingIdx] = pld;
+        } else {
+            answersPayload.current.push(pld);
+        }
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
@@ -261,7 +291,7 @@ const ExponentsAndPowersTest = () => {
                 student_answer: isSkipped ? "SKIPPED" : selectedOption,
                 is_correct: isSkipped ? false : isCorrect,
                 solution_text: currentQ.solution,
-                time_spent_seconds: timeSpent
+                time_spent_seconds: Math.round(timeSpentMs / 1000)
             };
             api.recordAttempt(attemptData).catch(console.error);
         }
@@ -275,12 +305,12 @@ const ExponentsAndPowersTest = () => {
     };
 
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (qIndex < questions.length - 1) {
-            navigateToQuestion(qIndex + 1);
+            await navigateToQuestion(qIndex + 1);
         } else {
-            handleRecordResponse();
-            finalizeTest();
+            await handleRecordResponse();
+            await finalizeTest();
         }
     };
 
@@ -292,7 +322,17 @@ const ExponentsAndPowersTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
-        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        if (sessionId) {
+            // v4 compile
+            await finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: answersPayload.current.length,
+                answersPayload: answersPayload.current
+            });
+
+            // legacy finish
+            await api.finishSession(sessionId).catch(console.error);
+        }
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);

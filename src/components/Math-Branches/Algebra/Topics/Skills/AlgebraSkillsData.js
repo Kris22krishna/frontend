@@ -67,7 +67,7 @@ const genPowerOfQuotientQuestions = () => {
     const n = _rnd(2,3), d = _rnd(4,5), p = _rnd(2,3);
     return [
         _mkQ(`Simplify: $\\left(\\frac{${n}}{${d}}\\right)^{${p}}$`, [`$\\frac{${n}^{${p}}}{${d}^{${p}}}$`,`$\\frac{${n*p}}{${d*p}}$`,`$\\frac{${n}^{${p}}}{${d}}$`,`$1$`], `Power applies to top and bottom.`),
-        _mkQ(`Simplify: $\\left(\\frac{x}{y}\\right)^{${p}}$`, [`$\\frac{x^{${p}}}{y^{${p}}$`,`$\\frac{x}{y^{${p}}}$`,`$x^{${p}}y^{${p}}$`,`$\\frac{${p}x}{${p}y}$`], `Distribute power to both.`),
+        _mkQ(`Simplify: $\\left(\\frac{x}{y}\\right)^{${p}}$`, [`$\\frac{x^{${p}}}{y^{${p}}}$`,`$\\frac{x}{y^{${p}}}$`,`$x^{${p}}y^{${p}}$`,`$\\frac{${p}x}{${p}y}$`], `Distribute power to both.`),
         _mkQ(`Simplify: $\\left(\\frac{2 \\cdot 3}{5}\\right)^{2}$`, [`$\\frac{6^{2}}{5^{2}}$`,`$\\frac{6}{5}$`,`$\\frac{36}{25}$`,`$\\frac{12}{10}$`], `Calculate the 6 first, then square both.`),
         _mkQ(`Simplify: $\\left(\\frac{a}{bc}\\right)^{${p}}$`, [`$\\frac{a^{${p}}}{b^{${p}}c^{${p}}}$`,`$\\frac{a}{b^{${p}}c^{${p}}}$`,`$\\frac{a^{${p}}}{bc}$`,`$a^{${p}}b^{${p}}c^{${p}}$`], `Everything inside gets the power.`),
         _mkQ(`Simplify: $\\left(\\frac{2x^{3}}{y^{2}}\\right)^{3}$`, [`$\\frac{8x^{9}}{y^{6}}$`,`$\\frac{6x^{9}}{y^{6}}$`,`$\\frac{8x^{6}}{y^{5}}$`,`$\\frac{2x^{9}}{y^{6}}$`], `Cube every part of the fraction.`),

@@ -292,6 +292,8 @@
     min-height: 100vh;
     background: #f8fafc;
     font-family: 'Open Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ── TOP NAV ────────────────────────────────────────────────── */
@@ -300,12 +302,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 20px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
     border-bottom: 1px solid #f1f5f9;
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
     position: sticky;
-    top: 0;
-    z-index: 100;
+    top: 80px;
+    z-index: 1000;
     flex-wrap: wrap;
     gap: 8px;
 }
@@ -929,3 +932,102 @@
 .poly-fill-input:focus {
     border-color: #6366f1;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE PORTRAIT (≤480px)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .poly-left { padding: 40px 16px; min-height: 260px; }
+    .poly-main-title { font-size: 1.8rem; }
+    .poly-main-sub { font-size: 13px; margin-bottom: 20px; }
+    .poly-right { padding: 24px 16px; }
+    .poly-card-btn { padding: 12px 14px; gap: 12px; border-radius: 14px; }
+    .poly-card-icon { width: 40px; height: 40px; font-size: 20px; border-radius: 10px; }
+    .poly-card-label { font-size: 15px; }
+    .poly-card-desc { font-size: 12px; }
+    .poly-card-chevron { font-size: 22px; }
+
+    .poly-nav { padding: 8px 12px; top: 56px; }
+    .poly-nav-back { padding: 5px 10px; font-size: 11px; }
+    .poly-nav-link { padding: 5px 10px; font-size: 11px; }
+    .poly-module-hero { padding: 16px 14px; }
+    .poly-module-title { font-size: 1.15rem; }
+    .poly-module-subtitle { font-size: 11px; }
+    .poly-section { padding: 12px 14px 24px; }
+
+    .poly-quiz-card { padding: 16px; border-radius: 14px; }
+    .poly-quiz-options { grid-template-columns: 1fr; gap: 8px; }
+
+    .poly-skill-card { padding: 14px; gap: 12px; border-radius: 14px; }
+    .poly-skill-icon { width: 40px; height: 40px; font-size: 20px; }
+    .poly-skill-actions { gap: 6px; }
+    .poly-skill-btn-outline, .poly-skill-btn-filled { padding: 6px 12px; font-size: 11px; }
+
+    .poly-learn-grid { grid-template-columns: 1fr; gap: 12px; }
+    .poly-details-window { padding: 16px; border-radius: 14px; }
+    .poly-rule-split { grid-template-columns: 1fr; gap: 12px; }
+
+    .poly-btn-primary { padding: 10px 20px; font-size: 13px; }
+    .poly-btn-secondary { padding: 10px 20px; font-size: 13px; }
+    .poly-btn-large { padding: 12px 28px; font-size: 14px; }
+
+    .poly-tab { padding: 8px 14px; font-size: 12px; }
+    .poly-learn-footer { gap: 8px; }
+
+    .poly-5w1h-grid { grid-template-columns: 1fr; gap: 8px; }
+    .poly-5w1h-header { padding: 14px 16px; gap: 10px; }
+    .poly-5w1h-icon { width: 34px; height: 34px; font-size: 16px; }
+    .poly-5w1h-q { font-size: 13px; }
+    .poly-5w1h-body { padding: 12px 16px 16px; }
+
+    .poly-assessment-layout { flex-direction: column; gap: 12px; }
+    .poly-assessment-palette { width: 100%; position: static; padding: 14px; border-radius: 14px; }
+    .poly-fill-input { width: 100px; font-size: 15px; padding: 10px 12px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤768px)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .poly-nav { top: 56px; }
+    .poly-5w1h-grid { grid-template-columns: repeat(2, 1fr); }
+    .poly-learn-grid { grid-template-columns: 1fr; }
+    .poly-assessment-layout { flex-direction: column; }
+    .poly-assessment-palette { width: 100%; position: static; }
+    .poly-skill-card { flex-direction: column; align-items: flex-start; }
+    .poly-skill-actions { width: 100%; }
+    .poly-skill-actions > button { flex: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — LANDSCAPE (short viewports)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-height: 500px) and (orientation: landscape) {
+    .poly-left { padding: 20px 16px; min-height: auto; }
+    .poly-main-title { font-size: 1.6rem; margin-bottom: 8px; }
+    .poly-main-sub { font-size: 12px; margin-bottom: 12px; }
+    .poly-stat { padding: 8px 12px; }
+    .poly-stat-num { font-size: 18px; }
+    .poly-right { padding: 16px 20px; }
+    .poly-card-btn { padding: 10px 14px; }
+
+    .poly-nav { top: 56px; padding: 6px 12px; }
+    .poly-nav-link { padding: 4px 8px; font-size: 11px; }
+    .poly-module-hero { padding: 12px 14px; }
+    .poly-module-title { font-size: 1.1rem; }
+    .poly-section { padding: 10px 14px 20px; }
+    .poly-quiz-card { padding: 16px; }
+    .poly-skill-card { padding: 12px 14px; }
+    .poly-assessment-palette { padding: 12px; }
+}
+
+@media (max-width: 768px) and (max-height: 500px) and (orientation: landscape) {
+    .poly-fullpage { flex-direction: row; height: 100vh; overflow: hidden; }
+    .poly-left { flex: 0 0 40%; min-height: auto; padding: 16px; }
+    .poly-right { padding: 16px; overflow-y: auto; }
+    .poly-nav { top: 0; }
+    .poly-module-hero { padding: 10px 12px; }
+    .poly-module-title { font-size: 1rem; }
+    .poly-learn-grid { grid-template-columns: 180px 1fr; }
+    .poly-5w1h-grid { grid-template-columns: repeat(2, 1fr); }
+}
