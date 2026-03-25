@@ -832,22 +832,22 @@
 
 .chem-lab-picker {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
   margin-bottom: 32px;
 }
 
 .chem-lab-stage {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 28px;
   align-items: start;
 }
 
 .chem-card-exp { grid-column: 1; grid-row: 1; }
 .chem-card-obs { grid-column: 1; grid-row: 2; }
 .chem-card-safety { grid-column: 1; grid-row: 3; }
-.chem-card-scene { grid-column: 2; grid-row: 1 / span 3; }
+.chem-card-scene { grid-column: 2; grid-row: 1 / span 3; position: sticky; top: 100px; }
 
 /* ── CORE CONCEPTS ──────────────────────────────────── */
 
@@ -1930,8 +1930,16 @@
   gap: 16px;
   margin-bottom: 32px;
   overflow-x: auto;
-  padding-bottom: 12px;
+  padding-bottom: 15px;
   scroll-snap-type: x mandatory;
+}
+
+@media (min-width: 1024px) {
+  .chem-lab-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: visible;
+  }
 }
 
 .chem-lab-picker::-webkit-scrollbar {
@@ -1987,9 +1995,17 @@
 }
 
 .chem-lab-stage {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
   gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .chem-lab-stage {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .chem-card-exp {
@@ -2226,7 +2242,9 @@
 
 @media (min-width: 1024px) {
   .chem-lab-stage {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 32px;
   }
 }
 
