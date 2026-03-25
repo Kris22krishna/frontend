@@ -80,9 +80,7 @@ const DynamicVisual = ({ type, data }) => {
         };
         return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', padding: '10px' }}>
-                <div style={{ fontSize: '0.9rem', color: '#64748b', textAlign: 'center', marginBottom: '10px', fontWeight: 'bold' }}>
-                    📏 Align objects at the start to compare!
-                </div>
+
                 {renderObject(aLength, '#4ECDC4', objectType, 'A')}
                 {renderObject(bLength, '#FF6B6B', objectType, 'B')}
             </div>
@@ -718,7 +716,7 @@ const Grade2WhatIsLong = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Next <ChevronRight size={24} />
+                                    Check Answer <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
