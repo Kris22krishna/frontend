@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Timer, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
+import { Timer, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { api } from '../../../../services/api';
@@ -92,6 +92,47 @@ const Grade2TensAndOnes = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
+    const getNextSkill = () => {
+        const grade2Config = TOPIC_CONFIGS['2'];
+        if (!grade2Config) return null;
+
+        const topics = Object.keys(grade2Config);
+        let currentTopicIdx = -1;
+        let currentSkillIdx = -1;
+
+        for (let i = 0; i < topics.length; i++) {
+            const skills = grade2Config[topics[i]];
+            const idx = skills.findIndex(s => s.id === skillId);
+            if (idx !== -1) {
+                currentTopicIdx = i;
+                currentSkillIdx = idx;
+                break;
+            }
+        }
+
+        if (currentTopicIdx === -1) return null;
+
+        const currentTopicSkills = grade2Config[topics[currentTopicIdx]];
+
+        if (currentSkillIdx < currentTopicSkills.length - 1) {
+            return {
+                ...currentTopicSkills[currentSkillIdx + 1],
+                topic: topics[currentTopicIdx]
+            };
+        }
+
+        if (currentTopicIdx < topics.length - 1) {
+            const nextTopicSkills = grade2Config[topics[currentTopicIdx + 1]];
+            if (nextTopicSkills.length > 0) {
+                return {
+                    ...nextTopicSkills[0],
+                    topic: topics[currentTopicIdx + 1]
+                };
+            }
+        }
+
+        return null;
+    };
 
     const generateTensOnesQuestions = () => {
         const qs = [];
@@ -240,8 +281,23 @@ const Grade2TensAndOnes = () => {
                         </div>
                     )}
                     <div className="results-actions">
-                        <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}><RefreshCw size={24} /> Start New Quest</button>
-                        <button className="action-btn-large back-topics-btn" onClick={() => navigate('/junior/grade/2')}><FileText size={24} /> Back to Topics</button>
+                        <button className="action-btn-large play-again-btn" onClick={() => window.location.reload()}>
+                            <RefreshCw size={24} /> Retake Test
+                        </button>
+
+                        {getNextSkill() && (
+                            <button className="action-btn-large next-skill-btn" onClick={() => {
+                                const next = getNextSkill();
+                                navigate(`/junior/grade/2/${next.route}?skillId=${next.id}`);
+                                window.location.reload();
+                            }}>
+                                Next Skill <ArrowRight size={24} />
+                            </button>
+                        )}
+
+                        <button className="action-btn-large back-topics-btn" onClick={() => navigate('/junior/grade/2')}>
+                            <FileText size={24} /> Back to Topics
+                        </button>
                     </div>
                 </main>
             </div>
@@ -279,7 +335,7 @@ const Grade2TensAndOnes = () => {
                         <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}><ChevronLeft size={24} /> Prev</button>
                         <div>
                             {isAnswered && !isTest && !answers[qIndex]?.isCorrect && <button className="g1-nav-btn steps-btn" onClick={() => setShowExplanationModal(true)}><Eye size={24} /> Steps</button>}
-                            {!isAnswered ? <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>Next <ChevronRight size={24} /></button> : <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>{qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} /></button>}
+                            {!isAnswered ? <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>Check Answer <ChevronRight size={24} /></button> : <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>{qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} /></button>}
                         </div>
                     </div>
                 </motion.div>
