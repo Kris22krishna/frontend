@@ -540,9 +540,10 @@ import CoordinateGeometryConnectomics from './components/practice/class-10/Coord
 import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactionsDashboard';
 import ChemReactionsIntro from './components/science/grade10/Topics/Introduction/ChemReactionsIntro';
 import ChemReactionsTerminology from './components/science/grade10/Topics/Terminology/ChemReactionsTerminology';
-import ChemReactionsSkills from './components/science/grade10/Topics/Skills/ChemReactionsSkills';
+import ChemReactionsCoreConcepts from './components/science/grade10/Topics/CoreConcepts/ChemReactionsCoreConcepts';
 import ChemReactionsConnectomics from './components/science/grade10/Topics/Connectomics/ChemReactionsConnectomics';
 import ChemReactionsExamEdge from './components/science/grade10/Topics/ExamEdge/ChemReactionsExamEdge';
+import ChemReactionsVirtualLab from './components/science/grade10/Topics/VirtualLab/ChemReactionsVirtualLab';
 
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';
@@ -808,9 +809,10 @@ function App() {
           <Route path="/senior/grade/10/science/chemical-reactions" element={<ChemicalReactionsDashboard />} />
           <Route path="/senior/grade/10/science/chemical-reactions/introduction" element={<ChemReactionsIntro />} />
           <Route path="/senior/grade/10/science/chemical-reactions/terminology" element={<ChemReactionsTerminology />} />
-          <Route path="/senior/grade/10/science/chemical-reactions/skills" element={<ChemReactionsSkills />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/core-concepts" element={<ChemReactionsCoreConcepts />} />
           <Route path="/senior/grade/10/science/chemical-reactions/connectomics" element={<ChemReactionsConnectomics />} />
           <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/virtual-lab" element={<ChemReactionsVirtualLab />} />
 
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />

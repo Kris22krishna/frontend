@@ -702,58 +702,58 @@ const SeniorGradeSyllabus = () => {
 
                     <div className="page-title">
                         {grade === '10' ? (
-                            <div className="subjToggleWrap" style={{
-                                display: 'flex', alignItems: 'center', gap: '6px',
-                                background: '#f1f5f9', borderRadius: '100px', padding: '4px', marginBottom: '16px', width: 'fit-content'
-                            }}>
-                                <button
-                                    onClick={() => setActiveSubject('mathematics')}
-                                    style={{
-                                        fontFamily: 'Inter, system-ui, sans-serif', fontSize: '0.8rem', fontWeight: '700',
-                                        padding: '8px 22px', borderRadius: '100px', border: 'none', cursor: 'pointer',
-                                        transition: 'all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)', letterSpacing: '0.03em',
-                                        background: activeSubject === 'mathematics' ? 'linear-gradient(135deg, #4F46E5, #7C3AED)' : 'transparent',
-                                        color: activeSubject === 'mathematics' ? '#fff' : '#64748b',
-                                        boxShadow: activeSubject === 'mathematics' ? '0 4px 14px rgba(79,70,229,0.4)' : 'none',
-                                        transform: activeSubject === 'mathematics' ? 'scale(1.04)' : 'scale(1)'
-                                    }}
-                                >
-                                    Mathematics
-                                </button>
-                                <button
-                                    onClick={() => setActiveSubject('science')}
-                                    style={{
-                                        fontFamily: 'Inter, system-ui, sans-serif', fontSize: '0.8rem', fontWeight: '700',
-                                        padding: '8px 22px', borderRadius: '100px', border: 'none', cursor: 'pointer',
-                                        transition: 'all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)', letterSpacing: '0.03em',
-                                        background: activeSubject === 'science' ? 'linear-gradient(135deg, #0891b2, #059669)' : 'transparent',
-                                        color: activeSubject === 'science' ? '#fff' : '#64748b',
-                                        boxShadow: activeSubject === 'science' ? '0 4px 14px rgba(8,145,178,0.4)' : 'none',
-                                        transform: activeSubject === 'science' ? 'scale(1.04)' : 'scale(1)'
-                                    }}
-                                >
-                                    Science
-                                </button>
+                            <div style={{ marginBottom: '12px' }}>
+                                <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '20px' }}>Grade 10 — Select Subject</div>
+                                <div className="subjToggleWrap" style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: '8px',
+                                    background: '#f1f5f9', borderRadius: '100px', padding: '6px', boxShadow: '0 4px 20px rgba(0,0,0,0.08), inset 0 1px 2px rgba(0,0,0,0.06)'
+                                }}>
+                                    <button
+                                        onClick={() => setActiveSubject('mathematics')}
+                                        style={{
+                                            fontFamily: 'Outfit, system-ui, sans-serif', fontSize: '1.1rem', fontWeight: '800',
+                                            padding: '14px 40px', borderRadius: '100px', border: 'none', cursor: 'pointer',
+                                            transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)', letterSpacing: '0.02em',
+                                            background: activeSubject === 'mathematics' ? 'linear-gradient(135deg, #4F46E5, #7C3AED)' : 'transparent',
+                                            color: activeSubject === 'mathematics' ? '#fff' : '#64748b',
+                                            boxShadow: activeSubject === 'mathematics' ? '0 6px 20px rgba(79,70,229,0.45)' : 'none',
+                                            transform: activeSubject === 'mathematics' ? 'scale(1.04)' : 'scale(1)'
+                                        }}
+                                    >
+                                        📐 Mathematics
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveSubject('science')}
+                                        style={{
+                                            fontFamily: 'Outfit, system-ui, sans-serif', fontSize: '1.1rem', fontWeight: '800',
+                                            padding: '14px 40px', borderRadius: '100px', border: 'none', cursor: 'pointer',
+                                            transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)', letterSpacing: '0.02em',
+                                            background: activeSubject === 'science' ? 'linear-gradient(135deg, #0891b2, #059669)' : 'transparent',
+                                            color: activeSubject === 'science' ? '#fff' : '#64748b',
+                                            boxShadow: activeSubject === 'science' ? '0 6px 20px rgba(8,145,178,0.45)' : 'none',
+                                            transform: activeSubject === 'science' ? 'scale(1.04)' : 'scale(1)'
+                                        }}
+                                    >
+                                        🔬 Science
+                                    </button>
+                                </div>
                             </div>
                         ) : (
-                            <span style={{
-                                fontSize: '0.75rem',
-                                fontWeight: '700',
-                                color: '#4F46E5',
-                                background: '#EEF2FF',
-                                padding: '4px 12px',
-                                borderRadius: '20px',
-                                marginBottom: '10px',
-                                display: 'inline-block',
-                                letterSpacing: '0.05em'
-                            }}>HIGH SCHOOL MATHEMATICS</span>
+                            <>
+                                <span style={{
+                                    fontSize: '0.75rem',
+                                    fontWeight: '700',
+                                    color: '#4F46E5',
+                                    background: '#EEF2FF',
+                                    padding: '4px 12px',
+                                    borderRadius: '20px',
+                                    marginBottom: '10px',
+                                    display: 'inline-block',
+                                    letterSpacing: '0.05em'
+                                }}>HIGH SCHOOL MATHEMATICS</span>
+                                <h1>Grade {grade} Curriculum</h1>
+                            </>
                         )}
-                        <h1>Grade {grade} Curriculum</h1>
-                    </div>
-
-                    <div className="page-subtitle">
-                        <span><BookOpen size={18} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }} /> {topics.length} Chapters</span>
-                        <span><Activity size={18} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'text-bottom' }} /> {skills.length} Skills</span>
                     </div>
                 </div>
             </header>

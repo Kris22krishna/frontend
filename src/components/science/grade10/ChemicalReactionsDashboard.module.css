@@ -1,1433 +1,942 @@
-/* ─── Chemical Reactions & Equations — Module CSS ──────────────────────── */
-/* Prefix: chem- */
+/* =====================================================
+   REAL NUMBERS MODULE – Modular Design
+   ===================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
-/* ── CSS Variables ─────────────────────────────────────────────────────── */
-.chemRoot {
-  --chem-bg: #0d1117;
-  --chem-surface: #161b22;
-  --chem-surface2: #1f2937;
-  --chem-border: #30363d;
-  --chem-accent: #f97316;
-  --chem-accent2: #38bdf8;
-  --chem-accent3: #a3e635;
-  --chem-indigo: #818cf8;
-  --chem-text: #e6edf3;
-  --chem-muted: #7d8590;
-  --chem-success: #4ade80;
-  --chem-danger: #ff6b6b;
-  --chem-warning: #fbbf24;
-  font-family: 'Outfit', sans-serif;
-  background: var(--chem-bg);
-  color: var(--chem-text);
-  min-height: 100vh;
+/* ── TOKENS ─────────────────────────────────────────── */
+:root {
+  --chem-teal: #0d9488;
+  --chem-indigo: #4f46e5;
+  --chem-violet: #7c3aed;
+  --chem-blue: #2563eb;
+  --chem-text: #0f172a;
+  --chem-muted: #64748b;
+  --chem-card: #ffffff;
+  --chem-border: #e2e8f0;
+  --chem-success: #10b981;
+  --chem-wrong: #ef4444;
+  --chem-red: #ef4444;
+  --chem-r: 14px;
+  --chem-rlg: 20px;
+  --chem-sh: 0 4px 20px rgba(0, 0, 0, 0.09);
+  --chem-shlg: 0 12px 40px rgba(0, 0, 0, 0.14);
 }
 
-/* ── SCROLLBAR ─────────────────────────────────────────────────────────── */
-.chemRoot ::-webkit-scrollbar { width: 5px; }
-.chemRoot ::-webkit-scrollbar-track { background: var(--chem-bg); }
-.chemRoot ::-webkit-scrollbar-thumb { background: var(--chem-border); border-radius: 3px; }
+/* ══════════════════════════════════════════════════════
+   FULL-VIEWPORT LANDING PAGE (RealNumbersDashboard)
+   ══════════════════════════════════════════════════════ */
 
-/* ════════════════════════════════════════════════════════════════════════
-   DASHBOARD (full-page split layout)
-════════════════════════════════════════════════════════════════════════ */
-.chemFullPage {
+.chem-fullpage {
   display: flex;
-  min-height: 100vh;
-}
-
-/* LEFT HERO PANEL */
-.chemLeft {
-  width: 42%;
-  background: linear-gradient(160deg, #0d1117 0%, #1a0a2e 50%, #0d1117 100%);
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 48px 40px;
+  min-height: calc(100vh - 64px);
+  font-family: 'Inter', system-ui, sans-serif;
   overflow: hidden;
-  flex-shrink: 0;
+  background: #f1f5f9;
 }
 
-.chemDeco {
+.chem-left {
+  position: relative;
+  flex: 0 0 46%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 56px 48px 48px 56px;
+  overflow: hidden;
+  background: linear-gradient(145deg,
+      #1e1b4b 0%,
+      #312e81 25%,
+      #4338ca 50%,
+      #581c87 75%,
+      #4c1d95 100%);
+}
+
+.chem-deco {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
 }
-.chemDecoA {
-  width: 380px; height: 380px;
-  background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
-  top: -80px; left: -60px;
-}
-.chemDecoB {
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, transparent 70%);
-  bottom: -60px; right: -40px;
+
+.chem-deco-a {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+  top: -80px;
+  left: -80px;
 }
 
-.chemLeftContent {
+.chem-deco-b {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, transparent 70%);
+  bottom: -60px;
+  right: -40px;
+}
+
+.chem-left-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
 }
 
-.chemNavBack {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: #fff;
-  font-family: 'Syne', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 18px;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 40px;
-  letter-spacing: 0.03em;
-}
-.chemNavBack:hover {
-  background: rgba(255,255,255,0.16);
+.chem-main-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
 }
 
-.chemBadgePill {
-  display: inline-block;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  color: var(--chem-accent);
-  background: rgba(249,115,22,0.12);
-  border: 1px solid rgba(249,115,22,0.3);
-  padding: 4px 14px;
-  border-radius: 100px;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-}
-
-.chemMainTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2rem, 3.5vw, 2.8rem);
-  font-weight: 800;
-  line-height: 1.15;
-  margin: 0 0 16px;
-  color: #fff;
-}
-
-.chemTitleAccent {
-  background: linear-gradient(135deg, #f97316, #fb923c, #38bdf8);
+.chem-title-accent {
+  background: linear-gradient(90deg, #818cf8 0%, #a5f3fc 40%, #fef9c3 80%, #fde68a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.chemMainSub {
-  font-size: 0.95rem;
-  color: var(--chem-muted);
-  line-height: 1.65;
+.chem-main-sub {
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.75;
+  max-width: 400px;
   margin: 0 0 36px;
+  font-weight: 400;
 }
 
-.chemStatsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.chem-stats-grid {
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
-.chemStat {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
-  padding: 14px 16px;
+.chem-stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 14px 20px;
+  min-width: 80px;
+  transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.chemStatNum {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--chem-accent);
+.chem-stat:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.18);
 }
 
-.chemStatLbl {
-  font-size: 0.75rem;
-  color: var(--chem-muted);
-  letter-spacing: 0.05em;
+.chem-stat-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chem-stat-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 5px;
+  text-align: center;
   text-transform: uppercase;
 }
 
-/* RIGHT MODULES PANEL */
-.chemRight {
+.chem-right {
   flex: 1;
-  background: var(--chem-surface);
-  padding: 48px 36px;
-  overflow-y: auto;
-}
-
-.chemRightEyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
-  color: var(--chem-muted);
-  text-transform: uppercase;
-  margin-bottom: 24px;
-}
-
-.chemCardsCol {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  justify-content: center;
+  padding: 40px 40px 40px 36px;
+  background: #f8fafc;
 }
 
-.chemCardBtn {
+.chem-right-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--chem-indigo);
+  margin: 0 0 20px 4px;
+}
+
+.chem-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chem-card-btn {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: var(--chem-bg);
+  background: #ffffff;
   border: 1px solid var(--chem-border);
-  border-radius: 16px;
-  padding: 20px 20px 20px 0;
+  border-radius: var(--chem-rlg);
+  overflow: hidden;
   cursor: pointer;
-  transition: all 0.22s;
   text-align: left;
   width: 100%;
-  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
 }
 
-.chemCardBtn:hover {
-  border-color: var(--chem-accent);
-  transform: translateX(4px);
-  box-shadow: 0 8px 24px rgba(249,115,22,0.12);
+.chem-card-btn:hover {
+  transform: translateX(6px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  border-color: var(--chem-indigo);
 }
 
-.chemCardStrip {
-  width: 5px;
+.chem-card-strip {
+  width: 6px;
   align-self: stretch;
-  border-radius: 0;
   flex-shrink: 0;
 }
 
-.chemCardIcon {
+.chem-card-icon {
   width: 52px;
   height: 52px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 24px;
   flex-shrink: 0;
+  margin: 20px 18px 20px 20px;
 }
 
-.chemCardText { flex: 1; }
-
-.chemCardTagline {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  color: var(--chem-muted);
-  text-transform: uppercase;
-  margin-bottom: 2px;
+.chem-card-text {
+  flex: 1;
+  padding: 18px 0;
 }
 
-.chemCardLabel {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
+.chem-card-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 3px;
   color: var(--chem-text);
-  margin-bottom: 4px;
 }
 
-.chemCardDesc {
-  font-size: 0.8rem;
+.chem-card-tagline {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
   color: var(--chem-muted);
-  line-height: 1.5;
+  margin-bottom: 6px;
 }
 
-.chemCardChevron {
+.chem-card-desc {
+  font-size: 13px;
   color: var(--chem-muted);
-  margin-right: 4px;
-  flex-shrink: 0;
-  transition: color 0.2s;
+  line-height: 1.55;
+  max-width: 340px;
 }
-.chemCardBtn:hover .chemCardChevron { color: var(--chem-accent); }
 
-/* ════════════════════════════════════════════════════════════════════════
-   INNER PAGE SHELL (Intro, Terminology, Skills, etc.)
-════════════════════════════════════════════════════════════════════════ */
-.chemPage {
-  background: var(--chem-bg);
+.chem-card-chevron {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0 22px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  transform: translateX(-6px);
+  color: var(--chem-indigo);
+}
+
+.chem-card-btn:hover .chem-card-chevron {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── SHARED TOPIC PAGE CLASSES ─────────────────────── */
+
+.chem-page {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f8fafc;
+  color: var(--chem-text);
   min-height: 100vh;
 }
 
-/* TOP NAV */
-.chemNav {
+.chem-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(13,17,23,0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--chem-border);
-  display: flex;
+}
+
+.chem-nav-back {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 24px;
-  flex-wrap: wrap;
-  min-height: 56px;
-}
-
-.chemNavLinks {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.chemNavLink {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 6px 14px;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--chem-indigo);
+  background: rgba(79, 70, 229, 0.08);
+  border: 1.5px solid rgba(79, 70, 229, 0.2);
   border-radius: 100px;
-  border: none;
-  background: transparent;
-  color: var(--chem-muted);
+  padding: 8px 18px;
   cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.03em;
-}
-.chemNavLink:hover { color: var(--chem-text); background: rgba(255,255,255,0.06); }
-.chemNavLinkActive {
-  composes: chemNavLink;
-  color: var(--chem-accent) !important;
-  background: rgba(249,115,22,0.1) !important;
+  transition: all 0.2s ease;
 }
 
-/* HERO STRIP */
-.chemHero {
-  background: linear-gradient(135deg, #0d1117 0%, #1a0a2e 60%, #0d1117 100%);
-  padding: 48px 32px 36px;
+.chem-nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.chem-nav-link {
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: var(--chem-muted);
+}
+
+.chem-nav-link.active {
+  background: linear-gradient(135deg, var(--chem-indigo), var(--chem-violet));
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+}
+
+.chem-hero {
+  background: linear-gradient(145deg, #1e1b4b 0%, #312e81 100%);
+  padding: 48px 24px;
   text-align: center;
+  color: #fff;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--chem-border);
 }
 
-.chemHero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 30% 60%, rgba(249,115,22,0.1) 0%, transparent 55%),
-    radial-gradient(ellipse at 70% 40%, rgba(56,189,248,0.08) 0%, transparent 55%);
-}
-
-.chemHeroTitle {
-  font-family: 'Syne', sans-serif;
+.chem-hero-title {
+  font-family: 'Outfit', sans-serif;
   font-size: clamp(1.8rem, 4vw, 2.8rem);
-  font-weight: 800;
-  color: var(--chem-text);
-  margin: 0 0 10px;
+  font-weight: 900;
+  margin-bottom: 8px;
   position: relative;
+  z-index: 2;
 }
 
-.chemHeroSub {
-  font-size: 1rem;
-  color: var(--chem-muted);
-  font-style: italic;
-  position: relative;
-  margin: 0;
-}
-
-/* MAIN CONTENT SHELL */
-.chemShell {
-  max-width: 1200px;
+.chem-hero-sub {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 48px 24px 80px;
+  position: relative;
+  z-index: 2;
 }
 
-/* SECTION HEADING */
-.chemSectionTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--chem-text);
-  margin-bottom: 8px;
-}
+/* ── 5W1H CARDS ────────────────────────────────────── */
 
-.chemSectionDesc {
-  color: var(--chem-muted);
-  font-size: 0.9rem;
-  font-style: italic;
-  margin-bottom: 28px;
-}
-
-.chemSectionBlock {
-  margin-bottom: 64px;
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   PREREQUISITES
-════════════════════════════════════════════════════════════════════════ */
-.chemPrereqGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
-}
-
-.chemPrereqCard {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 16px;
-  padding: 24px;
-  transition: border-color 0.2s, transform 0.2s;
-}
-.chemPrereqCard:hover {
-  border-color: var(--chem-accent2);
-  transform: translateY(-2px);
-}
-
-.chemPrereqIcon { font-size: 2rem; margin-bottom: 12px; }
-
-.chemPrereqTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--chem-accent2);
-  margin-bottom: 8px;
-}
-
-.chemPrereqDesc { font-size: 0.85rem; color: var(--chem-muted); margin-bottom: 10px; }
-
-.chemPrereqList { list-style: none; padding: 0; margin: 0; }
-.chemPrereqList li {
-  font-size: 0.82rem;
-  color: var(--chem-text);
-  padding: 3px 0;
-}
-.chemPrereqList li::before { content: '▸ '; color: var(--chem-accent); }
-
-/* ════════════════════════════════════════════════════════════════════════
-   5W1H INTRO CARDS
-════════════════════════════════════════════════════════════════════════ */
-.chemIntroGrid {
+.chem-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 18px;
+  gap: 24px;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.chemIntroCard {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.chemIntroCard:hover { border-color: rgba(249,115,22,0.4); transform: translateY(-2px); }
-.chemIntroCardOpen { border-color: rgba(249,115,22,0.5) !important; box-shadow: 0 8px 32px rgba(249,115,22,0.1); }
-
-.chemIntroCardStrip { height: 4px; width: 100%; }
-
-.chemIntroCardHeader {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 18px 20px;
-}
-
-.chemIntroCardIconWrap {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  flex-shrink: 0;
-}
-
-.chemIntroCardQ {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-
-.chemIntroCardLabel {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--chem-text);
-}
-
-.chemIntroCardChevron {
-  margin-left: auto;
-  color: var(--chem-muted);
-  transition: transform 0.3s;
-  font-size: 0.8rem;
-}
-.chemIntroCardChevronOpen { transform: rotate(180deg); color: var(--chem-accent); }
-
-.chemIntroCardBody {
-  padding: 0 20px 20px;
-  animation: chemFadeIn 0.25s ease;
-}
-
-.chemIntroCardContent {
-  font-size: 0.88rem;
-  color: var(--chem-muted);
-  line-height: 1.65;
-  margin-bottom: 12px;
-}
-
-.chemIntroCardFact {
-  background: rgba(249,115,22,0.07);
-  border: 1px solid rgba(249,115,22,0.2);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 0.82rem;
-  color: var(--chem-text);
-  line-height: 1.5;
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   TERMINOLOGY GRID
-════════════════════════════════════════════════════════════════════════ */
-.chemTermsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.chemTermCard {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 16px;
-  padding: 20px;
-  transition: all 0.2s;
-}
-.chemTermCard:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
-
-.chemTermHeader {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-left: 4px solid;
-  padding-left: 12px;
-  margin-bottom: 12px;
-}
-
-.chemTermIcon { font-size: 1.6rem; }
-
-.chemTermName {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.chemTermDef {
-  font-size: 0.85rem;
-  color: var(--chem-text);
-  margin-bottom: 10px;
-  line-height: 1.55;
-}
-
-.chemTermExamples {
-  background: rgba(255,255,255,0.04);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.78rem;
-  color: var(--chem-accent2);
-  margin-bottom: 10px;
-}
-
-.chemTermInUse {
-  font-size: 0.8rem;
-  color: var(--chem-muted);
-  font-style: italic;
-  margin-bottom: 8px;
-}
-
-.chemTermMemory {
-  display: inline-block;
-  background: rgba(163,230,53,0.08);
-  border: 1px solid rgba(163,230,53,0.2);
-  color: var(--chem-accent3);
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   COOL REACTIONS GRID
-════════════════════════════════════════════════════════════════════════ */
-.chemReactionsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.chemReactionCard {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-  transition: all 0.2s;
-}
-.chemReactionCard:hover { border-color: var(--chem-accent); transform: translateY(-2px); }
-
-.chemReactionEmoji { font-size: 2rem; margin-bottom: 8px; }
-
-.chemReactionTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--chem-text);
-  margin-bottom: 6px;
-}
-
-.chemReactionEq {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--chem-warning);
-  margin-bottom: 8px;
-}
-
-.chemReactionDesc { font-size: 0.75rem; color: var(--chem-muted); }
-
-/* ════════════════════════════════════════════════════════════════════════
-   SKILLS — Virtual Lab
-════════════════════════════════════════════════════════════════════════ */
-.chemLabWrap {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
-
-.chemLabSidebar {
-  width: 32%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.chemLabSidebarLabel {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--chem-muted);
-  margin-bottom: 4px;
-}
-
-.chemLabExpBtn {
-  text-align: left;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--chem-border);
-  background: var(--chem-surface);
-  cursor: pointer;
-  transition: all 0.2s;
-  width: 100%;
-}
-.chemLabExpBtn:hover { border-color: var(--chem-accent2); }
-.chemLabExpBtnActive { border-color: var(--chem-accent) !important; background: rgba(249,115,22,0.08) !important; }
-
-.chemLabExpBtnTitle {
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--chem-text);
-  margin-bottom: 4px;
-}
-
-.chemLabExpBtnDesc { font-size: 0.75rem; color: var(--chem-muted); line-height: 1.4; }
-
-.chemLabStage {
-  flex: 1;
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 16px;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-}
-
-.chemLabStageTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--chem-text);
-  margin-bottom: 6px;
-}
-
-.chemLabStageDesc { font-size: 0.85rem; color: var(--chem-muted); margin-bottom: 20px; }
-
-.chemLabSvgWrap {
-  flex: 1;
-  min-height: 240px;
-  background: #0a0e14;
-  border: 1px solid var(--chem-border);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-
-.chemLabSvg { max-height: 260px; width: 100%; }
-
-.chemLabControls {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.chemLabBtnRun {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 10px 28px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  background: var(--chem-success);
-  color: #000;
-  transition: all 0.2s;
-}
-.chemLabBtnRun:hover { background: #86efac; transform: translateY(-1px); }
-
-.chemLabBtnReset {
-  composes: chemLabBtnRun;
-  background: var(--chem-surface2) !important;
-  color: var(--chem-text) !important;
-  border: 1px solid var(--chem-border) !important;
-}
-.chemLabBtnReset:hover { border-color: var(--chem-accent2) !important; }
-
-.chemLabBtnWait {
-  composes: chemLabBtnRun;
-  background: var(--chem-border) !important;
-  color: var(--chem-muted) !important;
-  cursor: not-allowed !important;
-}
-
-.chemLabResult {
-  background: rgba(56,189,248,0.06);
-  border: 1px solid rgba(56,189,248,0.2);
-  border-radius: 12px;
-  padding: 16px 20px;
-  animation: chemFadeIn 0.3s ease;
-}
-
-.chemLabResultLabel {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  color: var(--chem-accent3);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.chemLabObservation { font-size: 0.88rem; color: var(--chem-text); margin-bottom: 10px; }
-
-.chemLabEqDisplay {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.9rem;
-  background: #0a0e14;
-  border: 1px dashed var(--chem-border);
-  border-radius: 8px;
-  padding: 10px 16px;
-  text-align: center;
-  color: var(--chem-accent2);
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   MASTERY SKILLS GRID
-════════════════════════════════════════════════════════════════════════ */
-.chemSkillGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.chemSkillCard {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 16px;
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.2s;
-}
-.chemSkillCard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-
-.chemSkillCardHeader {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 12px;
-}
-
-.chemSkillIconWrap {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-
-.chemSkillTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--chem-text);
-}
-
-.chemSkillDesc { font-size: 0.84rem; color: var(--chem-muted); margin-bottom: 14px; flex: 1; }
-
-.chemSkillHowLabel {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--chem-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 6px;
-}
-
-.chemSkillHowText {
-  font-size: 0.82rem;
-  color: var(--chem-text);
-  background: var(--chem-surface2);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 10px;
-  line-height: 1.5;
-  border: 1px solid var(--chem-border);
-}
-
-.chemSkillExample {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.78rem;
-  background: rgba(129,140,248,0.08);
-  border: 1px solid rgba(129,140,248,0.2);
-  color: var(--chem-indigo);
-  border-radius: 8px;
-  padding: 8px 12px;
-  line-height: 1.5;
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   FIVE RULES
-════════════════════════════════════════════════════════════════════════ */
-.chemRulesStack { display: flex; flex-direction: column; gap: 16px; }
-
-.chemRuleCard {
-  background: var(--chem-surface);
-  border-radius: 16px;
-  padding: 20px 24px;
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  border-left: 6px solid;
-  transition: box-shadow 0.2s;
-}
-.chemRuleCard:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
-
-.chemRuleNum {
-  font-family: 'Syne', sans-serif;
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--chem-muted);
-  flex-shrink: 0;
-  min-width: 50px;
-}
-
-.chemRuleTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--chem-text);
-  margin-bottom: 4px;
-}
-
-.chemRuleMain {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--chem-text);
-  margin-bottom: 6px;
-}
-
-.chemRuleDetail { font-size: 0.85rem; color: var(--chem-muted); line-height: 1.55; margin-bottom: 8px; }
-
-.chemRuleTip {
-  background: rgba(249,115,22,0.08);
-  border: 1px solid rgba(249,115,22,0.2);
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 0.8rem;
-  color: var(--chem-accent);
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   CONNECTOMICS — Mind Map
-════════════════════════════════════════════════════════════════════════ */
-.chemMindMap {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 20px;
-  padding: 28px;
-}
-
-.chemMindMapCenter {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.chemCentralNode {
-  display: inline-block;
-  background: linear-gradient(135deg, #f97316, #38bdf8);
-  color: #fff;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1rem;
-  padding: 12px 28px;
-  border-radius: 100px;
-  letter-spacing: 0.02em;
-}
-
-.chemBranches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-}
-
-.chemBranch {
-  background: var(--chem-surface2);
-  border: 1px solid var(--chem-border);
-  border-radius: 14px;
-  padding: 16px;
-  min-width: 200px;
-  flex: 1;
-  max-width: 280px;
-  border-top: 3px solid;
-}
-
-.chemBranchTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--chem-text);
-  margin-bottom: 10px;
-}
-
-.chemBranchList { list-style: none; padding: 0; margin: 0; }
-.chemBranchList li {
-  font-size: 0.8rem;
-  color: var(--chem-muted);
-  padding: 3px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.chemBranchList li::before { content: '→ '; color: var(--chem-accent); }
-
-.chemConnectBox {
-  background: rgba(56,189,248,0.06);
-  border: 1px solid rgba(56,189,248,0.2);
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-top: 20px;
-  font-size: 0.88rem;
-  color: var(--chem-muted);
-  line-height: 1.6;
-}
-
-/* ════════════════════════════════════════════════════════════════════════
-   STUDY TIPS GRID
-════════════════════════════════════════════════════════════════════════ */
-.chemStudyTipGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 14px;
-}
-
-.chemStudyTipCard {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-left: 4px solid var(--chem-success);
-  border-radius: 14px;
-  padding: 16px 18px;
-  font-size: 0.84rem;
-  color: var(--chem-muted);
-  line-height: 1.55;
-  transition: box-shadow 0.2s;
-}
-.chemStudyTipCard:hover { box-shadow: 0 4px 16px rgba(74,222,128,0.1); }
-
-.chemStudyTipCardTitle { font-weight: 700; color: var(--chem-text); margin-bottom: 4px; }
-
-/* ════════════════════════════════════════════════════════════════════════
-   EXAM EDGE — Equation Balancer
-════════════════════════════════════════════════════════════════════════ */
-.chemInteractiveTool {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 20px;
-  padding: 28px;
-  margin-bottom: 28px;
-}
-
-.chemToolTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--chem-text);
-  margin-bottom: 8px;
-}
-
-.chemToolDesc { font-size: 0.88rem; color: var(--chem-muted); margin-bottom: 20px; }
-
-.chemBalanceRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 1rem;
-  background: #0a0e14;
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 16px;
-}
-
-.chemCoeffInput {
-  width: 52px;
-  text-align: center;
-  background: var(--chem-surface2);
-  border: 1px solid var(--chem-border);
-  color: var(--chem-accent);
-  border-radius: 8px;
-  padding: 6px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.95rem;
-}
-.chemCoeffInput:focus { outline: none; border-color: var(--chem-accent); }
-
-.chemFormulaSpan { color: var(--chem-accent2); }
-.chemArrowSpan { color: var(--chem-muted); margin: 0 6px; }
-.chemPlusSpan { color: var(--chem-muted); margin: 0 6px; }
-
-.chemFeedback {
-  text-align: center;
-  font-size: 0.88rem;
-  padding: 8px 16px;
-  border-radius: 10px;
-  min-height: 36px;
-}
-.chemFeedbackCorrect { background: rgba(74,222,128,0.1); color: var(--chem-success); border: 1px solid rgba(74,222,128,0.3); }
-.chemFeedbackWrong { background: rgba(255,107,107,0.1); color: var(--chem-danger); border: 1px solid rgba(255,107,107,0.3); }
-
-.chemCheckBtn {
-  display: block;
-  margin: 14px auto 0;
-  font-family: 'Syne', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 10px 28px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  background: var(--chem-accent);
-  color: #000;
-  transition: all 0.2s;
-  letter-spacing: 0.04em;
-}
-.chemCheckBtn:hover { background: #fb923c; transform: translateY(-1px); }
-
-.chemHintText {
-  text-align: center;
-  font-size: 0.78rem;
-  color: var(--chem-muted);
-  font-style: italic;
-  margin-top: 10px;
-}
-
-/* Reaction Classifier */
-.chemClassifierQ {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.95rem;
-  color: var(--chem-accent2);
-  margin-bottom: 14px;
-  text-align: center;
-}
-
-.chemSelect {
-  display: block;
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto 12px;
-  background: var(--chem-surface2);
-  border: 1px solid var(--chem-border);
-  color: var(--chem-text);
-  font-family: 'Syne', sans-serif;
-  font-size: 0.88rem;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.chemSelect:focus { outline: none; border-color: var(--chem-accent); }
-
-/* ════════════════════════════════════════════════════════════════════════
-   EXAM EDGE — Vocab Quiz (2×2 options grid)
-════════════════════════════════════════════════════════════════════════ */
-.chemQuizWrap {
-  background: var(--chem-surface);
-  border: 1px solid var(--chem-border);
-  border-radius: 20px;
-  padding: 28px;
-}
-
-.chemQuizQ {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: var(--chem-text);
-}
-
-/* 2×2 options grid per rules.md */
-.chemQuizOptions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.chemQuizOpt {
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--chem-border);
-  background: var(--chem-surface2);
-  cursor: pointer;
-  font-size: 0.86rem;
-  color: var(--chem-text);
-  text-align: left;
-  transition: all 0.18s;
-}
-.chemQuizOpt:hover { border-color: var(--chem-accent2); color: var(--chem-accent2); }
-.chemQuizOptCorrect { border-color: var(--chem-success) !important; background: rgba(74,222,128,0.1) !important; color: var(--chem-success) !important; }
-.chemQuizOptWrong { border-color: var(--chem-danger) !important; background: rgba(255,107,107,0.1) !important; color: var(--chem-danger) !important; }
-
-.chemQuizFeedback {
-  font-size: 0.85rem;
-  padding: 10px 14px;
-  border-radius: 10px;
-  margin-top: 8px;
-}
-.chemQuizFbOk { background: rgba(74,222,128,0.1); color: var(--chem-success); border: 1px solid rgba(74,222,128,0.3); }
-.chemQuizFbNo { background: rgba(255,107,107,0.1); color: var(--chem-danger); border: 1px solid rgba(255,107,107,0.3); }
-
-.chemQuizNav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.chemQuizProgress {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.78rem;
-  color: var(--chem-muted);
-}
-
-.chemQuizScore {
-  background: rgba(56,189,248,0.12);
-  color: var(--chem-accent2);
-  border-radius: 20px;
-  padding: 4px 14px;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.chemQuizNextBtn {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 10px 24px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  background: var(--chem-surface2);
-  color: var(--chem-text);
-  border: 1px solid var(--chem-border);
-  transition: all 0.2s;
-}
-.chemQuizNextBtn:hover { border-color: var(--chem-accent); color: var(--chem-accent); }
-
-.chemQuizFinish {
-  text-align: center;
-  padding: 48px 24px;
-  animation: chemFadeIn 0.3s;
-}
-
-.chemQuizFinishScore {
-  font-size: 3rem;
-  margin-bottom: 8px;
-}
-
-.chemQuizFinishTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--chem-text);
-  margin-bottom: 6px;
-}
-
-.chemQuizRetryBtn {
-  display: inline-block;
-  margin-top: 20px;
-  font-family: 'Syne', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding: 12px 32px;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  background: var(--chem-accent);
-  color: #000;
-  transition: all 0.2s;
-}
-.chemQuizRetryBtn:hover { background: #fb923c; transform: translateY(-1px); }
-
-/* ════════════════════════════════════════════════════════════════════════
-   FOOTER CTA
-════════════════════════════════════════════════════════════════════════ */
-.chemCta {
-  margin-top: 56px;
-  background: linear-gradient(135deg, #1e1b4b, #1a0a2e);
-  border-radius: 20px;
-  border: 1px solid var(--chem-border);
-  padding: 28px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.chemCtaTitle {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 4px;
-}
-
-.chemCtaSub { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
-
-.chemCtaBtn {
-  padding: 12px 28px;
+.chem-intro-card {
   background: #fff;
-  color: #1e1b4b;
-  border: none;
-  border-radius: 100px;
-  font-weight: 800;
-  font-family: 'Syne', sans-serif;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.chemCtaBtn:hover { background: var(--chem-accent); color: #000; }
-
-/* ════════════════════════════════════════════════════════════════════════
-   SYLLABUS PAGE — Subject Toggle
-════════════════════════════════════════════════════════════════════════ */
-.subjToggleWrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #f1f5f9;
-  border-radius: 100px;
-  padding: 4px;
-  margin-top: 12px;
-}
-
-.subjToggleBtn {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 8px 22px;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-  letter-spacing: 0.03em;
-  background: transparent;
-  color: #64748b;
-}
-
-.subjToggleBtnMathActive {
-  background: linear-gradient(135deg, #4F46E5, #7C3AED);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(79,70,229,0.4);
-  transform: scale(1.04);
-}
-
-.subjToggleBtnSciActive {
-  background: linear-gradient(135deg, #0891b2, #059669);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(8,145,178,0.4);
-  transform: scale(1.04);
-}
-
-/* Science chapter grid for the syllabus page */
-.scienceChapterGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  animation: chemFadeIn 0.35s ease;
-}
-
-.scienceChapterCard {
-  background: linear-gradient(135deg, #0a1628, #0c2240);
-  border: 1px solid rgba(8,145,178,0.3);
-  border-radius: 20px;
-  padding: 24px;
-  cursor: pointer;
-  transition: all 0.25s;
-  position: relative;
+  border: 1px solid var(--chem-border);
+  border-radius: 18px;
   overflow: hidden;
-}
-.scienceChapterCard:hover {
-  border-color: rgba(8,145,178,0.7);
-  transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(8,145,178,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--chem-sh);
 }
 
-.scienceChapterCard::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 140px; height: 140px;
-  background: radial-gradient(circle, rgba(56,189,248,0.12) 0%, transparent 70%);
-  border-radius: 50%;
+.chem-intro-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--chem-shlg);
+  border-color: var(--chem-indigo);
 }
 
-.scienceCardBadge {
-  display: inline-block;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  background: rgba(8,145,178,0.15);
-  color: #38bdf8;
-  border: 1px solid rgba(56,189,248,0.3);
-  padding: 3px 12px;
-  border-radius: 100px;
-  margin-bottom: 14px;
-}
-
-.scienceCardEmoji { font-size: 2.4rem; margin-bottom: 12px; display: block; }
-
-.scienceCardTitle {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #e6edf3;
-  margin-bottom: 6px;
-  font-family: 'Outfit', sans-serif;
-}
-
-.scienceCardSubtitle {
-  font-size: 0.8rem;
-  color: #7d8590;
-  margin-bottom: 16px;
-  line-height: 1.5;
-}
-
-.scienceCardTags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-
-.scienceCardTag {
-  font-size: 0.72rem;
-  background: rgba(255,255,255,0.06);
-  color: #94a3b8;
-  border-radius: 20px;
-  padding: 2px 10px;
-}
-
-.scienceCardCta {
+.chem-intro-card-header {
+  padding: 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
 }
 
-.scienceCardCtaText {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #38bdf8;
+.chem-intro-card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
 }
 
-/* ════════════════════════════════════════════════════════════════════════
-   ANIMATIONS
-════════════════════════════════════════════════════════════════════════ */
-@keyframes chemFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+.chem-intro-card-q {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--chem-text);
+}
+
+.chem-intro-card-body {
+  padding: 0 24px 24px;
+  animation: rnFadeIn 0.3s ease;
+}
+
+.chem-intro-card-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--chem-muted);
+  margin-bottom: 16px;
+}
+
+.chem-intro-card-fact {
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(79, 70, 229, 0.05);
+  border: 1px solid rgba(79, 70, 229, 0.1);
+}
+
+@keyframes rnFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Lab SVG animations */
-@keyframes chemBubbleRise {
-  0% { transform: translateY(0) scale(1); opacity: 0.8; }
-  100% { transform: translateY(-40px) scale(1.4); opacity: 0; }
-}
-.chemBubble { animation: chemBubbleRise 1s infinite linear; }
-.chemBubble:nth-child(even) { animation-duration: 1.5s; animation-delay: 0.25s; }
+/* ── TERMINOLOGY ───────────────────────────────────── */
 
-@keyframes chemFlicker {
-  0% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
-  50% { transform: scale(1.05) rotate(1deg); opacity: 1; }
-  100% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
-}
-.chemFlame { animation: chemFlicker 0.12s infinite; transform-origin: bottom center; }
-
-@keyframes chemGlow {
-  0% { filter: drop-shadow(0 0 8px #fff); }
-  50% { filter: drop-shadow(0 0 28px #fff); }
-  100% { filter: drop-shadow(0 0 8px #fff); }
-}
-.chemMgGlow { animation: chemGlow 0.15s infinite; }
-
-/* ── RESPONSIVE ─────────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .chemFullPage { flex-direction: column; }
-  .chemLeft { width: 100%; padding: 32px 24px; }
-  .chemRight { padding: 28px 20px; }
-  .chemLabWrap { flex-direction: column; }
-  .chemLabSidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
-  .chemLabExpBtn { flex: 1; min-width: 140px; }
+.chem-term-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-@media (max-width: 600px) {
-  .chemShell { padding: 28px 16px 60px; }
-  .chemQuizOptions { grid-template-columns: 1fr; }
-  .chemStatsGrid { grid-template-columns: 1fr 1fr; }
+.chem-term-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid var(--chem-border);
+  padding: 24px;
+  transition: all 0.3s ease;
 }
+
+.chem-term-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--chem-indigo);
+  box-shadow: var(--chem-shlg);
+}
+
+.chem-term-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--chem-indigo);
+}
+
+.chem-term-def {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--chem-muted);
+  margin-bottom: 16px;
+}
+
+.chem-term-ex {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  border-left: 4px solid var(--chem-indigo);
+}
+
+/* ── RULES ─────────────────────────────────────────── */
+
+.chem-rules-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.chem-rule-item {
+  display: flex;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid var(--chem-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.chem-rule-item:hover {
+  transform: translateX(10px);
+  border-color: var(--chem-indigo);
+}
+
+.chem-rule-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--chem-indigo);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.chem-rule-content h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.chem-rule-content p {
+  font-size: 15px;
+  color: var(--chem-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── SKILLS DASHBOARD ─────────────────────────────── */
+
+.chem-skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.chem-skill-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 20px;
+  padding: 24px 32px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.chem-skill-card:hover {
+  transform: translateX(10px);
+  border-color: var(--skill-color);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.chem-skill-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.chem-skill-info {
+  flex: 1;
+}
+
+.chem-skill-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: var(--chem-text);
+}
+
+.chem-skill-desc {
+  font-size: 14px;
+  color: var(--chem-muted);
+}
+
+.chem-skill-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.chem-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.chem-btn-outline {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  color: var(--chem-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+}
+
+.chem-btn-outline:hover:not(:disabled) {
+  border-color: var(--chem-indigo);
+  color: var(--chem-indigo);
+  background: rgba(79, 70, 229, 0.02);
+  transform: translateX(-2px);
+}
+
+.chem-btn-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chem-btn-filled {
+  background: var(--skill-color, var(--chem-indigo));
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.chem-btn-filled:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  filter: brightness(1.1);
+}
+
+/* ── TERMINOLOGY MASTER-DETAIL ──────────────────────── */
+
+.chem-lexicon-container {
+  max-width: 1100px;
+  margin: 40px auto 20px;
+  padding: 0 24px;
+}
+
+.chem-lexicon-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.chem-selector-container {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: grid;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.chem-term-btn-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  font-family: 'Outfit', sans-serif;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+
+.chem-term-btn-mini:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.chem-term-btn-mini.active {
+  background: var(--chem-indigo);
+  color: #fff;
+  border-color: var(--chem-indigo);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+}
+
+.chem-details-window {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  min-height: 330px;
+  animation: rnSlideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chem-topic-shell {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@keyframes rnSlideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── QUIZ LAYOUT ────────────────────────────────────── */
+
+.chem-quiz-window {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  animation: rnSlideInRight 0.4s ease;
+}
+
+.chem-quiz-option {
+  padding: 16px 24px;
+  border-radius: 14px;
+  border: 3px solid rgba(0, 0, 0, 0.05);
+  background: #fff;
+  font-weight: 600;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.chem-quiz-option:hover:not(:disabled) {
+  border-color: var(--chem-indigo);
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.chem-quiz-option.correct {
+  border-color: var(--chem-success);
+  background: rgba(16, 185, 129, 0.05);
+  color: var(--chem-success);
+}
+
+.chem-quiz-option.wrong {
+  border-color: var(--chem-wrong);
+  background: rgba(239, 68, 68, 0.05);
+  color: var(--chem-wrong);
+}
+
+/* ── ASSESSMENT & SKILLS SPECIFIC (Preserved) ─────────── */
+
+.chem-assess-layout {
+  display: flex;
+  gap: 24px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.chem-assess-main {
+  flex: 1;
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.chem-assess-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+.chem-palette-window {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.chem-responsive-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Skills Selection Mobile */
+.sl-selection-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sl-item-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+}
+
+.sl-item-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.sl-item-info {
+  flex: 1;
+}
+
+.sl-item-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.sl-item-desc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ── RESPONSIVE OVERRIDES ───────────────────────────── */
+
+@media (max-width: 1024px) {
+  .chem-fullpage {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .chem-left {
+    flex: none;
+    width: 100%;
+    padding: 32px 24px;
+    min-height: 320px;
+  }
+
+  .chem-right {
+    flex: none;
+    width: 100%;
+    height: auto !important;
+    padding: 24px 16px 48px;
+  }
+
+  .chem-assess-layout {
+    flex-direction: column;
+  }
+
+  .chem-assess-sidebar, .chem-assess-main {
+    width: 100%;
+  }
+
+  .chem-lexicon-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .chem-nav {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: stretch;
+  }
+
+  .chem-nav-links {
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .chem-nav-links::-webkit-scrollbar { display: none; }
+
+  .chem-nav-link {
+    font-size: 13px;
+    padding: 9px 14px;
+    flex-shrink: 0;
+  }
+
+  .chem-hero-title {
+    font-size: 2rem;
+  }
+  
+  .chem-skill-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 24px;
+  }
+  
+  .chem-skill-actions {
+      width: 100%;
+      flex-direction: column;
+  }
+}
+
+/* ── UTILITIES (Preserved for Skills) ──────────────── */
+.skills-desktop-only { display: block; }
+.skills-mobile-only { display: none; }
+
+@media (max-width: 1024px) {
+    .skills-desktop-only { display: none !important; }
+    .skills-mobile-only { display: block !important; }
+}
+
+.sl-detail-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+.sl-example-box {
+    background: #f8fafc;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+.sl-detail-footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.sl-footer-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+}
+
