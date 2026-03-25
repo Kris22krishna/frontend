@@ -360,6 +360,12 @@ import PolynomialsGrade9 from './components/practice/class-9/polynomials/Polynom
 import PolynomialsGrade9Intro from './components/practice/class-9/polynomials/Topics/5W1H/PolynomialsGrade9Intro';
 import PolynomialsGrade9Terminology from './components/practice/class-9/polynomials/Topics/Terminology/PolynomialsGrade9Terminology';
 import PolynomialsGrade9Skills from './components/practice/class-9/polynomials/Topics/Skills/PolynomialsGrade9Skills';
+
+// Grade 9 Coordinate Geometry
+import CoordinateGeometry9 from './components/practice/class-9/coordinate_geometry_9/CoordinateGeometry9';
+import CoordinateGeometry9Intro from './components/practice/class-9/coordinate_geometry_9/Topics/Intro/CoordinateGeometry9Intro';
+import CoordinateGeometry9Terminology from './components/practice/class-9/coordinate_geometry_9/Topics/Terminology/CoordinateGeometry9Terminology';
+import CoordinateGeometry9Skills from './components/practice/class-9/coordinate_geometry_9/Topics/Skills/CoordinateGeometry9Skills';
 import RealNumberClassification from './components/practice/class-9/number_system/RealNumberClassification';
 import DecimalExpansion from './components/practice/class-9/number_system/DecimalExpansion';
 import OperationsOnSurds from './components/practice/class-9/number_system/OperationsOnSurds';
@@ -380,6 +386,7 @@ import ChapterTestPatterns from './components/practice/class-5/CanyouseethePatte
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
+import Class7Syllabus from './components/practice/class-7/Class7Syllabus';
 import RectanglePractice from './components/practice/grade-6/Perimeter and Area/Rectangle';
 import SquarePractice from './components/practice/grade-6/Perimeter and Area/Square';
 import TrianglePractice from './components/practice/grade-6/Perimeter and Area/Triangle';
@@ -445,6 +452,24 @@ import IntegersEasyTest from './components/practice/class-7/Integers/DeepDive/Te
 import IntegersMediumTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersMediumTest';
 import IntegersHardTest from './components/practice/class-7/Integers/DeepDive/Tests/IntegersHardTest';
 
+// Class 7 - The Triangle and its Properties
+import TheTriangleAndItsPropertiesHub from './components/practice/class-7/TheTriangleAndItsProperties/TheTriangleAndItsProperties';
+import TheTriangleAndItsPropertiesIntro5W1H from './components/practice/class-7/TheTriangleAndItsProperties/Topics/5W1H/TheTriangleAndItsPropertiesIntro5W1H';
+import TheTriangleAndItsPropertiesTerminology from './components/practice/class-7/TheTriangleAndItsProperties/Topics/Terminology/TheTriangleAndItsPropertiesTerminology';
+import TheTriangleAndItsPropertiesSkills from './components/practice/class-7/TheTriangleAndItsProperties/Topics/Skills/TheTriangleAndItsPropertiesSkills';
+import TheTriangleAndItsPropertiesEasyTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesEasyTest';
+import TheTriangleAndItsPropertiesMediumTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesMediumTest';
+import TheTriangleAndItsPropertiesHardTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesHardTest';
+
+// Class 7 - Simple Equations
+import SimpleEquationsHub from './components/practice/class-7/SimpleEquations/SimpleEquations';
+import SimpleEquationsIntro5W1H from './components/practice/class-7/SimpleEquations/Topics/5W1H/SimpleEquationsIntro5W1H';
+import SimpleEquationsTerminology from './components/practice/class-7/SimpleEquations/Topics/Terminology/SimpleEquationsTerminology';
+import SimpleEquationsSkills from './components/practice/class-7/SimpleEquations/Topics/Skills/SimpleEquationsSkills';
+import SimpleEquationsEasyTest from './components/practice/class-7/SimpleEquations/DeepDive/Tests/SimpleEquationsEasyTest';
+import SimpleEquationsMediumTest from './components/practice/class-7/SimpleEquations/DeepDive/Tests/SimpleEquationsMediumTest';
+import SimpleEquationsHardTest from './components/practice/class-7/SimpleEquations/DeepDive/Tests/SimpleEquationsHardTest';
+
 // Class 7 - Fractions and Decimals
 import FractionsAndDecimalsHub from './components/practice/class-7/FractionsAndDecimals/FractionsAndDecimals';
 import FractionsAndDecimalsIntro5W1H from './components/practice/class-7/FractionsAndDecimals/Topics/5W1H/FractionsAndDecimalsIntro5W1H';
@@ -460,6 +485,15 @@ import DataHandlingSkills from './components/practice/class-7/DataHandling/Topic
 import DataHandlingEasyTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingEasyTest';
 import DataHandlingMediumTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingMediumTest';
 import DataHandlingHardTest from './components/practice/class-7/DataHandling/DeepDive/Tests/DataHandlingHardTest';
+
+// Class 7 - Lines and Angles
+import LinesAndAnglesHub from './components/practice/class-7/LinesAndAngles/LinesAndAngles';
+import LinesAndAnglesIntro5W1H from './components/practice/class-7/LinesAndAngles/Topics/5W1H/LinesAndAnglesIntro5W1H';
+import LinesAndAnglesTerminology from './components/practice/class-7/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
+import LinesAndAnglesSkills from './components/practice/class-7/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
+import LinesAndAnglesEasyTest from './components/practice/class-7/LinesAndAngles/DeepDive/Tests/LinesAndAnglesEasyTest';
+import LinesAndAnglesMediumTest from './components/practice/class-7/LinesAndAngles/DeepDive/Tests/LinesAndAnglesMediumTest';
+import LinesAndAnglesHardTest from './components/practice/class-7/LinesAndAngles/DeepDive/Tests/LinesAndAnglesHardTest';
 import Formation from './components/practice/class-7/algebraic expressions/Formation';
 import TermsFactors from './components/practice/class-7/algebraic expressions/TermsFactors';
 import Coefficients from './components/practice/class-7/algebraic expressions/Coefficients';
@@ -755,6 +789,7 @@ function App() {
           <Route path="diagnosis-test" element={<ProtectedRoute redirectTo="/login"><DiagnosisLanding /></ProtectedRoute>} />
           <Route path="math/grade/:grade" element={<GradeSyllabus />} />
           {/* Middle Routes (Grades 5-7 professional design) */}
+          <Route path="middle/grade/7" element={<Class7Syllabus />} />
           <Route path="middle/grade/:grade" element={<MiddleGradeSyllabus />} />
           {/* Senior Routes (Grades 8-10 professional design) */}
           <Route path="senior/grade/:grade" element={<SeniorGradeSyllabus />} />
@@ -1022,6 +1057,24 @@ function App() {
           <Route path="middle/grade/7/integers/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><IntegersMediumTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/integers/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><IntegersHardTest /></ProtectedRoute>} />
 
+          {/* Class 7: The Triangle and its Properties */}
+          <Route path="middle/grade/7/the-triangle-and-its-properties" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/introduction" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/terminology" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/skills" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesHardTest /></ProtectedRoute>} />
+
+          {/* Class 7: Simple Equations */}
+          <Route path="middle/grade/7/simple-equations" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/introduction" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/terminology" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/skills" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsHardTest /></ProtectedRoute>} />
+
           {/* Class 7: Fractions and Decimals */}
           <Route path="middle/grade/7/fractions-and-decimals" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHub /></ProtectedRoute>} />
           <Route path="middle/grade/7/fractions-and-decimals/introduction" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsIntro5W1H /></ProtectedRoute>} />
@@ -1037,6 +1090,43 @@ function App() {
           <Route path="middle/grade/7/data-handling/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><DataHandlingEasyTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><DataHandlingMediumTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><DataHandlingHardTest /></ProtectedRoute>} />
+
+          {/* Class 7: Lines and Angles */}
+          <Route path="middle/grade/7/lines-and-angles" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/introduction" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesHardTest /></ProtectedRoute>} />
+
+          {/* Class 9: Number System Routes */}
+          <Route path="senior/grade/9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
+          <Route path="senior/grade/9/number-system/introduction" element={<ProtectedRoute redirectTo="/login"><NumberSystemIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/9/number-system/terminology" element={<ProtectedRoute redirectTo="/login"><NumberSystemTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/9/number-system/skills" element={<ProtectedRoute redirectTo="/login"><NumberSystemSkills /></ProtectedRoute>} />
+
+          {/* Class 9: Polynomials Routes */}
+          <Route path="senior/grade/9/polynomials" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9 /></ProtectedRoute>} />
+          <Route path="senior/grade/9/polynomials/introduction" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Intro /></ProtectedRoute>} />
+          <Route path="senior/grade/9/polynomials/terminology" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Terminology /></ProtectedRoute>} />
+          <Route path="senior/grade/9/polynomials/skills" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Coordinate Geometry Routes */}
+          <Route path="practice/class-9/coordinate-geometry" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometry9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/coordinate-geometry/intro" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometry9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/coordinate-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometry9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/coordinate-geometry/skills" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometry9Skills /></ProtectedRoute>} />
+
+          {/* Legacy Classification/Direct Routes */}
+          <Route path="practice/class-9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
+          <Route path="practice/class-9/real-number-classification" element={<ProtectedRoute redirectTo="/login"><RealNumberClassification /></ProtectedRoute>} />
+          <Route path="practice/class-9/decimal-expansion" element={<ProtectedRoute redirectTo="/login"><DecimalExpansion /></ProtectedRoute>} />
+          <Route path="practice/class-9/operations-on-surds" element={<ProtectedRoute redirectTo="/login"><OperationsOnSurds /></ProtectedRoute>} />
+          <Route path="practice/class-9/rationalisation" element={<ProtectedRoute redirectTo="/login"><Rationalisation /></ProtectedRoute>} />
+          <Route path="practice/class-9/laws-of-exponents" element={<ProtectedRoute redirectTo="/login"><LawsOfExponents /></ProtectedRoute>} />
+          <Route path="practice/class-9/chapter-test" element={<ProtectedRoute redirectTo="/login"><NumberSystemTest /></ProtectedRoute>} />
+
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
@@ -1928,7 +2018,7 @@ function App() {
         <Route path="/assessment-runner" element={<AssessmentRunner />} />
 
         {/* Full Screen Practice Sessions */}
-        <Route path="/practice/:templateId" element={<PracticeSession />} />
+        <Route path="/practice/:templateId" element={<ProtectedRoute redirectTo="/login"><PracticeSession /></ProtectedRoute>} />
         <Route path="/middle/practice/9003" element={<MultiplicationPractice />} />
         <Route path="/middle/practice/9004" element={<MultiplicationPractice3D />} />
         <Route path="/middle/practice/9005" element={<MultiplicationPracticeMultiple />} />
@@ -1973,7 +2063,7 @@ function App() {
         <Route path="/middle/grade/5/how-big-how-heavy/chapter-test" element={<HowBigHowHeavyTest />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
 
-        <Route path="/middle/practice/:skillId" element={<MiddlePracticeSession />} />
+        <Route path="/middle/practice/:skillId" element={<ProtectedRoute redirectTo="/login"><MiddlePracticeSession /></ProtectedRoute>} />
         {/* Class 10: Pair of Linear Equations Routes */}
         <Route path="/high/practice/10011" element={<ProtectedRoute redirectTo="/login"><GraphicalMethod /></ProtectedRoute>} />
         <Route path="/high/practice/10012" element={<ProtectedRoute redirectTo="/login"><GraphicalMethod /></ProtectedRoute>} />
@@ -2015,29 +2105,8 @@ function App() {
         <Route path="/high/practice/1239" element={<ProtectedRoute redirectTo="/login"><RelationshipCubic /></ProtectedRoute>} />
         <Route path="/high/practice/1240" element={<ProtectedRoute redirectTo="/login"><PolynomialsTest /></ProtectedRoute>} />
 
-        <Route path="/high/practice/:skillId" element={<HighPracticeSession />} />
+        <Route path="/high/practice/:skillId" element={<ProtectedRoute redirectTo="/login"><HighPracticeSession /></ProtectedRoute>} />
 
-
-        {/* Class 9: Number System Routes */}
-        <Route path="/senior/grade/9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
-        <Route path="/senior/grade/9/number-system/introduction" element={<ProtectedRoute redirectTo="/login"><NumberSystemIntro5W1H /></ProtectedRoute>} />
-        <Route path="/senior/grade/9/number-system/terminology" element={<ProtectedRoute redirectTo="/login"><NumberSystemTerminology /></ProtectedRoute>} />
-        <Route path="/senior/grade/9/number-system/skills" element={<ProtectedRoute redirectTo="/login"><NumberSystemSkills /></ProtectedRoute>} />
-
-        {/* Class 9: Polynomials Routes */}
-        <Route path="/senior/grade/9/polynomials" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9 /></ProtectedRoute>} />
-        <Route path="/senior/grade/9/polynomials/introduction" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Intro /></ProtectedRoute>} />
-        <Route path="/senior/grade/9/polynomials/terminology" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Terminology /></ProtectedRoute>} />
-        <Route path="/senior/grade/9/polynomials/skills" element={<ProtectedRoute redirectTo="/login"><PolynomialsGrade9Skills /></ProtectedRoute>} />
-
-        {/* Legacy Classification/Direct Routes */}
-        <Route path="/practice/class-9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
-        <Route path="/practice/class-9/real-number-classification" element={<ProtectedRoute redirectTo="/login"><RealNumberClassification /></ProtectedRoute>} />
-        <Route path="/practice/class-9/decimal-expansion" element={<ProtectedRoute redirectTo="/login"><DecimalExpansion /></ProtectedRoute>} />
-        <Route path="/practice/class-9/operations-on-surds" element={<ProtectedRoute redirectTo="/login"><OperationsOnSurds /></ProtectedRoute>} />
-        <Route path="/practice/class-9/rationalisation" element={<ProtectedRoute redirectTo="/login"><Rationalisation /></ProtectedRoute>} />
-        <Route path="/practice/class-9/laws-of-exponents" element={<ProtectedRoute redirectTo="/login"><LawsOfExponents /></ProtectedRoute>} />
-        <Route path="/practice/class-9/chapter-test" element={<ProtectedRoute redirectTo="/login"><NumberSystemTest /></ProtectedRoute>} />
 
         {/* Class 12: Matrices � Legacy routes redirect to canonical deep-dive URLs */}
         <Route path="/senior/grade/12/matrices/who-uses" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/who-uses" replace /></ProtectedRoute>} />

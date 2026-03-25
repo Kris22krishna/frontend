@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../integers.css';
 import MathRenderer from '../../../../../MathRenderer';
-import QuizEngine from '../../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine';
-import CategorizedPracticeEngine from '../../../../../Math-Branches/Algebra/Topics/Skills/Engines/CategorizedPracticeEngine';
+import QuizEngine from './Engines/QuizEngine';
+import AssessmentEngine from './Engines/AssessmentEngine';
+import CategorizedPracticeEngine from './Engines/CategorizedPracticeEngine';
 import { SKILLS } from './IntegersSkillsData';
 
 export default function IntegersSkills() {
