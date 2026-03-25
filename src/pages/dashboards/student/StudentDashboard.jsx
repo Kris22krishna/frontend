@@ -154,7 +154,7 @@ const ChronologicalSummary = ({ sessions }) => {
                             <th className="py-4 px-4 font-bold text-rose-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Incorrect</th>
                             <th className="py-4 px-4 font-bold text-slate-400 text-[11px] uppercase tracking-wider border-y border-slate-100">Skipped</th>
                             <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Duration</th>
-                            <th className="py-4 px-6 font-bold text-slate-500 text-[11px] uppercase tracking-wider rounded-r-2xl border-y border-slate-100 text-center">Report</th>
+                            {/* <th className="py-4 px-6 font-bold text-slate-500 text-[11px] uppercase tracking-wider rounded-r-2xl border-y border-slate-100 text-center">Report</th> */}
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
@@ -187,7 +187,7 @@ const ChronologicalSummary = ({ sessions }) => {
                                 <td className="py-5 px-4 text-sm text-slate-600 font-bold tabular-nums">
                                     {Math.floor(session.duration/60)}m {session.duration%60}s
                                 </td>
-                                <td className="py-5 px-6 text-center">
+                                {/* <td className="py-5 px-6 text-center">
                                     {session.has_report ? (
                                         <button className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-900 hover:text-white text-slate-700 rounded-xl text-xs font-black transition-all border border-slate-200 shadow-sm active:scale-95 group/btn">
                                             <ExternalLink className="h-3.5 w-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
@@ -196,7 +196,7 @@ const ChronologicalSummary = ({ sessions }) => {
                                     ) : (
                                         <span className="text-slate-300 text-xs font-medium italic">Practice</span>
                                     )}
-                                </td>
+                                </td> */}
                             </tr>
                         ))}
                     </tbody>
@@ -394,14 +394,14 @@ const StudentDashboard = () => {
                                 className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-0.5 transition-all group"
                             >
                                 <Play className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                                Start Practice
+                                Go to {profile?.grade}
                             </button>
                             <button
-                                onClick={() => navigate('/math')}
+                                onClick={() => navigate('/algebra')}
                                 className="flex items-center gap-2 bg-white text-slate-700 border border-slate-200 px-6 py-3 rounded-xl font-bold hover:bg-slate-50 hover:shadow-md hover:-translate-y-0.5 transition-all group"
                             >
                                 <BookOpen className="h-5 w-5 text-purple-500 group-hover:scale-110 transition-transform" />
-                                Explore
+                                Algebra
                             </button>
                         </div>
                     </div>
@@ -500,6 +500,9 @@ const StudentDashboard = () => {
                     </div>
                 </div>
 
+                {/* SECTION 7: Chronological Summary */}
+                <ChronologicalSummary sessions={sessions} />
+
                 {/* SECTION 4: Chapter-wise Skill Breakdown */}
                 <div className="bg-white p-6 md:p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 mt-8">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -548,8 +551,7 @@ const StudentDashboard = () => {
                     )}
                 </div>
 
-                {/* SECTION 7: Chronological Summary */}
-                <ChronologicalSummary sessions={sessions} />
+
 
             </div>
         </div>

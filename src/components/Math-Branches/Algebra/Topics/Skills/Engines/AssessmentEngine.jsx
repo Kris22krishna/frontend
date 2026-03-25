@@ -79,8 +79,11 @@ export default function AssessmentEngine({
     // v4 Logging
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
 
     useEffect(() => {
+        if (isFinishedRef.current) return;
+
         const newQs = typeof questions === 'function' ? questions() : questions;
         setQuestionSet(newQs);
         setCurrent(0);
@@ -97,24 +100,20 @@ export default function AssessmentEngine({
         }
 
         return () => {
-            if (!finished) {
-                // Map local answers to loggable format
-                const currentPayload = (answers || []).map((ans, idx) => {
-                    if (ans === null) return null;
-                    return {
-                        questionIndex: idx + 1,
-                        isCorrect: isAnswerCorrect(questionSet[idx], ans),
-                        timeSpent: 0
-                    };
-                }).filter(Boolean);
-
+            // Use refs for cleanup to avoid stale state issues
+            if (!isFinishedRef.current && answersPayload.current.some(a => a !== null)) {
                 abandonSession({ 
-                    answersPayload: currentPayload, 
-                    totalQuestions: questionSet.length 
+                    answersPayload: answersPayload.current.filter(Boolean), 
+                    totalQuestions: newQs.length 
                 });
             }
         };
-    }, [questions, nodeId, sessionType, finished, answers]);
+    }, [questions, nodeId, sessionType]);
+
+    // Sync finished state to ref
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
 
     useEffect(() => {
         if (topRef.current) {

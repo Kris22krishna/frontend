@@ -22,7 +22,14 @@ export default function QuizEngine({
     // v4 Logging
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
 
+    // Sync state for cleanup
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    // Initialize Question Set
     useEffect(() => {
         setQuestionSet(typeof questions === 'function' ? questions() : questions);
         setCurrent(0);
@@ -32,7 +39,7 @@ export default function QuizEngine({
         setFinished(false);
     }, [questions]);
 
-    // Timer state for Practice: Starts at 0, counts up
+    // Timer state for Practice
     const [timeTaken, setTimeTaken] = useState(0);
 
     useEffect(() => {
@@ -51,15 +58,15 @@ export default function QuizEngine({
         answersPayload.current = [];
 
         return () => {
-            // If the user navigates away before finishing, mark session as abandoned
-            if (!finished) {
+            // Only abandon if we haven't finished and we have some actual answers
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
                 abandonSession({ 
                     answersPayload: answersPayload.current, 
                     totalQuestions: questionSet.length 
                 });
             }
         };
-    }, [nodeId, sessionType, questionSet, finished]); // Re-run if finished changes so cleanup knows state
+    }, [nodeId, sessionType]); // Only start once per nodeId
 
     // Format time (MM:SS)
     const formatTime = (seconds) => {
