@@ -310,9 +310,9 @@ const StudentDashboard = ({ studentId, isEmbedded = false }) => {
             setLoading(true);
             setError(null);
             const [profileData, analyticsData, sessionsData] = await Promise.all([
-                api.getStudentProfile(),
+                api.getStudentProfile(studentId),
                 api.getStudentDashboardAnalytics(studentId),
-                api.getStudentSessionHistory(100)
+                api.getStudentSessionHistory(100, studentId)
             ]);
             setProfile(profileData);
             setAnalytics(analyticsData);

@@ -178,7 +178,7 @@ export const api = {
     // --- Student ---
     getStudentProfile: async (studentId = null) => {
         const params = new URLSearchParams();
-        if (studentId) params.append('user_id', studentId);
+        if (studentId) params.append('student_id', studentId);
         const response = await fetch(`${BASE_URL}/api/v1/student/profile?${params.toString()}`, {
             headers: getHeaders(),
         });
@@ -201,8 +201,11 @@ export const api = {
         return handleResponse(response);
     },
 
-    getStudentSessionHistory: async (limit = 100) => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/session-history?limit=${limit}`, {
+    getStudentSessionHistory: async (limit = 100, studentId = null) => {
+        const params = new URLSearchParams();
+        params.append('limit', limit);
+        if (studentId) params.append('student_id', studentId);
+        const response = await fetch(`${BASE_URL}/api/v1/student/session-history?${params.toString()}`, {
             headers: getHeaders(),
         });
         return handleResponse(response);

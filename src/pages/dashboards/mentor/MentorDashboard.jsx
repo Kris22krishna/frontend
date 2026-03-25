@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../services/api';
 import Navbar from '../../../components/Navbar';
@@ -14,6 +14,8 @@ import {
     Calendar,
     ChevronLeft,
     ChevronRight,
+    ChevronDown,
+    ChevronUp,
     ArrowLeft,
     AlertCircle,
     CheckCircle2
@@ -22,6 +24,7 @@ import {
 const MentorDashboard = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const dateInputRef = useRef(null);
     const [loading, setLoading] = useState(true);
     // Get initial name from storage if available
     const [mentorName, setMentorName] = useState(sessionStorage.getItem('firstName') || 'Mentor');
@@ -31,6 +34,8 @@ const MentorDashboard = () => {
     const [insights, setInsights] = useState({ total_time_seconds: 0, active_mentees: [], follow_up_mentees: [] });
     const [error, setError] = useState(null);
 
+    const [expandedClasses, setExpandedClasses] = useState({});
+
     // Sync name whenever user object is updated
     useEffect(() => {
         if (user?.first_name) {
@@ -39,6 +44,13 @@ const MentorDashboard = () => {
              setMentorName(user.name.split(' ')[0]);
         }
     }, [user]);
+
+    const toggleClass = (grade) => {
+        setExpandedClasses(prev => ({
+            ...prev,
+            [grade]: prev[grade] === undefined ? true : !prev[grade]
+        }));
+    };
 
     useEffect(() => {
         if (!selectedStudentId) {
@@ -99,23 +111,26 @@ const MentorDashboard = () => {
     }
 
     // --- Sub-Component: Mentee Card ---
-    const MenteeCard = ({ student }) => (
+    const MenteeCard = ({ student, showGrade = true }) => (
         <button
             onClick={() => setSelectedStudentId(student.user_id)}
-            className="flex flex-col items-center bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden text-center"
+            className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-100 transition-all group text-left w-full"
         >
-            <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Activity className="h-4 w-4 text-indigo-400" />
-            </div>
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-50 to-blue-50 text-indigo-600 flex items-center justify-center font-black text-xl mb-3 shadow-inner border border-white">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 text-indigo-600 flex items-center justify-center font-black text-lg shadow-inner border border-white shrink-0">
                 {student.name.charAt(0)}
             </div>
-            <h3 className="font-bold text-slate-800 text-base mb-1 truncate w-full">{student.name}</h3>
-            <span className="text-[10px] font-black bg-slate-100 text-slate-500 px-3 py-1 rounded-full uppercase tracking-widest">
-                Grade {student.grade || 'N/A'}
-            </span>
-            <div className="mt-4 text-[10px] font-bold text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                View Progress <ChevronRight className="h-3 w-3" />
+            <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-slate-800 text-sm truncate">{student.name}</h3>
+                <div className="flex items-center gap-2 mt-0.5">
+                    {showGrade && (
+                        <span className="text-[9px] font-black bg-slate-100 text-slate-400 px-2 py-0.5 rounded uppercase tracking-widest">
+                            Class {student.grade || 'N/A'}
+                        </span>
+                    )}
+                    <span className="text-[9px] font-bold text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                        View Dashboard →
+                    </span>
+                </div>
             </div>
         </button>
     );
@@ -143,7 +158,7 @@ const MentorDashboard = () => {
                         {list.map((s, idx) => (
                             <div key={idx} className="flex justify-between items-center text-xs">
                                 <span className="font-bold text-slate-700">{s.name}</span>
-                                <span className="text-[10px] px-1.5 py-0.5 bg-slate-100 rounded text-slate-500 font-black">G{s.grade}</span>
+                                <span className="text-[10px] px-1.5 py-0.5 bg-slate-100 rounded text-slate-500 font-black">{s.grade}</span>
                             </div>
                         ))}
                     </div>
@@ -193,20 +208,32 @@ const MentorDashboard = () => {
                                 >
                                     <ChevronLeft size={20} />
                                 </button>
-                                <div className="flex items-center gap-2 px-3 relative cursor-pointer hover:bg-white rounded-xl py-1.5 transition-colors">
-                                    <Calendar className="h-4 w-4 text-indigo-500" />
-                                    <span className="font-bold text-slate-700 text-sm whitespace-nowrap">
+                                <label 
+                                    className="flex items-center gap-2 px-3 relative cursor-pointer hover:bg-white rounded-xl py-1.5 transition-colors group"
+                                    onClick={(e) => {
+                                        if (dateInputRef.current) {
+                                            if (dateInputRef.current.showPicker) {
+                                                dateInputRef.current.showPicker();
+                                            } else {
+                                                dateInputRef.current.click();
+                                            }
+                                        }
+                                    }}
+                                >
+                                    <Calendar className="h-4 w-4 text-indigo-500 group-hover:scale-110 transition-transform pointer-events-none" />
+                                    <span className="font-bold text-slate-700 text-sm whitespace-nowrap pointer-events-none">
                                         {selectedDate === new Date().toISOString().split('T')[0] ? 'Today' : selectedDate}
                                     </span>
                                     <input 
+                                        ref={dateInputRef}
                                         type="date" 
-                                        className="absolute inset-0 opacity-0 cursor-pointer" 
+                                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full" 
                                         max={new Date().toISOString().split('T')[0]}
                                         value={selectedDate}
                                         onChange={(e) => setSelectedDate(e.target.value)}
                                         title="Select Date"
                                     />
-                                </div>
+                                </label>
                                 <button 
                                     onClick={() => handleDateChange(1)}
                                     disabled={selectedDate === new Date().toISOString().split('T')[0]}
@@ -242,7 +269,7 @@ const MentorDashboard = () => {
                         />
                     </div>
 
-                    {/* SECTION 3: My Students Grid */}
+                    {/* SECTION 3: My Students List */}
                     <div className="bg-white rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
                         <div className="flex items-center justify-between mb-8">
                             <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -253,13 +280,65 @@ const MentorDashboard = () => {
                         </div>
 
                         {students.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                                {students.map((student, idx) => (
-                                    <MenteeCard key={idx} student={student} />
-                                ))}
-                            </div>
+                            students.length > 10 ? (
+                                // Grouped by Class (Collapsible)
+                                <div className="space-y-6">
+                                    {Object.entries(
+                                        students.reduce((acc, s) => {
+                                            const grade = s.grade || 'N/A';
+                                            if (!acc[grade]) acc[grade] = [];
+                                            acc[grade].push(s);
+                                            return acc;
+                                        }, {})
+                                    )
+                                    .sort((a,b) => {
+                                        const numA = parseInt(a[0].replace(/\D/g, '')) || 0;
+                                        const numB = parseInt(b[0].replace(/\D/g, '')) || 0;
+                                        return numA - numB;
+                                    })
+                                    .map(([grade, classStudents]) => {
+                                        const isExpanded = expandedClasses[grade] === true; // Default false (closed)
+                                        return (
+                                            <div key={grade} className="bg-slate-50/50 rounded-2xl border border-slate-100 overflow-hidden">
+                                                <button 
+                                                    onClick={() => toggleClass(grade)}
+                                                    className="w-full flex items-center gap-4 px-6 py-4 hover:bg-slate-100/80 transition-colors group"
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <h3 className="text-sm font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">{grade}</h3>
+                                                        <span className="text-[10px] font-bold bg-white text-slate-400 px-2 py-0.5 rounded-full border border-slate-100">{classStudents.length} Students</span>
+                                                    </div>
+                                                    <div className="h-px flex-1 bg-slate-200/60"></div>
+                                                    {isExpanded ? (
+                                                        <ChevronUp className="h-4 w-4 text-slate-400 group-hover:text-indigo-500" />
+                                                    ) : (
+                                                        <ChevronDown className="h-4 w-4 text-slate-400 group-hover:text-indigo-500" />
+                                                    )}
+                                                </button>
+                                                
+                                                {isExpanded && (
+                                                    <div className="p-6 pt-2">
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                                            {classStudents.map((student, idx) => (
+                                                                <MenteeCard key={student.user_id || idx} student={student} showGrade={false} />
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                // Simple Grid
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                    {students.map((student, idx) => (
+                                        <MenteeCard key={student.user_id || idx} student={student} showGrade={true} />
+                                    ))}
+                                </div>
+                            )
                         ) : (
-                            <div className="text-center py-20 bg-slate-50 rounded-3xl border border-slate-100 dashed">
+                            <div className="text-center py-20 bg-slate-50 rounded-3xl border border-slate-100 border-dashed">
                                 <UserCircle className="h-12 w-12 text-slate-300 mx-auto mb-4" strokeWidth={1.5} />
                                 <p className="text-slate-500 font-medium">No students assigned to you yet.</p>
                             </div>
