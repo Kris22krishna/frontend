@@ -537,13 +537,13 @@ import CoordinateGeometrySkills from './components/practice/class-10/CoordinateG
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
 // Class 10 Science: Chemical Reactions
-import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactionsDashboard';
-import ChemReactionsIntro from './components/science/grade10/Topics/Introduction/ChemReactionsIntro';
-import ChemReactionsTerminology from './components/science/grade10/Topics/Terminology/ChemReactionsTerminology';
-import ChemReactionsCoreConcepts from './components/science/grade10/Topics/CoreConcepts/ChemReactionsCoreConcepts';
-import ChemReactionsConnectomics from './components/science/grade10/Topics/Connectomics/ChemReactionsConnectomics';
-import ChemReactionsExamEdge from './components/science/grade10/Topics/ExamEdge/ChemReactionsExamEdge';
-import ChemReactionsVirtualLab from './components/science/grade10/Topics/VirtualLab/ChemReactionsVirtualLab';
+import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactions/ChemicalReactionsDashboard';
+import ChemReactionsIntro from './components/science/grade10/ChemicalReactions/Topics/Introduction/ChemReactionsIntro';
+import ChemReactionsTerminology from './components/science/grade10/ChemicalReactions/Topics/Terminology/ChemReactionsTerminology';
+import ChemReactionsCoreConcepts from './components/science/grade10/ChemicalReactions/Topics/CoreConcepts/ChemReactionsCoreConcepts';
+import ChemReactionsConnectomics from './components/science/grade10/ChemicalReactions/Topics/Connectomics/ChemReactionsConnectomics';
+import ChemReactionsExamEdge from './components/science/grade10/ChemicalReactions/Topics/ExamEdge/ChemReactionsExamEdge';
+import ChemReactionsVirtualLab from './components/science/grade10/ChemicalReactions/Topics/VirtualLab/ChemReactionsVirtualLab';
 
 // Class 10: Polynomials
 import TypesAndDegrees from './components/practice/class-10/Polynomials/TypesAndDegrees';

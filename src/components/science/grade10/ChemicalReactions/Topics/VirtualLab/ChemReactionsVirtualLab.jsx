@@ -675,73 +675,66 @@ export default function ChemReactionsVirtualLab() {
             </nav>
 
             {/* Hero */}
-            <div style={{ background: 'linear-gradient(135deg, #0c4a6e 0%, #0891b2 50%, #4f46e5 100%)', padding: '40px 24px', textAlign: 'center', color: '#fff', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: -60, left: -60, width: 280, height: 280, background: 'radial-gradient(circle, rgba(56,189,248,0.25) 0%, transparent 70%)', borderRadius: '50%' }} />
-                <div style={{ position: 'relative', zIndex: 2 }}>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 100, padding: '6px 16px', marginBottom: 14, fontSize: 11, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase' }}>
+            <div className={styles['chem-lab-hero']}>
+                <div className={styles['chem-lab-hero-bg']} />
+                <div className={styles['chem-lab-hero-content']}>
+                    <div className={styles['chem-lab-hero-badge']}>
                         🧬 HANDS-ON SCIENCE
                     </div>
-                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, margin: '0 0 10px' }}>
-                        Interactive Virtual <span style={{ background: 'linear-gradient(90deg, #38bdf8, #a5f3fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lab</span>
+                    <h1 className={styles['chem-lab-hero-title']}>
+                        Interactive Virtual <span className={styles['chem-lab-hero-title-accent']}>Lab</span>
                     </h1>
-                    <p style={{ opacity: 0.85, fontSize: 'clamp(13px, 2vw, 16px)', maxWidth: 520, margin: '0 auto' }}>
+                    <p className={styles['chem-lab-hero-sub']}>
                         Pick an experiment, run it, and observe the animated reaction live in your browser.
                     </p>
                 </div>
             </div>
 
-            <div style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 20px 60px' }}>
+            <div className={styles['chem-lab-container']}>
 
                 {/* Experiment Picker */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(155px, 1fr))', gap: 10, marginBottom: 32 }}>
+                <div className={styles['chem-lab-picker']}>
                     {EXPERIMENTS.map((e, idx) => (
                         <button key={e.id} onClick={() => handleExpChange(idx)}
-                            style={{
-                                padding: '14px 16px', borderRadius: 16,
-                                border: `2px solid ${activeExp === idx ? e.color : '#e2e8f0'}`,
-                                background: activeExp === idx ? `${e.color}12` : '#fff',
-                                textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s ease',
-                                boxShadow: activeExp === idx ? `0 4px 16px ${e.color}25` : '0 1px 4px rgba(0,0,0,0.04)',
-                                transform: activeExp === idx ? 'translateY(-2px)' : 'none'
-                            }}>
-                            <div style={{ fontSize: 22, marginBottom: 5 }}>{e.emoji}</div>
-                            <div style={{ fontSize: 12, fontWeight: 800, color: activeExp === idx ? e.color : '#1e293b', lineHeight: 1.3 }}>{e.title}</div>
-                            <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', marginTop: 3 }}>{e.subtitle}</div>
+                            className={`${styles['chem-lab-picker-btn']} ${activeExp === idx ? styles['active'] : ''}`}
+                            style={{ '--skill-color': e.color, '--skill-color-12': e.color + '12', '--skill-color-25': e.color + '25' }}
+                        >
+                            <div className={styles['chem-lab-picker-emoji']}>{e.emoji}</div>
+                            <div className={styles['chem-lab-picker-title']}>{e.title}</div>
+                            <div className={styles['chem-lab-picker-sub']}>{e.subtitle}</div>
                         </button>
                     ))}
                 </div>
 
                 {/* Main Lab Stage */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
+                <div className={styles['chem-lab-stage']}>
 
-                    {/* LEFT — Info + Result */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                        {/* Experiment info card */}
-                        <div style={{ background: '#fff', borderRadius: 20, padding: 24, border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
-                            <div style={{ fontSize: 11, fontWeight: 900, color: exp.color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 8 }}>EXPERIMENT</div>
-                            <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 900, color: '#1e293b', margin: '0 0 8px' }}>{exp.title}</h2>
-                            <p style={{ fontSize: 15, color: '#475569', margin: '0 0 18px', lineHeight: 1.6 }}>{exp.desc}</p>
-                            <div style={{ background: '#f8fafc', borderRadius: 12, padding: '12px 16px', border: '1px solid #e2e8f0' }}>
-                                <div style={{ fontSize: 10, fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Reaction Type</div>
-                                <div style={{ fontWeight: 800, color: exp.color, fontSize: 14 }}>{exp.type}</div>
+                        {/* 1. Experiment info card */}
+                        <div className={styles['chem-card-exp']}>
+                            <div className={styles['chem-card-exp-badge']} style={{ color: exp.color }}>EXPERIMENT</div>
+                            <h2 className={styles['chem-card-exp-title']}>{exp.title}</h2>
+                            <p className={styles['chem-card-exp-desc']}>{exp.desc}</p>
+                            <div className={styles['chem-card-exp-type']}>
+                                <div className={styles['chem-card-exp-type-label']}>Reaction Type</div>
+                                <div className={styles['chem-card-exp-type-value']} style={{ color: exp.color }}>{exp.type}</div>
                             </div>
                         </div>
 
-                        {/* Result panel */}
+                        {/* 3. Result panel */}
                         {phase === 'done' ? (
-                            <div style={{ background: `linear-gradient(135deg, ${exp.colorLight}, #fff)`, borderRadius: 20, padding: 24, border: `1.5px solid ${exp.color}40`, animation: 'slideUp 0.5s ease' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                                    <span style={{ fontSize: 18 }}>✅</span>
-                                    <div style={{ fontSize: 10, fontWeight: 900, color: exp.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Observation Log</div>
+                            <div className={`${styles['chem-card-obs']} ${styles['done']}`} style={{ background: `linear-gradient(135deg, ${exp.colorLight}, #fff)`, border: `1.5px solid ${exp.color}40` }}>
+                                <div className={styles['chem-card-obs-badge']}>
+                                    <span className={styles['chem-card-obs-badge-icon']}>✅</span>
+                                    <div className={styles['chem-card-obs-badge-text']} style={{ color: exp.color }}>Observation Log</div>
                                 </div>
-                                <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, fontWeight: 500, margin: '0 0 16px' }}>{exp.observation}</p>
-                                <div style={{ background: '#fff', borderRadius: 12, padding: '12px 16px', border: `1px solid ${exp.color}30` }}>
-                                    <div style={{ fontSize: 10, fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>Balanced Equation</div>
-                                    <div style={{ fontSize: 15, fontWeight: 800, color: exp.color, fontFamily: 'JetBrains Mono, monospace' }}>{exp.equation}</div>
+                                <p className={styles['chem-card-obs-desc']}>{exp.observation}</p>
+                                <div className={styles['chem-card-obs-eq']} style={{ border: `1px solid ${exp.color}30` }}>
+                                    <div className={styles['chem-card-obs-eq-label']}>Balanced Equation</div>
+                                    <div className={styles['chem-card-obs-eq-value']} style={{ color: exp.color }}>{exp.equation}</div>
                                 </div>
                             </div>
                         ) : (
-                            <div style={{ background: '#f8fafc', borderRadius: 20, padding: '28px 24px', border: '2px dashed #cbd5e1', textAlign: 'center' }}>
+                            <div className={`${styles['chem-card-obs']} ${styles['idle']}`}>
                                 <div style={{ fontSize: 36, marginBottom: 10 }}>🔬</div>
                                 <p style={{ color: '#94a3b8', fontSize: 13, fontWeight: 600, margin: 0, lineHeight: 1.6 }}>
                                     Click <strong style={{ color: exp.color }}>{exp.actionLabel}</strong> to see the reaction and observations appear here.
@@ -749,57 +742,51 @@ export default function ChemReactionsVirtualLab() {
                             </div>
                         )}
 
-                        {/* Safety note */}
-                        <div style={{ background: '#fffbeb', borderRadius: 14, padding: '14px 18px', border: '1px solid #fef3c7', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                            <span style={{ fontSize: 16 }}>⚠️</span>
-                            <div style={{ fontSize: 12, color: '#92400e', lineHeight: 1.5 }}>
+                        {/* 4. Safety note */}
+                        <div className={styles['chem-card-safety']}>
+                            <span className={styles['chem-card-safety-icon']}>⚠️</span>
+                            <div className={styles['chem-card-safety-text']}>
                                 <strong>Safety Note:</strong> Only perform these reactions in a certified lab under qualified teacher supervision.
                             </div>
                         </div>
-                    </div>
 
-                    {/* RIGHT — Animated Scene */}
-                    <div style={{ background: '#fff', borderRadius: 24, border: '1px solid #e2e8f0', overflow: 'hidden', boxShadow: '0 8px 28px rgba(0,0,0,0.06)' }}>
+                    {/* 2. RIGHT — Animated Scene */}
+                    <div className={styles['chem-card-scene']}>
                         {/* macOS title bar */}
-                        <div style={{ background: 'linear-gradient(135deg, #1e293b, #334155)', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div className={styles['chem-card-scene-titlebar']}>
                             {['#ef4444', '#f59e0b', '#10b981'].map((c, i) => (
-                                <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c }} />
+                                <div key={i} className={styles['chem-card-scene-title-circle']} style={{ background: c }} />
                             ))}
-                            <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: '#94a3b8', fontFamily: 'monospace' }}>
+                            <span className={styles['chem-card-scene-title-text']}>
                                 lab.scene({exp.id})
                             </span>
                         </div>
                         {/* Scene canvas */}
-                        <div style={{
-                            padding: '28px 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 280,
+                        <div className={styles['chem-card-scene-canvas']} style={{
                             background: phase === 'running'
                                 ? (exp.id === 'mg' ? 'linear-gradient(180deg,#fffbeb,#fff)' : 'linear-gradient(180deg,#f0f9ff,#fff)')
-                                : '#fafafa',
-                            transition: 'background 1.5s ease'
+                                : '#fafafa'
                         }}>
                             <LabScene phase={phase} />
                         </div>
                         {/* Controls */}
-                        <div style={{ padding: '0 20px 20px', display: 'flex', gap: 10 }}>
+                        <div className={styles['chem-card-scene-controls']}>
                             {phase === 'idle' && (
-                                <button onClick={handleRun}
-                                    style={{ flex: 1, padding: '13px', borderRadius: 14, border: 'none', background: `linear-gradient(135deg, ${exp.color}, ${exp.color}bb)`, color: '#fff', fontWeight: 800, fontSize: 14, cursor: 'pointer', boxShadow: `0 4px 16px ${exp.color}40`, transition: 'all 0.2s' }}>
+                                <button onClick={handleRun} className={`${styles['chem-btn-lab-action']} ${styles['run']}`} style={{ '--skill-color': exp.color, '--skill-color-bb': exp.color + 'bb', '--skill-color-40': exp.color + '40' }}>
                                     {exp.actionLabel}
                                 </button>
                             )}
                             {phase === 'running' && (
-                                <button disabled style={{ flex: 1, padding: '13px', borderRadius: 14, border: '1.5px solid #e2e8f0', background: '#f8fafc', color: '#94a3b8', fontWeight: 700, fontSize: 14, cursor: 'not-allowed' }}>
+                                <button disabled className={`${styles['chem-btn-lab-action']} ${styles['running']}`}>
                                     ⏳ Reaction Occurring...
                                 </button>
                             )}
                             {phase === 'done' && (
-                                <button onClick={handleReset}
-                                    style={{ flex: 1, padding: '13px', borderRadius: 14, border: 'none', background: '#1e293b', color: '#fff', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>
+                                <button onClick={handleReset} className={`${styles['chem-btn-lab-action']} ${styles['reset']}`}>
                                     🔄 Reset Experiment
                                 </button>
                             )}
-                            <button onClick={handleReset}
-                                style={{ padding: '13px 16px', borderRadius: 14, border: '1.5px solid #e2e8f0', background: '#fff', color: '#475569', fontWeight: 700, fontSize: 16, cursor: 'pointer' }}>
+                            <button onClick={handleReset} className={styles['chem-btn-lab-icon']}>
                                 ↺
                             </button>
                         </div>

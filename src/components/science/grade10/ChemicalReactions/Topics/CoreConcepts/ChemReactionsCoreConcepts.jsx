@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { CORE_CONCEPTS } from './ChemReactionsCoreConceptsData';
 import { EquationBalancer, ReactionClassifier } from './ChemReactionsInteractiveTools';
 import styles from '../../ChemicalReactionsDashboard.module.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../MathRenderer';
 
-import QuizEngine from '../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine';
-import '../../../../Math-Branches/Algebra/algebra.css';
-import '../../../../Math-Branches/Algebra/Topics/Skills/AlgebraTestLayout.css';
+import QuizEngine from '../../Engines/ChemQuizEngine';
+import AssessmentEngine from '../../Engines/ChemAssessmentEngine';
+import '../../Engines/ChemTestLayout.css';
 
 /* ── Main Component ─────────────────────────────────────────────── */
 export default function ChemReactionsCoreConcepts() {
@@ -68,37 +67,29 @@ export default function ChemReactionsCoreConcepts() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         {CORE_CONCEPTS.map((concept, idx) => (
                             <div key={concept.id}
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: 24,
-                                    background: '#fff', border: '1px solid #f1f5f9', borderRadius: 20,
-                                    padding: '24px 32px', boxShadow: '0 4px 12px rgba(0,0,0,0.04)',
-                                    transition: 'all 0.3s ease', '--skill-color': concept.color
-                                }}>
-                                <div style={{
-                                    width: 56, height: 56, borderRadius: 14, display: 'flex',
-                                    alignItems: 'center', justifyContent: 'center', fontSize: 28,
-                                    flexShrink: 0, background: `${concept.color}15`, color: concept.color
-                                }}>{concept.icon}</div>
+                                className={styles['chem-concept-card']}
+                                style={{ '--skill-color': concept.color, '--skill-color-15': concept.color + '15', '--skill-color-40': concept.color + '40' }}>
+                                
+                                <div className={styles['chem-concept-header']}>
+                                    <div className={styles['chem-concept-icon']}>{concept.icon}</div>
 
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ fontSize: 11, fontWeight: 900, color: concept.color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>
-                                        Core Concept {concept.id}
+                                    <div className={styles['chem-concept-info']}>
+                                        <div style={{ fontSize: 11, fontWeight: 900, color: concept.color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>
+                                            Core Concept {concept.id}
+                                        </div>
+                                        <h3>{concept.title}</h3>
+                                        <p>{concept.desc}</p>
                                     </div>
-                                    <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 900, color: '#1e293b', margin: '0 0 4px' }}>{concept.title}</h3>
-                                    <p style={{ fontSize: 14, color: '#64748b', fontWeight: 500, margin: 0 }}>{concept.desc}</p>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
-                                    <button onClick={() => openSkill(idx, 'learn')}
-                                        style={{ padding: '10px 22px', borderRadius: 100, fontWeight: 700, fontSize: 14, background: '#fff', border: '1.5px solid #e2e8f0', color: '#1e293b', cursor: 'pointer', transition: 'all 0.2s' }}>
+                                <div className={styles['chem-concept-actions']}>
+                                    <button onClick={() => openSkill(idx, 'learn')} className={styles['chem-concept-btn']}>
                                         Learn
                                     </button>
-                                    <button onClick={() => openSkill(idx, 'practice')}
-                                        style={{ padding: '10px 22px', borderRadius: 100, fontWeight: 700, fontSize: 14, background: '#fff', border: '1.5px solid #e2e8f0', color: '#1e293b', cursor: 'pointer', transition: 'all 0.2s' }}>
+                                    <button onClick={() => openSkill(idx, 'practice')} className={styles['chem-concept-btn']}>
                                         Practice
                                     </button>
-                                    <button onClick={() => openSkill(idx, 'assess')}
-                                        style={{ padding: '10px 22px', borderRadius: 100, fontWeight: 800, fontSize: 14, background: concept.color, color: '#fff', border: 'none', cursor: 'pointer', boxShadow: `0 4px 12px ${concept.color}40`, transition: 'all 0.2s' }}>
+                                    <button onClick={() => openSkill(idx, 'assess')} className={`${styles['chem-concept-btn']} ${styles['assess']}`}>
                                         Assess
                                     </button>
                                 </div>
@@ -129,17 +120,17 @@ export default function ChemReactionsCoreConcepts() {
         const rule = !isToolView ? rules[selectedRuleIdx] : null;
 
         return (
-            <div className="skills-page alg-skills-stage" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
+            <div className="skills-page chem-skills-stage" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
                 {NAV}
 
-                <div className="alg-skills-stage-body">
-                    <div className="alg-lexicon-container">
-                        <div className="alg-skill-learn-header">
+                <div className="chem-skills-stage-body">
+                    <div className="chem-lexicon-container">
+                        <div className="chem-skill-learn-header">
                             <h1 style={{ 
                                 fontFamily: 'Outfit, sans-serif', 
                                 fontSize: 'clamp(1.4rem, 5.5vw, 2.5rem)', 
                                 fontWeight: 900, 
-                                color: 'var(--alg-text)', 
+                                color: 'var(--chem-text, #0f172a)', 
                                 margin: 0,
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
@@ -150,14 +141,14 @@ export default function ChemReactionsCoreConcepts() {
                             </h1>
                             <div style={{ display: 'flex', gap: 12, flexWrap: 'nowrap' }}>
                                 <button 
-                                    className="alg-skill-btn-outline" 
+                                    className="chem-skill-btn-outline" 
                                     onClick={() => setView('practice')}
                                     style={{ whiteSpace: 'nowrap', padding: '10px 20px', fontSize: 13, minWidth: 'fit-content' }}
                                 >
                                     Practice All
                                 </button>
                                 <button 
-                                    className="alg-skill-btn-filled" 
+                                    className="chem-skill-btn-filled" 
                                     style={{ '--skill-color': skill.color, whiteSpace: 'nowrap', padding: '10px 20px', fontSize: 13, minWidth: 'fit-content' }} 
                                     onClick={() => setView('assess')}
                                 >
@@ -166,47 +157,47 @@ export default function ChemReactionsCoreConcepts() {
                             </div>
                         </div>
 
-                        <div className="alg-learn-grid">
-                            <aside className="alg-learn-sidebar" style={{ gap: 10 }}>
+                        <div className="chem-learn-grid">
+                            <aside className="chem-learn-sidebar" style={{ gap: 10 }}>
                                 {rules.map((r, idx) => (
                                     <button
                                         key={idx}
-                                        className={`alg-sidebar-btn ${selectedRuleIdx === idx ? 'active' : ''}`}
+                                        className={`chem-sidebar-btn ${selectedRuleIdx === idx ? 'active' : ''}`}
                                         onClick={() => setSelectedRuleIdx(idx)}
                                         style={{ '--skill-color': skill.color, '--skill-color-15': `${skill.color}15`, '--skill-color-40': `${skill.color}40` }}
                                     >
-                                        <div className="alg-sidebar-btn-num">{idx + 1}</div>
-                                        <div className="alg-sidebar-btn-title">{r.title}</div>
+                                        <div className="chem-sidebar-btn-num">{idx + 1}</div>
+                                        <div className="chem-sidebar-btn-title">{r.title}</div>
                                     </button>
                                 ))}
                                 {/* Dedicated interactive tool entry (only for 1.1 and 1.2) */}
                                 {(skill.id === '1.1' || skill.id === '1.2') && (
                                     <button
-                                        className={`alg-sidebar-btn ${selectedRuleIdx === rules.length ? 'active' : ''}`}
+                                        className={`chem-sidebar-btn ${selectedRuleIdx === rules.length ? 'active' : ''}`}
                                         onClick={() => setSelectedRuleIdx(rules.length)}
                                         style={{ '--skill-color': skill.color, '--skill-color-15': `${skill.color}15`, '--skill-color-40': `${skill.color}40` }}
                                     >
-                                        <div className="alg-sidebar-btn-num">🔧</div>
-                                        <div className="alg-sidebar-btn-title">Interactive Practice</div>
+                                        <div className="chem-sidebar-btn-num">🔧</div>
+                                        <div className="chem-sidebar-btn-title">Interactive Practice</div>
                                     </button>
                                 )}
                             </aside>
 
-                            <main className="alg-details-window-anim alg-details-window" key={`${skill.id}-${selectedRuleIdx}`}>
+                            <main className="chem-details-window-anim chem-details-window" key={`${skill.id}-${selectedRuleIdx}`}>
                                 {!isToolView && rule ? (
                                     <>
-                                        <div className="alg-law-header">
+                                        <div className="chem-law-header">
                                             <h3 style={{ margin: 0, fontSize: 'clamp(20px, 6vw, 28px)', fontWeight: 900, color: skill.color }}>
                                                 {rule.title}
                                             </h3>
                                         </div>
-                                        <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--alg-muted)', marginBottom: 24, letterSpacing: 1, textTransform: 'uppercase', opacity: 0.8 }}>
+                                        <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--chem-muted, #64748b)', marginBottom: 24, letterSpacing: 1, textTransform: 'uppercase', opacity: 0.8 }}>
                                             RULE {selectedRuleIdx + 1} OF {rules.length}
                                         </div>
 
                                         <div style={{ marginBottom: 24, padding: '18px 20px', borderRadius: 18, background: 'linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.9))', border: '1px solid rgba(148,163,184,0.16)' }}>
                                             <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.2, textTransform: 'uppercase', color: skill.color, marginBottom: 8 }}>Big Idea</div>
-                                            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--alg-text)' }}>
+                                            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--chem-text, #0f172a)' }}>
                                                 <MathRenderer text={skill.learn.concept} />
                                             </p>
                                         </div>
@@ -217,15 +208,15 @@ export default function ChemReactionsCoreConcepts() {
                                             </div>
                                         </div>
 
-                                        <div className="alg-rule-split" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 32, marginBottom: 32 }}>
+                                        <div className="chem-rule-split" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 32, marginBottom: 32 }}>
                                             <div>
-                                                <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>Explanation</h4>
-                                                <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
+                                                <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--chem-muted, #64748b)', marginBottom: 10 }}>Explanation</h4>
+                                                <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--chem-text, #0f172a)' }}>
                                                     <MathRenderer text={rule.d} />
                                                 </p>
                                                 <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: 16, borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
-                                                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
-                                                        <span style={{ fontWeight: 800, color: 'var(--alg-teal)' }}>Tip: </span>
+                                                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--chem-muted, #64748b)' }}>
+                                                        <span style={{ fontWeight: 800, color: 'var(--chem-teal, #0d9488)' }}>Tip: </span>
                                                         <MathRenderer text={rule.tip} />
                                                     </p>
                                                 </div>
@@ -233,7 +224,7 @@ export default function ChemReactionsCoreConcepts() {
                                             <div style={{ minWidth: 0 }}>
                                                 <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>Practical Example</h4>
                                                 <div style={{ background: '#f8fafc', padding: '24px 20px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)', overflowX: 'auto', overflowY: 'hidden' }}>
-                                                    <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--alg-text)', minWidth: 'min-content' }}>
+                                                    <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--chem-text, #0f172a)', minWidth: 'min-content' }}>
                                                         <MathRenderer text={rule.ex.includes('$') ? rule.ex : `$$${rule.ex}$$`} />
                                                     </div>
                                                 </div>
@@ -259,7 +250,7 @@ export default function ChemReactionsCoreConcepts() {
                                     </div>
                                 ) : null}
 
-                                <div className="alg-learn-footer" style={{ marginTop: 48, display: 'flex', justifyContent: 'space-between', borderTop: '2px solid rgba(0,0,0,0.04)', paddingTop: 24 }}>
+                                <div className="chem-learn-footer" style={{ marginTop: 48, display: 'flex', justifyContent: 'space-between', borderTop: '2px solid rgba(0,0,0,0.04)', paddingTop: 24 }}>
                                     <button
                                         onClick={() => setSelectedRuleIdx(r => Math.max(0, r - 1))}
                                         disabled={selectedRuleIdx === 0}
@@ -289,7 +280,7 @@ export default function ChemReactionsCoreConcepts() {
     /* ── PRACTICE VIEW (Uses Algebra Engine) ───────────────────────── */
     if (view === 'practice' && skill) {
         return (
-            <div className={`skills-page alg-skills-stage`} style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
+            <div className={`skills-page chem-skills-stage`} style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
                 {NAV}
                 <div style={{ maxWidth: 900, margin: '40px auto', padding: '0 24px 60px' }}>
                     <QuizEngine
@@ -297,7 +288,7 @@ export default function ChemReactionsCoreConcepts() {
                         title={`Practice: ${skill.title}`}
                         color={skill.color}
                         onBack={() => setView('learn')}
-                        prefix="algtest"
+                        prefix="chemtest"
                     />
                 </div>
             </div>
@@ -307,17 +298,19 @@ export default function ChemReactionsCoreConcepts() {
     /* ── ASSESS VIEW (Uses Algebra Engine) ─────────────────────────── */
     if (view === 'assess' && skill) {
         return (
-            <div className={`skills-page alg-skills-stage`} style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
+            <div className={styles['chem-page']} style={{ background: '#f8fafc', minHeight: '100vh', overflowY: 'auto' }}>
                 {NAV}
-                <div style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 60px' }}>
-                    <AssessmentEngine
-                        questions={skill.assessment}
-                        title={`Assessment: ${skill.title}`}
-                        color={skill.color}
-                        onBack={() => setView('learn')}
-                        prefix="algtest"
-                    />
-                </div>
+                <main className={styles['chem-topic-shell']} style={{ maxWidth: '1180px', margin: '0 auto', padding: '32px 24px 60px' }}>
+                    <div className="skills-page chem-skills-stage" style={{ minHeight: 'auto', background: 'transparent', padding: 0 }}>
+                        <AssessmentEngine
+                            questions={skill.assessment}
+                            title={`Assessment: ${skill.title}`}
+                            color={skill.color}
+                            onBack={() => setView('learn')}
+                            prefix="chemtest"
+                        />
+                    </div>
+                </main>
             </div>
         );
     }

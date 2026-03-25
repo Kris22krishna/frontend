@@ -132,11 +132,14 @@ export function EquationBalancer({ color = '#f59e0b' }) {
 
                 {/* Coefficient input row */}
                 <div style={{
-                    display: 'flex', alignItems: 'center', flexWrap: 'wrap',
-                    gap: 10, marginBottom: 24, justifyContent: 'center',
+                    display: 'flex', alignItems: 'center', flexWrap: 'nowrap',
+                    overflowX: 'auto', WebkitOverflowScrolling: 'touch',
+                    gap: 10, marginBottom: 24, justifyContent: 'flex-start',
                     background: '#f8fafc', borderRadius: 16, padding: '20px 24px',
                     border: '1px solid #e2e8f0',
+                    scrollbarWidth: 'none'
                 }}>
+                    <style>{`div::-webkit-scrollbar { display: none; }`}</style>
                     {eq.parts.map((part, i) => (
                         <React.Fragment key={i}>
                             {/* Coefficient input */}
@@ -280,8 +283,8 @@ export function ReactionClassifier({ color = '#0ea5e9' }) {
                     </div>
                 </div>
 
-                {/* Option buttons (2×3 grid) */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+                {/* Option buttons (Responsive grid) */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10, marginBottom: 20 }}>
                     {TYPE_OPTIONS.map((opt) => {
                         const isSelected = selected === opt;
                         return (

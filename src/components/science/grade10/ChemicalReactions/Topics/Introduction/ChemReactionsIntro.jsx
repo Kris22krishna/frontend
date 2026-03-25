@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { chemReactionsIntroData } from './ChemReactionsIntroData';
 import styles from '../../ChemicalReactionsDashboard.module.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../MathRenderer';
 
 /* ── Single card ─────────────────────────────────── */
 function W1HCard({ card }) {
@@ -100,24 +100,22 @@ export default function ChemReactionsIntro() {
             </nav>
 
             <div className={styles['chem-hero']}>
-                <h1 className={styles['chem-hero-title']}>Dive into <span style={{ color: '#8b5cf6' }}>Chemical Reactions</span></h1>
+                <h1 className={styles['chem-hero-title']}>Dive into <span className={styles['chem-hero-accent--violet']}>Chemical Reactions</span></h1>
                 <p className={styles['chem-hero-sub']}>Get started with the 6 big questions and check your prerequisites.</p>
             </div>
 
-            <main className={styles['chem-topic-shell']} style={{ maxWidth: '1200px', margin: '0 auto', padding: '40px 24px' }}>
+            <main className={styles['chem-topic-shell']}>
                 {/* Prerequisites */}
-                <section style={{ marginBottom: '60px' }}>
-                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '24px', textAlign: 'center', color: '#4f46e5' }}>
-                        Prerequisites
-                    </h2>
-                    <div className={styles['chem-responsive-grid']} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '24px' }}>
+                <section className={styles['chem-section-mb']}>
+                    <h2 className={styles['chem-section-header']}>Prerequisites</h2>
+                    <div className={styles['chem-grid']} style={{ padding: 0 }}>
                         {chemReactionsIntroData.prerequisites.map((p, idx) => (
-                            <div key={idx} className={styles['chem-feature-card']} style={{ background: '#fff', padding: '32px 24px', borderRadius: '24px', border: '1px solid #e2e8f0', textAlign: 'center', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)', transition: 'all 0.3s ease' }}>
-                                <div style={{ fontSize: '40px', marginBottom: '16px' }}>{p.icon}</div>
-                                <h3 style={{ fontSize: '20px', fontWeight: 900, margin: '0 0 8px', color: '#0f172a' }}>
+                            <div key={idx} className={`${styles['chem-concept-card']} ${styles['chem-prereq-card']}`}>
+                                <div className={styles['chem-prereq-icon']}>{p.icon}</div>
+                                <h3 className={styles['chem-prereq-title']}>
                                     <MathRenderer text={p.title} />
                                 </h3>
-                                <p style={{ fontSize: '15px', color: '#64748b', margin: 0, lineHeight: 1.6 }}>
+                                <p className={styles['chem-prereq-desc']}>
                                     <MathRenderer text={p.desc} />
                                 </p>
                             </div>
@@ -126,9 +124,7 @@ export default function ChemReactionsIntro() {
                 </section>
 
                 {/* 5W1H Cards Grid */}
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '28px', fontWeight: 900, marginBottom: '32px', textAlign: 'center', color: '#4f46e5' }}>
-                    6 Big Questions
-                </h2>
+                <h2 className={styles['chem-section-header']}>6 Big Questions</h2>
                 <div className={styles['chem-grid']} style={{ padding: 0 }}>
                     {chemReactionsIntroData.cards5W1H.map((card, idx) => (
                         <W1HCard key={idx} card={card} />
@@ -136,26 +132,14 @@ export default function ChemReactionsIntro() {
                 </div>
 
                 {/* Footer CTA */}
-                <div className={styles['chem-topic-cta']} style={{ 
-                    marginTop: '60px', 
-                    padding: '32px', 
-                    background: 'linear-gradient(135deg, #1e1b4b, #312e81)', 
-                    borderRadius: '24px', 
-                    color: '#fff', 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: '20px'
-                }}>
+                <div className={styles['chem-topic-cta']}>
                     <div>
-                        <h3 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px' }}>Ready to learn the language?</h3>
-                        <p style={{ margin: 0, opacity: 0.8 }}>Next up: Key terms and vocabulary.</p>
+                        <h3>Ready to learn the language?</h3>
+                        <p>Next up: Key terms and vocabulary.</p>
                     </div>
-                    <button 
+                    <button
                         className={styles['chem-topic-cta-button']}
                         onClick={() => navigate('/senior/grade/10/science/chemical-reactions/terminology')}
-                        style={{ padding: '12px 28px', background: '#fff', color: '#1e1b4b', border: 'none', borderRadius: '100px', fontWeight: 800, cursor: 'pointer' }}
                     >
                         Terminology →
                     </button>
