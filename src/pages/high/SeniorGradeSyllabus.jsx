@@ -131,7 +131,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10151, skill_name: 'Coordinate Geometry: Interactive Chapter', topic: 'Coordinate Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/coordinate-geometry' },
 
                         // Circles
-                        { skill_id: 10152, skill_name: 'Circles: Interactive Chapter', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/circles' }
+                        { skill_id: 10152, skill_name: 'Circles: Interactive Chapter', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/circles' },
+
+                        // Areas Related to Circles
+                        { skill_id: 10153, skill_name: 'Areas Related to Circles: Interactive Chapter', topic: 'Areas Related to Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/areas-related-to-circles' }
                     ]);
                 } else if (grade === '9') {
                     setSkills([
@@ -139,7 +142,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1240, skill_name: 'Number System: Master Hub', topic: 'Number System', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/number-system' },
                         
                         // Polynomials Hub
-                        { skill_id: 1241, skill_name: 'Polynomials: Master Hub', topic: 'Polynomials', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/polynomials' }
+                        { skill_id: 1241, skill_name: 'Polynomials: Master Hub', topic: 'Polynomials', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/polynomials' },
+
+                        // Coordinate Geometry Hub
+                        { skill_id: 1242, skill_name: 'Coordinate Geometry: Master Hub', topic: 'Coordinate Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/coordinate-geometry' }
                     ]);
                 } else if (grade === '8') {
                     // Set all 9 Grade 8 skills for proper counting

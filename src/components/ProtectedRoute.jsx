@@ -21,10 +21,9 @@ const ProtectedRoute = ({ children, allowedRoles = [], redirectTo = '/admin-logi
     }
 
     // Not authenticated - redirect to login
-    // TEMP BYPASS FOR DEBUGGING
-    // if (!isAuthenticated) {
-    //     return <Navigate to={redirectTo} state={{ from: location }} replace />;
-    // }
+    if (!isAuthenticated) {
+        return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    }
 
     const userType = user?.role;
 
@@ -35,6 +34,7 @@ const ProtectedRoute = ({ children, allowedRoles = [], redirectTo = '/admin-logi
         const dashboardRoutes = {
             student: '/student-dashboard',
             teacher: '/teacher-dashboard',
+            mentor: '/mentor-dashboard',
             parent: '/parent-dashboard',
             admin: '/admin',
             uploader: '/uploader-dashboard',

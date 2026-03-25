@@ -11,7 +11,7 @@ const cards5W1H = [
         gradFrom: "#0891b2",
         gradTo: "#06b6d4",
         shadow: "rgba(6,182,212,0.35)",
-        content: `Data Handling is the process of collecting, organising, and interpreting information (data) to draw meaningful conclusions. It involves finding representative values like the **mean** (average), **median** (middle value), and **mode** (most frequent value). We also use **range** (spread) to understand how data varies. Visual tools like **bar graphs** and **double bar graphs** help us compare data at a glance!`,
+        content: `Data Handling is the process of collecting, organising, and interpreting information (data) to draw meaningful conclusions. It involves finding representative values like the $\\mathbf{mean}$ (average), $\\mathbf{median}$ (middle value), and $\\mathbf{mode}$ (most frequent value). We also use $\\mathbf{range}$ (spread) to understand how data varies. Visual tools like $\\mathbf{bar\\ graphs}$ and $\\mathbf{double\\ bar\\ graphs}$ help us compare data at a glance!`,
         fact: "💡 The word 'statistics' comes from the Latin 'status', meaning 'state' — governments were the first to collect large-scale data!",
     },
     {
@@ -61,7 +61,7 @@ const cards5W1H = [
         gradFrom: "#2563eb",
         gradTo: "#3b82f6",
         shadow: "rgba(59,130,246,0.35)",
-        content: `First, you **collect** data (surveys, experiments, observations). Then you **organise** it using tables and frequency charts. Next, you **summarise** it with representative values: Mean $= \\frac{\\text{Sum of all values}}{\\text{Number of values}}$, Median (middle value after sorting), Mode (most frequent value), and Range $= \\text{Max} - \\text{Min}$. Finally, you **represent** it visually using bar graphs and double bar graphs for easy comparison!`,
+        content: `First, you $\\mathbf{collect}$ data (surveys, experiments, observations). Then you $\\mathbf{organise}$ it using tables and frequency charts. Next, you $\\mathbf{summarise}$ it with representative values: Mean $= \\frac{\\text{Sum of all values}}{\\text{Number of values}}$, Median (middle value after sorting), Mode (most frequent value), and Range $= \\text{Max} - \\text{Min}$. Finally, you $\\mathbf{represent}$ it visually using bar graphs and double bar graphs for easy comparison!`,
         fact: "💡 The arithmetic mean can be misleading — if Bill Gates walks into a room, the 'average' wealth of everyone skyrockets, but nobody actually got richer!",
     },
 ];
