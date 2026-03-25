@@ -182,11 +182,11 @@ export default function LinearEquationsSkills() {
     const goBack = () => { setView('list'); setActiveRule(0); };
 
     const skillMap = {
-        balancing: NODE_IDS.g8MathAlgebraSolving,
-        transposition: NODE_IDS.g8MathAlgebraSolving,
-        wordproblems: NODE_IDS.g8MathAlgebraWordProblems
+        balancing: NODE_IDS.g8MathLinearSolving,
+        transposition: NODE_IDS.g8MathLinearSolving,
+        wordproblems: NODE_IDS.g8MathLinearWordProblems
     };
-    const nodeId = skill ? skillMap[skill.id] : NODE_IDS.g8MathAlgebraSolving;
+    const nodeId = skill ? skillMap[skill.id] : NODE_IDS.g8MathLinearSolving;
 
     // Build pools once when entering practice/assess mode
     const practicePool = useMemo(() => skill ? skill.practicePool() : [], [view, activeIdx]);

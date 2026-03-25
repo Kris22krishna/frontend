@@ -17,17 +17,36 @@ export default function AlgebraSkills() {
     const [lawView, setLawView] = useState(null); // null | 'practice' | 'assessment'
 
     const skillMap = {
-        exponents: NODE_IDS.g8MathAlgebraExponents,
-        liketerms: NODE_IDS.g8MathAlgebraLikeTerms,
-        expressions: NODE_IDS.g8MathAlgebraExpressions,
-        solving: NODE_IDS.g8MathAlgebraSolving,
-        subject: NODE_IDS.g8MathAlgebraSubject,
-        wordproblems: NODE_IDS.g8MathAlgebraWordProblems,
-        reallife: NODE_IDS.g8MathAlgebraRealLife
+        exponents: NODE_IDS.mathBranchAlgebraExponents,
+        liketerms: NODE_IDS.mathBranchAlgebraLikeTerms,
+        expressions: NODE_IDS.mathBranchAlgebraExpressions,
+        solving: NODE_IDS.mathBranchAlgebraSolving,
+        subject: NODE_IDS.mathBranchAlgebraSubject,
+        wordproblems: NODE_IDS.mathBranchAlgebraWordProblems,
+        reallife: NODE_IDS.mathBranchAlgebraRealLife
     };
 
+    // Sub-node mapping for Exponent Laws
+    const exponentLawIds = [
+        NODE_IDS.mathBranchAlgebraExponentsProductLaw,
+        NODE_IDS.mathBranchAlgebraExponentsQuotientLaw,
+        NODE_IDS.mathBranchAlgebraExponentsPowerLaw,
+        NODE_IDS.mathBranchAlgebraExponentsPowerOfProduct,
+        NODE_IDS.mathBranchAlgebraExponentsPowerOfQuotient,
+        NODE_IDS.mathBranchAlgebraExponentsZeroLaw,
+        NODE_IDS.mathBranchAlgebraExponentsIdentityLaw,
+        NODE_IDS.mathBranchAlgebraExponentsNegativeLaw,
+        NODE_IDS.mathBranchAlgebraExponentsFractionalLaw,
+        NODE_IDS.mathBranchAlgebraExponentsStandardForm,
+        NODE_IDS.mathBranchAlgebraExponentsComparing
+    ];
+
     const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
-    const nodeId = skill ? skillMap[skill.id] : null;
+    
+    // Choose specific law node if in lawView, otherwise use main skill node
+    const nodeId = (skill?.id === 'exponents' && lawView)
+        ? exponentLawIds[selectedLearnIdx]
+        : (skill ? skillMap[skill.id] : null);
 
     const openSkill = (index, nextView) => {
         setActiveSkill(index);

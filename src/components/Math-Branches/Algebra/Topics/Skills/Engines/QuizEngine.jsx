@@ -20,7 +20,7 @@ export default function QuizEngine({
     const [finished, setFinished] = useState(false);
 
     // v4 Logging
-    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
 
     useEffect(() => {
@@ -45,11 +45,21 @@ export default function QuizEngine({
 
     // Start session on mount/questions change
     useEffect(() => {
-        if (nodeId) {
-            startSession(nodeId, sessionType);
-            answersPayload.current = [];
-        }
-    }, [nodeId, sessionType, questions]);
+        if (!nodeId) return;
+        
+        startSession({ nodeId, sessionType });
+        answersPayload.current = [];
+
+        return () => {
+            // If the user navigates away before finishing, mark session as abandoned
+            if (!finished) {
+                abandonSession({ 
+                    answersPayload: answersPayload.current, 
+                    totalQuestions: questionSet.length 
+                });
+            }
+        };
+    }, [nodeId, sessionType, questionSet, finished]); // Re-run if finished changes so cleanup knows state
 
     // Format time (MM:SS)
     const formatTime = (seconds) => {
@@ -72,14 +82,20 @@ export default function QuizEngine({
         // v4 Log
         if (nodeId) {
             const answerData = {
-                question: q.question,
-                selectedAnswer: q.options[optIdx],
-                correctAnswer: q.options[q.correct],
-                isCorrect,
-                timeSpent: 0 // We don't have per-question timer here easily, but could add
+                question_index: current + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
             };
             answersPayload.current.push(answerData);
-            await logAnswer(answerData);
+            
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
         }
     };
 
@@ -87,7 +103,11 @@ export default function QuizEngine({
         if (current + 1 >= questionSet.length) {
             setFinished(true);
             if (nodeId) {
-                await finishSession(answersPayload.current);
+                await finishSession({
+                    totalQuestions: questionSet.length,
+                    questionsAnswered: answersPayload.current.length,
+                    answersPayload: answersPayload.current
+                });
             }
         } else {
             setCurrent(c => c + 1);

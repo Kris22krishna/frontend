@@ -77,7 +77,7 @@ export default function AssessmentEngine({
     const topRef = useRef(null);
 
     // v4 Logging
-    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
 
     useEffect(() => {
@@ -92,10 +92,29 @@ export default function AssessmentEngine({
 
         // v4 Start
         if (nodeId) {
-            startSession(nodeId, sessionType);
+            startSession({ nodeId, sessionType });
             answersPayload.current = Array(newQs.length).fill(null);
         }
-    }, [questions, nodeId, sessionType]);
+
+        return () => {
+            if (!finished) {
+                // Map local answers to loggable format
+                const currentPayload = (answers || []).map((ans, idx) => {
+                    if (ans === null) return null;
+                    return {
+                        questionIndex: idx + 1,
+                        isCorrect: isAnswerCorrect(questionSet[idx], ans),
+                        timeSpent: 0
+                    };
+                }).filter(Boolean);
+
+                abandonSession({ 
+                    answersPayload: currentPayload, 
+                    totalQuestions: questionSet.length 
+                });
+            }
+        };
+    }, [questions, nodeId, sessionType, finished, answers]);
 
     useEffect(() => {
         if (topRef.current) {
@@ -139,14 +158,20 @@ export default function AssessmentEngine({
         if (nodeId) {
             const isCorrect = isAnswerCorrect(q, optIdx);
             const answerData = {
-                question: q.question,
-                selectedAnswer: q.options[optIdx],
-                correctAnswer: q.options[q.correct],
-                isCorrect,
-                timeSpent: 0
+                question_index: current + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
             };
             answersPayload.current[current] = answerData;
-            await logAnswer(answerData);
+
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
         }
     };
 
@@ -160,14 +185,20 @@ export default function AssessmentEngine({
         if (nodeId) {
             const isCorrect = isAnswerCorrect(q, value);
             const answerData = {
-                question: q.question,
-                selectedAnswer: value,
-                correctAnswer: q.answer,
-                isCorrect,
-                timeSpent: 0
+                question_index: current + 1,
+                answer_json: { text: value },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
             };
             answersPayload.current[current] = answerData;
-            await logAnswer(answerData);
+
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
         }
     };
 
@@ -185,14 +216,20 @@ export default function AssessmentEngine({
         if (nodeId) {
             const isCorrect = isAnswerCorrect(q, nextAnswer);
             const answerData = {
-                question: q.question,
-                selectedAnswer: JSON.stringify(nextAnswer),
-                correctAnswer: JSON.stringify(q.correct),
-                isCorrect,
-                timeSpent: 0
+                question_index: current + 1,
+                answer_json: { selected: nextAnswer },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
             };
             answersPayload.current[current] = answerData;
-            await logAnswer(answerData);
+
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
         }
     };
 
@@ -222,8 +259,12 @@ export default function AssessmentEngine({
 
         // v4 Finish
         if (nodeId) {
-            const finalPayload = answersPayload.current.filter(Boolean);
-            await finishSession(finalPayload);
+            const fPayload = answersPayload.current.filter(Boolean);
+            await finishSession({
+                totalQuestions: questionSet.length,
+                questionsAnswered: fPayload.length,
+                answersPayload: fPayload
+            });
         }
     };
 

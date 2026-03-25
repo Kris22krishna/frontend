@@ -190,6 +190,13 @@ export const api = {
         return handleResponse(response);
     },
 
+    getStudentSessionHistory: async (limit = 100) => {
+        const response = await fetch(`${BASE_URL}/api/v1/student/session-history?limit=${limit}`, {
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
     // --- Skills ---
     getSkills: async (grade) => {
         const params = new URLSearchParams();

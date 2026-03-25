@@ -13,7 +13,13 @@ import {
     AlertTriangle,
     Zap,
     ChevronDown,
-    ChevronUp
+    ChevronUp,
+    ChevronLeft,
+    ChevronRight,
+    ArrowUp,
+    ArrowDown,
+    ExternalLink,
+    Filter
 } from 'lucide-react';
 import { api } from '../../../services/api';
 import {
@@ -72,12 +78,195 @@ const ChapterAccordion = ({ chapter, skills, mode }) => {
     );
 };
 
+const ChronologicalSummary = ({ sessions }) => {
+    const [filterCategory, setFilterCategory] = React.useState('all');
+    const [sortOrder, setSortOrder] = React.useState('desc'); // 'asc' | 'desc'
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const recordsPerPage = 10;
+
+    // Filter and Sort
+    const processedSessions = React.useMemo(() => {
+        let result = [...sessions];
+        if (filterCategory !== 'all') {
+            result = result.filter(s => s.category.toLowerCase() === filterCategory.toLowerCase());
+        }
+        result.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+        });
+        return result;
+    }, [sessions, filterCategory, sortOrder]);
+
+    // Pagination
+    const totalPages = Math.ceil(processedSessions.length / recordsPerPage);
+    const currentRecords = processedSessions.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage);
+
+    if (sessions.length === 0) return null;
+
+    return (
+        <div className="bg-white p-6 md:p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 mt-8 w-full overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {/* Header with Filters */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3">
+                        <div className="p-2 bg-cyan-100 rounded-xl">
+                            <Clock className="h-6 w-6 text-cyan-600" />
+                        </div>
+                        Chronological Summary
+                    </h2>
+                    <p className="text-slate-500 text-sm mt-1 ml-11">Review your recent activities and performance</p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-100">
+                        <Filter className="h-4 w-4 text-slate-400 ml-2" />
+                        <select 
+                            value={filterCategory}
+                            onChange={(e) => { setFilterCategory(e.target.value); setCurrentPage(1); }}
+                            className="bg-transparent text-slate-600 text-sm font-bold px-2 py-1 outline-none cursor-pointer"
+                        >
+                            <option value="all">All Categories</option>
+                            <option value="practice">Practice</option>
+                            <option value="assessment">Assessment</option>
+                        </select>
+                    </div>
+
+                    <button 
+                        onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+                        className="flex items-center gap-2 bg-slate-50 border border-slate-200 text-slate-600 text-sm font-bold rounded-xl px-4 py-2.5 hover:bg-slate-100 transition-all active:scale-95"
+                    >
+                        Date {sortOrder === 'desc' ? <ArrowDown className="h-4 w-4 text-cyan-500" /> : <ArrowUp className="h-4 w-4 text-cyan-500" />}
+                    </button>
+                </div>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto -mx-6 md:mx-0">
+                <table className="w-full text-left border-separate border-spacing-0">
+                    <thead>
+                        <tr className="bg-slate-50/50">
+                            <th className="py-4 px-6 font-bold text-slate-500 text-[11px] uppercase tracking-wider rounded-l-2xl border-y border-slate-100">Sno</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Date</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Category</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Skill Name</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Sub Skill</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Questions</th>
+                            <th className="py-4 px-4 font-bold text-emerald-600 text-[11px] uppercase tracking-wider border-y border-slate-100">Correct</th>
+                            <th className="py-4 px-4 font-bold text-rose-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Incorrect</th>
+                            <th className="py-4 px-4 font-bold text-slate-400 text-[11px] uppercase tracking-wider border-y border-slate-100">Skipped</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Duration</th>
+                            <th className="py-4 px-6 font-bold text-slate-500 text-[11px] uppercase tracking-wider rounded-r-2xl border-y border-slate-100 text-center">Report</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                        {currentRecords.map((session, idx) => (
+                            <tr key={session.id} className="hover:bg-slate-50/80 transition-all group">
+                                <td className="py-5 px-6 text-sm text-slate-400 font-medium">{(currentPage - 1) * recordsPerPage + idx + 1}</td>
+                                <td className="py-5 px-4 text-sm text-slate-600 font-semibold whitespace-nowrap">
+                                    {new Date(session.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                </td>
+                                <td className="py-5 px-4">
+                                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
+                                        session.category.toLowerCase() === 'assessment' 
+                                        ? 'bg-purple-100 text-purple-600 border border-purple-200' 
+                                        : 'bg-cyan-100 text-cyan-600 border border-cyan-200'
+                                    }`}>
+                                        {session.category}
+                                    </span>
+                                </td>
+                                <td className="py-5 px-4 text-sm text-slate-800 font-bold">{session.skill_name}</td>
+                                <td className="py-5 px-4 text-sm text-slate-500 font-medium italic">{session.sub_skill_name || 'N/A'}</td>
+                                <td className="py-5 px-4 text-sm text-slate-700 font-black">{session.total_questions}</td>
+                                <td className="py-5 px-4 text-sm text-emerald-500 font-black">
+                                    <div className="flex items-center gap-1">
+                                        {session.correct}
+                                        {session.correct > 0 && <CheckCircle2 className="h-3 w-3" />}
+                                    </div>
+                                </td>
+                                <td className="py-5 px-4 text-sm text-rose-500 font-black">{session.incorrect}</td>
+                                <td className="py-5 px-4 text-sm text-slate-400 font-bold">{session.skipped}</td>
+                                <td className="py-5 px-4 text-sm text-slate-600 font-bold tabular-nums">
+                                    {Math.floor(session.duration/60)}m {session.duration%60}s
+                                </td>
+                                <td className="py-5 px-6 text-center">
+                                    {session.has_report ? (
+                                        <button className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-900 hover:text-white text-slate-700 rounded-xl text-xs font-black transition-all border border-slate-200 shadow-sm active:scale-95 group/btn">
+                                            <ExternalLink className="h-3.5 w-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                                            Report
+                                        </button>
+                                    ) : (
+                                        <span className="text-slate-300 text-xs font-medium italic">Practice</span>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex justify-between items-center mt-8 pt-6 border-t border-slate-50">
+                    <p className="text-sm text-slate-500 font-medium">
+                        Showing <span className="text-slate-800 font-bold">{(currentPage - 1) * recordsPerPage + 1}</span>-
+                        <span className="text-slate-800 font-bold">{Math.min(currentPage * recordsPerPage, processedSessions.length)}</span> of 
+                        <span className="text-slate-800 font-bold ml-1">{processedSessions.length}</span> records
+                    </p>
+                    <div className="flex items-center gap-1">
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="p-2 rounded-xl hover:bg-slate-100 disabled:opacity-20 transition-all active:scale-90"
+                        >
+                            <ChevronLeft className="h-5 w-5 text-slate-600" />
+                        </button>
+                        <div className="flex gap-1">
+                            {[...Array(totalPages)].map((_, i) => {
+                                const pageNum = i + 1;
+                                // Show first, last, and pages around current
+                                if (pageNum === 1 || pageNum === totalPages || (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)) {
+                                    return (
+                                        <button 
+                                            key={pageNum}
+                                            onClick={() => setCurrentPage(pageNum)}
+                                            className={`w-9 h-9 rounded-xl text-sm font-black transition-all active:scale-90 ${
+                                                currentPage === pageNum 
+                                                ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-200 scale-110' 
+                                                : 'text-slate-400 hover:bg-slate-50'
+                                            }`}
+                                        >
+                                            {pageNum}
+                                        </button>
+                                    );
+                                }
+                                if (pageNum === currentPage - 2 || pageNum === currentPage + 2) {
+                                    return <span key={pageNum} className="text-slate-300 px-1 pt-2">...</span>;
+                                }
+                                return null;
+                            })}
+                        </div>
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            className="p-2 rounded-xl hover:bg-slate-100 disabled:opacity-20 transition-all active:scale-90"
+                        >
+                            <ChevronRight className="h-5 w-5 text-slate-600" />
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
 const StudentDashboard = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [profile, setProfile] = useState(null);
     const [analytics, setAnalytics] = useState(null);
+    const [sessions, setSessions] = useState([]);
     const [mode, setMode] = useState('latest'); // 'latest' | 'best'
 
     useEffect(() => {
@@ -88,12 +277,14 @@ const StudentDashboard = () => {
         try {
             setLoading(true);
             setError(null);
-            const [profileData, analyticsData] = await Promise.all([
+            const [profileData, analyticsData, sessionsData] = await Promise.all([
                 api.getStudentProfile(),
-                api.getStudentDashboardAnalytics()
+                api.getStudentDashboardAnalytics(),
+                api.getStudentSessionHistory(100)
             ]);
             setProfile(profileData);
             setAnalytics(analyticsData);
+            setSessions(sessionsData || []);
         } catch (err) {
             console.error('Failed to fetch student dashboard:', err);
             setError(err.message || 'Failed to load dashboard data');
@@ -300,15 +491,15 @@ const StudentDashboard = () => {
 
                         <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-2xl border border-indigo-100 transition-all hover:shadow-md">
                             <div className="flex items-center gap-3 mb-2">
-                                <Award className="h-5 w-5 text-indigo-500" />
-                                <div className="text-sm font-bold text-indigo-900">Most Practiced Skill</div>
+                                <Target className="h-5 w-5 text-indigo-500" />
+                                <div className="text-sm font-bold text-indigo-900">Questions Attempted</div>
                             </div>
                             <div className="text-lg font-bold text-slate-800 line-clamp-2 leading-tight">
-                                {learning_insights?.most_practiced?.skill_name || 'N/A'}
+                                {quick_stats?.total_questions || 0}
                             </div>
                             <div className="text-sm text-indigo-600 font-medium mt-2">
-                                {learning_insights?.most_practiced?.total
-                                    ? `${learning_insights.most_practiced.total} attempts`
+                                {quick_stats?.total_questions
+                                    ? `${quick_stats.total_questions} attempts`
                                     : 'Start practicing to see insights'}
                             </div>
                         </div>
@@ -316,30 +507,30 @@ const StudentDashboard = () => {
                         <div className="bg-gradient-to-br from-rose-50 to-orange-50 p-5 rounded-2xl border border-rose-100 transition-all hover:shadow-md">
                             <div className="flex items-center gap-3 mb-2">
                                 <Target className="h-5 w-5 text-rose-500" />
-                                <div className="text-sm font-bold text-rose-900">Area for Improvement</div>
+                                <div className="text-sm font-bold text-emerald-900">Correct Answers</div>
                             </div>
                             <div className="text-lg font-bold text-slate-800 line-clamp-2 leading-tight">
-                                {learning_insights?.weakest_skill?.skill_name || 'N/A'}
+                                {quick_stats?.total_correct || 0}
                             </div>
                             <div className="text-sm text-rose-600 font-medium mt-2">
                                 {learning_insights?.weakest_skill?.accuracy !== undefined
-                                    ? `${Math.round(learning_insights.weakest_skill.accuracy * 100)}% accuracy - Needs review`
-                                    : 'Keep practicing to find weak spots'}
+                                    ? `${Math.round(quick_stats.total_correct / quick_stats.total_questions * 100)}% accuracy - Needs review`
+                                    : 'Start practicing to improve accuracy'}
                             </div>
                         </div>
 
                         <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-2xl border border-emerald-100 transition-all hover:shadow-md">
                             <div className="flex items-center gap-3 mb-2">
                                 <Clock className="h-5 w-5 text-emerald-500" />
-                                <div className="text-sm font-bold text-emerald-900">Avg Time per Question</div>
+                                <div className="text-sm font-bold text-emerald-900">Total Practice Time</div>
                             </div>
                             <div className="text-3xl font-black text-slate-800">
-                                {learning_insights?.avg_time_per_question
-                                    ? `${learning_insights.avg_time_per_question.toFixed(1)}s`
-                                    : '0s'}
+                                {totalMinutes
+                                    ? `${totalMinutes.toFixed(1)}min`
+                                    : '0min'}
                             </div>
                             <div className="text-sm text-emerald-600 font-medium mt-1">
-                                Overall answering speed
+                                Total time spent learning
                             </div>
                         </div>
                     </div>
@@ -392,6 +583,9 @@ const StudentDashboard = () => {
                         </div>
                     )}
                 </div>
+
+                {/* SECTION 7: Chronological Summary */}
+                <ChronologicalSummary sessions={sessions} />
 
             </div>
         </div>

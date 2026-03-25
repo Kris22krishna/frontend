@@ -1,65 +1,99 @@
-// lib/curriculumIds.js
-// Keep in sync with supabase/seeds/curriculum.sql (v3_ tables) and
-// supabase/migrations/001_v4_tables.sql (v4_ tables).
-//
-// v4 UUIDs: used by useSessionLogger + AlgebraSkillsData for progress tracking.
-// v4 nodes mirror the v3 structure but live in the new unified node table.
+/** ── lib/curriculumIds.js ───────────────────────────────────────────────────
+ * Canonical registry of v4 curriculum UUIDs for Skill100.ai.
+ *
+ * This file acts as the single source of truth for the frontend.
+ * Ensure these match the entries in 'supabase/seeds/curriculum.sql'.
+ *
+ * Structure:
+ *   - 'a' prefix: Academic (official curriculum path)
+ *   - 'm' prefix: Modules (Math-Branches, IDM, etc.)
+ * ────────────────────────────────────────────────────────────────────────── */
 
 export const NODE_IDS = {
-  // ── v4 Subjects ──────────────────────────────────────────────────────────
+  // ── 0. SUBJECTS ───────────────────────────────────────────────────────────
   math: 'a1000000-0000-0000-0000-000000000001',
 
-  // ── v4 Grades ─────────────────────────────────────────────────────────────
-  grade8: 'a2000000-0000-0000-0000-000000000001',
-  grade9: 'a2000000-0000-0000-0000-000000000002',
+  // ── 1. GRADES ─────────────────────────────────────────────────────────────
+  grade8: 'a2000000-0000-0000-0000-000000000008',
+  grade9: 'a2000000-0000-0000-0000-000000000009',
 
-  // ── v4 Chapters ───────────────────────────────────────────────────────────
-  g8MathAlgebra: 'a3000000-0000-0000-0000-000000000001',
+  // ── 2. GRADE 8 CHAPTERS ───────────────────────────────────────────────────
+  g8MathRationalNumbers:   'a3000000-0000-0000-0000-000000000001',
+  g8MathLinearEquations:   'a3000000-0000-0000-0000-000000000002',
+  g8MathSquaresRoots:      'a3000000-0000-0000-0000-000000000003',
+  g8MathCubesRoots:        'a3000000-0000-0000-0000-000000000004',
+  g8MathExponentsPowers:   'a3000000-0000-0000-0000-000000000005',
+  g8MathComparingQuantities:'a3000000-0000-0000-0000-000000000006',
+  g8MathAlgebraicIdentities:'a3000000-0000-0000-0000-000000000007',
+  g8MathMensuration:       'a3000000-0000-0000-0000-000000000008',
+  g8MathFactorisation:     'a3000000-0000-0000-0000-000000000009',
+  g8MathProportions:       'a3000000-0000-0000-0000-000000000010',
+  g8MathGraphs:            'a3000000-0000-0000-0000-000000000011',
+  g8MathDataHandling:      'a3000000-0000-0000-0000-000000000012',
 
-  // ── v4 Skills (no subskills — leaf nodes) ────────────────────────────────
-  g8MathAlgebraLikeTerms:    'a4000000-0000-0000-0000-000000000002',
-  g8MathAlgebraExpressions:  'a4000000-0000-0000-0000-000000000003',
-  g8MathAlgebraSolving:      'a4000000-0000-0000-0000-000000000004',
-  g8MathAlgebraSubject:      'a4000000-0000-0000-0000-000000000005',
-  g8MathAlgebraWordProblems: 'a4000000-0000-0000-0000-000000000006',
-  g8MathAlgebraRealLife:     'a4000000-0000-0000-0000-000000000007',
+  // ── 3. GRADE 8 SKILLS (Representative selection) ──────────────────────────
+  
+  // Rational Numbers
+  g8MathRationalAssociativity:   'a4000000-0000-0000-0000-000000010001',
+  g8MathRationalDistributivity:  'a4000000-0000-0000-0000-000000010002',
+  
+  // Linear Equations
+  g8MathLinearSolving:           'a4000000-0000-0000-0000-000000020001',
+  g8MathLinearWordProblems:      'a4000000-0000-0000-0000-000000020002',
 
-  // ── v4 Skill with subskills — Laws of Exponents ───────────────────────────
-  g8MathAlgebraExponents:    'a4000000-0000-0000-0000-000000000001',
+  // Exponents & Powers
+  g8MathExponentsLaws:           'a4000000-0000-0000-0000-000000050001',
+  g8MathExponentsStandardForm:   'a4000000-0000-0000-0000-000000050002',
 
-  // ── v4 Subskills (Exponent Laws) ─────────────────────────────────────────
-  g8MathAlgebraExponentsProductLaw:    'a5000000-0000-0000-0000-000000000001',
-  g8MathAlgebraExponentsQuotientLaw:   'a5000000-0000-0000-0000-000000000002',
-  g8MathAlgebraExponentsPowerLaw:      'a5000000-0000-0000-0000-000000000003',
-  g8MathAlgebraExponentsPowerOfProduct:'a5000000-0000-0000-0000-000000000004',
-  g8MathAlgebraExponentsPowerOfQuotient:'a5000000-0000-0000-0000-000000000005',
-  g8MathAlgebraExponentsZeroLaw:       'a5000000-0000-0000-0000-000000000006',
-  g8MathAlgebraExponentsIdentityLaw:   'a5000000-0000-0000-0000-000000000007',
-  g8MathAlgebraExponentsNegativeLaw:   'a5000000-0000-0000-0000-000000000008',
-  g8MathAlgebraExponentsFractionalLaw: 'a5000000-0000-0000-0000-000000000009',
-  g8MathAlgebraExponentsStandardForm:  'a5000000-0000-0000-0000-000000000010',
-  g8MathAlgebraExponentsComparing:     'a5000000-0000-0000-0000-000000000011',
+  // Comparing Quantities
+  g8MathComparingPercentages:    'a4000000-0000-0000-0000-000000060001',
+  g8MathComparingProfitLoss:     'a4000000-0000-0000-0000-000000060002',
+  g8MathComparingSimpleInterest: 'a4000000-0000-0000-0000-000000060003',
+  g8MathComparingCompoundInterest:'a4000000-0000-0000-0000-000000060004',
+
+  // ── 4. MATH-BRANCHES MODULE (Independent) ─────────────────────────────────
+  mathBranchAlgebra:             'f1000000-0000-0000-0000-000000000001',
+
+  // Algebra Hub Skills
+  mathBranchAlgebraExponents:    'f2000000-0000-0000-0000-000000000001',
+  mathBranchAlgebraLikeTerms:    'f2000000-0000-0000-0000-000000000002',
+  mathBranchAlgebraExpressions:  'f2000000-0000-0000-0000-000000000003',
+  mathBranchAlgebraSolving:      'f2000000-0000-0000-0000-000000000004',
+  mathBranchAlgebraSubject:      'f2000000-0000-0000-0000-000000000005',
+  mathBranchAlgebraWordProblems: 'f2000000-0000-0000-0000-000000000006',
+  mathBranchAlgebraRealLife:     'f2000000-0000-0000-0000-000000000007',
+  mathBranchAlgebraTerminologyQuiz: 'f2000000-0000-0000-0000-000000000010',
+
+  // Subskills for mathBranchAlgebraExponents
+  mathBranchAlgebraExponentsProductLaw:     'f3000000-0000-0000-0000-000000000001',
+  mathBranchAlgebraExponentsQuotientLaw:    'f3000000-0000-0000-0000-000000000002',
+  mathBranchAlgebraExponentsPowerLaw:       'f3000000-0000-0000-0000-000000000003',
+  mathBranchAlgebraExponentsPowerOfProduct: 'f3000000-0000-0000-0000-000000000004',
+  mathBranchAlgebraExponentsPowerOfQuotient:'f3000000-0000-0000-0000-000000000005',
+  mathBranchAlgebraExponentsZeroLaw:        'f3000000-0000-0000-0000-000000000006',
+  mathBranchAlgebraExponentsIdentityLaw:    'f3000000-0000-0000-0000-000000000007',
+  mathBranchAlgebraExponentsNegativeLaw:    'f3000000-0000-0000-0000-000000000008',
+  mathBranchAlgebraExponentsFractionalLaw:  'f3000000-0000-0000-0000-000000000009',
+  mathBranchAlgebraExponentsStandardForm:   'f3000000-0000-0000-0000-000000000010',
+  mathBranchAlgebraExponentsComparing:      'f3000000-0000-0000-0000-000000000011',
 };
 
-// Slug → NODE_ID lookup (used by useSessionLogger)
+/**
+ * Slug-to-ID mapping to simplify integration in generic engines.
+ */
 export const SLUG_TO_NODE_ID = {
-  'g8-math-algebra':                           NODE_IDS.g8MathAlgebra,
-  'g8-math-algebra-exponents':                 NODE_IDS.g8MathAlgebraExponents,
-  'g8-math-algebra-like-terms':                NODE_IDS.g8MathAlgebraLikeTerms,
-  'g8-math-algebra-expressions':               NODE_IDS.g8MathAlgebraExpressions,
-  'g8-math-algebra-solving':                   NODE_IDS.g8MathAlgebraSolving,
-  'g8-math-algebra-subject':                   NODE_IDS.g8MathAlgebraSubject,
-  'g8-math-algebra-word-problems':             NODE_IDS.g8MathAlgebraWordProblems,
-  'g8-math-algebra-real-life':                 NODE_IDS.g8MathAlgebraRealLife,
-  'g8-math-algebra-exponents-product-law':     NODE_IDS.g8MathAlgebraExponentsProductLaw,
-  'g8-math-algebra-exponents-quotient-law':    NODE_IDS.g8MathAlgebraExponentsQuotientLaw,
-  'g8-math-algebra-exponents-power-law':       NODE_IDS.g8MathAlgebraExponentsPowerLaw,
-  'g8-math-algebra-exponents-power-of-product':NODE_IDS.g8MathAlgebraExponentsPowerOfProduct,
-  'g8-math-algebra-exponents-power-of-quotient':NODE_IDS.g8MathAlgebraExponentsPowerOfQuotient,
-  'g8-math-algebra-exponents-zero-law':        NODE_IDS.g8MathAlgebraExponentsZeroLaw,
-  'g8-math-algebra-exponents-identity-law':    NODE_IDS.g8MathAlgebraExponentsIdentityLaw,
-  'g8-math-algebra-exponents-negative-law':    NODE_IDS.g8MathAlgebraExponentsNegativeLaw,
-  'g8-math-algebra-exponents-fractional-law':  NODE_IDS.g8MathAlgebraExponentsFractionalLaw,
-  'g8-math-algebra-exponents-standard-form':   NODE_IDS.g8MathAlgebraExponentsStandardForm,
-  'g8-math-algebra-exponents-comparing':      NODE_IDS.g8MathAlgebraExponentsComparing,
+  // Hub Slugs
+  'math-branch-algebra':                NODE_IDS.mathBranchAlgebra,
+  'math-branch-algebra-exponents':      NODE_IDS.mathBranchAlgebraExponents,
+  'math-branch-algebra-solving':        NODE_IDS.mathBranchAlgebraSolving,
+  'math-branch-algebra-word-problems':  NODE_IDS.mathBranchAlgebraWordProblems,
+  
+  // Grade 8 Slugs (Chapters)
+  'g8-math-rational-numbers':           NODE_IDS.g8MathRationalNumbers,
+  'g8-math-linear-equations':           NODE_IDS.g8MathLinearEquations,
+  'g8-math-exponents':                  NODE_IDS.g8MathExponentsPowers,
+
+  // Grade 8 Slugs (Skills)
+  'g8-math-linear-solving':             NODE_IDS.g8MathLinearSolving,
+  'g8-math-linear-word-problems':       NODE_IDS.g8MathLinearWordProblems,
 };
