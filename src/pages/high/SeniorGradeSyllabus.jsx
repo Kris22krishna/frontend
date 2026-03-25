@@ -205,7 +205,6 @@ const SeniorGradeSyllabus = () => {
 
     // Group skills by topic (Chapter Level)
     const skillsByTopic = (skills || []).reduce((acc, skill) => {
-        const topicName = (skill.topic || 'General').toLowerCase();
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade - Grade 8: we'll hardcode everything, so skip database skills
