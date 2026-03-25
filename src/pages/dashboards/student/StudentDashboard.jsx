@@ -7,9 +7,7 @@ import {
     Loader2,
     Target,
     CheckCircle2,
-    Percent,
     Clock,
-    Award,
     AlertTriangle,
     Zap,
     ChevronDown,
@@ -409,37 +407,6 @@ const StudentDashboard = () => {
                     </div>
                 </div>
 
-                {/* SECTION 2: Quick Stats Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
-                        <Target className="h-8 w-8 text-cyan-500 mb-4 relative z-10" />
-                        <div className="text-3xl font-black text-slate-800 relative z-10">{quick_stats?.total_questions || 0}</div>
-                        <div className="text-slate-500 font-medium text-sm relative z-10">Questions Attempted</div>
-                    </div>
-
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
-                        <CheckCircle2 className="h-8 w-8 text-emerald-500 mb-4 relative z-10" />
-                        <div className="text-3xl font-black text-slate-800 relative z-10">{quick_stats?.total_correct || 0}</div>
-                        <div className="text-slate-500 font-medium text-sm relative z-10">Correct Answers</div>
-                    </div>
-
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
-                        <Percent className="h-8 w-8 text-purple-500 mb-4 relative z-10" />
-                        <div className="text-3xl font-black text-slate-800 relative z-10">{accuracy}%</div>
-                        <div className="text-slate-500 font-medium text-sm relative z-10">Overall Accuracy</div>
-                    </div>
-
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110" />
-                        <Clock className="h-8 w-8 text-blue-500 mb-4 relative z-10" />
-                        <div className="text-3xl font-black text-slate-800 relative z-10">{totalMinutes} <span className="text-xl text-slate-600 font-bold">min</span></div>
-                        <div className="text-slate-500 font-medium text-sm relative z-10">Total Practice Time</div>
-                    </div>
-                </div>
-
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* SECTION 3: Chapter Time Analytics */}
                     <div className="lg:col-span-2 bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
@@ -486,51 +453,48 @@ const StudentDashboard = () => {
                     <div className="space-y-4">
                         <h2 className="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2 px-1">
                             <Zap className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                            Insights
+                            Learning Insights
                         </h2>
 
-                        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-2xl border border-indigo-100 transition-all hover:shadow-md">
+                        {/* Total Attempts */}
+                        <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-5 rounded-2xl border border-indigo-100 transition-all hover:shadow-md">
                             <div className="flex items-center gap-3 mb-2">
                                 <Target className="h-5 w-5 text-indigo-500" />
                                 <div className="text-sm font-bold text-indigo-900">Questions Attempted</div>
                             </div>
-                            <div className="text-lg font-bold text-slate-800 line-clamp-2 leading-tight">
+                            <div className="text-3xl font-black text-slate-800">
                                 {quick_stats?.total_questions || 0}
                             </div>
-                            <div className="text-sm text-indigo-600 font-medium mt-2">
-                                {quick_stats?.total_questions
-                                    ? `${quick_stats.total_questions} attempts`
-                                    : 'Start practicing to see insights'}
+                            <div className="text-sm text-indigo-600 font-medium mt-1">
+                                Total questions solved so far
                             </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-rose-50 to-orange-50 p-5 rounded-2xl border border-rose-100 transition-all hover:shadow-md">
-                            <div className="flex items-center gap-3 mb-2">
-                                <Target className="h-5 w-5 text-rose-500" />
-                                <div className="text-sm font-bold text-emerald-900">Correct Answers</div>
-                            </div>
-                            <div className="text-lg font-bold text-slate-800 line-clamp-2 leading-tight">
-                                {quick_stats?.total_correct || 0}
-                            </div>
-                            <div className="text-sm text-rose-600 font-medium mt-2">
-                                {learning_insights?.weakest_skill?.accuracy !== undefined
-                                    ? `${Math.round(quick_stats.total_correct / quick_stats.total_questions * 100)}% accuracy - Needs review`
-                                    : 'Start practicing to improve accuracy'}
-                            </div>
-                        </div>
-
+                        {/* Correct Answers */}
                         <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-2xl border border-emerald-100 transition-all hover:shadow-md">
                             <div className="flex items-center gap-3 mb-2">
-                                <Clock className="h-5 w-5 text-emerald-500" />
-                                <div className="text-sm font-bold text-emerald-900">Total Practice Time</div>
+                                <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                                <div className="text-sm font-bold text-emerald-900">Correct Answers</div>
                             </div>
                             <div className="text-3xl font-black text-slate-800">
-                                {totalMinutes
-                                    ? `${totalMinutes.toFixed(1)}min`
-                                    : '0min'}
+                                {quick_stats?.total_correct || 0}
                             </div>
                             <div className="text-sm text-emerald-600 font-medium mt-1">
-                                Total time spent learning
+                                {accuracy}% Accuracy rate
+                            </div>
+                        </div>
+
+                        {/* Total Time */}
+                        <div className="bg-gradient-to-br from-purple-50 to-fuchsia-50 p-5 rounded-2xl border border-purple-100 transition-all hover:shadow-md">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Clock className="h-5 w-5 text-purple-500" />
+                                <div className="text-sm font-bold text-purple-900">Total Learning Time</div>
+                            </div>
+                            <div className="text-3xl font-black text-slate-800">
+                                {totalMinutes} <span className="text-xl text-slate-600 font-bold">min</span>
+                            </div>
+                            <div className="text-sm text-purple-600 font-medium mt-1">
+                                Practice & Assessment sessions
                             </div>
                         </div>
                     </div>
