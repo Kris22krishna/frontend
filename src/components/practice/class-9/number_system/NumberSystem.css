@@ -513,6 +513,8 @@
     min-height: 100vh;
     background: #f8fafc;
     font-family: 'Open Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ── TOP NAV ────────────────────────────────────────────────── */
@@ -521,12 +523,13 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 20px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
     border-bottom: 1px solid #f1f5f9;
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
     position: sticky;
-    top: 0;
-    z-index: 100;
+    top: 80px;
+    z-index: 1000;
     flex-wrap: wrap;
     gap: 8px;
 }
@@ -1157,3 +1160,114 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — MOBILE PORTRAIT (≤480px)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .ns-left { padding: 40px 16px; min-height: 260px; }
+    .ns-main-title { font-size: 1.8rem; }
+    .ns-main-sub { font-size: 13px; margin-bottom: 20px; }
+    .ns-right { padding: 24px 16px; }
+    .ns-card-btn { padding: 12px 14px; gap: 12px; border-radius: 14px; }
+    .ns-card-icon { width: 40px; height: 40px; font-size: 20px; border-radius: 10px; }
+    .ns-card-label { font-size: 15px; }
+    .ns-card-desc { font-size: 12px; }
+    .ns-card-chevron { font-size: 22px; }
+
+    .ns-nav { padding: 8px 12px; top: 56px; }
+    .ns-nav-back { padding: 5px 10px; font-size: 11px; }
+    .ns-nav-link { padding: 5px 10px; font-size: 11px; }
+    .ns-module-hero { padding: 16px 14px; }
+    .ns-module-title { font-size: 1.15rem; }
+    .ns-module-subtitle { font-size: 11px; }
+    .ns-section { padding: 12px 14px 24px; }
+
+    .ns-quiz-card { padding: 16px; border-radius: 14px; }
+    .ns-quiz-options { grid-template-columns: 1fr; gap: 8px; }
+    .ns-option-btn { padding: 12px 14px; font-size: 14px; border-radius: 12px; }
+
+    .ns-skill-card { padding: 14px; gap: 12px; border-radius: 14px; }
+    .ns-skill-icon { width: 40px; height: 40px; font-size: 20px; }
+    .ns-skill-actions { gap: 6px; }
+    .ns-skill-btn-outline, .ns-skill-btn-filled { padding: 6px 12px; font-size: 11px; }
+
+    .ns-learn-grid { grid-template-columns: 1fr; gap: 12px; }
+    .ns-details-window { padding: 16px; border-radius: 14px; }
+    .ns-rule-split { grid-template-columns: 1fr; gap: 12px; }
+
+    .ns-btn-primary { padding: 10px 20px; font-size: 13px; }
+    .ns-btn-secondary { padding: 10px 20px; font-size: 13px; }
+
+    .ns-tab { padding: 8px 14px; font-size: 12px; }
+    .ns-learn-footer { gap: 8px; }
+
+    .ns-5w1h-grid { grid-template-columns: 1fr; gap: 8px; }
+    .ns-5w1h-header { padding: 14px 16px; gap: 10px; }
+    .ns-5w1h-icon { width: 34px; height: 34px; font-size: 16px; }
+    .ns-5w1h-q { font-size: 13px; }
+    .ns-5w1h-body { padding: 12px 16px 16px; }
+
+    .ns-assessment-layout { flex-direction: column; gap: 12px; }
+    .ns-assessment-palette { width: 100%; position: static; padding: 14px; border-radius: 14px; }
+
+    .question-card-modern { padding: 1.2rem; border-radius: 1.2rem; }
+    .question-text-modern { font-size: 1rem; margin-bottom: 1.2rem; }
+    .junior-practice-header { padding: 0 1rem; height: 52px; }
+    .junior-bottom-bar { height: 60px; padding: 0 1rem; }
+    .ns-quiz-finished { padding: 20px; border-radius: 16px; }
+
+    .palette-grid { grid-template-columns: repeat(5, 1fr); gap: 0.3rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤768px)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    .ns-nav { top: 56px; }
+    .ns-5w1h-grid { grid-template-columns: repeat(2, 1fr); }
+    .ns-learn-grid { grid-template-columns: 1fr; }
+    .ns-assessment-layout { flex-direction: column; }
+    .ns-assessment-palette { width: 100%; position: static; }
+    .ns-skill-card { flex-direction: column; align-items: flex-start; }
+    .ns-skill-actions { width: 100%; }
+    .ns-skill-actions > button { flex: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — LANDSCAPE (short viewports)
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-height: 500px) and (orientation: landscape) {
+    .ns-left { padding: 20px 16px; min-height: auto; }
+    .ns-main-title { font-size: 1.6rem; margin-bottom: 8px; }
+    .ns-main-sub { font-size: 12px; margin-bottom: 12px; }
+    .ns-stat { padding: 8px 12px; }
+    .ns-stat-num { font-size: 18px; }
+    .ns-right { padding: 16px 20px; }
+    .ns-card-btn { padding: 10px 14px; }
+
+    .ns-nav { top: 56px; padding: 6px 12px; }
+    .ns-nav-link { padding: 4px 8px; font-size: 11px; }
+    .ns-module-hero { padding: 12px 14px; }
+    .ns-module-title { font-size: 1.1rem; }
+    .ns-section { padding: 10px 14px 20px; }
+    .ns-quiz-card { padding: 16px; }
+    .ns-skill-card { padding: 12px 14px; }
+    .ns-assessment-palette { padding: 12px; }
+
+    .junior-practice-page { height: auto; min-height: 100vh; }
+    .question-card-modern { max-height: none; }
+    .junior-practice-header { height: 48px; }
+    .junior-bottom-bar { height: 52px; }
+}
+
+@media (max-width: 768px) and (max-height: 500px) and (orientation: landscape) {
+    .ns-fullpage { flex-direction: row; min-height: 100vh; overflow: hidden; }
+    .ns-left { flex: 0 0 40%; min-height: auto; padding: 16px; }
+    .ns-right { padding: 16px; overflow-y: auto; }
+    .ns-nav { top: 0; }
+    .ns-module-hero { padding: 10px 12px; }
+    .ns-module-title { font-size: 1rem; }
+    .ns-learn-grid { grid-template-columns: 180px 1fr; }
+    .ns-5w1h-grid { grid-template-columns: repeat(2, 1fr); }
+}
