@@ -1,0 +1,139 @@
+.pw_page {
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.pw_topic_nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.pw_back_link {
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 14px;
+    background: none;
+    border: none;
+}
+
+.pw_nav_link_active {
+    font-weight: 800;
+    color: #f59e0b;
+    font-size: 14px;
+}
+
+.pw_nav_link {
+    font-weight: 600;
+    color: #94a3b8;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.pw_nav_links {
+    display: flex;
+    gap: 16px;
+}
+
+.pw_content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.pw_intro_header {
+    margin-bottom: 32px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 16px;
+}
+
+.pw_intro_title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 900;
+    margin-bottom: 4px;
+    color: #0f172a;
+}
+
+.pw_intro_title_accent {
+    color: #f59e0b;
+}
+
+.pw_intro_subtitle {
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.pw_intro_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.pw_intro_card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.pw_intro_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+}
+
+.pw_card_header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pw_card_icon_box {
+    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.pw_card_label {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.pw_card_q {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: #0f172a;
+}
+
+.pw_card_desc {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .pw_intro_grid {
+        grid-template-columns: 1fr;
+    }
+}
