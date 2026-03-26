@@ -1179,7 +1179,7 @@ const MiddleGradeSyllabus = () => {
                     </Link>
                 </div>
 
-                <header className="middle-header-bold">
+                <header className={`middle-header-bold ${(gradeInt === 5 || gradeInt === 6) ? 'middle-header-with-toggle' : ''}`}>
                     <div className="header-decoration">
                         <div className="geo-shape shape-1"></div>
                         <div className="geo-shape shape-2"></div>
@@ -1192,19 +1192,21 @@ const MiddleGradeSyllabus = () => {
                     </div>
 
                     {(gradeInt === 5 || gradeInt === 6) && (
-                        <div className="subjToggleWrap">
-                            <button
-                                onClick={() => setActiveSubject('mathematics')}
-                                className={`subjToggleBtn maths ${activeSubject === 'mathematics' ? 'active' : ''}`}
-                            >
-                                📐 Mathematics
-                            </button>
-                            <button
-                                onClick={() => setActiveSubject('science')}
-                                className={`subjToggleBtn science ${activeSubject === 'science' ? 'active' : ''}`}
-                            >
-                                🔬 Science
-                            </button>
+                        <div className="middle-header-actions">
+                            <div className="middle-subject-toggle-wrapper">
+                                <button
+                                    onClick={() => setActiveSubject('mathematics')}
+                                    className={`middle-subject-toggle-btn ${activeSubject === 'mathematics' ? 'active' : 'inactive'}`}
+                                >
+                                    Mathematics
+                                </button>
+                                <button
+                                    onClick={() => setActiveSubject('science')}
+                                    className={`middle-subject-toggle-btn ${activeSubject === 'science' ? 'active' : 'inactive'}`}
+                                >
+                                    Science
+                                </button>
+                            </div>
                         </div>
                     )}
                 </header>
