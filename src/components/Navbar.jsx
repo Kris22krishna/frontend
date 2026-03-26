@@ -14,7 +14,7 @@ const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Derived state
-    const userType = user?.role; // Ensure user object has role
+    const userType = user?.role || sessionStorage.getItem('activeRole'); // Ensure user object has role
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -44,6 +44,7 @@ const Navbar = () => {
             case 'parent': return '/parent-dashboard';          //need to change it back to /parent-dashboard once it has been implemented correctly
             case 'student': return '/student-dashboard';
             case 'teacher': return '/teacher-dashboard';
+            case 'mentor': return '/mentor-dashboard';
             case 'admin': return '/admin';
             case 'uploader': return '/uploader-dashboard';
             case 'assessment_uploader': return '/assessment-uploader-dashboard';

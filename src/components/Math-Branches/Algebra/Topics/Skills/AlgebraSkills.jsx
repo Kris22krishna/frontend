@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../algebra.css';
 import './AlgebraTestLayout.css';
@@ -48,6 +48,8 @@ export default function AlgebraSkills() {
         ? exponentLawIds[selectedLearnIdx]
         : (skill ? skillMap[skill.id] : null);
 
+    const currentNodeId = useMemo(() => nodeId, [nodeId]);
+
     const openSkill = (index, nextView) => {
         setActiveSkill(index);
         setSelectedLearnIdx(0);
@@ -64,6 +66,10 @@ export default function AlgebraSkills() {
     if (view !== 'list' && skill) {
         const rule = skill?.learn?.rules?.[selectedLearnIdx];
         const hasLawQuiz = rule?.practice && rule?.assessment;
+
+        // Memoize law engine questions
+        const practiceQuestions = rule?.practice;
+        const assessmentQuestions = rule?.assessment;
 
         return (
             <div className="skills-page alg-skills-stage" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
@@ -147,22 +153,22 @@ export default function AlgebraSkills() {
                                             {lawView === 'practice' ? (
                                                 <QuizEngine
                                                     key={`law-prac-${selectedLearnIdx}`}
-                                                    questions={rule.practice}
+                                                    questions={practiceQuestions}
                                                     title={`Practice: ${rule.title}`}
                                                     color={skill.color}
                                                     onBack={() => setLawView(null)}
                                                     prefix="algtest"
-                                                    nodeId={nodeId}
+                                                    nodeId={currentNodeId}
                                                 />
                                             ) : (
                                                 <AssessmentEngine
                                                     key={`law-ass-${selectedLearnIdx}`}
-                                                    questions={rule.assessment}
+                                                    questions={assessmentQuestions}
                                                     title={`Assess: ${rule.title}`}
                                                     color={skill.color}
                                                     onBack={() => setLawView(null)}
                                                     prefix="algtest"
-                                                    nodeId={nodeId}
+                                                    nodeId={currentNodeId}
                                                 />
                                             )}
                                         </div>
@@ -222,9 +228,9 @@ export default function AlgebraSkills() {
                                                 <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.2, textTransform: 'uppercase', color: skill.color, marginBottom: 8 }}>
                                                     Big Idea
                                                 </div>
-                                                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--alg-text)' }}>
+                                                <div style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--alg-text)' }}>
                                                     <MathRenderer text={skill.learn.concept} />
-                                                </p>
+                                                </div>
                                             </div>
 
                                             <div
@@ -248,15 +254,15 @@ export default function AlgebraSkills() {
                                                     <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--alg-muted)', marginBottom: 10 }}>
                                                         Explanation
                                                     </h4>
-                                                    <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
+                                                    <div style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--alg-text)' }}>
                                                         <MathRenderer text={rule.d} />
-                                                    </p>
+                                                    </div>
 
                                                     <div style={{ marginTop: 24, background: 'rgba(20,184,166,0.05)', padding: 16, borderRadius: 16, border: '1px solid rgba(20,184,166,0.1)' }}>
-                                                        <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
+                                                        <div style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--alg-muted)' }}>
                                                             <span style={{ fontWeight: 800, color: 'var(--alg-teal)' }}>Tip: </span>
                                                             <MathRenderer text={rule.tip} />
-                                                        </p>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -351,7 +357,7 @@ export default function AlgebraSkills() {
                             <AlgebraCategorizedPracticeEngine
                                 skill={skill}
                                 onBack={() => setView('list')}
-                                nodeId={nodeId}
+                                nodeId={currentNodeId}
                             />
                         ) : (
                             <QuizEngine
@@ -360,7 +366,7 @@ export default function AlgebraSkills() {
                                 color={skill.color}
                                 onBack={() => setView('list')}
                                 prefix="algtest"
-                                nodeId={nodeId}
+                                nodeId={currentNodeId}
                             />
                         )
                     ) : (
@@ -370,7 +376,7 @@ export default function AlgebraSkills() {
                             color={skill.color}
                             onBack={() => setView('list')}
                             prefix="algtest"
-                            nodeId={nodeId}
+                            nodeId={currentNodeId}
                         />
                     )}
                 </div>
@@ -402,22 +408,24 @@ export default function AlgebraSkills() {
                 <div className="alg-skills-grid">
                     {SKILLS.map((item, index) => (
                         <div key={item.id} className="alg-skill-card" style={{ '--skill-color': item.color, '--skill-color-30': `${item.color}30`, '--skill-color-40': `${item.color}40` }}>
-                            <div className="alg-skill-icon" style={{ background: `${item.color}10`, color: item.color }}>
-                                {item.icon}
-                            </div>
-
-                            <div className="alg-skill-content">
-                                <div className="alg-skill-text-stack">
-                                    <span style={{ fontSize: 11, fontWeight: 900, color: item.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{item.subtitle}</span>
-                                    <h3 style={{ fontSize: 22, fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>{item.title}</h3>
+                            <div className="alg-skill-layout">
+                                <div className="alg-skill-icon" style={{ background: `${item.color}10`, color: item.color }}>
+                                    {item.icon}
                                 </div>
-                                <p style={{ fontSize: 14, color: 'var(--alg-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{item.desc}</p>
-                            </div>
 
-                            <div className="alg-skill-actions">
-                                <button className="alg-skill-btn-outline" onClick={() => openSkill(index, 'learn')}>Learn</button>
-                                <button className="alg-skill-btn-outline" onClick={() => openSkill(index, 'practice')}>Practice</button>
-                                <button className="alg-skill-btn-filled" style={{ '--skill-color': item.color }} onClick={() => openSkill(index, 'assessment')}>Assess</button>
+                                <div className="alg-skill-content">
+                                    <div className="alg-skill-text-stack">
+                                        <span style={{ fontSize: 11, fontWeight: 900, color: item.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{item.subtitle}</span>
+                                        <h3 style={{ fontSize: 22, fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>{item.title}</h3>
+                                    </div>
+                                    <p style={{ fontSize: 14, color: 'var(--alg-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{item.desc}</p>
+                                </div>
+
+                                <div className="alg-skill-actions">
+                                    <button className="alg-skill-btn-outline" onClick={() => openSkill(index, 'learn')}>Learn</button>
+                                    <button className="alg-skill-btn-outline" onClick={() => openSkill(index, 'practice')}>Practice</button>
+                                    <button className="alg-skill-btn-filled" style={{ '--skill-color': item.color }} onClick={() => openSkill(index, 'assessment')}>Assess</button>
+                                </div>
                             </div>
                         </div>
                     ))}
