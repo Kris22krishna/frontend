@@ -1202,27 +1202,26 @@ const MiddleGradeSyllabus = () => {
                     </div>
                     <div className="header-content">
                         <div className="grade-badge">GRADE {grade.replace('grade', '')}</div>
-                        
-                        {gradeInt === 6 && (
-                            <div className="subjToggleWrap">
-                                <button
-                                    onClick={() => setActiveSubject('mathematics')}
-                                    className={`subjToggleBtn maths ${activeSubject === 'mathematics' ? 'active' : ''}`}
-                                >
-                                    📐 Mathematics
-                                </button>
-                                <button
-                                    onClick={() => setActiveSubject('science')}
-                                    className={`subjToggleBtn science ${activeSubject === 'science' ? 'active' : ''}`}
-                                >
-                                    🔬 Science
-                                </button>
-                            </div>
-                        )}
-
                         <h1>{activeSubject === 'mathematics' ? 'Mathematics' : 'Science'}</h1>
                         <p>{activeSubject === 'mathematics' ? 'Master advanced concepts with interactive problem solving.' : 'Explore the wonders of the natural world with interactive labs and experiments.'}</p>
                     </div>
+
+                    {gradeInt === 6 && (
+                        <div className="subjToggleWrap">
+                            <button
+                                onClick={() => setActiveSubject('mathematics')}
+                                className={`subjToggleBtn maths ${activeSubject === 'mathematics' ? 'active' : ''}`}
+                            >
+                                📐 Mathematics
+                            </button>
+                            <button
+                                onClick={() => setActiveSubject('science')}
+                                className={`subjToggleBtn science ${activeSubject === 'science' ? 'active' : ''}`}
+                            >
+                                🔬 Science
+                            </button>
+                        </div>
+                    )}
                 </header>
 
                 {gradeInt === 6 && activeSubject === 'science' ? (
