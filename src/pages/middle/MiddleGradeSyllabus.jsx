@@ -48,6 +48,7 @@ const MiddleGradeSyllabus = () => {
     const { grade } = useParams();
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
+    const [activeSubject, setActiveSubject] = useState('maths');
     const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -190,8 +191,11 @@ const MiddleGradeSyllabus = () => {
             setLoading(true);
             try {
                 const gradeNum = grade.replace('grade', '');
-                const response = await api.getSkills(gradeNum);
-                let fetched = response || [];
+                let fetched = [];
+
+                if (activeSubject === 'maths') {
+                    const response = await api.getSkills(gradeNum);
+                    fetched = response || [];
 
                 if (gradeNum === '6') {
                     fetched = [
@@ -571,6 +575,20 @@ const MiddleGradeSyllabus = () => {
                         }
                     ];
                 }
+                } else if (activeSubject === 'science') {
+                    if (gradeNum === '7') {
+                        fetched = [
+                            {
+                                skill_id: 'local-wws-chapter',
+                                skill_name: 'The Ever-Evolving World of Science',
+                                topic: 'The Ever-Evolving World of Science',
+                                sub_topic: 'Main',
+                                isLocal: true,
+                                path: '/middle/grade/7/science/wonderful-world-science'
+                            }
+                        ];
+                    }
+                }
                 setSkills(fetched);
             } catch (error) {
                 console.error("Failed to fetch skills", error);
@@ -580,7 +598,7 @@ const MiddleGradeSyllabus = () => {
         };
 
         fetchData();
-    }, [grade]);
+    }, [grade, activeSubject]);
 
     // Group skills by topic and sub-topic
     const skillsByTopic = skills.reduce((acc, skill) => {
@@ -589,9 +607,11 @@ const MiddleGradeSyllabus = () => {
 
         // Filter by grade
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
-        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling"].some(t => topicName.includes(t))) return acc;
-        if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
-        if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
+        if (activeSubject === 'maths') {
+            if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling"].some(t => topicName.includes(t))) return acc;
+            if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
+            if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
+        }
 
 
 
@@ -1144,17 +1164,35 @@ const MiddleGradeSyllabus = () => {
                     </Link>
                 </div>
 
-                <header className="middle-header-bold">
+                <header className="middle-header-bold" style={{ display: 'flex', alignItems: 'center', gap: '3rem', flexWrap: 'wrap' }}>
                     <div className="header-decoration">
                         <div className="geo-shape shape-1"></div>
                         <div className="geo-shape shape-2"></div>
                         <div className="geo-shape shape-3"></div>
                     </div>
-                    <div className="header-content">
+                    
+                    <div className="header-content" style={{ flex: 1, minWidth: '300px' }}>
                         <div className="grade-badge">GRADE {grade.replace('grade', '')}</div>
-                        <h1>Mathematics</h1>
-                        <p>Master advanced concepts with interactive problem solving.</p>
+                        <h1>{activeSubject === 'maths' ? 'Mathematics' : 'Science'}</h1>
+                        <p>{activeSubject === 'maths' ? 'Master advanced concepts with interactive problem solving.' : 'Explore the wonders of the natural world through interactive modules.'}</p>
                     </div>
+
+                    {gradeInt === 7 && (
+                        <div className="subject-toggle-wrapper">
+                            <button 
+                                onClick={() => setActiveSubject('maths')}
+                                className={`subject-toggle-btn ${activeSubject === 'maths' ? 'active' : 'inactive'}`}
+                            >
+                                Mathematics
+                            </button>
+                            <button 
+                                onClick={() => setActiveSubject('science')}
+                                className={`subject-toggle-btn ${activeSubject === 'science' ? 'active' : 'inactive'}`}
+                            >
+                                Science
+                            </button>
+                        </div>
+                    )}
                 </header>
 
                 <div className="middle-masonry-grid">
