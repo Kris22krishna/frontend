@@ -92,6 +92,19 @@
     max-width: 650px;
 }
 
+.middle-header-with-toggle {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.middle-header-actions {
+    position: relative;
+    z-index: 10;
+    margin-left: auto;
+    align-self: flex-start;
+}
+
 .grade-badge {
     background: #3b82f6;
     color: white;
@@ -429,6 +442,15 @@
         font-size: 2.5rem;
     }
 
+    .middle-header-with-toggle {
+        flex-direction: column;
+    }
+
+    .middle-header-actions {
+        width: 100%;
+        margin-left: 0;
+    }
+
     .middle-masonry-grid {
         grid-template-columns: 1fr;
     }
@@ -440,47 +462,62 @@
 }
 
 /* --- Subject Toggle --- */
-.subjToggleWrap {
+.middle-subject-toggle-wrapper {
+    position: relative;
+    z-index: 10;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(0, 0, 0, 0.18);
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.4rem;
+    border-radius: 3rem;
     backdrop-filter: blur(10px);
-    border-radius: 100px;
-    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    align-self: flex-start;
     margin-left: auto;
-    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.subjToggleBtn {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 800;
-    padding: 10px 24px;
-    border-radius: 100px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.middle-subject-toggle-btn {
+    padding: 0.85rem 2.2rem;
+    border-radius: 2.5rem;
     border: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.05rem;
+}
+
+.middle-subject-toggle-btn.active {
+    background: #fff;
+    color: #4F46E5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.middle-subject-toggle-btn.inactive {
     background: transparent;
-    color: rgba(255, 255, 255, 0.85);
+    color: #fff;
+    box-shadow: none;
 }
 
-.subjToggleBtn.active.maths {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0);
+.middle-subject-toggle-btn:hover {
+    transform: translateY(-1px);
 }
 
-.subjToggleBtn.active.science {
-    background: linear-gradient(135deg, #059669, #10b981);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-}
+@media (max-width: 650px) {
+    .middle-subject-toggle-wrapper {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 1.5rem;
+        justify-content: space-between;
+    }
 
-.subjToggleBtn:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    .middle-subject-toggle-btn {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        text-align: center;
+    }
 }
 
 /* Science Card specifically for Middle */
