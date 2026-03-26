@@ -176,22 +176,36 @@ export const api = {
     },
 
     // --- Student ---
-    getStudentProfile: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/profile`, {
+    getStudentProfile: async (studentId = null) => {
+        const params = new URLSearchParams();
+        if (studentId) params.append('student_id', studentId);
+        const response = await fetch(`${BASE_URL}/api/v1/student/profile?${params.toString()}`, {
             headers: getHeaders(),
         });
         return handleResponse(response);
     },
 
-    getStudentDashboardAnalytics: async () => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/dashboard-analytics`, {
+    getStudentDashboardAnalytics: async (studentId = null) => {
+        const params = new URLSearchParams();
+        if (studentId) params.append('user_id', studentId);
+        const response = await fetch(`${BASE_URL}/api/v1/student/dashboard-analytics?${params.toString()}`, {
             headers: getHeaders(),
         });
         return handleResponse(response);
     },
 
-    getStudentSessionHistory: async (limit = 100) => {
-        const response = await fetch(`${BASE_URL}/api/v1/student/session-history?limit=${limit}`, {
+    getMentorDailyInsights: async (date) => {
+        const response = await fetch(`${BASE_URL}/api/v1/mentor/daily-insights?date=${date}`, {
+            headers: getHeaders(),
+        });
+        return handleResponse(response);
+    },
+
+    getStudentSessionHistory: async (limit = 100, studentId = null) => {
+        const params = new URLSearchParams();
+        params.append('limit', limit);
+        if (studentId) params.append('student_id', studentId);
+        const response = await fetch(`${BASE_URL}/api/v1/student/session-history?${params.toString()}`, {
             headers: getHeaders(),
         });
         return handleResponse(response);

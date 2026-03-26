@@ -16,8 +16,8 @@ import {
     generateDecimalMultiplyAssessment,
 } from "./fractionsAndDecimalsQuestions";
 
-import QuizEngine from "./Engines/QuizEngine";
-import AssessmentEngine from "./Engines/AssessmentEngine";
+import QuizEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine";
+import AssessmentEngine from "../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine";
 
 // ─── SKILLS DATA ───────────────────────────────────────────────────────────
 const SKILLS = [

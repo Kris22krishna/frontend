@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+    --dils-indigo: #4f46e5;
+    --dils-violet: #8b5cf6;
+    --dils-accent: #ffd60a;
+    --dils-text: #0f172a;
+    --dils-muted: #64748b;
+    --dils-card: #ffffff;
+    --dils-border: #e2e8f0;
+    --dils-success: #10b981;
+    --dils-wrong: #ef4444;
+    --dils-sh: 0 4px 20px rgba(0, 0, 0, 0.09);
+    --dils-shlg: 0 12px 40px rgba(0, 0, 0, 0.14);
+}
+
+.dils-page {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #f8fafc;
+    color: var(--dils-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.dils-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px;
+}
+
+.dils-page-fixed {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.dils-topic-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    background: #fff;
+    border-bottom: 1px solid var(--dils-border);
+    flex-shrink: 0;
+}
+
+.dils-back-link {
+    background: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.dils-back-link:hover {
+    color: var(--dils-indigo);
+}
+
+.dils-nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.dils-nav-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.dils-nav-link-active {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--dils-indigo);
+}
+
+/* Skills Hub Styles */
+.dils-skills-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 950px;
+    margin: 30px auto;
+}
+
+.dils-skill-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 20px;
+    padding: 24px 32px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.dils-skill-card:hover {
+    transform: translateX(10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+    border-color: var(--skill-color);
+}
+
+.dils-skill-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.dils-skill-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dils-skill-text-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dils-skill-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.dils-btn-outline {
+    padding: 9px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    color: var(--dils-text);
+}
+
+.dils-btn-outline:hover {
+    background: #f8fafc;
+    border-color: #64748b;
+    transform: translateY(-2px);
+}
+
+.dils-btn-filled {
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: var(--skill-color);
+    border: none;
+    color: #fff;
+}
+
+.dils-btn-filled:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Learn View Styles */
+.dils-learn-view-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.dils-learn-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dils-rule-btn {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dils-formula-box {
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    text-align: center;
+    border: 1.5px solid transparent;
+}
+
+.dils-formula-text {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.dils-formula-text {
+    font-size: 28px;
+    color: #4f46e5;
+}
+
+/* --- Visual Assets --- */
+.dils-skill-image-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f8fafc;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.dils-skill-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 2px;
+}
+
+.dils-learn-figure-container {
+    margin-top: 24px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #cbd5e1;
+    min-height: 120px;
+}
+
+.dils-learn-figure {
+    max-width: 280px;
+    max-height: 180px;
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+    transition: transform 0.3s ease;
+}
+
+.dils-learn-figure:hover {
+    transform: scale(1.05);
+}
+
+.dils-rule-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .dils-rule-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dils-example-box {
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* Landing Page Overrides (matches ft- style) */
+.dils-fullpage {
+    display: flex;
+    min-height: 100vh;
+}
+
+.dils-left {
+    position: relative;
+    flex: 0 0 46%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 56px;
+    background: linear-gradient(145deg, #4f46e5 0%, #3730a3 40%, #8b5cf6 100%);
+    overflow: hidden;
+    color: white;
+}
+
+.dils-right {
+    flex: 1;
+    background: #f8fafc;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dils-card-btn {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--dils-border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    gap: 20px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+.dils-card-btn:hover {
+    transform: translateX(8px);
+    border-color: var(--dils-indigo);
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.1);
+}
+
+.dils-card-icon {
+    font-size: 32px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f3ff;
+    border-radius: 16px;
+}

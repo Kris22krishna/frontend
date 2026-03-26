@@ -681,29 +681,30 @@ const DataHandling = () => {
                         </div>
                     </div>
 
-                    <AnimatePresence>
-                        {isAnswered && (
-                            <motion.div
-                                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }}
-                                className="g1-next-action"
-                                style={{ flexDirection: 'column', gap: '20px' }}
-                            >
-                                {motivation && (
-                                    <motion.div
-                                        initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                                        className="g1-motivation-container"
-                                    >
-                                        <img src={mascotImg} alt="mascot" className="w-16 h-16 object-contain mb-2" />
-                                        <span className="g1-motivation-text">{motivation.text}</span>
-                                        <span className="g1-motivation-sub">{motivation.sub}</span>
-                                    </motion.div>
-                                )}
-                                <button className="g1-primary-btn" style={{ padding: '20px 60px', borderRadius: '40px', fontSize: '1.4rem' }} onClick={handleNext}>
-                                    {qIndex === totalLines - 1 ? (isTest ? 'Submit Test 📝' : 'Finish Quest 🏆') : 'Next Challenge 🚀'} <ArrowRight />
+                    {/* --- INJECTED FOOTER V2 --- */}
+                    <div className="g1-navigation-footer">
+                        <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>
+                            <ChevronLeft size={24} /> Prev
+                        </button>
+
+                        <div>
+                            {isAnswered && !isTest && !answers[qIndex]?.isCorrect && (
+                                <button className="g1-nav-btn steps-btn" onClick={() => setShowExplanationModal(true)}>
+                                    <Eye size={24} /> Steps
                                 </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                            )}
+
+                            {!isAnswered ? (
+                                <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
+                                    Next <ChevronRight size={24} />
+                                </button>
+                            ) : (
+                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                    {qIndex === totalLines - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </motion.div>
             </div>
 
