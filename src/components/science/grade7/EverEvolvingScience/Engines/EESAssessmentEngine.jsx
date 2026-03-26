@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import MathRenderer from '../../../../MathRenderer';
-import styles from '../wonderfulworldscience.module.css';
+import styles from '../everevolvingscience.module.css';
 
 // ── Shuffle helper ─────────────────────────────────────────────────────────
 function shuffle(arr) {
@@ -17,7 +17,7 @@ function sample(pool, n) {
     return shuffle(pool).slice(0, n);
 }
 
-export default function WWSAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function EESAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
     const safePool = Array.isArray(questionPool) ? questionPool : [];
     const [questions] = useState(() => {
         const valid = safePool.filter(

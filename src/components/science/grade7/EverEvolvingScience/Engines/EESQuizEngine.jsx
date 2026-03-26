@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import MathRenderer from '../../../../MathRenderer';
-import styles from '../wonderfulworldscience.module.css';
+import styles from '../everevolvingscience.module.css';
 
-export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBack, color }) {
+export default function EESQuizEngine({ questions, title, onBack, onSecondaryBack, color }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);

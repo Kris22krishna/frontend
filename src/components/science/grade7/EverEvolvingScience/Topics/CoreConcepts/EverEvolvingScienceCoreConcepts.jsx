@@ -4,9 +4,9 @@ import { CORE_CONCEPTS } from './EverEvolvingScienceCoreConceptsData';
 import styles from '../../EverEvolvingScienceDashboard.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 
-import WWSPracticeEngine from '../../Engines/WWSPracticeEngine';
-import WWSAssessmentEngine from '../../Engines/WWSAssessmentEngine';
-import wwsStyles from '../../wonderfulworldscience.module.css';
+import EESPracticeEngine from '../../Engines/EESPracticeEngine';
+import EESAssessmentEngine from '../../Engines/EESAssessmentEngine';
+import eesStyles from '../../everevolvingscience.module.css';
 
 /* ── Main Component ─────────────────────────────────────────────── */
 export default function EverEvolvingScienceCoreConcepts() {
@@ -261,14 +261,14 @@ export default function EverEvolvingScienceCoreConcepts() {
     /* ── PRACTICE VIEW ───────────────────────── */
     if (view === 'practice' && skill) {
         return (
-            <div className={wwsStyles['wws-page']}>
+            <div className={eesStyles['wws-page']}>
                 {NAV}
-                <div className={wwsStyles['wws-module-hero']}>
-                    <h1 className={wwsStyles['wws-module-title']}>Practice: <span className={wwsStyles['wws-accent-text']}>{skill.title}</span></h1>
-                    <p className={wwsStyles['wws-module-subtitle']}>Questions · All types · Instant feedback</p>
+                <div className={eesStyles['wws-module-hero']}>
+                    <h1 className={eesStyles['wws-module-title']}>Practice: <span className={eesStyles['wws-accent-text']}>{skill.title}</span></h1>
+                    <p className={eesStyles['wws-module-subtitle']}>Questions · All types · Instant feedback</p>
                 </div>
-                <div className={wwsStyles['wws-section']}>
-                    <WWSPracticeEngine
+                <div className={eesStyles['wws-section']}>
+                    <EESPracticeEngine
                         questionPool={practiceQ}
                         sampleSize={20}
                         title={skill.title}
@@ -283,14 +283,14 @@ export default function EverEvolvingScienceCoreConcepts() {
     /* ── ASSESS VIEW ─────────────────────────── */
     if (view === 'assess' && skill) {
         return (
-            <div className={wwsStyles['wws-page']}>
+            <div className={eesStyles['wws-page']}>
                 {NAV}
-                <div className={wwsStyles['wws-module-hero']}>
-                    <h1 className={wwsStyles['wws-module-title']}>Assessment: <span className={wwsStyles['wws-accent-text']}>{skill.title}</span></h1>
-                    <p className={wwsStyles['wws-module-subtitle']}>10 MCQ questions · 10-minute timer</p>
+                <div className={eesStyles['wws-module-hero']}>
+                    <h1 className={eesStyles['wws-module-title']}>Assessment: <span className={eesStyles['wws-accent-text']}>{skill.title}</span></h1>
+                    <p className={eesStyles['wws-module-subtitle']}>10 MCQ questions · 10-minute timer</p>
                 </div>
-                <div className={wwsStyles['wws-section']}>
-                    <WWSAssessmentEngine
+                <div className={eesStyles['wws-section']}>
+                    <EESAssessmentEngine
                         questionPool={assessQ}
                         sampleSize={10}
                         title={skill.title}

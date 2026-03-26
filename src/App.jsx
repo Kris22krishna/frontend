@@ -598,11 +598,11 @@ import CoordinateGeometrySkills from './components/practice/class-10/CoordinateG
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
 // Grade 7 Science: The Ever-Evolving World of Science
-import EverEvolvingScienceDashboard from './components/science/grade7/WonderfulWorldScience/EverEvolvingScienceDashboard';
-import EverEvolvingScienceIntro from './components/science/grade7/WonderfulWorldScience/Topics/Introduction/EverEvolvingScienceIntro';
-import EverEvolvingScienceTerminology from './components/science/grade7/WonderfulWorldScience/Topics/Terminology/EverEvolvingScienceTerminology';
-import EverEvolvingScienceCoreConcepts from './components/science/grade7/WonderfulWorldScience/Topics/CoreConcepts/EverEvolvingScienceCoreConcepts';
-import EverEvolvingScienceConnectomics from './components/science/grade7/WonderfulWorldScience/Topics/Connectomics/EverEvolvingScienceConnectomics';
+import EverEvolvingScienceDashboard from './components/science/grade7/EverEvolvingScience/EverEvolvingScienceDashboard';
+import EverEvolvingScienceIntro from './components/science/grade7/EverEvolvingScience/Topics/Introduction/EverEvolvingScienceIntro';
+import EverEvolvingScienceTerminology from './components/science/grade7/EverEvolvingScience/Topics/Terminology/EverEvolvingScienceTerminology';
+import EverEvolvingScienceCoreConcepts from './components/science/grade7/EverEvolvingScience/Topics/CoreConcepts/EverEvolvingScienceCoreConcepts';
+import EverEvolvingScienceConnectomics from './components/science/grade7/EverEvolvingScience/Topics/Connectomics/EverEvolvingScienceConnectomics';
 
 // Class 10 Science: Chemical Reactions
 import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactions/ChemicalReactionsDashboard';
