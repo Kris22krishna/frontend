@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { CheckCircle2, XCircle, Clock, Flag, Home, RotateCcw, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function JuniorEvsAssessmentEngine({ questions, onComplete }) {
+export default function JuniorEvsAssessmentEngine({ 
+  questions, 
+  onComplete,
+  nodeId,
+  sessionType = 'test' 
+}) {
   const navigate = useNavigate();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState({}); // { idx: selectedOpt }
@@ -11,6 +17,24 @@ export default function JuniorEvsAssessmentEngine({ questions, onComplete }) {
   const [timer, setTimer] = useState(questions.length * 60); // 1 min per question
   const timerRef = useRef(null);
 
+  // v4 Logging
+  const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+  const isFinishedRef = useRef(false);
+
+  // Start session on mount
+  useEffect(() => {
+    if (!nodeId) return;
+    startSession({ nodeId, sessionType });
+    isFinishedRef.current = false;
+
+    return () => {
+      if (!isFinishedRef.current) {
+        // Abandon session if navigating away before submission
+        abandonSession({ totalQuestions: questions.length });
+      }
+    };
+  }, [nodeId, sessionType, startSession, questions.length, abandonSession]);
+
   // Timer
   useEffect(() => {
     if (isSubmitted) return;
@@ -18,7 +42,7 @@ export default function JuniorEvsAssessmentEngine({ questions, onComplete }) {
       setTimer(prev => {
         if (prev <= 1) {
           clearInterval(timerRef.current);
-          setIsSubmitted(true);
+          handleFinalSubmit();
           return 0;
         }
         return prev - 1;
@@ -46,15 +70,45 @@ export default function JuniorEvsAssessmentEngine({ questions, onComplete }) {
     });
   };
 
-  const handleSubmit = () => {
+  const handleFinalSubmit = async () => {
+    if (isFinishedRef.current) return;
     clearInterval(timerRef.current);
+    
+    // Compile final payload for v4 table
+    const fullPayload = questions.map((q, i) => {
+      const userAns = answers[i];
+      if (!userAns) return null;
+      return {
+        question_index: i + 1,
+        answer_json: { selected: userAns },
+        is_correct: userAns === q.correctAnswer ? 1.0 : 0.0,
+        marks_awarded: userAns === q.correctAnswer ? 1 : 0,
+        marks_possible: 1,
+        time_taken_ms: 0
+      };
+    }).filter(Boolean);
+
+    if (nodeId) {
+      // First log each individual answer that was given
+      for (const item of fullPayload) {
+        await logAnswer(item);
+      }
+      // Then compile and finish
+      await finishSession({
+        totalQuestions: questions.length,
+        questionsAnswered: fullPayload.length,
+        answersPayload: fullPayload
+      });
+    }
+
+    isFinishedRef.current = true;
     setIsSubmitted(true);
   };
 
   const answeredCount = Object.keys(answers).length;
   const reviewCount = markedForReview.size;
 
-  // Calculate results
+  // Calculate results for local display
   const getResults = useCallback(() => {
     let correct = 0, wrong = 0, unanswered = 0;
     const breakdown = questions.map((q, i) => {
@@ -296,7 +350,7 @@ export default function JuniorEvsAssessmentEngine({ questions, onComplete }) {
           </div>
 
           {/* Submit */}
-          <button onClick={handleSubmit} style={{
+          <button onClick={handleFinalSubmit} style={{
             width: '100%', padding: '14px', borderRadius: 14, border: 'none',
             background: 'linear-gradient(135deg, #ef4444, #dc2626)', color: '#fff',
             fontWeight: 900, fontSize: 16, cursor: 'pointer',

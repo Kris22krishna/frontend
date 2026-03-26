@@ -1,6 +1,7 @@
 export const OUR_FAMILIES_SKILLS = [
     {
         id: 'family-roles',
+        nodeId: 'b4031001-0001-0000-0000-000000000000',
         title: 'Family Roles & Relationships',
         desc: 'Identify family members and their roles.',
         color: '#ec4899',
@@ -8,6 +9,7 @@ export const OUR_FAMILIES_SKILLS = [
     },
     {
         id: 'playing-together',
+        nodeId: 'b4031001-0002-0000-0000-000000000000',
         title: 'Playing Games',
         desc: 'Recognize traditional games and activities.',
         color: '#8b5cf6',
@@ -15,6 +17,7 @@ export const OUR_FAMILIES_SKILLS = [
     },
     {
         id: 'helping-out',
+        nodeId: 'b4031001-0003-0000-0000-000000000000',
         title: 'Helping Out',
         desc: 'Understand how we help each other at home.',
         color: '#10b981',
@@ -22,6 +25,7 @@ export const OUR_FAMILIES_SKILLS = [
     },
     {
         id: 'animals-surroundings',
+        nodeId: 'b4031001-0004-0000-0000-000000000000',
         title: 'Animals & Nature',
         desc: 'Caring for pets and neighborhood animals.',
         color: '#f59e0b',
@@ -103,7 +107,7 @@ export function generateEvsQuestions(skillId, count = 20) {
         let baseQuestion = pool[iteration % pool.length];
         // Create a slight variation
         let varQ = {...baseQuestion};
-        varQ.question = `(Review) ${varQ.question}`;
+        varQ.question = `${varQ.question}`;
         
         // Shuffle options but track correct
         let oldCorrectText = varQ.options[varQ.correct];

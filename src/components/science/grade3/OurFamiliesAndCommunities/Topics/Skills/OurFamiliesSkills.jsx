@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OUR_FAMILIES_SKILLS, generateEvsQuestions } from './OurFamiliesSkillsData';
 import styles from '../../OurFamiliesShared.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { getSkillVisual } from '../OurFamiliesVisuals';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 import PracticeEngine from '../../Engines/JuniorEvsPracticeEngine';
 import AssessmentEngine from '../../Engines/JuniorEvsAssessmentEngine';
@@ -16,9 +17,51 @@ export default function OurFamiliesSkills() {
     const [activeSkillIdx, setActiveSkillIdx] = useState(null);
     const [view, setView] = useState('list'); // 'list' | 'learn' | 'practice' | 'assess'
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+
     useEffect(() => { window.scrollTo(0, 0); }, [view, activeSkillIdx]);
 
     const skill = activeSkillIdx !== null ? OUR_FAMILIES_SKILLS[activeSkillIdx] : null;
+
+    useEffect(() => {
+        if (view === 'practice' && skill?.nodeId) {
+            startSession({ nodeId: skill.nodeId, sessionType: 'practice' });
+            isFinishedRef.current = false;
+        }
+        return () => {
+            if (view === 'practice' && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: 1 });
+            }
+        };
+    }, [view, skill, startSession, abandonSession]);
+
+    const handlePracticeWin = async () => {
+        if (isFinishedRef.current) return;
+        isFinishedRef.current = true;
+        
+        // Log one "completion" answer for the mini-game
+        await logAnswer({
+            questionIndex: 1,
+            answerJson: { status: 'completed', game: skill.id },
+            isCorrect: 1.0,
+            marksAwarded: 1,
+            marksPossible: 1
+        });
+
+        await finishSession({
+            totalQuestions: 1,
+            questionsAnswered: 1,
+            answersPayload: [{
+                question_index: 1,
+                answer_json: { status: 'completed', game: skill.id },
+                is_correct: 1.0,
+                marks_awarded: 1,
+                marks_possible: 1
+            }]
+        });
+    };
 
     const openSkill = (idx, nextView) => {
         setActiveSkillIdx(idx);
@@ -177,7 +220,7 @@ export default function OurFamiliesSkills() {
             <div className={`skills-page chem-skills-stage`} style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
                 {NAV}
                 <div style={{ maxWidth: 900, margin: '40px auto', padding: '0 24px 60px' }}>
-                    <InteractiveGameMapper skillId={skill.id} color={skill.color} />
+                    <InteractiveGameMapper skillId={skill.id} color={skill.color} onWin={handlePracticeWin} />
                     <div style={{ textAlign: 'center', marginTop: 40 }}>
                         <button onClick={() => { setView('list'); setActiveSkillIdx(null); }} style={{ padding: '12px 32px', borderRadius: 100, border: '2px solid #cbd5e1', background: '#f1f5f9', color: '#475569', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s' }}>
                             ← Back to Skills
@@ -201,6 +244,7 @@ export default function OurFamiliesSkills() {
                             color={skill.color}
                             onBack={() => { setView('list'); setActiveSkillIdx(null); }}
                             prefix="chemtest"
+                            nodeId={skill.nodeId}
                         />
                     </div>
                 </main>

@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function JuniorEvsAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'evstest' }) {
+export default function JuniorEvsAssessmentEngine({ 
+    questions, 
+    title, 
+    onBack, 
+    onSecondaryBack, 
+    color, 
+    prefix = 'evstest',
+    nodeId,
+    sessionType = 'assessment'
+}) {
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -50,6 +60,15 @@ export default function JuniorEvsAssessmentEngine({ questions, title, onBack, on
     const [finished, setFinished] = useState(false);
     const [timeLeft, setTimeLeft] = useState(questionSet.length * 60);
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
     useEffect(() => {
         const newQs = typeof questions === 'function' ? questions() : questions;
         setQuestionSet(newQs);
@@ -61,13 +80,30 @@ export default function JuniorEvsAssessmentEngine({ questions, title, onBack, on
         window.scrollTo(0, 0);
     }, [questions]);
 
+    // Start session on mount/questions change
+    useEffect(() => {
+        if (!nodeId) return;
+        
+        startSession({ nodeId, sessionType });
+        answersPayload.current = [];
+
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ 
+                    answersPayload: answersPayload.current, 
+                    totalQuestions: questionSet.length 
+                });
+            }
+        };
+    }, [nodeId, sessionType]);
+
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [current]);
 
     useEffect(() => {
         if (finished) return;
-        if (timeLeft <= 0) { setFinished(true); return; }
+        if (timeLeft <= 0) { handleFinalSubmit(); return; }
         const timer = setInterval(() => setTimeLeft(p => p - 1), 1000);
         return () => clearInterval(timer);
     }, [timeLeft, finished]);
@@ -81,11 +117,34 @@ export default function JuniorEvsAssessmentEngine({ questions, title, onBack, on
         const newAns = [...answers]; newAns[current] = next; setAnswers(newAns);
     };
 
+    const handleFinalSubmit = async () => {
+        setFinished(true);
+        if (nodeId) {
+            // Aggregate all answers into payload if not already there
+            // In assessment, we might only log at the end, or log each next.
+            // Let's ensure current payload has everything.
+            const fullPayload = answers.map((ans, i) => ({
+                question_index: i + 1,
+                answer_json: { answer: ans, label: getUserAnswerLabel(questionSet[i], ans) },
+                is_correct: isAnswerCorrect(questionSet[i], ans) ? 1.0 : 0.0,
+                marks_awarded: isAnswerCorrect(questionSet[i], ans) ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            })).filter(a => a.answer_json.answer !== null);
+
+            await finishSession({
+                totalQuestions: questionSet.length,
+                questionsAnswered: fullPayload.length,
+                answersPayload: fullPayload
+            });
+        }
+    };
+
     const handleSubmit = () => {
         if (questionSet.some((q, i) => !isAnswerComplete(q, answers[i]))) {
             if (!window.confirm('You have unanswered questions. Submit anyway?')) return;
         }
-        setFinished(true);
+        handleFinalSubmit();
     };
 
     const answeredCount = questionSet.reduce((cnt, q, i) => cnt + (isAnswerComplete(q, answers[i]) ? 1 : 0), 0);

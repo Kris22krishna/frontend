@@ -76,6 +76,56 @@ export const NODE_IDS = {
   mathBranchAlgebraExponentsFractionalLaw:  'f3000000-0000-0000-0000-000000000009',
   mathBranchAlgebraExponentsStandardForm:   'f3000000-0000-0000-0000-000000000010',
   mathBranchAlgebraExponentsComparing:      'f3000000-0000-0000-0000-000000000011',
+  // ── 5. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
+  
+  // Grade 10 Science: Chemical Reactions
+  g10ScienceChemicalReactions:  'b3101001-0000-0000-0000-000000000001',
+  
+  // Grade 6 Science: Wonderful World of Science
+  g6ScienceWonderfulWorld:      'b3061001-0000-0000-0000-000000000001',
+  
+  // Grade 5 Science: Water
+  g5ScienceWater:               'b3051001-0000-0000-0000-000000000001',
+  
+  // Grade 8 Science: Investigative Science
+  g8ScienceInvestigative:       'b3081001-0000-0000-0000-000000000001',
+  
+  // Grade 3 EVS
+  g3EvsOurFamilies:             'b3031001-0000-0000-0000-000000000001',
+  
+  // Grade 4 EVS
+  g4EvsOurCommunity:            'b3041001-0000-0000-0000-000000000001',
+  
+  // Grade 3 Math: Time Goes On
+  g3MathTimeGoesOn:             'a3031001-0000-0000-0000-000000000001',
+  g3MathTimeGoesOnReadingCalendar:   'a4031001-0001-0000-0000-000000000000',
+  g3MathTimeGoesOnFuturePastDates:   'a4031001-0002-0000-0000-000000000000',
+  g3MathTimeGoesOnConstructingCalendar:'a4031001-0003-0000-0000-000000000000',
+  g3MathTimeGoesOnMonthsDaysYear:    'a4031001-0004-0000-0000-000000000000',
+  g3MathTimeGoesOnComparingCalendars:'a4031001-0005-0000-0000-000000000000',
+  g3MathTimeGoesOnAgeProblems:       'a4031001-0006-0000-0000-000000000000',
+  g3MathTimeGoesOnReadingDates:      'a4031001-0007-0000-0000-000000000000',
+  g3MathTimeGoesOnAgeDuration:       'a4031001-0008-0000-0000-000000000000',
+  g3MathTimeGoesOnClockTime:         'a4031001-0009-0000-0000-000000000000',
+  g3MathTimeGoesOnTimeDurations:     'a4031001-0010-0000-0000-000000000000',
+  
+  // Grade 6 Math: Patterns
+  g6MathPatterns:               'a3061001-0000-0000-0000-000000000001',
+  g6MathPatternsIntro:          'a4061001-0001-0000-0000-000000000000',
+  g6MathPatternsTerminology:    'a4061001-0002-0000-0000-000000000000',
+  g6MathPatternsSkills:         'a4061001-0003-0000-0000-000000000000',
+
+  // Grade 3 EVS Skills
+  g3EvsOurFamiliesRoles:        'b4031001-0001-0000-0000-000000000000',
+  g3EvsOurFamiliesPlaying:      'b4031001-0002-0000-0000-000000000000',
+  g3EvsOurFamiliesHelping:      'b4031001-0003-0000-0000-000000000000',
+  g3EvsOurFamiliesAnimals:      'b4031001-0004-0000-0000-000000000000',
+
+  // Grade 4 EVS Skills
+  g4EvsOurCommunityPlaces:     'b4041001-0001-0000-0000-000000000000',
+  g4EvsOurCommunityWork:       'b4041001-0002-0000-0000-000000000000',
+  g4EvsOurCommunityFestivals:  'b4041001-0003-0000-0000-000000000000',
+  g4EvsOurCommunityTeamwork:   'b4041001-0004-0000-0000-000000000000',
 };
 
 /**
@@ -88,6 +138,16 @@ export const SLUG_TO_NODE_ID = {
   'math-branch-algebra-solving':        NODE_IDS.mathBranchAlgebraSolving,
   'math-branch-algebra-word-problems':  NODE_IDS.mathBranchAlgebraWordProblems,
   
+  // Grade-based Slugs
+  'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
+  'g6-science-wonderful-world':         NODE_IDS.g6ScienceWonderfulWorld,
+  'g5-science-water-essence':           NODE_IDS.g5ScienceWater,
+  'g8-science-investigative':          NODE_IDS.g8ScienceInvestigative,
+  'g3-math-time-goes-on':               NODE_IDS.g3MathTimeGoesOn,
+  'g6-math-patterns':                  NODE_IDS.g6MathPatterns,
+  'g3-science-our-families':           NODE_IDS.g3EvsOurFamilies,
+  'g4-science-our-community':          NODE_IDS.g4EvsOurCommunity,
+
   // Grade 8 Slugs (Chapters)
   'g8-math-rational-numbers':           NODE_IDS.g8MathRationalNumbers,
   'g8-math-linear-equations':           NODE_IDS.g8MathLinearEquations,
@@ -96,4 +156,17 @@ export const SLUG_TO_NODE_ID = {
   // Grade 8 Slugs (Skills)
   'g8-math-linear-solving':             NODE_IDS.g8MathLinearSolving,
   'g8-math-linear-word-problems':       NODE_IDS.g8MathLinearWordProblems,
+
+  // Grade 3 EVS Slugs (Skills)
+  'g3-science-family-roles':            NODE_IDS.g3EvsOurFamiliesRoles,
+  'g3-science-playing-games':           NODE_IDS.g3EvsOurFamiliesPlaying,
+  'g3-science-helping-out':             NODE_IDS.g3EvsOurFamiliesHelping,
+  'g3-science-helping-out':             NODE_IDS.g3EvsOurFamiliesHelping,
+  'g3-science-animals-nature':          NODE_IDS.g3EvsOurFamiliesAnimals,
+
+  // Grade 4 EVS Slugs (Skills)
+  'g4-science-community-places':        NODE_IDS.g4EvsOurCommunityPlaces,
+  'g4-science-people-work':             NODE_IDS.g4EvsOurCommunityWork,
+  'g4-science-festivals':               NODE_IDS.g4EvsOurCommunityFestivals,
+  'g4-science-teamwork':                NODE_IDS.g4EvsOurCommunityTeamwork,
 };

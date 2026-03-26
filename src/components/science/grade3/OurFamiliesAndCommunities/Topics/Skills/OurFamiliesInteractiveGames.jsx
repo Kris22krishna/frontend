@@ -57,7 +57,7 @@ function makeFamilyRound() {
 }
 
 // 1. Family Roles Match Game (randomized each round)
-export function FamilyRolesGame({ color }) {
+export function FamilyRolesGame({ color, onWin }) {
     const [family, setFamily] = useState(makeFamilyRound);
     const [slots, setSlots] = useState(() => shuffle(family));
     const [selectedIcon, setSelectedIcon] = useState(null);
@@ -84,6 +84,10 @@ export function FamilyRolesGame({ color }) {
     };
 
     const isWin = family.every(f => f.matched);
+    
+    React.useEffect(() => {
+        if (isWin && onWin) onWin();
+    }, [isWin, onWin]);
 
     return (
         <GameWrapper
@@ -185,7 +189,7 @@ function makeRangoliRound() {
 }
 
 // 2. Rangoli Coloring Game (randomized design + palette each round)
-export function RangoliGame({ color }) {
+export function RangoliGame({ color, onWin }) {
     const [round, setRound] = useState(makeRangoliRound);
     const [selectedColor, setSelectedColor] = useState(() => round.palette[0]);
 
@@ -203,6 +207,10 @@ export function RangoliGame({ color }) {
     };
 
     const isWin = round.paths.every(p => p.color !== '#fff');
+
+    React.useEffect(() => {
+        if (isWin && onWin) onWin();
+    }, [isWin, onWin]);
 
     const centerColors = {
         '#ef4444': '#fcd34d', '#f97316': '#fde68a', '#dc2626': '#fbbf24',
@@ -270,7 +278,7 @@ export function RangoliGame({ color }) {
 }
 
 // 3. Helping Out Sorting Game (unchanged — items are randomized by state init)
-export function HelpingOutGame({ color }) {
+export function HelpingOutGame({ color, onWin }) {
     const itemsData = [
         { id: 1, icon: '🧸', name: 'Teddy', bin: 'toys', sorted: false },
         { id: 2, icon: '🍌', name: 'Banana Peel', bin: 'trash', sorted: false },
@@ -298,6 +306,10 @@ export function HelpingOutGame({ color }) {
     };
 
     const isWin = items.every(i => i.sorted);
+
+    React.useEffect(() => {
+        if (isWin && onWin) onWin();
+    }, [isWin, onWin]);
 
     return (
         <GameWrapper
@@ -372,7 +384,7 @@ function makeAnimalRound() {
 }
 
 // 4. Feed Animals Game (randomized each round)
-export function FeedAnimalsGame({ color }) {
+export function FeedAnimalsGame({ color, onWin }) {
     const [round, setRound] = useState(makeAnimalRound);
     const [selectedFood, setSelectedFood] = useState(null);
 
@@ -397,6 +409,10 @@ export function FeedAnimalsGame({ color }) {
     };
 
     const isWin = round.animals.every(a => a.fed);
+
+    React.useEffect(() => {
+        if (isWin && onWin) onWin();
+    }, [isWin, onWin]);
 
     return (
         <GameWrapper
@@ -455,9 +471,9 @@ export function FeedAnimalsGame({ color }) {
 }
 
 // Master component mapper
-export default function InteractiveGameMapper({ skillId, color }) {
-    if (skillId === 'playing-together') return <RangoliGame color={color} />;
-    if (skillId === 'helping-out') return <HelpingOutGame color={color} />;
-    if (skillId === 'animals-surroundings') return <FeedAnimalsGame color={color} />;
-    return <FamilyRolesGame color={color} />;
+export default function InteractiveGameMapper({ skillId, color, onWin }) {
+    if (skillId === 'playing-together') return <RangoliGame color={color} onWin={onWin} />;
+    if (skillId === 'helping-out') return <HelpingOutGame color={color} onWin={onWin} />;
+    if (skillId === 'animals-surroundings') return <FeedAnimalsGame color={color} onWin={onWin} />;
+    return <FamilyRolesGame color={color} onWin={onWin} />;
 }

@@ -13,25 +13,29 @@ export const OUR_COMMUNITY_SKILLS = [
     id: 'community-places',
     name: "Places in Our Community",
     shortDesc: "Identify where to go when you need stamps, fresh vegetables, or a doctor.",
-    color: '#3498DB'
+    color: '#3498DB',
+    nodeId: 'b4041001-0001-0000-0000-000000000000'
   },
   {
     id: 'people-at-work',
     name: "People at Work",
     shortDesc: "Match the tools and professions to the people who help maintain our neighborhood.",
-    color: '#E74C3C'
+    color: '#E74C3C',
+    nodeId: 'b4041001-0002-0000-0000-000000000000'
   },
   {
     id: 'festivals-togetherness',
     name: "Festivals & Togetherness",
     shortDesc: "Celebrate Van Mahotsav and Uruka by organizing community events.",
-    color: '#F1C40F'
+    color: '#F1C40F',
+    nodeId: 'b4041001-0003-0000-0000-000000000000'
   },
   {
     id: 'teamwork',
     name: "Teamwork & Cooperation",
     shortDesc: "Build bridges and solve problems together just like ants and bees.",
-    color: '#2ECC71'
+    color: '#2ECC71',
+    nodeId: 'b4041001-0004-0000-0000-000000000000'
   }
 ];
 
