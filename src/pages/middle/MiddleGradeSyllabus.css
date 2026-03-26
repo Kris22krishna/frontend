@@ -176,14 +176,30 @@
 }
 
 @keyframes morph {
-    0% { border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; transform: rotate(0deg); }
-    50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; transform: rotate(180deg); }
-    100% { border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; transform: rotate(360deg); }
+    0% {
+        border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+        transform: rotate(0deg);
+    }
+
+    50% {
+        border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+        transform: rotate(180deg);
+    }
+
+    100% {
+        border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes float-slow {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-30px, -50px); }
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(-30px, -50px);
+    }
 }
 
 @keyframes float {
@@ -477,4 +493,107 @@
     .shape-2 {
         opacity: 0.1;
     }
+}
+
+/* --- Subject Toggle --- */
+.subjToggleWrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(10px);
+    border-radius: 100px;
+    padding: 6px;
+    margin-left: auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.subjToggleBtn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    padding: 10px 24px;
+    border-radius: 100px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.subjToggleBtn.active.maths {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0);
+}
+
+.subjToggleBtn.active.science {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.subjToggleBtn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Science Card specifically for Middle */
+.science-chapter-card-middle {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.science-chapter-card-middle:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+    border-color: #10b981;
+}
+
+.science-chapter-card-middle .chapter-num {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 4px 12px;
+    border-radius: 100px;
+    width: fit-content;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.science-chapter-card-middle .chapter-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.science-chapter-card-middle h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.science-chapter-card-middle p {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.science-chapter-card-middle .enter-link {
+    margin-top: auto;
+    font-weight: 800;
+    color: #10b981;
+    font-size: 0.95rem;
 }
