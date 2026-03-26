@@ -1171,6 +1171,22 @@ const MiddleGradeSyllabus = () => {
         };
     }
 
+    // Manual Override for Grade 5 Science
+    if (gradeInt === 5 && activeSubject === 'science') {
+        skillsByTopic['Water — The Essence of Life'] = {
+            'Interactive Chapter': [
+                {
+                    skill_id: 'wel-chapter-local',
+                    skill_name: 'Water — The Essence of Life',
+                    topic: 'Science',
+                    sub_topic: 'Interactive Chapter',
+                    isLocal: true,
+                    path: '/middle/grade/5/science/water-essence-of-life'
+                }
+            ]
+        };
+    }
+
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 
     if (!skills || skills.length === 0) return (
@@ -1206,7 +1222,7 @@ const MiddleGradeSyllabus = () => {
                         <p>{activeSubject === 'mathematics' ? 'Master advanced concepts with interactive problem solving.' : 'Explore the wonders of the natural world with interactive labs and experiments.'}</p>
                     </div>
 
-                    {gradeInt === 6 && (
+                    {(gradeInt === 5 || gradeInt === 6) && (
                         <div className="subjToggleWrap">
                             <button
                                 onClick={() => setActiveSubject('mathematics')}
@@ -1224,18 +1240,32 @@ const MiddleGradeSyllabus = () => {
                     )}
                 </header>
 
-                {gradeInt === 6 && activeSubject === 'science' ? (
+                {(gradeInt === 6 || gradeInt === 5) && activeSubject === 'science' ? (
                     <div className="middle-masonry-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
-                        <div
-                            className="science-chapter-card-middle"
-                            onClick={() => handleSkillClick({ isLocal: true, path: '/middle/grade/6/science/wonderful-world-of-science' })}
-                        >
-                            <div className="chapter-num">Chapter 1</div>
-                            <div className="chapter-icon">🧪</div>
-                            <h3>The Wonderful World of Science</h3>
-                            <p>Explore what science is, the 5W1H of scientific thinking, and perform experiments in our virtual lab.</p>
-                            <div className="enter-link">Explore Chapter →</div>
-                        </div>
+                        {gradeInt === 6 && (
+                            <div
+                                className="science-chapter-card-middle"
+                                onClick={() => handleSkillClick({ isLocal: true, path: '/middle/grade/6/science/wonderful-world-of-science' })}
+                            >
+                                <div className="chapter-num">Chapter 1</div>
+                                <div className="chapter-icon">🧪</div>
+                                <h3>The Wonderful World of Science</h3>
+                                <p>Explore what science is, the 5W1H of scientific thinking, and perform experiments in our virtual lab.</p>
+                                <div className="enter-link">Explore Chapter →</div>
+                            </div>
+                        )}
+                        {gradeInt === 5 && (
+                            <div
+                                className="science-chapter-card-middle"
+                                onClick={() => handleSkillClick({ isLocal: true, path: '/middle/grade/5/science/water-essence-of-life' })}
+                            >
+                                <div className="chapter-num">Chapter 1</div>
+                                <div className="chapter-icon">💧</div>
+                                <h3>Water — The Essence of Life</h3>
+                                <p>Discover where water comes from, the water cycle, aquatic ecosystems, and why conservation matters.</p>
+                                <div className="enter-link">Explore Chapter →</div>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className="middle-masonry-grid">

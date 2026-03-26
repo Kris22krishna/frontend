@@ -581,6 +581,15 @@ import WWSTerminology from './components/science/grade6/WonderfulWorldOfScience/
 import WWSCoreConcepts from './components/science/grade6/WonderfulWorldOfScience/Topics/CoreConcepts/WWSCoreConcepts';
 import WWSConnectomics from './components/science/grade6/WonderfulWorldOfScience/Topics/Connectomics/WWSConnectomics';
 import WWSVirtualLab from './components/science/grade6/WonderfulWorldOfScience/Topics/VirtualLab/WWSVirtualLab';
+
+// Class 5 Science: Water — The Essence of Life
+import WaterEssenceOfLifeDashboard from './components/science/grade5/WaterEssenceOfLife/WaterEssenceOfLifeDashboard';
+import WELIntro from './components/science/grade5/WaterEssenceOfLife/Topics/Introduction/WELIntro';
+import WELTerminology from './components/science/grade5/WaterEssenceOfLife/Topics/Terminology/WELTerminology';
+import WELCoreConcepts from './components/science/grade5/WaterEssenceOfLife/Topics/CoreConcepts/WELCoreConcepts';
+import WELConnectomics from './components/science/grade5/WaterEssenceOfLife/Topics/Connectomics/WELConnectomics';
+import WELVirtualLab from './components/science/grade5/WaterEssenceOfLife/Topics/VirtualLab/WELVirtualLab';
+
 // Class 10: Areas Related to Circles
 import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
 import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
@@ -872,6 +881,14 @@ function App() {
           <Route path="/middle/grade/6/science/wonderful-world-of-science/core-concepts" element={<WWSCoreConcepts />} />
           <Route path="/middle/grade/6/science/wonderful-world-of-science/connectomics" element={<WWSConnectomics />} />
           <Route path="/middle/grade/6/science/wonderful-world-of-science/virtual-lab" element={<WWSVirtualLab />} />
+
+          {/* Grade 5 Science */}
+          <Route path="/middle/grade/5/science/water-essence-of-life" element={<WaterEssenceOfLifeDashboard />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/introduction" element={<WELIntro />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/terminology" element={<WELTerminology />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/core-concepts" element={<WELCoreConcepts />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/connectomics" element={<WELConnectomics />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/virtual-lab" element={<WELVirtualLab />} />
 
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
