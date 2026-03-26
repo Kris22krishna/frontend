@@ -143,6 +143,12 @@ import DoesItLookSameTerminology from './components/practice/class-5/doesitlooks
 import DoesItLookSameSkills from './components/practice/class-5/doesitlooksame/Topics/Skills/DoesItLookSameSkills.jsx';
 import DoesItLookSameTest from './components/practice/class-5/doesitlooksame/DoesItLookSameTest.jsx';
 
+import BeMyMultiple from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/BeMyMultiple';
+import BeMyMultipleIntro from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/5W1H/BeMyMultipleIntro';
+import BeMyMultipleTerminology from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/Terminology/BeMyMultipleTerminology';
+import BeMyMultipleSkills from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/Skills/BeMyMultipleSkills';
+import BeMyMultipleTest from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/BeMyMultipleTest';
+
 import SharingAndMeasuring from './components/practice/class-4/Sharing_and_Measuring/SharingAndMeasuring';
 import SharingAndMeasuringIntro from './components/practice/class-4/Sharing_and_Measuring/Topics/5W1H/SharingAndMeasuringIntro';
 import SharingAndMeasuringTerminology from './components/practice/class-4/Sharing_and_Measuring/Topics/Terminology/SharingAndMeasuringTerminology';
@@ -1315,6 +1321,13 @@ function App() {
         <Route path="/middle/grade/5/does-it-look-same/skills" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameSkills /></ProtectedRoute>} />
         <Route path="/middle/grade/5/does-it-look-same/chapter-test" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameTest /></ProtectedRoute>} />
         <Route path="/middle/grade/5/how-many-squares/chapter-test" element={<ProtectedRoute redirectTo="/login"><HowManySquaresTest /></ProtectedRoute>} />
+
+        {/* Be My Multiple, I'll be Your Factor Routes */}
+        <Route path="/middle/grade/5/be-my-multiple" element={<ProtectedRoute redirectTo="/login"><BeMyMultiple /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/introduction" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleIntro /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/terminology" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleTerminology /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/skills" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/test" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleTest /></ProtectedRoute>} />
 
         {/* Grade 5 - Tenths and Hundredths */}
         <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
