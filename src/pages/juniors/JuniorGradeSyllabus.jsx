@@ -52,12 +52,28 @@ const JuniorGradeSyllabus = () => {
     const [topics, setTopics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hoveredTopic, setHoveredTopic] = useState(null);
+    const [activeSubject, setActiveSubject] = useState('math');
 
     useEffect(() => {
         const fetchTopics = async () => {
             try {
                 setLoading(true);
                 const gradeNumStr = String(grade).replace(/\D/g, ''); // Extract only digits
+
+                if (gradeNumStr === '3' && activeSubject === 'world-around-us') {
+                    setTopics([{
+                        name: 'Our Families and Communities',
+                        skills: [
+                            {id: 'intro', name: 'Introduction'},
+                            {id: 'terms', name: 'Terminology'},
+                            {id: 'skills', name: 'Skills'},
+                            {id: 'vlab', name: 'Virtual Lab'}
+                        ],
+                        skillCount: 4
+                    }]);
+                    setLoading(false);
+                    return;
+                }
                 const isGrade1 = gradeNumStr === '1';
                 const isGrade2 = gradeNumStr === '2';
                 const isGrade3 = gradeNumStr === '3';
@@ -184,7 +200,7 @@ const JuniorGradeSyllabus = () => {
         };
 
         fetchTopics();
-    }, [grade]);
+    }, [grade, activeSubject]);
 
     const gradeLabels = {
         '1': 'Grade 1',
@@ -214,10 +230,48 @@ const JuniorGradeSyllabus = () => {
 
                 {/* Header */}
                 <div className="junior-header">
+                    {grade === '3' && (
+                        <div className="subject-toggle-container" style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
+                            <button 
+                                onClick={() => setActiveSubject('math')}
+                                style={{
+                                    padding: '16px 32px',
+                                    fontSize: '1.4rem',
+                                    fontWeight: '800',
+                                    borderRadius: '100px',
+                                    border: 'none',
+                                    background: activeSubject === 'math' ? '#4F46E5' : '#E2E8F0',
+                                    color: activeSubject === 'math' ? 'white' : '#64748B',
+                                    cursor: 'pointer',
+                                    boxShadow: activeSubject === 'math' ? '0 8px 24px rgba(79, 70, 229, 0.3)' : 'none',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                🔢 Grade 3 Math
+                            </button>
+                            <button 
+                                onClick={() => setActiveSubject('world-around-us')}
+                                style={{
+                                    padding: '16px 32px',
+                                    fontSize: '1.4rem',
+                                    fontWeight: '800',
+                                    borderRadius: '100px',
+                                    border: 'none',
+                                    background: activeSubject === 'world-around-us' ? '#10B981' : '#E2E8F0',
+                                    color: activeSubject === 'world-around-us' ? 'white' : '#64748B',
+                                    cursor: 'pointer',
+                                    boxShadow: activeSubject === 'world-around-us' ? '0 8px 24px rgba(16, 185, 129, 0.3)' : 'none',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                🌍 Grade 3 World Around Us
+                            </button>
+                        </div>
+                    )}
                     <h1>Choose Your Adventure! 🚀</h1>
                     <div className="grade-badge-large">
                         <Sparkles className="sparkle-icon" />
-                        <span>{gradeLabels[grade]} Math</span>
+                        <span>{gradeLabels[grade]} {activeSubject === 'world-around-us' ? 'World Around Us' : 'Math'}</span>
                     </div>
                     <p>Pick a skill to start learning and having fun!</p>
                 </div>
@@ -244,7 +298,9 @@ const JuniorGradeSyllabus = () => {
                                     onMouseEnter={() => setHoveredTopic(topic.name)}
                                     onMouseLeave={() => setHoveredTopic(null)}
                                     onClick={() => {
-                                        if (topic.name === 'Ticking Clocks and Turning Calendars') {
+                                        if (topic.name === 'Our Families and Communities') {
+                                            navigate('/junior/grade/3/science/our-families-and-communities');
+                                        } else if (topic.name === 'Ticking Clocks and Turning Calendars') {
                                             navigate('/ticking-clocks');
                                         } else if (topic.name === 'The Transport Museum') {
                                             navigate('/the-transport-museum');
