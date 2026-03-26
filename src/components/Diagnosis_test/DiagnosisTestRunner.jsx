@@ -364,6 +364,19 @@ const DiagnosisTestRunner = () => {
                 }
             }
 
+            const formatValue = (val) => {
+                if (typeof val === 'object' && val !== null) {
+                    if (val.num !== undefined && val.den !== undefined) return `$\\frac{${val.num}}{${val.den}}$`;
+                    if (val.n !== undefined && val.d !== undefined) return `$\\frac{${val.n}}{${val.d}}$`;
+                    return Object.values(val).join(', ');
+                }
+                if (typeof val === 'string' && (val.includes('/assets/') || val.includes('data:image/'))) {
+                    return "Image Selection";
+                }
+                return val || "None";
+            };
+
+
             let userDisplay = userAnswer;
             let correctDisplay = q.answer;
 
@@ -372,45 +385,34 @@ const DiagnosisTestRunner = () => {
                     const expected = JSON.parse(q.answer);
                     const rows = q.rows || [];
 
-                    const formatRow = (row, ans) => {
-                        if (row.left !== undefined) {
-                            const f = (val) => (typeof val === 'object' && val.n !== undefined) ? `${val.n}/${val.d}` : val;
-                            let resStr = "";
-                            if (q.variant === 'fraction') {
-                                resStr = ans ? `${ans.num || '?'}/${ans.den || '?'}` : "None";
-                            } else {
-                                resStr = ans ? (ans["0"] || ans) : "None";
-                            }
-                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)} = ${resStr}$`;
-                        }
-                        return row.text || "Row";
+                    const formatRowString = (row, ans) => {
+                        const rowLabel = row.text || (row.left !== undefined ? `${formatValue(row.left)} ${row.op || ''} ${formatValue(row.right)}` : "Row");
+                        const valStr = formatValue(ans);
+                        return `${rowLabel}: ${valStr}`;
                     };
 
-                    const formatExpectedRow = (row, expVal) => {
-                        if (row.left !== undefined) {
-                            const f = (val) => (typeof val === 'object' && val.n !== undefined) ? `${val.n}/${val.d}` : val;
-                            let resStr = "";
-                            if (q.variant === 'fraction') {
-                                resStr = `${expVal.num}/${expVal.den}`;
-                            } else {
-                                resStr = expVal["0"] || expVal;
-                            }
-                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)} = ${resStr}$`;
-                        }
-                        return row.text || "Row";
-                    };
-
-                    userDisplay = rows.map((row, i) => formatRow(row, userAnswer?.[i])).join(', ');
-                    correctDisplay = rows.map((row, i) => formatExpectedRow(row, expected[i])).join(', ');
+                    userDisplay = rows.map((row, i) => formatRowString(row, userAnswer?.[i])).join(' | ');
+                    correctDisplay = rows.map((row, i) => formatRowString(row, expected[i])).join(' | ');
                 } catch (e) {
                     console.error("Error formatting table results:", e);
                     userDisplay = isCorrect ? "Completed Correctly" : "Incorrectly Filled";
                     correctDisplay = "Check Table Properties";
                 }
             } else if (q.type === 'factorTree') {
-                userDisplay = isCorrect ? "Nodes filled correctly" : "Missing or wrong nodes";
-                correctDisplay = "View factor tree branches";
+                try {
+                    const expected = JSON.parse(q.answer);
+                    const values = Object.values(expected).join(', ');
+                    userDisplay = isCorrect ? "All nodes correct" : "Missing/Incorrect nodes";
+                    correctDisplay = `Values: ${values}`;
+                } catch (e) {
+                    userDisplay = "Factor Tree Completed";
+                    correctDisplay = "Check Factor Tree";
+                }
+            } else {
+                userDisplay = formatValue(userAnswer);
+                correctDisplay = formatValue(q.answer);
             }
+
 
             let status = 'wrong';
             if (qScore === 1) {
