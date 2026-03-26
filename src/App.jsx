@@ -153,6 +153,20 @@ import HideAndSeekIntro5W1H from './components/practice/class-4/Hide_and_Seek/To
 import HideAndSeekTerminology from './components/practice/class-4/Hide_and_Seek/Topics/Terminology/HideAndSeekTerminology';
 import HideAndSeekSkills from './components/practice/class-4/Hide_and_Seek/Topics/Skills/HideAndSeekSkills';
 
+// Grade 3 EVS
+import OurFamiliesDashboard from './components/science/grade3/OurFamiliesAndCommunities/OurFamiliesDashboard';
+import OurFamiliesIntro from './components/science/grade3/OurFamiliesAndCommunities/Topics/Introduction/OurFamiliesIntro';
+import OurFamiliesTerminology from './components/science/grade3/OurFamiliesAndCommunities/Topics/Terminology/OurFamiliesTerminology';
+import OurFamiliesSkills from './components/science/grade3/OurFamiliesAndCommunities/Topics/Skills/OurFamiliesSkills';
+import OurFamiliesVirtualLab from './components/science/grade3/OurFamiliesAndCommunities/Topics/VirtualLab/OurFamiliesVirtualLab';
+
+// Grade 4 EVS
+import OurCommunityDashboard from './components/science/grade4/OurCommunity/OurCommunityDashboard';
+import OurCommunityIntro from './components/science/grade4/OurCommunity/Topics/Introduction/OurCommunityIntro';
+import OurCommunityTerminology from './components/science/grade4/OurCommunity/Topics/Terminology/OurCommunityTerminology';
+import OurCommunitySkills from './components/science/grade4/OurCommunity/Topics/Skills/OurCommunitySkills';
+import OurCommunityVirtualLab from './components/science/grade4/OurCommunity/Topics/VirtualLab/OurCommunityVirtualLab';
+
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
@@ -1220,6 +1234,61 @@ function App() {
         <Route path="/neet" element={<NeetMockTest />} />
 
         {/* Junior Routes (Grades 1-4 child-friendly design) */}
+        
+        {/* Grade 3 EVS Routes */}
+        <Route path="/junior/grade/3/science/our-families-and-communities" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurFamiliesDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/3/science/our-families-and-communities/introduction" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurFamiliesIntro />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/3/science/our-families-and-communities/terminology" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurFamiliesTerminology />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/3/science/our-families-and-communities/skills" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurFamiliesSkills />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/3/science/our-families-and-communities/virtual-lab" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurFamiliesVirtualLab />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 4 EVS Routes */}
+        <Route path="/junior/grade/4/science/our-community" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/introduction" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityIntro />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/terminology" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityTerminology />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/skills" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunitySkills />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/virtual-lab" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityVirtualLab />
+          </ProtectedRoute>
+        } />
+
         <Route path="/junior/grade/:grade" element={<JuniorGradeSyllabus />} />
         <Route path="/junior/grade/:grade/topic/:topic" element={<JuniorSubtopics />} />
         <Route path="/junior/grade/:grade/practice" element={
