@@ -7,6 +7,13 @@ import QuizEngine from '../../Engines/WELQuizEngine';
 import AssessmentEngine from '../../Engines/WELAssessmentEngine';
 import '../../Engines/WELTestLayout.css';
 
+const normalizeQuestions = (questions = []) =>
+    questions.map((question) => ({
+        ...question,
+        question: question.question ?? question.q ?? '',
+        correct: question.correct ?? question.answer,
+    }));
+
 /* ── Main Component ─────────────────────────────────────────────── */
 export default function WELCoreConcepts() {
     const navigate = useNavigate();
@@ -18,6 +25,8 @@ export default function WELCoreConcepts() {
     useEffect(() => { window.scrollTo(0, 0); }, [view, activeSkillIdx]);
 
     const skill = activeSkillIdx !== null ? WEL_CONCEPTS[activeSkillIdx] : null;
+    const practiceQuestions = normalizeQuestions(skill?.practiceQuestions);
+    const assessmentQuestions = normalizeQuestions(skill?.assessmentQuestions);
 
     const openSkill = (idx, nextView) => {
         setActiveSkillIdx(idx);
@@ -215,7 +224,7 @@ export default function WELCoreConcepts() {
                 {NAV}
                 <div style={{ maxWidth: 900, margin: '40px auto', padding: '0 24px 60px' }}>
                     <QuizEngine
-                        questions={skill.practiceQuestions}
+                        questions={practiceQuestions}
                         title={`Practice: ${skill.title}`}
                         color={skill.color}
                         onBack={() => setView('learn')}
@@ -234,7 +243,7 @@ export default function WELCoreConcepts() {
                 <main className={styles['wel-topic-shell']} style={{ maxWidth: '1180px', margin: '0 auto', padding: '32px 24px 60px' }}>
                     <div className="skills-page wel-skills-stage" style={{ minHeight: 'auto', background: 'transparent', padding: 0 }}>
                         <AssessmentEngine
-                            questions={skill.assessmentQuestions}
+                            questions={assessmentQuestions}
                             title={`Assessment: ${skill.title}`}
                             color={skill.color}
                             onBack={() => setView('learn')}
