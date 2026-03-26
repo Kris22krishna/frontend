@@ -565,6 +565,14 @@ import CoordinateGeometryTerminology from './components/practice/class-10/Coordi
 import CoordinateGeometrySkills from './components/practice/class-10/CoordinateGeometry/Topics/Skills/CoordinateGeometrySkills';
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
+// Class 10 Science: Chemical Reactions
+import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactions/ChemicalReactionsDashboard';
+import ChemReactionsIntro from './components/science/grade10/ChemicalReactions/Topics/Introduction/ChemReactionsIntro';
+import ChemReactionsTerminology from './components/science/grade10/ChemicalReactions/Topics/Terminology/ChemReactionsTerminology';
+import ChemReactionsCoreConcepts from './components/science/grade10/ChemicalReactions/Topics/CoreConcepts/ChemReactionsCoreConcepts';
+import ChemReactionsConnectomics from './components/science/grade10/ChemicalReactions/Topics/Connectomics/ChemReactionsConnectomics';
+import ChemReactionsExamEdge from './components/science/grade10/ChemicalReactions/Topics/ExamEdge/ChemReactionsExamEdge';
+import ChemReactionsVirtualLab from './components/science/grade10/ChemicalReactions/Topics/VirtualLab/ChemReactionsVirtualLab';
 // Class 10: Areas Related to Circles
 import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
 import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
@@ -839,6 +847,16 @@ function App() {
           <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
+          
+          {/* Grade 10 Science */}
+          <Route path="/senior/grade/10/science/chemical-reactions" element={<ChemicalReactionsDashboard />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/introduction" element={<ChemReactionsIntro />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/terminology" element={<ChemReactionsTerminology />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/core-concepts" element={<ChemReactionsCoreConcepts />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/connectomics" element={<ChemReactionsConnectomics />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/virtual-lab" element={<ChemReactionsVirtualLab />} />
+
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
           {/* Algebra Topic Pages */}
