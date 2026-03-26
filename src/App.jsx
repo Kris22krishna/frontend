@@ -585,6 +585,15 @@ import ChemReactionsCoreConcepts from './components/science/grade10/ChemicalReac
 import ChemReactionsConnectomics from './components/science/grade10/ChemicalReactions/Topics/Connectomics/ChemReactionsConnectomics';
 import ChemReactionsExamEdge from './components/science/grade10/ChemicalReactions/Topics/ExamEdge/ChemReactionsExamEdge';
 import ChemReactionsVirtualLab from './components/science/grade10/ChemicalReactions/Topics/VirtualLab/ChemReactionsVirtualLab';
+
+// Class 9 Science: Matter in Our Surroundings
+import MatterInOurSurroundingsDashboard from './components/science/grade9/matterinoursurroundings/MatterInOurSurroundingsDashboard';
+import MatterIntro from './components/science/grade9/matterinoursurroundings/Topics/Introduction/MatterIntro';
+import MatterTerminology from './components/science/grade9/matterinoursurroundings/Topics/Terminology/MatterTerminology';
+import MatterCoreConcepts from './components/science/grade9/matterinoursurroundings/Topics/CoreConcepts/MatterCoreConcepts';
+import MatterConnectomics from './components/science/grade9/matterinoursurroundings/Topics/Connectomics/MatterConnectomics';
+import MatterExamEdge from './components/science/grade9/matterinoursurroundings/Topics/ExamEdge/MatterExamEdge';
+import MatterVirtualLab from './components/science/grade9/matterinoursurroundings/Topics/VirtualLab/MatterVirtualLab';
 // Class 10: Areas Related to Circles
 import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
 import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
@@ -868,6 +877,15 @@ function App() {
           <Route path="/senior/grade/10/science/chemical-reactions/connectomics" element={<ChemReactionsConnectomics />} />
           <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
           <Route path="/senior/grade/10/science/chemical-reactions/virtual-lab" element={<ChemReactionsVirtualLab />} />
+
+          {/* Grade 9 Science */}
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings" element={<MatterInOurSurroundingsDashboard />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/introduction" element={<MatterIntro />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/terminology" element={<MatterTerminology />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/core-concepts" element={<MatterCoreConcepts />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/connectomics" element={<MatterConnectomics />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/exam-edge" element={<MatterExamEdge />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/virtual-lab" element={<MatterVirtualLab />} />
 
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />

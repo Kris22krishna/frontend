@@ -34,7 +34,7 @@ const SeniorGradeSyllabus = () => {
     };
 
     const handleSkillClick = (skill) => {
-        if (!isAuthenticated && (grade === '10' || grade === '8')) {
+        if (!isAuthenticated && (grade === '10' || grade === '8' || grade === '9')) {
             setPendingSkill(skill);
             setShowLoginModal(true);
         } else {
@@ -706,9 +706,9 @@ const SeniorGradeSyllabus = () => {
                     </nav>
 
                     <div className="page-title">
-                        {grade === '10' ? (
+                        {grade === '10' || grade === '9' ? (
                             <div style={{ marginBottom: '12px' }}>
-                                <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '20px' }}>Grade 10 — Select Subject</div>
+                                <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '20px' }}>Grade {grade} — Select Subject</div>
                                 <div className="subjToggleWrap" style={{
                                     display: 'inline-flex', alignItems: 'center', gap: '8px',
                                     background: '#f1f5f9', borderRadius: '100px', padding: '6px', boxShadow: '0 4px 20px rgba(0,0,0,0.08), inset 0 1px 2px rgba(0,0,0,0.06)'
@@ -765,39 +765,71 @@ const SeniorGradeSyllabus = () => {
 
             {/* Main Content - Grid Layout */}
             <main className="senior-content-grid">
-                {grade === '10' && activeSubject === 'science' ? (
+                {(grade === '10' || grade === '9') && activeSubject === 'science' ? (
                     <div className="science-chapter-grid" style={{
                         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', animation: 'chemFadeIn 0.35s ease'
                     }}>
-                        <div
-                            className="science-chapter-card"
-                            onClick={() => handleSkillClick({ isLocal: true, path: '/senior/grade/10/science/chemical-reactions' })}
-                            style={{
-                                background: 'linear-gradient(135deg, #0a1628, #0c2240)', border: '1px solid rgba(8,145,178,0.3)',
-                                borderRadius: '20px', padding: '24px', cursor: 'pointer', transition: 'all 0.25s',
-                                position: 'relative', overflow: 'hidden'
-                            }}
-                        >
-                            <span style={{
-                                display: 'inline-block', fontSize: '0.62rem', fontWeight: '700', letterSpacing: '0.16em',
-                                textTransform: 'uppercase', background: 'rgba(8,145,178,0.15)', color: '#38bdf8',
-                                border: '1px solid rgba(56,189,248,0.3)', padding: '3px 12px', borderRadius: '100px', marginBottom: '14px'
-                            }}>Chapter 1</span>
-                            <span style={{ fontSize: '2.4rem', marginBottom: '12px', display: 'block' }}>⚗️</span>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#e6edf3', marginBottom: '6px', fontFamily: '"Outfit", sans-serif' }}>
-                                Chemical Reactions & Equations
-                            </h3>
-                            <p style={{ fontSize: '0.8rem', color: '#7d8590', marginBottom: '16px', lineHeight: '1.5' }}>
-                                Master equations, experiments, and reaction types with the interactive virtual lab.
-                            </p>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
-                                <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Virtual Lab</span>
-                                <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Balancer</span>
+                        {grade === '10' ? (
+                            <div
+                                className="science-chapter-card"
+                                onClick={() => handleSkillClick({ isLocal: true, path: '/senior/grade/10/science/chemical-reactions' })}
+                                style={{
+                                    background: 'linear-gradient(135deg, #0a1628, #0c2240)', border: '1px solid rgba(8,145,178,0.3)',
+                                    borderRadius: '20px', padding: '24px', cursor: 'pointer', transition: 'all 0.25s',
+                                    position: 'relative', overflow: 'hidden'
+                                }}
+                            >
+                                <span style={{
+                                    display: 'inline-block', fontSize: '0.62rem', fontWeight: '700', letterSpacing: '0.16em',
+                                    textTransform: 'uppercase', background: 'rgba(8,145,178,0.15)', color: '#38bdf8',
+                                    border: '1px solid rgba(56,189,248,0.3)', padding: '3px 12px', borderRadius: '100px', marginBottom: '14px'
+                                }}>Chapter 1</span>
+                                <span style={{ fontSize: '2.4rem', marginBottom: '12px', display: 'block' }}>⚗️</span>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#e6edf3', marginBottom: '6px', fontFamily: '"Outfit", sans-serif' }}>
+                                    Chemical Reactions & Equations
+                                </h3>
+                                <p style={{ fontSize: '0.8rem', color: '#7d8590', marginBottom: '16px', lineHeight: '1.5' }}>
+                                    Master equations, experiments, and reaction types with the interactive virtual lab.
+                                </p>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+                                    <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Virtual Lab</span>
+                                    <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Balancer</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <span style={{ fontSize: '0.82rem', fontWeight: '700', color: '#38bdf8' }}>Enter Module →</span>
+                                </div>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <span style={{ fontSize: '0.82rem', fontWeight: '700', color: '#38bdf8' }}>Enter Module →</span>
+                        ) : (
+                            <div
+                                className="science-chapter-card"
+                                onClick={() => handleSkillClick({ isLocal: true, path: '/senior/grade/9/science/matter-in-our-surroundings' })}
+                                style={{
+                                    background: 'linear-gradient(135deg, #0a1628, #0c2240)', border: '1px solid rgba(8,145,178,0.3)',
+                                    borderRadius: '20px', padding: '24px', cursor: 'pointer', transition: 'all 0.25s',
+                                    position: 'relative', overflow: 'hidden'
+                                }}
+                            >
+                                <span style={{
+                                    display: 'inline-block', fontSize: '0.62rem', fontWeight: '700', letterSpacing: '0.16em',
+                                    textTransform: 'uppercase', background: 'rgba(8,145,178,0.15)', color: '#38bdf8',
+                                    border: '1px solid rgba(56,189,248,0.3)', padding: '3px 12px', borderRadius: '100px', marginBottom: '14px'
+                                }}>Chapter 1</span>
+                                <span style={{ fontSize: '2.4rem', marginBottom: '12px', display: 'block' }}>🧊</span>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#e6edf3', marginBottom: '6px', fontFamily: '"Outfit", sans-serif' }}>
+                                    Matter in Our Surroundings
+                                </h3>
+                                <p style={{ fontSize: '0.8rem', color: '#7d8590', marginBottom: '16px', lineHeight: '1.5' }}>
+                                    Explore the physical nature of matter, states of matter, and the effect of temperature and pressure.
+                                </p>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+                                    <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>States of Matter</span>
+                                    <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Phase Change</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <span style={{ fontSize: '0.82rem', fontWeight: '700', color: '#38bdf8' }}>Enter Module →</span>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 ) : (
                     <div className="topics-grid-container">
