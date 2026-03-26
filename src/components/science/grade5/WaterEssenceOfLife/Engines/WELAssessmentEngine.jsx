@@ -1,7 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function welAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'chemtest' }) {
+export default function welAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+
+    useEffect(() => {
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questionSet.length });
+            }
+        };
+    }, [abandonSession, questionSet.length]);
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -114,6 +134,15 @@ export default function welAssessmentEngine({ questions, title, onBack, onSecond
         const newAns = [...answers];
         newAns[current] = optIdx;
         setAnswers(newAns);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: optIdx },
+            is_correct: isAnswerCorrect(q, optIdx) ? 1.0 : 0.0,
+            marks_awarded: isAnswerCorrect(q, optIdx) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleTextAnswerChange = (value) => {
@@ -121,6 +150,15 @@ export default function welAssessmentEngine({ questions, title, onBack, onSecond
         const newAns = [...answers];
         newAns[current] = value;
         setAnswers(newAns);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { text: value },
+            is_correct: isAnswerCorrect(q, value) ? 1.0 : 0.0,
+            marks_awarded: isAnswerCorrect(q, value) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleMsqToggle = (optIdx) => {
@@ -132,6 +170,15 @@ export default function welAssessmentEngine({ questions, title, onBack, onSecond
         const newAns = [...answers];
         newAns[current] = nextAnswer;
         setAnswers(newAns);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selections: nextAnswer },
+            is_correct: isAnswerCorrect(q, nextAnswer) ? 1.0 : 0.0,
+            marks_awarded: isAnswerCorrect(q, nextAnswer) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleNext = () => {
@@ -151,10 +198,27 @@ export default function welAssessmentEngine({ questions, title, onBack, onSecond
         });
     };
 
-    const handleSubmit = () => {
+    const handleFinalSubmit = async () => {
         if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
+
+        const answersPayload = answers.map((ans, idx) => ({
+            question_index: idx + 1,
+            answer_json: typeof ans === 'string' ? { text: ans } : (Array.isArray(ans) ? { selections: ans } : { selection: ans }),
+            is_correct: isAnswerCorrect(questionSet[idx], ans) ? 1 : 0,
+            marks_awarded: isAnswerCorrect(questionSet[idx], ans) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        }));
+
+        await finishSession({
+            totalQuestions: questionSet.length,
+            questionsAnswered: answeredCount,
+            answersPayload
+        });
+
+        isFinishedRef.current = true;
         setFinished(true);
         setPaletteOpen(false);
     };
@@ -357,7 +421,7 @@ export default function welAssessmentEngine({ questions, title, onBack, onSecond
                 </div>
             </div>
 
-            <button onClick={handleSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: `var(--${prefix}-red, #ef4444)`, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>
+            <button onClick={handleFinalSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: `var(--${prefix}-red, #ef4444)`, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>
                 Submit Assessment
             </button>
         </div>

@@ -126,6 +126,12 @@ export const NODE_IDS = {
   g4EvsOurCommunityWork:       'b4041001-0002-0000-0000-000000000000',
   g4EvsOurCommunityFestivals:  'b4041001-0003-0000-0000-000000000000',
   g4EvsOurCommunityTeamwork:   'b4041001-0004-0000-0000-000000000000',
+
+  // Grade 5 Science: Water Essence of Life
+  g5ScienceWaterSources:        'b4051001-0001-0000-0000-000000000000',
+  g5ScienceWaterCycle:          'b4051001-0002-0000-0000-000000000000',
+  g5ScienceLifeWater:           'b4051001-0003-0000-0000-000000000000',
+  g5ScienceWaterTerminologyQuiz:'b4051001-0010-0000-0000-000000000000',
 };
 
 /**
@@ -161,7 +167,6 @@ export const SLUG_TO_NODE_ID = {
   'g3-science-family-roles':            NODE_IDS.g3EvsOurFamiliesRoles,
   'g3-science-playing-games':           NODE_IDS.g3EvsOurFamiliesPlaying,
   'g3-science-helping-out':             NODE_IDS.g3EvsOurFamiliesHelping,
-  'g3-science-helping-out':             NODE_IDS.g3EvsOurFamiliesHelping,
   'g3-science-animals-nature':          NODE_IDS.g3EvsOurFamiliesAnimals,
 
   // Grade 4 EVS Slugs (Skills)
@@ -169,4 +174,10 @@ export const SLUG_TO_NODE_ID = {
   'g4-science-people-work':             NODE_IDS.g4EvsOurCommunityWork,
   'g4-science-festivals':               NODE_IDS.g4EvsOurCommunityFestivals,
   'g4-science-teamwork':                NODE_IDS.g4EvsOurCommunityTeamwork,
+
+  // Grade 5 Science Slugs (Skills)
+  'g5-science-water-sources':           NODE_IDS.g5ScienceWaterSources,
+  'g5-science-water-cycle':             NODE_IDS.g5ScienceWaterCycle,
+  'g5-science-water-life-water':        NODE_IDS.g5ScienceLifeWater,
+  'g5-science-water-terminology':       NODE_IDS.g5ScienceWaterTerminologyQuiz,
 };

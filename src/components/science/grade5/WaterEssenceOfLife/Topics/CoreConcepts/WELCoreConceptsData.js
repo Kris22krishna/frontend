@@ -5,6 +5,7 @@
 export const WEL_CONCEPTS = [
     {
         id: 'water-sources',
+        nodeId: 'b4051001-0001-0000-0000-000000000000',
         title: 'Water Sources & Availability',
         icon: '💧',
         color: '#0ea5e9',
@@ -62,6 +63,7 @@ export const WEL_CONCEPTS = [
     },
     {
         id: 'water-cycle',
+        nodeId: 'b4051001-0002-0000-0000-000000000000',
         title: 'Water Cycle & States of Water',
         icon: '☁️',
         color: '#8b5cf6',
@@ -119,6 +121,7 @@ export const WEL_CONCEPTS = [
     },
     {
         id: 'life-in-water',
+        nodeId: 'b4051001-0003-0000-0000-000000000000',
         title: 'Life in Water & Conservation',
         icon: '🐟',
         color: '#10b981',

@@ -1,9 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../WaterEssenceOfLifeDashboard.module.css';
 import { TERMS, COOL_FACTS, VOCAB_QUIZ } from './WELTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function WELTerminology() {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+    useEffect(() => {
+        if (activeTab === 'quiz' && !sessionStartedRef.current) {
+            startSession({ nodeId: NODE_IDS.g5ScienceWaterTerminologyQuiz, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    }, [activeTab, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (activeTab === 'quiz' && sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: VOCAB_QUIZ.length });
+            }
+        };
+    }, [activeTab, abandonSession]);
+
     const navigate = useNavigate();
     const BASE = '/middle/grade/5/science/water-essence-of-life';
 
@@ -32,23 +53,40 @@ export default function WELTerminology() {
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        isFinishedRef.current = false;
+        sessionStartedRef.current = false;
     };
 
     const handleQuizSelect = (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
+        const correct = optIdx === activeQuiz.correct;
+        if (correct) {
             setQuizTotalScore(s => s + 1);
         }
+
+        logAnswer({
+            question_index: quizIdx + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx(i => i + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
+            await finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                questionsAnswered: VOCAB_QUIZ.length
+            });
+            isFinishedRef.current = true;
             setQuizFinished(true);
         }
     };
