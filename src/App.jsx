@@ -591,6 +591,15 @@ import ChemReactionsCoreConcepts from './components/science/grade10/ChemicalReac
 import ChemReactionsConnectomics from './components/science/grade10/ChemicalReactions/Topics/Connectomics/ChemReactionsConnectomics';
 import ChemReactionsExamEdge from './components/science/grade10/ChemicalReactions/Topics/ExamEdge/ChemReactionsExamEdge';
 import ChemReactionsVirtualLab from './components/science/grade10/ChemicalReactions/Topics/VirtualLab/ChemReactionsVirtualLab';
+
+// Grade 8 Science: Investigative Science
+import InvestigativeScienceDashboard from './components/science/grade8/ExploringInvestigativeScience/InvestigativeScienceDashboard';
+import ScienceIntro from './components/science/grade8/ExploringInvestigativeScience/Topics/Introduction/ScienceIntro';
+import ScienceTerminology from './components/science/grade8/ExploringInvestigativeScience/Topics/Terminology/ScienceTerminology';
+import ScienceCoreConcepts from './components/science/grade8/ExploringInvestigativeScience/Topics/CoreConcepts/ScienceCoreConcepts';
+import ScienceConnectomics from './components/science/grade8/ExploringInvestigativeScience/Topics/Connectomics/ScienceConnectomics';
+import ScienceExamEdge from './components/science/grade8/ExploringInvestigativeScience/Topics/ExamEdge/ScienceExamEdge';
+import ScienceVirtualLab from './components/science/grade8/ExploringInvestigativeScience/Topics/VirtualLab/ScienceVirtualLab';
 // Class 10: Areas Related to Circles
 import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
 import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
@@ -865,7 +874,7 @@ function App() {
           <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
-          
+
           {/* Grade 10 Science */}
           <Route path="/senior/grade/10/science/chemical-reactions" element={<ChemicalReactionsDashboard />} />
           <Route path="/senior/grade/10/science/chemical-reactions/introduction" element={<ChemReactionsIntro />} />
@@ -874,6 +883,15 @@ function App() {
           <Route path="/senior/grade/10/science/chemical-reactions/connectomics" element={<ChemReactionsConnectomics />} />
           <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
           <Route path="/senior/grade/10/science/chemical-reactions/virtual-lab" element={<ChemReactionsVirtualLab />} />
+
+          {/* Grade 8 Science */}
+          <Route path="/senior/grade/8/science/investigative-science" element={<InvestigativeScienceDashboard />} />
+          <Route path="/senior/grade/8/science/investigative-science/introduction" element={<ScienceIntro />} />
+          <Route path="/senior/grade/8/science/investigative-science/terminology" element={<ScienceTerminology />} />
+          <Route path="/senior/grade/8/science/investigative-science/core-concepts" element={<ScienceCoreConcepts />} />
+          <Route path="/senior/grade/8/science/investigative-science/connectomics" element={<ScienceConnectomics />} />
+          <Route path="/senior/grade/8/science/investigative-science/exam-edge" element={<ScienceExamEdge />} />
+          <Route path="/senior/grade/8/science/investigative-science/virtual-lab" element={<ScienceVirtualLab />} />
 
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
@@ -884,7 +902,7 @@ function App() {
           <Route path="algebra-mastery" element={<ProtectedRoute redirectTo="/login"><AlgebraMasteryTest /></ProtectedRoute>} />
           {/* Calculus Master Dashboard */}
           <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
-          
+
           {/* Calculus: Functions */}
           <Route path="calculus/functions" element={<ProtectedRoute redirectTo="/login"><FunctionsDashboard /></ProtectedRoute>} />
           <Route path="calculus/functions/introduction" element={<ProtectedRoute redirectTo="/login"><FunctionsIntro5W1H /></ProtectedRoute>} />
