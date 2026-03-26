@@ -422,6 +422,12 @@ import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation
 import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
 import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
 
+// Grade 6 Patterns
+import Grade6PatternsInMathematics from './components/practice/grade-6/PatternsInMathematics/PatternsInMathematics';
+import Grade6PatternsIntro5W1H from './components/practice/grade-6/PatternsInMathematics/Topics/5W1H/PatternsIntro5W1H';
+import Grade6PatternsTerminology from './components/practice/grade-6/PatternsInMathematics/Topics/Terminology/PatternsTerminology';
+import Grade6PatternsSkills from './components/practice/grade-6/PatternsInMathematics/Topics/Skills/PatternsSkills';
+
 // Grade 6 Symmetry
 import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
 import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
@@ -571,6 +577,14 @@ import CoordinateGeometryTerminology from './components/practice/class-10/Coordi
 import CoordinateGeometrySkills from './components/practice/class-10/CoordinateGeometry/Topics/Skills/CoordinateGeometrySkills';
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
+// Class 10 Science: Chemical Reactions
+import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactions/ChemicalReactionsDashboard';
+import ChemReactionsIntro from './components/science/grade10/ChemicalReactions/Topics/Introduction/ChemReactionsIntro';
+import ChemReactionsTerminology from './components/science/grade10/ChemicalReactions/Topics/Terminology/ChemReactionsTerminology';
+import ChemReactionsCoreConcepts from './components/science/grade10/ChemicalReactions/Topics/CoreConcepts/ChemReactionsCoreConcepts';
+import ChemReactionsConnectomics from './components/science/grade10/ChemicalReactions/Topics/Connectomics/ChemReactionsConnectomics';
+import ChemReactionsExamEdge from './components/science/grade10/ChemicalReactions/Topics/ExamEdge/ChemReactionsExamEdge';
+import ChemReactionsVirtualLab from './components/science/grade10/ChemicalReactions/Topics/VirtualLab/ChemReactionsVirtualLab';
 // Class 10: Areas Related to Circles
 import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
 import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
@@ -845,6 +859,16 @@ function App() {
           <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
+          
+          {/* Grade 10 Science */}
+          <Route path="/senior/grade/10/science/chemical-reactions" element={<ChemicalReactionsDashboard />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/introduction" element={<ChemReactionsIntro />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/terminology" element={<ChemReactionsTerminology />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/core-concepts" element={<ChemReactionsCoreConcepts />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/connectomics" element={<ChemReactionsConnectomics />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
+          <Route path="/senior/grade/10/science/chemical-reactions/virtual-lab" element={<ChemReactionsVirtualLab />} />
+
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
           {/* Algebra Topic Pages */}
@@ -1127,6 +1151,13 @@ function App() {
           <Route path="practice/class-9/rationalisation" element={<ProtectedRoute redirectTo="/login"><Rationalisation /></ProtectedRoute>} />
           <Route path="practice/class-9/laws-of-exponents" element={<ProtectedRoute redirectTo="/login"><LawsOfExponents /></ProtectedRoute>} />
           <Route path="practice/class-9/chapter-test" element={<ProtectedRoute redirectTo="/login"><NumberSystemTest /></ProtectedRoute>} />
+
+
+          {/* Grade 6 Patterns in Mathematics Module */}
+          <Route path="middle/grade/6/patterns-in-mathematics" element={<Grade6PatternsInMathematics />} />
+          <Route path="middle/grade/6/patterns-in-mathematics/introduction" element={<Grade6PatternsIntro5W1H />} />
+          <Route path="middle/grade/6/patterns-in-mathematics/terminology" element={<Grade6PatternsTerminology />} />
+          <Route path="middle/grade/6/patterns-in-mathematics/skills" element={<Grade6PatternsSkills />} />
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
@@ -1877,6 +1908,9 @@ function App() {
         <Route path="/middle/grade/6/perimeter-area/triangle" element={<TrianglePractice />} />
         <Route path="/middle/grade/6/perimeter-area/regular-polygon" element={<RegularPolygonPractice />} />
         <Route path="/middle/grade/6/perimeter-area/mixed-bag" element={<MixedBagPractice />} />
+
+
+
         <Route path="/middle/grade/6/patterns-math/intro" element={<VisualisingNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/relations" element={<RelationsAmongNumberSequences />} />
         <Route path="/middle/grade/6/patterns-math/shapes" element={<PatternsInShapes />} />

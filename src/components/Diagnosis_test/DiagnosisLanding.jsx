@@ -28,18 +28,31 @@ const DiagnosisLanding = () => {
             <div className="max-w-7xl mx-auto mb-6 relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 blur-3xl opacity-20 rounded-full -z-10 transform -translate-y-1/2"></div>
                 
-                <div className="text-center space-y-3">
-                    <div className="inline-flex items-center justify-center p-2.5 bg-white rounded-xl shadow-sm border border-indigo-100 mb-2 animate-bounce-slow">
-                        <Brain className="w-6 h-6 text-indigo-600" />
+                <div className="flex flex-col items-center justify-center relative">
+                    {/* Floating Results Button */}
+                    <div className="absolute right-0 top-0">
+                        <button 
+                            onClick={() => navigate('/student/diagnosis-results')}
+                            className="flex items-center space-x-2 px-4 py-2 bg-white border border-indigo-100 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-300 text-indigo-600 font-bold text-sm"
+                        >
+                            <Award className="w-4 h-4" />
+                            <span>My Results</span>
+                        </button>
                     </div>
-                    
-                    <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 tracking-tight">
-                        Diagnosis Test
-                    </h1>
-                    
-                    <p className="max-w-xl mx-auto text-sm md:text-base text-slate-600 leading-relaxed font-medium">
-                        Discover your strengths, identify your growth areas, and embark on a personalized learning journey crafted just for you.
-                    </p>
+
+                    <div className="text-center space-y-3">
+                        <div className="inline-flex items-center justify-center p-2.5 bg-white rounded-xl shadow-sm border border-indigo-100 mb-2 animate-bounce-slow">
+                            <Brain className="w-6 h-6 text-indigo-600" />
+                        </div>
+                        
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 tracking-tight">
+                            Diagnosis Test
+                        </h1>
+                        
+                        <p className="max-w-xl mx-auto text-sm md:text-base text-slate-600 leading-relaxed font-medium">
+                            Discover your strengths, identify your growth areas, and embark on a personalized learning journey crafted just for you.
+                        </p>
+                    </div>
                 </div>
             </div>
 
