@@ -15,7 +15,7 @@ const SeniorGradeSyllabus = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const [skills, setSkills] = useState([]);
-    const [activeSubject, setActiveSubject] = useState('mathematics'); // For Grade 10 only
+    const [activeSubject, setActiveSubject] = useState('mathematics'); // For Grade 10 and Grade 8
     const [loading, setLoading] = useState(true);
 
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -707,6 +707,7 @@ const SeniorGradeSyllabus = () => {
 
                     <div className="page-title">
                         {grade === '10' || grade === '9' ? (
+                        {grade === '10' || grade === '8' ? (
                             <div style={{ marginBottom: '12px' }}>
                                 <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '20px' }}>Grade {grade} — Select Subject</div>
                                 <div className="subjToggleWrap" style={{
@@ -830,6 +831,40 @@ const SeniorGradeSyllabus = () => {
                                 </div>
                             </div>
                         )}
+                    </div>
+                ) : grade === '8' && activeSubject === 'science' ? (
+                    <div className="science-chapter-grid" style={{
+                        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px', animation: 'chemFadeIn 0.35s ease'
+                    }}>
+                        <div
+                            className="science-chapter-card"
+                            onClick={() => handleSkillClick({ isLocal: true, path: '/senior/grade/8/science/investigative-science' })}
+                            style={{
+                                background: 'linear-gradient(135deg, #0f172a, #1e293b)', border: '1px solid rgba(13,148,136,0.3)',
+                                borderRadius: '20px', padding: '24px', cursor: 'pointer', transition: 'all 0.25s',
+                                position: 'relative', overflow: 'hidden'
+                            }}
+                        >
+                            <span style={{
+                                display: 'inline-block', fontSize: '0.62rem', fontWeight: '700', letterSpacing: '0.16em',
+                                textTransform: 'uppercase', background: 'rgba(13,148,136,0.15)', color: '#2dd4bf',
+                                border: '1px solid rgba(45,212,191,0.3)', padding: '3px 12px', borderRadius: '100px', marginBottom: '14px'
+                            }}>Chapter 1</span>
+                            <span style={{ fontSize: '2.4rem', marginBottom: '12px', display: 'block' }}>🔬</span>
+                            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#e6edf3', marginBottom: '6px', fontFamily: '"Outfit", sans-serif' }}>
+                                Exploring the Investigative World of Science
+                            </h3>
+                            <p style={{ fontSize: '0.8rem', color: '#7d8590', marginBottom: '16px', lineHeight: '1.5' }}>
+                                Master the scientific method, variable control, and test hypotheses through our Virtual Puri Simulator!
+                            </p>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+                                <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>Virtual Lab</span>
+                                <span style={{ fontSize: '0.72rem', background: 'rgba(255,255,255,0.06)', color: '#94a3b8', borderRadius: '20px', padding: '2px 10px' }}>5W1H Pattern</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <span style={{ fontSize: '0.82rem', fontWeight: '700', color: '#2dd4bf' }}>Enter Module →</span>
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     <div className="topics-grid-container">

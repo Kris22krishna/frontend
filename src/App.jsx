@@ -236,6 +236,18 @@ import RakshaBandhanTest from './components/practice/class-3/Raksha-Bandhan/Raks
 import FairShareTest from './components/practice/class-3/fair-share/FairShareTest';
 import FunAtClassPartyTest from './components/practice/class-3/Fun-at-class-party/FunAtClassPartyTest';
 import HouseOfHundredsIITest from './components/practice/class-3/House-of-Hundreds-II/HouseOfHundredsIITest';
+// Time Goes On
+import ReadingCalendar from './components/practice/class-3/Time-Goes-On/reading-calendar';
+import FuturePastDates from './components/practice/class-3/Time-Goes-On/future-past-dates';
+import ConstructingCalendar from './components/practice/class-3/Time-Goes-On/constructing-calendar';
+import MonthsDaysYear from './components/practice/class-3/Time-Goes-On/months-days-year';
+import ComparingCalendars from './components/practice/class-3/Time-Goes-On/comparing-calendars';
+import AgeProblems from './components/practice/class-3/Time-Goes-On/age-problems';
+import ReadingDates from './components/practice/class-3/Time-Goes-On/reading-dates';
+import AgeDuration from './components/practice/class-3/Time-Goes-On/age-duration';
+import ClockTime from './components/practice/class-3/Time-Goes-On/clock-time';
+import TimeDurations from './components/practice/class-3/Time-Goes-On/time-durations';
+import TimeGoesOnTest from './components/practice/class-3/Time-Goes-On/TimeGoesOnTest';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -594,6 +606,14 @@ import MatterCoreConcepts from './components/science/grade9/matterinoursurroundi
 import MatterConnectomics from './components/science/grade9/matterinoursurroundings/Topics/Connectomics/MatterConnectomics';
 import MatterExamEdge from './components/science/grade9/matterinoursurroundings/Topics/ExamEdge/MatterExamEdge';
 import MatterVirtualLab from './components/science/grade9/matterinoursurroundings/Topics/VirtualLab/MatterVirtualLab';
+// Grade 8 Science: Investigative Science
+import InvestigativeScienceDashboard from './components/science/grade8/ExploringInvestigativeScience/InvestigativeScienceDashboard';
+import ScienceIntro from './components/science/grade8/ExploringInvestigativeScience/Topics/Introduction/ScienceIntro';
+import ScienceTerminology from './components/science/grade8/ExploringInvestigativeScience/Topics/Terminology/ScienceTerminology';
+import ScienceCoreConcepts from './components/science/grade8/ExploringInvestigativeScience/Topics/CoreConcepts/ScienceCoreConcepts';
+import ScienceConnectomics from './components/science/grade8/ExploringInvestigativeScience/Topics/Connectomics/ScienceConnectomics';
+import ScienceExamEdge from './components/science/grade8/ExploringInvestigativeScience/Topics/ExamEdge/ScienceExamEdge';
+import ScienceVirtualLab from './components/science/grade8/ExploringInvestigativeScience/Topics/VirtualLab/ScienceVirtualLab';
 // Class 10: Areas Related to Circles
 import AreasRelatedToCirclesDashboard from './components/practice/class-10/AreasRelatedToCircles/AreasRelatedToCirclesDashboard';
 import AreasRelatedToCirclesIntro from './components/practice/class-10/AreasRelatedToCircles/Topics/Introduction/AreasRelatedToCirclesIntro';
@@ -868,7 +888,7 @@ function App() {
           <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
-          
+
           {/* Grade 10 Science */}
           <Route path="/senior/grade/10/science/chemical-reactions" element={<ChemicalReactionsDashboard />} />
           <Route path="/senior/grade/10/science/chemical-reactions/introduction" element={<ChemReactionsIntro />} />
@@ -886,6 +906,14 @@ function App() {
           <Route path="/senior/grade/9/science/matter-in-our-surroundings/connectomics" element={<MatterConnectomics />} />
           <Route path="/senior/grade/9/science/matter-in-our-surroundings/exam-edge" element={<MatterExamEdge />} />
           <Route path="/senior/grade/9/science/matter-in-our-surroundings/virtual-lab" element={<MatterVirtualLab />} />
+          {/* Grade 8 Science */}
+          <Route path="/senior/grade/8/science/investigative-science" element={<InvestigativeScienceDashboard />} />
+          <Route path="/senior/grade/8/science/investigative-science/introduction" element={<ScienceIntro />} />
+          <Route path="/senior/grade/8/science/investigative-science/terminology" element={<ScienceTerminology />} />
+          <Route path="/senior/grade/8/science/investigative-science/core-concepts" element={<ScienceCoreConcepts />} />
+          <Route path="/senior/grade/8/science/investigative-science/connectomics" element={<ScienceConnectomics />} />
+          <Route path="/senior/grade/8/science/investigative-science/exam-edge" element={<ScienceExamEdge />} />
+          <Route path="/senior/grade/8/science/investigative-science/virtual-lab" element={<ScienceVirtualLab />} />
 
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
@@ -896,7 +924,7 @@ function App() {
           <Route path="algebra-mastery" element={<ProtectedRoute redirectTo="/login"><AlgebraMasteryTest /></ProtectedRoute>} />
           {/* Calculus Master Dashboard */}
           <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
-          
+
           {/* Calculus: Functions */}
           <Route path="calculus/functions" element={<ProtectedRoute redirectTo="/login"><FunctionsDashboard /></ProtectedRoute>} />
           <Route path="calculus/functions/introduction" element={<ProtectedRoute redirectTo="/login"><FunctionsIntro5W1H /></ProtectedRoute>} />
@@ -1310,6 +1338,19 @@ function App() {
             <HouseOfHundredsIITest />
           </ProtectedRoute>
         } />
+
+        {/* Time Goes On Routes */}
+        <Route path="/junior/grade/:grade/time-goes-on/reading-calendar" element={<ProtectedRoute redirectTo="/login"><ReadingCalendar /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/future-past-dates" element={<ProtectedRoute redirectTo="/login"><FuturePastDates /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/constructing-calendar" element={<ProtectedRoute redirectTo="/login"><ConstructingCalendar /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/months-days-year" element={<ProtectedRoute redirectTo="/login"><MonthsDaysYear /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/comparing-calendars" element={<ProtectedRoute redirectTo="/login"><ComparingCalendars /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/age-problems" element={<ProtectedRoute redirectTo="/login"><AgeProblems /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/reading-dates" element={<ProtectedRoute redirectTo="/login"><ReadingDates /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/age-duration" element={<ProtectedRoute redirectTo="/login"><AgeDuration /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/clock-time" element={<ProtectedRoute redirectTo="/login"><ClockTime /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/time-durations" element={<ProtectedRoute redirectTo="/login"><TimeDurations /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/chapter-test" element={<ProtectedRoute redirectTo="/login"><TimeGoesOnTest /></ProtectedRoute>} />
 
         {/* Grade 8 Exponents and Powers - Negative Exponents */}
         <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
