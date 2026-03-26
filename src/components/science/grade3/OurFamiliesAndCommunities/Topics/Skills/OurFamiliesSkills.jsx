@@ -200,7 +200,7 @@ export default function OurFamiliesSkills() {
                             title={`Assessment: ${skill.title}`}
                             color={skill.color}
                             onBack={() => { setView('list'); setActiveSkillIdx(null); }}
-                            prefix="evstest"
+                            prefix="chemtest"
                         />
                     </div>
                 </main>

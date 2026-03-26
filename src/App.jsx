@@ -160,6 +160,13 @@ import OurFamiliesTerminology from './components/science/grade3/OurFamiliesAndCo
 import OurFamiliesSkills from './components/science/grade3/OurFamiliesAndCommunities/Topics/Skills/OurFamiliesSkills';
 import OurFamiliesVirtualLab from './components/science/grade3/OurFamiliesAndCommunities/Topics/VirtualLab/OurFamiliesVirtualLab';
 
+// Grade 4 EVS
+import OurCommunityDashboard from './components/science/grade4/OurCommunity/OurCommunityDashboard';
+import OurCommunityIntro from './components/science/grade4/OurCommunity/Topics/Introduction/OurCommunityIntro';
+import OurCommunityTerminology from './components/science/grade4/OurCommunity/Topics/Terminology/OurCommunityTerminology';
+import OurCommunitySkills from './components/science/grade4/OurCommunity/Topics/Skills/OurCommunitySkills';
+import OurCommunityVirtualLab from './components/science/grade4/OurCommunity/Topics/VirtualLab/OurCommunityVirtualLab';
+
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
@@ -1191,6 +1198,33 @@ function App() {
         <Route path="/junior/grade/3/science/our-families-and-communities/virtual-lab" element={
           <ProtectedRoute redirectTo="/login">
             <OurFamiliesVirtualLab />
+          </ProtectedRoute>
+        } />
+
+        {/* Grade 4 EVS Routes */}
+        <Route path="/junior/grade/4/science/our-community" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/introduction" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityIntro />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/terminology" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityTerminology />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/skills" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunitySkills />
+          </ProtectedRoute>
+        } />
+        <Route path="/junior/grade/4/science/our-community/virtual-lab" element={
+          <ProtectedRoute redirectTo="/login">
+            <OurCommunityVirtualLab />
           </ProtectedRoute>
         } />
 

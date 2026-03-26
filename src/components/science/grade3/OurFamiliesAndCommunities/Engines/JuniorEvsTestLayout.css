@@ -523,8 +523,6 @@
     flex-direction: column;
     justify-content: space-between;
     min-height: calc(100dvh - 220px);
-    max-height: calc(100dvh - 220px);
-    overflow: hidden;
   }
 
   .chemtest-quiz-container,
@@ -540,7 +538,6 @@
     flex: 1;
     min-height: 0;
     margin-bottom: 12px;
-    overflow: auto;
   }
 
   .chemtest-quiz-options {
@@ -551,8 +548,6 @@
   .chemtest-assessment-layout {
     position: relative;
     min-height: calc(100dvh - 220px);
-    max-height: calc(100dvh - 220px);
-    overflow: hidden;
     padding: 0 !important;
   }
 
@@ -685,7 +680,6 @@
   .chemtest-quiz-active,
   .chemtest-assessment-layout {
     min-height: calc(100dvh - 205px);
-    max-height: calc(100dvh - 205px);
   }
 
   .chemtest-palette-trigger {

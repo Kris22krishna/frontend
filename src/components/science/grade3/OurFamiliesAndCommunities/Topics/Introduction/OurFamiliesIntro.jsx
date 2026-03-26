@@ -3,10 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { ourFamiliesIntroData } from './OurFamiliesIntroData';
 import styles from '../../OurFamiliesShared.module.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { FamilyRolesVisual, HelpingOutVisual, FestivalsVisual, ChhupanVisual, AnimalsVisual, RangoliVisual } from '../OurFamiliesVisuals';
 
 /* ── Single card ─────────────────────────────────── */
 function W1HCard({ card }) {
     const [open, setOpen] = useState(false);
+
+    const getVisual = (q) => {
+        switch (q) {
+            case 'WHAT': return <FamilyRolesVisual />;
+            case 'WHO': return <HelpingOutVisual />;
+            case 'WHEN': return <FestivalsVisual />;
+            case 'WHERE': return <ChhupanVisual />;
+            case 'WHY': return <AnimalsVisual />;
+            case 'HOW': return <RangoliVisual />;
+            default: return null;
+        }
+    };
 
     return (
         <div
@@ -64,6 +77,9 @@ function W1HCard({ card }) {
             {/* Expanded content */}
             {open && (
                 <div className={styles['chem-intro-card-body']}>
+                    <div style={{ marginBottom: 20, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                        {getVisual(card.q)}
+                    </div>
                     <p className={styles['chem-intro-card-content']}><MathRenderer text={card.content} /></p>
                     <div className={styles['chem-intro-card-fact']}>
                         <span style={{ color: card.gradFrom, fontWeight: 800 }}>⭐ Fun Fact: </span>

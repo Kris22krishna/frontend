@@ -74,6 +74,20 @@ const JuniorGradeSyllabus = () => {
                     setLoading(false);
                     return;
                 }
+                if (gradeNumStr === '4' && activeSubject === 'world-around-us') {
+                    setTopics([{
+                        name: 'Our Community',
+                        skills: [
+                            {id: 'intro', name: 'Introduction'},
+                            {id: 'terms', name: 'Terminology'},
+                            {id: 'skills', name: 'Skills'},
+                            {id: 'vlab', name: 'Virtual Lab'}
+                        ],
+                        skillCount: 4
+                    }]);
+                    setLoading(false);
+                    return;
+                }
                 const isGrade1 = gradeNumStr === '1';
                 const isGrade2 = gradeNumStr === '2';
                 const isGrade3 = gradeNumStr === '3';
@@ -230,7 +244,7 @@ const JuniorGradeSyllabus = () => {
 
                 {/* Header */}
                 <div className="junior-header">
-                    {grade === '3' && (
+                    {(grade === '3' || grade === '4') && (
                         <div className="subject-toggle-container" style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
                             <button 
                                 onClick={() => setActiveSubject('math')}
@@ -247,7 +261,7 @@ const JuniorGradeSyllabus = () => {
                                     transition: 'all 0.3s ease'
                                 }}
                             >
-                                🔢 Grade 3 Math
+                                🔢 Grade {grade} Math
                             </button>
                             <button 
                                 onClick={() => setActiveSubject('world-around-us')}
@@ -264,7 +278,7 @@ const JuniorGradeSyllabus = () => {
                                     transition: 'all 0.3s ease'
                                 }}
                             >
-                                🌍 Grade 3 World Around Us
+                                🌍 Grade {grade} World Around Us
                             </button>
                         </div>
                     )}
@@ -300,6 +314,8 @@ const JuniorGradeSyllabus = () => {
                                     onClick={() => {
                                         if (topic.name === 'Our Families and Communities') {
                                             navigate('/junior/grade/3/science/our-families-and-communities');
+                                        } else if (topic.name === 'Our Community') {
+                                            navigate('/junior/grade/4/science/our-community');
                                         } else if (topic.name === 'Ticking Clocks and Turning Calendars') {
                                             navigate('/ticking-clocks');
                                         } else if (topic.name === 'The Transport Museum') {
