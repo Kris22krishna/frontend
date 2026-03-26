@@ -53,6 +53,7 @@ const MiddleGradeSyllabus = () => {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [pendingSkill, setPendingSkill] = useState(null);
     const [expandedSubTopics, setExpandedSubTopics] = useState({});
+    const [activeSubject, setActiveSubject] = useState('mathematics');
 
     const toggleSubTopic = (topic, subTopic) => {
         setExpandedSubTopics(prev => ({
@@ -588,8 +589,10 @@ const MiddleGradeSyllabus = () => {
         const gradeNum = parseInt(grade.replace('grade', ''));
 
         // Filter by grade
+        if (activeSubject === 'science') return acc; // Handle science separately
+
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
-        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling"].some(t => topicName.includes(t))) return acc;
+        if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry"].some(t => topicName.includes(t.toLowerCase()))) return acc;
         if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
         if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
 
@@ -1121,6 +1124,38 @@ const MiddleGradeSyllabus = () => {
 
 
 
+    // Manual Override for Grade 6 Science
+    if (gradeInt === 6 && activeSubject === 'science') {
+        skillsByTopic['Wonderful World of Science'] = {
+            'Interactive Chapter': [
+                {
+                    skill_id: 'wws-chapter-local',
+                    skill_name: 'The Wonderful World of Science',
+                    topic: 'Science',
+                    sub_topic: 'Interactive Chapter',
+                    isLocal: true,
+                    path: '/middle/grade/6/science/wonderful-world-of-science'
+                }
+            ]
+        };
+    }
+
+    // Manual Override for Grade 5 Science
+    if (gradeInt === 5 && activeSubject === 'science') {
+        skillsByTopic['Water — The Essence of Life'] = {
+            'Interactive Chapter': [
+                {
+                    skill_id: 'wel-chapter-local',
+                    skill_name: 'Water — The Essence of Life',
+                    topic: 'Science',
+                    sub_topic: 'Interactive Chapter',
+                    isLocal: true,
+                    path: '/middle/grade/5/science/water-essence-of-life'
+                }
+            ]
+        };
+    }
+
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 
     if (!skills || skills.length === 0) return (
@@ -1152,13 +1187,58 @@ const MiddleGradeSyllabus = () => {
                     </div>
                     <div className="header-content">
                         <div className="grade-badge">GRADE {grade.replace('grade', '')}</div>
-                        <h1>Mathematics</h1>
-                        <p>Master advanced concepts with interactive problem solving.</p>
+                        <h1>{activeSubject === 'mathematics' ? 'Mathematics' : 'Science'}</h1>
+                        <p>{activeSubject === 'mathematics' ? 'Master advanced concepts with interactive problem solving.' : 'Explore the wonders of the natural world with interactive labs and experiments.'}</p>
                     </div>
+
+                    {(gradeInt === 5 || gradeInt === 6) && (
+                        <div className="subjToggleWrap">
+                            <button
+                                onClick={() => setActiveSubject('mathematics')}
+                                className={`subjToggleBtn maths ${activeSubject === 'mathematics' ? 'active' : ''}`}
+                            >
+                                📐 Mathematics
+                            </button>
+                            <button
+                                onClick={() => setActiveSubject('science')}
+                                className={`subjToggleBtn science ${activeSubject === 'science' ? 'active' : ''}`}
+                            >
+                                🔬 Science
+                            </button>
+                        </div>
+                    )}
                 </header>
 
-                <div className="middle-masonry-grid">
-                    {Object.entries(skillsByTopic).map(([topic, subTopics], index) => {
+                {(gradeInt === 6 || gradeInt === 5) && activeSubject === 'science' ? (
+                    <div className="middle-masonry-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
+                        {gradeInt === 6 && (
+                            <div
+                                className="science-chapter-card-middle"
+                                onClick={() => handleSkillClick({ isLocal: true, path: '/middle/grade/6/science/wonderful-world-of-science' })}
+                            >
+                                <div className="chapter-num">Chapter 1</div>
+                                <div className="chapter-icon">🧪</div>
+                                <h3>The Wonderful World of Science</h3>
+                                <p>Explore what science is, the 5W1H of scientific thinking, and perform experiments in our virtual lab.</p>
+                                <div className="enter-link">Explore Chapter →</div>
+                            </div>
+                        )}
+                        {gradeInt === 5 && (
+                            <div
+                                className="science-chapter-card-middle"
+                                onClick={() => handleSkillClick({ isLocal: true, path: '/middle/grade/5/science/water-essence-of-life' })}
+                            >
+                                <div className="chapter-num">Chapter 1</div>
+                                <div className="chapter-icon">💧</div>
+                                <h3>Water — The Essence of Life</h3>
+                                <p>Discover where water comes from, the water cycle, aquatic ecosystems, and why conservation matters.</p>
+                                <div className="enter-link">Explore Chapter →</div>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="middle-masonry-grid">
+                        {Object.entries(skillsByTopic).map(([topic, subTopics], index) => {
                         const accentColor = getAccentColor(index);
 
                         // Define fixed order for sub-topics
@@ -1225,6 +1305,7 @@ const MiddleGradeSyllabus = () => {
                         );
                     })}
                 </div>
+                )}
             </div>
             <LoginPromptModal
                 isOpen={showLoginModal}

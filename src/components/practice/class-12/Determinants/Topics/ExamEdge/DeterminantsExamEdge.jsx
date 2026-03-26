@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   AlertTriangle,
-  BadgeCheck,
-  Brain,
   Lightbulb,
   RefreshCw,
-  Rocket,
   Target,
   Trophy,
 } from "lucide-react";
@@ -17,25 +14,21 @@ import { pickQuestionDeskItems } from "../../../shared/examDeskUtils";
 import { determinantsExamEdgeData as data } from "./DeterminantsExamEdgeData";
 
 const EXAM_TABS = [
-  { id: "kcet", name: "KCET", color: "#0d9488", icon: BadgeCheck },
-  { id: "jee", name: "JEE Main", color: "#f59e0b", icon: Rocket },
-  { id: "jeeAdvanced", name: "JEE Advanced", color: "#ef4444", icon: Brain },
+  { id: "board", name: "Board Level", color: "#f59e0b", icon: Trophy },
 ];
 
 export default function DeterminantsExamEdge() {
-  const [activeTab, setActiveTab] = useState("kcet");
+  const [activeTab, setActiveTab] = useState("board");
   const [questionSeed, setQuestionSeed] = useState(1);
 
   const currentTab = EXAM_TABS.find((tab) => tab.id === activeTab);
   const questionSet = data.questions[activeTab] || [];
   const questionDeskItems = pickQuestionDeskItems(
     questionSet,
-    activeTab === "jeeAdvanced" ? 2 : 3,
+    2,
     questionSeed + activeTab.length
   );
-  const currentStrategy = data.strategy.find((item) =>
-    activeTab === "kcet" ? item.exam.includes("KCET") : item.exam.includes("JEE")
-  );
+  const currentStrategy = data.strategy.find((item) => item.exam.includes("Board"));
 
   useEffect(() => {
     setQuestionSeed((seed) => seed + 1);
@@ -126,11 +119,7 @@ export default function DeterminantsExamEdge() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
               {data.highYield
                 .filter((item) =>
-                  activeTab === "kcet"
-                    ? item.category.includes("KCET") || item.category.includes("Core")
-                    : activeTab === "jee"
-                      ? item.category.includes("JEE") || item.category.includes("Core")
-                      : true
+                  item.category.includes("Board")
                 )
                 .flatMap((item) => item.topics)
                 .map((topic) => (
@@ -283,7 +272,7 @@ export default function DeterminantsExamEdge() {
           Showing a fresh set of {questionDeskItems.length} exam-style questions for {currentTab.name}.
         </p>
 
-        {activeTab === "jeeAdvanced" ? (
+        {activeTab === "board" ? (
           <div style={{ display: "grid", gap: 20, marginBottom: 40 }}>
             {questionDeskItems.map(({ item, questionNumber }) => (
               <div

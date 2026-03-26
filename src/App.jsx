@@ -606,6 +606,22 @@ import ChemReactionsConnectomics from './components/science/grade10/ChemicalReac
 import ChemReactionsExamEdge from './components/science/grade10/ChemicalReactions/Topics/ExamEdge/ChemReactionsExamEdge';
 import ChemReactionsVirtualLab from './components/science/grade10/ChemicalReactions/Topics/VirtualLab/ChemReactionsVirtualLab';
 
+// Class 6 Science: Wonderful World of Science
+import WonderfulWorldOfScienceDashboard from './components/science/grade6/WonderfulWorldOfScience/WonderfulWorldOfScienceDashboard';
+import WWSIntro from './components/science/grade6/WonderfulWorldOfScience/Topics/Introduction/WWSIntro';
+import WWSTerminology from './components/science/grade6/WonderfulWorldOfScience/Topics/Terminology/WWSTerminology';
+import WWSCoreConcepts from './components/science/grade6/WonderfulWorldOfScience/Topics/CoreConcepts/WWSCoreConcepts';
+import WWSConnectomics from './components/science/grade6/WonderfulWorldOfScience/Topics/Connectomics/WWSConnectomics';
+import WWSVirtualLab from './components/science/grade6/WonderfulWorldOfScience/Topics/VirtualLab/WWSVirtualLab';
+
+// Class 5 Science: Water — The Essence of Life
+import WaterEssenceOfLifeDashboard from './components/science/grade5/WaterEssenceOfLife/WaterEssenceOfLifeDashboard';
+import WELIntro from './components/science/grade5/WaterEssenceOfLife/Topics/Introduction/WELIntro';
+import WELTerminology from './components/science/grade5/WaterEssenceOfLife/Topics/Terminology/WELTerminology';
+import WELCoreConcepts from './components/science/grade5/WaterEssenceOfLife/Topics/CoreConcepts/WELCoreConcepts';
+import WELConnectomics from './components/science/grade5/WaterEssenceOfLife/Topics/Connectomics/WELConnectomics';
+import WELVirtualLab from './components/science/grade5/WaterEssenceOfLife/Topics/VirtualLab/WELVirtualLab';
+
 // Grade 8 Science: Investigative Science
 import InvestigativeScienceDashboard from './components/science/grade8/ExploringInvestigativeScience/InvestigativeScienceDashboard';
 import ScienceIntro from './components/science/grade8/ExploringInvestigativeScience/Topics/Introduction/ScienceIntro';
@@ -898,6 +914,21 @@ function App() {
           <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
           <Route path="/senior/grade/10/science/chemical-reactions/virtual-lab" element={<ChemReactionsVirtualLab />} />
 
+          {/* Grade 6 Science */}
+          <Route path="/middle/grade/6/science/wonderful-world-of-science" element={<WonderfulWorldOfScienceDashboard />} />
+          <Route path="/middle/grade/6/science/wonderful-world-of-science/introduction" element={<WWSIntro />} />
+          <Route path="/middle/grade/6/science/wonderful-world-of-science/terminology" element={<WWSTerminology />} />
+          <Route path="/middle/grade/6/science/wonderful-world-of-science/core-concepts" element={<WWSCoreConcepts />} />
+          <Route path="/middle/grade/6/science/wonderful-world-of-science/connectomics" element={<WWSConnectomics />} />
+          <Route path="/middle/grade/6/science/wonderful-world-of-science/virtual-lab" element={<WWSVirtualLab />} />
+
+          {/* Grade 5 Science */}
+          <Route path="/middle/grade/5/science/water-essence-of-life" element={<WaterEssenceOfLifeDashboard />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/introduction" element={<WELIntro />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/terminology" element={<WELTerminology />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/core-concepts" element={<WELCoreConcepts />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/connectomics" element={<WELConnectomics />} />
+          <Route path="/middle/grade/5/science/water-essence-of-life/virtual-lab" element={<WELVirtualLab />} />
           {/* Grade 8 Science */}
           <Route path="/senior/grade/8/science/investigative-science" element={<InvestigativeScienceDashboard />} />
           <Route path="/senior/grade/8/science/investigative-science/introduction" element={<ScienceIntro />} />
