@@ -193,6 +193,19 @@ const MiddleGradeSyllabus = () => {
                 const response = await api.getSkills(gradeNum);
                 let fetched = response || [];
 
+                if (gradeNum === '6') {
+                    fetched = [
+                        {
+                            skill_id: 'local-patterns-in-mathematics',
+                            skill_name: 'Patterns in Mathematics: Interactive Chapter',
+                            topic: 'Patterns',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/patterns-in-mathematics'
+                        }
+                    ];
+                }
+
                 if (gradeNum === '7') {
                     fetched = [
                         ...fetched,
@@ -1107,50 +1120,6 @@ const MiddleGradeSyllabus = () => {
     }
 
 
-    // Manual Override for Grade 6 Perimeter and Area
-    if (parseInt(grade.replace('grade', '')) === 6) {
-        skillsByTopic['Perimeter and Area'] = {
-            'Main': [
-                { skill_id: 'rect-6', skill_name: 'Rectangle', topic: 'Perimeter and Area' },
-                { skill_id: 'sq-6', skill_name: 'Square', topic: 'Perimeter and Area' },
-                { skill_id: 'tri-6', skill_name: 'Triangle', topic: 'Perimeter and Area' },
-                { skill_id: 'poly-6', skill_name: 'Regular Polygon', topic: 'Perimeter and Area' },
-                { skill_id: 'mixed-6', skill_name: 'Mixed Bag', topic: 'Perimeter and Area' }
-            ]
-        };
-        skillsByTopic['Patterns in Mathematics'] = {
-            'Main': [
-                { skill_id: 'patterns-6', skill_name: 'Intro to Patterns', topic: 'Patterns in Mathematics' },
-                { skill_id: 'shapes-6', skill_name: 'Patterns in Shapes', topic: 'Patterns in Mathematics' },
-                { skill_id: 'relations-6', skill_name: 'Relations among Number Sequences', topic: 'Patterns in Mathematics' }
-            ]
-        };
-        skillsByTopic['Number Play'] = {
-            'Main': [
-                { skill_id: 'numbers-things-6', skill_name: 'Numbers can Tell us Things', topic: 'Number Play' },
-                { skill_id: 'supercells-6', skill_name: 'Supercells', topic: 'Number Play' },
-                { skill_id: 'growing-patterns-6', skill_name: 'Growing Patterns', topic: 'Number Play' },
-                { skill_id: 'playing-digits-6', skill_name: 'Playing with Digits', topic: 'Number Play' }
-            ]
-        };
-        skillsByTopic['Data Handling and Presentation'] = {
-            'Main': [
-                { skill_id: 'data-handling-6', skill_name: 'Collecting and Organising Data', topic: 'Data Handling and Presentation' },
-                { skill_id: 'pictographs-6', skill_name: 'Pictographs', topic: 'Data Handling and Presentation' },
-                { skill_id: 'drawing-bar-graph-6', skill_name: 'Drawing a Bar Graph', topic: 'Data Handling and Presentation' },
-                { skill_id: 'bar-graphs-6', skill_name: 'Bar Graphs', topic: 'Data Handling and Presentation' },
-                { skill_id: 'figure-it-out-6', skill_name: 'Figure It Out', topic: 'Data Handling and Presentation' }
-            ]
-        };
-        skillsByTopic['Symmetry'] = {
-            'Main': [
-                { skill_id: 'sym-intro-6', skill_name: 'Introduction to Symmetry', topic: 'Symmetry' },
-                { skill_id: 'sym-refl-6', skill_name: 'Reflection in a Line', topic: 'Symmetry' },
-                { skill_id: 'sym-rot-6', skill_name: 'Rotational Symmetry', topic: 'Symmetry' },
-                { skill_id: 'sym-order-6', skill_name: 'Order of Rotational Symmetry', topic: 'Symmetry' }
-            ]
-        };
-    }
 
     if (loading) return <div className="middle-loading">Loading syllabus...</div>;
 
