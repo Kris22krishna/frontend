@@ -187,8 +187,22 @@ export const TOPIC_CONFIGS = {
             { id: "HH2-08", name: "The Number Detective" },
             { id: "HH2-09", name: "Paper Slips" },
             { id: "HH2-TEST", name: "Chapter Test", route: "chapter-test" }
+        ],
+        'Time Goes On': [
+            { id: "TGO-01", name: "Reading days and dates from a calendar", route: "reading-calendar" },
+            { id: "TGO-02", name: "Calculating future and past dates", route: "future-past-dates" },
+            { id: "TGO-03", name: "Constructing and completing a calendar", route: "constructing-calendar" },
+            { id: "TGO-04", name: "Understanding months, days, and year structure", route: "months-days-year" },
+            { id: "TGO-05", name: "Comparing calendars and identifying patterns", route: "comparing-calendars" },
+            { id: "TGO-06", name: "Solving age-based problems", route: "age-problems" },
+            { id: "TGO-07", name: "Reading and using dates (real-life context)", route: "reading-dates" },
+            { id: "TGO-08", name: "Calculating age and duration between dates", route: "age-duration" },
+            { id: "TGO-09", name: "Reading, representing, and calculating time on clocks", route: "clock-time" },
+            { id: "TGO-10", name: "Understanding time durations and daily activities", route: "time-durations" },
+            { id: "TGO-TEST", name: "Chapter Test", route: "chapter-test" }
         ]
     },
+
     '4': {
         'The Cleanest Village': [
             { id: "CV-01", name: "Repeated Addition", route: "repeated-addition" },
