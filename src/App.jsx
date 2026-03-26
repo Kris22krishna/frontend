@@ -217,6 +217,18 @@ import RakshaBandhanTest from './components/practice/class-3/Raksha-Bandhan/Raks
 import FairShareTest from './components/practice/class-3/fair-share/FairShareTest';
 import FunAtClassPartyTest from './components/practice/class-3/Fun-at-class-party/FunAtClassPartyTest';
 import HouseOfHundredsIITest from './components/practice/class-3/House-of-Hundreds-II/HouseOfHundredsIITest';
+// Time Goes On
+import ReadingCalendar from './components/practice/class-3/Time-Goes-On/reading-calendar';
+import FuturePastDates from './components/practice/class-3/Time-Goes-On/future-past-dates';
+import ConstructingCalendar from './components/practice/class-3/Time-Goes-On/constructing-calendar';
+import MonthsDaysYear from './components/practice/class-3/Time-Goes-On/months-days-year';
+import ComparingCalendars from './components/practice/class-3/Time-Goes-On/comparing-calendars';
+import AgeProblems from './components/practice/class-3/Time-Goes-On/age-problems';
+import ReadingDates from './components/practice/class-3/Time-Goes-On/reading-dates';
+import AgeDuration from './components/practice/class-3/Time-Goes-On/age-duration';
+import ClockTime from './components/practice/class-3/Time-Goes-On/clock-time';
+import TimeDurations from './components/practice/class-3/Time-Goes-On/time-durations';
+import TimeGoesOnTest from './components/practice/class-3/Time-Goes-On/TimeGoesOnTest';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -1293,6 +1305,19 @@ function App() {
             <HouseOfHundredsIITest />
           </ProtectedRoute>
         } />
+
+        {/* Time Goes On Routes */}
+        <Route path="/junior/grade/:grade/time-goes-on/reading-calendar" element={<ProtectedRoute redirectTo="/login"><ReadingCalendar /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/future-past-dates" element={<ProtectedRoute redirectTo="/login"><FuturePastDates /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/constructing-calendar" element={<ProtectedRoute redirectTo="/login"><ConstructingCalendar /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/months-days-year" element={<ProtectedRoute redirectTo="/login"><MonthsDaysYear /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/comparing-calendars" element={<ProtectedRoute redirectTo="/login"><ComparingCalendars /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/age-problems" element={<ProtectedRoute redirectTo="/login"><AgeProblems /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/reading-dates" element={<ProtectedRoute redirectTo="/login"><ReadingDates /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/age-duration" element={<ProtectedRoute redirectTo="/login"><AgeDuration /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/clock-time" element={<ProtectedRoute redirectTo="/login"><ClockTime /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/time-durations" element={<ProtectedRoute redirectTo="/login"><TimeDurations /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/time-goes-on/chapter-test" element={<ProtectedRoute redirectTo="/login"><TimeGoesOnTest /></ProtectedRoute>} />
 
         {/* Grade 8 Exponents and Powers - Negative Exponents */}
         <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
