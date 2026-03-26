@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { wonderfulWorldConnectomicsData } from './WonderfulWorldScienceConnectomicsData';
-import styles from '../../WonderfulWorldScienceDashboard.module.css';
+import { wonderfulWorldConnectomicsData } from './EverEvolvingScienceConnectomicsData';
+import styles from '../../EverEvolvingScienceDashboard.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { Share2 } from 'lucide-react';
 
-export default function WonderfulWorldScienceConnectomics() {
+export default function EverEvolvingScienceConnectomics() {
     const navigate = useNavigate();
 
     useEffect(() => {

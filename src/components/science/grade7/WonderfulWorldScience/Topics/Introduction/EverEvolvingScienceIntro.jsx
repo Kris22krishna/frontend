@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { wonderfulWorldIntroData } from './WonderfulWorldScienceIntroData';
-import styles from '../../WonderfulWorldScienceDashboard.module.css';
+import { wonderfulWorldIntroData } from './EverEvolvingScienceIntroData';
+import styles from '../../EverEvolvingScienceDashboard.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 
 /* ── Single card ─────────────────────────────────── */
@@ -76,7 +76,7 @@ function W1HCard({ card }) {
 }
 
 /* ── Main page ───────────────────────────────────── */
-export default function WonderfulWorldScienceIntro() {
+export default function EverEvolvingScienceIntro() {
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import styles from './WonderfulWorldScienceDashboard.module.css';
+import styles from './EverEvolvingScienceDashboard.module.css';
 
 const STATS = [
     { label: 'Core Concepts', num: '3', color: '#6366f1' },
@@ -49,7 +49,7 @@ const MODULES = [
     }
 ];
 
-export default function WonderfulWorldScienceDashboard() {
+export default function EverEvolvingScienceDashboard() {
     const navigate = useNavigate();
 
     useEffect(() => {

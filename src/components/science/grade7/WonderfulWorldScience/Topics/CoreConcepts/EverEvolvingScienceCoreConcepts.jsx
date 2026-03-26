@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CORE_CONCEPTS } from './WonderfulWorldScienceCoreConceptsData';
-import styles from '../../WonderfulWorldScienceDashboard.module.css';
+import { CORE_CONCEPTS } from './EverEvolvingScienceCoreConceptsData';
+import styles from '../../EverEvolvingScienceDashboard.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 
 import WWSPracticeEngine from '../../Engines/WWSPracticeEngine';
@@ -9,7 +9,7 @@ import WWSAssessmentEngine from '../../Engines/WWSAssessmentEngine';
 import wwsStyles from '../../wonderfulworldscience.module.css';
 
 /* ── Main Component ─────────────────────────────────────────────── */
-export default function WonderfulWorldScienceCoreConcepts() {
+export default function EverEvolvingScienceCoreConcepts() {
     const navigate = useNavigate();
     const [activeSkillIdx, setActiveSkillIdx] = useState(null);
     const [view, setView] = useState('list'); // 'list' | 'learn' | 'practice' | 'assess'

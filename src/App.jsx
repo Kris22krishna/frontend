@@ -598,11 +598,11 @@ import CoordinateGeometrySkills from './components/practice/class-10/CoordinateG
 import CoordinateGeometryConnectomics from './components/practice/class-10/CoordinateGeometry/Topics/Connectomics/CoordinateGeometryConnectomics';
 
 // Grade 7 Science: The Ever-Evolving World of Science
-import WonderfulWorldScienceDashboard from './components/science/grade7/WonderfulWorldScience/WonderfulWorldScienceDashboard';
-import WonderfulWorldScienceIntro from './components/science/grade7/WonderfulWorldScience/Topics/Introduction/WonderfulWorldScienceIntro';
-import WonderfulWorldScienceTerminology from './components/science/grade7/WonderfulWorldScience/Topics/Terminology/WonderfulWorldScienceTerminology';
-import WonderfulWorldScienceCoreConcepts from './components/science/grade7/WonderfulWorldScience/Topics/CoreConcepts/WonderfulWorldScienceCoreConcepts';
-import WonderfulWorldScienceConnectomics from './components/science/grade7/WonderfulWorldScience/Topics/Connectomics/WonderfulWorldScienceConnectomics';
+import EverEvolvingScienceDashboard from './components/science/grade7/WonderfulWorldScience/EverEvolvingScienceDashboard';
+import EverEvolvingScienceIntro from './components/science/grade7/WonderfulWorldScience/Topics/Introduction/EverEvolvingScienceIntro';
+import EverEvolvingScienceTerminology from './components/science/grade7/WonderfulWorldScience/Topics/Terminology/EverEvolvingScienceTerminology';
+import EverEvolvingScienceCoreConcepts from './components/science/grade7/WonderfulWorldScience/Topics/CoreConcepts/EverEvolvingScienceCoreConcepts';
+import EverEvolvingScienceConnectomics from './components/science/grade7/WonderfulWorldScience/Topics/Connectomics/EverEvolvingScienceConnectomics';
 
 // Class 10 Science: Chemical Reactions
 import ChemicalReactionsDashboard from './components/science/grade10/ChemicalReactions/ChemicalReactionsDashboard';
@@ -913,11 +913,11 @@ function App() {
           <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
           
           {/* Grade 7 Science */}
-          <Route path="/middle/grade/7/science/wonderful-world-science" element={<WonderfulWorldScienceDashboard />} />
-          <Route path="/middle/grade/7/science/wonderful-world-science/introduction" element={<WonderfulWorldScienceIntro />} />
-          <Route path="/middle/grade/7/science/wonderful-world-science/terminology" element={<WonderfulWorldScienceTerminology />} />
-          <Route path="/middle/grade/7/science/wonderful-world-science/core-concepts" element={<WonderfulWorldScienceCoreConcepts />} />
-          <Route path="/middle/grade/7/science/wonderful-world-science/connectomics" element={<WonderfulWorldScienceConnectomics />} />
+          <Route path="/middle/grade/7/science/wonderful-world-science" element={<EverEvolvingScienceDashboard />} />
+          <Route path="/middle/grade/7/science/wonderful-world-science/introduction" element={<EverEvolvingScienceIntro />} />
+          <Route path="/middle/grade/7/science/wonderful-world-science/terminology" element={<EverEvolvingScienceTerminology />} />
+          <Route path="/middle/grade/7/science/wonderful-world-science/core-concepts" element={<EverEvolvingScienceCoreConcepts />} />
+          <Route path="/middle/grade/7/science/wonderful-world-science/connectomics" element={<EverEvolvingScienceConnectomics />} />
 
           {/* Grade 10 Science */}
           <Route path="/senior/grade/10/science/chemical-reactions" element={<ChemicalReactionsDashboard />} />

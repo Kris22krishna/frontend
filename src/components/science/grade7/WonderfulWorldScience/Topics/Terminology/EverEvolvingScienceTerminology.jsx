@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../WonderfulWorldScienceDashboard.module.css';
+import styles from '../../EverEvolvingScienceDashboard.module.css';
 import MathRenderer from '../../../../../MathRenderer';
-import { TERMS, COOL_CONTEXTS, VOCAB_QUIZ } from './WonderfulWorldScienceTerminologyData';
+import { TERMS, COOL_CONTEXTS, VOCAB_QUIZ } from './EverEvolvingScienceTerminologyData';
 
-export default function WonderfulWorldScienceTerminology() {
+export default function EverEvolvingScienceTerminology() {
     const navigate = useNavigate();
 
     useEffect(() => {
