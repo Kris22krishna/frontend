@@ -1049,127 +1049,13 @@ const MiddleGradeSyllabus = () => {
         };
 
         skillsByTopic['Can you see the Pattern ?'] = {
-            'Pattern Recognition': [
-                {
-                    skill_id: '2001',
-                    skill_name: 'Pattern Identification',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Pattern Recognition',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/pattern-identification'
-                },
-                {
-                    skill_id: '2002',
-                    skill_name: 'Rule-based Pattern Creation',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Pattern Recognition',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/rule-pattern-creation'
-                },
-                {
-                    skill_id: '2003',
-                    skill_name: 'Understanding Rotations',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Pattern Recognition',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/rotations'
-                },
-                {
-                    skill_id: '2004',
-                    skill_name: 'Grid Pattern Recognition',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Pattern Recognition',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/grid-patterns'
-                }
-            ],
-            'Number properties': [
-                {
-                    skill_id: '2005',
-                    skill_name: 'Properties of Operation',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Number properties',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/properties-of-operation'
-                },
-                {
-                    skill_id: '2006',
-                    skill_name: 'Digit Relationships',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Number properties',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/digit-relationships'
-                },
-                {
-                    skill_id: '2007',
-                    skill_name: 'Palindrome Recognition',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Number properties',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/palindromes'
-                },
-                {
-                    skill_id: '2008',
-                    skill_name: 'Structured Number Patterns',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Number properties',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/structured-patterns'
-                }
-            ],
-            'Logical Reasoning': [
-                {
-                    skill_id: '2009',
-                    skill_name: 'Rule Applications',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Logical Reasoning',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/rule-applications'
-                },
-                {
-                    skill_id: '2010',
-                    skill_name: 'Multi-step Operations',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Logical Reasoning',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/multi-step-operations'
-                },
-                {
-                    skill_id: '2011',
-                    skill_name: 'Missing Number Reasoning',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Logical Reasoning',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/missing-numbers'
-                },
-                {
-                    skill_id: '2012',
-                    skill_name: 'Mental Calculation Reasoning',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Logical Reasoning',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/mental-calculation'
-                }
-            ],
-            'Skill Application Problems': [
-                {
-                    skill_id: '2013',
-                    skill_name: 'Skill Application Problems',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Skill Application Problems',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/skill-application'
-                }
+            'Learn': [
+                { skill_id: 'PT-5W1H', skill_name: '5W1H Introduction', topic: 'Can you see the Pattern ?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/canyouseethepatterns/introduction' },
+                { skill_id: 'PT-TERM', skill_name: 'Terminology', topic: 'Can you see the Pattern ?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/canyouseethepatterns/terminology' },
+                { skill_id: 'PT-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Can you see the Pattern ?', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/canyouseethepatterns/skills' }
             ],
             'Chapter Test': [
-                {
-                    skill_id: '2000',
-                    skill_name: 'Chapter Test',
-                    topic: 'Can you see the Pattern ?',
-                    sub_topic: 'Chapter Test',
-                    isLocal: true,
-                    path: '/middle/grade/5/can-you-see-the-pattern/chapter-test'
-                }
+                { skill_id: 'PT-TEST', skill_name: 'Chapter Test', topic: 'Can you see the Pattern ?', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/canyouseethepatterns/chapter-test' }
             ]
         };
     }

@@ -66,7 +66,7 @@ const DiagnosisTestRunner = () => {
                             setTimeLeft(realTimeLeft);
                             setIsSubmitted(false);
                         }
-                        
+
                         setLoading(false);
                         return; // Successfully restored, skip loading new questions
                     }
@@ -178,9 +178,9 @@ const DiagnosisTestRunner = () => {
         const timer = setInterval(() => {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
             const remaining = Math.max(0, (30 * 60) - elapsed);
-            
+
             setTimeLeft(remaining);
-            
+
             if (remaining <= 0) {
                 clearInterval(timer);
                 setIsSubmitted(true);
