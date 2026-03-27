@@ -1,0 +1,2264 @@
+/* =====================================================
+   REAL NUMBERS MODULE – Modular Design
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── TOKENS ─────────────────────────────────────────── */
+:root {
+  --wel-teal: #0d9488;
+  --wel-indigo: #4f46e5;
+  --wel-violet: #7c3aed;
+  --wel-blue: #2563eb;
+  --wel-text: #0f172a;
+  --wel-muted: #64748b;
+  --wel-card: #ffffff;
+  --wel-border: #e2e8f0;
+  --wel-success: #10b981;
+  --wel-wrong: #ef4444;
+  --wel-red: #ef4444;
+  --wel-r: 14px;
+  --wel-rlg: 20px;
+  --wel-sh: 0 4px 20px rgba(0, 0, 0, 0.09);
+  --wel-shlg: 0 12px 40px rgba(0, 0, 0, 0.14);
+}
+
+/* ══════════════════════════════════════════════════════
+   FULL-VIEWPORT LANDING PAGE (RealNumbersDashboard)
+   ══════════════════════════════════════════════════════ */
+
+.wel-fullpage {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.wel-left {
+  position: relative;
+  flex: 0 0 46%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 56px 48px 48px 56px;
+  overflow: hidden;
+  background: linear-gradient(145deg,
+      #1e1b4b 0%,
+      #312e81 25%,
+      #4338ca 50%,
+      #581c87 75%,
+      #4c1d95 100%);
+}
+
+.wel-deco {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.wel-deco-a {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+  top: -80px;
+  left: -80px;
+}
+
+.wel-deco-b {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.25) 0%, transparent 70%);
+  bottom: -60px;
+  right: -40px;
+}
+
+.wel-left-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.wel-main-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+}
+
+.wel-title-accent {
+  background: linear-gradient(90deg, #818cf8 0%, #a5f3fc 40%, #fef9c3 80%, #fde68a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wel-main-sub {
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.75;
+  max-width: 400px;
+  margin: 0 0 36px;
+  font-weight: 400;
+}
+
+.wel-stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.wel-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 14px 20px;
+  min-width: 80px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.wel-stat:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.wel-stat-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.wel-stat-lbl {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 5px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.wel-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 40px 40px 36px;
+  background: #f8fafc;
+}
+
+.wel-right-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--wel-indigo);
+  margin: 0 0 20px 4px;
+}
+
+.wel-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wel-card-btn {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--wel-border);
+  border-radius: var(--wel-rlg);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.wel-card-btn:hover {
+  transform: translateX(6px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  border-color: var(--wel-indigo);
+}
+
+.wel-card-strip {
+  width: 6px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.wel-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  margin: 20px 18px 20px 20px;
+}
+
+.wel-card-text {
+  flex: 1;
+  padding: 18px 0;
+}
+
+.wel-card-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 3px;
+  color: var(--wel-text);
+}
+
+.wel-card-tagline {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--wel-muted);
+  margin-bottom: 6px;
+}
+
+.wel-card-desc {
+  font-size: 13px;
+  color: var(--wel-muted);
+  line-height: 1.55;
+  max-width: 340px;
+}
+
+.wel-card-chevron {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 0 22px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  transform: translateX(-6px);
+  color: var(--wel-indigo);
+}
+
+.wel-card-btn:hover .wel-card-chevron {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── SHARED TOPIC PAGE CLASSES ─────────────────────── */
+
+.wel-page {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f8fafc;
+  color: var(--wel-text);
+  min-height: 100vh;
+}
+
+.wel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.wel-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--wel-indigo);
+  background: rgba(79, 70, 229, 0.08);
+  border: 1.5px solid rgba(79, 70, 229, 0.2);
+  border-radius: 100px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wel-nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.wel-nav-link {
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1.5px solid rgba(79, 70, 229, 0.18);
+  background: linear-gradient(180deg, #ffffff 0%, #eef4ff 100%);
+  color: #334155;
+  box-shadow: 0 6px 18px rgba(148, 163, 184, 0.14);
+}
+
+.wel-nav-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(79, 70, 229, 0.32);
+  background: linear-gradient(180deg, #ffffff 0%, #e7efff 100%);
+  color: var(--wel-indigo);
+}
+
+.wel-nav-link:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.22);
+  outline-offset: 2px;
+}
+
+.wel-nav-link.active {
+  background: linear-gradient(135deg, #5b6cf7 0%, #7c3aed 100%);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.34);
+}
+
+.wel-hero {
+  background: linear-gradient(145deg, #1e1b4b 0%, #312e81 100%);
+  padding: 48px 24px;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.wel-hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.wel-hero-sub {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── 5W1H CARDS ────────────────────────────────────── */
+
+.wel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wel-intro-card {
+  background: #fff;
+  border: 1px solid var(--wel-border);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--wel-sh);
+}
+
+.wel-intro-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--wel-shlg);
+  border-color: var(--wel-indigo);
+}
+
+.wel-intro-card-header {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wel-intro-card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #fff;
+}
+
+.wel-intro-card-q {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--wel-text);
+}
+
+.wel-intro-card-body {
+  padding: 0 24px 24px;
+  animation: rnFadeIn 0.3s ease;
+}
+
+.wel-intro-card-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--wel-muted);
+  margin-bottom: 16px;
+}
+
+.wel-intro-card-fact {
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(79, 70, 229, 0.05);
+  border: 1px solid rgba(79, 70, 229, 0.1);
+}
+
+@keyframes rnFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TERMINOLOGY ───────────────────────────────────── */
+
+.wel-term-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wel-term-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid var(--wel-border);
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.wel-term-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--wel-indigo);
+  box-shadow: var(--wel-shlg);
+}
+
+.wel-term-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--wel-indigo);
+}
+
+.wel-term-def {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--wel-muted);
+  margin-bottom: 16px;
+}
+
+.wel-term-ex {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  border-left: 4px solid var(--wel-indigo);
+}
+
+/* ── RULES ─────────────────────────────────────────── */
+
+.wel-rules-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.wel-rule-item {
+  display: flex;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid var(--wel-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+.wel-rule-item:hover {
+  transform: translateX(10px);
+  border-color: var(--wel-indigo);
+}
+
+.wel-rule-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--wel-indigo);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.wel-rule-content h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.wel-rule-content p {
+  font-size: 15px;
+  color: var(--wel-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── SKILLS DASHBOARD ─────────────────────────────── */
+
+.wel-skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.wel-skill-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 20px;
+  padding: 24px 32px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.wel-skill-card:hover {
+  transform: translateX(10px);
+  border-color: var(--skill-color);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.wel-skill-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.wel-skill-info {
+  flex: 1;
+}
+
+.wel-skill-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: var(--wel-text);
+}
+
+.wel-skill-desc {
+  font-size: 14px;
+  color: var(--wel-muted);
+}
+
+.wel-skill-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.wel-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.wel-btn-outline {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  color: var(--wel-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+}
+
+.wel-btn-outline:hover:not(:disabled) {
+  border-color: var(--wel-indigo);
+  color: var(--wel-indigo);
+  background: rgba(79, 70, 229, 0.02);
+  transform: translateX(-2px);
+}
+
+.wel-btn-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wel-btn-filled {
+  background: var(--skill-color, var(--wel-indigo));
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.wel-btn-filled:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  filter: brightness(1.1);
+}
+
+/* ── TERMINOLOGY MASTER-DETAIL ──────────────────────── */
+
+.wel-lexicon-container {
+  max-width: 1100px;
+  margin: 40px auto 20px;
+  padding: 0 24px;
+}
+
+.wel-lexicon-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.wel-selector-container {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: grid;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.wel-term-btn-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  font-family: 'Outfit', sans-serif;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+}
+
+.wel-term-btn-mini:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.wel-term-btn-mini.active {
+  background: var(--wel-indigo);
+  color: #fff;
+  border-color: var(--wel-indigo);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+}
+
+.wel-details-window {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  min-height: 330px;
+  animation: rnSlideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+}
+
+.wel-topic-shell {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@keyframes rnSlideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── QUIZ LAYOUT ────────────────────────────────────── */
+
+.wel-quiz-window {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  animation: rnSlideInRight 0.4s ease;
+}
+
+.wel-quiz-option {
+  padding: 16px 24px;
+  border-radius: 14px;
+  border: 3px solid rgba(0, 0, 0, 0.05);
+  background: #fff;
+  font-weight: 600;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.wel-quiz-option:hover:not(:disabled) {
+  border-color: var(--wel-indigo);
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.wel-quiz-option.correct {
+  border-color: var(--wel-success);
+  background: rgba(16, 185, 129, 0.05);
+  color: var(--wel-success);
+}
+
+.wel-quiz-option.wrong {
+  border-color: var(--wel-wrong);
+  background: rgba(239, 68, 68, 0.05);
+  color: var(--wel-wrong);
+}
+
+/* ── ASSESSMENT & SKILLS SPECIFIC (Preserved) ─────────── */
+
+.wel-assess-layout {
+  display: flex;
+  gap: 24px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.wel-assess-main {
+  flex: 1;
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.wel-assess-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+.wel-palette-window {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.wel-responsive-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Skills Selection Mobile */
+.sl-selection-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sl-item-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+}
+
+.sl-item-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.sl-item-info {
+  flex: 1;
+}
+
+.sl-item-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.sl-item-desc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ── VIRTUAL LAB ──────────────────────────────────────── */
+
+.wel-lab-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.wel-lab-stage {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.wel-card-exp { grid-column: 1; grid-row: 1; }
+.wel-card-obs { grid-column: 1; grid-row: 2; }
+.wel-card-safety { grid-column: 1; grid-row: 3; }
+.wel-card-scene { grid-column: 2; grid-row: 1 / span 3; position: sticky; top: 100px; }
+
+/* ── CORE CONCEPTS ──────────────────────────────────── */
+
+.wel-concept-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 24px 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: all 0.3s ease;
+}
+
+.wel-concept-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+.wel-concept-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+}
+
+.wel-concept-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  background: var(--skill-color-15);
+  color: var(--skill-color);
+}
+
+.wel-concept-info {
+  flex: 1;
+  text-align: left;
+}
+
+.wel-concept-info h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 0 0 4px;
+}
+
+.wel-concept-info p {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+  margin: 0;
+}
+
+.wel-concept-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.wel-concept-btn {
+  padding: 10px 22px;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  color: #1e293b;
+}
+
+.wel-concept-btn.assess {
+  background: var(--skill-color);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px var(--skill-color-40);
+  font-weight: 800;
+}
+
+/* ── EXAM EDGE & CONNECTOMICS ────────────────────────── */
+
+.wel-stat-card {
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--skill-color-20);
+  background: var(--skill-color-08);
+  transition: all 0.3s;
+}
+
+.wel-stat-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--skill-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.wel-stat-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1e1b4b;
+  font-family: 'Outfit', sans-serif;
+}
+
+.wel-connection-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.wel-connection-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.wel-connection-type {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── RESPONSIVE OVERRIDES ───────────────────────────── */
+
+@media (max-width: 1024px) {
+  .wel-fullpage {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .wel-left {
+    flex: none;
+    width: 100%;
+    padding: 32px 24px;
+    min-height: 320px;
+  }
+
+  .wel-right {
+    flex: none;
+    width: 100%;
+    height: auto !important;
+    padding: 24px 16px 48px;
+  }
+
+  .wel-assess-layout {
+    flex-direction: column;
+  }
+
+  .wel-assess-sidebar, .wel-assess-main {
+    width: 100%;
+  }
+
+  .wel-page, .skills-page {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  .wel-lexicon-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .wel-nav {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+    align-items: stretch;
+  }
+
+  .wel-nav-links {
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .wel-nav-links::-webkit-scrollbar { display: none; }
+
+  .wel-nav-link {
+    font-size: 13px;
+    padding: 9px 14px;
+    flex-shrink: 0;
+  }
+
+  .wel-hero-title {
+    font-size: 2rem;
+  }
+  
+  .wel-skill-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 24px;
+  }
+  
+  .wel-subtabs {
+    display: flex;
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    gap: 8px !important;
+    padding: 2px 4px 12px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  .wel-subtabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wel-subtabs > button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  /* Terminology Mastery/Detail Mobile scroll */
+  .wel-selector-container {
+      display: flex !important;
+      flex-direction: row !important;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px 4px 14px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 0;
+      background: transparent;
+      backdrop-filter: none;
+      border: none;
+      margin-bottom: 16px;
+  }
+  
+  .wel-selector-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .wel-term-btn-mini {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 130px;
+  }
+
+  .wel-details-window {
+    padding: 20px 16px;
+    min-height: auto;
+  }
+
+  .wel-details-window h2 {
+    font-size: 24px !important;
+  }
+  
+  .wel-lexicon-container {
+    padding: 0 16px;
+    margin-top: 24px;
+  }
+
+  .wel-topic-shell {
+    padding: 24px 16px !important;
+  }
+
+  .wel-stat-card {
+    padding: 16px;
+  }
+  
+  .wel-stat-value {
+    font-size: 20px;
+  }
+
+  .wel-connection-card {
+    padding: 20px 16px;
+  }
+
+  .wel-topic-cta, .wel-topic-banner {
+    padding: 24px 16px !important;
+    text-align: center;
+    flex-direction: column;
+  }
+
+  .wel-topic-cta h3, .wel-topic-banner h2 {
+    font-size: 18px !important;
+  }
+
+  .wel-topic-cta p, .wel-topic-banner p {
+    font-size: 14px !important;
+  }
+
+  .wel-topic-cta-button {
+    width: 100%;
+  }
+
+  .wel-skill-actions {
+      width: 100%;
+      flex-direction: column;
+  }
+
+  /* Core Concepts Mobile Overrides */
+  .wel-concept-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 24px 20px;
+    gap: 24px;
+  }
+  
+  .wel-concept-header {
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .wel-concept-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+  
+  .wel-concept-info h3 {
+    font-size: 18px;
+  }
+  
+  .wel-concept-info p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .wel-concept-actions {
+    width: 100%;
+    gap: 8px; /* Fit 3 buttons side-by-side */
+    justify-content: space-between;
+  }
+  
+  .wel-concept-btn {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  /* Virtual Lab Mobile Overrides */
+  .wel-lab-picker {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    gap: 12px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .wel-lab-picker::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wel-lab-picker > button {
+    flex: 0 0 auto;
+    width: 140px;
+    padding: 10px 12px !important;
+  }
+  
+  .wel-lab-picker > button > div:nth-child(1) {
+    font-size: 18px !important;
+    margin-bottom: 3px !important;
+  }
+  
+  .wel-lab-picker > button > div:nth-child(2) {
+    font-size: 11px !important;
+  }
+
+  .wel-lab-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .wel-card-exp { order: 1; }
+  .wel-card-scene { order: 2; }
+  .wel-card-obs { order: 3; }
+  .wel-card-safety { order: 4; }
+}
+
+/* ── UTILITIES (Preserved for Skills) ──────────────── */
+.skills-desktop-only { display: block; }
+.skills-mobile-only { display: none; }
+
+@media (max-width: 1024px) {
+    .skills-desktop-only { display: none !important; }
+    .skills-mobile-only { display: block !important; }
+}
+
+.sl-detail-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+.sl-example-box {
+    background: #f8fafc;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+}
+
+.sl-detail-footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.sl-footer-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+}
+
+/* ── INTRO PAGE ─────────────────────────────────── */
+
+.wel-section-header {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #4f46e5;
+}
+
+.wel-section-header--violet {
+  color: #8b5cf6;
+}
+
+.wel-section-mb {
+  margin-bottom: 60px;
+}
+
+.wel-prereq-card {
+  --skill-color: #4f46e5;
+  --skill-color-15: #4f46e515;
+  --skill-color-40: #4f46e540;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.wel-prereq-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.wel-prereq-title {
+  font-size: 20px;
+  font-weight: 900;
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-family: 'Outfit', sans-serif;
+}
+
+.wel-prereq-desc {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.wel-card-label-sub {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.wel-card-chevron-inline {
+  transition: all 0.3s ease;
+}
+
+.wel-card-chevron-inline--open {
+  transform: rotate(180deg);
+}
+
+.wel-topic-cta {
+  margin-top: 60px;
+  padding: 32px;
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  border-radius: 24px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.wel-topic-cta h3 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.wel-topic-cta p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.wel-topic-cta-button {
+  padding: 12px 28px;
+  background: #fff;
+  color: #1e1b4b;
+  border: none;
+  border-radius: 100px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.wel-topic-cta-button:hover {
+  opacity: 0.9;
+}
+
+/* ── TOPIC SHELL ─────────────────────────────────── */
+
+.wel-topic-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ── SECTION HEADINGS ─────────────────────────────── */
+
+.wel-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 32px;
+  text-align: center;
+  color: #1e1b4b;
+}
+
+/* ── REAL WORLD CARD (Connectomics) ────────────────── */
+
+.wel-realworld-card {
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  padding: 32px;
+  border-radius: 24px;
+  color: #fff;
+}
+
+.wel-realworld-impact {
+  font-size: 11px;
+  font-weight: 900;
+  color: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.wel-realworld-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.wel-realworld-desc {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── TOPIC BANNER (Connectomics footer) ─────────────── */
+
+.wel-topic-banner {
+  margin-top: 60px;
+  text-align: center;
+  background: #f8fafc;
+  padding: 40px;
+  border-radius: 32px;
+  border: 2px dashed #e2e8f0;
+}
+
+.wel-topic-banner h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1e1b4b;
+  margin-bottom: 8px;
+}
+
+.wel-topic-banner p {
+  max-width: 600px;
+  margin: 0 auto;
+  color: #64748b;
+}
+
+/* ── HERO ACCENT ─────────────────────────────────── */
+
+.wel-hero-accent--violet {
+  color: #8b5cf6;
+}
+
+.wel-hero-accent--red {
+  color: #ef4444;
+}
+
+.wel-hero-accent--amber {
+  color: #f59e0b;
+}
+
+@media (max-width: 768px) {
+  .wel-topic-shell {
+    padding: 24px 16px !important;
+  }
+
+  .wel-section-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .wel-section-header {
+    font-size: 22px;
+  }
+
+  .wel-topic-cta {
+    flex-direction: column;
+    padding: 24px 16px;
+    text-align: center;
+  }
+
+  .wel-topic-cta-button {
+    width: 100%;
+  }
+
+  .wel-topic-banner {
+    padding: 24px 16px;
+  }
+
+  .wel-prereq-card {
+    padding: 20px 16px;
+  }
+}
+
+/* ── EXAM EDGE SPECIFIC ──────────────────────────── */
+
+.wel-exam-details {
+  background: #fff;
+}
+
+.wel-high-yield-section {
+  margin-bottom: 40px;
+}
+
+.wel-section-subhead {
+  font-size: 14px;
+  font-weight: 900;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wel-topic-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wel-topic-chip {
+  background: #f8fafc;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e1b4b;
+}
+
+.wel-strategy-pitfall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 32px;
+}
+
+.wel-strategy-box {
+  background: #fffbeb;
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid #fef3c7;
+  color: #92400e;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.wel-pitfall-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wel-pitfall-item {
+  background: #fef2f2;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid #fee2e2;
+  color: #991b1b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.wel-tips-banner {
+  margin-top: 40px;
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  padding: 40px;
+  border-radius: 32px;
+  color: #fff;
+}
+
+.wel-tips-banner-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.wel-tips-banner-head h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.wel-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+  gap: 20px;
+}
+
+.wel-tip-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── TERMINOLOGY / LEXICON ───────────────────────── */
+
+.wel-lexicon-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.wel-lexicon-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.2rem, 8vw, 3.5rem);
+  font-weight: 900;
+  color: var(--wel-text);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.wel-lexicon-title-accent {
+  background: linear-gradient(135deg, #0d9488, #4f46e5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wel-lexicon-sub {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--wel-muted);
+  max-width: 650px;
+  line-height: 1.6;
+}
+
+.wel-term-mini-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.wel-term-mini-label {
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.wel-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.wel-detail-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.wel-detail-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.wel-detail-body {
+  font-size: 18px;
+  color: var(--wel-text);
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.wel-detail-sub-label {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+  font-weight: 800;
+}
+
+.wel-detail-examples-box {
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wel-detail-example-item {
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.wel-detail-hint-box {
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.wel-detail-hint-text {
+  margin: 0;
+  font-size: 16px;
+  color: var(--wel-muted);
+  line-height: 1.6;
+}
+
+.wel-quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.wel-quiz-meta-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #4f46e5;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.wel-quiz-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--wel-text);
+  margin: 4px 0 0;
+}
+
+.wel-quiz-score-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 4px solid #f1f5f9;
+  border-top-color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #4f46e5;
+}
+
+.wel-quiz-question {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--wel-text);
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.wel-quiz-explanation {
+  background: rgba(79, 70, 229, 0.05);
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  margin-bottom: 28px;
+}
+
+.wel-quiz-explanation p {
+  margin: 0;
+  font-size: 15px;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.wel-quiz-nav {
+  display: flex;
+  justify-content: center;
+}
+
+.wel-quiz-result {
+  text-align: center;
+  padding: 24px 0;
+}
+
+.wel-quiz-result-emoji {
+  font-size: 72px;
+  margin-bottom: 20px;
+}
+
+.wel-quiz-result-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: var(--wel-text);
+}
+
+.wel-quiz-result-score {
+  color: var(--wel-muted);
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.wel-quiz-result-score span {
+  color: #4f46e5;
+  font-weight: 900;
+}
+
+.wel-quiz-result-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.wel-lexicon-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .wel-strategy-pitfall-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wel-tips-banner {
+    padding: 24px 16px;
+  }
+
+  .wel-tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wel-detail-title {
+    font-size: 24px;
+  }
+
+  .wel-lexicon-title {
+    font-size: 2rem;
+  }
+}
+
+/* ── VIRTUAL LAB SPECIFIC ───────────────────────── */
+
+.wel-lab-hero {
+  background: linear-gradient(135deg, #0c4a6e 0%, #0891b2 50%, #4f46e5 100%);
+  padding: 40px 24px;
+  text-align: center;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.wel-lab-hero-bg {
+  position: absolute;
+  top: -60px;
+  left: -60px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.wel-lab-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.wel-lab-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  padding: 6px 16px;
+  margin-bottom: 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.wel-lab-hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900;
+  margin: 0 0 10px;
+}
+
+.wel-lab-hero-title-accent {
+  background: linear-gradient(90deg, #38bdf8, #a5f3fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wel-lab-hero-sub {
+  opacity: 0.85;
+  font-size: clamp(13px, 2vw, 16px);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.wel-lab-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 20px 60px;
+}
+
+.wel-lab-picker {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  scroll-snap-type: x mandatory;
+}
+
+@media (min-width: 1024px) {
+  .wel-lab-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: visible;
+  }
+}
+
+.wel-lab-picker::-webkit-scrollbar {
+  height: 6px;
+}
+
+.wel-lab-picker::-webkit-scrollbar-thumb {
+  background: var(--wel-border);
+  border-radius: 10px;
+}
+
+.wel-lab-picker-btn {
+  flex: 0 0 160px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  scroll-snap-align: start;
+}
+
+.wel-lab-picker-btn.active {
+  border-color: var(--skill-color);
+  background: var(--skill-color-12);
+  box-shadow: 0 4px 16px var(--skill-color-25);
+  transform: translateY(-2px);
+}
+
+.wel-lab-picker-emoji {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.wel-lab-picker-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.wel-lab-picker-btn.active .wel-lab-picker-title {
+  color: var(--skill-color);
+}
+
+.wel-lab-picker-sub {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+
+.wel-lab-stage {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .wel-lab-stage {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.wel-card-exp {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.wel-card-exp-badge {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
+}
+
+.wel-card-exp-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 0 0 8px;
+}
+
+.wel-card-exp-desc {
+  font-size: 15px;
+  color: #475569;
+  margin: 0 0 18px;
+  line-height: 1.6;
+}
+
+.wel-card-exp-type {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.wel-card-exp-type-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.wel-card-exp-type-value {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.wel-card-obs {
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.wel-card-obs.done {
+  animation: chemSlideUp 0.5s ease;
+}
+
+.wel-card-obs.idle {
+  background: #f8fafc;
+  padding: 28px 24px;
+  border: 2px dashed #cbd5e1;
+  text-align: center;
+}
+
+.wel-card-obs-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.wel-card-obs-badge-icon {
+  font-size: 18px;
+}
+
+.wel-card-obs-badge-text {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.wel-card-obs-desc {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.7;
+  font-weight: 500;
+  margin: 0 0 16px;
+}
+
+.wel-card-obs-eq {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.wel-card-obs-eq-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.wel-card-obs-eq-value {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.wel-card-safety {
+  background: #fffbeb;
+  border-radius: 14px;
+  padding: 14px 18px;
+  border: 1px solid #fef3c7;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.wel-card-safety-icon {
+  font-size: 16px;
+}
+
+.wel-card-safety-text {
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.wel-card-scene {
+  background: #fff;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.wel-card-scene-titlebar {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wel-card-scene-title-circle {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.wel-card-scene-title-text {
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.wel-card-scene-canvas {
+  padding: 28px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  transition: background 1.5s ease;
+}
+
+.wel-card-scene-controls {
+  padding: 0 20px 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.wel-btn-lab-action {
+  flex: 1;
+  padding: 13px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.wel-btn-lab-action.run {
+  background: linear-gradient(135deg, var(--skill-color), var(--skill-color-bb));
+  color: #fff;
+  box-shadow: 0 4px 16px var(--skill-color-40);
+}
+
+.wel-btn-lab-action.running {
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: #94a3b8;
+  font-weight: 700;
+  cursor: not-allowed;
+}
+
+.wel-btn-lab-action.reset {
+  background: #1e293b;
+  color: #fff;
+}
+
+.wel-btn-lab-icon {
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@keyframes chemSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 1024px) {
+  .wel-lab-stage {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 32px;
+  }
+}
+
+

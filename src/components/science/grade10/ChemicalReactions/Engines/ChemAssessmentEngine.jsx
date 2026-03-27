@@ -1,7 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function ChemAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'chemtest' }) {
+const normalizeQuestionKey = (question = {}) =>
+    String(question.question ?? question.q ?? '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const getUniqueQuestions = (questions = []) => {
+    const seen = new Set();
+    return (questions ?? []).filter((question) => {
+        const key = normalizeQuestionKey(question);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+};
+
+const resolveQuestions = (questions) =>
+    getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
+
+export default function ChemAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -58,23 +83,36 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         return question.options?.[answer] ?? 'Not Answered';
     };
 
-    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
+    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
     const [finished, setFinished] = useState(false);
-    const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
 
     useEffect(() => {
-        const newQs = typeof questions === 'function' ? questions() : questions;
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questionSet.length });
+            }
+        };
+    }, [abandonSession, questionSet.length]);
+
+    useEffect(() => {
+        const newQs = resolveQuestions(questions);
         setQuestionSet(newQs);
         setCurrent(0);
         setAnswers(Array(newQs.length).fill(null));
         setMarkedForReview(Array(newQs.length).fill(false));
         setTimeLeft(newQs.length * 60);
         setFinished(false);
-        setPaletteOpen(false);
     }, [questions]);
 
     useEffect(() => {
@@ -84,7 +122,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
             const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
             window.scrollTo({ top: y, behavior: 'smooth' });
         }
-        setPaletteOpen(false);
     }, [current]);
 
     const [timeLeft, setTimeLeft] = useState(questionSet.length * 60);
@@ -114,6 +151,16 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         const newAns = [...answers];
         newAns[current] = optIdx;
         setAnswers(newAns);
+
+        const correct = isAnswerCorrect(q, optIdx);
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleTextAnswerChange = (value) => {
@@ -121,6 +168,16 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         const newAns = [...answers];
         newAns[current] = value;
         setAnswers(newAns);
+
+        const correct = isAnswerCorrect(q, value);
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { text: value },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleMsqToggle = (optIdx) => {
@@ -132,6 +189,16 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         const newAns = [...answers];
         newAns[current] = nextAnswer;
         setAnswers(newAns);
+
+        const correct = isAnswerCorrect(q, nextAnswer);
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selections: nextAnswer },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleNext = () => {
@@ -156,7 +223,31 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         setFinished(true);
-        setPaletteOpen(false);
+        isFinishedRef.current = true;
+
+        let finalScore = 0;
+        answers.forEach((ans, index) => {
+            if (isAnswerCorrect(questionSet[index], ans)) finalScore++;
+        });
+
+        const payload = answers.map((ans, idx) => {
+            if (!isAnswerComplete(questionSet[idx], ans)) return null;
+            const qType = getQuestionType(questionSet[idx]);
+            return {
+                question_index: idx + 1,
+                answer_json: qType === 'text' ? { text: ans } : (qType === 'msq' ? { selections: ans } : { selection: ans }),
+                is_correct: isAnswerCorrect(questionSet[idx], ans) ? 1.0 : 0.0,
+                marks_awarded: isAnswerCorrect(questionSet[idx], ans) ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+        }).filter(Boolean);
+
+        finishSession({
+            totalQuestions: questionSet.length,
+            questionsAnswered: payload.length,
+            answersPayload: payload
+        });
     };
 
     const answeredCount = questionSet.reduce((count, question, index) => (
@@ -186,7 +277,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                                 setAnswers(Array(newQs.length).fill(null));
                                 setTimeLeft(newQs.length * 60);
                                 setFinished(false);
-                                setPaletteOpen(false);
                             }}
                             style={{ padding: '10px 20px', background: color, border: 'none', color: '#fff', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}
                         >
@@ -247,16 +337,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
     }
 
     const palette = (
-        <div className={`${prefix}-assessment-palette ${paletteOpen ? 'is-open' : ''}`}>
-            <div className={`${prefix}-assessment-mobile-head`}>
-                <div>
-                    <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.4, textTransform: 'uppercase', opacity: 0.72 }}>Quick Nav</div>
-                    <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 24, fontWeight: 800, color: `var(--${prefix}-text, #1e293b)` }}>Question Palette</div>
-                </div>
-                <button type="button" className={`${prefix}-palette-close`} onClick={() => setPaletteOpen(false)}>
-                    Close
-                </button>
-            </div>
+        <div className={`${prefix}-assessment-palette`}>
 
             <div
                 style={{
@@ -496,12 +577,12 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                     )}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, gap: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, gap: 12, flexWrap: 'wrap' }}>
                     <button
                         onClick={handlePrev}
                         disabled={current === 0}
                         className={`${prefix}-btn-secondary`}
-                        style={{ visibility: current === 0 ? 'hidden' : 'visible', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, background: '#fff', border: '1px solid #e2e8f0', color: `var(--${prefix}-text)`, fontWeight: 600 }}
+                        style={{ visibility: current === 0 ? 'hidden' : 'visible', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: '1 1 120px', background: '#fff', border: '1px solid #e2e8f0', color: `var(--${prefix}-text)`, fontWeight: 600 }}
                     >
                         ← Previous
                     </button>
@@ -510,28 +591,29 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                         onClick={toggleMarkForReview}
                         className={`${prefix}-btn-secondary`}
                         style={{ 
-                            padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, margin: '0 auto',
+                            padding: '12px 20px', fontSize: 14, borderRadius: 100, flex: '2 1 160px', margin: '0 auto',
                             background: '#fff',
                             border: `1px solid ${markedForReview[current] ? '#f59e0b' : '#e2e8f0'}`,
                             color: markedForReview[current] ? '#d97706' : `var(--${prefix}-text)`,
-                            fontWeight: 600
+                            fontWeight: 600,
+                            whiteSpace: 'nowrap'
                         }}
                     >
-                        {markedForReview[current] ? 'Marked for Review' : 'Mark for Review'}
+                        {markedForReview[current] ? '🔖 Marked' : 'Mark for Review'}
                     </button>
                     {current + 1 === questionSet.length ? (
                         <button
                             onClick={handleSubmit}
                             className={`${prefix}-btn-primary`}
-                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, fontWeight: 600 }}
+                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: '1 1 120px', fontWeight: 600 }}
                         >
-                            Submit Assessment
+                            Submit
                         </button>
                     ) : (
                         <button
                             onClick={handleNext}
                             className={`${prefix}-btn-primary`}
-                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, fontWeight: 600 }}
+                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: '1 1 120px', fontWeight: 600 }}
                         >
                             Next →
                         </button>
@@ -539,12 +621,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                 </div>
             </div>
 
-            <button type="button" className={`${prefix}-palette-trigger`} onClick={() => setPaletteOpen(true)}>
-                <span>Palette</span>
-                <strong>{answeredCount}/{questionSet.length}</strong>
-            </button>
-
-            <div className={`${prefix}-palette-backdrop ${paletteOpen ? 'is-open' : ''}`} onClick={() => setPaletteOpen(false)} />
             {palette}
         </div>
     );

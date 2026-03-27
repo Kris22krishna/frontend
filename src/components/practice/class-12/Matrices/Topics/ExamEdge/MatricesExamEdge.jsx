@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   BadgeCheck,
-  Brain,
   Lightbulb,
   RefreshCw,
-  Rocket,
   Target,
   Trophy,
 } from "lucide-react";
@@ -17,25 +15,24 @@ import "../../MatricesPages.css";
 import MathRenderer from "../../../../../MathRenderer";
 
 const EXAM_TABS = [
+  { id: "board", name: "Board Level", color: "#f59e0b", icon: Trophy },
   { id: "kcet", name: "KCET", color: "#0d9488", icon: BadgeCheck },
-  { id: "jee", name: "JEE Main", color: "#f59e0b", icon: Rocket },
-  { id: "jeeAdvanced", name: "JEE Advanced", color: "#ef4444", icon: Brain },
 ];
 
 export default function MatricesExamEdge() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("kcet");
+  const [activeTab, setActiveTab] = useState("board");
   const [questionSeed, setQuestionSeed] = useState(1);
 
   const currentTab = EXAM_TABS.find((tab) => tab.id === activeTab);
   const questionSet = data.questions[activeTab] || [];
   const questionDeskItems = pickQuestionDeskItems(
     questionSet,
-    activeTab === "jeeAdvanced" ? 2 : 3,
+    activeTab === "board" ? 2 : 3,
     questionSeed + activeTab.length
   );
   const currentStrategy = data.strategy.find((item) =>
-    activeTab === "kcet" ? item.exam.includes("KCET") : item.exam.includes("JEE")
+    activeTab === "kcet" ? item.exam.includes("KCET") : item.exam.includes("Board")
   );
 
   useEffect(() => {
@@ -219,10 +216,8 @@ export default function MatricesExamEdge() {
               {data.highYield
                 .filter((item) =>
                   activeTab === "kcet"
-                    ? item.category.includes("KCET") || item.category.includes("Core")
-                    : activeTab === "jee"
-                      ? item.category.includes("JEE") || item.category.includes("Core")
-                      : true
+                    ? item.category.includes("KCET")
+                    : item.category.includes("Board")
                 )
                 .flatMap((item) => item.topics)
                 .map((topic) => (
@@ -288,7 +283,7 @@ export default function MatricesExamEdge() {
                   </ul>
                 ) : (
                   <p style={{ margin: 0 }}>
-                    Combine JEE Main and Advanced strategies for comprehensive preparation.
+                    Use the board-level notes to anchor the concept before switching to faster objective practice.
                   </p>
                 )}
               </div>
@@ -381,7 +376,7 @@ export default function MatricesExamEdge() {
           Showing a fresh set of {questionDeskItems.length} exam-style questions for {currentTab.name}.
         </p>
 
-        {activeTab === "jeeAdvanced" ? (
+        {activeTab === "board" ? (
           <div style={{ display: "grid", gap: 20, marginBottom: 40 }}>
             {questionDeskItems.map(({ item, questionNumber }) => (
               <div

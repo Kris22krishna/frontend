@@ -1,0 +1,263 @@
+/* OurFamiliesDashboard.module.css */
+
+.dashboardContainer {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Outfit', sans-serif;
+    background-color: #F8FAFC;
+    overflow-x: hidden;
+}
+
+/* ── LEFT PANEL (HERO) - Inspired by Grade 3 Math ── */
+.heroPanel {
+    flex: 0 0 45%;
+    position: relative;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    overflow: hidden;
+    color: #334155;
+}
+
+/* Floating Decorations */
+.cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50px;
+    opacity: 0.8;
+    animation: float 6s ease-in-out infinite;
+}
+.cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
+.cloud1 { width: 120px; height: 40px; top: 15%; left: 10%; animation-delay: 0s; }
+.cloud1::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+.cloud1::after { width: 60px; height: 60px; top: -35px; right: 15px; }
+
+.cloud2 { width: 100px; height: 35px; top: 60%; right: 10%; animation-delay: 2s; }
+.cloud2::before { width: 40px; height: 40px; top: -20px; left: 10px; }
+.cloud2::after { width: 50px; height: 50px; top: -25px; right: 15px; }
+
+.cloud3 { width: 80px; height: 25px; bottom: 15%; left: 20%; animation-delay: 4s; }
+.cloud3::before { width: 30px; height: 30px; top: -15px; left: 10px; }
+.cloud3::after { width: 40px; height: 40px; top: -20px; right: 10px; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.heroContent {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 500px;
+    background: rgba(255, 255, 255, 0.4);
+    padding: 40px;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.backBtn {
+    position: absolute;
+    top: -60px;
+    left: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: white;
+    color: #475569;
+    font-weight: 700;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+.backBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.gradeBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFF;
+    color: #F59E0B;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #1E293B;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+.title span {
+    color: #EC4899;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.statCard {
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    text-align: center;
+}
+.statNum {
+    font-size: 2rem;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 5px;
+}
+.statLabel {
+    font-size: 0.9rem;
+    color: #64748B;
+    font-weight: 600;
+}
+
+/* ── RIGHT PANEL (MODULES) - Inspired by Chemical Reactions ── */
+.modulesPanel {
+    flex: 1;
+    padding: 60px;
+    overflow-y: auto;
+    background: #F8FAFC;
+    display: flex;
+    flex-direction: column;
+}
+
+.modulesEyebrow {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #94A3B8;
+    letter-spacing: 0.1em;
+    margin-bottom: 30px;
+}
+
+.modulesList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+}
+
+.moduleCard {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 24px;
+    padding: 24px 32px;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.moduleCard:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+.markerStrip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+}
+
+.iconContainer {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-right: 24px;
+    flex-shrink: 0;
+}
+
+.cardContent {
+    flex: 1;
+}
+
+.cardTagline {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    color: #64748B;
+    text-transform: uppercase;
+}
+
+.cardTitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1E293B;
+    margin-bottom: 8px;
+}
+
+.cardDesc {
+    font-size: 0.95rem;
+    color: #64748B;
+    line-height: 1.5;
+}
+
+.chevronIcon {
+    color: #CBD5E1;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.moduleCard:hover .chevronIcon {
+    transform: translateX(5px);
+    color: #475569;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .dashboardContainer {
+        flex-direction: column;
+    }
+    .heroPanel {
+        padding: 40px 20px;
+        border-radius: 0 0 40px 40px;
+    }
+    .backBtn {
+        top: 20px;
+        left: 20px;
+    }
+    .modulesPanel {
+        padding: 40px 20px;
+    }
+}

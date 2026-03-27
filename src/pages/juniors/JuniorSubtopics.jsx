@@ -125,6 +125,14 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/chapter-test`);
             return;
         }
+        if (subtopic.id.startsWith("TGO-")) {
+            const gradeConfigs = TOPIC_CONFIGS['3'];
+            const skill = gradeConfigs["Time Goes On"]?.find(s => String(s.id) === String(subtopic.id));
+            if (skill && skill.route) {
+                navigate(`/junior/grade/${grade}/time-goes-on/${skill.route}`);
+                return;
+            }
+        }
 
         // Grade 4 - The Cleanest Village & Weigh It, Pour It routing
         const gradeNum = grade.replace('grade', '');

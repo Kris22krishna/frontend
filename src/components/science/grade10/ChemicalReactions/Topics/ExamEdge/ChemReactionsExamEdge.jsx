@@ -202,10 +202,10 @@ export default function ChemReactionsExamEdge() {
                                     <div key={idx} style={{ background: '#f8fafc', padding: '20px', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
                                         <div style={{ fontWeight: '800', color: '#1e1b4b', marginBottom: '12px', fontSize: '16px' }}>
                                             <span style={{ color: exam.color, marginRight: '8px' }}>Q{idx + 1}.</span>
-                                            <MathRenderer text={item.q} />
+                                            <MathRenderer text={item.q} inline={false} />
                                         </div>
-                                        <div style={{ color: '#475569', fontSize: '15px', lineHeight: '1.6', paddingLeft: '16px', borderLeft: `3px solid ${exam.color}40`, whiteSpace: 'pre-wrap' }}>
-                                            <strong>Answer:</strong> <MathRenderer text={item.a} />
+                                        <div style={{ color: '#475569', fontSize: '15px', lineHeight: '1.8', paddingLeft: '16px', borderLeft: `3px solid ${exam.color}40` }}>
+                                            <strong>Answer:</strong> <MathRenderer text={item.a} inline={false} />
                                             {item.diagram === 'electrolysis' && <ElectrolysisDiagram />}
                                         </div>
                                     </div>
