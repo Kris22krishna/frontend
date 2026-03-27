@@ -192,6 +192,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
                         { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
                         { skill_id: 'local-8-leq-landing', skill_name: 'Linear Equations Chapter', topic: 'Linear Equations in One Variable' },
+                        { skill_id: 'local-8-ccr-landing', skill_name: 'Cubes and Cube Roots Chapter', topic: 'Cubes and Cube Roots' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -572,6 +573,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Organising Data, Charts, Probability',
                 isLocal: true,
                 path: '/senior/grade/8/data-handling'
+            }
+        ];
+
+        // Cubes and Cube Roots (NCERT Ch. 7 — Grade 8)
+        skillsByTopic['Cubes and Cube Roots'] = [
+            {
+                skill_id: 'local-8-ccr-landing',
+                skill_name: 'Cubes and Cube Roots Chapter',
+                topic: 'Cubes and Cube Roots',
+                subtopic: 'Perfect Cubes, Cube Roots, Estimating',
+                isLocal: true,
+                path: '/senior/grade/8/cubes-and-cube-roots'
             }
         ];
 

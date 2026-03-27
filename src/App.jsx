@@ -355,6 +355,12 @@ import Grade8DataHandlingIntro5W1H from './components/practice/class-8/data_hand
 import Grade8DataHandlingTerminology from './components/practice/class-8/data_handling/Topics/Terminology/DataHandlingTerminology';
 import Grade8DataHandlingSkills from './components/practice/class-8/data_handling/Topics/Skills/DataHandlingSkills';
 
+// Grade 8 Cubes and Cube Roots
+import CubesAndCubeRoots from './components/practice/class-8/cubes_and_cube_roots/CubesAndCubeRoots';
+import CubesIntro5W1H from './components/practice/class-8/cubes_and_cube_roots/Topics/5W1H/CubesIntro5W1H';
+import CubesTerminology from './components/practice/class-8/cubes_and_cube_roots/Topics/Terminology/CubesTerminology';
+import CubesSkills from './components/practice/class-8/cubes_and_cube_roots/Topics/Skills/CubesSkills';
+
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
 import Grade1Numbers1to9 from './components/practice/grade-1/numbers-1-9';
@@ -1094,6 +1100,12 @@ function App() {
           <Route path="senior/grade/8/comparing-quantities/introduction" element={<ProtectedRoute redirectTo="/login"><ComparingQuantitiesIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/8/comparing-quantities/terminology" element={<ProtectedRoute redirectTo="/login"><ComparingQuantitiesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/8/comparing-quantities/skills" element={<ProtectedRoute redirectTo="/login"><ComparingQuantitiesSkills /></ProtectedRoute>} />
+
+          {/* Grade 8: Cubes and Cube Roots Chapter Pages */}
+          <Route path="senior/grade/8/cubes-and-cube-roots" element={<ProtectedRoute redirectTo="/login"><CubesAndCubeRoots /></ProtectedRoute>} />
+          <Route path="senior/grade/8/cubes-and-cube-roots/introduction" element={<ProtectedRoute redirectTo="/login"><CubesIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/cubes-and-cube-roots/terminology" element={<ProtectedRoute redirectTo="/login"><CubesTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/cubes-and-cube-roots/skills" element={<ProtectedRoute redirectTo="/login"><CubesSkills /></ProtectedRoute>} />
 
           {/* Class 12: Matrices — unified structure (inside MainLayout for navbar/footer) */}
           <Route path="senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesHub /></ProtectedRoute>} />
