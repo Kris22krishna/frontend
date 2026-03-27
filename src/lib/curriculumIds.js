@@ -138,6 +138,20 @@ export const NODE_IDS = {
   g6ScienceWonderfulWorldMethod:           'b4061001-0002-0000-0000-000000000000',
   g6ScienceWonderfulWorldDailyLife:        'b4061001-0003-0000-0000-000000000000',
   g6ScienceWonderfulWorldTerminologyQuiz:  'b4061001-0010-0000-0000-000000000000',
+
+  // Grade 7 Science: Ever-Evolving Science
+  g7ScienceEverEvolving:                   'b3071001-0000-0000-0000-000000000001',
+  g7ScienceEverEvolvingProcess:            'b4071001-0001-0000-0000-000000000000',
+  g7ScienceEverEvolvingMaterials:          'b4071001-0002-0000-0000-000000000000',
+  g7ScienceEverEvolvingChanges:            'b4071001-0003-0000-0000-000000000000',
+  g7ScienceEverEvolvingTerminologyQuiz:    'b4071001-0010-0000-0000-000000000000',
+
+  // Grade 8 Science: Exploring Investigative Science
+  g8ScienceInvestigativeScience:           'b3081001-0000-0000-0000-000000000001',
+  g8ScienceInvestigativeMethod:            'b4081001-0001-0000-0000-000000000000',
+  g8ScienceInvestigativeMeasurements:      'b4081001-0002-0000-0000-000000000000',
+  g8ScienceInvestigativeAnalysis:          'b4081001-0003-0000-0000-000000000000',
+  g8ScienceInvestigativeTerminologyQuiz:   'b4081001-0010-0000-0000-000000000000',
 };
 
 /**
@@ -192,4 +206,18 @@ export const SLUG_TO_NODE_ID = {
   'g6-science-wws-method':             NODE_IDS.g6ScienceWonderfulWorldMethod,
   'g6-science-wws-daily-life':          NODE_IDS.g6ScienceWonderfulWorldDailyLife,
   'g6-science-wws-terminology':         NODE_IDS.g6ScienceWonderfulWorldTerminologyQuiz,
+
+  // Grade 7 Science Slugs
+  'ever-evolving-science':              NODE_IDS.g7ScienceEverEvolving,
+  'g7-science-ees-process':             NODE_IDS.g7ScienceEverEvolvingProcess,
+  'g7-science-ees-materials':           NODE_IDS.g7ScienceEverEvolvingMaterials,
+  'g7-science-ees-changes':             NODE_IDS.g7ScienceEverEvolvingChanges,
+  'g7-science-ees-terminology':         NODE_IDS.g7ScienceEverEvolvingTerminologyQuiz,
+
+  // Grade 8 Science Slugs
+  'exploring-investigative-science':    NODE_IDS.g8ScienceInvestigativeScience,
+  'g8-science-eis-method':             NODE_IDS.g8ScienceInvestigativeMethod,
+  'g8-science-eis-measurements':       NODE_IDS.g8ScienceInvestigativeMeasurements,
+  'g8-science-eis-analysis':           NODE_IDS.g8ScienceInvestigativeAnalysis,
+  'g8-science-eis-terminology':         NODE_IDS.g8ScienceInvestigativeTerminologyQuiz,
 };

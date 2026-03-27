@@ -1,6 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
 import styles from '../everevolvingscience.module.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+
+const normalizeQuestionKey = (question = {}) =>
+    String(question.question ?? question.q ?? '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const getUniqueQuestions = (questions = []) => {
+    const seen = new Set();
+    return (questions ?? []).filter((question) => {
+        const key = normalizeQuestionKey(question);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+};
+
+const resolveQuestions = (questions) =>
+    getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
 
 // ── Shuffle helper ─────────────────────────────────────────────────────────
 function shuffle(arr) {
@@ -12,8 +33,13 @@ function shuffle(arr) {
     return c;
 }
 
-export default function EESPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack }) {
-    const safePool = Array.isArray(questionPool) ? questionPool : [];
+export default function EESPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack, nodeId }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+
+    const safePool = resolveQuestions(Array.isArray(questionPool) ? questionPool : []);
     const [questions, setQuestions] = useState(() => shuffle(safePool).slice(0, sampleSize));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -21,6 +47,21 @@ export default function EESPracticeEngine({ questionPool, sampleSize = 20, title
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+
+    useEffect(() => {
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questions.length });
+            }
+        };
+    }, [abandonSession, questions.length]);
 
     useEffect(() => {
         if (finished) return;
@@ -42,12 +83,27 @@ export default function EESPracticeEngine({ questionPool, sampleSize = 20, title
         if (answered) return;
         setSelected(idx);
         setAnswered(true);
-        if (idx === q.correct) setScore((s) => s + 1);
+        const correct = idx === q.correct;
+        if (correct) setScore((s) => s + 1);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: idx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleNext = () => {
         if (current + 1 >= questions.length) {
             setFinished(true);
+            isFinishedRef.current = true;
+            finishSession({
+                totalQuestions: questions.length,
+                totalScore: score
+            });
         } else {
             setCurrent((c) => c + 1);
             setSelected(null);

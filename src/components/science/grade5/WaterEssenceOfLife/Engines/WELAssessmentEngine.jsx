@@ -29,6 +29,14 @@ export default function welAssessmentEngine({ questions, title, onBack, onSecond
     const isFinishedRef = useRef(false);
     const sessionStartedRef = useRef(false);
 
+    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
+    const [current, setCurrent] = useState(0);
+    const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
+    const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
+    const [finished, setFinished] = useState(false);
+    const [paletteOpen, setPaletteOpen] = useState(false);
+    const topRef = useRef(null);
+
     useEffect(() => {
         if (nodeId && !sessionStartedRef.current) {
             startSession({ nodeId, sessionType: 'assessment' });
@@ -99,14 +107,6 @@ export default function welAssessmentEngine({ questions, title, onBack, onSecond
         }
         return question.options?.[answer] ?? 'Not Answered';
     };
-
-    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
-    const [current, setCurrent] = useState(0);
-    const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
-    const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
-    const [finished, setFinished] = useState(false);
-    const [paletteOpen, setPaletteOpen] = useState(false);
-    const topRef = useRef(null);
 
     useEffect(() => {
         const newQs = resolveQuestions(questions);

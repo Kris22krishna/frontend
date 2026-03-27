@@ -259,6 +259,7 @@ export default function ScienceCoreConcepts() {
                         questions={skill.practice || []}
                         title={`Practice: ${skill.title}`}
                         color={skill.color}
+                        nodeId={skill.nodeId}
                         onBack={() => setView('learn')}
                         prefix="chemtest"
                     />
@@ -278,6 +279,7 @@ export default function ScienceCoreConcepts() {
                             questions={skill.assessment || []}
                             title={`Assessment: ${skill.title}`}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('learn')}
                             prefix="chemtest"
                         />

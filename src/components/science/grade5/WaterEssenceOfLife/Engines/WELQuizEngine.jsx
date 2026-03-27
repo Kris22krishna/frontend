@@ -29,6 +29,13 @@ export default function welQuizEngine({ questions, title, onBack, onSecondaryBac
     const isFinishedRef = useRef(false);
     const sessionStartedRef = useRef(false);
 
+    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
+    const [current, setCurrent] = useState(0);
+    const [selected, setSelected] = useState(null);
+    const [answered, setAnswered] = useState(false);
+    const [score, setScore] = useState(0);
+    const [finished, setFinished] = useState(false);
+
     useEffect(() => {
         if (nodeId && !sessionStartedRef.current) {
             startSession({ nodeId, sessionType: 'practice' });
@@ -43,13 +50,6 @@ export default function welQuizEngine({ questions, title, onBack, onSecondaryBac
             }
         };
     }, [abandonSession, questionSet.length]);
-
-    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
-    const [current, setCurrent] = useState(0);
-    const [selected, setSelected] = useState(null);
-    const [answered, setAnswered] = useState(false);
-    const [score, setScore] = useState(0);
-    const [finished, setFinished] = useState(false);
 
     useEffect(() => {
         setQuestionSet(resolveQuestions(questions));

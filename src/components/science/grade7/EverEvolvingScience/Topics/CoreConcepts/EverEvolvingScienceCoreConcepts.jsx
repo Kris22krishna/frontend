@@ -273,6 +273,7 @@ export default function EverEvolvingScienceCoreConcepts() {
                         sampleSize={20}
                         title={skill.title}
                         color={skill.color}
+                        nodeId={skill.nodeId}
                         onBack={() => setView('learn')}
                     />
                 </div>
@@ -295,6 +296,7 @@ export default function EverEvolvingScienceCoreConcepts() {
                         sampleSize={10}
                         title={skill.title}
                         color={skill.color}
+                        nodeId={skill.nodeId}
                         onBack={() => setView('learn')}
                     />
                 </div>

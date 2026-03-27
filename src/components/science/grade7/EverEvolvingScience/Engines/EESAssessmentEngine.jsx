@@ -1,6 +1,27 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
 import styles from '../everevolvingscience.module.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+
+const normalizeQuestionKey = (question = {}) =>
+    String(question.question ?? question.q ?? '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const getUniqueQuestions = (questions = []) => {
+    const seen = new Set();
+    return (questions ?? []).filter((question) => {
+        const key = normalizeQuestionKey(question);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+};
+
+const resolveQuestions = (questions) =>
+    getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
 
 // ── Shuffle helper ─────────────────────────────────────────────────────────
 function shuffle(arr) {
@@ -17,21 +38,52 @@ function sample(pool, n) {
     return shuffle(pool).slice(0, n);
 }
 
-export default function EESAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function EESAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack, nodeId }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+
     const safePool = Array.isArray(questionPool) ? questionPool : [];
     const [questions] = useState(() => {
-        const valid = safePool.filter(
+        const valid = resolveQuestions(safePool).filter(
             (q) => Array.isArray(q?.options) && q.options.length > 0 &&
                    Number.isInteger(q.correct) && q.correct >= 0 && q.correct < q.options.length
         );
         return sample(valid, Math.min(sampleSize, valid.length));
     });
+
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questions.length).fill(null));
     const [timeLeft, setTimeLeft] = useState(600);
     const [finished, setFinished] = useState(false);
 
-    const finish = useCallback(() => setFinished(true), []);
+    useEffect(() => {
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questions.length });
+            }
+        };
+    }, [abandonSession, questions.length]);
+
+    const finish = useCallback(() => {
+        if (isFinishedRef.current) return;
+        setFinished(true);
+        isFinishedRef.current = true;
+
+        const score = questions.reduce((acc, q, i) => acc + (answers[i] === q.correct ? 1 : 0), 0);
+        finishSession({
+            totalQuestions: questions.length,
+            totalScore: score
+        });
+    }, [questions, answers, finishSession]);
 
     useEffect(() => {
         if (finished) return;
@@ -51,6 +103,16 @@ export default function EESAssessmentEngine({ questionPool, sampleSize = 10, tit
         const next = [...answers];
         next[current] = optIdx;
         setAnswers(next);
+
+        const correct = optIdx === questions[current].correct;
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleSubmit = () => {
