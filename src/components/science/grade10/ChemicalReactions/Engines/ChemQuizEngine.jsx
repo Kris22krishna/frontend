@@ -80,10 +80,16 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
     const q = questionSet[current];
     const progress = ((current + (finished ? 1 : 0)) / questionSet.length) * 100;
 
+    const [answers, setAnswers] = useState(() => Array(resolveQuestions(questions).length).fill(null));
+
     const handleSelect = (optIdx) => {
         if (answered) return;
         setSelected(optIdx);
         setAnswered(true);
+        const newAns = [...answers];
+        newAns[current] = optIdx;
+        setAnswers(newAns);
+        
         const correct = optIdx === q.correct;
         if (correct) setScore(s => s + 1);
 
@@ -101,9 +107,25 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
         if (current + 1 >= questionSet.length) {
             setFinished(true);
             isFinishedRef.current = true;
+            const payload = answers.map((ans, idx) => {
+                if (ans === null && idx !== current) return null;
+                const finalAns = idx === current ? selected : ans;
+                if (finalAns === null) return null;
+                const isCorrect = finalAns === questionSet[idx].correct;
+                return {
+                    question_index: idx + 1,
+                    answer_json: { selection: finalAns },
+                    is_correct: isCorrect ? 1.0 : 0.0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0
+                };
+            }).filter(Boolean);
+
             finishSession({
                 totalQuestions: questionSet.length,
-                totalScore: score
+                questionsAnswered: payload.length,
+                answersPayload: payload
             });
         } else {
             setCurrent(c => c + 1);

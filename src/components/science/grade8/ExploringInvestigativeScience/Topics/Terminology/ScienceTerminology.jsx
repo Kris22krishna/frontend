@@ -55,10 +55,16 @@ export default function ScienceTerminology() {
         }
     };
 
+    const [quizAnswers, setQuizAnswers] = useState(() => Array(SCIENCE_VOCAB_QUIZ.length).fill(null));
+
     const handleQuizSelect = (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
+        const newAns = [...quizAnswers];
+        newAns[quizIdx] = optIdx;
+        setQuizAnswers(newAns);
+
         const correct = optIdx === activeQuiz.correct;
         if (correct) setQuizTotalScore(s => s + 1);
 
@@ -80,9 +86,25 @@ export default function ScienceTerminology() {
         } else {
             setQuizFinished(true);
             isFinishedRef.current = true;
+            
+            const payload = quizAnswers.map((ans, idx) => {
+                const finalAns = idx === quizIdx ? quizSelected : ans;
+                if (finalAns === null) return null;
+                const isCorrect = finalAns === SCIENCE_VOCAB_QUIZ[idx].correct;
+                return {
+                    question_index: idx + 1,
+                    answer_json: { selection: finalAns },
+                    is_correct: isCorrect ? 1.0 : 0.0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0
+                };
+            }).filter(Boolean);
+
             finishSession({
                 totalQuestions: SCIENCE_VOCAB_QUIZ.length,
-                totalScore: quizTotalScore
+                questionsAnswered: payload.length,
+                answersPayload: payload
             });
         }
     };

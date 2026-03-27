@@ -230,9 +230,23 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
             if (isAnswerCorrect(questionSet[index], ans)) finalScore++;
         });
 
+        const payload = answers.map((ans, idx) => {
+            if (!isAnswerComplete(questionSet[idx], ans)) return null;
+            const qType = getQuestionType(questionSet[idx]);
+            return {
+                question_index: idx + 1,
+                answer_json: qType === 'text' ? { text: ans } : (qType === 'msq' ? { selections: ans } : { selection: ans }),
+                is_correct: isAnswerCorrect(questionSet[idx], ans) ? 1.0 : 0.0,
+                marks_awarded: isAnswerCorrect(questionSet[idx], ans) ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+        }).filter(Boolean);
+
         finishSession({
             totalQuestions: questionSet.length,
-            totalScore: finalScore
+            questionsAnswered: payload.length,
+            answersPayload: payload
         });
     };
 
