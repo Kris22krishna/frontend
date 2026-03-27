@@ -454,6 +454,12 @@ import Grade6PatternsIntro5W1H from './components/practice/grade-6/PatternsInMat
 import Grade6PatternsTerminology from './components/practice/grade-6/PatternsInMathematics/Topics/Terminology/PatternsTerminology';
 import Grade6PatternsSkills from './components/practice/grade-6/PatternsInMathematics/Topics/Skills/PatternsSkills';
 
+// Grade 6 Lines and Angles
+import Grade6LinesAndAngles from './components/practice/grade-6/LinesAndAngles/LinesAndAngles_6';
+import Grade6LinesAndAnglesIntro from './components/practice/grade-6/LinesAndAngles/Topics/5W1H/LinesAndAnglesIntro5W1H';
+import Grade6LinesAndAnglesTerminology from './components/practice/grade-6/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
+import Grade6LinesAndAnglesSkills from './components/practice/grade-6/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
+
 // Grade 6 Symmetry
 import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
 import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
@@ -1263,6 +1269,12 @@ function App() {
           <Route path="middle/grade/6/patterns-in-mathematics/introduction" element={<Grade6PatternsIntro5W1H />} />
           <Route path="middle/grade/6/patterns-in-mathematics/terminology" element={<Grade6PatternsTerminology />} />
           <Route path="middle/grade/6/patterns-in-mathematics/skills" element={<Grade6PatternsSkills />} />
+
+          {/* Grade 6 Lines and Angles Module */}
+          <Route path="middle/grade/6/lines-and-angles" element={<Grade6LinesAndAngles />} />
+          <Route path="middle/grade/6/lines-and-angles/introduction" element={<Grade6LinesAndAnglesIntro />} />
+          <Route path="middle/grade/6/lines-and-angles/terminology" element={<Grade6LinesAndAnglesTerminology />} />
+          <Route path="middle/grade/6/lines-and-angles/skills" element={<Grade6LinesAndAnglesSkills />} />
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
