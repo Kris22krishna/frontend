@@ -706,8 +706,7 @@ const SeniorGradeSyllabus = () => {
                     </nav>
 
                     <div className="page-title">
-                        {grade === '10' || grade === '9' ? (
-                        {grade === '10' || grade === '8' ? (
+                        {(grade === '10' || grade === '9' || grade === '8') ? (
                             <div style={{ marginBottom: '12px' }}>
                                 <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '20px' }}>Grade {grade} — Select Subject</div>
                                 <div className="subjToggleWrap" style={{

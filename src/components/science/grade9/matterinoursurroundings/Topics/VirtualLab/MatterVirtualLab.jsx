@@ -126,7 +126,7 @@ export default function MatterVirtualLab() {
                             ) : (
                                 <div style={{ textAlign: 'center', padding: '20px 0' }}>
                                     <div style={{ fontSize: '40px', marginBottom: '16px' }}>🔬</div>
-                                    <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: 600, margin: 0, maxWidth: '240px', margin: '0 auto' }}>
+                                    <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: 600, maxWidth: '240px', margin: '0 auto' }}>
                                         Click <strong>{activity.actionLabel}</strong> to perform the activity and record scientific observations.
                                     </p>
                                 </div>
