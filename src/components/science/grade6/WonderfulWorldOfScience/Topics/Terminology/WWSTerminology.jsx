@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../WonderfulWorldOfScienceDashboard.module.css';
 import { TERMS, COOL_FACTS, VOCAB_QUIZ } from './WWSTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
 
 export default function WWSTerminology() {
     const navigate = useNavigate();
@@ -22,6 +24,28 @@ export default function WWSTerminology() {
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const nodeId = SLUG_TO_NODE_ID['g6-science-wws-terminology'];
+    const sessionStartedRef = useRef(false);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        if (activeTab === 'quiz' && !sessionStartedRef.current && nodeId) {
+            startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = true;
+        }
+    }, [activeTab, nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: VOCAB_QUIZ.length });
+            }
+        };
+    }, [abandonSession]);
+
+
     const activeTerm = TERMS[selectedIdx];
     const activeFact = COOL_FACTS[selectedFactIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
@@ -38,17 +62,33 @@ export default function WWSTerminology() {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
+        const isCorrect = optIdx === activeQuiz.correct;
+        if (isCorrect) {
             setQuizTotalScore(s => s + 1);
         }
+
+        logAnswer({
+            question_index: quizIdx + 1,
+            answer_json: { selection: optIdx },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx(i => i + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
+            await finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                questionsAnswered: VOCAB_QUIZ.length,
+                score: quizTotalScore
+            });
+            isFinishedRef.current = true;
             setQuizFinished(true);
         }
     };

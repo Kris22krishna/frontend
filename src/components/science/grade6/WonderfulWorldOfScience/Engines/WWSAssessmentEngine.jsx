@@ -1,7 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function WWSAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'chemtest' }) {
+export default function WWSAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+
+    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
+    const [current, setCurrent] = useState(0);
+    const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
+    const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
+    const [finished, setFinished] = useState(false);
+    const [paletteOpen, setPaletteOpen] = useState(false);
+    const topRef = useRef(null);
+
+    useEffect(() => {
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questionSet.length });
+            }
+        };
+    }, [abandonSession, questionSet.length]);
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -58,13 +86,6 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
         return question.options?.[answer] ?? 'Not Answered';
     };
 
-    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
-    const [current, setCurrent] = useState(0);
-    const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
-    const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
-    const [finished, setFinished] = useState(false);
-    const [paletteOpen, setPaletteOpen] = useState(false);
-    const topRef = useRef(null);
 
     useEffect(() => {
         const newQs = typeof questions === 'function' ? questions() : questions;
@@ -114,6 +135,15 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
         const newAns = [...answers];
         newAns[current] = optIdx;
         setAnswers(newAns);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: optIdx },
+            is_correct: isAnswerCorrect(q, optIdx) ? 1.0 : 0.0,
+            marks_awarded: isAnswerCorrect(q, optIdx) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleTextAnswerChange = (value) => {
@@ -121,6 +151,15 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
         const newAns = [...answers];
         newAns[current] = value;
         setAnswers(newAns);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { text: value },
+            is_correct: isAnswerCorrect(q, value) ? 1.0 : 0.0,
+            marks_awarded: isAnswerCorrect(q, value) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleMsqToggle = (optIdx) => {
@@ -132,6 +171,15 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
         const newAns = [...answers];
         newAns[current] = nextAnswer;
         setAnswers(newAns);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selections: nextAnswer },
+            is_correct: isAnswerCorrect(q, nextAnswer) ? 1.0 : 0.0,
+            marks_awarded: isAnswerCorrect(q, nextAnswer) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleNext = () => {
@@ -151,10 +199,23 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
         });
     };
 
-    const handleSubmit = () => {
+    const handleFinalSubmit = async () => {
         if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
+
+        let finalScore = 0;
+        answers.forEach((ans, index) => {
+            if (isAnswerCorrect(questionSet[index], ans)) finalScore++;
+        });
+
+        await finishSession({
+            totalQuestions: questionSet.length,
+            questionsAnswered: answeredCount,
+            score: finalScore
+        });
+
+        isFinishedRef.current = true;
         setFinished(true);
         setPaletteOpen(false);
     };
@@ -357,7 +418,7 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
                 </div>
             </div>
 
-            <button onClick={handleSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: `var(--${prefix}-red, #ef4444)`, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>
+            <button onClick={handleFinalSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: `var(--${prefix}-red, #ef4444)`, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>
                 Submit Assessment
             </button>
         </div>
@@ -521,7 +582,7 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
                     </button>
                     {current + 1 === questionSet.length ? (
                         <button
-                            onClick={handleSubmit}
+                            onClick={handleFinalSubmit}
                             className={`${prefix}-btn-primary`}
                             style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, fontWeight: 600 }}
                         >

@@ -132,6 +132,12 @@ export const NODE_IDS = {
   g5ScienceWaterCycle:          'b4051001-0002-0000-0000-000000000000',
   g5ScienceLifeWater:           'b4051001-0003-0000-0000-000000000000',
   g5ScienceWaterTerminologyQuiz:'b4051001-0010-0000-0000-000000000000',
+
+  // Grade 6 Science: Wonderful World of Science
+  g6ScienceWonderfulWorldWhatIsScience:    'b4061001-0001-0000-0000-000000000000',
+  g6ScienceWonderfulWorldMethod:           'b4061001-0002-0000-0000-000000000000',
+  g6ScienceWonderfulWorldDailyLife:        'b4061001-0003-0000-0000-000000000000',
+  g6ScienceWonderfulWorldTerminologyQuiz:  'b4061001-0010-0000-0000-000000000000',
 };
 
 /**
@@ -180,4 +186,10 @@ export const SLUG_TO_NODE_ID = {
   'g5-science-water-cycle':             NODE_IDS.g5ScienceWaterCycle,
   'g5-science-water-life-water':        NODE_IDS.g5ScienceLifeWater,
   'g5-science-water-terminology':       NODE_IDS.g5ScienceWaterTerminologyQuiz,
+
+  // Grade 6 Science Slugs
+  'g6-science-wws-what-is-science':     NODE_IDS.g6ScienceWonderfulWorldWhatIsScience,
+  'g6-science-wws-method':             NODE_IDS.g6ScienceWonderfulWorldMethod,
+  'g6-science-wws-daily-life':          NODE_IDS.g6ScienceWonderfulWorldDailyLife,
+  'g6-science-wws-terminology':         NODE_IDS.g6ScienceWonderfulWorldTerminologyQuiz,
 };
