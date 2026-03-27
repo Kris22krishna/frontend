@@ -287,7 +287,9 @@ export default function ChemReactionsCoreConcepts() {
                         questions={skill.practice}
                         title={`Practice: ${skill.title}`}
                         color={skill.color}
+                        nodeId={skill.nodeId}
                         onBack={() => setView('learn')}
+                        onSecondaryBack={() => { setView('list'); setActiveSkillIdx(null); }}
                         prefix="chemtest"
                     />
                 </div>
@@ -306,7 +308,9 @@ export default function ChemReactionsCoreConcepts() {
                             questions={skill.assessment}
                             title={`Assessment: ${skill.title}`}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('learn')}
+                            onSecondaryBack={() => { setView('list'); setActiveSkillIdx(null); }}
                             prefix="chemtest"
                         />
                     </div>

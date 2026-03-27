@@ -92,6 +92,19 @@
     max-width: 650px;
 }
 
+.middle-header-with-toggle {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.middle-header-actions {
+    position: relative;
+    z-index: 10;
+    margin-left: auto;
+    align-self: flex-start;
+}
+
 .grade-badge {
     background: #3b82f6;
     color: white;
@@ -176,14 +189,30 @@
 }
 
 @keyframes morph {
-    0% { border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; transform: rotate(0deg); }
-    50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; transform: rotate(180deg); }
-    100% { border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%; transform: rotate(360deg); }
+    0% {
+        border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+        transform: rotate(0deg);
+    }
+
+    50% {
+        border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+        transform: rotate(180deg);
+    }
+
+    100% {
+        border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes float-slow {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-30px, -50px); }
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(-30px, -50px);
+    }
 }
 
 @keyframes float {
@@ -401,6 +430,62 @@
 }
 
 /* -------------------------------------------
+   SUBJECT TOGGLE BUTTONS
+   ------------------------------------------- */
+.subject-toggle-wrapper {
+    position: relative;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.4rem;
+    border-radius: 3rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    align-self: flex-start;
+    margin-left: auto;
+}
+
+.subject-toggle-btn {
+    padding: 0.85rem 2.2rem;
+    border-radius: 2.5rem;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.05rem;
+}
+
+.subject-toggle-btn.active {
+    background: #fff;
+    color: #4F46E5;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.subject-toggle-btn.inactive {
+    background: transparent;
+    color: #fff;
+    box-shadow: none;
+}
+
+@media (max-width: 650px) {
+    .subject-toggle-wrapper {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 1.5rem;
+        justify-content: space-between;
+    }
+    
+    .subject-toggle-btn {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        text-align: center;
+    }
+}
+
+/* -------------------------------------------
    RESPONSIVE 
    ------------------------------------------- */
 @media (max-width: 768px) {
@@ -413,6 +498,15 @@
         font-size: 2.5rem;
     }
 
+    .middle-header-with-toggle {
+        flex-direction: column;
+    }
+
+    .middle-header-actions {
+        width: 100%;
+        margin-left: 0;
+    }
+
     .middle-masonry-grid {
         grid-template-columns: 1fr;
     }
@@ -421,4 +515,122 @@
     .shape-2 {
         opacity: 0.1;
     }
+}
+
+/* --- Subject Toggle --- */
+.middle-subject-toggle-wrapper {
+    position: relative;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 0.4rem;
+    border-radius: 3rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    align-self: flex-start;
+    margin-left: auto;
+}
+
+.middle-subject-toggle-btn {
+    padding: 0.85rem 2.2rem;
+    border-radius: 2.5rem;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.05rem;
+}
+
+.middle-subject-toggle-btn.active {
+    background: #fff;
+    color: #4F46E5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.middle-subject-toggle-btn.inactive {
+    background: transparent;
+    color: #fff;
+    box-shadow: none;
+}
+
+.middle-subject-toggle-btn:hover {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 650px) {
+    .middle-subject-toggle-wrapper {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 1.5rem;
+        justify-content: space-between;
+    }
+
+    .middle-subject-toggle-btn {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        text-align: center;
+    }
+}
+
+/* Science Card specifically for Middle */
+.science-chapter-card-middle {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+}
+
+.science-chapter-card-middle:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+    border-color: #10b981;
+}
+
+.science-chapter-card-middle .chapter-num {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 4px 12px;
+    border-radius: 100px;
+    width: fit-content;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.science-chapter-card-middle .chapter-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.science-chapter-card-middle h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.science-chapter-card-middle p {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.science-chapter-card-middle .enter-link {
+    margin-top: auto;
+    font-weight: 800;
+    color: #10b981;
+    font-size: 0.95rem;
 }

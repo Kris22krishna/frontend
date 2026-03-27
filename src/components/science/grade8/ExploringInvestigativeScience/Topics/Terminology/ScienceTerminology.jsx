@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../InvestigativeScienceDashboard.module.css';
 import { SCIENCE_TERMS, SCIENCE_REACTION_CASES, SCIENCE_VOCAB_QUIZ } from './ScienceTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
 
 export default function ScienceTerminology() {
     const navigate = useNavigate();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const nodeId = SLUG_TO_NODE_ID['g8-science-eis-terminology'];
+
+    const sessionStartedRef = useRef(false);
+    const isFinishedRef = useRef(false);
 
     useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -21,16 +28,85 @@ export default function ScienceTerminology() {
     const activeCase = SCIENCE_REACTION_CASES[selectedCaseIdx];
     const activeQuiz = SCIENCE_VOCAB_QUIZ[quizIdx];
 
-    const resetQuiz = () => { setQuizIdx(0); setQuizSelected(null); setQuizAnswered(false); setQuizTotalScore(0); setQuizFinished(false); };
+    useEffect(() => {
+        if (activeTab === 'quiz' && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    }, [activeTab, nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: SCIENCE_VOCAB_QUIZ.length });
+            }
+        };
+    }, [abandonSession]);
+
+    const resetQuiz = () => {
+        setQuizIdx(0);
+        setQuizSelected(null);
+        setQuizAnswered(false);
+        setQuizTotalScore(0);
+        setQuizFinished(false);
+        isFinishedRef.current = false;
+        if (sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'practice' });
+        }
+    };
+
+    const [quizAnswers, setQuizAnswers] = useState(() => Array(SCIENCE_VOCAB_QUIZ.length).fill(null));
+
     const handleQuizSelect = (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) setQuizTotalScore(s => s + 1);
+        const newAns = [...quizAnswers];
+        newAns[quizIdx] = optIdx;
+        setQuizAnswers(newAns);
+
+        const correct = optIdx === activeQuiz.correct;
+        if (correct) setQuizTotalScore(s => s + 1);
+
+        logAnswer({
+            question_index: quizIdx + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
+
     const nextQuiz = () => {
-        if (quizIdx + 1 < SCIENCE_VOCAB_QUIZ.length) { setQuizIdx(i => i + 1); setQuizSelected(null); setQuizAnswered(false); }
-        else setQuizFinished(true);
+        if (quizIdx + 1 < SCIENCE_VOCAB_QUIZ.length) {
+            setQuizIdx(i => i + 1);
+            setQuizSelected(null);
+            setQuizAnswered(false);
+        } else {
+            setQuizFinished(true);
+            isFinishedRef.current = true;
+            
+            const payload = quizAnswers.map((ans, idx) => {
+                const finalAns = idx === quizIdx ? quizSelected : ans;
+                if (finalAns === null) return null;
+                const isCorrect = finalAns === SCIENCE_VOCAB_QUIZ[idx].correct;
+                return {
+                    question_index: idx + 1,
+                    answer_json: { selection: finalAns },
+                    is_correct: isCorrect ? 1.0 : 0.0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0
+                };
+            }).filter(Boolean);
+
+            finishSession({
+                totalQuestions: SCIENCE_VOCAB_QUIZ.length,
+                questionsAnswered: payload.length,
+                answersPayload: payload
+            });
+        }
     };
 
     const navLinks = [

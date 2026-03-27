@@ -1,6 +1,9 @@
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
+
 export const CORE_CONCEPTS = [
     {
         "id": "1.1",
+        "nodeId": SLUG_TO_NODE_ID['g10-science-cr-equations'],
         "title": "Chemical Equations",
         "subtitle": "From Words to Symbols",
         "desc": "Master the art of translating chemical changes into precise, balanced mathematical equations.",
@@ -384,6 +387,7 @@ export const CORE_CONCEPTS = [
     },
     {
         "id": "1.2",
+        "nodeId": SLUG_TO_NODE_ID['g10-science-cr-types'],
         "title": "Types of Reactions",
         "subtitle": "Classifying Chemical Change",
         "desc": "Identify the core types of chemical reactions through observation and balanced formulas.",
@@ -758,6 +762,7 @@ export const CORE_CONCEPTS = [
     },
     {
         "id": "1.3",
+        "nodeId": SLUG_TO_NODE_ID['g10-science-cr-oxidation'],
         "title": "Effects of Oxidation",
         "subtitle": "Corrosion & Rancidity",
         "desc": "Understand real-world implications of metal oxidation and how to prevent molecular degradation.",

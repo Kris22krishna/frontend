@@ -57,8 +57,8 @@ The number $ad - bc$ is called the **determinant**. If it equals 0, the matrix h
   },
   {
     icon: <Shuffle size={28} color="#D97706" />,
-    title: "The Adjoint Method (for 3×3)",
-    body: `For a 3×3 matrix, we use the **Adjoint (Adjugate)**:
+    title: "Finding the Inverse of a 3×3 Matrix",
+    body: `For a 3×3 matrix, one standard inverse method is the **adjoint (adjugate) method**:
 $$A^{-1} = \\frac{1}{|A|}\\, \\text{adj}(A)$$
 
 **Steps:**  
@@ -222,7 +222,7 @@ const InvertibleMatrices = () => {
           <div
             style={{ fontWeight: 700, color: "#1E293B", fontSize: "1.1rem" }}
           >
-            Invertible Matrices
+            Inverse Matrices
           </div>
         </div>
         <div
@@ -236,7 +236,7 @@ const InvertibleMatrices = () => {
             letterSpacing: "0.05em",
           }}
         >
-          SECTION 7 • INVERSE & ADJOINT
+          SECTION 7 • INVERSE MATRICES
         </div>
       </nav>
 
@@ -251,7 +251,7 @@ const InvertibleMatrices = () => {
               marginBottom: 16,
             }}
           >
-            Invertible Matrices & The Adjoint
+            Inverse Matrices
           </h1>
           <p
             style={{
@@ -262,8 +262,8 @@ const InvertibleMatrices = () => {
               margin: "0 auto",
             }}
           >
-            Learn how to "undo" matrix multiplication by finding the inverse —
-            and how the adjoint method extends this to larger matrices.
+            Learn how to "undo" matrix multiplication by finding the inverse,
+            then see the standard methods used to compute it in 2×2 and 3×3 cases.
           </p>
         </div>
 
@@ -520,7 +520,7 @@ const InvertibleMatrices = () => {
             <QuizEngine
               questions={QUIZ_QUESTIONS}
               skillId={12106}
-              skillName="Invertible Matrices"
+              skillName="Inverse Matrices"
               onComplete={handleQuizComplete}
               mastery={0.75}
             />

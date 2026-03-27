@@ -1,7 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function ScienceAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'chemtest' }) {
+const normalizeQuestionKey = (question = {}) =>
+    String(question.question ?? question.q ?? '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const getUniqueQuestions = (questions = []) => {
+    const seen = new Set();
+    return (questions ?? []).filter((question) => {
+        const key = normalizeQuestionKey(question);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+};
+
+const resolveQuestions = (questions) =>
+    getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
+
+export default function ScienceAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -58,7 +84,7 @@ export default function ScienceAssessmentEngine({ questions, title, onBack, onSe
         return question.options?.[answer] ?? 'Not Answered';
     };
 
-    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
+    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
@@ -67,7 +93,22 @@ export default function ScienceAssessmentEngine({ questions, title, onBack, onSe
     const topRef = useRef(null);
 
     useEffect(() => {
-        const newQs = typeof questions === 'function' ? questions() : questions;
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questionSet.length });
+            }
+        };
+    }, [abandonSession, questionSet.length]);
+
+    useEffect(() => {
+        const newQs = resolveQuestions(questions);
         setQuestionSet(newQs);
         setCurrent(0);
         setAnswers(Array(newQs.length).fill(null));
@@ -109,6 +150,16 @@ export default function ScienceAssessmentEngine({ questions, title, onBack, onSe
         const newAns = [...answers];
         newAns[current] = optIdx;
         setAnswers(newAns);
+
+        const correct = isAnswerCorrect(q, optIdx);
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleTextAnswerChange = (value) => {
@@ -116,6 +167,16 @@ export default function ScienceAssessmentEngine({ questions, title, onBack, onSe
         const newAns = [...answers];
         newAns[current] = value;
         setAnswers(newAns);
+
+        const correct = isAnswerCorrect(q, value);
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: value },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleMsqToggle = (optIdx) => {
@@ -127,6 +188,16 @@ export default function ScienceAssessmentEngine({ questions, title, onBack, onSe
         const newAns = [...answers];
         newAns[current] = nextAnswer;
         setAnswers(newAns);
+
+        const correct = isAnswerCorrect(q, nextAnswer);
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: nextAnswer },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleNext = () => { if (current + 1 < questionSet.length) setCurrent((index) => index + 1); };
@@ -146,7 +217,18 @@ export default function ScienceAssessmentEngine({ questions, title, onBack, onSe
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         setFinished(true);
+        isFinishedRef.current = true;
         setPaletteOpen(false);
+
+        let finalScore = 0;
+        answers.forEach((ans, index) => {
+            if (isAnswerCorrect(questionSet[index], ans)) finalScore++;
+        });
+
+        finishSession({
+            totalQuestions: questionSet.length,
+            totalScore: finalScore
+        });
     };
 
     const answeredCount = questionSet.reduce((count, question, index) => (

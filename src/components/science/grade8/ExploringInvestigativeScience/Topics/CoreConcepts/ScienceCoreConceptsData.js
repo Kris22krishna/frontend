@@ -1,6 +1,9 @@
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
+
 export const CORE_CONCEPTS = [
     {
         "id": "1.1",
+        "nodeId": SLUG_TO_NODE_ID['g8-science-eis-method'],
         "title": "Scientific Method & Inquiry",
         "subtitle": "The Process of Discovery",
         "desc": "Master the step-by-step approach scientists use to ask questions and solve mysteries.",
@@ -69,6 +72,7 @@ export const CORE_CONCEPTS = [
     },
     {
         "id": "1.2",
+        "nodeId": SLUG_TO_NODE_ID['g8-science-eis-measurements'],
         "title": "Measurements & Observational Skills",
         "subtitle": "Quantifying the World",
         "desc": "Learn how to gather accurate data using standardized units and sharp observational techniques.",
@@ -137,6 +141,7 @@ export const CORE_CONCEPTS = [
     },
     {
         "id": "1.3",
+        "nodeId": SLUG_TO_NODE_ID['g8-science-eis-analysis'],
         "title": "Data Analysis & Drawing Conclusions",
         "subtitle": "Finding the Truth",
         "desc": "Discover how to organize data, identify trends, and decide if your hypothesis was right or wrong.",
