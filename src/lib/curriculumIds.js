@@ -16,6 +16,7 @@ export const NODE_IDS = {
   // ── 1. GRADES ─────────────────────────────────────────────────────────────
   grade8: 'a2000000-0000-0000-0000-000000000008',
   grade9: 'a2000000-0000-0000-0000-000000000009',
+  grade10: 'a2000000-0000-0000-0000-000000000010',
 
   // ── 2. GRADE 8 CHAPTERS ───────────────────────────────────────────────────
   g8MathRationalNumbers:   'a3000000-0000-0000-0000-000000000001',
@@ -79,7 +80,11 @@ export const NODE_IDS = {
   // ── 5. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
   
   // Grade 10 Science: Chemical Reactions
-  g10ScienceChemicalReactions:  'b3101001-0000-0000-0000-000000000001',
+  g10ScienceChemicalReactions:          'b3101001-0000-0000-0000-000000000001',
+  g10ScienceChemicalEquations:         'b4101001-0001-0000-0000-000000000000',
+  g10ScienceChemicalTypes:             'b4101001-0002-0000-0000-000000000000',
+  g10ScienceChemicalOxidation:         'b4101001-0003-0000-0000-000000000000',
+  g10ScienceChemicalTerminologyQuiz:   'b4101001-0010-0000-0000-000000000000',
   
   // Grade 6 Science: Wonderful World of Science
   g6ScienceWonderfulWorld:      'b3061001-0000-0000-0000-000000000001',
@@ -166,6 +171,10 @@ export const SLUG_TO_NODE_ID = {
   
   // Grade-based Slugs
   'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
+  'g10-science-cr-equations':          NODE_IDS.g10ScienceChemicalEquations,
+  'g10-science-cr-types':              NODE_IDS.g10ScienceChemicalTypes,
+  'g10-science-cr-oxidation':          NODE_IDS.g10ScienceChemicalOxidation,
+  'g10-science-cr-terminology':        NODE_IDS.g10ScienceChemicalTerminologyQuiz,
   'g6-science-wonderful-world':         NODE_IDS.g6ScienceWonderfulWorld,
   'g5-science-water-essence':           NODE_IDS.g5ScienceWater,
   'g8-science-investigative':          NODE_IDS.g8ScienceInvestigative,
