@@ -732,6 +732,17 @@ const MiddleGradeSyllabus = () => {
             ]
         };
 
+        skillsByTopic['Be My Multiple, I’ll be Your Factor'] = {
+            'Learn': [
+                { skill_id: 'BMF-5W1H', skill_name: '5W1H Introduction', topic: 'Be My Multiple, I’ll be Your Factor', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/be-my-multiple/introduction' },
+                { skill_id: 'BMF-TERM', skill_name: 'Terminology', topic: 'Be My Multiple, I’ll be Your Factor', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/be-my-multiple/terminology' },
+                { skill_id: 'BMF-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Be My Multiple, I’ll be Your Factor', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/be-my-multiple/skills' }
+            ],
+            'Chapter Test': [
+                { skill_id: 'BMF-TEST', skill_name: 'Chapter Test', topic: 'Be My Multiple, I’ll be Your Factor', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/be-my-multiple/test' }
+            ]
+        };
+
         skillsByTopic['Tenths and Hundredths'] = {
             'Decimals': [
                 {

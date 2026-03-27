@@ -1,0 +1,444 @@
+.ft_test_page {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.ft_test_nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 32px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.ft_test_title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.ft_test_timer {
+    font-weight: 800;
+    color: #6366f1; /* Indigo for Be My Multiple */
+    font-size: 14px;
+    background: #f5f3ff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ft_test_layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
+    padding: 32px 24px;
+}
+
+.ft_test_main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ft_test_card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.ft_test_card:hover {
+    border-color: #6366f1;
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.05);
+}
+
+.ft_test_q_header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.ft_test_q_num {
+    font-size: 12px;
+    font-weight: 900;
+    color: #6366f1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ft_test_q_text {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: #0f172a;
+}
+
+.ft_test_options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.ft_test_opt_btn {
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 3px solid #f1f5f9;
+    background: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ft_test_opt_btn:hover {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+}
+
+.ft_test_opt_btn_active {
+    border-color: #6366f1;
+    background: #f5f3ff;
+    font-weight: 700;
+    color: #6366f1;
+}
+
+.ft_test_opt_label {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.ft_test_opt_btn_active .ft_test_opt_label {
+    background: #6366f1;
+    color: #fff;
+}
+
+.ft_test_sidebar {
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: all 0.3s ease-in-out;
+}
+
+.ft_test_summary_card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+}
+
+.ft_palette_toggle {
+    background: #f5f3ff;
+    border: 1px solid #e0e7ff;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #6366f1;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.ft_palette_toggle:hover {
+    background: #6366f1;
+    color: #fff;
+}
+
+.ft_palette_content {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ft_summary_title {
+    font-weight: 900;
+    font-size: 13px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+}
+
+.ft_summary_stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.ft_stat_box {
+    text-align: center;
+    padding: 16px 12px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+}
+
+.ft_stat_val {
+    display: block;
+    font-size: 24px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.ft_stat_lbl {
+    font-size: 10px;
+    color: #94a3b8;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.ft_palette_title {
+    font-size: 11px;
+    font-weight: 900;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.ft_q_nav_grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.ft_q_nav_btn {
+    aspect-ratio: 1/1;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 12px;
+    color: #64748b;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ft_q_nav_btn:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+}
+
+.ft_q_nav_btn_answered {
+    background: #6366f1;
+    color: #fff;
+    border-color: #6366f1;
+}
+
+.ft_submit_btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    border: none;
+    background: #0f172a;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+}
+
+.ft_submit_btn:hover {
+    background: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ft_exit_btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.ft_exit_btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+@media (max-width: 991px) {
+    .ft_test_layout {
+        grid-template-columns: 1fr;
+    }
+
+    .ft_test_sidebar {
+        position: static;
+    }
+
+    .ft_test_options {
+        grid-template-columns: 1fr;
+    }
+
+    .ft_q_nav_grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 6px;
+    }
+
+    .ft_q_nav_btn {
+        font-size: 10px;
+        border-radius: 6px;
+    }
+
+    .ft_test_summary_card {
+        padding: 16px;
+    }
+}
+
+/* Report Modal Styles */
+.ft_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+}
+
+.ft_modal_content {
+    background: #fff;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 48px 32px;
+    text-align: center;
+}
+
+.ft_modal_badge {
+    width: 80px;
+    height: 80px;
+    background: #f0fdf4;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 40px;
+}
+
+.ft_modal_title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.ft_modal_subtitle {
+    color: #64748b;
+    margin-bottom: 40px;
+}
+
+.ft_results_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.ft_res_box {
+    padding: 20px;
+    border-radius: 20px;
+    background: #f8fafc;
+}
+
+.ft_res_val {
+    display: block;
+    font-size: 24px;
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.ft_res_lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.ft_modal_footer {
+    display: flex;
+    gap: 12px;
+}
+
+.ft_modal_btn_primary {
+    flex: 1;
+    padding: 16px;
+    border-radius: 100px;
+    border: none;
+    background: #6366f1;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.ft_modal_btn_secondary {
+    flex: 1;
+    padding: 16px;
+    border-radius: 100px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #0f172a;
+    font-weight: 800;
+    cursor: pointer;
+}
