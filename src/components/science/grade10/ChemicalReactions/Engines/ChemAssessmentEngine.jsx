@@ -63,7 +63,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
     const [finished, setFinished] = useState(false);
-    const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
 
     useEffect(() => {
@@ -74,7 +73,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         setMarkedForReview(Array(newQs.length).fill(false));
         setTimeLeft(newQs.length * 60);
         setFinished(false);
-        setPaletteOpen(false);
     }, [questions]);
 
     useEffect(() => {
@@ -84,7 +82,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
             const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
             window.scrollTo({ top: y, behavior: 'smooth' });
         }
-        setPaletteOpen(false);
     }, [current]);
 
     const [timeLeft, setTimeLeft] = useState(questionSet.length * 60);
@@ -156,7 +153,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         setFinished(true);
-        setPaletteOpen(false);
     };
 
     const answeredCount = questionSet.reduce((count, question, index) => (
@@ -186,7 +182,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                                 setAnswers(Array(newQs.length).fill(null));
                                 setTimeLeft(newQs.length * 60);
                                 setFinished(false);
-                                setPaletteOpen(false);
                             }}
                             style={{ padding: '10px 20px', background: color, border: 'none', color: '#fff', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}
                         >
@@ -247,16 +242,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
     }
 
     const palette = (
-        <div className={`${prefix}-assessment-palette ${paletteOpen ? 'is-open' : ''}`}>
-            <div className={`${prefix}-assessment-mobile-head`}>
-                <div>
-                    <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.4, textTransform: 'uppercase', opacity: 0.72 }}>Quick Nav</div>
-                    <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 24, fontWeight: 800, color: `var(--${prefix}-text, #1e293b)` }}>Question Palette</div>
-                </div>
-                <button type="button" className={`${prefix}-palette-close`} onClick={() => setPaletteOpen(false)}>
-                    Close
-                </button>
-            </div>
+        <div className={`${prefix}-assessment-palette`}>
 
             <div
                 style={{
@@ -496,12 +482,12 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                     )}
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, gap: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24, gap: 12, flexWrap: 'wrap' }}>
                     <button
                         onClick={handlePrev}
                         disabled={current === 0}
                         className={`${prefix}-btn-secondary`}
-                        style={{ visibility: current === 0 ? 'hidden' : 'visible', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, background: '#fff', border: '1px solid #e2e8f0', color: `var(--${prefix}-text)`, fontWeight: 600 }}
+                        style={{ visibility: current === 0 ? 'hidden' : 'visible', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: '1 1 120px', background: '#fff', border: '1px solid #e2e8f0', color: `var(--${prefix}-text)`, fontWeight: 600 }}
                     >
                         ← Previous
                     </button>
@@ -510,28 +496,29 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                         onClick={toggleMarkForReview}
                         className={`${prefix}-btn-secondary`}
                         style={{ 
-                            padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, margin: '0 auto',
+                            padding: '12px 20px', fontSize: 14, borderRadius: 100, flex: '2 1 160px', margin: '0 auto',
                             background: '#fff',
                             border: `1px solid ${markedForReview[current] ? '#f59e0b' : '#e2e8f0'}`,
                             color: markedForReview[current] ? '#d97706' : `var(--${prefix}-text)`,
-                            fontWeight: 600
+                            fontWeight: 600,
+                            whiteSpace: 'nowrap'
                         }}
                     >
-                        {markedForReview[current] ? 'Marked for Review' : 'Mark for Review'}
+                        {markedForReview[current] ? '🔖 Marked' : 'Mark for Review'}
                     </button>
                     {current + 1 === questionSet.length ? (
                         <button
                             onClick={handleSubmit}
                             className={`${prefix}-btn-primary`}
-                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, fontWeight: 600 }}
+                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: '1 1 120px', fontWeight: 600 }}
                         >
-                            Submit Assessment
+                            Submit
                         </button>
                     ) : (
                         <button
                             onClick={handleNext}
                             className={`${prefix}-btn-primary`}
-                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: 1, maxWidth: 200, fontWeight: 600 }}
+                            style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: '1 1 120px', fontWeight: 600 }}
                         >
                             Next →
                         </button>
@@ -539,12 +526,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                 </div>
             </div>
 
-            <button type="button" className={`${prefix}-palette-trigger`} onClick={() => setPaletteOpen(true)}>
-                <span>Palette</span>
-                <strong>{answeredCount}/{questionSet.length}</strong>
-            </button>
-
-            <div className={`${prefix}-palette-backdrop ${paletteOpen ? 'is-open' : ''}`} onClick={() => setPaletteOpen(false)} />
             {palette}
         </div>
     );
