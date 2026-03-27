@@ -2,19 +2,32 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 
+const normalizeQuestionKey = (question = {}) =>
+    String(question.question ?? question.q ?? '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const getUniqueQuestions = (questions = []) => {
+    const seen = new Set();
+
+    return (questions ?? []).filter((question) => {
+        const key = normalizeQuestionKey(question);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+};
+
+const resolveQuestions = (questions) =>
+    getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
+
 export default function WWSAssessmentEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
     // v4 Logging
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
     const sessionStartedRef = useRef(false);
-
-    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
-    const [current, setCurrent] = useState(0);
-    const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
-    const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
-    const [finished, setFinished] = useState(false);
-    const [paletteOpen, setPaletteOpen] = useState(false);
-    const topRef = useRef(null);
 
     useEffect(() => {
         if (nodeId && !sessionStartedRef.current) {
@@ -30,6 +43,7 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
             }
         };
     }, [abandonSession, questionSet.length]);
+
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -86,9 +100,16 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
         return question.options?.[answer] ?? 'Not Answered';
     };
 
+    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
+    const [current, setCurrent] = useState(0);
+    const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
+    const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
+    const [finished, setFinished] = useState(false);
+    const [paletteOpen, setPaletteOpen] = useState(false);
+    const topRef = useRef(null);
 
     useEffect(() => {
-        const newQs = typeof questions === 'function' ? questions() : questions;
+        const newQs = resolveQuestions(questions);
         setQuestionSet(newQs);
         setCurrent(0);
         setAnswers(Array(newQs.length).fill(null));
@@ -241,7 +262,7 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
                         <button
                             className={`${prefix}-btn-primary`}
                             onClick={() => {
-                                const newQs = typeof questions === 'function' ? questions() : questions;
+                                const newQs = resolveQuestions(questions);
                                 setQuestionSet(newQs);
                                 setCurrent(0);
                                 setAnswers(Array(newQs.length).fill(null));
@@ -610,4 +631,3 @@ export default function WWSAssessmentEngine({ questions, title, onBack, onSecond
         </div>
     );
 }
-

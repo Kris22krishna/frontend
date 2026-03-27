@@ -2,13 +2,34 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 
+const normalizeQuestionKey = (question = {}) =>
+    String(question.question ?? question.q ?? '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const getUniqueQuestions = (questions = []) => {
+    const seen = new Set();
+
+    return (questions ?? []).filter((question) => {
+        const key = normalizeQuestionKey(question);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+};
+
+const resolveQuestions = (questions) =>
+    getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
+
 export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
     // v4 Logging
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
     const sessionStartedRef = useRef(false);
 
-    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
+    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
@@ -31,7 +52,7 @@ export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBac
     }, [abandonSession, questionSet.length]);
 
     useEffect(() => {
-        setQuestionSet(typeof questions === 'function' ? questions() : questions);
+        setQuestionSet(resolveQuestions(questions));
         setCurrent(0);
         setSelected(null);
         setAnswered(false);
@@ -151,7 +172,7 @@ export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBac
                     <button
                         className={`${prefix}-btn-primary`}
                         onClick={() => {
-                            if (typeof questions === 'function') { setQuestionSet(questions()); }
+                            setQuestionSet(resolveQuestions(questions));
                             setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false);
                         }}
                         style={{ padding: '16px 32px', background: color, fontSize: 16, boxShadow: `0 8px 24px ${color}40`, flex: 1, minWidth: 200 }}
@@ -333,4 +354,3 @@ export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBac
         </div>
     );
 }
-
