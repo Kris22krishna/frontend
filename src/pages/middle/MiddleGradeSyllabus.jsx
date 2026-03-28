@@ -241,6 +241,14 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/patterns-in-mathematics'
+                        },
+                        {
+                            skill_id: 'local-lines-and-angles',
+                            skill_name: 'Lines and Angles: Interactive Chapter',
+                            topic: 'Lines and Angles',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/lines-and-angles'
                         }
                     ];
                 }
@@ -632,7 +640,7 @@ const MiddleGradeSyllabus = () => {
 
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (activeSubject === 'mathematics') {
-            if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry"].some(t => topicName.includes(t.toLowerCase()))) return acc;
+            if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles"].some(t => topicName.includes(t.toLowerCase()))) return acc;
             if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
             if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
         }
