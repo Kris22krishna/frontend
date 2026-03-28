@@ -61,7 +61,8 @@ const SeniorGradeSyllabus = () => {
                     setSkills([
                         { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' },
                         { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' },
-                        { skill_id: 12200, skill_name: 'Relations: Interactive Chapter', topic: 'Relations', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/relations' }
+                        { skill_id: 12200, skill_name: 'Relations: Interactive Chapter', topic: 'Relations', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/relations' },
+                        { skill_id: 12300, skill_name: 'Functions: Interactive Chapter', topic: 'Functions', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/functions' }
                     ]);
                 } else if (grade === '10') {
                     setSkills([

@@ -708,6 +708,12 @@ import RelationsTerminology from './components/practice/class-12/Relations/Topic
 import RelationsSkills from './components/practice/class-12/Relations/Topics/Skills/RelationsSkills';
 import RelationsConnectomics from './components/practice/class-12/Relations/Topics/Connectomics/RelationsConnectomics';
 import RelationsExamEdge from './components/practice/class-12/Relations/Topics/ExamEdge/RelationsExamEdge';
+import Functions12Hub from './components/practice/class-12/Functions/Functions';
+import Functions12Intro5W1H from './components/practice/class-12/Functions/Topics/5W1H/FunctionsIntro5W1H';
+import Functions12Terminology from './components/practice/class-12/Functions/Topics/Terminology/FunctionsTerminology';
+import Functions12Skills from './components/practice/class-12/Functions/Topics/Skills/FunctionsSkills';
+import Functions12Connectomics from './components/practice/class-12/Functions/Topics/Connectomics/FunctionsConnectomics';
+import Functions12ExamEdge from './components/practice/class-12/Functions/Topics/ExamEdge/FunctionsExamEdge';
 
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
@@ -1204,6 +1210,14 @@ function App() {
           <Route path="senior/grade/12/relations/skills" element={<ProtectedRoute redirectTo="/login"><RelationsSkills /></ProtectedRoute>} />
           <Route path="senior/grade/12/relations/connectomics" element={<ProtectedRoute redirectTo="/login"><RelationsConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/12/relations/exam-edge" element={<ProtectedRoute redirectTo="/login"><RelationsExamEdge /></ProtectedRoute>} />
+
+          {/* Class 12: Functions */}
+          <Route path="senior/grade/12/functions" element={<ProtectedRoute redirectTo="/login"><Functions12Hub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/introduction" element={<ProtectedRoute redirectTo="/login"><Functions12Intro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/terminology" element={<ProtectedRoute redirectTo="/login"><Functions12Terminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/skills" element={<ProtectedRoute redirectTo="/login"><Functions12Skills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/connectomics" element={<ProtectedRoute redirectTo="/login"><Functions12Connectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><Functions12ExamEdge /></ProtectedRoute>} />
 
           {/* Class 7: Integers */}
           <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />
