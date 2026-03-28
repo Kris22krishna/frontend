@@ -47,45 +47,94 @@ const DynamicVisual = ({ type, data, isAnswered }) => {
         );
     }
 
-    const tens = Math.floor(num / 10);
+    const hundreds = Math.floor(num / 100);
+    const tens = Math.floor((num % 100) / 10);
     const ones = num % 10;
+
     return (
-        <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="g1-tens-grid-area" style={{ width: '100%' }}>
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-end', justifyContent: 'center', width: '100%', maxWidth: '350px', margin: '0 auto' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
-                    {Array.from({ length: tens }).map((_, i) => (
+        <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="g1-place-value-table-container" style={{ width: '100%', maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(3, 1fr)', 
+                gap: '2px', 
+                background: '#E2E8F0', 
+                border: '3px solid #E2E8F0', 
+                borderRadius: '20px',
+                overflow: 'hidden',
+                boxShadow: '0 10px 25px rgba(0,0,0,0.08)'
+            }}>
+                {/* Header Row */}
+                <div style={{ background: '#F8FAFC', padding: '12px', textAlign: 'center', borderBottom: '2px solid #E2E8F0' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#64748B', textTransform: 'uppercase', letterSpacing: '1px' }}>Hundreds</div>
+                </div>
+                <div style={{ background: '#F8FAFC', padding: '12px', textAlign: 'center', borderBottom: '2px solid #E2E8F0', borderLeft: '2px solid #E2E8F0', borderRight: '2px solid #E2E8F0' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#0891B2', textTransform: 'uppercase', letterSpacing: '1px' }}>Tens</div>
+                </div>
+                <div style={{ background: '#F8FAFC', padding: '12px', textAlign: 'center', borderBottom: '2px solid #E2E8F0' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 900, color: '#EC4899', textTransform: 'uppercase', letterSpacing: '1px' }}>Ones</div>
+                </div>
+
+                {/* Content Row */}
+                <div style={{ background: 'white', padding: '20px 10px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '120px' }}>
+                    {hundreds > 0 ? (
+                        <div style={{ fontSize: '2.4rem', fontWeight: 900, color: '#CBD5E1' }}>{hundreds}</div>
+                    ) : (
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px dashed #E2E8F0' }}></div>
+                    )}
+                </div>
+                <div style={{ background: 'white', padding: '20px 10px', display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center', alignItems: 'flex-end', minHeight: '120px', borderLeft: '2px solid #F1F5F9', borderRight: '2px solid #F1F5F9' }}>
+                    {tens > 0 ? Array.from({ length: tens }).map((_, i) => (
                         <motion.div
                             key={i}
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: i * 0.05 }}
-                            style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px', padding: '3px', background: 'white', border: '2px solid #E2E8F0', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
+                            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: i * 0.05 }}
+                            style={{ display: 'flex', flexDirection: 'column-reverse', gap: '1px', padding: '2px', border: '1.5px solid #CBD5E1', borderRadius: '5px', background: 'white' }}
                         >
                             {Array.from({ length: 10 }).map((_, j) => (
-                                <div key={j} style={{ width: '15px', height: '6px', backgroundColor: color, borderRadius: '1px' }}></div>
+                                <div key={j} style={{ width: '10px', height: '5px', backgroundColor: color, borderRadius: '1px' }}></div>
                             ))}
                         </motion.div>
-                    ))}
+                    )) : (
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px dashed #E2E8F0' }}></div>
+                    )}
                 </div>
-                {ones > 0 && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 15px)', gap: '4px' }}>
-                        {Array.from({ length: ones }).map((_, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: (tens * 0.05) + (i * 0.1) }}
-                                style={{ width: '15px', height: '6px', backgroundColor: color, borderRadius: '1px', opacity: 0.8 }}
-                            />
-                        ))}
-                    </div>
-                )}
+                <div style={{ background: 'white', padding: '20px 10px', display: 'flex', flexWrap: 'wrap', gap: '3px', justifyContent: 'center', alignItems: 'center', minHeight: '120px' }}>
+                    {ones > 0 ? (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 12px)', gap: '3px' }}>
+                            {Array.from({ length: ones }).map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: (tens * 0.05) + (i * 0.05) }}
+                                    style={{ width: '12px', height: '12px', backgroundColor: color, borderRadius: '2px', opacity: 0.9 }}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px dashed #E2E8F0' }}></div>
+                    )}
+                </div>
             </div>
-            {isAnswered && (
-                <div style={{ marginTop: '15px', fontSize: '1.2rem', fontWeight: 400, color: '#4A5568' }}>
-                    {tens} Tens and {ones} Ones
-                </div>
-            )}
+            
+            <AnimatePresence>
+                {isAnswered && (
+                    <motion.div 
+                        initial={{ y: 10, opacity: 0 }} 
+                        animate={{ y: 0, opacity: 1 }}
+                        style={{ marginTop: '20px', textAlign: 'center' }}
+                    >
+                        <div style={{ display: 'inline-flex', gap: '12px', padding: '10px 24px', background: 'white', borderRadius: '100px', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', border: '1px solid #F1F5F9' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0891B2' }}>{tens}</span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#64748B' }}>Tens</span>
+                            </div>
+                            <div style={{ width: '1px', background: '#E2E8F0' }}></div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span style={{ fontSize: '1.4rem', fontWeight: 900, color: '#EC4899' }}>{ones}</span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#64748B' }}>Ones</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 };
@@ -162,7 +211,7 @@ const Numbers51to100 = () => {
             if (typeToGen === 'counting') {
                 const num = Math.floor(Math.random() * 49) + 51;
                 question = {
-                    text: `How many blocks are there in total? 🔢`,
+                    text: `Count the blocks carefully! What number is shown? 🔢`,
                     options: [num, (num + 10) % 101 || 51, Math.max(51, num - 5)].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: num,
                     type: 'counting',
@@ -176,7 +225,7 @@ const Numbers51to100 = () => {
                 const wrong1 = numberWords(Math.min(100, num + Math.floor(Math.random() * 5) + 1));
                 const wrong2 = numberWords(Math.max(51, num - Math.floor(Math.random() * 5) - 1));
                 question = {
-                    text: `How do you write ${num} in words?`,
+                    text: `How do you write the number shown in the table in words? ✍️`,
                     options: [correctWord, wrong1, wrong2].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: correctWord,
                     type: 'counting',
@@ -190,7 +239,7 @@ const Numbers51to100 = () => {
                 const wrong1 = Math.min(100, num + Math.floor(Math.random() * 10) + 1);
                 const wrong2 = Math.max(51, num - Math.floor(Math.random() * 10) - 1);
                 question = {
-                    text: `What number is "${word}"? 🔤`,
+                    text: `Which number matches the name: "${word}"? 🔤`,
                     options: [num, wrong1, wrong2].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: num,
                     type: 'counting',
@@ -329,7 +378,7 @@ const Numbers51to100 = () => {
                 visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
+                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
             }
         }));
 
@@ -628,7 +677,7 @@ const Numbers51to100 = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Check Answer <ChevronRight size={24} />
+                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>

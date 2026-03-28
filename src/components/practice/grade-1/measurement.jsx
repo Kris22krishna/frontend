@@ -71,20 +71,34 @@ const DynamicVisual = ({ type, data }) => {
     }
 
     if (type === 'capacity') {
-        const { f1, f2, color1, color2, label1, label2 } = data; // content fillers
+        const { f1, f2, color1, color2, label1, label2, isAnswered } = data; // content fillers
         return (
-            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', gap: '50px', justifyContent: 'center', background: 'white', padding: '30px', borderRadius: '30px' }}>
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', gap: '50px', justifyContent: 'center', background: 'white', padding: '30px', borderRadius: '30px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ position: 'relative', width: '60px', height: '100px', border: '3px solid #64748b', borderTop: 'none', borderRadius: '0 0 10px 10px', overflow: 'hidden' }}>
+                    <div style={{ position: 'relative', width: '60px', height: '100px', border: '3px solid #64748b', borderTop: 'none', borderRadius: '0 0 10px 10px', overflow: 'hidden', background: '#f8fafc' }}>
                         <motion.div initial={{ height: 0 }} animate={{ height: `${f1}%` }} style={{ position: 'absolute', bottom: 0, width: '100%', background: color1, opacity: 0.7 }} />
+                        <AnimatePresence>
+                            {isAnswered && (
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: 900, color: '#1e3a8a', fontSize: '1.2rem', textShadow: '0 0 10px white' }}>
+                                    {f1}%
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
-                    <span style={{ fontWeight: 400, color: '#31326F' }}>{label1}</span>
+                    <span style={{ fontWeight: 600, color: '#31326F' }}>{label1}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ position: 'relative', width: '60px', height: '100px', border: '3px solid #64748b', borderTop: 'none', borderRadius: '0 0 10px 10px', overflow: 'hidden' }}>
+                    <div style={{ position: 'relative', width: '60px', height: '100px', border: '3px solid #64748b', borderTop: 'none', borderRadius: '0 0 10px 10px', overflow: 'hidden', background: '#f8fafc' }}>
                         <motion.div initial={{ height: 0 }} animate={{ height: `${f2}%` }} style={{ position: 'absolute', bottom: 0, width: '100%', background: color2, opacity: 0.7 }} />
+                        <AnimatePresence>
+                            {isAnswered && (
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: 900, color: '#1e3a8a', fontSize: '1.2rem', textShadow: '0 0 10px white' }}>
+                                    {f2}%
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
-                    <span style={{ fontWeight: 400, color: '#31326F' }}>{label2}</span>
+                    <span style={{ fontWeight: 600, color: '#31326F' }}>{label2}</span>
                 </div>
             </motion.div>
         );
@@ -260,18 +274,19 @@ const Measurement = () => {
                 const isMore = Math.random() > 0.5;
                 const f1 = 30 + Math.floor(Math.random() * 20);
                 const f2 = f1 + (Math.random() > 0.5 ? 40 : -20);
-                const label1 = "Jug A";
-                const label2 = "Cup B";
+                const containerType = Math.random() > 0.5 ? { name: 'Jug', emoji: '🫗' } : { name: 'Cup', emoji: '🥛' };
+                const label1 = `${containerType.name} A`;
+                const label2 = `${containerType.name} B`;
                 const adj = isMore ? 'holds more' : 'holds less';
                 const correct = (isMore ? (f1 > f2 ? label1 : label2) : (f1 < f2 ? label1 : label2));
 
                 question = {
-                    text: `Which container ${adj}? 💧`,
+                    text: `Which ${containerType.name.toLowerCase()} ${adj}? 🧐 ${containerType.emoji}`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type: 'capacity',
                     visualData: { f1, f2, color1: '#3b82f6', color2: '#3b82f6', label1, label2 },
-                    explanation: `Comparing the liquid levels, ${correct} ${adj}.`
+                    explanation: `Comparing the liquid levels, ${correct} ${adj} because its level is higher.`
                 };
             }
             questions.push(question);
@@ -378,7 +393,7 @@ const Measurement = () => {
                 visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
+                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
             }
         }));
 
@@ -523,7 +538,7 @@ const Measurement = () => {
                                                     <LatexText text={ans.questionText} />
                                                     {ans.visualData && (
                                                         <div className="log-visual-area" style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
-                                                            <DynamicVisual type={ans.type} data={ans.visualData} />
+                                                            <DynamicVisual type={ans.type} data={{ ...ans.visualData, isAnswered: true }} />
                                                         </div>
                                                     )}
                                                 </div>
@@ -655,7 +670,7 @@ const Measurement = () => {
 
                     <div className="g1-content-split">
                         <div className="g1-visual-area">
-                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                            <DynamicVisual type={currentQ.type} data={{ ...currentQ.visualData, isAnswered }} />
                         </div>
 
                         <div className="g1-quiz-side">
@@ -693,7 +708,7 @@ const Measurement = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Check Answer <ChevronRight size={24} />
+                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>
