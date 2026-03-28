@@ -713,8 +713,6 @@ const SeniorGradeSyllabus = () => {
                     <nav className="breadcrumb">
                         <Link to="/" className="home-link">Home</Link>
                         <ChevronRight size={14} />
-                        <Link to="/" className="home-link">Math</Link>
-                        <ChevronRight size={14} />
                         <span>Grade {grade}</span>
                     </nav>
 
