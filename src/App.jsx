@@ -233,6 +233,17 @@ import AssessmentStudentDashboard from './pages/dashboards/AssessmentStudentDash
 import AssessmentRunner from './pages/AssessmentRunner';
 
 // Junior Pages (Grades 1-4 child-friendly design)
+import Grade3Practice from './components/practice/grade-3/Grade3Practice';
+// Grade 3 – New NCERT Chapter Practice Sessions
+import WhatsInAName from './components/practice/grade-3/whats-in-a-name';
+import ToyJoy from './components/practice/grade-3/toy-joy';
+import DoubleCentury from './components/practice/grade-3/double-century';
+import VacationNaniMaa from './components/practice/grade-3/vacation-nani-maa';
+import FunWithShapesCh3 from './components/practice/grade-3/fun-with-shapes-ch3';
+import HouseOfHundreds1 from './components/practice/grade-3/house-of-hundreds-1';
+import FillingAndLifting from './components/practice/grade-3/filling-and-lifting';
+import GiveAndTakeCh12 from './components/practice/grade-3/give-and-take-ch12';
+import SurajkundFair from './components/practice/grade-3/surajkund-fair';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
@@ -1270,7 +1281,24 @@ function App() {
         <Route path="/neet" element={<NeetMockTest />} />
 
         {/* Junior Routes (Grades 1-4 child-friendly design) */}
-        
+
+        {/* Grade 3 Practice Hub */}
+        <Route path="/junior/grade/3/math-practice" element={
+          <ProtectedRoute redirectTo="/login">
+            <Grade3Practice />
+          </ProtectedRoute>
+        } />
+        {/* Grade 3 – Chapter Practice Sessions */}
+        <Route path="/junior/grade/3/whats-in-a-name" element={<ProtectedRoute redirectTo="/login"><WhatsInAName /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/toy-joy" element={<ProtectedRoute redirectTo="/login"><ToyJoy /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/double-century" element={<ProtectedRoute redirectTo="/login"><DoubleCentury /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/vacation-nani-maa" element={<ProtectedRoute redirectTo="/login"><VacationNaniMaa /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/fun-with-shapes-ch3" element={<ProtectedRoute redirectTo="/login"><FunWithShapesCh3 /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/house-of-hundreds-1" element={<ProtectedRoute redirectTo="/login"><HouseOfHundreds1 /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/filling-and-lifting" element={<ProtectedRoute redirectTo="/login"><FillingAndLifting /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/give-and-take-ch12" element={<ProtectedRoute redirectTo="/login"><GiveAndTakeCh12 /></ProtectedRoute>} />
+        <Route path="/junior/grade/3/surajkund-fair" element={<ProtectedRoute redirectTo="/login"><SurajkundFair /></ProtectedRoute>} />
+
         {/* Grade 3 EVS Routes */}
         <Route path="/junior/grade/3/science/our-families-and-communities" element={
           <ProtectedRoute redirectTo="/login">

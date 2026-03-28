@@ -125,12 +125,26 @@ const JuniorSubtopics = () => {
             navigate(`/junior/grade/${grade}/house-of-hundreds-ii/chapter-test`);
             return;
         }
+        const gradeNumStr = String(grade).replace(/\D/g, '');
+
         if (subtopic.id.startsWith("TGO-")) {
             const gradeConfigs = TOPIC_CONFIGS['3'];
             const skill = gradeConfigs["Time Goes On"]?.find(s => String(s.id) === String(subtopic.id));
             if (skill && skill.route) {
                 navigate(`/junior/grade/${grade}/time-goes-on/${skill.route}`);
                 return;
+            }
+        }
+
+        // Grade 3 – New NCERT chapters (route exactly like Grade 1 pattern)
+        if (gradeNumStr === '3') {
+            const gradeConfigs = TOPIC_CONFIGS['3'];
+            if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
+                if (skill && skill.route) {
+                    navigate(`/junior/grade/3/${skill.route}?skillId=${subtopic.id}`);
+                    return;
+                }
             }
         }
 
@@ -170,7 +184,6 @@ const JuniorSubtopics = () => {
             }
         }
 
-        const gradeNumStr = String(grade).replace(/\D/g, '');
         if (gradeNumStr === '1') {
             const gradeConfigs = TOPIC_CONFIGS['1'];
             if (gradeConfigs && gradeConfigs[decodedTopic]) {
@@ -259,6 +272,16 @@ const JuniorSubtopics = () => {
                             .replace(/\s+/g, '-')
                             .replace(/[?,]/g, '');
                         navigate(`/junior/grade/2/${topicSlug}?skillId=${subtopic.id}`);
+                        setPendingSubtopic(null);
+                        return;
+                    }
+                }
+            } else if (String(grade).replace(/\D/g, '') === '3') {
+                const gradeConfigs = TOPIC_CONFIGS['3'];
+                if (gradeConfigs && gradeConfigs[decodedTopic]) {
+                    const skill = gradeConfigs[decodedTopic].find(s => String(s.id) === String(subtopic.id));
+                    if (skill && skill.route) {
+                        navigate(`/junior/grade/3/${skill.route}?skillId=${subtopic.id}`);
                         setPendingSubtopic(null);
                         return;
                     }

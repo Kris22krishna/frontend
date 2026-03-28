@@ -158,6 +158,99 @@ export const TOPIC_CONFIGS = {
         ]
     },
     '3': {
+        "What's in a Name?": [
+            { id: "WIN-01", name: "Counting Objects",           route: "whats-in-a-name" },
+            { id: "WIN-02", name: "Number Recognition",          route: "whats-in-a-name" },
+            { id: "WIN-03", name: "Number Names",                route: "whats-in-a-name" },
+            { id: "WIN-04", name: "Comparing Numbers",           route: "whats-in-a-name" },
+            { id: "WIN-05", name: "Ordering Numbers",            route: "whats-in-a-name" },
+            { id: "WIN-06", name: "Before, After, Between",      route: "whats-in-a-name" },
+            { id: "WIN-07", name: "Place Value (Tens & Ones)",   route: "whats-in-a-name" },
+            { id: "WIN-TEST", name: "Chapter Test",              route: "whats-in-a-name" }
+        ],
+        'Toy Joy': [
+            { id: "TJY-01", name: "Counting and Grouping",       route: "toy-joy" },
+            { id: "TJY-02", name: "Addition using Objects",       route: "toy-joy" },
+            { id: "TJY-03", name: "Subtraction using Objects",    route: "toy-joy" },
+            { id: "TJY-04", name: "Number Line Operations",       route: "toy-joy" },
+            { id: "TJY-05", name: "Vertical Addition/Subtraction",route: "toy-joy" },
+            { id: "TJY-06", name: "Missing Numbers",              route: "toy-joy" },
+            { id: "TJY-07", name: "Fact Families",                route: "toy-joy" },
+            { id: "TJY-08", name: "Word Problems",                route: "toy-joy" },
+            { id: "TJY-TEST", name: "Chapter Test",               route: "toy-joy" }
+        ],
+        'Double Century': [
+            { id: "DCY-01", name: "Counting 100–200",            route: "double-century" },
+            { id: "DCY-02", name: "Number Reading & Writing",    route: "double-century" },
+            { id: "DCY-03", name: "Before, After, Between",      route: "double-century" },
+            { id: "DCY-04", name: "Skip Counting",               route: "double-century" },
+            { id: "DCY-05", name: "Number Patterns",             route: "double-century" },
+            { id: "DCY-06", name: "Comparing Numbers",           route: "double-century" },
+            { id: "DCY-07", name: "Ordering Numbers",            route: "double-century" },
+            { id: "DCY-TEST", name: "Chapter Test",              route: "double-century" }
+        ],
+        'Vacation with My Nani Maa': [
+            { id: "NNM-01", name: "Comparing Lengths",           route: "vacation-nani-maa" },
+            { id: "NNM-02", name: "Estimating Length",           route: "vacation-nani-maa" },
+            { id: "NNM-03", name: "Non-standard Measurement",    route: "vacation-nani-maa" },
+            { id: "NNM-04", name: "Ordering by Length",          route: "vacation-nani-maa" },
+            { id: "NNM-05", name: "Distance Concepts",           route: "vacation-nani-maa" },
+            { id: "NNM-06", name: "Practical Measurement Problems", route: "vacation-nani-maa" },
+            { id: "NNM-TEST", name: "Chapter Test",              route: "vacation-nani-maa" }
+        ],
+        'Fun with Shapes': [
+            { id: "FWS-01", name: "Identifying Shapes",          route: "fun-with-shapes-ch3" },
+            { id: "FWS-02", name: "Counting Sides & Corners",    route: "fun-with-shapes-ch3" },
+            { id: "FWS-03", name: "Sorting Shapes",              route: "fun-with-shapes-ch3" },
+            { id: "FWS-04", name: "Shape Matching",              route: "fun-with-shapes-ch3" },
+            { id: "FWS-05", name: "Pattern Completion",          route: "fun-with-shapes-ch3" },
+            { id: "FWS-06", name: "Shapes in Real Life",         route: "fun-with-shapes-ch3" },
+            { id: "FWS-07", name: "Symmetry Basics",             route: "fun-with-shapes-ch3" },
+            { id: "FWS-08", name: "Shape Construction",          route: "fun-with-shapes-ch3" },
+            { id: "FWS-TEST", name: "Chapter Test",              route: "fun-with-shapes-ch3" }
+        ],
+        'House of Hundreds – I': [
+            { id: "HH1-01", name: "Reading 100 Chart",           route: "house-of-hundreds-1" },
+            { id: "HH1-02", name: "Row Patterns (+1)",           route: "house-of-hundreds-1" },
+            { id: "HH1-03", name: "Column Patterns (+10)",       route: "house-of-hundreds-1" },
+            { id: "HH1-04", name: "Neighbour Numbers",           route: "house-of-hundreds-1" },
+            { id: "HH1-05", name: "Missing Numbers",             route: "house-of-hundreds-1" },
+            { id: "HH1-06", name: "Skip Counting on Grid",       route: "house-of-hundreds-1" },
+            { id: "HH1-07", name: "Counting in Tens",            route: "house-of-hundreds-1" },
+            { id: "HH1-08", name: "Number Sequences",            route: "house-of-hundreds-1" },
+            { id: "HH1-09", name: "Identify Patterns",           route: "house-of-hundreds-1" },
+            { id: "HH1-TEST", name: "Chapter Test",              route: "house-of-hundreds-1" }
+        ],
+        'Filling and Lifting': [
+            { id: "FAL-01", name: "Capacity Comparison",         route: "filling-and-lifting" },
+            { id: "FAL-02", name: "Estimating Capacity",         route: "filling-and-lifting" },
+            { id: "FAL-03", name: "Measuring Capacity",          route: "filling-and-lifting" },
+            { id: "FAL-04", name: "Weight Comparison",           route: "filling-and-lifting" },
+            { id: "FAL-05", name: "Balance Scale",               route: "filling-and-lifting" },
+            { id: "FAL-06", name: "Estimating Weight",           route: "filling-and-lifting" },
+            { id: "FAL-TEST", name: "Chapter Test",              route: "filling-and-lifting" }
+        ],
+        'Give and Take': [
+            { id: "GTK-01", name: "Addition without Carry",      route: "give-and-take-ch12" },
+            { id: "GTK-02", name: "Addition with Carry",         route: "give-and-take-ch12" },
+            { id: "GTK-03", name: "Subtraction without Borrow",  route: "give-and-take-ch12" },
+            { id: "GTK-04", name: "Subtraction with Borrow",     route: "give-and-take-ch12" },
+            { id: "GTK-05", name: "Mental Math",                 route: "give-and-take-ch12" },
+            { id: "GTK-06", name: "Missing Digits",              route: "give-and-take-ch12" },
+            { id: "GTK-07", name: "Word Problems",               route: "give-and-take-ch12" },
+            { id: "GTK-08", name: "Check Answers",               route: "give-and-take-ch12" },
+            { id: "GTK-TEST", name: "Chapter Test",              route: "give-and-take-ch12" }
+        ],
+        'The Surajkund Fair': [
+            { id: "SKF-01", name: "Identifying Coins & Notes",   route: "surajkund-fair" },
+            { id: "SKF-02", name: "Counting Money",              route: "surajkund-fair" },
+            { id: "SKF-03", name: "Making an Amount",            route: "surajkund-fair" },
+            { id: "SKF-04", name: "Comparing Money",             route: "surajkund-fair" },
+            { id: "SKF-05", name: "Transactions",                route: "surajkund-fair" },
+            { id: "SKF-06", name: "Finding Change",              route: "surajkund-fair" },
+            { id: "SKF-07", name: "Word Problems",               route: "surajkund-fair" },
+            { id: "SKF-TEST", name: "Chapter Test",              route: "surajkund-fair" }
+        ],
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
