@@ -714,6 +714,12 @@ import Functions12Terminology from './components/practice/class-12/Functions/Top
 import Functions12Skills from './components/practice/class-12/Functions/Topics/Skills/FunctionsSkills';
 import Functions12Connectomics from './components/practice/class-12/Functions/Topics/Connectomics/FunctionsConnectomics';
 import Functions12ExamEdge from './components/practice/class-12/Functions/Topics/ExamEdge/FunctionsExamEdge';
+import InverseTrigonometricFunctionsHub from './components/practice/class-12/InverseTrigonometricFunctions/InverseTrigonometricFunctions';
+import InverseTrigonometricFunctionsIntro5W1H from './components/practice/class-12/InverseTrigonometricFunctions/Topics/5W1H/InverseTrigonometricFunctionsIntro5W1H';
+import InverseTrigonometricFunctionsTerminology from './components/practice/class-12/InverseTrigonometricFunctions/Topics/Terminology/InverseTrigonometricFunctionsTerminology';
+import InverseTrigonometricFunctionsSkills from './components/practice/class-12/InverseTrigonometricFunctions/Topics/Skills/InverseTrigonometricFunctionsSkills';
+import InverseTrigonometricFunctionsConnectomics from './components/practice/class-12/InverseTrigonometricFunctions/Topics/Connectomics/InverseTrigonometricFunctionsConnectomics';
+import InverseTrigonometricFunctionsExamEdge from './components/practice/class-12/InverseTrigonometricFunctions/Topics/ExamEdge/InverseTrigonometricFunctionsExamEdge';
 
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
@@ -1218,6 +1224,14 @@ function App() {
           <Route path="senior/grade/12/functions/skills" element={<ProtectedRoute redirectTo="/login"><Functions12Skills /></ProtectedRoute>} />
           <Route path="senior/grade/12/functions/connectomics" element={<ProtectedRoute redirectTo="/login"><Functions12Connectomics /></ProtectedRoute>} />
           <Route path="senior/grade/12/functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><Functions12ExamEdge /></ProtectedRoute>} />
+
+          {/* Class 12: Inverse Trigonometric Functions */}
+          <Route path="senior/grade/12/inverse-trigonometric-functions" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsHub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/introduction" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/terminology" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/skills" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/connectomics" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsExamEdge /></ProtectedRoute>} />
 
           {/* Class 7: Integers */}
           <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />
