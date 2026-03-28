@@ -466,6 +466,12 @@ import RotationalSymmetry6 from './components/practice/grade-6/symmetry/Rotation
 import OrderOfRotationalSymmetry6 from './components/practice/grade-6/symmetry/OrderOfRotationalSymmetry';
 import IntroToSymmetry6 from './components/practice/grade-6/symmetry/line-of-symmetry';
 
+// Grade 6 Number Play Chapter
+import Grade6NumberPlay from './components/practice/grade-6/NumberPlay_6/NumberPlay_6';
+import Grade6NumberPlayIntro from './components/practice/grade-6/NumberPlay_6/Topics/5W1H/NumberPlay6Intro';
+import Grade6NumberPlayTerminology from './components/practice/grade-6/NumberPlay_6/Topics/Terminology/NumberPlay6Terminology';
+import Grade6NumberPlaySkills from './components/practice/grade-6/NumberPlay_6/Topics/Skills/NumberPlay6Skills';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -1275,6 +1281,12 @@ function App() {
           <Route path="middle/grade/6/lines-and-angles/introduction" element={<Grade6LinesAndAnglesIntro />} />
           <Route path="middle/grade/6/lines-and-angles/terminology" element={<Grade6LinesAndAnglesTerminology />} />
           <Route path="middle/grade/6/lines-and-angles/skills" element={<Grade6LinesAndAnglesSkills />} />
+
+          {/* Grade 6 Number Play Chapter */}
+          <Route path="middle/grade/6/number-play-chapter" element={<Grade6NumberPlay />} />
+          <Route path="middle/grade/6/number-play-chapter/introduction" element={<Grade6NumberPlayIntro />} />
+          <Route path="middle/grade/6/number-play-chapter/terminology" element={<Grade6NumberPlayTerminology />} />
+          <Route path="middle/grade/6/number-play-chapter/skills" element={<Grade6NumberPlaySkills />} />
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
@@ -2115,6 +2127,8 @@ function App() {
         <Route path="/middle/grade/:grade/symmetry/reflection" element={<ReflectionInALine6 />} />
         <Route path="/middle/grade/:grade/symmetry/rotational" element={<RotationalSymmetry6 />} />
         <Route path="/middle/grade/:grade/symmetry/order-rotational" element={<OrderOfRotationalSymmetry6 />} />
+
+
         <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
         <Route path="/middle/grade/7/comparing-quantities/use-of-percentages" element={<UseOfPercentages />} />
         <Route path="/middle/grade/7/comparing-quantities/profit-and-loss" element={<ProfitAndLoss />} />

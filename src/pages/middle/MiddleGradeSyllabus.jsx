@@ -249,6 +249,14 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/lines-and-angles'
+                        },
+                        {
+                            skill_id: 'local-number-play-chapter',
+                            skill_name: 'Number Play: Interactive Chapter',
+                            topic: 'Number Play',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/number-play-chapter'
                         }
                     ];
                 }
