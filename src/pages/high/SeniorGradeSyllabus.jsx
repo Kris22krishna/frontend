@@ -588,6 +588,18 @@ const SeniorGradeSyllabus = () => {
             }
         ];
 
+        // Understanding Quadrilaterals (NCERT Ch. 3 — Grade 8)
+        skillsByTopic['Understanding Quadrilaterals'] = [
+            {
+                skill_id: 'local-8-uq-landing',
+                skill_name: 'Understanding Quadrilaterals Chapter',
+                topic: 'Understanding Quadrilaterals',
+                subtopic: 'Polygons, Angles, and Special Quadrilaterals',
+                isLocal: true,
+                path: '/senior/grade/8/understanding-quadrilaterals'
+            }
+        ];
+
         // Comparing Quantities (NCERT Ch. 8 — Grade 8)
         skillsByTopic['Comparing Quantities'] = [
             {

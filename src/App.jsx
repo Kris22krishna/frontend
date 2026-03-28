@@ -361,6 +361,12 @@ import CubesIntro5W1H from './components/practice/class-8/cubes_and_cube_roots/T
 import CubesTerminology from './components/practice/class-8/cubes_and_cube_roots/Topics/Terminology/CubesTerminology';
 import CubesSkills from './components/practice/class-8/cubes_and_cube_roots/Topics/Skills/CubesSkills';
 
+// Grade 8 Understanding Quadrilaterals
+import UnderstandingQuadrilaterals from './components/practice/class-8/understanding_quadrilaterals/UnderstandingQuadrilaterals';
+import UnderstandingQuadrilateralsIntro5W1H from './components/practice/class-8/understanding_quadrilaterals/Topics/5W1H/UnderstandingQuadrilateralsIntro5W1H';
+import UnderstandingQuadrilateralsTerminology from './components/practice/class-8/understanding_quadrilaterals/Topics/Terminology/UnderstandingQuadrilateralsTerminology';
+import UnderstandingQuadrilateralsSkills from './components/practice/class-8/understanding_quadrilaterals/Topics/Skills/UnderstandingQuadrilateralsSkills';
+
 // Grade 1 Specialized Components
 import Grade1ShapesAndSpace from './components/practice/grade-1/shapes-and-space';
 import Grade1Numbers1to9 from './components/practice/grade-1/numbers-1-9';
@@ -1106,6 +1112,12 @@ function App() {
           <Route path="senior/grade/8/cubes-and-cube-roots/introduction" element={<ProtectedRoute redirectTo="/login"><CubesIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/8/cubes-and-cube-roots/terminology" element={<ProtectedRoute redirectTo="/login"><CubesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/8/cubes-and-cube-roots/skills" element={<ProtectedRoute redirectTo="/login"><CubesSkills /></ProtectedRoute>} />
+
+          {/* Grade 8: Understanding Quadrilaterals Chapter Pages */}
+          <Route path="senior/grade/8/understanding-quadrilaterals" element={<ProtectedRoute redirectTo="/login"><UnderstandingQuadrilaterals /></ProtectedRoute>} />
+          <Route path="senior/grade/8/understanding-quadrilaterals/introduction" element={<ProtectedRoute redirectTo="/login"><UnderstandingQuadrilateralsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/8/understanding-quadrilaterals/terminology" element={<ProtectedRoute redirectTo="/login"><UnderstandingQuadrilateralsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/8/understanding-quadrilaterals/skills" element={<ProtectedRoute redirectTo="/login"><UnderstandingQuadrilateralsSkills /></ProtectedRoute>} />
 
           {/* Class 12: Matrices — unified structure (inside MainLayout for navbar/footer) */}
           <Route path="senior/grade/12/matrices" element={<ProtectedRoute redirectTo="/login"><MatricesHub /></ProtectedRoute>} />
