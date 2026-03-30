@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Download, Loader2, RefreshCw, Trophy, Target, Clock, User, ClipboardList, CheckCircle2, XCircle, X, ArrowUp, ArrowDown } from 'lucide-react';
 import { api } from '../../../../services/api';
+import DiagnosisResults from '../../../../components/Diagnosis_test/DiagnosisResults';
 
 const DiagnosisResultsPage = () => {
     const [loading, setLoading] = useState(true);
@@ -368,85 +369,23 @@ const DiagnosisResultsPage = () => {
                 </div>
             </div>
 
-            {/* Detailed Results Modal */}
+            {/* Detailed Results Overlay - Using Student Design */}
             {selectedTest && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-                        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0">
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-900">Test Details</h2>
-                                <p className="text-sm text-gray-500">{selectedTest.student_name} • Grade {selectedTest.grade}</p>
-                            </div>
-                            <button
-                                onClick={() => setSelectedTest(null)}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                            >
-                                <X className="h-5 w-5 text-gray-500" />
-                            </button>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-                                <div className="bg-blue-50 p-3 rounded-xl border border-blue-100">
-                                    <p className="text-[10px] text-blue-600 uppercase font-bold tracking-wider">Score</p>
-                                    <p className="text-lg font-bold text-blue-900">{selectedTest.score}/{selectedTest.total_questions}</p>
-                                </div>
-                                <div className="bg-green-50 p-3 rounded-xl border border-green-100">
-                                    <p className="text-[10px] text-green-600 uppercase font-bold tracking-wider">Correct</p>
-                                    <p className="text-lg font-bold text-green-900">{selectedTest.total_correct || 0}</p>
-                                </div>
-                                <div className="bg-red-50 p-3 rounded-xl border border-red-100">
-                                    <p className="text-[10px] text-red-600 uppercase font-bold tracking-wider">Wrong</p>
-                                    <p className="text-lg font-bold text-red-900">{selectedTest.total_wrong || 0}</p>
-                                </div>
-                                <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
-                                    <p className="text-[10px] text-orange-600 uppercase font-bold tracking-wider">Partial</p>
-                                    <p className="text-lg font-bold text-orange-900">{selectedTest.total_partial || 0}</p>
-                                </div>
-                                <div className="bg-amber-50 p-3 rounded-xl border border-amber-100">
-                                    <p className="text-[10px] text-amber-600 uppercase font-bold tracking-wider">Time</p>
-                                    <p className="text-lg font-bold text-amber-900">{formatTime(selectedTest.time_taken_seconds)}</p>
-                                </div>
-                            </div>
-
-                            <h3 className="font-semibold text-gray-900 mb-3">Question Breakdown</h3>
-                            <div className="space-y-3">
-                                {selectedTest.results && Array.isArray(selectedTest.results) ? (
-                                    selectedTest.results.map((q, i) => (
-                                        <div key={i} className="p-4 rounded-xl border border-gray-100 bg-gray-50/50">
-                                            <div className="flex items-start gap-3">
-                                                {q.isCorrect ? (
-                                                    <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                                                ) : (
-                                                    <XCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                                                )}
-                                                <div className="space-y-1">
-                                                    <p className="text-sm text-gray-900 font-medium">{q.question}</p>
-                                                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
-                                                        <p><span className="text-gray-500">User:</span> <span className={q.isCorrect ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>{q.userAnswer}</span></p>
-                                                        {!q.isCorrect && (
-                                                            <p><span className="text-gray-500">Correct:</span> <span className="text-green-600 font-medium">{q.correctAnswer}</span></p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-sm text-gray-500 text-center py-4 italic">No detailed breakdown available for this test.</p>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="p-6 border-t border-gray-100 bg-gray-50">
-                            <button
-                                onClick={() => setSelectedTest(null)}
-                                className="w-full py-2.5 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
+                <div className="fixed inset-0 bg-white z-[100] overflow-y-auto w-full h-full">
+                    <DiagnosisResults 
+                        grade={selectedTest.grade} 
+                        results={{
+                            score: selectedTest.score,
+                            total: selectedTest.total_questions,
+                            timeTaken: selectedTest.time_taken_seconds,
+                            questionResults: selectedTest.results || [],
+                            totalCorrect: selectedTest.total_correct || selectedTest.score,
+                            totalWrong: selectedTest.total_wrong || (selectedTest.total_questions - selectedTest.score),
+                            totalPartial: selectedTest.total_partial || 0
+                        }}
+                        isAdmin={true}
+                        onClose={() => setSelectedTest(null)}
+                    />
                 </div>
             )}
         </div>
