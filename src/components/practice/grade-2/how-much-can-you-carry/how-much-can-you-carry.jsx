@@ -408,7 +408,7 @@ const Grade2HowMuchCanYouCarry = () => {
                 visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
+                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
             }
         }));
 

@@ -13,34 +13,101 @@ import avatarImg from '../../../../assets/avatar.png';
 import '../../../../pages/juniors/class-1/Grade1Practice.css';
 
 // ─── Visual Components ───
-const TensOnesVisual = ({ num }) => {
-    const tens = Math.floor(num / 10);
+const TensOnesVisual = ({ num, isAnswered }) => {
+    const hundreds = Math.floor(num / 100);
+    const tens = Math.floor((num % 100) / 10);
     const ones = num % 10;
+    
     return (
-        <div style={{ display: 'flex', gap: '30px', padding: '30px', background: '#F0FFF4', borderRadius: '30px', border: '3px solid #68D391', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', maxWidth: '200px' }}>
-                    {Array.from({ length: tens }).map((_, i) => (
-                        <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.1 }} style={{ width: '20px', height: '100px', background: '#48BB78', borderRadius: '5px', border: '2px solid #2F855A' }} />
-                    ))}
+        <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="g2-place-value-table-container" style={{ width: '100%', maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(3, 1fr)', 
+                gap: '2px', 
+                background: '#CBD5E1', 
+                border: '3px solid #CBD5E1', 
+                borderRadius: '24px',
+                overflow: 'hidden',
+                boxShadow: '0 12px 30px rgba(0,0,0,0.1)'
+            }}>
+                {/* Header Row */}
+                <div style={{ background: '#F1F5F9', padding: '14px', textAlign: 'center', borderBottom: '2px solid #CBD5E1' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#64748B', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Hundreds</div>
                 </div>
-                <span style={{ fontWeight: 800, color: '#2F855A' }}>{tens} Tens</span>
-            </div>
-            <div style={{ width: '4px', height: '100px', background: '#C6F6D5' }} />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', maxWidth: '150px' }}>
-                    {Array.from({ length: ones }).map((_, i) => (
-                        <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: (tens + i) * 0.1 }} style={{ width: '20px', height: '20px', background: '#9AE6B4', borderRadius: '4px', border: '2px solid #48BB78' }} />
-                    ))}
+                <div style={{ background: '#F1F5F9', padding: '14px', textAlign: 'center', borderBottom: '2px solid #CBD5E1', borderLeft: '2px solid #CBD5E1', borderRight: '2px solid #CBD5E1' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#0891B2', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Tens</div>
                 </div>
-                <span style={{ fontWeight: 800, color: '#2F855A' }}>{ones} Ones</span>
+                <div style={{ background: '#F1F5F9', padding: '14px', textAlign: 'center', borderBottom: '2px solid #CBD5E1' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 900, color: '#EC4899', textTransform: 'uppercase', letterSpacing: '1.2px' }}>Ones</div>
+                </div>
+
+                {/* Content Row */}
+                <div style={{ background: 'white', padding: '25px 12px', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '140px' }}>
+                    {hundreds > 0 ? (
+                        <div style={{ fontSize: '2.8rem', fontWeight: 900, color: '#CBD5E1' }}>{hundreds}</div>
+                    ) : (
+                        <div style={{ width: '50px', height: '50px', borderRadius: '50%', border: '2.5px dashed #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E2E8F0', fontWeight: 900 }}>0</div>
+                    )}
+                </div>
+                <div style={{ background: 'white', padding: '25px 12px', display: 'flex', flexWrap: 'wrap', gap: '5px', justifyContent: 'center', alignItems: 'flex-end', minHeight: '140px', borderLeft: '2px solid #F1F5F9', borderRight: '2px solid #F1F5F9' }}>
+                    {tens > 0 ? Array.from({ length: tens }).map((_, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: i * 0.05 }}
+                            style={{ display: 'flex', flexDirection: 'column-reverse', gap: '1.5px', padding: '3px', border: '2px solid #0891B2', borderRadius: '6px', background: '#ECFEFF' }}
+                        >
+                            {Array.from({ length: 10 }).map((_, j) => (
+                                <div key={j} style={{ width: '12px', height: '10px', backgroundColor: '#0891B2', borderRadius: '1.5px' }}></div>
+                            ))}
+                        </motion.div>
+                    )) : (
+                        <div style={{ width: '50px', height: '50px', borderRadius: '50%', border: '2.5px dashed #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E2E8F0', fontWeight: 900 }}>0</div>
+                    )}
+                </div>
+                <div style={{ background: 'white', padding: '25px 12px', display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center', alignItems: 'center', minHeight: '140px' }}>
+                    {ones > 0 ? (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 16px)', gap: '6px' }}>
+                            {Array.from({ length: ones }).map((_, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: (tens * 0.05) + (i * 0.05) }}
+                                    style={{ width: '16px', height: '16px', backgroundColor: '#EC4899', borderRadius: '4px', border: '1.5px solid #BE185D' }}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div style={{ width: '50px', height: '50px', borderRadius: '50%', border: '2.5px dashed #E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E2E8F0', fontWeight: 900 }}>0</div>
+                    )}
+                </div>
             </div>
-        </div>
+            
+            <AnimatePresence>
+                {isAnswered && (
+                    <motion.div 
+                        initial={{ y: 10, opacity: 0 }} 
+                        animate={{ y: 0, opacity: 1 }}
+                        style={{ marginTop: '24px', textAlign: 'center' }}
+                    >
+                        <div style={{ display: 'inline-flex', gap: '15px', padding: '12px 30px', background: 'white', borderRadius: '100px', boxShadow: '0 6px 20px rgba(0,0,0,0.06)', border: '1px solid #F1F5F9', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#0891B2' }}>{tens}</span>
+                                <span style={{ fontSize: '1rem', fontWeight: 800, color: '#64748B' }}>Tens</span>
+                            </div>
+                            <div style={{ width: '2px', height: '24px', background: '#F1F5F9' }}></div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#EC4899' }}>{ones}</span>
+                                <span style={{ fontSize: '1rem', fontWeight: 800, color: '#64748B' }}>Ones</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div>
     );
 };
 
-const DynamicVisual = ({ type, data }) => {
-    if (type === 'tens-ones') return <TensOnesVisual num={data.num} />;
+const DynamicVisual = ({ type, data, isAnswered }) => {
+    if (type === 'tens-ones') return <TensOnesVisual num={data.num} isAnswered={isAnswered} />;
     if (type === 'expanded-form') {
         return (
             <div style={{ fontSize: '3.5rem', fontWeight: 900, color: '#2D3436', padding: '40px', background: 'white', borderRadius: '30px', border: '3px solid #EDF2F7', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', width: '100%', textAlign: 'center' }}>
@@ -139,7 +206,14 @@ const Grade2TensAndOnes = () => {
         for (let i = 0; i < totalQuestions; i++) {
             const num = Math.floor(Math.random() * 90) + 10;
             const t = Math.floor(num / 10), o = num % 10;
-            qs.push({ text: `How many Tens and Ones are there in ${num}?`, options: [`${t} Tens, ${o} Ones`, `${o} Tens, ${t} Ones`, `${t} Tens, 0 Ones`, `10 Tens, ${num} Ones`].sort(() => 0.5 - Math.random()), correct: `${t} Tens, ${o} Ones`, type: 'tens-ones', visualData: { num }, explanation: `${num} is made of ${t} groups of ten and ${o} single ones.` });
+            qs.push({ 
+                text: `Look at the table. How many Tens and Ones are there in total? 🧐`, 
+                options: [`${t} Tens, ${o} Ones`, `${o} Tens, ${t} Tens`, `${t} Tens, 0 Ones`, `10 Tens, ${num} Ones`].sort(() => 0.5 - Math.random()), 
+                correct: `${t} Tens, ${o} Ones`, 
+                type: 'tens-ones', 
+                visualData: { num }, 
+                explanation: `${num} is made of ${t} groups of ten and ${o} single ones.` 
+            });
         }
         return qs;
     };
@@ -149,7 +223,14 @@ const Grade2TensAndOnes = () => {
         for (let i = 0; i < totalQuestions; i++) {
             const num = Math.floor(Math.random() * 90) + 10;
             const t = Math.floor(num / 10) * 10, o = num % 10;
-            qs.push({ text: `Write ${num} in expanded form:`, options: [`${t} + ${o}`, `${num} + 10`, `${t}0 + ${o}`, `${t} + ${o}0`].sort(() => 0.5 - Math.random()), correct: `${t} + ${o}`, type: 'tens-ones', visualData: { num }, explanation: `${num} = ${t} + ${o}.` });
+            qs.push({ 
+                text: `Look at the blocks. Can you write this number in expanded form? 📝`, 
+                options: [`${t} + ${o}`, `${num} + 10`, `${t}0 + ${o}`, `${t} + ${o}0`].sort(() => 0.5 - Math.random()), 
+                correct: `${t} + ${o}`, 
+                type: 'tens-ones', 
+                visualData: { num }, 
+                explanation: `${num} = ${t} + ${o}.` 
+            });
         }
         return qs;
     };
@@ -267,7 +348,7 @@ const Grade2TensAndOnes = () => {
                                         <div key={idx} className="quest-log-item">
                                             <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>{idx + 1}</div>
                                             <div className="log-content">
-                                                <div className="log-question"><LatexText text={ans.questionText} /><div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}><DynamicVisual type={ans.type} data={ans.visualData} /></div></div>
+                                                <div className="log-question"><LatexText text={ans.questionText} /><div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}><DynamicVisual type={ans.type} data={ans.visualData} isAnswered={true} /></div></div>
                                                 <div className="log-answers">
                                                     <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}><span className="log-label">Your Answer</span><span className="log-value">{ans.selectedOption}</span></div>
                                                     {!ans.isCorrect && <div className="log-answer-box correct-box"><span className="log-label">Correct Answer</span><span className="log-value">{ans.correctAnswer}</span></div>}
@@ -322,7 +403,7 @@ const Grade2TensAndOnes = () => {
                 <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
                     <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
                     <div className="g1-content-split">
-                        <div className="g1-visual-area"><DynamicVisual type={currentQ.type} data={currentQ.visualData} /></div>
+                        <div className="g1-visual-area"><DynamicVisual type={currentQ.type} data={currentQ.visualData} isAnswered={isAnswered} /></div>
                         <div className="g1-quiz-side">
                             <div className="g1-options-grid">
                                 {currentQ.options.map((opt, i) => (

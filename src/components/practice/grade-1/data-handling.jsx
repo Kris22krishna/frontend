@@ -361,7 +361,7 @@ const DataHandling = () => {
                 visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
+                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
             }
         }));
 
@@ -696,7 +696,7 @@ const DataHandling = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Next <ChevronRight size={24} />
+                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>

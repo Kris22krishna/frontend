@@ -1,10 +1,10 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../Relations.css";
 import MathRenderer from "../../../../../MathRenderer";
 import RelationsTopNav from "../../RelationsTopNav";
 
-// â”€â”€â”€ DATA SECTIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── DATA SECTIONS ─────────────────────────────────────────────────────────
 
 const TERMS = [
     {
@@ -281,7 +281,7 @@ const VOCAB_QUIZ = [
     },
 ];
 
-// â”€â”€â”€ MAIN COMPONENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── MAIN COMPONENT ────────────────────────────────────────────────────────
 
 export default function RelationsTerminology() {
     const navigate = useNavigate();
@@ -395,7 +395,7 @@ export default function RelationsTerminology() {
                 }
             `}</style>
 
-            {/* â”€â”€ TOP NAV BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── TOP NAV BAR ──────────────────────────────── */}
             <RelationsTopNav
                 active="terminology"
                 backLabel="Back to Relations"
@@ -405,30 +405,30 @@ export default function RelationsTerminology() {
                     className="rel-intro-nav-back"
                     onClick={() => navigate("/senior/grade/12/relations")}
                 >
-                    â† Back to Relations HUB
+                    ← Back to Relations HUB
                 </button>
                 <div className="rel-intro-nav-links">
                     <button
                         className="rel-intro-nav-link"
                         onClick={() => navigate("/senior/grade/12/relations/introduction")}
                     >
-                        ðŸŒŸ Introduction
+                        🌟 Introduction
                     </button>
                     <button
                         className="rel-intro-nav-link rel-intro-nav-link--active"
                     >
-                        ðŸ“– Terminology
+                        📖 Terminology
                     </button>
                     <button
                         className="rel-intro-nav-link"
                         onClick={() => navigate("/senior/grade/12/relations/skills")}
                     >
-                        ðŸŽ¯ Skills
+                        🎯 Skills
                     </button>
                 </div>
             </nav>}
 
-            {/* â”€â”€ MAIN CONTENT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── MAIN CONTENT ──────────────────────────────── */}
             <div
                 className="rel-lexicon-container"
                 style={{ maxWidth: 1100, margin: "40px auto 20px", padding: "0 24px" }}
@@ -508,7 +508,7 @@ export default function RelationsTerminology() {
                 </div>
 
                 {activeTab !== "quiz" ? (
-                    /* â”€â”€ MASTER-DETAIL VIEW (Terms or Rules) â”€â”€ */
+                    /* ── MASTER-DETAIL VIEW (Terms or Rules) ── */
                     <div
                         className="rel-lexicon-grid"
                         style={{
@@ -979,7 +979,7 @@ export default function RelationsTerminology() {
                         </main>
                     </div>
                 ) : (
-                    /* â”€â”€ QUIZ VIEW â”€â”€ */
+                    /* ── QUIZ VIEW ── */
                     <div
                         className="rel-quiz-container"
                         style={{
