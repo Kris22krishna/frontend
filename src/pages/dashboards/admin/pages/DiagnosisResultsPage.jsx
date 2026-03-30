@@ -15,7 +15,7 @@ const DiagnosisResultsPage = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await api.getAdminDiagnosisResults(500);
+            const data = await api.getAdminDiagnosisResults(2000);
             setResults(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('Failed to fetch diagnosis results:', err);
