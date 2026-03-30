@@ -33,9 +33,13 @@ const DiagnosisTestRunner = () => {
         violationMessage,
         dismissWarning,
         requestFullscreen
-    } = useViolationTracker(maxViolations, () => {
-        setIsSubmitted(true);
-    });
+    } = useViolationTracker(maxViolations);
+
+    useEffect(() => {
+        if (violationCount >= maxViolations && !isSubmitted && !submitting) {
+            handleSubmit();
+        }
+    }, [violationCount, isSubmitted, submitting]);
 
     useEffect(() => {
         if (!loading && !isSubmitted && questions.length > 0) {
@@ -184,9 +188,9 @@ const DiagnosisTestRunner = () => {
 
             setTimeLeft(remaining);
 
-            if (remaining <= 0) {
+            if (remaining <= 0 && !isSubmitted && !submitting) {
                 clearInterval(timer);
-                setIsSubmitted(true);
+                handleSubmit();
             }
         }, 1000);
 
@@ -548,7 +552,14 @@ const DiagnosisTestRunner = () => {
 
 
     return (
-        <div className="diagnosis-runner min-h-screen font-sans">
+        <div className="diagnosis-runner min-h-screen font-sans relative">
+            <ViolationWarning
+                isOpen={showWarning && violationCount < maxViolations}
+                onClose={dismissWarning}
+                violationCount={violationCount}
+                maxViolations={maxViolations}
+                message={violationMessage}
+            />
             <header className="cbt-header shadow-md px-3 sm:px-10 h-14 sm:h-20">
                 <div className="flex items-center gap-2 sm:gap-4">
                     <span className="font-extrabold text-sm sm:text-2xl bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">

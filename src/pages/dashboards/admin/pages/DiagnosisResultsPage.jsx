@@ -11,6 +11,8 @@ const DiagnosisResultsPage = () => {
     const [error, setError] = useState(null);
     const [selectedTest, setSelectedTest] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: 'created_at', direction: 'desc' });
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const fetchResults = async () => {
         setLoading(true);
@@ -76,6 +78,18 @@ const DiagnosisResultsPage = () => {
         if (sortConfig.key !== key) return <RefreshCw size={12} className="opacity-0 group-hover:opacity-50" />;
         return sortConfig.direction === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />;
     };
+
+    // Reset page on filter/sort changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedGrade, searchTerm, sortConfig]);
+
+    // Pagination
+    const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
+    const paginatedResults = filteredResults.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     // Stats
     const totalTests = filteredResults.length;
@@ -311,9 +325,9 @@ const DiagnosisResultsPage = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                            {filteredResults.map((r, idx) => (
+                            {paginatedResults.map((r, idx) => (
                                 <tr key={r.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="py-3 px-4 text-sm text-gray-500">{idx + 1}</td>
+                                    <td className="py-3 px-4 text-sm text-gray-500">{(currentPage - 1) * itemsPerPage + idx + 1}</td>
                                     <td className="py-3 px-4">
                                         <div>
                                             <p className="text-sm font-medium text-gray-900">{r.student_name}</p>
@@ -367,6 +381,40 @@ const DiagnosisResultsPage = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                        <div className="flex-1 flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-gray-700">
+                                    Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium">{Math.min(currentPage * itemsPerPage, filteredResults.length)}</span> of <span className="font-medium">{filteredResults.length}</span> results
+                                </p>
+                            </div>
+                            <div>
+                                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                    <button
+                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                        disabled={currentPage === 1}
+                                        className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                                    >
+                                        Previous
+                                    </button>
+                                    <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+                                    <button
+                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                                    >
+                                        Next
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Detailed Results Overlay - Using Student Design */}
