@@ -89,7 +89,7 @@ const StudentDiagnosisResultsPage = () => {
                             <Activity className="text-emerald-500" />
                             Skill Discovery
                         </h1>
-                        <p className="text-slate-500 mt-1">Review your past Skill Discovery tests and track your improvement.</p>
+                        <p className="text-slate-500 mt-1">Review your past Skill Discovery and track your improvement.</p>
                     </div>
                 </div>
 
