@@ -68,8 +68,19 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                 setIsLoading(false);
                 return;
             }
+            if (phoneNumber.length !== 10) {
+                setError('Please enter a valid 10-digit phone number.');
+                setIsLoading(false);
+                return;
+            }
             if (!email) {
                 setError('Email is required.');
+                setIsLoading(false);
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                setError('Please enter a valid email address.');
                 setIsLoading(false);
                 return;
             }
@@ -296,7 +307,7 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                         <input
                             type="tel"
                             value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
                             className="auth-input"
                             placeholder="+1 (555) 000-0000"
                             required
