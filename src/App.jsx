@@ -143,6 +143,12 @@ import DoesItLookSameTerminology from './components/practice/class-5/doesitlooks
 import DoesItLookSameSkills from './components/practice/class-5/doesitlooksame/Topics/Skills/DoesItLookSameSkills.jsx';
 import DoesItLookSameTest from './components/practice/class-5/doesitlooksame/DoesItLookSameTest.jsx';
 
+import BeMyMultiple from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/BeMyMultiple';
+import BeMyMultipleIntro from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/5W1H/BeMyMultipleIntro';
+import BeMyMultipleTerminology from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/Terminology/BeMyMultipleTerminology';
+import BeMyMultipleSkills from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/Skills/BeMyMultipleSkills';
+import BeMyMultipleTest from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/BeMyMultipleTest';
+
 import SharingAndMeasuring from './components/practice/class-4/Sharing_and_Measuring/SharingAndMeasuring';
 import SharingAndMeasuringIntro from './components/practice/class-4/Sharing_and_Measuring/Topics/5W1H/SharingAndMeasuringIntro';
 import SharingAndMeasuringTerminology from './components/practice/class-4/Sharing_and_Measuring/Topics/Terminology/SharingAndMeasuringTerminology';
@@ -448,6 +454,12 @@ import Grade6PatternsIntro5W1H from './components/practice/grade-6/PatternsInMat
 import Grade6PatternsTerminology from './components/practice/grade-6/PatternsInMathematics/Topics/Terminology/PatternsTerminology';
 import Grade6PatternsSkills from './components/practice/grade-6/PatternsInMathematics/Topics/Skills/PatternsSkills';
 
+// Grade 6 Lines and Angles
+import Grade6LinesAndAngles from './components/practice/grade-6/LinesAndAngles/LinesAndAngles_6';
+import Grade6LinesAndAnglesIntro from './components/practice/grade-6/LinesAndAngles/Topics/5W1H/LinesAndAnglesIntro5W1H';
+import Grade6LinesAndAnglesTerminology from './components/practice/grade-6/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
+import Grade6LinesAndAnglesSkills from './components/practice/grade-6/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
+
 // Grade 6 Symmetry
 import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
 import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
@@ -613,6 +625,14 @@ import ChemReactionsConnectomics from './components/science/grade10/ChemicalReac
 import ChemReactionsExamEdge from './components/science/grade10/ChemicalReactions/Topics/ExamEdge/ChemReactionsExamEdge';
 import ChemReactionsVirtualLab from './components/science/grade10/ChemicalReactions/Topics/VirtualLab/ChemReactionsVirtualLab';
 
+// Class 9 Science: Matter in Our Surroundings
+import MatterInOurSurroundingsDashboard from './components/science/grade9/matterinoursurroundings/MatterInOurSurroundingsDashboard';
+import MatterIntro from './components/science/grade9/matterinoursurroundings/Topics/Introduction/MatterIntro';
+import MatterTerminology from './components/science/grade9/matterinoursurroundings/Topics/Terminology/MatterTerminology';
+import MatterCoreConcepts from './components/science/grade9/matterinoursurroundings/Topics/CoreConcepts/MatterCoreConcepts';
+import MatterConnectomics from './components/science/grade9/matterinoursurroundings/Topics/Connectomics/MatterConnectomics';
+import MatterExamEdge from './components/science/grade9/matterinoursurroundings/Topics/ExamEdge/MatterExamEdge';
+import MatterVirtualLab from './components/science/grade9/matterinoursurroundings/Topics/VirtualLab/MatterVirtualLab';
 // Class 6 Science: Wonderful World of Science
 import WonderfulWorldOfScienceDashboard from './components/science/grade6/WonderfulWorldOfScience/WonderfulWorldOfScienceDashboard';
 import WWSIntro from './components/science/grade6/WonderfulWorldOfScience/Topics/Introduction/WWSIntro';
@@ -928,6 +948,14 @@ function App() {
           <Route path="/senior/grade/10/science/chemical-reactions/exam-edge" element={<ChemReactionsExamEdge />} />
           <Route path="/senior/grade/10/science/chemical-reactions/virtual-lab" element={<ChemReactionsVirtualLab />} />
 
+          {/* Grade 9 Science */}
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings" element={<MatterInOurSurroundingsDashboard />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/introduction" element={<MatterIntro />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/terminology" element={<MatterTerminology />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/core-concepts" element={<MatterCoreConcepts />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/connectomics" element={<MatterConnectomics />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/exam-edge" element={<MatterExamEdge />} />
+          <Route path="/senior/grade/9/science/matter-in-our-surroundings/virtual-lab" element={<MatterVirtualLab />} />
           {/* Grade 6 Science */}
           <Route path="/middle/grade/6/science/wonderful-world-of-science" element={<WonderfulWorldOfScienceDashboard />} />
           <Route path="/middle/grade/6/science/wonderful-world-of-science/introduction" element={<WWSIntro />} />
@@ -1242,6 +1270,12 @@ function App() {
           <Route path="middle/grade/6/patterns-in-mathematics/terminology" element={<Grade6PatternsTerminology />} />
           <Route path="middle/grade/6/patterns-in-mathematics/skills" element={<Grade6PatternsSkills />} />
 
+          {/* Grade 6 Lines and Angles Module */}
+          <Route path="middle/grade/6/lines-and-angles" element={<Grade6LinesAndAngles />} />
+          <Route path="middle/grade/6/lines-and-angles/introduction" element={<Grade6LinesAndAnglesIntro />} />
+          <Route path="middle/grade/6/lines-and-angles/terminology" element={<Grade6LinesAndAnglesTerminology />} />
+          <Route path="middle/grade/6/lines-and-angles/skills" element={<Grade6LinesAndAnglesSkills />} />
+
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
         <Route path="/internship" element={<Internship />} />
@@ -1503,6 +1537,13 @@ function App() {
         <Route path="/middle/grade/5/does-it-look-same/skills" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameSkills /></ProtectedRoute>} />
         <Route path="/middle/grade/5/does-it-look-same/chapter-test" element={<ProtectedRoute redirectTo="/login"><DoesItLookSameTest /></ProtectedRoute>} />
         <Route path="/middle/grade/5/how-many-squares/chapter-test" element={<ProtectedRoute redirectTo="/login"><HowManySquaresTest /></ProtectedRoute>} />
+
+        {/* Be My Multiple, I'll be Your Factor Routes */}
+        <Route path="/middle/grade/5/be-my-multiple" element={<ProtectedRoute redirectTo="/login"><BeMyMultiple /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/introduction" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleIntro /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/terminology" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleTerminology /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/skills" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/be-my-multiple/test" element={<ProtectedRoute redirectTo="/login"><BeMyMultipleTest /></ProtectedRoute>} />
 
         {/* Grade 5 - Tenths and Hundredths */}
         <Route path="/middle/grade/5/tenths-hundredths/place-values" element={<PlaceValuesOfDecimals />} />
