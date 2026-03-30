@@ -31,7 +31,7 @@ const DiagnosisResults = ({ results, grade, onRetake }) => {
             if (sessionStorage.getItem(submitKey)) {
                 return; // Prevent duplicate submission of the exact same test run
             }
-            
+
             // Mark as submitted synchronously before the async API call to block strict-mode race conditions
             sessionStorage.setItem(submitKey, 'true');
 

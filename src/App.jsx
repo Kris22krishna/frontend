@@ -143,6 +143,12 @@ import DoesItLookSameTerminology from './components/practice/class-5/doesitlooks
 import DoesItLookSameSkills from './components/practice/class-5/doesitlooksame/Topics/Skills/DoesItLookSameSkills.jsx';
 import DoesItLookSameTest from './components/practice/class-5/doesitlooksame/DoesItLookSameTest.jsx';
 
+import PatternsLanding from './components/practice/class-5/canyouseethepatterns/PatternsLanding';
+import CanYouSeePatternsIntro5W1H from './components/practice/class-5/canyouseethepatterns/Topics/5W1H/PatternsIntro5W1H';
+import CanYouSeePatternsTerminology from './components/practice/class-5/canyouseethepatterns/Topics/Terminology/PatternsTerminology';
+import CanYouSeePatternsSkills from './components/practice/class-5/canyouseethepatterns/Topics/Skills/PatternsSkills';
+import CanYouSeePatternsTest from './components/practice/class-5/canyouseethepatterns/PatternsTest';
+
 import BeMyMultiple from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/BeMyMultiple';
 import BeMyMultipleIntro from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/5W1H/BeMyMultipleIntro';
 import BeMyMultipleTerminology from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/Terminology/BeMyMultipleTerminology';
@@ -2295,6 +2301,13 @@ function App() {
         <Route path="/middle/grade/5/multiply-divide/chapter-test" element={<MultiplyDivideTest />} />
         <Route path="/middle/grade/5/how-big-how-heavy/chapter-test" element={<HowBigHowHeavyTest />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
+
+        {/* Can You See the Pattern? - New Implementation */}
+        <Route path="/middle/grade/5/canyouseethepatterns" element={<ProtectedRoute redirectTo="/login"><PatternsLanding /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/introduction" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsIntro5W1H /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/terminology" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsTerminology /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/skills" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/chapter-test" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsTest /></ProtectedRoute>} />
 
         <Route path="/middle/practice/:skillId" element={<ProtectedRoute redirectTo="/login"><MiddlePracticeSession /></ProtectedRoute>} />
         {/* Class 10: Pair of Linear Equations Routes */}
