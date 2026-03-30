@@ -87,9 +87,9 @@ const StudentDiagnosisResultsPage = () => {
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
                             <Activity className="text-emerald-500" />
-                            Diagnosis Results
+                            Skill Discovery
                         </h1>
-                        <p className="text-slate-500 mt-1">Review your past diagnosis tests and track your improvement.</p>
+                        <p className="text-slate-500 mt-1">Review your past Skill Discovery tests and track your improvement.</p>
                     </div>
                 </div>
 
