@@ -66,7 +66,7 @@ const DiagnosisTestRunner = () => {
                             setTimeLeft(realTimeLeft);
                             setIsSubmitted(false);
                         }
-                        
+
                         setLoading(false);
                         return; // Successfully restored, skip loading new questions
                     }
@@ -178,9 +178,9 @@ const DiagnosisTestRunner = () => {
         const timer = setInterval(() => {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
             const remaining = Math.max(0, (30 * 60) - elapsed);
-            
+
             setTimeLeft(remaining);
-            
+
             if (remaining <= 0) {
                 clearInterval(timer);
                 setIsSubmitted(true);
@@ -521,7 +521,7 @@ const DiagnosisTestRunner = () => {
             <header className="cbt-header shadow-md px-3 sm:px-10 h-14 sm:h-20">
                 <div className="flex items-center gap-2 sm:gap-4">
                     <span className="font-extrabold text-sm sm:text-2xl bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                        Diagnosis Test • Grade {grade}
+                        Skill Discovery • Grade {grade}
                     </span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-6">
@@ -534,7 +534,7 @@ const DiagnosisTestRunner = () => {
                         className="px-4 sm:px-8 py-2 sm:py-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-base hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95"
                         onClick={handleSubmit}
                     >
-                        Submit Test
+                        Final Submit
                     </button>
                 </div>
             </header>

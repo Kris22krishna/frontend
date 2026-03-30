@@ -408,20 +408,23 @@ export default function AlgebraSkills() {
                 <div className="alg-skills-grid">
                     {SKILLS.map((item, index) => (
                         <div key={item.id} className="alg-skill-card" style={{ '--skill-color': item.color, '--skill-color-30': `${item.color}30`, '--skill-color-40': `${item.color}40` }}>
-                            <div className="alg-skill-layout">
-                                <div className="alg-skill-icon" style={{ background: `${item.color}10`, color: item.color }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 16,
+                                width: '100%',
+                            }}>
+                                <div className="alg-skill-icon" style={{ background: `${item.color}10`, color: item.color, flexShrink: 0 }}>
                                     {item.icon}
                                 </div>
 
-                                <div className="alg-skill-content">
-                                    <div className="alg-skill-text-stack">
-                                        <span style={{ fontSize: 11, fontWeight: 900, color: item.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{item.subtitle}</span>
-                                        <h3 style={{ fontSize: 22, fontWeight: 900, color: 'var(--alg-text)', margin: 0 }}>{item.title}</h3>
-                                    </div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <span style={{ fontSize: 11, fontWeight: 900, color: item.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{item.subtitle}</span>
+                                    <h3 style={{ fontSize: 20, fontWeight: 900, color: 'var(--alg-text)', margin: '2px 0 4px' }}>{item.title}</h3>
                                     <p style={{ fontSize: 14, color: 'var(--alg-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{item.desc}</p>
                                 </div>
 
-                                <div className="alg-skill-actions">
+                                <div style={{ display: 'flex', gap: 10, flexShrink: 0, alignItems: 'center', marginLeft: 'auto' }}>
                                     <button className="alg-skill-btn-outline" onClick={() => openSkill(index, 'learn')}>Learn</button>
                                     <button className="alg-skill-btn-outline" onClick={() => openSkill(index, 'practice')}>Practice</button>
                                     <button className="alg-skill-btn-filled" style={{ '--skill-color': item.color }} onClick={() => openSkill(index, 'assessment')}>Assess</button>

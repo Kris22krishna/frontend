@@ -143,7 +143,9 @@ const JuniorGradeSyllabus = () => {
                         };
                     }
 
-                    if (skill.skill_name && !topicMap[topicName].skills.find(s => s.id === skill.skill_id)) {
+                    if (skill.skill_name && 
+                        !topicMap[topicName].skills.find(s => s.id === skill.skill_id) && 
+                        !skill.skill_name.toLowerCase().includes('chapter test')) {
                         topicMap[topicName].skills.push({
                             id: skill.skill_id,
                             name: skill.skill_name
@@ -163,7 +165,8 @@ const JuniorGradeSyllabus = () => {
                             };
                         }
                         skills.forEach(skill => {
-                            if (!topicMap[topicName].skills.find(s => s.id === skill.id)) {
+                            if (!topicMap[topicName].skills.find(s => s.id === skill.id) && 
+                                !skill.name.toLowerCase().includes('chapter test')) {
                                 topicMap[topicName].skills.push({
                                     id: skill.id,
                                     name: skill.name

@@ -143,6 +143,12 @@ import DoesItLookSameTerminology from './components/practice/class-5/doesitlooks
 import DoesItLookSameSkills from './components/practice/class-5/doesitlooksame/Topics/Skills/DoesItLookSameSkills.jsx';
 import DoesItLookSameTest from './components/practice/class-5/doesitlooksame/DoesItLookSameTest.jsx';
 
+import PatternsLanding from './components/practice/class-5/canyouseethepatterns/PatternsLanding';
+import CanYouSeePatternsIntro5W1H from './components/practice/class-5/canyouseethepatterns/Topics/5W1H/PatternsIntro5W1H';
+import CanYouSeePatternsTerminology from './components/practice/class-5/canyouseethepatterns/Topics/Terminology/PatternsTerminology';
+import CanYouSeePatternsSkills from './components/practice/class-5/canyouseethepatterns/Topics/Skills/PatternsSkills';
+import CanYouSeePatternsTest from './components/practice/class-5/canyouseethepatterns/PatternsTest';
+
 import BeMyMultiple from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/BeMyMultiple';
 import BeMyMultipleIntro from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/5W1H/BeMyMultipleIntro';
 import BeMyMultipleTerminology from './components/practice/class-5/Be My Multiple, I’ll be Your Factor/Topics/Terminology/BeMyMultipleTerminology';
@@ -453,6 +459,12 @@ import Grade6PatternsInMathematics from './components/practice/grade-6/PatternsI
 import Grade6PatternsIntro5W1H from './components/practice/grade-6/PatternsInMathematics/Topics/5W1H/PatternsIntro5W1H';
 import Grade6PatternsTerminology from './components/practice/grade-6/PatternsInMathematics/Topics/Terminology/PatternsTerminology';
 import Grade6PatternsSkills from './components/practice/grade-6/PatternsInMathematics/Topics/Skills/PatternsSkills';
+
+// Grade 6 Lines and Angles
+import Grade6LinesAndAngles from './components/practice/grade-6/LinesAndAngles/LinesAndAngles_6';
+import Grade6LinesAndAnglesIntro from './components/practice/grade-6/LinesAndAngles/Topics/5W1H/LinesAndAnglesIntro5W1H';
+import Grade6LinesAndAnglesTerminology from './components/practice/grade-6/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
+import Grade6LinesAndAnglesSkills from './components/practice/grade-6/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
 
 // Grade 6 Symmetry
 import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
@@ -1291,6 +1303,12 @@ function App() {
           <Route path="middle/grade/6/patterns-in-mathematics/introduction" element={<Grade6PatternsIntro5W1H />} />
           <Route path="middle/grade/6/patterns-in-mathematics/terminology" element={<Grade6PatternsTerminology />} />
           <Route path="middle/grade/6/patterns-in-mathematics/skills" element={<Grade6PatternsSkills />} />
+
+          {/* Grade 6 Lines and Angles Module */}
+          <Route path="middle/grade/6/lines-and-angles" element={<Grade6LinesAndAngles />} />
+          <Route path="middle/grade/6/lines-and-angles/introduction" element={<Grade6LinesAndAnglesIntro />} />
+          <Route path="middle/grade/6/lines-and-angles/terminology" element={<Grade6LinesAndAnglesTerminology />} />
+          <Route path="middle/grade/6/lines-and-angles/skills" element={<Grade6LinesAndAnglesSkills />} />
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
@@ -2311,6 +2329,13 @@ function App() {
         <Route path="/middle/grade/5/multiply-divide/chapter-test" element={<MultiplyDivideTest />} />
         <Route path="/middle/grade/5/how-big-how-heavy/chapter-test" element={<HowBigHowHeavyTest />} />
         <Route path="/middle/grade/5/can-you-see-the-pattern/chapter-test" element={<ChapterTestPatterns />} />
+
+        {/* Can You See the Pattern? - New Implementation */}
+        <Route path="/middle/grade/5/canyouseethepatterns" element={<ProtectedRoute redirectTo="/login"><PatternsLanding /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/introduction" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsIntro5W1H /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/terminology" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsTerminology /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/skills" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsSkills /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/canyouseethepatterns/chapter-test" element={<ProtectedRoute redirectTo="/login"><CanYouSeePatternsTest /></ProtectedRoute>} />
 
         <Route path="/middle/practice/:skillId" element={<ProtectedRoute redirectTo="/login"><MiddlePracticeSession /></ProtectedRoute>} />
         {/* Class 10: Pair of Linear Equations Routes */}

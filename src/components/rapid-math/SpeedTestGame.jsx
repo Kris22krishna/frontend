@@ -119,7 +119,9 @@ export function SpeedTestGame() {
         };
     }, [selectedDifficulty]);
 
-    const startGame = (forcedOps = []) => {
+    const startGame = (forcedOpsArg = []) => {
+        const forcedOps = Array.isArray(forcedOpsArg) ? forcedOpsArg : [];
+
         setStats({
             totalQuestions: 0,
             totalTime: 0,
@@ -130,7 +132,7 @@ export function SpeedTestGame() {
         });
 
         const [firstOp, ...rest] = forcedOps;
-        setOperationQueue(rest || []);
+        setOperationQueue(rest);
         setCurrentQuestion(generateQuestion(firstOp));
 
         const now = Date.now();
@@ -380,7 +382,7 @@ export function SpeedTestGame() {
 
                         <div className="space-y-3 lg:space-y-4">
                             <Button
-                                onClick={startGame}
+                                onClick={() => startGame()}
                                 className="w-full py-4 lg:py-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg lg:text-xl shadow-lg shadow-blue-500/25 transition-transform hover:scale-[1.02] active:scale-[0.98]"
                             >
                                 Start Practice

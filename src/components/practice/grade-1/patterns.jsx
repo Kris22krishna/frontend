@@ -201,12 +201,25 @@ const Patterns = () => {
 
             const correct = missingIdx >= seq.length ? (patternLogic === 1 ? pType.items[1] : (patternLogic === 2 ? pType.items[1] : pType.items[0])) : seq[missingIdx];
 
+            let explanation = "";
+            const isAbab = patternLogic === 0;
+            const isAab = patternLogic === 1;
+
+            if (isAbab) {
+                explanation = `This is an ABAB pattern. It goes ${pType.items[0]}, ${pType.items[1]}, ${pType.items[0]}, ${pType.items[1]}. So, the next one is ${correct}!`;
+            } else if (isAab) {
+                explanation = `This is an AAB pattern. It repeats two ${pType.items[0]}s followed by one ${pType.items[1]}. The missing spot needs ${correct}.`;
+            } else {
+                explanation = `This is an ABB pattern. It repeats one ${pType.items[0]} followed by two ${pType.items[1]}s. The missing spot needs ${correct}.`;
+            }
+
             questions.push({
                 text: missingIdx >= seq.length ? "Look at the pattern belt! What comes next? 🚂" : "Someone is missing! Who goes in the empty spot? 🕵️",
                 options: [pType.items[0], pType.items[1]].sort(() => 0.5 - Math.random()),
                 correct: correct,
                 type: 'pattern',
-                visualData: { seq: displaySeq, missingIdx }
+                visualData: { seq: displaySeq, missingIdx },
+                explanation: explanation
             });
         }
         return questions;
@@ -605,7 +618,7 @@ const Patterns = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Check Answer <ChevronRight size={24} />
+                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>
@@ -626,6 +639,7 @@ const Patterns = () => {
                 }}
                 explanation={answers[qIndex]?.explanation}
                 isCorrect={answers[qIndex]?.isCorrect}
+                correctAnswer={answers[qIndex]?.correctAnswer}
                 mascot={mascotImg}
             />
         </div>
