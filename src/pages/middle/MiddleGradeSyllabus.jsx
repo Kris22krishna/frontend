@@ -257,6 +257,14 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/number-play-chapter'
+                        },
+                        {
+                            skill_id: 'local-data-handling-6-chapter',
+                            skill_name: 'Data Handling and Presentation: Interactive Chapter',
+                            topic: 'Data Handling',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/data-handling-6'
                         }
                     ];
                 }

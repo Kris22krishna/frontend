@@ -472,6 +472,12 @@ import Grade6NumberPlayIntro from './components/practice/grade-6/NumberPlay_6/To
 import Grade6NumberPlayTerminology from './components/practice/grade-6/NumberPlay_6/Topics/Terminology/NumberPlay6Terminology';
 import Grade6NumberPlaySkills from './components/practice/grade-6/NumberPlay_6/Topics/Skills/NumberPlay6Skills';
 
+// Grade 6 Data Handling and Presentation Chapter
+import Grade6DataHandling from './components/practice/grade-6/DataHandling6/DataHandling6';
+import Grade6DataHandlingIntro from './components/practice/grade-6/DataHandling6/Topics/5W1H/DataHandling6Intro';
+import Grade6DataHandlingTerminology from './components/practice/grade-6/DataHandling6/Topics/Terminology/DataHandling6Terminology';
+import Grade6DataHandlingSkills from './components/practice/grade-6/DataHandling6/Topics/Skills/DataHandling6Skills';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -1287,6 +1293,12 @@ function App() {
           <Route path="middle/grade/6/number-play-chapter/introduction" element={<Grade6NumberPlayIntro />} />
           <Route path="middle/grade/6/number-play-chapter/terminology" element={<Grade6NumberPlayTerminology />} />
           <Route path="middle/grade/6/number-play-chapter/skills" element={<Grade6NumberPlaySkills />} />
+
+          {/* Grade 6 Data Handling and Presentation Chapter */}
+          <Route path="middle/grade/6/data-handling-6" element={<Grade6DataHandling />} />
+          <Route path="middle/grade/6/data-handling-6/introduction" element={<Grade6DataHandlingIntro />} />
+          <Route path="middle/grade/6/data-handling-6/terminology" element={<Grade6DataHandlingTerminology />} />
+          <Route path="middle/grade/6/data-handling-6/skills" element={<Grade6DataHandlingSkills />} />
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
