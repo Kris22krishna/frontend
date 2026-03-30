@@ -1,16 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, XCircle, Clock, RotateCcw, Home, GraduationCap, ArrowRight } from 'lucide-react';
 import MathRenderer from '../MathRenderer';
 import './DiagnosisTest.css';
-import { api } from '../../services/api';
 
 const DiagnosisResults = ({ results, grade, onRetake }) => {
     const navigate = useNavigate();
     const { score, total, timeTaken, questionResults } = results;
     const percentage = Math.round((score / total) * 100);
     const wrongCount = total - score;
-    const lastSubmittedRef = useRef(null);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -24,42 +22,6 @@ const DiagnosisResults = ({ results, grade, onRetake }) => {
         if (pct >= 60) return "Good job! A little more practice will make you perfect.";
         return "Keep practicing! You can do better next time.";
     };
-
-    useEffect(() => {
-        const submitResults = async () => {
-            const submitKey = `diagnosis_submit_${grade}_${score}_${timeTaken}`;
-            if (sessionStorage.getItem(submitKey)) {
-                return; // Prevent duplicate submission of the exact same test run
-            }
-
-            // Mark as submitted synchronously before the async API call to block strict-mode race conditions
-            sessionStorage.setItem(submitKey, 'true');
-
-            try {
-                const data = {
-                    grade: grade,
-                    score: score,
-                    total_questions: total,
-                    total_correct: results.totalCorrect || 0,
-                    total_wrong: results.totalWrong || 0,
-                    total_partial: results.totalPartial || 0,
-                    time_taken: timeTaken,
-                    question_results: questionResults
-                };
-
-                const response = await api.submitDiagnosisTest(data);
-                console.log('Diagnosis results submitted successfully:', response);
-            } catch (err) {
-                console.error('Error submitting diagnosis results:', err);
-                sessionStorage.removeItem(submitKey); // Rollback if failed
-            }
-        };
-
-        if (results && lastSubmittedRef.current !== results) {
-            submitResults();
-            lastSubmittedRef.current = results;
-        }
-    }, [results, grade, score, total, timeTaken, questionResults]);
 
     return (
         <div className="diagnosis-runner bg-slate-50 min-h-screen pb-20">
