@@ -34,8 +34,14 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
         if (isRateLimited) return;
         setIsLoading(true);
 
-        if (!name) {
-            setError('Please enter your full name.');
+        if (!name.trim()) {
+            setError('Full name is required.');
+            setIsLoading(false);
+            return;
+        }
+
+        if (!password) {
+            setError('Password is required.');
             setIsLoading(false);
             return;
         }
@@ -268,7 +274,7 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
 
             <form onSubmit={handleValidate}>
                 <div className="auth-form-group">
-                    <label className="auth-label">Full Name</label>
+                    <label className="auth-label">Full Name *</label>
                     <input
                         type="text"
                         value={name}
@@ -381,7 +387,7 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                         </>
                     ) : (
                         <>
-                            <label className="auth-label">Email</label>
+                            <label className="auth-label">Email *</label>
                             <input
                                 type="email"
                                 value={email}
