@@ -67,7 +67,7 @@ const DiagnosisResults = ({ results, grade, onRetake }) => {
             <header className="cbt-header shadow-md px-3 sm:px-10 h-auto sm:h-20 py-2 sm:py-0 flex-wrap gap-2 mb-0">
                 <div className="flex items-center gap-2 sm:gap-4">
                     <span className="font-extrabold text-sm sm:text-2xl bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                        Diagnosis Results • Grade {grade}
+                        Skill Discovery Results • Grade {grade}
                     </span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-4">
@@ -96,10 +96,10 @@ const DiagnosisResults = ({ results, grade, onRetake }) => {
                     <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-indigo-50 text-indigo-700 rounded-full font-bold text-xs sm:text-sm mb-4 sm:mb-6 animate-bounce">
                         <GraduationCap size={16} className="sm:hidden" />
                         <GraduationCap size={18} className="hidden sm:block" />
-                        Grade {grade} Diagnosis Assessment
+                        Grade {grade} Skill Discovery
                     </div>
                     <h1 className="text-2xl sm:text-5xl font-black text-slate-900 mb-2 sm:mb-4 tracking-tight">
-                        Assessment Result
+                        Skill Discovery Result
                     </h1>
                     <p className="text-sm sm:text-xl text-slate-500 font-medium max-w-2xl mx-auto">
                         {getPerformanceMessage(percentage)}
