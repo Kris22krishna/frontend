@@ -191,9 +191,10 @@ const Grade2BirdsComeBirdsGo = () => {
                     explanation: `${maxCat.name} has ${maxCat.count} icons, which is the most.`
                 });
             } else {
+                let opts = Array.from(new Set([String(target.count), String(target.count + 2), String(Math.max(0, target.count - 1)), '0', String(target.count + 1)]));
                 qs.push({
                     text: `How many ${target.name.toLowerCase()} are shown in the pictograph?`,
-                    options: [String(target.count), String(target.count + 2), String(target.count - 1), '0'].sort(() => 0.5 - Math.random()),
+                    options: opts.slice(0, 4).sort(() => 0.5 - Math.random()),
                     correct: String(target.count),
                     type: 'pictograph',
                     visualData: { categories },
@@ -213,9 +214,14 @@ const Grade2BirdsComeBirdsGo = () => {
                 { name: 'Green', count: Math.floor(Math.random() * 8) + 2, color: '#319795' }
             ];
             const target = categories[Math.floor(Math.random() * 3)];
+            let opts = Array.from(new Set(categories.map(c => String(c.count))));
+            const extras = [target.count + 1, Math.max(0, target.count - 1), target.count + 2, Math.floor(Math.random() * 10) + 5];
+            for (let e of extras) {
+                if (opts.length < 4 && !opts.includes(String(e))) opts.push(String(e));
+            }
             qs.push({
                 text: `According to the chart, what is the count for the ${target.name} team?`,
-                options: categories.map(c => String(c.count)).concat([String(Math.floor(Math.random() * 15) + 10)]).sort(() => 0.5 - Math.random()),
+                options: opts.slice(0, 4).sort(() => 0.5 - Math.random()),
                 correct: String(target.count),
                 type: 'chart',
                 visualData: { categories, unit: 'Team Score' },

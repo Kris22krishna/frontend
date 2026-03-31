@@ -20,9 +20,9 @@ const DynamicVisual = ({ type, data }) => {
             <motion.div initial={{ scale: 0.5, rotate: -10 }} animate={{ scale: 1, rotate: 0 }} className="g1-visual-item flex justify-center w-full">
                 <svg width="100%" height="auto" style={{ maxWidth: '300px', maxHeight: '300px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} viewBox="0 0 100 100">
                     {shape === 'circle' && <circle cx="50" cy="50" r="42" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" rx="15" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                     {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" rx="12" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                     {shape === 'oval' && <ellipse cx="50" cy="50" rx="45" ry="30" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                 </svg>
             </motion.div>

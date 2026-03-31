@@ -54,8 +54,8 @@ const DynamicVisual = ({ type, data }) => {
         const { n1, n2, color1, color2 } = data;
         return (
             <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 50px)', alignItems: 'center', justifyContent: 'center' }}>
-                <div className="g1-compare-box" style={{ background: color1 + '15', padding: '25px', borderRadius: '30px' }}>
-                    <div style={{ fontSize: '3.5rem', fontWeight: 400, color: color1, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>{n1}</div>
+                <div className="g1-compare-box" style={{ background: color1 + '15', padding: '25px', borderRadius: '30px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700, color: color1, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>Group A</div>
                     <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px' }}>
                             {Array.from({ length: 10 }).map((_, i) => (
@@ -70,8 +70,8 @@ const DynamicVisual = ({ type, data }) => {
                     </div>
                 </div>
                 <div style={{ fontSize: '2.5rem', fontWeight: 400, color: '#CBD5E0' }}>VS</div>
-                <div className="g1-compare-box" style={{ background: color2 + '15', padding: '25px', borderRadius: '30px' }}>
-                    <div style={{ fontSize: '3.5rem', fontWeight: 400, color: color2, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>{n2}</div>
+                <div className="g1-compare-box" style={{ background: color2 + '15', padding: '25px', borderRadius: '30px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700, color: color2, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>Group B</div>
                     <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px' }}>
                             {Array.from({ length: 10 }).map((_, i) => (
@@ -226,13 +226,14 @@ const Numbers10to20 = () => {
                 let n2 = isTest ? (20 - i) : (Math.floor(Math.random() * 11) + 10);
                 if (n1 === n2) n2 = 15;
                 const isGreater = isTest ? (i % 2 === 0) : (Math.random() > 0.5);
+                const correctAns = isGreater ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 question = {
                     text: `Which group has ${isGreater ? 'MORE' : 'FEWER'} blocks?`,
-                    options: [n1, n2].sort(() => 0.5 - Math.random()),
-                    correct: isGreater ? (n1 > n2 ? n1 : n2) : (n1 < n2 ? n1 : n2),
+                    options: ['Group A', 'Group B'],
+                    correct: correctAns,
                     type: 'comparison',
                     visualData: { n1, n2, color1, color2 },
-                    explanation: `${isGreater ? 'More' : 'Fewer'} means the ${isGreater ? 'larger' : 'smaller'} number.`
+                    explanation: `Group A has ${n1} and Group B has ${n2}. ${correctAns} clearly has ${isGreater ? 'more' : 'fewer'} blocks.`
                 };
             }
             questions.push(question);

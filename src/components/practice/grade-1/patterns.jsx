@@ -182,14 +182,14 @@ const Patterns = () => {
             let missingIdx;
 
             if (patternLogic === 0) { // ABAB
-                seq = [pType.items[0], pType.items[1], pType.items[0], pType.items[1]];
-                missingIdx = skillMode === '1002' ? 4 : Math.floor(Math.random() * 4);
-            } else if (patternLogic === 1) { // AAB
-                seq = [pType.items[0], pType.items[0], pType.items[1], pType.items[0], pType.items[0]];
-                missingIdx = skillMode === '1002' ? 5 : Math.floor(Math.random() * 5);
-            } else { // ABB
-                seq = [pType.items[0], pType.items[1], pType.items[1], pType.items[0], pType.items[1]];
-                missingIdx = skillMode === '1002' ? 5 : Math.floor(Math.random() * 5);
+                seq = [pType.items[0], pType.items[1], pType.items[0], pType.items[1], pType.items[0], pType.items[1]];
+                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3; // 3, 4, 5
+            } else if (patternLogic === 1) { // AABAAB
+                seq = [pType.items[0], pType.items[0], pType.items[1], pType.items[0], pType.items[0], pType.items[1]];
+                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3; // 3, 4, 5
+            } else { // ABBABB
+                seq = [pType.items[0], pType.items[1], pType.items[1], pType.items[0], pType.items[1], pType.items[1]];
+                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3; // 3, 4, 5
             }
 
             let displaySeq = [...seq];
@@ -199,7 +199,7 @@ const Patterns = () => {
                 displaySeq[missingIdx] = null;
             }
 
-            const correct = missingIdx >= seq.length ? (patternLogic === 1 ? pType.items[1] : (patternLogic === 2 ? pType.items[1] : pType.items[0])) : seq[missingIdx];
+            const correct = missingIdx >= seq.length ? pType.items[0] : seq[missingIdx];
 
             let explanation = "";
             const isAbab = patternLogic === 0;

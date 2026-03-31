@@ -300,7 +300,8 @@ const Time = () => {
                     options: ['Day', 'Night'].sort(() => 0.5 - Math.random()),
                     correct: item.a,
                     type: 'day-night',
-                    visualData: { scenario: item.a }
+                    visualData: { scenario: item.a },
+                    explanation: `We usually associate this activity or visual with the ${item.a.toUpperCase()} time.`
                 };
             } else if (type === 'days-week') {
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -316,7 +317,8 @@ const Time = () => {
                         options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7]].sort(() => 0.5 - Math.random()),
                         correct: days[idx],
                         type: 'days-week',
-                        visualData: { day: days[idx], isAfter: true, label: 'ORDER' } // Custom label for visual
+                        visualData: { day: days[idx], isAfter: true, label: 'ORDER' }, // Custom label for visual
+                        explanation: `Counting from Sunday, the ${orderText[idx]} day is ${days[idx]}.`
                     };
                 } else {
                     const idx = Math.floor(Math.random() * 7);
@@ -325,7 +327,8 @@ const Time = () => {
                         options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7]].sort(() => 0.5 - Math.random()),
                         correct: days[idx],
                         type: 'days-week',
-                        visualData: { day: days[idx], isAfter: true, label: 'NAME' }
+                        visualData: { day: days[idx], isAfter: true, label: 'NAME' },
+                        explanation: `The highlighted section corresponds to ${days[idx]}.`
                     };
                 }
             } else if (type === 'before-after') {
@@ -338,7 +341,8 @@ const Time = () => {
                     options: [days[targetIdx], days[(targetIdx + 2) % 7], days[(targetIdx + 4) % 7]].sort(() => 0.5 - Math.random()),
                     correct: days[targetIdx],
                     type: 'days-week', // Reuse visual
-                    visualData: { day: days[dayIdx], isAfter }
+                    visualData: { day: days[dayIdx], isAfter },
+                    explanation: `Following the standard sequence of days, the day immediately ${isAfter ? 'after' : 'before'} ${days[dayIdx]} is ${days[targetIdx]}.`
                 };
             } else {
                 const hour = Math.floor(Math.random() * 12) + 1;
@@ -347,7 +351,8 @@ const Time = () => {
                     options: [`${hour} o'clock`, `${(hour % 12) + 1} o'clock`, `${(hour + 10) % 12 + 1} o'clock`].sort(() => 0.5 - Math.random()),
                     correct: `${hour} o'clock`,
                     type: 'clock',
-                    visualData: { hour }
+                    visualData: { hour },
+                    explanation: `The short hour hand points exactly to ${hour}, which means it is ${hour} o'clock.`
                 };
             }
             questions.push(question);

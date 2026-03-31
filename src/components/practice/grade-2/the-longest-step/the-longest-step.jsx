@@ -164,7 +164,7 @@ const Grade2TheLongestStep = () => {
             const unit = obj.units[0];
             const count = Math.floor(Math.random() * 5) + (obj.avg - 2);
             qs.push({
-                text: `Look at the picture. How many ${unit.toLowerCase()} long is the ${obj.name.toLowerCase()}?`,
+                text: `Count the units shown. How many ${unit.toLowerCase()} long is the ${obj.name.toLowerCase()}?`,
                 options: [String(count), String(count + 2), String(count - 1), String(count + 5)].sort(() => 0.5 - Math.random()),
                 correct: String(count),
                 type: 'measure',
@@ -188,7 +188,7 @@ const Grade2TheLongestStep = () => {
             const item = items[i % items.length];
             qs.push({
                 text: `Which unit is best to measure the length of a ${item.name.toLowerCase()}?`,
-                options: ['Fingers', 'Handspans', 'Steps', 'Meters'].sort(() => 0.5 - Math.random()),
+                options: ['Fingers', 'Handspans', 'Steps'].sort(() => 0.5 - Math.random()),
                 correct: item.unit,
                 type: 'estimate',
                 visualData: { emoji: item.emoji, name: item.name },

@@ -152,6 +152,15 @@ const Grade2MyFunday = () => {
         return null;
     };
 
+    const getOptions = (correct, allList) => {
+        let opts = [correct];
+        const shuffled = [...allList].sort(() => 0.5 - Math.random());
+        for (let item of shuffled) {
+            if (opts.length < 4 && !opts.includes(item)) opts.push(item);
+        }
+        return opts.sort(() => 0.5 - Math.random());
+    };
+
     const generateDayQuestions = () => {
         const qs = [];
         for (let i = 0; i < totalQuestions; i++) {
@@ -160,14 +169,14 @@ const Grade2MyFunday = () => {
             const type = Math.floor(Math.random() * 3);
             if (type === 0) {
                 const next = DAYS_OF_WEEK[(di + 1) % 7];
-                qs.push({ text: `Which day comes after ${day}?`, options: DAYS_OF_WEEK.slice().sort(() => 0.5 - Math.random()).slice(0, 4), correct: next, type: 'calendar-card', visualData: { label: 'Today', value: day, color: '#FEF3C7' }, explanation: `The day after ${day} is ${next}.` });
+                qs.push({ text: `Which day comes after ${day}?`, options: getOptions(next, DAYS_OF_WEEK), correct: next, type: 'calendar-card', visualData: { label: 'Today', value: day, color: '#FEF3C7' }, explanation: `The day after ${day} is ${next}.` });
             } else if (type === 1) {
                 const prev = DAYS_OF_WEEK[(di + 6) % 7];
-                qs.push({ text: `Which day comes before ${day}?`, options: DAYS_OF_WEEK.slice().sort(() => 0.5 - Math.random()).slice(0, 4), correct: prev, type: 'calendar-card', visualData: { label: 'Today', value: day, color: '#D1FAE5' }, explanation: `The day before ${day} is ${prev}.` });
+                qs.push({ text: `Which day comes before ${day}?`, options: getOptions(prev, DAYS_OF_WEEK), correct: prev, type: 'calendar-card', visualData: { label: 'Today', value: day, color: '#D1FAE5' }, explanation: `The day before ${day} is ${prev}.` });
             } else {
                 const targetDi = Math.floor(Math.random() * 7);
                 const ordinals = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh"];
-                qs.push({ text: `Which day is the ${ordinals[targetDi]} day of the week?`, options: DAYS_OF_WEEK.slice().sort(() => 0.5 - Math.random()).slice(0, 4), correct: DAYS_OF_WEEK[targetDi], type: 'calendar-card', visualData: { label: 'Week Day', value: targetDi + 1, color: '#E0E7FF' }, explanation: `${DAYS_OF_WEEK[targetDi]} is the ${ordinals[targetDi]} day.` });
+                qs.push({ text: `Which day is the ${ordinals[targetDi]} day of the week?`, options: getOptions(DAYS_OF_WEEK[targetDi], DAYS_OF_WEEK), correct: DAYS_OF_WEEK[targetDi], type: 'calendar-card', visualData: { label: 'Week Day', value: targetDi + 1, color: '#E0E7FF' }, explanation: `${DAYS_OF_WEEK[targetDi]} is the ${ordinals[targetDi]} day.` });
             }
         }
         return qs;
@@ -181,11 +190,11 @@ const Grade2MyFunday = () => {
             const type = Math.floor(Math.random() * 2);
             if (type === 0) {
                 const next = MONTHS_OF_YEAR[(mi + 1) % 12];
-                qs.push({ text: `Which month comes after ${month}?`, options: MONTHS_OF_YEAR.slice().sort(() => 0.5 - Math.random()).slice(0, 4), correct: next, type: 'calendar-card', visualData: { label: 'This Month', value: month, color: '#FCE7F3' }, explanation: `The month after ${month} is ${next}.` });
+                qs.push({ text: `Which month comes after ${month}?`, options: getOptions(next, MONTHS_OF_YEAR), correct: next, type: 'calendar-card', visualData: { label: 'This Month', value: month, color: '#FCE7F3' }, explanation: `The month after ${month} is ${next}.` });
             } else {
                 const ordinals = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
                 const targetMi = Math.floor(Math.random() * 12);
-                qs.push({ text: `Which month is the ${ordinals[targetMi]} month of the year?`, options: MONTHS_OF_YEAR.slice().sort(() => 0.5 - Math.random()).slice(0, 4), correct: MONTHS_OF_YEAR[targetMi], type: 'calendar-card', visualData: { label: 'Month Order', value: targetMi + 1, color: '#F3E8FF' }, explanation: `${MONTHS_OF_YEAR[targetMi]} is the ${ordinals[targetMi]} month.` });
+                qs.push({ text: `Which month is the ${ordinals[targetMi]} month of the year?`, options: getOptions(MONTHS_OF_YEAR[targetMi], MONTHS_OF_YEAR), correct: MONTHS_OF_YEAR[targetMi], type: 'calendar-card', visualData: { label: 'Month Order', value: targetMi + 1, color: '#F3E8FF' }, explanation: `${MONTHS_OF_YEAR[targetMi]} is the ${ordinals[targetMi]} month.` });
             }
         }
         return qs;

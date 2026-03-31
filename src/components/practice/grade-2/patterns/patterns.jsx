@@ -156,18 +156,23 @@ const Grade2Patterns = () => {
             } else { // 1016 = Identifying and completing
                 const mixed = Math.random() > 0.5;
                 if (mixed) {
-                    const start = Math.floor(Math.random() * 50);
-                    seq = [start, start + 10, start + 20, start + 30];
+                    const start = Math.floor(Math.random() * 40) + 5;
+                    const step = [2, 5, 10][Math.floor(Math.random() * 3)];
+                    seq = [start, start + step, start + 2 * step, start + 3 * step, start + 4 * step];
+                    missingIdx = 4;
+                    correct = seq[missingIdx];
+                    options = Array.from(new Set([correct, correct + step, Math.max(0, correct - step)]));
+                    while (options.length < 3) {
+                        options.push(options[0] + step * Math.floor(Math.random() * 3 + 2));
+                        options = Array.from(new Set(options));
+                    }
+                    options = options.slice(0, 3).sort(() => 0.5 - Math.random());
                 } else {
-                    const pItems = [shapes[0], shapes[1], shapes[2]];
-                    seq = [pItems[0], pItems[1], pItems[2], pItems[0]];
-                }
-                missingIdx = 3;
-                correct = seq[missingIdx];
-                if (typeof correct === 'number') {
-                    options = [correct, correct + 10, correct - 10].sort(() => 0.5 - Math.random());
-                } else {
-                    options = [shapes[0], shapes[1], shapes[2]].sort(() => 0.5 - Math.random());
+                    const pItems = [shapes[i % shapes.length], shapes[(i + 1) % shapes.length], shapes[(i + 2) % shapes.length]];
+                    seq = [pItems[0], pItems[1], pItems[2], pItems[0], pItems[1]];
+                    missingIdx = 4;
+                    correct = seq[missingIdx];
+                    options = [...pItems].sort(() => 0.5 - Math.random());
                     type = 'shape';
                 }
             }

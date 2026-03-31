@@ -107,6 +107,7 @@ const Numbers1to9 = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
     const [userInput, setUserInput] = useState('');
     const [showExplanationModal, setShowExplanationModal] = useState(false);
@@ -374,7 +375,15 @@ const Numbers1to9 = () => {
 
         // Show modal for all answers in practice mode
         if (!isTest) {
-            setShowExplanationModal(true);
+            if (isCorrect) {
+                setIsAutoAdvancing(true);
+                setTimeout(() => {
+                    handleNext();
+                    setIsAutoAdvancing(false);
+                }, 800);
+            } else {
+                setShowExplanationModal(true);
+            }
         } else {
             // Give a tiny delay so they see the option highlight green
             setTimeout(() => {
@@ -709,7 +718,7 @@ const Numbers1to9 = () => {
                                     {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}

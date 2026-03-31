@@ -127,7 +127,7 @@ const ANIMALS = [
 const TRACE_OBJECTS = [
     { obj: 'Coin', emoji: '🪙', shape: 'Circle', shapeEmoji: '⭕' },
     { obj: 'Eraser', emoji: '🧽', shape: 'Rectangle', shapeEmoji: '🟩' },
-    { obj: 'Sandwich', emoji: '🥪', shape: 'Triangle', shapeEmoji: '🔺' },
+    { obj: 'Television', emoji: '📺', shape: 'Rectangle', shapeEmoji: '🟩' },
     { obj: 'Biscuit', emoji: '🍪', shape: 'Circle', shapeEmoji: '⭕' },
     { obj: 'Book', emoji: '📕', shape: 'Rectangle', shapeEmoji: '🟩' },
     { obj: 'Pizza Slice', emoji: '🍕', shape: 'Triangle', shapeEmoji: '🔺' },
