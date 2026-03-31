@@ -680,7 +680,7 @@ const MiddleGradeSyllabus = () => {
 
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (activeSubject === 'mathematics') {
-            if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles"].some(t => topicName.includes(t.toLowerCase()))) return acc;
+            if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time"].some(t => topicName.includes(t.toLowerCase()))) return acc;
             if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling" && topicName !== "lines and angles" && topicName !== "simple equations" && topicName !== "the triangle and its properties") return acc;
             if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling" || topicName === "lines and angles" || topicName === "simple equations" || topicName === "the triangle and its properties") && !skill.isLocal) return acc;
         }
