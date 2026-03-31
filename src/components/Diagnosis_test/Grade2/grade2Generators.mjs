@@ -129,13 +129,35 @@ export const generateValue = () => {
   // Distractors
   const distractors = new Set();
   distractors.add(answer);
-  distractors.add(String(targetDigit)); // Face value
-  distractors.add(String(targetDigit * 10));
-  distractors.add(String(targetDigit * 100));
-  distractors.add(String(getRandomInt(10, 900))); // Random fallback
+
+  // Add face value as a distractor
+  distractors.add(String(targetDigit));
+
+  if (targetDigit === 0) {
+    // For 0, place value is always 0. Add meaningful distractors.
+    distractors.add("10");
+    distractors.add("100");
+    // Add value of one of the other digits
+    if (targetPos === 'tens') {
+      distractors.add(String(hundreds * 100));
+      distractors.add(String(ones));
+    } else if (targetPos === 'ones') {
+      distractors.add(String(tens * 10));
+      distractors.add(String(hundreds * 100));
+    }
+  } else {
+    // For non-zero digits, use standard place value distractors
+    distractors.add(String(targetDigit * 10));
+    distractors.add(String(targetDigit * 100));
+  }
+
+  // Ensure we have exactly 4 unique options
+  while (distractors.size < 4) {
+    const randomVal = String(getRandomInt(1, 9) * [1, 10, 100][getRandomInt(0, 2)]);
+    distractors.add(randomVal);
+  }
 
   const options = Array.from(distractors)
-    .filter(val => val !== undefined)
     .slice(0, 4)
     .map(val => ({ value: val, label: val }));
 
