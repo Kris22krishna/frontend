@@ -46,6 +46,19 @@ const CARDS = [
         ],
     },
     {
+        q: 'WHEN',
+        label: 'When Do We Use It?',
+        icon: '⏳',
+        color: '#6a1b9a',
+        short: 'From ancient land surveys to modern-day GPS, data science, and robotics.',
+        bullets: [
+            '📜 Ancient Times — Egyptian and Greek surveyors used grid-like methods to measure plots of land after the Nile flooded each year.',
+            '🔭 17th Century — René Descartes formalized the coordinate system in 1637, giving birth to Analytic Geometry.',
+            '🏫 In Class 9 — We use it RIGHT NOW to plot points, find distances, and prove geometric properties algebraically.',
+            '🤖 In Modern Tech — Every time you use a map app, play a 3D game, or a self-driving car navigates, coordinate geometry is running behind the scenes.',
+        ],
+    },
+    {
         q: 'WHY',
         label: 'Why Learn Coordinate Geometry?',
         icon: '💡',
@@ -107,7 +120,7 @@ export default function CoordinateGeometry9Intro() {
                 <div className={styles['module-hero']}>
                     <h1 className={styles['module-title']}>
                         Discover Coordinate Geometry Through{' '}
-                        <span className={styles['accent-text']}>5 Big Questions</span>
+                        <span className={styles['accent-text']}>6 Big Questions</span>
                     </h1>
                     <p className={styles['module-subtitle']}>
                         Tap each card to explore ✨
