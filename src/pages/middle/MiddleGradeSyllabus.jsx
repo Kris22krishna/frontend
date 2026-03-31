@@ -265,6 +265,14 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/data-handling-6'
+                        },
+                        {
+                            skill_id: 'local-prime-time-6-chapter',
+                            skill_name: 'Prime Time: Interactive Chapter',
+                            topic: 'Prime Time',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/prime-time'
                         }
                     ];
                 }

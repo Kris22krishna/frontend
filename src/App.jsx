@@ -484,6 +484,12 @@ import Grade6DataHandlingIntro from './components/practice/grade-6/DataHandling6
 import Grade6DataHandlingTerminology from './components/practice/grade-6/DataHandling6/Topics/Terminology/DataHandling6Terminology';
 import Grade6DataHandlingSkills from './components/practice/grade-6/DataHandling6/Topics/Skills/DataHandling6Skills';
 
+// Grade 6 Prime Time Chapter
+import Grade6PrimeTime from './components/practice/grade-6/PrimeTime6/PrimeTime6';
+import Grade6PrimeTimeIntro from './components/practice/grade-6/PrimeTime6/Topics/5W1H/PrimeTime6Intro';
+import Grade6PrimeTimeTerminology from './components/practice/grade-6/PrimeTime6/Topics/Terminology/PrimeTime6Terminology';
+import Grade6PrimeTimeSkills from './components/practice/grade-6/PrimeTime6/Topics/Skills/PrimeTime6Skills';
+
 import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
@@ -1375,6 +1381,12 @@ function App() {
           <Route path="middle/grade/6/data-handling-6/introduction" element={<Grade6DataHandlingIntro />} />
           <Route path="middle/grade/6/data-handling-6/terminology" element={<Grade6DataHandlingTerminology />} />
           <Route path="middle/grade/6/data-handling-6/skills" element={<Grade6DataHandlingSkills />} />
+
+          {/* Grade 6 Prime Time Chapter */}
+          <Route path="middle/grade/6/prime-time" element={<Grade6PrimeTime />} />
+          <Route path="middle/grade/6/prime-time/introduction" element={<Grade6PrimeTimeIntro />} />
+          <Route path="middle/grade/6/prime-time/terminology" element={<Grade6PrimeTimeTerminology />} />
+          <Route path="middle/grade/6/prime-time/skills" element={<Grade6PrimeTimeSkills />} />
 
         </Route>
         <Route path="/rapid-math" element={<RapidMathPage />} />
