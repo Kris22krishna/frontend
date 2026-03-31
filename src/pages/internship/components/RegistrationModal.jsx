@@ -17,17 +17,25 @@ const RegistrationModal = ({ isOpen, onClose }) => {
     });
     const [status, setStatus] = useState('idle'); // idle, loading, success, error
     const [phoneError, setPhoneError] = useState('');
+    const [emailError, setEmailError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setPhoneError('');
+        setEmailError('');
 
         if (formData.phoneNumber.length !== 10) {
             setPhoneError('Please enter a valid 10-digit phone number');
             return;
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            setEmailError('Please enter a valid email address');
+            return;
+        }
+
         setStatus('loading');
-        setPhoneError('');
 
         const dataToSubmit = {
             ...formData,
@@ -251,8 +259,13 @@ const RegistrationModal = ({ isOpen, onClose }) => {
                                                     value={formData.email}
                                                     onChange={handleChange}
                                                     placeholder="Enter your email ID"
-                                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all placeholder:text-slate-500"
+                                                    className={`w-full bg-slate-800 border ${emailError ? 'border-red-500' : 'border-slate-700'} rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 ${emailError ? 'focus:ring-red-500/50' : 'focus:ring-blue-500/50'} transition-all placeholder:text-slate-500`}
                                                 />
+                                                {emailError && (
+                                                    <p className="text-red-400 text-xs mt-1 flex items-center gap-1">
+                                                        <AlertCircle size={10} /> {emailError}
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
 
