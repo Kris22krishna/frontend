@@ -70,7 +70,7 @@ export default function FunctionsSkills() {
                                     border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 8,
                                     backdropFilter: 'blur(10px)'
                                 }}>
-                                    {skill.learn.rules.map((rule, index) => {
+                                    {skill.learn.subFunctions.map((rule, index) => {
                                         const isActive = selectedLearnIdx === index;
                                         return (
                                             <button
@@ -101,9 +101,9 @@ export default function FunctionsSkills() {
                                                     {index + 1}
                                                 </div>
                                                 <span style={{
-                                                    fontWeight: 700, fontSize: 14,
+                                                    fontWeight: 700, fontSize: 13,
                                                     color: isActive ? '#fff' : 'var(--calc-text)',
-                                                    lineHeight: 1.3
+                                                    lineHeight: 1.2
                                                 }}>
                                                     {rule.title}
                                                 </span>
@@ -124,74 +124,88 @@ export default function FunctionsSkills() {
                                             from { opacity: 0; transform: translateX(20px); }
                                             to { opacity: 1; transform: translateX(0); }
                                         }
+                                        .calc-graph-container svg { width: 100%; height: 100%; max-height: 250px; }
+                                        .calc-table { width: 100%; border-collapse: collapse; text-align: center; font-family: Outfit, sans-serif; }
+                                        .calc-table th, .calc-table td { border: 1px solid #e2e8f0; padding: 6px 10px; font-size: 15px; }
+                                        .calc-table th { background: #f8fafc; color: #475569; font-weight: 700; height: 36px; }
                                     `}</style>
 
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                                        <div>
-                                            <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>
-                                                {skill.learn.rules[selectedLearnIdx].title}
-                                            </h3>
-                                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--calc-muted)' }}>
-                                                RULE {selectedLearnIdx + 1} OF {skill.learn.rules.length}
-                                            </div>
-                                        </div>
-                                        <div style={{ fontSize: 32 }}>{skill.icon}</div>
-                                    </div>
-
-                                    <div style={{
-                                        marginBottom: 24, padding: '18px 20px', borderRadius: 18,
-                                        background: 'linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.9))',
-                                        border: '1px solid rgba(148,163,184,0.16)'
-                                    }}>
-                                        <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.2, textTransform: 'uppercase', color: skill.color, marginBottom: 8 }}>
-                                            Big Idea
-                                        </div>
-                                        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: 'var(--calc-text)' }}>
-                                            <MathRenderer text={skill.learn.concept} />
-                                        </p>
-                                    </div>
-
-                                    <div style={{
-                                        background: `${skill.color}05`, padding: '18px 24px', borderRadius: 20,
-                                        border: `2px solid ${skill.color}15`, marginBottom: 32, textAlign: 'center'
-                                    }}>
-                                        <div className="formula-text" style={{ fontSize: 24, fontWeight: 800, color: skill.color }}>
-                                            <MathRenderer text={`$$${skill.learn.rules[selectedLearnIdx].f}$$`} />
-                                        </div>
-                                    </div>
-
-                                    <div className="calc-learn-content-grid">
-                                        <div>
-                                            <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--calc-muted)', marginBottom: 10 }}>
-                                                Explanation
-                                            </h4>
-                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--calc-text)' }}>
-                                                <MathRenderer text={skill.learn.rules[selectedLearnIdx].d} />
-                                            </p>
-
-                                            <div style={{ marginTop: 24, background: `${skill.color}0D`, padding: 16, borderRadius: 16, border: `1px solid ${skill.color}1A` }}>
-                                                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--calc-muted)' }}>
-                                                    <span style={{ fontWeight: 800, color: skill.color }}>Tip: </span>
-                                                    <MathRenderer text={skill.learn.rules[selectedLearnIdx].tip} />
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, marginBottom: 10 }}>
-                                                Practical Example
-                                            </h4>
-                                            <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, border: '1px solid rgba(0,0,0,0.03)' }}>
-                                                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--calc-text)' }}>
-                                                    <MathRenderer
-                                                        text={skill.learn.rules[selectedLearnIdx].ex.includes('$')
-                                                            ? skill.learn.rules[selectedLearnIdx].ex
-                                                            : `$${skill.learn.rules[selectedLearnIdx].ex}$`}
-                                                    />
+                                    {(() => {
+                                        const activeSub = skill.learn.subFunctions[selectedLearnIdx];
+                                        return (
+                                            <>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                                                    <div>
+                                                        <h3 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 900, color: skill.color }}>
+                                                            {activeSub.title}
+                                                        </h3>
+                                                        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--calc-muted)' }}>
+                                                            SUB-FUNCTION {selectedLearnIdx + 1} OF {skill.learn.subFunctions.length}
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ fontSize: 32 }}>{skill.icon}</div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                                <div style={{
+                                                    marginBottom: 24, padding: '16px 20px', borderRadius: 16,
+                                                    background: 'linear-gradient(180deg, rgba(248,250,252,0.98), rgba(241,245,249,0.9))',
+                                                    border: '1px solid rgba(148,163,184,0.16)'
+                                                }}>
+                                                    <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.2, textTransform: 'uppercase', color: skill.color, marginBottom: 8 }}>
+                                                        Explanation
+                                                    </div>
+                                                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--calc-text)' }}>
+                                                        <MathRenderer text={activeSub.explanation} />
+                                                    </p>
+                                                </div>
+
+                                                <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginBottom: 24 }}>
+                                                    <div className="calc-graph-container" style={{ 
+                                                        flex: '1 1 250px', background: '#f8fafc', padding: 12, borderRadius: 20,
+                                                        border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                                     }} dangerouslySetInnerHTML={{ __html: activeSub.graphSvg }} />
+                                                     
+                                                    <div style={{ flex: '1 1 200px', display: 'flex', flexDirection: 'column' }}>
+                                                        <div style={{
+                                                            background: `${skill.color}05`, padding: '12px', borderRadius: 16,
+                                                            border: `2px solid ${skill.color}1A`, marginBottom: 12, textAlign: 'center'
+                                                        }}>
+                                                            <div className="formula-text" style={{ fontSize: 20, fontWeight: 800, margin: 0, color: skill.color }}>
+                                                                <MathRenderer text={`$$${activeSub.equation}$$`} />
+                                                            </div>
+                                                        </div>
+                                                        <div style={{ borderRadius: 12, overflow: 'hidden', boxShadow: '0 0 0 1px #e2e8f0' }}>
+                                                            <table className="calc-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style={{width: '50%'}}><MathRenderer text="$x$" /></th>
+                                                                        <th style={{width: '50%'}}><MathRenderer text="$f(x)$" /></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {activeSub.table.map((pt, i) => (
+                                                                        <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : '#f8fafc' }}>
+                                                                            <td style={{fontWeight: 600}}><MathRenderer text={pt.x.toString().includes('π') ? `$${pt.x}$` : pt.x} /></td>
+                                                                            <td style={{fontWeight: 700, color: skill.color}}><MathRenderer text={pt.y.toString().includes('π') || pt.y === 'Undef' ? pt.y : `$${pt.y}$`} /></td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div style={{ background: '#f8fafc', padding: '16px 24px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.04)' }}>
+                                                    <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: skill.color, margin: '0 0 8px' }}>
+                                                        Real Life Example
+                                                    </h4>
+                                                    <span style={{ fontSize: 15, color: 'var(--calc-text)', lineHeight: 1.5 }}>
+                                                        {activeSub.realLife}
+                                                    </span>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
 
                                     <div style={{ marginTop: 40, display: 'flex', gap: 16 }}>
                                         <button

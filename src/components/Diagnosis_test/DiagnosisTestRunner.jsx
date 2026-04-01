@@ -6,6 +6,7 @@ import DiagnosisResults from './DiagnosisResults';
 import './DiagnosisTest.css';
 import { useViolationTracker } from './violation/useViolation';
 import ViolationWarning from './violation/ViolationWarning';
+import { api } from '../../services/api';
 
 const DiagnosisTestRunner = () => {
     const { grade } = useParams();
@@ -20,6 +21,8 @@ const DiagnosisTestRunner = () => {
     const [error, setError] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [showGrid, setShowGrid] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState(null);
 
     const STORAGE_KEY = `diagnosis_test_g${grade}`;
 
@@ -30,9 +33,13 @@ const DiagnosisTestRunner = () => {
         violationMessage,
         dismissWarning,
         requestFullscreen
-    } = useViolationTracker(maxViolations, () => {
-        setIsSubmitted(true);
-    });
+    } = useViolationTracker(maxViolations);
+
+    useEffect(() => {
+        if (violationCount >= maxViolations && !isSubmitted && !submitting) {
+            handleSubmit();
+        }
+    }, [violationCount, isSubmitted, submitting]);
 
     useEffect(() => {
         if (!loading && !isSubmitted && questions.length > 0) {
@@ -181,9 +188,9 @@ const DiagnosisTestRunner = () => {
 
             setTimeLeft(remaining);
 
-            if (remaining <= 0) {
+            if (remaining <= 0 && !isSubmitted && !submitting) {
                 clearInterval(timer);
-                setIsSubmitted(true);
+                handleSubmit();
             }
         }, 1000);
 
@@ -284,9 +291,37 @@ const DiagnosisTestRunner = () => {
         );
     };
 
-    const handleSubmit = () => {
-        setIsSubmitted(true);
-        // We don't clear storage here yet because they might refresh on the results page
+    const handleSubmit = async () => {
+        if (submitting) return;
+
+        setSubmitting(true);
+        setSubmitError(null);
+
+        try {
+            const results = calculateDetailedResults();
+            const data = {
+                grade: grade,
+                score: results.score,
+                total_questions: results.total,
+                total_correct: results.totalCorrect || 0,
+                total_wrong: results.totalWrong || 0,
+                total_partial: results.totalPartial || 0,
+                time_taken: results.timeTaken,
+                question_results: results.questionResults
+            };
+
+            const response = await api.submitDiagnosisTest(data);
+            console.log('Diagnosis results submitted successfully:', response);
+            setIsSubmitted(true);
+        } catch (err) {
+            console.error('Error submitting diagnosis results:', err);
+            setSubmitError('Failed to save your results. Please try clicking "Final Submit" again.');
+            // Even if it fails, we might still want to show results, 
+            // but for reliability let's ask them to retry or handle it gracefully.
+            setIsSubmitted(true); // Still show results so they don't lose work, but logging error
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const calculateDetailedResults = () => {
@@ -517,7 +552,14 @@ const DiagnosisTestRunner = () => {
 
 
     return (
-        <div className="diagnosis-runner min-h-screen font-sans">
+        <div className="diagnosis-runner min-h-screen font-sans relative">
+            <ViolationWarning
+                isOpen={showWarning && violationCount < maxViolations}
+                onClose={dismissWarning}
+                violationCount={violationCount}
+                maxViolations={maxViolations}
+                message={violationMessage}
+            />
             <header className="cbt-header shadow-md px-3 sm:px-10 h-14 sm:h-20">
                 <div className="flex items-center gap-2 sm:gap-4">
                     <span className="font-extrabold text-sm sm:text-2xl bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
@@ -531,10 +573,12 @@ const DiagnosisTestRunner = () => {
                         <span className="text-sm sm:text-xl">{formatTime(timeLeft)}</span>
                     </div>
                     <button
-                        className="px-4 sm:px-8 py-2 sm:py-3 bg-indigo-600 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-base hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95"
+                        className={`px-4 sm:px-8 py-2 sm:py-3 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-base transition-all shadow-lg active:scale-95 flex items-center gap-2 ${submitting ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'}`}
                         onClick={handleSubmit}
+                        disabled={submitting}
                     >
-                        Final Submit
+                        {submitting && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                        {submitting ? 'Submitting...' : 'Final Submit'}
                     </button>
                 </div>
             </header>

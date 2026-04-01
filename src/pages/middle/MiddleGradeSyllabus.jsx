@@ -249,6 +249,30 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/lines-and-angles'
+                        },
+                        {
+                            skill_id: 'local-number-play-chapter',
+                            skill_name: 'Number Play: Interactive Chapter',
+                            topic: 'Number Play',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/number-play-chapter'
+                        },
+                        {
+                            skill_id: 'local-data-handling-6-chapter',
+                            skill_name: 'Data Handling and Presentation: Interactive Chapter',
+                            topic: 'Data Handling',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/data-handling-6'
+                        },
+                        {
+                            skill_id: 'local-prime-time-6-chapter',
+                            skill_name: 'Prime Time: Interactive Chapter',
+                            topic: 'Prime Time',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/prime-time'
                         }
                     ];
                 }
@@ -640,7 +664,7 @@ const MiddleGradeSyllabus = () => {
 
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (activeSubject === 'mathematics') {
-            if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles"].some(t => topicName.includes(t.toLowerCase()))) return acc;
+            if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time"].some(t => topicName.includes(t.toLowerCase()))) return acc;
             if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
             if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
         }

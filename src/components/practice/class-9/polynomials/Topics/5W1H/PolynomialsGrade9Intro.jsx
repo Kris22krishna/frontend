@@ -47,6 +47,20 @@ const CARDS = [
         ],
     },
     {
+        q: 'WHEN',
+        label: 'When Did Polynomials Emerge?',
+        icon: '⏳',
+        color: '#6a1b9a',
+        short: 'From ancient Babylonian equations to modern AI algorithms and space exploration.',
+        bullets: [
+            '📜 ~2000 BC — Ancient Babylonians solved quadratic equations (degree-2 polynomials) on clay tablets for land and trade calculations.',
+            '🏛️ ~300 BC — Greek mathematicians like Euclid and Diophantus studied polynomial-like relationships in geometry.',
+            '📖 16th–17th Century — Mathematicians like Cardano and Descartes developed general methods to solve cubic and quartic polynomials.',
+            '🏫 In Class 9 — You learn to factor, find zeroes, and apply algebraic identities — skills that unlock algebra, calculus, and beyond.',
+            '🤖 Today — Polynomials power machine learning models, cryptographic security, signal processing, and rocket trajectory computations.',
+        ],
+    },
+    {
         q: 'WHY',
         label: 'Why Learn Polynomials?',
         icon: '💡',
@@ -108,7 +122,7 @@ export default function PolynomialsGrade9Intro() {
             <div className="poly-module-hero">
                 <h1 className="poly-module-title">
                     Discover Polynomials Through{' '}
-                    <span className="poly-accent-text">5 Big Questions</span>
+                    <span className="poly-accent-text">6 Big Questions</span>
                 </h1>
                 <p className="poly-module-subtitle">
                     Tap each card to explore ✨
