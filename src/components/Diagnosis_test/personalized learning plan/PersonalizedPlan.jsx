@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { CalendarDays, Clock, Download, BookOpen, GraduationCap, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const PersonalizedPlan = ({ questionResults, grade }) => {
     const [isPlanExpanded, setIsPlanExpanded] = useState(false);
     // 1. Identify missing topics
     // Filter out only the questions that were not correct
-    const missedQuestions = questionResults.filter(q => q.status !== 'correct');
+    const missedQuestions = (questionResults || []).filter(q => q && q.status !== 'correct');
     
     // Get unique topics from those missed questions
     const topicsToLearn = [...new Set(missedQuestions.map(q => q.topic || 'General Foundational Skills'))];
 
     // 2. Generate plan data table
     const getTopicAdvice = (topic) => {
-        const t = topic.toLowerCase();
+        const t = (topic || '').toLowerCase();
         if (t.includes('fraction')) return "Review identifying, adding, and subtracting fractions using visual models.";
         if (t.includes('algebra') || t.includes('equation')) return "Practice solving for unknowns and understanding mathematical expressions.";
         if (t.includes('geometry') || t.includes('shape') || t.includes('angle')) return "Focus on identifying properties of shapes, angles, and spatial reasoning.";
@@ -37,56 +37,69 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
 
     // Generate PDF function
     const downloadPDF = () => {
-        const doc = new jsPDF();
-        
-        // Title
-        doc.setFontSize(22);
-        doc.setTextColor(79, 70, 229); // indigo-600
-        doc.text(`Grade ${grade} Personalized Learning Plan`, 14, 22);
-        
-        // Subtitle
-        doc.setFontSize(12);
-        doc.setTextColor(100, 116, 139); // slate-500
-        doc.text(`Created based on your recent skill discovery assessment.`, 14, 32);
+        try {
+            const doc = new jsPDF();
+            
+            // Title
+            doc.setFontSize(22);
+            doc.setTextColor(79, 70, 229); // indigo-600
+            doc.text(`Grade ${grade} Personalized Learning Plan`, 14, 22);
+            
+            // Subtitle
+            doc.setFontSize(12);
+            doc.setTextColor(100, 116, 139); // slate-500
+            doc.text(`Created based on your recent skill discovery assessment.`, 14, 32);
 
-        // Table
-        doc.autoTable({
-            startY: 40,
-            head: [['Day', 'Topic to Learn', 'Suggested Time', 'What to Focus On']],
-            body: planData.map(item => [item.day, item.learning, item.time, item.details]),
-            theme: 'grid',
-            headStyles: { 
-                fillColor: [79, 70, 229], 
-                textColor: [255, 255, 255],
-                fontStyle: 'bold',
-                halign: 'center'
-            },
-            bodyStyles: {
-                textColor: [51, 65, 85], // slate-700
-            },
-            columnStyles: {
-                0: { cellWidth: 20, halign: 'center', fontStyle: 'bold' },
-                1: { cellWidth: 45 },
-                2: { cellWidth: 30, halign: 'center' },
-                3: { cellWidth: 85 }
-            },
-            styles: { 
-                fontSize: 11, 
-                cellPadding: 8 
-            },
-            alternateRowStyles: { 
-                fillColor: [248, 250, 252] // slate-50
+            // Table
+            autoTable(doc, {
+                startY: 40,
+                head: [['Day', 'Topic to Learn', 'Suggested Time', 'What to Focus On']],
+                body: planData.map(item => [item.day, item.learning, item.time, item.details]),
+                theme: 'grid',
+                headStyles: { 
+                    fillColor: [79, 70, 229], 
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold',
+                    halign: 'center'
+                },
+                bodyStyles: {
+                    textColor: [51, 65, 85], // slate-700
+                },
+                columnStyles: {
+                    0: { cellWidth: 20, halign: 'center', fontStyle: 'bold' },
+                    1: { cellWidth: 45 },
+                    2: { cellWidth: 30, halign: 'center' },
+                    3: { cellWidth: 85 }
+                },
+                styles: { 
+                    fontSize: 11, 
+                    cellPadding: 8 
+                },
+                alternateRowStyles: { 
+                    fillColor: [248, 250, 252] // slate-50
+                }
+            });
+
+            // Footer
+            let finalY = 40;
+            if (doc.lastAutoTable && doc.lastAutoTable.finalY) {
+                finalY = doc.lastAutoTable.finalY;
+            } else if (doc.previousAutoTable && doc.previousAutoTable.finalY) {
+                finalY = doc.previousAutoTable.finalY;
+            } else if (doc.autoTable && doc.autoTable.previous && doc.autoTable.previous.finalY) {
+                finalY = doc.autoTable.previous.finalY;
             }
-        });
-
-        // Footer
-        const finalY = doc.lastAutoTable.finalY || 40;
-        doc.setFontSize(10);
-        doc.setTextColor(148, 163, 184); // slate-400
-        doc.text(`Keep learning and practicing! You are doing great.`, 14, finalY + 15);
-        
-        // Save
-        doc.save(`Learning_Plan_Grade_${grade}.pdf`);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(148, 163, 184); // slate-400
+            doc.text(`Keep learning and practicing! You are doing great.`, 14, finalY + 15);
+            
+            // Save
+            doc.save(`Learning_Plan_Grade_${grade}.pdf`);
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            alert("Sorry, there was an error generating your PDF. Please try again or contact support if the issue persists.");
+        }
     };
 
     // If perfectly scored
