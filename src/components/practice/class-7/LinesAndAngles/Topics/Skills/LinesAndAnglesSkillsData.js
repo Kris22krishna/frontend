@@ -5,7 +5,7 @@ import {
     generateTransversalPropertiesQuestions,
     generateCheckingParallelQuestions,
     generateApplicationsQuestions
-} from './linesAndAnglesQuestions';
+} from './LinesAndAnglesQuestions';
 
 export const SKILLS = [
     {
