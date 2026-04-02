@@ -1,6 +1,7 @@
 export const SKILLS = [
     {
         id: 'similar-figures',
+        nodeId: 'a4101006-0001-0000-0000-000000000000',
         title: 'Understanding Similar Figures',
         subtitle: 'Same Shape, New Size',
         desc: 'Decide when figures and polygons are similar using angle equality and proportional sides.',
@@ -55,6 +56,7 @@ Special cases:
     },
     {
         id: 'similarity-of-triangles',
+        nodeId: 'a4101006-0002-0000-0000-000000000000',
         title: 'Similarity of Triangles',
         subtitle: 'Matching Triangle Shapes',
         desc: 'Use triangle-specific conditions to decide whether two triangles are similar.',
@@ -104,6 +106,7 @@ Once triangles are similar, corresponding sides are proportional and correspondi
     },
     {
         id: 'bpt-and-converse',
+        nodeId: 'a4101006-0003-0000-0000-000000000000',
         title: 'Basic Proportionality Theorem',
         subtitle: 'Parallel Lines Inside Triangles',
         desc: 'Use BPT and its converse to prove ratios and parallel lines.',
@@ -154,6 +157,7 @@ Conversely, if these two ratios are equal, then the joining line is parallel to 
     },
     {
         id: 'applications-of-bpt',
+        nodeId: 'a4101006-0004-0000-0000-000000000000',
         title: 'Applications of Proportional Segments',
         subtitle: 'Finding Missing Lengths',
         desc: 'Solve ratio-based geometry problems using BPT and similar triangles.',
@@ -205,6 +209,7 @@ Typical flow:
     },
     {
         id: 'aaa-sss-sas',
+        nodeId: 'a4101006-0005-0000-0000-000000000000',
         title: 'Criteria for Similarity',
         subtitle: 'AAA, SSS, SAS',
         desc: 'Choose the correct triangle similarity test and justify it clearly.',
@@ -256,6 +261,7 @@ The goal is to pick the shortest correct test for the given data.`,
     },
     {
         id: 'using-similar-triangles',
+        nodeId: 'a4101006-0006-0000-0000-000000000000',
         title: 'Using Similar Triangles',
         subtitle: 'Unknown Angles and Lengths',
         desc: 'Apply proven similarity to solve geometry questions involving sides and angles.',
@@ -307,6 +313,7 @@ That is why one similarity proof often solves an entire geometry problem.`,
     },
     {
         id: 'real-life-applications',
+        nodeId: 'a4101006-0007-0000-0000-000000000000',
         title: 'Real-Life Applications',
         subtitle: 'Indirect Measurement',
         desc: 'Use similar triangles to estimate heights, shadows, and distances in the real world.',

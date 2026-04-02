@@ -100,6 +100,17 @@ export const NODE_IDS = {
   g10MathAreasCirclesComposite:           'a4101012-0006-0000-0000-000000000000',
   g10MathAreasCirclesTerminologyQuiz:     'a4101012-0010-0000-0000-000000000000',
 
+  // Grade 10 Math: Triangles (Chapter 6)
+  g10MathTriangles:                         'a3101006-0000-0000-0000-000000000001',
+  g10MathTriSimilarFigures:                 'a4101006-0001-0000-0000-000000000000',
+  g10MathTriSimilarityOfTriangles:          'a4101006-0002-0000-0000-000000000000',
+  g10MathTriBPTAndConverse:                 'a4101006-0003-0000-0000-000000000000',
+  g10MathTriApplicationsOfBPT:              'a4101006-0004-0000-0000-000000000000',
+  g10MathTriAAASSSAS:                       'a4101006-0005-0000-0000-000000000000',
+  g10MathTriUsingSimilarTriangles:          'a4101006-0006-0000-0000-000000000000',
+  g10MathTriRealLifeApplications:           'a4101006-0007-0000-0000-000000000000',
+  g10MathTriTerminologyQuiz:                'a4101006-0010-0000-0000-000000000000',
+
   // Grade 10 Math: Arithmetic Progressions (Chapter 5)
   g10MathArithmeticProgressions:              'a3101005-0000-0000-0000-000000000001',
   g10MathAPRecognisingPatterns:               'a4101005-0001-0000-0000-000000000000',
