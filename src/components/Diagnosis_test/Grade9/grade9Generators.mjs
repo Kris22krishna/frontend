@@ -125,7 +125,7 @@ export const generatePolynomialBasics = () => {
 
     return {
         type: "tableInput",
-        question: "",
+        question: "Find the value of the polynomial:",
         topic: "Polynomials / Basics",
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -265,7 +265,8 @@ export const generateLinearEquationSolutions = () => {
         question: `Find the values of x and y that satisfy the equation: </br> ${questionText}`,
         topic: "Linear Equations / Solutions",
         answer: JSON.stringify(answerObj),
-        rows: rows
+        rows: rows,
+        inputKeys: ["x", "y"]
     };
 };
 

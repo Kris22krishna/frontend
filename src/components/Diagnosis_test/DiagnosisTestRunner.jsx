@@ -8,6 +8,41 @@ import { useViolationTracker } from './violation/useViolation';
 import ViolationWarning from './violation/ViolationWarning';
 import { api } from '../../services/api';
 
+const generateFactorTreeResultsSVG = (tree, userAnswers, correctAnswers) => {
+    const getNodes = (n, x, y, level, answersToShow) => {
+        const hGap = 120 / Math.pow(1.6, level);
+        const vGap = 80;
+        const radius = 25;
+        let content = "";
+        
+        if (n.children) {
+            n.children.forEach((child, idx) => {
+                const cx = idx === 0 ? x - hGap : x + hGap;
+                const cy = y + vGap;
+                content += `<line x1="${x}" y1="${y + radius}" x2="${cx}" y2="${cy - radius}" stroke="#cbd5e1" stroke-width="2" />`;
+                content += getNodes(child, cx, cy, level + 1, answersToShow);
+            });
+        }
+        
+        content += `<circle cx="${x}" cy="${y}" r="${radius}" fill="${n.isInput ? "#fff" : "#f1f5f9"}" stroke="${n.isInput ? "#4f46e5" : "#cbd5e1"}" stroke-width="2" />`;
+        
+        const displayVal = n.isInput ? (answersToShow[n.id] || "?") : n.val;
+        content += `<text x="${x}" y="${y + 5}" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#334155">${displayVal}</text>`;
+        
+        return content;
+    };
+
+    return `
+    <svg width="100%" height="auto" viewBox="0 0 1000 450" xmlns="http://www.w3.org/2000/svg" style="background:white; border-radius:1rem; max-width:1000px; display:block; margin:auto;">
+        <rect width="100%" height="100%" fill="#fff" />
+        <text x="250" y="40" text-anchor="middle" font-family="Arial" font-weight="900" font-size="20" fill="#6366f1">YOUR TREE</text>
+        ${getNodes(tree, 250, 100, 0, userAnswers)}
+        <line x1="500" y1="30" x2="500" y2="420" stroke="#f1f5f9" stroke-width="4" stroke-dasharray="10 5" />
+        <text x="750" y="40" text-anchor="middle" font-family="Arial" font-weight="900" font-size="20" fill="#10b981">CORRECT TREE</text>
+        ${getNodes(tree, 750, 100, 0, correctAnswers)}
+    </svg>`;
+};
+
 const DiagnosisTestRunner = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
@@ -244,7 +279,7 @@ const DiagnosisTestRunner = () => {
     };
 
     const renderFactorTree = (node, x, y, level, parentX, parentY) => {
-        const hGap = 160 / (level + 1);
+        const hGap = 120 / Math.pow(1.6, level);
         const vGap = 80;
         const radius = 25;
         const currentQId = questions[currentIndex].id;
@@ -348,6 +383,7 @@ const DiagnosisTestRunner = () => {
                         const rowExpected = expected[rowIdx];
                         if (typeof rowExpected === 'object' && rowExpected !== null) {
                             Object.keys(rowExpected).forEach(key => {
+                                if (key.startsWith('_')) return; // Skip internal keys
                                 totalInputs++;
                                 const userVal = String(userAnswer?.[rowIdx]?.[key] || '').trim().toLowerCase();
                                 const expVal = String(rowExpected[key] || '').trim().toLowerCase();
@@ -361,7 +397,7 @@ const DiagnosisTestRunner = () => {
                         }
                     });
 
-                    if (totalInputs > 0 && correctInputs > 0) {
+                    if (totalInputs > 0) {
                         qScore = correctInputs / totalInputs;
                         correctCount += qScore;
                         if (qScore === 1) isCorrect = true;
@@ -403,49 +439,70 @@ const DiagnosisTestRunner = () => {
             let userDisplay = userAnswer;
             let correctDisplay = q.answer;
 
+            const formatTableValue = (val, variant) => {
+                if (val === null || val === undefined) return "_None_";
+                if (typeof val === 'object') {
+                    if (variant === 'fraction' && val.num !== undefined) {
+                        return `$${val.num}/${val.den}$`;
+                    }
+                    if (variant === 'coordinate' && val.x !== undefined) {
+                        return `(${val.x}, ${val.y})`;
+                    }
+                    if (val["0"] !== undefined && typeof val["0"] !== 'object') return val["0"];
+                    
+                    const keys = Object.keys(val).filter(k => !k.startsWith('_'));
+                    if (keys.length > 0) {
+                        return keys.map(k => val[k]).join(', ');
+                    }
+                    return JSON.stringify(val);
+                }
+                return String(val);
+            };
+
             if (q.type === 'tableInput') {
                 try {
                     const expected = JSON.parse(q.answer);
                     const rows = q.rows || [];
 
                     const formatRow = (row, ans) => {
+                        const resStr = formatTableValue(ans, q.variant);
                         if (row.left !== undefined) {
                             const f = (val) => (typeof val === 'object' && val.n !== undefined) ? `${val.n}/${val.d}` : val;
-                            let resStr = "";
-                            if (q.variant === 'fraction') {
-                                resStr = ans ? `${ans.num || '?'}/${ans.den || '?'}` : "None";
-                            } else {
-                                resStr = ans ? (ans["0"] || ans) : "None";
-                            }
-                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)} = ${resStr}$`;
+                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)}$\n**Ans:** ${resStr}`;
                         }
-                        return row.text || "Row";
+                        return `${row.text || "Row"}\n**Ans:** ${resStr}`;
                     };
 
                     const formatExpectedRow = (row, expVal) => {
+                        const resStr = formatTableValue(expVal, q.variant);
                         if (row.left !== undefined) {
                             const f = (val) => (typeof val === 'object' && val.n !== undefined) ? `${val.n}/${val.d}` : val;
-                            let resStr = "";
-                            if (q.variant === 'fraction') {
-                                resStr = `${expVal.num}/${expVal.den}`;
-                            } else {
-                                resStr = expVal["0"] || expVal;
-                            }
-                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)} = ${resStr}$`;
+                            return `$${f(row.left)} ${row.op || ''} ${f(row.right)}$\n**Ans:** ${resStr}`;
                         }
-                        return row.text || "Row";
+                        return `${row.text || "Row"}\n**Ans:** ${resStr}`;
                     };
 
-                    userDisplay = rows.map((row, i) => formatRow(row, userAnswer?.[i])).join(', ');
-                    correctDisplay = rows.map((row, i) => formatExpectedRow(row, expected[i])).join(', ');
+                    userDisplay = rows.map((row, i) => formatRow(row, userAnswer?.[i])).join('\n\n');
+                    correctDisplay = rows.map((row, i) => formatExpectedRow(row, expected[i])).join('\n\n');
                 } catch (e) {
                     console.error("Error formatting table results:", e);
                     userDisplay = isCorrect ? "Completed Correctly" : "Incorrectly Filled";
                     correctDisplay = "Check Table Properties";
                 }
             } else if (q.type === 'factorTree') {
-                userDisplay = isCorrect ? "Nodes filled correctly" : "Missing or wrong nodes";
-                correctDisplay = "View factor tree branches";
+                try {
+                    const expected = JSON.parse(q.answer);
+                    userDisplay = isCorrect ? "All nodes filled correctly" : "Some nodes missing or incorrect";
+                    correctDisplay = "Refer to the comparison diagram on the right";
+                    
+                    // Generate a side-by-side SVG comparison
+                    const comparisonSvg = generateFactorTreeResultsSVG(q.tree, userAnswer || {}, expected);
+                    q.image = comparisonSvg; // Override q.image so it shows in Results UI
+                } catch (e) {
+                    console.error("Error generating factor tree comparison:", e);
+                    userDisplay = isCorrect ? "Completed" : "Incomplete";
+                    correctDisplay = "Check branches";
+                }
             }
 
             let status = 'wrong';
@@ -465,6 +522,7 @@ const DiagnosisTestRunner = () => {
                 userAnswer: userDisplay,
                 correctAnswer: correctDisplay,
                 isCorrect,
+                marks: qScore,
                 status,
                 type: q.type,
                 topic: q.topic,
@@ -700,7 +758,7 @@ const DiagnosisTestRunner = () => {
                             </div>
                         ) : q.type === 'tableInput' ? (
                             <div className="mt-4 space-y-3">
-                                {q.variant === 'visual' || q.variant === 'fraction' ? (
+                                {q.variant === 'visual' || q.variant === 'fraction' || q.variant === 'coordinate' ? (
                                     <div className="space-y-3">
                                         {q.rows.map((row, rowIdx) => {
                                             const f = (p) => {
@@ -756,6 +814,26 @@ const DiagnosisTestRunner = () => {
                                                                         value={answers[q.id]?.[rowIdx]?.den || ''}
                                                                         onChange={(e) => handleTableInputChange(rowIdx, 'den', e.target.value)}
                                                                     />
+                                                                </div>
+                                                            ) : q.variant === 'coordinate' ? (
+                                                                <div className="flex items-center gap-1 font-mono text-lg text-slate-600 bg-white p-3 rounded-xl border-3 border-slate-100 shadow-inner group-hover:shadow-md transition-all">
+                                                                    <span className="font-bold">(</span>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="w-12 text-center border-b-2 border-slate-100 focus:border-indigo-500 outline-none p-0 bg-transparent transition-colors font-bold"
+                                                                        placeholder="x"
+                                                                        value={answers[q.id]?.[rowIdx]?.x || ''}
+                                                                        onChange={(e) => handleTableInputChange(rowIdx, 'x', e.target.value)}
+                                                                    />
+                                                                    <span className="font-bold">,</span>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="w-12 text-center border-b-2 border-slate-100 focus:border-indigo-500 outline-none p-0 bg-transparent transition-colors font-bold"
+                                                                        placeholder="y"
+                                                                        value={answers[q.id]?.[rowIdx]?.y || ''}
+                                                                        onChange={(e) => handleTableInputChange(rowIdx, 'y', e.target.value)}
+                                                                    />
+                                                                    <span className="font-bold">)</span>
                                                                 </div>
                                                             ) : (
                                                                 <div className="relative group/input">
@@ -881,7 +959,7 @@ const DiagnosisTestRunner = () => {
                             </div>
                         ) : q.type === 'factorTree' ? (
                             <div className="mt-6 bg-white rounded-3xl p-8 border border-slate-100 shadow-sm overflow-x-auto overflow-y-visible">
-                                <svg width="600" height="400" className="mx-auto overflow-visible">
+                                <svg width="100%" height="auto" viewBox="0 0 600 450" className="mx-auto overflow-visible max-w-[600px]">
                                     {renderFactorTree(q.tree, 300, 40, 0)}
                                 </svg>
                                 <p className="mt-8 text-slate-400 font-medium italic text-center border-t border-slate-50 pt-6">Fill in the missing numbers in the factor tree branches.</p>

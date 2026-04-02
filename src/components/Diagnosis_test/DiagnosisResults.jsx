@@ -158,7 +158,7 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                         <div className="grid grid-cols-1 gap-6">
                         {questionResults.map((q, idx) => (
                             <div key={idx} className={`p-6 sm:p-8 rounded-[2rem] border-l-[12px] bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all duration-300 ${q.isCorrect ? 'border-l-green-500' : q.marks > 0 ? 'border-l-amber-500' : 'border-l-red-500'}`}>
-                                <div className="flex flex-col md:flex-row gap-8">
+                                <div className={`flex flex-col ${q.type === 'factorTree' ? '' : 'md:flex-row'} gap-8`}>
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-6">
                                             <span className="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black text-slate-600 border border-slate-100 shadow-sm">
@@ -205,10 +205,11 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                                     </div>
 
                                     {(q.img || q.image) && (
-                                        <div className="w-full md:w-64 h-auto min-h-[12rem] bg-white rounded-3xl flex items-center justify-center p-6 border border-slate-100 shadow-inner shrink-0 overflow-hidden">
+                                        <div className={`w-full ${q.type === 'factorTree' ? 'mt-4' : 'md:w-80'} h-auto min-h-[12rem] bg-white rounded-3xl flex items-center justify-center p-4 sm:p-8 border border-slate-100 shadow-inner shrink-0 overflow-hidden`}>
                                             {(q.img || q.image).trim().startsWith('<') ? (
                                                 <div
-                                                    className="w-full h-full flex items-center justify-center overflow-hidden svg-container"
+                                                    className="w-full h-full flex items-center justify-center svg-container"
+                                                    style={{ maxWidth: q.type === 'factorTree' ? '1000px' : '100%' }}
                                                     dangerouslySetInnerHTML={{ __html: (q.img || q.image) }}
                                                 />
                                             ) : (
