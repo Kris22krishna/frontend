@@ -108,6 +108,17 @@ export const NODE_IDS = {
   g10MathCirclesCircumscribedPolygons:      'a4101010-0006-0000-0000-000000000000',
   g10MathCirclesComplexApplications:        'a4101010-0007-0000-0000-000000000000',
   g10MathCirclesTerminologyQuiz:            'a4101010-0010-0000-0000-000000000000',
+  
+  // Grade 10 Math: Polynomials (Chapter 2)
+  g10MathPolynomials:                       'a3101002-0000-0000-0000-000000000001',
+  g10MathPolyTypesDegrees:                  'a4101002-0001-0000-0000-000000000000',
+  g10MathPolyEvaluatingIdentifying:         'a4101002-0002-0000-0000-000000000000',
+  g10MathPolyGeometricalInterpretation:    'a4101002-0003-0000-0000-000000000000',
+  g10MathPolyGraphicalBehaviour:            'a4101002-0004-0000-0000-000000000000',
+  g10MathPolyRelationshipQuadratic:         'a4101002-0005-0000-0000-000000000000',
+  g10MathPolyRelationshipCubic:             'a4101002-0006-0000-0000-000000000000',
+  g10MathPolyConstructingQuadratic:         'a4101002-0007-0000-0000-000000000000',
+  g10MathPolyChapterTest:                   'a4101002-0010-0000-0000-000000000000',
 
   // Grade 10 Math: Pair of Linear Equations (Chapter 3)
   g10MathLinearEquations:                   'a3101003-0000-0000-0000-000000000001',
