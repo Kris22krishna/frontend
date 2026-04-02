@@ -104,7 +104,7 @@ const JuniorGradeSyllabus = () => {
                     const topicName = (skill.topic || 'General').toLowerCase();
 
                     if (isGrade3) {
-                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii") || topicName.toLowerCase().includes("time goes on");
+                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii") || topicName.toLowerCase().includes("time goes on") || topicName.toLowerCase().includes("toy joy");
                     }
                     if (isGrade4) {
                         return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling") || topicName.includes("sharing and measuring") || topicName.includes("measuring length") || topicName.includes("transport museum");

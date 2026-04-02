@@ -164,6 +164,17 @@ export const TOPIC_CONFIGS = {
             { id: "RB-03", name: "Division" },
             { id: "RB-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
+        'Toy Joy': [
+            { id: "TJ-01", name: "Identifying 3D Shapes", route: "toy-joy/identifying-3d-shapes" },
+            { id: "TJ-02", name: "Counting Shapes in a Model", route: "toy-joy/counting-shapes" },
+            { id: "TJ-03", name: "Describing Position of Shapes", route: "toy-joy/describing-position" },
+            { id: "TJ-04", name: "Properties of 3D Shapes", route: "toy-joy/properties-of-3d-shapes" },
+            { id: "TJ-05", name: "Classifying Shapes", route: "toy-joy/classifying-shapes" },
+            { id: "TJ-06", name: "Opposite Faces of a Cube", route: "toy-joy/opposite-faces-cube" },
+            { id: "TJ-07", name: "Building and Combining Shapes", route: "toy-joy/building-combining-shapes" },
+            { id: "TJ-08", name: "Sequencing a Model Construction", route: "toy-joy/sequencing-model-construction" },
+            { id: "TJ-TEST", name: "Chapter Test", route: "toy-joy/chapter-test" }
+        ],
         'Fair Share': [
             { id: "FS-01", name: "Cutting equal parts" },
             { id: "FS-02", name: "Halves and doubles" },
