@@ -81,6 +81,80 @@ const create3DShapeSVG = (name) => {
     }
 };
 
+const createAngleSVG = (type) => {
+    const strokeColor = "#16a34a"; 
+    const strokeWidth = "4";
+    const size = 300;
+    const center = size / 2;
+    const length = 110;
+
+    let angleDegrees;
+    let showRightAngleMarker = false;
+
+    if (type === "Acute") {
+        angleDegrees = getRandomInt(35, 55);
+    } else if (type === "Obtuse") {
+        angleDegrees = getRandomInt(125, 145);
+    } else if (type === "Right") {
+        angleDegrees = 90;
+        showRightAngleMarker = true;
+    } else if (type === "Straight") {
+        angleDegrees = 180;
+    }
+
+    // Convert to radians
+    const angleRadians = (angleDegrees * Math.PI) / 180;
+    
+    // Slight random rotation for natural feel
+    const rotationBase = type === "Right" ? (Math.random() > 0.5 ? 0 : Math.PI/4) : (getRandomInt(-20, 20) * Math.PI) / 180;
+
+    const x1 = center + length * Math.cos(rotationBase);
+    const y1 = center + length * Math.sin(rotationBase);
+    
+    const x2 = center + length * Math.cos(rotationBase - angleRadians);
+    const y2 = center + length * Math.sin(rotationBase - angleRadians);
+
+    let marker = "";
+    if (showRightAngleMarker) {
+        const mSize = 25;
+        const mx1 = center + mSize * Math.cos(rotationBase);
+        const my1 = center + mSize * Math.sin(rotationBase);
+        const mx2 = center + mSize * Math.cos(rotationBase - Math.PI/2);
+        const my2 = center + mSize * Math.sin(rotationBase - Math.PI/2);
+        const mx3 = mx1 + (mx2 - center);
+        const my3 = my1 + (my2 - center);
+        
+        marker = `<path d="M ${mx1} ${my1} L ${mx3} ${my3} L ${mx2} ${my2}" fill="none" stroke="${strokeColor}" stroke-width="2" />`;
+    } else if (type !== "Straight") {
+        const arcRadius = 35;
+        const startX = center + arcRadius * Math.cos(rotationBase);
+        const startY = center + arcRadius * Math.sin(rotationBase);
+        const endX = center + arcRadius * Math.cos(rotationBase - angleRadians);
+        const endY = center + arcRadius * Math.sin(rotationBase - angleRadians);
+        const largeArcFlag = angleDegrees > 180 ? 1 : 0;
+        marker = `<path d="M ${startX} ${startY} A ${arcRadius} ${arcRadius} 0 ${largeArcFlag} 0 ${endX} ${endY}" fill="none" stroke="${strokeColor}" stroke-width="2" />`;
+    }
+
+    // Label positioning
+    const labelRadius = showRightAngleMarker ? 50 : (type === "Straight" ? 30 : 55);
+    const labelAngle = rotationBase - angleRadians / 2;
+    const labelX = center + labelRadius * Math.cos(labelAngle);
+    const labelY = center + labelRadius * Math.sin(labelAngle);
+
+    const labelText = `${angleDegrees}°`;
+
+    const svgString = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="white" />
+        ${marker}
+        <text x="${labelX}" y="${labelY}" font-family="Arial" font-size="20" font-weight="bold" fill="${strokeColor}" text-anchor="middle" dominant-baseline="middle">${labelText}</text>
+        <line x1="${center}" y1="${center}" x2="${x1}" y2="${y1}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" />
+        <line x1="${center}" y1="${center}" x2="${x2}" y2="${y2}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" />
+        <circle cx="${center}" cy="${center}" r="4" fill="${strokeColor}" />
+    </svg>`;
+
+    return svgString;
+};
+
 // --- Number Sense & Operations ---
 
 export const generatePlaceValue5Digit = () => {
@@ -623,31 +697,8 @@ export const generateFractionOperations = () => {
 export const generateAngles = () => {
     const types = ["Acute", "Obtuse", "Right", "Straight"];
     const type = types[getRandomInt(0, 3)];
-    let imagePath, question;
-
-    if (type === "Acute") {
-        // 3 acute angle images available
-        const imageNum = getRandomInt(1, 3);
-        imagePath = `/assets/grade4/acute_angle_${imageNum}.png`;
-        question = `Identify the type of angle shown in the image`;
-
-    } else if (type === "Obtuse") {
-        // 3 obtuse angle images available
-        const imageNum = getRandomInt(1, 3);
-        imagePath = `/assets/grade4/obtuse_angle_${imageNum}.png`;
-        question = `Identify the type of angle shown in the image`;
-
-    } else if (type === "Right") {
-        // 2 right angle images available
-        const imageNum = getRandomInt(1, 2);
-        imagePath = `/assets/grade4/right_angle_${imageNum}.png`;
-        question = `Identify the type of angle shown in the image`;
-
-    } else { // Straight
-        // 1 straight angle image available
-        imagePath = `/assets/grade4/straight_angle_1.png`;
-        question = `Identify the type of angle shown in the image`;
-    }
+    const imagePath = createAngleSVG(type);
+    const question = `Identify the type of angle shown in the image`;
 
     const options = shuffleArray([
         { value: "Acute", label: "Acute" },
@@ -741,17 +792,13 @@ export const generateAreaShape = () => {
         ];
 
         const svgString = svgParts.join('');
-        const base64Svg = typeof Buffer !== 'undefined'
-            ? Buffer.from(svgString).toString('base64')
-            : btoa(svgString);
-        const imagePath = `data:image/svg+xml;base64,${base64Svg}`;
 
         return {
             type: "userInput",
             topic: "Measurement / Area",
             question: `Find the area of the rectangle shown in the image:`,
             answer: String(area),
-            image: imagePath
+            image: svgString
         };
     } else {
         // Square
@@ -779,17 +826,13 @@ export const generateAreaShape = () => {
         ];
 
         const svgString = svgParts.join('');
-        const base64Svg = typeof Buffer !== 'undefined'
-            ? Buffer.from(svgString).toString('base64')
-            : btoa(svgString);
-        const imagePath = `data:image/svg+xml;base64,${base64Svg}`;
 
         return {
             type: "userInput",
             topic: "Measurement / Area",
             question: `Find the area of the square shown in the image:`,
             answer: String(area),
-            image: imagePath
+            image: svgString
         };
     }
 };
@@ -832,17 +875,13 @@ export const generatePerimeterShape = () => {
         ];
 
         const svgString = svgParts.join('');
-        const base64Svg = typeof Buffer !== 'undefined'
-            ? Buffer.from(svgString).toString('base64')
-            : btoa(svgString);
-        const imagePath = `data:image/svg+xml;base64,${base64Svg}`;
 
         return {
             type: "userInput",
             topic: "Measurement / Perimeter",
             question: `Find the perimeter of the rectangle shown in the image:`,
             answer: String(perimeter),
-            image: imagePath
+            image: svgString
         };
     } else {
         // Square
@@ -870,17 +909,13 @@ export const generatePerimeterShape = () => {
         ];
 
         const svgString = svgParts.join('');
-        const base64Svg = typeof Buffer !== 'undefined'
-            ? Buffer.from(svgString).toString('base64')
-            : btoa(svgString);
-        const imagePath = `data:image/svg+xml;base64,${base64Svg}`;
 
         return {
             type: "userInput",
             topic: "Measurement / Perimeter",
             question: `Find the perimeter of the square shown in the image:`,
             answer: String(perimeter),
-            image: imagePath
+            image: svgString
         };
     }
 };
