@@ -89,7 +89,7 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                             <CheckCircle2 size={28} />
                         </div>
                         <div className="text-2xl font-black text-slate-900 leading-none mb-1">
-                            {score % 1 === 0 ? score : score.toFixed(1)}
+                            {score % 1 === 0 ? score : score.toFixed(2)}
                         </div>
                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Correct</div>
                     </div>
