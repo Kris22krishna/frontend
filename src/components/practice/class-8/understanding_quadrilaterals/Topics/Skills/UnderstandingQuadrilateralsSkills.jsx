@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { LatexText } from '@/components/LatexText';
 import styles from '../../understanding_quadrilaterals.module.css';
 import {
-    polygonsClassificationAndDiagonals,
     angleSumAndExteriorAngles,
     kindsOfQuadrilaterals,
     specialParallelograms,
@@ -14,33 +13,8 @@ import UnderstandingQuadrilateralsAssessmentEngine from './Engines/Understanding
 
 const SKILLS = [
     {
-        id: 'polygons-classification-diagonals',
-        num: 1,
-        icon: 'P1',
-        label: 'Polygons, Classification, and Diagonals',
-        desc: 'Build the chapter foundation from plane curves to polygons, diagonals, convex figures, and regular polygons.',
-        color: '#0f766e',
-        pool: polygonsClassificationAndDiagonals,
-        learn: {
-            concept: 'The chapter begins with plane curves, then focuses on polygons. A polygon is a simple closed curve made of line segments. From there we classify polygons by number of sides, by shape type such as convex or concave, and by whether they are regular or irregular.',
-            rules: [
-                { icon: '1', title: 'Plane Curves to Polygons', body: 'Every polygon starts as a plane figure, but not every plane figure is a polygon. To be a polygon, the figure must be simple, closed, and made only of line segments.' },
-                { icon: '2', title: 'Naming by Number of Sides', body: 'A 3-sided polygon is a triangle, a 4-sided polygon is a quadrilateral, a 5-sided polygon is a pentagon, and so on. This classification is the first way we organise polygon families.' },
-                { icon: '3', title: 'Diagonals', body: 'A diagonal joins 2 non-consecutive vertices of a polygon. In quadrilateral $ABCD$, the diagonals are $AC$ and $BD$. From one vertex, an $n$-gon can be divided into $(n-2)$ triangles.' },
-                { icon: '4', title: 'Convex and Concave', body: 'In a convex polygon, every interior angle is less than $180^\\circ$ and every diagonal lies inside the polygon. In a concave polygon, at least one interior angle is greater than $180^\\circ$.' },
-                { icon: '5', title: 'Regular and Irregular', body: 'A regular polygon is both equilateral and equiangular. If the sides are not all equal or the angles are not all equal, the polygon is irregular.' },
-            ],
-            examples: [
-                { q: 'How many diagonals does a quadrilateral have?', a: 'A quadrilateral has exactly $2$ diagonals.' },
-                { q: 'How many triangles are formed from one vertex of a hexagon?', a: '$6 - 2 = 4$ triangles.' },
-                { q: 'Which is regular: a square or a general parallelogram?', a: 'A square is regular, but a general parallelogram is not.' },
-            ],
-            tip: 'Use a checklist: closed, simple, line segments only. Then classify by sides, then by shape type, then by special properties.',
-        },
-    },
-    {
         id: 'angle-sum-exterior-angles',
-        num: 2,
+        num: 1,
         icon: 'A2',
         label: 'Angle Sum and Exterior Angles',
         desc: 'Use the chapter formulas for quadrilaterals, general polygons, and regular polygons.',
@@ -65,7 +39,7 @@ const SKILLS = [
     },
     {
         id: 'kinds-of-quadrilaterals',
-        num: 3,
+        num: 2,
         icon: 'Q3',
         label: 'Kinds of Quadrilaterals',
         desc: 'Classify trapeziums, kites, and parallelograms and use the elements and properties of a parallelogram.',
@@ -90,7 +64,7 @@ const SKILLS = [
     },
     {
         id: 'special-parallelograms',
-        num: 4,
+        num: 3,
         icon: 'S4',
         label: 'Special Parallelograms',
         desc: 'Study rhombus, rectangle, and square as special forms of a parallelogram and compare their diagonal properties.',
@@ -160,7 +134,7 @@ export default function UnderstandingQuadrilateralsSkills() {
         return (
             <div className={styles['ccr-page']}>
                 <nav className={styles['ccr-nav']}>
-                    <button className={styles['ccr-nav-back']} onClick={backToList}>{"<-"} Skills</button>
+                    <button className={styles['ccr-nav-back']} onClick={backToList}>← Skills</button>
                     <div className={styles['ccr-nav-links']}>
                         <button className={styles['ccr-nav-link']} onClick={() => navigate('/senior/grade/8/understanding-quadrilaterals')}>Home</button>
                         <button className={styles['ccr-nav-link']} onClick={() => navigate('/senior/grade/8/understanding-quadrilaterals/terminology')}>Terminology</button>
@@ -268,7 +242,7 @@ export default function UnderstandingQuadrilateralsSkills() {
         return (
             <div className={styles['ccr-page']}>
                 <nav className={styles['ccr-nav']}>
-                    <button className={styles['ccr-nav-back']} onClick={backToList}>{"<-"} Skills</button>
+                    <button className={styles['ccr-nav-back']} onClick={backToList}>← Skills</button>
                     <div className={styles['ccr-nav-links']}>
                         <button className={styles['ccr-nav-link']} onClick={() => openSkill(activeSkill, 'learn')}>Learn</button>
                         <button className={`${styles['ccr-nav-link']} ${styles['ccr-nav-link--active']}`}>Practice</button>
@@ -296,7 +270,7 @@ export default function UnderstandingQuadrilateralsSkills() {
         return (
             <div className={styles['ccr-page']}>
                 <nav className={styles['ccr-nav']}>
-                    <button className={styles['ccr-nav-back']} onClick={backToList}>{"<-"} Skills</button>
+                    <button className={styles['ccr-nav-back']} onClick={backToList}>← Skills</button>
                     <div className={styles['ccr-nav-links']}>
                         <button className={styles['ccr-nav-link']} onClick={() => openSkill(activeSkill, 'learn')}>Learn</button>
                         <button className={styles['ccr-nav-link']} onClick={() => openSkill(activeSkill, 'practice')}>Practice</button>
@@ -323,7 +297,7 @@ export default function UnderstandingQuadrilateralsSkills() {
     return (
         <div className={styles['ccr-page']}>
             <nav className={styles['ccr-nav']}>
-                <button className={styles['ccr-nav-back']} onClick={() => navigate('/senior/grade/8/understanding-quadrilaterals')}>{"<-"} Understanding Quadrilaterals</button>
+                <button className={styles['ccr-nav-back']} onClick={() => navigate('/senior/grade/8/understanding-quadrilaterals')}>← Understanding Quadrilaterals</button>
                 <div className={styles['ccr-nav-links']}>
                     <button className={styles['ccr-nav-link']} onClick={() => navigate('/senior/grade/8/understanding-quadrilaterals/introduction')}>Introduction</button>
                     <button className={styles['ccr-nav-link']} onClick={() => navigate('/senior/grade/8/understanding-quadrilaterals/terminology')}>Terminology</button>

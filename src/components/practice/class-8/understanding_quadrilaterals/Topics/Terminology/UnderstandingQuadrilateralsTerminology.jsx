@@ -72,10 +72,10 @@ const KEY_IDEAS = [
         color: '#7c3aed',
         icon: '📐',
         rules: [
-            { icon: '🔺', title: 'Interior Angle Sum', body: 'An $n$-gon can be divided into $(n-2)$ triangles, so its interior angle sum is $(n-2) \\times 180^\\circ$.' },
-            { icon: '🔄', title: 'Exterior Angle Sum', body: 'The sum of the exterior angles of any convex polygon is always $360^\\circ$.' },
-            { icon: '🪁', title: 'Kinds of Quadrilaterals', body: 'The chapter studies trapezium, kite, parallelogram, rhombus, rectangle, and square through their side, angle, and diagonal properties.' },
-            { icon: '🌳', title: 'Hierarchy', body: 'A square is the most specialised case: it is at the same time a rectangle, a rhombus, and a parallelogram.' },
+            { icon: '🔺', title: 'Interior Angle Sum', body: 'An $n$-gon can be divided into $(n-2)$ triangles, so its interior angle sum is $(n-2) \\times 180^\\circ$. For a quadrilateral this gives $2 \\times 180^\\circ = 360^\\circ$.' },
+            { icon: '🔄', title: 'Exterior Angle Sum', body: 'Walking once around any convex polygon, you turn through one full rotation. So the sum of all exterior angles is always $360^\\circ$, regardless of the number of sides.' },
+            { icon: '↔️', title: 'How Parallel Sides Classify Shapes', body: 'The number of parallel side-pairs determines the quadrilateral family. Zero pairs gives a general quadrilateral or kite. Exactly one pair gives a trapezium. Two pairs of parallel sides define a parallelogram and all its special forms.' },
+            { icon: '🏆', title: 'The Square at the Apex', body: 'As more conditions are added — first equal opposite sides and angles (parallelogram), then equal diagonals (rectangle), then perpendicular diagonals (rhombus) — the figure narrows until every condition is met simultaneously in the square.' },
         ],
     },
 ];
@@ -137,15 +137,15 @@ export default function UnderstandingQuadrilateralsTerminology() {
                 <h1 className={styles['ccr-module-title']}>
                     Understanding Quadrilaterals <span className={styles['ccr-accent-text']}>Terminology</span>
                 </h1>
-                <p className={styles['ccr-module-subtitle']}>6 Key Terms · 2 Key Ideas · 10-Q Quiz</p>
+                <p className={styles['ccr-module-subtitle']}>6 Key Terms · 2 Key Ideas · Quiz</p>
             </div>
 
             <div className={styles['ccr-lexicon-container']} style={{ maxWidth: 1060, margin: '0 auto', padding: '0 20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 24, paddingTop: 24 }}>
                     {[
-                        { id: 'terms', label: '📚 Key Terms' },
-                        { id: 'ideas', label: '💡 Key Ideas' },
-                        { id: 'quiz', label: '🧪 Test Prep' },
+                        { id: 'terms', label: 'Key Terms' },
+                        { id: 'ideas', label: 'Key Ideas' },
+                        { id: 'quiz', label: 'Test Prep' },
                     ].map(({ id, label }) => (
                         <button key={id} className={`${styles['ccr-tab']}${tab === id ? ` ${styles['active']}` : ''}`} onClick={() => setTab(id)}>
                             {label}
@@ -297,6 +297,8 @@ export default function UnderstandingQuadrilateralsTerminology() {
                         </div>
                     </div>
                 )}
+
+
 
                 {tab === 'quiz' && (
                     <div className={styles['ccr-quiz-container']}>
