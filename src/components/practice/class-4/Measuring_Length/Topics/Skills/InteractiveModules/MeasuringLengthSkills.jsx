@@ -752,6 +752,7 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
                         const statusBg = status === 'Correct' ? '#dcfce7' : status === 'Incorrect' ? '#fee2e2' : '#f1f5f9';
                         const isExpanded = expandedBreakdown === i;
                         const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+                        const questionText = q.q || q.statement || 'Question text unavailable';
 
                         return (
                             <div key={i} style={{ border: '2px solid #f1f5f9', borderRadius: 16, padding: '20px 24px', background: '#fafafa' }}>
@@ -760,7 +761,7 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
                                     <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                                         <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, color: '#475569', flexShrink: 0, marginTop: 2 }}>{i + 1}</div>
                                         <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', lineHeight: 1.5 }}>
-                                            {q.q}
+                                            {questionText}
                                             {q.type === 'fill_blank' && <span style={{ color: '#64748b', fontWeight: 600 }}> (Answer: {q.answer}{q.twoAnswers ? `, R ${q.answer2}` : ''})</span>}
                                         </div>
                                     </div>
