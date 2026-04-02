@@ -98,6 +98,17 @@ export const NODE_IDS = {
   g10MathAPSumOfTerms:                        'a4101005-0005-0000-0000-000000000000',
   g10MathAPChapterTest:                       'a4101005-0010-0000-0000-000000000000',
 
+  // Grade 10 Math: Circles (Chapter 10)
+  g10MathCircles:                           'a3101010-0000-0000-0000-000000000001',
+  g10MathCirclesTangentBasics:              'a4101010-0001-0000-0000-000000000000',
+  g10MathCirclesTangentPerp:                'a4101010-0002-0000-0000-000000000000',
+  g10MathCirclesNumberOfTangents:           'a4101010-0003-0000-0000-000000000000',
+  g10MathCirclesLengthsOfTangents:          'a4101010-0004-0000-0000-000000000000',
+  g10MathCirclesAngleProperties:            'a4101010-0005-0000-0000-000000000000',
+  g10MathCirclesCircumscribedPolygons:      'a4101010-0006-0000-0000-000000000000',
+  g10MathCirclesComplexApplications:        'a4101010-0007-0000-0000-000000000000',
+  g10MathCirclesTerminologyQuiz:            'a4101010-0010-0000-0000-000000000000',
+
   // ── 6. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
   
   // Grade 10 Science: Chemical Reactions
