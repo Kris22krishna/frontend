@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../probability.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 const TERMS = [
     {
@@ -185,6 +187,9 @@ export default function ProbabilityTerminology() {
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
 
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = React.useRef([]);
+
     React.useEffect(() => {
         document.body.classList.add('hide-main-footer');
         return () => document.body.classList.remove('hide-main-footer');
@@ -197,7 +202,24 @@ export default function ProbabilityTerminology() {
         if (answered) return;
         setAnsSelected(idx);
         setAnswered(true);
-        if (idx === QUIZ[quizIdx].corr) setScore(s => s + 1);
+
+        const currentQ = QUIZ[quizIdx];
+        const isCorrect = idx === currentQ.corr;
+
+        const answerData = {
+            question_index: quizIdx,
+            answer_json: {
+                question: currentQ.q,
+                selected: currentQ.opts[idx],
+                correct: currentQ.opts[currentQ.corr]
+            },
+            is_correct: isCorrect ? 1 : 0,
+        };
+
+        v4Answers.current[quizIdx] = answerData;
+        logAnswer(answerData);
+
+        if (isCorrect) setScore(s => s + 1);
     };
 
     const nextQ = () => {
@@ -207,8 +229,23 @@ export default function ProbabilityTerminology() {
             setAnswered(false);
         } else {
             setFinished(true);
+            finishSession({
+                totalQuestions: QUIZ.length,
+                questionsAnswered: v4Answers.current.filter(Boolean).length,
+                answersPayload: v4Answers.current.filter(Boolean)
+            });
         }
     };
+
+    // Session Start when switching to quiz view
+    React.useEffect(() => {
+        if (view === 'quiz' && !finished) {
+            startSession({
+                nodeId: NODE_IDS.g10MathProbTerminologyQuiz,
+                sessionType: 'practice'
+            });
+        }
+    }, [view, finished, startSession]);
 
     return (
         <div className="prob-terminology-page">

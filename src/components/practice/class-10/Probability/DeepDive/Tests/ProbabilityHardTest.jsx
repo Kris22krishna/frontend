@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Clock } from 'lucide-react';
-import { api } from '../../../../../../services/api';
 import { LatexText } from '../../../../../LatexText';
 import '../../../TenthPracticeSession.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 const BLUE_THEME_CSS = `
     .option-btn-modern.selected {
@@ -173,8 +174,9 @@ const ProbabilityHardTest = () => {
     const [isTestOver, setIsTestOver] = useState(false);
     const [responses, setResponses] = useState({});
 
-    const questionStartTime = useRef(Date.now());
-    const [sessionId, setSessionId] = useState(null);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = React.useRef([]);
+
     const [questions, setQuestions] = useState([]);
 
     const generateQuestions = () => {
@@ -194,14 +196,11 @@ const ProbabilityHardTest = () => {
 
     useEffect(() => {
         setQuestions(generateQuestions());
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            api.createPracticeSession(String(uid).includes("-") ? 1 : parseInt(uid, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
-    }, []);
+        startSession({
+            nodeId: NODE_IDS.g10MathProbHardTest,
+            sessionType: 'assessment'
+        });
+    }, [startSession]);
 
     useEffect(() => {
         if (isTestOver) return;
@@ -212,42 +211,34 @@ const ProbabilityHardTest = () => {
     const handleRecordResponse = () => {
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
-        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
         const isSkipped = !selectedOption;
 
         const responseData = {
             selectedOption,
             isCorrect,
-            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent,
             isSkipped
         };
 
-        setResponses(prev => ({ ...prev, [qIndex]: responseData }));
+        const answerData = {
+            question_index: qIndex,
+            answer_json: {
+                question: currentQ.text,
+                selected: isSkipped ? "SKIPPED" : selectedOption,
+                correct: currentQ.correctAnswer
+            },
+            is_correct: isSkipped ? 0 : (isCorrect ? 1 : 0),
+        };
 
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            const attemptData = {
-                difficulty_level: 'Hard',
-                user_id: String(uid).includes("-") ? 1 : parseInt(uid, 10),
-                session_id: sessionId,
-                skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                correct_answer: currentQ.correctAnswer,
-                student_answer: isSkipped ? "SKIPPED" : selectedOption,
-                is_correct: isSkipped ? false : isCorrect,
-                solution_text: currentQ.solution,
-                time_spent_seconds: timeSpent
-            };
-            api.recordAttempt(attemptData).catch(console.error);
-        }
+        v4Answers.current[qIndex] = answerData;
+        logAnswer(answerData);
+
+        setResponses(prev => ({ ...prev, [qIndex]: responseData }));
     };
 
     const navigateToQuestion = (targetIndex) => {
         handleRecordResponse();
         setQIndex(targetIndex);
         setSelectedOption(responses[targetIndex]?.selectedOption || null);
-        questionStartTime.current = Date.now();
     };
 
     const handleNext = () => {
@@ -267,28 +258,11 @@ const ProbabilityHardTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
-        if (sessionId) await api.finishSession(sessionId).catch(console.error);
-
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
-            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
-            const skippedCount = questions.length - correctCount - wrongCount;
-            await api.createReport({
-                title: SKILL_NAME,
-                type: 'practice',
-                score: (correctCount / questions.length) * 100,
-                parameters: {
-                    skill_id: SKILL_ID,
-                    total_questions: questions.length,
-                    correct_answers: correctCount,
-                    skipped_questions: skippedCount,
-                    time_taken_seconds: timeElapsed
-                },
-                user_id: uid
-            }).catch(console.error);
-        }
+        finishSession({
+            totalQuestions: questions.length,
+            questionsAnswered: v4Answers.current.filter(Boolean).length,
+            answersPayload: v4Answers.current.filter(Boolean)
+        });
     };
 
     const formatTime = (seconds) => {

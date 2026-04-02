@@ -149,6 +149,21 @@ export const NODE_IDS = {
   g10MathTrigIdentities:                    'a4101008-0006-0000-0000-000000000000',
   g10MathTrigSimplifyProve:                 'a4101008-0007-0000-0000-000000000000',
   g10MathTrigAngleProblems:                 'a4101008-0008-0000-0000-000000000000',
+  
+  // Grade 10 Math: Probability (Chapter 15)
+  g10MathProbability:                       'a3101015-0000-0000-0000-000000000001',
+  g10MathProbRandomExperiments:             'a4101015-0001-0000-0000-000000000000',
+  g10MathProbTheoretical:                   'a4101015-0002-0000-0000-000000000000',
+  g10MathProbElementary:                    'a4101015-0003-0000-0000-000000000000',
+  g10MathProbComplementary:                 'a4101015-0004-0000-0000-000000000000',
+  g10MathProbImpossibleSure:                'a4101015-0005-0000-0000-000000000000',
+  g10MathProbCoinsDice:                     'a4101015-0006-0000-0000-000000000000',
+  g10MathProbCards:                         'a4101015-0007-0000-0000-000000000000',
+  g10MathProbSelections:                    'a4101015-0008-0000-0000-000000000000',
+  g10MathProbTerminologyQuiz:               'a4101015-0010-0000-0000-000000000000',
+  g10MathProbEasyTest:                      'a4101015-0011-0000-0000-000000000000',
+  g10MathProbMediumTest:                    'a4101015-0012-0000-0000-000000000000',
+  g10MathProbHardTest:                      'a4101015-0013-0000-0000-000000000000',
 
   // ── 6. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
   
@@ -264,6 +279,21 @@ export const SLUG_TO_NODE_ID = {
   // Grade 8 Slugs (Skills)
   'g8-math-linear-solving':             NODE_IDS.g8MathLinearSolving,
   'g8-math-linear-word-problems':       NODE_IDS.g8MathLinearWordProblems,
+
+  // Grade 10 Math: Probability
+  'g10-math-probability':               NODE_IDS.g10MathProbability,
+  'g10-math-prob-random-experiments':   NODE_IDS.g10MathProbRandomExperiments,
+  'g10-math-prob-theoretical':         NODE_IDS.g10MathProbTheoretical,
+  'g10-math-prob-elementary':          NODE_IDS.g10MathProbElementary,
+  'g10-math-prob-complementary':       NODE_IDS.g10MathProbComplementary,
+  'g10-math-prob-impossible-sure':     NODE_IDS.g10MathProbImpossibleSure,
+  'g10-math-prob-coins-dice':          NODE_IDS.g10MathProbCoinsDice,
+  'g10-math-prob-cards':               NODE_IDS.g10MathProbCards,
+  'g10-math-prob-selections':          NODE_IDS.g10MathProbSelections,
+  'g10-math-prob-terminology':         NODE_IDS.g10MathProbTerminologyQuiz,
+  'g10-math-prob-easy-test':           NODE_IDS.g10MathProbEasyTest,
+  'g10-math-prob-medium-test':         NODE_IDS.g10MathProbMediumTest,
+  'g10-math-prob-hard-test':           NODE_IDS.g10MathProbHardTest,
 
   // Grade 3 EVS Slugs (Skills)
   'g3-science-family-roles':            NODE_IDS.g3EvsOurFamiliesRoles,
