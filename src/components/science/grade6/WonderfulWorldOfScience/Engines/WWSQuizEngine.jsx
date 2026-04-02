@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 const normalizeQuestionKey = (question = {}) =>
     String(question.question ?? question.q ?? '')
@@ -22,13 +23,33 @@ const getUniqueQuestions = (questions = []) => {
 const resolveQuestions = (questions) =>
     getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
 
-export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'chemtest' }) {
+export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+
     const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
+
+    useEffect(() => {
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questionSet.length });
+            }
+        };
+    }, [abandonSession, questionSet.length]);
 
     useEffect(() => {
         setQuestionSet(resolveQuestions(questions));
@@ -64,11 +85,26 @@ export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBac
         if (answered) return;
         setSelected(optIdx);
         setAnswered(true);
-        if (optIdx === q.correct) setScore(s => s + 1);
+        const correct = optIdx === q.correct;
+        if (correct) setScore(s => s + 1);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
+            await finishSession({
+                totalQuestions: questionSet.length,
+                questionsAnswered: questionSet.length,
+            });
+            isFinishedRef.current = true;
             setFinished(true);
         } else {
             setCurrent(c => c + 1);
@@ -318,4 +354,3 @@ export default function WWSQuizEngine({ questions, title, onBack, onSecondaryBac
         </div>
     );
 }
-

@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../EverEvolvingScienceDashboard.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, COOL_CONTEXTS, VOCAB_QUIZ } from './EverEvolvingScienceTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
 
 export default function EverEvolvingScienceTerminology() {
     const navigate = useNavigate();
+    const nodeId = SLUG_TO_NODE_ID['g7-science-ees-terminology'];
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -13,6 +21,21 @@ export default function EverEvolvingScienceTerminology() {
 
     // Tabs state
     const [activeTab, setActiveTab] = useState('terms');
+
+    useEffect(() => {
+        if (activeTab === 'quiz' && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    }, [activeTab, nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: VOCAB_QUIZ.length });
+            }
+        };
+    }, [abandonSession]);
 
     // Selection state for Master-Detail
     const [selectedIdx, setSelectedIdx] = useState(0);
@@ -41,9 +64,19 @@ export default function EverEvolvingScienceTerminology() {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
+        const isCorrect = optIdx === activeQuiz.correct;
+        if (isCorrect) {
             setQuizTotalScore(s => s + 1);
         }
+
+        logAnswer({
+            question_index: quizIdx + 1,
+            answer_json: { selection: optIdx },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const nextQuiz = () => {
@@ -53,6 +86,11 @@ export default function EverEvolvingScienceTerminology() {
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            isFinishedRef.current = true;
+            finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                totalScore: quizTotalScore
+            });
         }
     };
 

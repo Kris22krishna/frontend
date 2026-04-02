@@ -227,6 +227,7 @@ export default function WELCoreConcepts() {
                         questions={practiceQuestions}
                         title={`Practice: ${skill.title}`}
                         color={skill.color}
+                        nodeId={skill.nodeId}
                         onBack={() => setView('learn')}
                         prefix="weltest"
                     />
@@ -246,6 +247,7 @@ export default function WELCoreConcepts() {
                             questions={assessmentQuestions}
                             title={`Assessment: ${skill.title}`}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('learn')}
                             prefix="weltest"
                         />

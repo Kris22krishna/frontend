@@ -249,6 +249,7 @@ export default function WWSCoreConcepts() {
                         questions={skill.practice}
                         title={`Practice: ${skill.title}`}
                         color={skill.color}
+                        nodeId={skill.nodeId}
                         onBack={() => setView('learn')}
                         prefix="wwstest"
                     />
@@ -268,6 +269,7 @@ export default function WWSCoreConcepts() {
                             questions={skill.assessment}
                             title={`Assessment: ${skill.title}`}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('learn')}
                             prefix="wwstest"
                         />

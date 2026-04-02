@@ -23,6 +23,8 @@
     "clsx": "^2.1.1",
     "firebase": "^12.8.0",
     "framer-motion": "^11.18.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
     "katex": "^0.16.28",
     "lodash": "^4.17.23",
     "lucide-react": "^0.562.0",

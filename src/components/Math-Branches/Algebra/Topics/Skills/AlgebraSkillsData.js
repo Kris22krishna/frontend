@@ -180,86 +180,342 @@ const generateExponentAssessment = () => {
 
 const exponentAssessment = generateExponentAssessment();
 
-// --- OTHER SKILLS RESTORATION (GENERIC GOOD ALGEBRA CONTENT) ---
+// --- OTHER SKILLS — DYNAMIC GENERATORS (20+ questions each) ---
 
-// Skill 2: Like Terms
+// ── Skill 2: Identifying Like & Unlike Terms ──────────────────────────────
 const genLikeTerms = () => {
-    return [
-        _mkQ('Simplify: $3x + 5x$', [`$8x$`,`$8x^2$`,`$15x$`,`$35x$`], 'Same variable, add coefficients.'),
-        _mkQ('Simplify: $10y - 4y + 2y$', [`$8y$`,`$4y$`,`$12y$`,`$8$`], 'Subtract and add.'),
-        _mkQ('Simplify: $2x^2 + 7x^2$', [`$9x^2$`,`$9x^4$`,`$14x^2$`,`$9$`], 'Letters and powers match.'),
-        _mkQ('Simplify: $4a + 5b - a$', [`$3a + 5b$`,`$8ab$`,`$9ab$`,`$4$`], 'Combine $4a - a = 3a$.'),
-        _mkQ('Simplify: $x + x + x$', [`$3x$`,`$x^3$`,`$3$`,`$x$`], 'Coefficients are 1.'),
-        _mkQ('Which terms are LIKE?', [`$2x, 5x$`,`$2x, 2y$`,`$x^2, x^3$`,`$4, 4a$`], 'Same letter and power.'),
+    const qs = [];
+    // Block A – identify like-term pairs
+    const vars = ['x','y','a','b','m','n','p','q'];
+    for (let i = 0; i < 5; i++) {
+        const v = vars[i % vars.length];
+        const w = vars[(i + 1) % vars.length];
+        const cA = _rnd(2,9), cB = _rnd(2,9);
+        qs.push(_mkQ(
+            `Which pair are LIKE terms?`,
+            [`$${cA}${v}, ${cB}${v}$`, `$${cA}${v}, ${cB}${w}$`, `$${v}^2, ${v}^3$`, `$${cA}, ${cA}${v}$`],
+            `Like terms share the same variable and power. $${cA}${v}$ and $${cB}${v}$ both have $${v}$.`
+        ));
+    }
+    // Block B – simplify addition/subtraction of like terms
+    const pairs = [
+        [3,5,'x'], [7,2,'y'], [6,4,'a'], [8,3,'b'], [5,5,'n'],
+        [9,1,'m'], [4,4,'p'], [2,7,'q'], [10,3,'x'], [6,6,'y']
     ];
+    pairs.forEach(([cA, cB, v]) => {
+        const sum = cA + cB, diff = Math.abs(cA - cB);
+        qs.push(_mkQ(
+            `Simplify: $${cA}${v} + ${cB}${v}$`,
+            [`$${sum}${v}$`, `$${sum}${v}^2$`, `$${cA*cB}${v}$`, `$${diff}${v}$`],
+            `Add coefficients: $${cA} + ${cB} = ${sum}$.`
+        ));
+    });
+    // Block C – subtraction
+    const subPairs = [
+        [10,4,'x'], [8,3,'y'], [9,2,'a'], [7,5,'b'], [6,1,'m']
+    ];
+    subPairs.forEach(([cA, cB, v]) => {
+        const diff = cA - cB;
+        qs.push(_mkQ(
+            `Simplify: $${cA}${v} - ${cB}${v}$`,
+            [`$${diff}${v}$`, `$${cA+cB}${v}$`, `$${cA*cB}${v}$`, `$${diff}${v}^2$`],
+            `Subtract coefficients: $${cA} - ${cB} = ${diff}$.`
+        ));
+    });
+    // Block D – mixed with unlike terms
+    qs.push(_mkQ('Simplify: $4a + 5b - a$', [`$3a + 5b$`,`$8ab$`,`$9ab$`,`$4$`], 'Combine $4a - a = 3a$; $b$ stays.'));
+    qs.push(_mkQ('Simplify: $3x + 2y + x - y$', [`$4x + y$`,`$5xy$`,`$4x - y$`,`$6x + y$`], 'Group: $3x+x=4x$ and $2y-y=y$.'));
+    qs.push(_mkQ('Simplify: $5m + 2n - 3m + n$', [`$2m + 3n$`,`$8mn$`,`$2m - 3n$`,`$3m + n$`], 'Group like terms: $5m-3m=2m$, $2n+n=3n$.'));
+    qs.push(_mkQ('Simplify: $x^2 + 3x + 2x^2 - x$', [`$3x^2 + 2x$`,`$5x^3$`,`$3x^2 - 2x$`,`$6x^2$`], '$x^2+2x^2=3x^2$; $3x-x=2x$.'));
+    qs.push(_mkQ('Which of these CANNOT be simplified further?', [`$3x + 4y$`,`$2x + 5x$`,`$3a - a$`,`$4b + b$`], '$3x + 4y$ has unlike terms — cannot combine.'));
+    return _shuffle(qs).slice(0, 20);
 };
 const likeTermsQuestions = genLikeTerms;
 const likeTermsAssessment = genLikeTerms;
 
-// Skill 3: Simplifying Expressions
+// ── Skill 3: Simplifying Expressions ────────────────────────────────────
 const genExpressions = () => {
-    return [
-        _mkQ('Expand: $2(x + 5)$', [`$2x + 10$`,`$2x + 5$`,`$7x$`,`$x + 10$`], 'Distribute 2 to both.'),
-        _mkQ('Expand: $3(2x - 4)$', [`$6x - 12$`,`$6x - 4$`,`$5x - 7$`,`$x - 12$`], 'Multiply both terms.'),
-        _mkQ('Simplify: $5(x + 1) + 2x$', [`$7x + 5$`,`$5x + 3$`,`$12x$`,`$7x + 1$`], '$5x + 5 + 2x = 7x + 5$.'),
-        _mkQ('Simplify: $-(x - 4)$', [`$-x + 4$`,`$-x - 4$`,`$x - 4$`,`$x + 4$`], 'Flip signs inside.'),
-        _mkQ('Simplify: $2(a+b) - a$', [`$a + 2b$`,`$2a + 2b$`,`$ab$`,`$2b$`], '$2a + 2b - a = a + 2b$.'),
+    const qs = [];
+    // Block A – basic distribution
+    const distData = [
+        [2,'x',5, '2x+10', '2x+5', '7x', 'x+10'],
+        [3,'x',4, '3x+12', '3x+4', '7x', 'x+12'],
+        [4,'a',2, '4a+8',  '4a+2', '6a', 'a+8'],
+        [5,'b',3, '5b+15', '5b+3', '8b', 'b+15'],
+        [2,'m',7, '2m+14', '2m+7', '9m', 'm+14'],
     ];
+    distData.forEach(([k, v, c, correct, w1, w2, w3]) => {
+        qs.push(_mkQ(
+            `Expand: $${k}(${v} + ${c})$`,
+            [`$${correct}$`, `$${w1}$`, `$${w2}$`, `$${w3}$`],
+            `Multiply $${k}$ by each term: $${k}\\times ${v}=${k}${v}$, $${k}\\times${c}=${k*c}$.`
+        ));
+    });
+    // Block B – distribution with subtraction
+    const subData = [
+        [3,'x',4,'6x-12','6x-4','5x-7','x-12', 2],
+        [2,'y',5,'2y-10','2y-5','7y','y-10', 1],
+        [4,'a',3,'4a-12','4a-3','7a','a-12', 1],
+        [5,'b',2,'5b-10','5b-2','7b','b-10', 1],
+    ];
+    subData.forEach(([k, v, c, correct, w1, w2, w3]) => {
+        qs.push(_mkQ(
+            `Expand: $${k}(${v} - ${c})$`,
+            [`$${correct}$`, `$${w1}$`, `$${w2}$`, `$${w3}$`],
+            `Distribute: $${k}\\times${v}=${k}${v}$, $${k}\\times(-${c})=-${k*c}$.`
+        ));
+    });
+    // Block C – simplify after expanding
+    qs.push(_mkQ('Simplify: $5(x+1)+2x$', [`$7x+5$`,`$5x+3$`,`$12x$`,`$7x+1$`], '$5x+5+2x=7x+5$.'));
+    qs.push(_mkQ('Simplify: $3(a+2)+2a$', [`$5a+6$`,`$3a+6$`,`$5a+2$`,`$6a$`], '$3a+6+2a=5a+6$.'));
+    qs.push(_mkQ('Simplify: $2(x+3)-x$', [`$x+6$`,`$2x+6$`,`$x-6$`,`$3x+6$`], '$2x+6-x=x+6$.'));
+    qs.push(_mkQ('Simplify: $4(y-1)+3y$', [`$7y-4$`,`$4y-1$`,`$7y+4$`,`$y-4$`], '$4y-4+3y=7y-4$.'));
+    qs.push(_mkQ('Simplify: $-(x-4)$', [`$-x+4$`,`$-x-4$`,`$x-4$`,`$x+4$`], 'Multiply by $-1$: flip every sign inside.'));
+    qs.push(_mkQ('Simplify: $2(a+b)-a$', [`$a+2b$`,`$2a+2b$`,`$ab$`,`$2b$`], '$2a+2b-a=a+2b$.'));
+    // Block D – collecting like terms after expanding two brackets
+    qs.push(_mkQ('Simplify: $2(x+3)+3(x+1)$', [`$5x+9$`,`$5x+4$`,`$6x+9$`,`$5x+6$`], '$2x+6+3x+3=5x+9$.'));
+    qs.push(_mkQ('Simplify: $4(a-2)-2(a+1)$', [`$2a-10$`,`$2a-6$`,`$6a-10$`,`$2a+10$`], '$4a-8-2a-2=2a-10$.'));
+    qs.push(_mkQ('Simplify: $3(2x-1)+x$', [`$7x-3$`,`$6x-3$`,`$7x+3$`,`$6x-1$`], '$6x-3+x=7x-3$.'));
+    qs.push(_mkQ('Simplify: $5(m+2)-3(m-1)$', [`$2m+13$`,`$2m+7$`,`$8m+7$`,`$2m-13$`], '$5m+10-3m+3=2m+13$.'));
+    qs.push(_mkQ('Simplify: $(x+2)(x+3)$ — identify correct expansion', [`$x^2+5x+6$`,`$x^2+6x+6$`,`$x^2+5x+5$`,`$x^2+6$`], 'FOIL: $x^2+3x+2x+6=x^2+5x+6$.'));
+    return _shuffle(qs).slice(0, 20);
 };
 const expressionQuestions = genExpressions;
 const expressionAssessment = genExpressions;
 
-// Skill 4: Solving Equations
+// ── Skill 4: Solving Equations ───────────────────────────────────────────
 const generateEquationQuestionsLinear1 = () => {
-    const a = _rnd(2, 5), b = _rnd(1, 10), x = _rnd(1, 10);
+    const a = _rnd(2, 9), b = _rnd(1, 12), x = _rnd(1, 10);
     const result = a * x + b;
-    return [ _mkQ(`Solve for $x$: $${a}x + ${b} = ${result}$`, [`$${x}$`,`$${x+1}$`,`$${x-1}$`,`$${a+b}$`], `Subtract ${b}, then divide by ${a}.`) ];
+    return [_mkQ(
+        `Solve for $x$: $${a}x + ${b} = ${result}$`,
+        [`$x=${x}$`, `$x=${x+1}$`, `$x=${x-1}$`, `$x=${a+b}$`],
+        `Subtract $${b}$: $${a}x=${result-b}$, divide by $${a}$: $x=${x}$.`
+    )];
 };
 const generateEquationQuestionsLinear2 = () => {
-    return [ _mkQ('If $x+y=10$ and $x-y=2$, find $x$.', [`$6$`,`$4$`,`$8$`,`$5$`], 'Add equations: $2x=12 \Rightarrow x=6$.') ];
+    const S = _rnd(8,14), D = _rnd(2,6);
+    const x = (S+D)/2, y = (S-D)/2;
+    if (!Number.isInteger(x) || !Number.isInteger(y)) return generateEquationQuestionsLinear2();
+    return [_mkQ(
+        `If $x+y=${S}$ and $x-y=${D}$, find $x$.`,
+        [`$${x}$`, `$${y}$`, `$${S}$`, `$${D}$`],
+        `Add equations: $2x=${S+D}$, so $x=${x}$.`
+    )];
 };
 const generateEquationQuestionsQuadratic = () => {
-    const r1 = _rnd(1, 5), r2 = _rnd(1, 5);
-    const b = -(r1 + r2), c = r1 * r2;
-    const signB = b < 0 ? '-' : '+';
-    const absB = Math.abs(b);
-    return [ _mkQ(`Factor: $x^2 ${signB} ${absB}x + ${c} = 0$`, [`$(x-${r1})(x-${r2})=0$`,`$(x+${r1})(x+${r2})=0$`,`$(x-${r1})(x+${r2})=0$`,`$(x+${r1})(x-${r2})=0$`], `Roots are $${r1}$ and $${r2}$.`) ];
+    const r1 = _rnd(1,6), r2 = _rnd(1,6);
+    const bCoeff = -(r1+r2), cCoeff = r1*r2;
+    const signB = bCoeff < 0 ? '-' : '+';
+    const absB = Math.abs(bCoeff);
+    return [_mkQ(
+        `Solve: $x^2 ${signB} ${absB}x + ${cCoeff} = 0$`,
+        [`$x=${r1}$ or $x=${r2}$`, `$x=${-r1}$ or $x=${-r2}$`, `$x=${r1+r2}$`, `$x=${cCoeff}$`],
+        `Factor as $(x-${r1})(x-${r2})=0$; roots are $${r1}$ and $${r2}$.`
+    )];
 };
-const equationAssessment = () => [ ...generateEquationQuestionsLinear1(), ...generateEquationQuestionsLinear1(), ...generateEquationQuestionsQuadratic() ];
 
-// Skill 5: Subject Change
+// Full 20-question dynamic practice for Solving Equations
+const genSolvingPractice = () => {
+    const qs = [];
+    // 8 basic linear (ax + b = c)
+    for (let i = 0; i < 8; i++) qs.push(...generateEquationQuestionsLinear1());
+    // 5 two-variable pairs
+    for (let i = 0; i < 5; i++) qs.push(...generateEquationQuestionsLinear2());
+    // 4 quadratics
+    for (let i = 0; i < 4; i++) qs.push(...generateEquationQuestionsQuadratic());
+    // 3 misc linear
+    qs.push(_mkQ('Solve: $3x - 7 = 14$', [`$x=7$`,`$x=3$`,`$x=5$`,`$x=21$`], '$3x=21$, $x=7$.'));
+    qs.push(_mkQ('Solve: $\\frac{x}{4} = 5$', [`$x=20$`,`$x=1.25$`,`$x=9$`,`$x=4$`], 'Multiply both sides by 4.'));
+    qs.push(_mkQ('Solve: $2(x+3)=16$', [`$x=5$`,`$x=8$`,`$x=4$`,`$x=11$`], '$x+3=8$, $x=5$.'));
+    return _shuffle(qs).slice(0, 20);
+};
+const equationAssessment = () => {
+    const qs = [];
+    for (let i = 0; i < 8; i++) qs.push(...generateEquationQuestionsLinear1());
+    for (let i = 0; i < 5; i++) qs.push(...generateEquationQuestionsLinear2());
+    for (let i = 0; i < 4; i++) qs.push(...generateEquationQuestionsQuadratic());
+    qs.push(_mkQ('Solve: $5x + 3 = 28$', [`$x=5$`,`$x=6$`,`$x=4$`,`$x=31$`], '$5x=25$, $x=5$.'));
+    qs.push(_mkQ('Solve: $\\frac{2x}{3} = 8$', [`$x=12$`,`$x=16$`,`$x=6$`,`$x=4$`], '$2x=24$, $x=12$.'));
+    qs.push(_mkQ('Solve: $4(x-1)=20$', [`$x=6$`,`$x=5$`,`$x=4$`,`$x=21$`], '$x-1=5$, $x=6$.'));
+    return _shuffle(qs).slice(0, 20);
+};
+
+// ── Skill 5: Change of Subject ───────────────────────────────────────────
 const genSubject = () => {
-    return [
-        _mkQ('Make $x$ the subject: $y = x + 5$', [`$x = y - 5$`,`$x = y + 5$`,`$x = 5 - y$`,`$x = 5y$`], 'Subtract 5.'),
-        _mkQ('Make $x$ the subject: $A = 2x$', [`$x = A/2$`,`$x = 2A$`,`$x = A - 2$`,`$x = A + 2$`], 'Divide by 2.'),
-        _mkQ('Make $r$ the subject: $C = 2\\pi r$', [`$r = C/(2\\pi)$`,`$r = 2\\pi/C$`,`$r = C - 2\\pi$`,`$r = C \\cdot 2\\pi$`], 'Isolate r.'),
-        _mkQ('Rearrange for $v$: $d = vt$', [`$v = d/t$`,`$v = dt$`,`$v = t/d$`,`$v = d - t$`], 'Divide by t.'),
-        _mkQ('Solve for $x$ in terms of $a$: $ax = 10$', [`$x = 10/a$`,`$x = a/10$`,`$x = 10 - a$`,`$x = 10a$`], 'Divide by a.'),
-    ];
+    const qs = [];
+    const c = _rnd(2,9), d = _rnd(2,8), e = _rnd(2,7), f = _rnd(2,6);
+    // Basic add/subtract type: y = x + k
+    qs.push(_mkQ(`Make $x$ the subject: $y = x + ${c}$`, [`$x=y-${c}$`,`$x=y+${c}$`,`$x=${c}-y$`,`$x=${c}y$`], `Subtract $${c}$ from both sides.`));
+    qs.push(_mkQ(`Make $x$ the subject: $y = x - ${d}$`, [`$x=y+${d}$`,`$x=y-${d}$`,`$x=${d}-y$`,`$x=${d}y$`], `Add $${d}$ to both sides.`));
+    qs.push(_mkQ(`Make $a$ the subject: $b = a + ${e}$`, [`$a=b-${e}$`,`$a=b+${e}$`,`$a=${e}-b$`,`$a=${e}b$`], `Subtract $${e}$ from both sides.`));
+    // Multiply/divide type: y = kx
+    qs.push(_mkQ(`Make $x$ the subject: $A = ${c}x$`, [`$x=A/${c}$`,`$x=${c}A$`,`$x=A-${c}$`,`$x=A+${c}$`], `Divide both sides by $${c}$.`));
+    qs.push(_mkQ(`Make $p$ the subject: $Q = ${d}p$`, [`$p=Q/${d}$`,`$p=${d}Q$`,`$p=Q-${d}$`,`$p=Q+${d}$`], `Divide both sides by $${d}$.`));
+    qs.push(_mkQ(`Make $t$ the subject: $d = vt$`, [`$t=d/v$`,`$t=dv$`,`$t=v/d$`,`$t=d-v$`], 'Divide both sides by $v$.'));
+    qs.push(_mkQ(`Make $r$ the subject: $C = 2\\pi r$`, [`$r=C/(2\\pi)$`,`$r=2\\pi/C$`,`$r=C-2\\pi$`,`$r=C\\cdot 2\\pi$`], 'Divide both sides by $2\\pi$.'));
+    qs.push(_mkQ(`Make $h$ the subject: $A = bh$`, [`$h=A/b$`,`$h=Ab$`,`$h=b/A$`,`$h=A+b$`], 'Divide both sides by $b$.'));
+    // Two-step: y = kx + c
+    qs.push(_mkQ(`Make $x$ the subject: $y = ${c}x + ${d}$`, [`$x=(y-${d})/${c}$`,`$x=(y+${d})/${c}$`,`$x=y/${c}-${d}$`,`$x=y-${d}${c}$`], `Subtract $${d}$, then divide by $${c}$.`));
+    qs.push(_mkQ(`Make $x$ the subject: $P = ${e}x - ${f}$`, [`$x=(P+${f})/${e}$`,`$x=(P-${f})/${e}$`,`$x=P/${e}+${f}$`,`$x=P+${f}${e}$`], `Add $${f}$, then divide by $${e}$.`));
+    qs.push(_mkQ(`Make $v$ the subject: $E = \\frac{1}{2}mv^2$`, [`$v=\\sqrt{2E/m}$`,`$v=2E/m$`,`$v=\\sqrt{E/m}$`,`$v=2Em$`], 'Multiply by 2, divide by $m$, take square root.'));
+    qs.push(_mkQ(`Make $l$ the subject: $A = l^2$`, [`$l=\\sqrt{A}$`,`$l=A^2$`,`$l=A/2$`,`$l=2A$`], 'Take the square root of both sides.'));
+    qs.push(_mkQ(`Make $x$ the subject: $ax = 10$`, [`$x=10/a$`,`$x=a/10$`,`$x=10-a$`,`$x=10a$`], 'Divide both sides by $a$.'));
+    qs.push(_mkQ(`Make $y$ the subject: $x = 3y + 1$`, [`$y=(x-1)/3$`,`$y=(x+1)/3$`,`$y=x/3-1$`,`$y=3(x-1)$`], 'Subtract 1, then divide by 3.'));
+    qs.push(_mkQ(`Make $F$ the subject: $C = (F-32)/1.8$`, [`$F=1.8C+32$`,`$F=C/1.8+32$`,`$F=C-32/1.8$`,`$F=1.8C-32$`], 'Multiply by 1.8, then add 32.'));
+    qs.push(_mkQ(`Make $m$ the subject: $F = ma$`, [`$m=F/a$`,`$m=Fa$`,`$m=a/F$`,`$m=F+a$`], 'Divide both sides by $a$.'));
+    qs.push(_mkQ(`Make $x$ the subject: $y = \\sqrt{x}$`, [`$x=y^2$`,`$x=y/2$`,`$x=\\sqrt{y}$`,`$x=2y$`], 'Square both sides: $x=y^2$.'));
+    qs.push(_mkQ(`Make $r$ the subject: $A = \\pi r^2$`, [`$r=\\sqrt{A/\\pi}$`,`$r=A/(\\pi)$`,`$r=\\sqrt{A}\\pi$`,`$r=A^2/\\pi$`], 'Divide by $\\pi$, take square root.'));
+    qs.push(_mkQ(`Make $b$ the subject: $A = \\frac{1}{2}bh$`, [`$b=2A/h$`,`$b=A/(2h)$`,`$b=2Ah$`,`$b=A/h$`], 'Multiply by 2, divide by $h$.'));
+    qs.push(_mkQ(`Make $x$ the subject: $y = x/k$`, [`$x=ky$`,`$x=y/k$`,`$x=k/y$`,`$x=y-k$`], 'Multiply both sides by $k$.'));
+    return _shuffle(qs).slice(0, 20);
 };
 const subjectQuestions = genSubject;
 const subjectAssessment = genSubject;
 
-// Skill 6: Word Problems
+// ── Skill 6: Word Problems ───────────────────────────────────────────────
 const genWordProblems = () => {
-    return [
-        _mkQ('A pizza costs $\\$8$ and each topping is $\\$1.50$. If total is $\\$14$, how many toppings ($t$)?', [`$4$`,`$2$`,`$6$`,`$5$`], '$1.5t + 8 = 14 \Rightarrow 1.5t = 6 \Rightarrow t=4$.'),
-        _mkQ('Double a number plus 5 is 15. The number?', [`$5$`,`$10$`,`$2.5$`,`$20$`], '$2n + 5 = 15 \Rightarrow 2n = 10 \Rightarrow n=5$.'),
-        _mkQ('Three consecutive numbers sum to 18. Smallest?', [`$5$`,`$6$`,`$4$`,`$3$`], '$x + x+1 + x+2 = 18 \Rightarrow 3x + 3 = 18 \Rightarrow 3x = 15 \Rightarrow x=5$.'),
-    ];
+    const qs = [];
+    const base = _rnd(3,8), rate = _rnd(1,3), total = base + rate * _rnd(3,7);
+    const items = Math.round((total - base) / rate);
+    qs.push(_mkQ(
+        `A shop charges $\\$${base}$ entry plus $\\$${rate}$ per game. Total bill: $\\$${total}$. How many games?`,
+        [`$${items}$`, `$${items+1}$`, `$${items-1}$`, `$${base+rate}$`],
+        `$${rate}g + ${base} = ${total}\\Rightarrow g = ${items}$.`
+    ));
+    // Age problem
+    const ageNow = _rnd(10,30), ageYears = _rnd(3,10);
+    const ageFuture = ageNow + ageYears;
+    qs.push(_mkQ(
+        `Sam is $${ageNow}$ years old. In $${ageYears}$ years, how old will Sam be?`,
+        [`$${ageFuture}$`, `$${ageNow-ageYears}$`, `$${ageNow+2*ageYears}$`, `$2\\times${ageNow}$`],
+        `$${ageNow} + ${ageYears} = ${ageFuture}$.`
+    ));
+    // Consecutive integers
+    const start = _rnd(3,10);
+    const sumThree = start + (start+1) + (start+2);
+    qs.push(_mkQ(
+        `Three consecutive integers sum to $${sumThree}$. What is the smallest?`,
+        [`$${start}$`, `$${start+1}$`, `$${start-1}$`, `$${start+2}$`],
+        `$x+(x+1)+(x+2)=${sumThree}\\Rightarrow x=${start}$.`
+    ));
+    // Perimeter
+    const width = _rnd(4,10), perim = _rnd(24,40);
+    const length = (perim/2) - width;
+    if (Number.isInteger(length) && length > width) {
+        qs.push(_mkQ(
+            `A rectangle has perimeter $${perim}$ cm and width $${width}$ cm. Find the length.`,
+            [`$${length}$ cm`, `$${perim-width}$ cm`, `$${width}$ cm`, `$${perim/4}$ cm`],
+            `$2(l+${width})=${perim}\\Rightarrow l=${length}$ cm.`
+        ));
+    }
+    // Shared cost
+    const cost = _rnd(30,80), people = _rnd(3,6);
+    const share = cost / people;
+    if (Number.isInteger(share)) {
+        qs.push(_mkQ(
+            `$${people}$ friends share a bill of $\\$${cost}$ equally. How much does each pay?`,
+            [`$\\$${share}$`, `$\\$${cost-people}$`, `$\\$${share+1}$`, `$\\$${cost*people}$`],
+            `$${cost}\\div${people}=${share}$.`
+        ));
+    }
+    // Double & add
+    const secret = _rnd(4,12), doubleAdd = 2 * secret + _rnd(3,9);
+    const addK = doubleAdd - 2 * secret;
+    qs.push(_mkQ(
+        `Double a number then add $${addK}$ gives $${doubleAdd}$. Find the number.`,
+        [`$${secret}$`, `$${secret+1}$`, `$${secret-1}$`, `$${doubleAdd}$`],
+        `$2n+${addK}=${doubleAdd}\\Rightarrow n=${secret}$.`
+    ));
+    // Static bank of extra problems
+    qs.push(_mkQ('A pizza costs $\\$8$ and each topping is $\\$1.50$. Total $\\$14$. How many toppings?', [`$4$`,`$2$`,`$6$`,`$5$`], '$1.5t+8=14\\Rightarrow t=4$.'));
+    qs.push(_mkQ('A bus carries 45 passengers. After 3 stops with 5 exiting each, how many remain?', [`$30$`,`$35$`,`$25$`,`$40$`], '$45-3\\times5=30$.'));
+    qs.push(_mkQ('A jacket is 20% off its original price of $\\$60$. Sale price?', [`$\\$48$`,`$\\$50$`,`$\\$40$`,`$\\$55$`], '0.8×60=48.'));
+    qs.push(_mkQ('Two numbers differ by 7. Their sum is 33. Find the larger number.', [`$20$`,`$13$`,`$26$`,`$23$`], '$x+(x-7)=33\\Rightarrow x=20$.'));
+    qs.push(_mkQ('A train travels 240 km in 3 hours. Speed?', [`$80$ km/h`,`$60$ km/h`,`$720$ km/h`,`$90$ km/h`], '$\\text{speed}=240/3=80$.'));
+    qs.push(_mkQ('Tom has $3t$ sweets and Liz has $t+10$. They have 30 total. Find $t$.', [`$5$`,`$10$`,`$6$`,`$4$`], '$3t+t+10=30\\Rightarrow 4t=20\\Rightarrow t=5$.'));
+    qs.push(_mkQ('A rectangle has a length twice its width. Perimeter is 48 cm. Find the width.', [`$8$ cm`,`$12$ cm`,`$16$ cm`,`$6$ cm`], '$2(2w+w)=48\\Rightarrow w=8$.'));
+    qs.push(_mkQ('If 5 pens cost $\\$3.50$, how much do 8 pens cost?', [`$\\$5.60$`,`$\\$4.50$`,`$\\$7.00$`,`$\\$6.00$`], '$0.70\\times8=5.60$.'));
+    qs.push(_mkQ('A tank has 200 litres. It leaks 4 litres per hour. When will it be empty?', [`$50$ hours`,`$40$ hours`,`$196$ hours`,`$25$ hours`], '$200/4=50$ hours.'));
+    qs.push(_mkQ('The sum of two numbers is 25 and one is 3 more than the other. Smaller number?', [`$11$`,`$14$`,`$12$`,`$13$`], '$x+(x+3)=25\\Rightarrow x=11$.'));
+    qs.push(_mkQ('Maria earns $\\$12$ per hour and works 35 hours. She saves $\\$180$. Spending?', [`$\\$240$`,`$\\$180$`,`$\\$420$`,`$\\$60$`], '$12\\times35=420$; $420-180=240$.'));
+    qs.push(_mkQ('A number tripled minus 4 equals 20. Find the number.', [`$8$`,`$6$`,`$9$`,`$24$`], '$3n-4=20\\Rightarrow 3n=24\\Rightarrow n=8$.'));
+    return _shuffle(qs).slice(0, 20);
 };
 const wordProblemQuestions = genWordProblems;
 const wordProblemAssessment = genWordProblems;
 
-// Skill 7: Real Life
+// ── Skill 7: Algebra in Action (Real Life) ───────────────────────────────
 const genRealLife = () => {
-    return [
-        _mkQ('If a cab costs $\\$3$ base plus $\\$2$ per mile, how far for $\\$13$?', [`$5$ miles`,`$4$ miles`,`$6$ miles`,`$10$ miles`], '$3 + 2m = 13 \Rightarrow 2m = 10 \Rightarrow m=5$.'),
-        _mkQ('A farmer has chickens (2 legs) and cows (4 legs). If 10 heads and 32 legs, how many cows?', [`$6$`,`$4$`,`$5$`,`$2$`], '$2c + 4(10-c) = 32$ or similar leads to $c=6$ cows.'),
-    ];
+    const qs = [];
+    // Taxi / distance problems
+    const baseFare = _rnd(2,5), perMile = _rnd(1,3), miles = _rnd(3,10);
+    const totalFare = baseFare + perMile * miles;
+    qs.push(_mkQ(
+        `A taxi charges $\\$${baseFare}$ base plus $\\$${perMile}$ per mile. Total: $\\$${totalFare}$. Distance?`,
+        [`$${miles}$ miles`, `$${miles+1}$ miles`, `$${miles-1}$ miles`, `$${baseFare+perMile}$ miles`],
+        `$${perMile}m+${baseFare}=${totalFare}\\Rightarrow m=${miles}$.`
+    ));
+    // Chicken-cow type
+    const cows = _rnd(3,7), chickens = 10 - cows;
+    const legs = 4*cows + 2*chickens;
+    qs.push(_mkQ(
+        `A farmer has chickens and cows totalling 10 animals and ${legs} legs. How many cows?`,
+        [`$${cows}$`, `$${chickens}$`, `$${cows+1}$`, `$${cows-1}$`],
+        `$2c+4(10-c)=${legs}\\Rightarrow c=${cows}$.`
+    ));
+    // Savings
+    const weekly = _rnd(15,30), goal = weekly * _rnd(4,10);
+    const weeks = goal / weekly;
+    qs.push(_mkQ(
+        `You save $\\$${weekly}$ per week. How many weeks to reach $\\$${goal}$?`,
+        [`$${weeks}$ weeks`, `$${weeks+1}$ weeks`, `$${weeks-1}$ weeks`, `$${goal}$ weeks`],
+        `$${weekly}w=${goal}\\Rightarrow w=${weeks}$.`
+    ));
+    // Temperature conversion
+    const degC = _rnd(0,40);
+    const degF = Math.round(degC * 1.8 + 32);
+    qs.push(_mkQ(
+        `Convert $${degC}°C$ to Fahrenheit using $F=1.8C+32$.`,
+        [`$${degF}°F$`, `$${degF+10}°F$`, `$${degF-10}°F$`, `$${degC+32}°F$`],
+        `$F=1.8\\times${degC}+32=${degF}$.`
+    ));
+    // Profit = Revenue - Cost
+    const units = _rnd(10,30), costPer = _rnd(2,5), sellPer = costPer + _rnd(2,5);
+    const profit = units * (sellPer - costPer);
+    qs.push(_mkQ(
+        `You buy ${units} items at $\\$${costPer}$ each and sell at $\\$${sellPer}$ each. Profit?`,
+        [`$\\$${profit}$`, `$\\$${units*sellPer}$`, `$\\$${units*costPer}$`, `$\\$${profit+costPer}$`],
+        `Profit $=${units}\\times(${sellPer}-${costPer})=${profit}$.`
+    ));
+    // Speed-distance-time
+    const speed = _rnd(40,100), time = _rnd(2,5);
+    const dist = speed * time;
+    qs.push(_mkQ(
+        `A car travels at $${speed}$ km/h for $${time}$ hours. Distance covered?`,
+        [`$${dist}$ km`, `$${speed+time}$ km`, `$${dist/2}$ km`, `$${speed*time+10}$ km`],
+        `$d=s\\times t=${speed}\\times${time}=${dist}$ km.`
+    ));
+    // Mobile data
+    const dataUsed = _rnd(2,6), remaining = _rnd(1,4), total = dataUsed + remaining;
+    qs.push(_mkQ(
+        `A phone plan has $${total}$ GB data. You used $${dataUsed}$ GB. Remaining?`,
+        [`$${remaining}$ GB`, `$${total}$ GB`, `$${dataUsed}$ GB`, `$${total+dataUsed}$ GB`],
+        `$${total}-${dataUsed}=${remaining}$ GB.`
+    ));
+    // Static classics
+    qs.push(_mkQ('A shop sells pens for $\\$2$ and rulers for $\\$3$. Total $\\$24$ buying 10 items. How many pens?', [`$6$`,`$4$`,`$8$`,`$5$`], '$2p+3(10-p)=24\\Rightarrow p=6$.'));
+    qs.push(_mkQ('A recipe uses 3 cups flour for 12 cookies. Cups for 40 cookies?', [`$10$`,`$12$`,`$8$`,`$15$`], '$3/12\\times40=10$.'));
+    qs.push(_mkQ('A phone costs $\\$600$ on a 12-month plan. Monthly payment?', [`$\\$50$`,`$\\$60$`,`$\\$48$`,`$\\$55$`], '$600\\div12=50$.'));
+    qs.push(_mkQ('A runner does 5 km in 25 min. Time for 15 km at the same pace?', [`$75$ min`,`$50$ min`,`$60$ min`,`$45$ min`], '$5$ min/km $\\times15=75$ min.'));
+    qs.push(_mkQ('Electricity costs $\\$0.12$ per kWh. Bill for 500 kWh?', [`$\\$60$`,`$\\$50$`,`$\\$120$`,`$\\$6$`], '$0.12\\times500=60$.'));
+    qs.push(_mkQ('A classroom has 30 seats. 5 rows are filled. How many seats per row?', [`$6$`,`$5$`,`$25$`,`$150$`], '$30\\div5=6$.'));
+    return _shuffle(qs).slice(0, 20);
 };
 const generateRealLifeQuestions = genRealLife;
 const generateRealLifeAssessment = genRealLife;
+
+
 
 export const SKILLS = [
     {
@@ -331,6 +587,7 @@ export const SKILLS = [
         icon: '⚖️',
         color: '#8b5cf6',
         desc: 'Finding the value of variables in different equation types.',
+        practice: genSolvingPractice,
         assessment: equationAssessment,
         practiceCategories: [
             { id: 'linear1', title: 'Linear Equations (1 Variable)', questions: generateEquationQuestionsLinear1 },

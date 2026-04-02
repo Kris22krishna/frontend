@@ -46,7 +46,7 @@ const DiagnosisLanding = () => {
                         </div>
                         
                         <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 tracking-tight">
-                            Diagnosis Test
+                            Skill Discovery
                         </h1>
                         
                         <p className="max-w-xl mx-auto text-sm md:text-base text-slate-600 leading-relaxed font-medium">

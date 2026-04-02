@@ -1,6 +1,9 @@
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
+
 export const CORE_CONCEPTS = [
     {
         "id": "1.1",
+        "nodeId": SLUG_TO_NODE_ID['g7-science-ees-process'],
         "title": "Science as a Process",
         "subtitle": "Thinking Like a Scientist",
         "desc": "Master the scientific method — from observation and hypothesis to experimentation and conclusion.",
@@ -74,6 +77,7 @@ export const CORE_CONCEPTS = [
     },
     {
         "id": "1.2",
+        "nodeId": SLUG_TO_NODE_ID['g7-science-ees-materials'],
         "title": "Materials & Their Properties",
         "subtitle": "Exploring What Things Are Made Of",
         "desc": "Discover how we classify materials based on their properties — conductors, insulators, acids, and bases.",
@@ -140,6 +144,7 @@ export const CORE_CONCEPTS = [
     },
     {
         "id": "1.3",
+        "nodeId": SLUG_TO_NODE_ID['g7-science-ees-changes'],
         "title": "Changes Around Us",
         "subtitle": "Reversible & Irreversible Changes",
         "desc": "Understand the difference between changes that can be reversed and those that cannot — and how heat plays a role.",

@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../ChemicalReactionsDashboard.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, COOL_REACTIONS, VOCAB_QUIZ } from './ChemReactionsTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
 
 export default function ChemReactionsTerminology() {
     const navigate = useNavigate();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const nodeId = SLUG_TO_NODE_ID['g10-science-cr-terminology'];
+
+    const sessionStartedRef = useRef(false);
+    const isFinishedRef = useRef(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -25,6 +32,25 @@ export default function ChemReactionsTerminology() {
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
 
+    useEffect(() => {
+        if (activeTab === 'quiz' && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+            isFinishedRef.current = false;
+        } else if (activeTab !== 'quiz' && sessionStartedRef.current && !isFinishedRef.current) {
+            abandonSession({ totalQuestions: VOCAB_QUIZ.length });
+            sessionStartedRef.current = false;
+        }
+    }, [activeTab, nodeId, startSession, abandonSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: VOCAB_QUIZ.length });
+            }
+        };
+    }, [abandonSession]);
+
     const activeTerm = TERMS[selectedIdx];
     const activeReaction = COOL_REACTIONS[selectedReactionIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
@@ -35,15 +61,33 @@ export default function ChemReactionsTerminology() {
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        isFinishedRef.current = false;
+        sessionStartedRef.current = false; // Trigger re-start in effect
     };
+
+    const [quizAnswers, setQuizAnswers] = useState(() => Array(VOCAB_QUIZ.length).fill(null));
 
     const handleQuizSelect = (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
+        const newAns = [...quizAnswers];
+        newAns[quizIdx] = optIdx;
+        setQuizAnswers(newAns);
+
+        const correct = optIdx === activeQuiz.correct;
+        if (correct) {
             setQuizTotalScore(s => s + 1);
         }
+
+        logAnswer({
+            question_index: quizIdx + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const nextQuiz = () => {
@@ -53,6 +97,28 @@ export default function ChemReactionsTerminology() {
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            isFinishedRef.current = true;
+            
+            const payload = quizAnswers.map((ans, idx) => {
+                if (ans === null && idx !== quizIdx) return null;
+                const finalAns = idx === quizIdx ? quizSelected : ans;
+                if (finalAns === null) return null;
+                const isCorrect = finalAns === VOCAB_QUIZ[idx].correct;
+                return {
+                    question_index: idx + 1,
+                    answer_json: { selection: finalAns },
+                    is_correct: isCorrect ? 1.0 : 0.0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0
+                };
+            }).filter(Boolean);
+
+            finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                questionsAnswered: payload.length,
+                answersPayload: payload
+            });
         }
     };
 

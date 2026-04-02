@@ -1,8 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'chemtest' }) {
-    const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
+const normalizeQuestionKey = (question = {}) =>
+    String(question.question ?? question.q ?? '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const getUniqueQuestions = (questions = []) => {
+    const seen = new Set();
+    return (questions ?? []).filter((question) => {
+        const key = normalizeQuestionKey(question);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+};
+
+const resolveQuestions = (questions) =>
+    getUniqueQuestions(typeof questions === 'function' ? questions() : questions);
+
+export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBack, color, nodeId, prefix = 'chemtest' }) {
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+
+    const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
@@ -10,7 +36,22 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
     const [finished, setFinished] = useState(false);
 
     useEffect(() => {
-        setQuestionSet(typeof questions === 'function' ? questions() : questions);
+        if (nodeId && !sessionStartedRef.current) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    }, [nodeId, startSession]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current) {
+                abandonSession({ totalQuestions: questionSet.length });
+            }
+        };
+    }, [abandonSession, questionSet.length]);
+
+    useEffect(() => {
+        setQuestionSet(resolveQuestions(questions));
         setCurrent(0);
         setSelected(null);
         setAnswered(false);
@@ -39,16 +80,53 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
     const q = questionSet[current];
     const progress = ((current + (finished ? 1 : 0)) / questionSet.length) * 100;
 
+    const [answers, setAnswers] = useState(() => Array(resolveQuestions(questions).length).fill(null));
+
     const handleSelect = (optIdx) => {
         if (answered) return;
         setSelected(optIdx);
         setAnswered(true);
-        if (optIdx === q.correct) setScore(s => s + 1);
+        const newAns = [...answers];
+        newAns[current] = optIdx;
+        setAnswers(newAns);
+        
+        const correct = optIdx === q.correct;
+        if (correct) setScore(s => s + 1);
+
+        logAnswer({
+            question_index: current + 1,
+            answer_json: { selection: optIdx },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        });
     };
 
     const handleNext = () => {
         if (current + 1 >= questionSet.length) {
             setFinished(true);
+            isFinishedRef.current = true;
+            const payload = answers.map((ans, idx) => {
+                if (ans === null && idx !== current) return null;
+                const finalAns = idx === current ? selected : ans;
+                if (finalAns === null) return null;
+                const isCorrect = finalAns === questionSet[idx].correct;
+                return {
+                    question_index: idx + 1,
+                    answer_json: { selection: finalAns },
+                    is_correct: isCorrect ? 1.0 : 0.0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0
+                };
+            }).filter(Boolean);
+
+            finishSession({
+                totalQuestions: questionSet.length,
+                questionsAnswered: payload.length,
+                answersPayload: payload
+            });
         } else {
             setCurrent(c => c + 1);
             setSelected(null);

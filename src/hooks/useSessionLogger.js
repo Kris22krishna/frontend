@@ -45,28 +45,40 @@ export function useSessionLogger() {
   }, []);
 
   /** ── logAnswer ────────────────────────────────────────────────────────── */
-  const logAnswer = useCallback(async ({
-    questionIndex, // 1-based
-    answerJson,    // { selected: idx } | { value: n } | etc.
-    isCorrect,     // 1.0 | 0.5 | 0.0
-    marksAwarded = null,
-    marksPossible = null,
-    timeTakenMs = null,
-  }) => {
+  const logAnswer = useCallback(async (params) => {
+    const {
+      questionIndex,
+      question_index,
+      answerJson,
+      answer_json,
+      isCorrect,
+      is_correct,
+      marksAwarded,
+      marks_awarded,
+      marksPossible,
+      marks_possible,
+      timeTakenMs,
+      time_taken_ms,
+    } = params;
+
     const s = sessionRef.current;
     if (!s) return;
+
+    const qIdx = questionIndex ?? question_index;
+    const isCorr = isCorrect ?? is_correct ?? 0;
+    const aJson = answerJson ?? answer_json ?? {};
 
     const payload = {
       session_id:     s.sessionId,
       user_id:        s.userId,
       node_id:        s.nodeId,
       session_type:   s.sessionType,
-      question_index: questionIndex,
-      answer_json:    answerJson,
-      is_correct:     isCorrect,
-      marks_awarded:  marksAwarded  ?? isCorrect,         // default 1pt per Q
-      marks_possible: marksPossible ?? 1,
-      time_taken_ms:  timeTakenMs,
+      question_index: qIdx,
+      answer_json:    aJson,
+      is_correct:     isCorr,
+      marks_awarded:  marksAwarded ?? marks_awarded ?? isCorr,
+      marks_possible: marksPossible ?? marks_possible ?? 1,
+      time_taken_ms:  timeTakenMs ?? time_taken_ms,
       answered_at:    new Date().toISOString(),
     };
 
@@ -74,17 +86,14 @@ export function useSessionLogger() {
       .from('v4_session_temp')
       .upsert(payload, {
         onConflict: 'session_id,question_index',
-        // On revision: overwrite answer_json, is_correct, marks, time, answered_at
-        // and increment revision_count via DB expression (handled below)
         ignoreDuplicates: false,
       });
 
-    // Increment revision_count in a separate step if row already existed
     if (!error) {
       await supabase.rpc('v4_increment_revision_count', {
         p_session_id:     s.sessionId,
-        p_question_index: questionIndex,
-      }).then(() => {}).catch(() => {}); // rpc optional — ignore if not created
+        p_question_index: qIdx,
+      }).then(() => {}).catch(() => {});
     }
 
     if (error) {
@@ -93,20 +102,56 @@ export function useSessionLogger() {
   }, []);
 
   /** ── finishSession ────────────────────────────────────────────────────── */
-  const finishSession = useCallback(async ({
-    totalQuestions,
-    questionsAnswered,
-    answersPayload,    // array of { question_index, answer_json, is_correct, marks_awarded, marks_possible, time_taken_ms }
-    retainTempRows = false,
-    status = 'completed',
-  }) => {
+  const finishSession = useCallback(async (params) => {
+    const {
+      totalQuestions,
+      questionsAnswered,
+      answersPayload,
+      totalScore,        // optional fallback
+      retainTempRows = false,
+      status = 'completed',
+    } = params;
+
     const s = sessionRef.current;
     if (!s || logginRef.current) return null;
     logginRef.current = true;
 
     try {
-      // Guard: zero-answer sessions are discarded silently
-      if (!answersPayload || answersPayload.length === 0) {
+      let finalAnswers = answersPayload || [];
+
+      // Fallback: fetch from temp if payload missing
+      if (finalAnswers.length === 0) {
+        const { data: tempRows } = await supabase
+          .from('v4_session_temp')
+          .select('*')
+          .eq('session_id', s.sessionId)
+          .order('question_index', { ascending: true });
+        
+        if (tempRows && tempRows.length > 0) {
+          finalAnswers = tempRows.map(r => ({
+            question_index: r.question_index,
+            answer_json: r.answer_json,
+            is_correct: r.is_correct,
+            marks_awarded: r.marks_awarded,
+            marks_possible: r.marks_possible,
+            time_taken_ms: r.time_taken_ms
+          }));
+        }
+      }
+
+      // Final guard: if still empty, use totalScore if provided to make a dummy entry
+      if (finalAnswers.length === 0 && totalScore !== undefined) {
+        finalAnswers = [{
+          question_index: 0,
+          answer_json: { summary: true },
+          is_correct: 1.0, 
+          marks_awarded: totalScore,
+          marks_possible: totalQuestions || totalScore,
+          time_taken_ms: 0
+        }];
+      }
+
+      if (finalAnswers.length === 0) {
         console.log('[useSessionLogger] Zero-answer session discarded');
         sessionRef.current = null;
         logginRef.current = false;
@@ -116,8 +161,8 @@ export function useSessionLogger() {
       const endedAt = new Date().toISOString();
 
       // Calculate totals
-      const totalMarksAwarded  = answersPayload.reduce((s, a) => s + (a.marks_awarded  ?? 0), 0);
-      const totalMarksPossible = answersPayload.reduce((s, a) => s + (a.marks_possible ?? 1), 0);
+      const totalMarksAwarded  = finalAnswers.reduce((s, a) => s + (a.marks_awarded  ?? 0), 0);
+      const totalMarksPossible = finalAnswers.reduce((s, a) => s + (a.marks_possible ?? 1), 0);
       const accuracyPct = totalMarksPossible > 0
         ? Math.floor((totalMarksAwarded / totalMarksPossible) * 100)
         : 0;
@@ -127,7 +172,7 @@ export function useSessionLogger() {
       const timeTakenSeconds = Math.round((endedMs - startedMs) / 1000);
 
       // Build answers_json array sorted by question_index
-      const answersJson = [...answersPayload].sort((a, b) => a.question_index - b.question_index);
+      const answersJson = [...finalAnswers].sort((a, b) => a.question_index - b.question_index);
 
       // ── Insert into v4_sessions ──────────────────────────────────────────
       const sessionRow = {
@@ -137,7 +182,7 @@ export function useSessionLogger() {
         session_type:         s.sessionType,
         status,
         total_questions:      totalQuestions,
-        questions_answered:   questionsAnswered,
+        questions_answered:   questionsAnswered ?? finalAnswers.length,
         total_marks_awarded:  totalMarksAwarded,
         total_marks_possible: totalMarksPossible,
         accuracy_pct:         accuracyPct,

@@ -12,6 +12,44 @@ const mcq = (question, correctAnswer, distractors, explanation) => {
     return { question, options: shuffled, correct: shuffled.indexOf(correctAnswer), explanation };
 };
 
+export const graphFrame = (fnDef, customElements = '', color='#0ea5e9') => {
+    let pts = '';
+    if (typeof fnDef === 'function') {
+        const minX = -5, maxX = 5, steps = 150;
+        let segments = [];
+        let currentSegment = [];
+        for(let i=0; i<=steps; i++){
+            let x = minX + (maxX-minX)*(i/steps);
+            let y = fnDef(x);
+            if (isNaN(y) || typeof y !== 'number' || Math.abs(y) === Infinity) {
+                if (currentSegment.length > 0) { segments.push(currentSegment); currentSegment = []; }
+                continue;
+            }
+            if (y > 10 || y < -10) {
+                if (currentSegment.length > 0) {
+                    currentSegment.push(`${100 + x*20},${100 - (y > 0 ? 10 : -10)*20}`);
+                    segments.push(currentSegment); 
+                    currentSegment = [];
+                }
+                continue;
+            }
+            currentSegment.push(`${100 + x*20},${100 - y*20}`);
+        }
+        if (currentSegment.length > 0) segments.push(currentSegment);
+        pts = segments.map(seg => `<polyline points="${seg.join(' ')}" stroke="${color}" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round" />`).join('\n');
+    } else {
+        pts = fnDef;
+    }
+    return `<svg viewBox="0 0 200 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <path d="M20,0 L20,200 M40,0 L40,200 M60,0 L60,200 M80,0 L80,200 M120,0 L120,200 M140,0 L140,200 M160,0 L160,200 M180,0 L180,200" stroke="#e2e8f0" stroke-width="1" />
+        <path d="M0,20 L200,20 M0,40 L200,40 M0,60 L200,60 M0,80 L200,80 M0,120 L200,120 M0,140 L200,140 M0,160 L200,160 M0,180 L200,180" stroke="#e2e8f0" stroke-width="1" />
+        <line x1="100" y1="0" x2="100" y2="200" stroke="#94a3b8" stroke-width="2" />
+        <line x1="0" y1="100" x2="200" y2="100" stroke="#94a3b8" stroke-width="2" />
+        ${pts}
+        ${customElements}
+    </svg>`;
+};
+
 /* ════════════════════════════════════════════════════════════════════════════
    1 — ALGEBRAIC FUNCTIONS
    ════════════════════════════════════════════════════════════════════════════ */
@@ -252,10 +290,55 @@ export const SKILLS = [
         assessment: genAlgebraic,
         learn: {
             concept: 'Algebraic functions are the standard building blocks of algebra. If you can build it using a finite number of math operations (addition, multiplication, roots), it\'s algebraic.',
-            rules: [
-                { title: 'Polynomials', f: 'f(x) = a_n x^n + ... + a_0', d: 'Linear, quadratic, and cubic lines. They are smooth, continuous, and have a domain of all real numbers.', ex: 'f(x) = 3x^2 - 2x + 1', tip: 'The highest power is the degree.' },
-                { title: 'Rational Functions', f: 'f(x) = \\frac{P(x)}{Q(x)}', d: 'Fractions where the numerator and denominator are both polynomials. Watch out for division by zero!', ex: 'f(x) = \\frac{x+1}{x-2}', tip: 'Denominators CANNOT be zero.' },
-                { title: 'Radical Functions', f: 'f(x) = \\sqrt[n]{x}', d: 'Functions involving roots. If it’s an even root (like square root), the inside cannot be negative.', ex: 'f(x) = \\sqrt{x+4}', tip: 'Even roots need non-negative inputs.' }
+            subFunctions: [
+                {
+                    title: 'Constant Function',
+                    equation: 'f(x) = c',
+                    explanation: 'A function that always returns the same output value regardless of the input. Graphically, it forms a perfectly horizontal line.',
+                    realLife: 'A flat-rate gym membership that costs $50/month no matter how many times you visit.',
+                    graphSvg: graphFrame(x => 2.5, '', '#f59e0b'),
+                    table: [{x: -2, y: 2.5}, {x: -1, y: 2.5}, {x: 0, y: 2.5}, {x: 1, y: 2.5}, {x: 2, y: 2.5}]
+                },
+                {
+                    title: 'Linear Function',
+                    equation: 'f(x) = mx + c',
+                    explanation: 'A polynomial of degree 1. It creates a straight line with a constant slope ($m$) and a fixed y-intercept ($c$).',
+                    realLife: 'A taxi meter that charges a base fare plus a fixed rate for every mile traveled.',
+                    graphSvg: graphFrame(x => 1.5*x + 1, '', '#f59e0b'),
+                    table: [{x: -2, y: -2}, {x: -1, y: -0.5}, {x: 0, y: 1}, {x: 1, y: 2.5}, {x: 2, y: 4}]
+                },
+                {
+                    title: 'Parabolic Function',
+                    equation: 'f(x) = ax^2 + bx + c',
+                    explanation: 'A quadratic polynomial (degree 2) that forms a symmetrical U-shaped curve called a parabola. The rate of change itself changes linearly.',
+                    realLife: 'The trajectory path of a kicked soccer ball flying through the air under gravity.',
+                    graphSvg: graphFrame(x => 0.5*x*x - 3, '', '#f59e0b'),
+                    table: [{x: -2, y: -1}, {x: -1, y: -2.5}, {x: 0, y: -3}, {x: 1, y: -2.5}, {x: 2, y: -1}]
+                },
+                {
+                    title: 'Cubic Function',
+                    equation: 'f(x) = ax^3 + bx^2 + cx + d',
+                    explanation: 'A polynomial of degree 3. It typically features an "S" shape, crossing the x-axis 1 to 3 times, growing infinitely in opposite directions.',
+                    realLife: 'The calculation of the volume of a perfectly spherical balloon as it inflates over time.',
+                    graphSvg: graphFrame(x => 0.2*x*x*x, '', '#f59e0b'),
+                    table: [{x: -2, y: -1.6}, {x: -1, y: -0.2}, {x: 0, y: 0}, {x: 1, y: 0.2}, {x: 2, y: 1.6}]
+                },
+                {
+                    title: 'Rational Function',
+                    equation: 'f(x) = \\frac{1}{x}',
+                    explanation: 'A ratio of two polynomials. They introduce "asymptotes" — invisible boundary lines the graph approaches infinitely but never touches.',
+                    realLife: 'Sharing a $100 pizza bill evenly among an increasing number of friends ($x$).',
+                    graphSvg: graphFrame(x => x === 0 ? NaN : 1/x, '', '#f59e0b'),
+                    table: [{x: -2, y: -0.5}, {x: -1, y: -1}, {x: 0, y: 'Undef'}, {x: 1, y: 1}, {x: 2, y: 0.5}]
+                },
+                {
+                    title: 'Radical Function',
+                    equation: 'f(x) = \\sqrt{x}',
+                    explanation: 'The inverse of a polynomial power. The square root function grows slowly and only accepts non-negative numbers in its domain.',
+                    realLife: 'Calculating the time it takes an object to fall to the ground from a certain height.',
+                    graphSvg: graphFrame(x => x < 0 ? NaN : Math.sqrt(x) * 1.5, '', '#f59e0b'),
+                    table: [{x: 0, y: 0}, {x: 1, y: 1.5}, {x: 2, y: 2.12}, {x: 3, y: 2.6}, {x: 4, y: 3}]
+                }
             ]
         }
     },
@@ -270,9 +353,31 @@ export const SKILLS = [
         assessment: genTrig,
         learn: {
             concept: 'Trig functions take an angle (usually in radians) and give the ratio of sides of a right triangle. They are inherently cyclic and repeat infinitely.',
-            rules: [
-                { title: 'Sine and Cosine', f: '\\sin(x), \\cos(x)', d: 'Wave-like functions that oscillate perfectly between -1 and 1. They repeat every $2\\pi$.', ex: 'f(x) = \\sin(x)', tip: 'Their domain is all real numbers.' },
-                { title: 'Tangent', f: '\\tan(x) = \\frac{\\sin(x)}{\\cos(x)}', d: 'Represents the slope of the angle. It shoots off to infinity creating vertical asymptotes whenever $\\cos(x) = 0$.', ex: 'f(x) = \\tan(x)', tip: 'Undefined at $\\pi/2, 3\\pi/2$, etc.' }
+            subFunctions: [
+                {
+                    title: 'Sine Function',
+                    equation: 'f(x) = \\sin(x)',
+                    explanation: 'A perfectly smooth, periodic wave oscillating between 1 and -1. It represents the "y" coordinate on the unit circle.',
+                    realLife: 'The alternating current (AC) voltage powering the electrical outlets in your home.',
+                    graphSvg: graphFrame(x => 2 * Math.sin(x), '', '#10b981'),
+                    table: [{x: '-π', y: 0}, {x: '-π/2', y: -2}, {x: 0, y: 0}, {x: 'π/2', y: 2}, {x: 'π', y: 0}]
+                },
+                {
+                    title: 'Cosine Function',
+                    equation: 'f(x) = \\cos(x)',
+                    explanation: 'Identical shape to the Sine wave, but shifted horizontally by 90 degrees. It represents the "x" coordinate on the unit circle.',
+                    realLife: 'The swinging pendulum of a grandfather clock tracking back and forth.',
+                    graphSvg: graphFrame(x => 2 * Math.cos(x), '', '#10b981'),
+                    table: [{x: '-π', y: -2}, {x: '-π/2', y: 0}, {x: 0, y: 2}, {x: 'π/2', y: 0}, {x: 'π', y: -2}]
+                },
+                {
+                    title: 'Tangent Function',
+                    equation: 'f(x) = \\tan(x)',
+                    explanation: 'Represents the ratio of Sine to Cosine. Because Cosine hits zero regularly, Tangent has infinite vertical asymptotes.',
+                    realLife: 'The length of a shadow cast by a flagpole as the sun moves across the sky.',
+                    graphSvg: graphFrame(x => { const v = Math.tan(x); return Math.abs(v) > 10 ? NaN : v; }, '', '#10b981'),
+                    table: [{x: '-π/4', y: -1}, {x: 0, y: 0}, {x: 'π/4', y: 1}, {x: 'π/2', y: 'Undef'}, {x: '3π/4', y: -1}]
+                }
             ]
         }
     },
@@ -286,10 +391,32 @@ export const SKILLS = [
         practice: genInvTrig,
         assessment: genInvTrig,
         learn: {
-            concept: 'While $\\sin(x)$ takes an angle and returns a ratio, $\\arcsin(x)$ takes the ratio and returns the *angle*. Since trig functions repeat, we must restrict their domains to create a true inverse.',
-            rules: [
-                { title: 'ArcSine', f: '\\sin^{-1}(x) \\text{ or } \\arcsin(x)', d: 'Inputs must be between -1 and 1. Outputs an angle rigidly between $-\\pi/2$ and $\\pi/2$.', ex: '\\arcsin(1) = \\frac{\\pi}{2}', tip: '\\sin^{-1}(x) is NOT 1/sin(x)!' },
-                { title: 'ArcTangent', f: '\\tan^{-1}(x) \\text{ or } \\arctan(x)', d: 'Can accept any real number input $(-\\infty, \\infty)$ and outputs an angle between $-\\pi/2$ and $\\pi/2$.', ex: '\\arctan(0) = 0', tip: 'Domain encompasses all real numbers.' }
+            concept: 'While standard trig functions take an angle and return a ratio, inverse trig functions take the ratio and return the missing angle.',
+            subFunctions: [
+                {
+                    title: 'ArcSine Function',
+                    equation: 'f(x) = \\arcsin(x)',
+                    explanation: 'It answers "What angle produces this sine ratio?". Its domain is strictly restricted to [-1, 1] to pass the vertical line test.',
+                    realLife: 'Finding the launch angle required for a ramp to attain a specific height ratio.',
+                    graphSvg: graphFrame(x => (x < -2 || x > 2) ? NaN : Math.asin(x/2)*2, '', '#8b5cf6'),
+                    table: [{x: -2, y: '-π'}, {x: -1, y: '-π/2'}, {x: 0, y: 0}, {x: 1, y: 'π/2'}, {x: 2, y: 'π'}]
+                },
+                {
+                    title: 'ArcCosine Function',
+                    equation: 'f(x) = \\arccos(x)',
+                    explanation: 'Returns the angle associated with a specific cosine ratio. Its range is restricted from 0 to π (0 to 180 degrees).',
+                    realLife: 'Engineers calculating the tension angle of a crane cable based on adjacent distances.',
+                    graphSvg: graphFrame(x => (x < -2 || x > 2) ? NaN : Math.acos(x/2)*2, '', '#8b5cf6'),
+                    table: [{x: -2, y: 'π'}, {x: -1, y: '2π/3'}, {x: 0, y: 'π/2'}, {x: 1, y: 'π/3'}, {x: 2, y: 0}]
+                },
+                {
+                    title: 'ArcTangent Function',
+                    equation: 'f(x) = \\arctan(x)',
+                    explanation: 'Unlike arcsine, arctangent can accept any input because the tangent ratio can stretch to infinity. It outputs bounded angles strictly between -π/2 and π/2.',
+                    realLife: 'Calculating the pitch angle of an aircraft or a roof using width and height.',
+                    graphSvg: graphFrame(x => Math.atan(x)*2, '', '#8b5cf6'),
+                    table: [{x: -2, y: -2.2}, {x: -1, y: '-1.57'}, {x: 0, y: 0}, {x: 1, y: '1.57'}, {x: 2, y: 2.2}]
+                }
             ]
         }
     },
@@ -303,10 +430,32 @@ export const SKILLS = [
         practice: genExponential,
         assessment: genExponential,
         learn: {
-            concept: 'Algebraic functions have fixed powers ($x^2$). Exponential functions have a fixed base, but the *variable* is the power ($2^x$). This leads to unbelievably fast compounding growth.',
-            rules: [
-                { title: 'Natural Base e', f: 'f(x) = e^x', d: 'The most important function in calculus. The number e (≈ 2.718) is the natural rate of continuous growth.', ex: 'f(x) = e^x', tip: 'Its derivative is itself.' },
-                { title: 'General Bases', f: 'f(x) = a^x \\text{ (where } a > 0)', d: 'If a > 1, it models explosive growth. If 0 < a < 1, it models exponential decay (shrinking to zero).', ex: 'f(x) = 2^x', tip: 'Base a must be positive.' }
+            concept: 'Exponential functions have a fixed base, but the variable is the power ($2^x$). This leads to extremely fast compounding growth.',
+            subFunctions: [
+                {
+                    title: 'Natural Exponential',
+                    equation: 'f(x) = e^x',
+                    explanation: 'The universally standard foundation of continuous growth. Euler\'s number $e$ (≈2.718) represents perfect, uninterrupted compounding.',
+                    realLife: 'A population of bacteria multiplying perfectly continuously over time within a petri dish.',
+                    graphSvg: graphFrame(x => Math.exp(x)*0.5, '', '#0ea5e9'),
+                    table: [{x: -2, y: 0.07}, {x: -1, y: 0.18}, {x: 0, y: 0.5}, {x: 1, y: 1.36}, {x: 2, y: 3.69}]
+                },
+                {
+                    title: 'General Exponential Growth',
+                    equation: 'f(x) = a^x \\; (a > 1)',
+                    explanation: 'Functions where the base $a$ is larger than 1. This produces a J-curve that shoots rapidly toward infinity.',
+                    realLife: 'Accruing compound interest in a high-yield savings account or rapid viral spread across the internet.',
+                    graphSvg: graphFrame(x => Math.pow(2, x)*0.5, '', '#0ea5e9'),
+                    table: [{x: -2, y: 0.125}, {x: -1, y: 0.25}, {x: 0, y: 0.5}, {x: 1, y: 1}, {x: 2, y: 2}]
+                },
+                {
+                    title: 'Exponential Decay',
+                    equation: 'f(x) = a^x \\; (0 < a < 1)',
+                    explanation: 'Functions where the base $a$ is a fraction strictly between 0 and 1. The output drops rapidly and coasts toward zero without ever fully reaching it.',
+                    realLife: 'The radioactive half-life decay of a uranium isotope measured over millennia.',
+                    graphSvg: graphFrame(x => Math.pow(0.5, x)*0.5, '', '#0ea5e9'),
+                    table: [{x: -2, y: 2}, {x: -1, y: 1}, {x: 0, y: 0.5}, {x: 1, y: 0.25}, {x: 2, y: 0.125}]
+                }
             ]
         }
     },
@@ -320,10 +469,24 @@ export const SKILLS = [
         practice: genLogarithmic,
         assessment: genLogarithmic,
         learn: {
-            concept: 'A logarithm answers the question: "To what exponent must I raise the base to get this number?" It completely un-does exponential growth.',
-            rules: [
-                { title: 'Natural Logarithm', f: '\\ln(x)', d: 'Logarithm with base e. The exact inverse of $e^x$. You cannot take the log of 0 or negative numbers.', ex: '\\ln(e) = 1', tip: 'y = ln(x) means e^y = x.' },
-                { title: 'Log Properties', f: '\\log_a(xy) = \\log_a(x) + \\log_a(y)', d: 'Logarithms turn multiplication into addition, and division into subtraction. They bring powers down to the front!', ex: '\\ln(x^2) = 2\\ln(x)', tip: 'Logs compress large operations.' }
+            concept: 'A logarithm completely un-does exponential growth. It isolates the exponent, squashing massive outputs back down to manageable numbers.',
+            subFunctions: [
+                {
+                    title: 'Natural Logarithm',
+                    equation: 'f(x) = \\ln(x)',
+                    explanation: 'Logarithm with base $e$. It maps rapid exponential magnitudes back to linear time. It possesses a vertical asymptote at $x=0$.',
+                    realLife: 'Archaeologists using Carbon-14 dating to figure out the exact age of an ancient artifact.',
+                    graphSvg: graphFrame(x => x <= 0 ? NaN : Math.log(x)*2, '', '#f43f5e'),
+                    table: [{x: 0.5, y: -1.38}, {x: 1, y: 0}, {x: 2, y: 1.38}, {x: 3, y: 2.19}, {x: 5, y: 3.21}]
+                },
+                {
+                    title: 'Base-10 Logarithm',
+                    equation: 'f(x) = \\log_{10}(x)',
+                    explanation: 'Also known as the common logarithm. It cleanly counts the exact number of times 10 must be multiplied to reach a particular number.',
+                    realLife: 'Measuring earthquake intensity on the Richter scale, where a 6.0 is 10x stronger than a 5.0.',
+                    graphSvg: graphFrame(x => x <= 0 ? NaN : Math.log10(x)*4, '', '#f43f5e'),
+                    table: [{x: 0.1, y: -4}, {x: 1, y: 0}, {x: 3, y: 1.9}, {x: 5, y: 2.79}, {x: 10, y: 4}]
+                }
             ]
         }
     },
@@ -337,10 +500,16 @@ export const SKILLS = [
         practice: genModulus,
         assessment: genModulus,
         learn: {
-            concept: 'The modulus or absolute value function strips away the negative sign. It asks: "How far is this number from zero?", guaranteeing a non-negative answer.',
-            rules: [
-                { title: 'Absolute Value', f: 'f(x) = |x|', d: 'Creates a sharp V-shaped graph. It equals $x$ if $x \\ge 0$, and equals $-x$ if $x < 0$.', ex: '|-5| = 5', tip: 'Distance is always positive or zero.' },
-                { title: 'Solving Equations', f: '|x| = c', d: 'If $c$ is positive, the equation splits into two paths: $x = c$ AND $x = -c$.', ex: '|x| = 4 \\rightarrow x=\\pm 4', tip: 'If c is negative, there are no solutions!' }
+            concept: 'The absolute value function strips away the negative sign. It asks: "How far is this number from zero?", guaranteeing a non-negative answer.',
+            subFunctions: [
+                {
+                    title: 'Absolute Value Function',
+                    equation: 'f(x) = |x|',
+                    explanation: 'Graphically, it creates a sharp, perfectly symmetrical "V" shape exactly at the origin. It acts seamlessly as an identical identity function for positive numbers.',
+                    realLife: 'Measuring the absolute tolerance error or allowed variance margin in precision machine manufacturing.',
+                    graphSvg: graphFrame(x => Math.abs(x), '', '#6366f1'),
+                    table: [{x: -2, y: 2}, {x: -1, y: 1}, {x: 0, y: 0}, {x: 1, y: 1}, {x: 2, y: 2}]
+                }
             ]
         }
     }

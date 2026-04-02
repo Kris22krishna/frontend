@@ -368,7 +368,7 @@ const Numbers1to9 = () => {
                 visualData: sessionQuestions[qIndex].visualData,
                 questionText: sessionQuestions[qIndex].text,
                 correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
+                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
             }
         }));
 
@@ -658,18 +658,18 @@ const Numbers1to9 = () => {
                                             className="g1-number-input"
                                             placeholder="?"
                                             value={userInput}
-                                            onChange={(e) => setUserInput(e.target.value)}
+                                            onChange={(e) => {
+                                                setUserInput(e.target.value);
+                                                setSelectedOption(e.target.value.trim() || null);
+                                            }}
                                             disabled={isAnswered}
-                                            onKeyPress={(e) => e.key === 'Enter' && userInput && handleOptionSelect(userInput.trim())}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' && userInput && !isAnswered) {
+                                                    handleSubmit();
+                                                }
+                                            }}
                                             autoFocus
                                         />
-                                        <button
-                                            className="g1-submit-btn"
-                                            onClick={() => handleOptionSelect(userInput.trim())}
-                                            disabled={isAnswered || !userInput}
-                                        >
-                                            {isTest ? 'Submit Answer' : 'Check Answer'} <ArrowRight size={20} />
-                                        </button>
                                     </div>
                                 ) : (
                                     currentQ.options.map((opt, i) => (
@@ -706,7 +706,7 @@ const Numbers1to9 = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Check Answer <ChevronRight size={24} />
+                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>

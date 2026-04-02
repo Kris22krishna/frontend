@@ -73,7 +73,7 @@ const Navbar = () => {
                     {isAuthenticated && userType === 'student' && (
                         <>
                             <Link to="/diagnosis-test" className={`nav-link-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
-                                Diagnosis Test
+                                 Skill Discovery
                             </Link>
                             <Link to="/idm-dashboard" className={`nav-link-item ${isActive('/idm-dashboard') ? 'active' : ''}`} >
                                 IDM 2026
@@ -132,7 +132,7 @@ const Navbar = () => {
                                 </Link>
                                 {userType === 'student' && (
                                     <Link to="/diagnosis-test" className={`mobile-dropdown-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
-                                        Diagnosis Test
+                                        Skill Discovery
                                     </Link>
                                 )}
                                 <button onClick={handleLogout} className="mobile-dropdown-item logout-btn">Logout</button>

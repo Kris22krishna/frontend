@@ -530,7 +530,7 @@ const BuildTheBridge = ({ onComplete }) => {
 // ==========================================
 // GAME MAPPER
 // ==========================================
-export default function InteractiveGameMapper({ skillId, onComplete }) {
+export default function InteractiveGameMapper({ skillId, onComplete, onWin }) {
   const [hasCompleted, setHasCompleted] = useState(false);
   const [results, setResults] = useState({ score: 0, total: 0 });
   const [gameKey, setGameKey] = useState(Date.now()); // for re-randomization
@@ -538,6 +538,7 @@ export default function InteractiveGameMapper({ skillId, onComplete }) {
   const handleGameComplete = (score, total) => {
     setResults({ score, total });
     setHasCompleted(true);
+    if (onWin) onWin();
   };
 
   const handlePlayAgain = () => {

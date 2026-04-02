@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, GraduationCap, Dumbbell, Target, Sparkles } from 'lucide-react';
 import { OUR_COMMUNITY_SKILLS, generateEvsQuestions } from './OurCommunitySkillsData';
@@ -6,6 +6,7 @@ import styles from '../../OurCommunityShared.module.css';
 import { getPlaceVisual, getTermVisual, BuilderScene, ParkScene, MarketScene, PostOfficeScene, HospitalScene, VanMahotsavScene } from '../OurCommunityVisuals';
 import InteractiveGameMapper from './OurCommunityInteractiveGames';
 import JuniorEvsAssessmentEngine from './OurCommunityAssessmentEngine';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 /* ── LEARN DATA: Step-by-step slides per skill ───── */
 const LEARN_SLIDES = {
@@ -156,7 +157,49 @@ export default function OurCommunitySkills() {
   const [currentSkill, setCurrentSkill] = useState(null);
   const [assessQuestions, setAssessQuestions] = useState([]);
 
+  // v4 Logging
+  const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+  const isFinishedRef = useRef(false);
+
   useEffect(() => { window.scrollTo(0, 0); }, [activeView]);
+
+  useEffect(() => {
+    if (activeView === 'practice' && currentSkill?.nodeId) {
+      startSession({ nodeId: currentSkill.nodeId, sessionType: 'practice' });
+      isFinishedRef.current = false;
+    }
+    return () => {
+      // Abandon practice if user leaves before 'Win'
+      if (activeView === 'practice' && !isFinishedRef.current) {
+        abandonSession({ totalQuestions: 1 });
+      }
+    };
+  }, [activeView, currentSkill, startSession, abandonSession]);
+
+  const handlePracticeWin = async () => {
+    if (isFinishedRef.current) return;
+    
+    // Log one mastery question for the mini-game
+    const answer = {
+      question_index: 1,
+      answer_json: { status: 'won' },
+      is_correct: 1.0,
+      marks_awarded: 1,
+      marks_possible: 1,
+      time_taken_ms: 0
+    };
+
+    if (currentSkill?.nodeId) {
+      await logAnswer(answer);
+      await finishSession({
+        totalQuestions: 1,
+        questionsAnswered: 1,
+        answersPayload: [answer]
+      });
+    }
+
+    isFinishedRef.current = true;
+  };
 
   const handleModeSelect = (skill, mode) => {
     setCurrentSkill(skill);
@@ -203,6 +246,7 @@ export default function OurCommunitySkills() {
             key={Date.now()} // Force re-mount for randomization
             skillId={currentSkill.id}
             onComplete={() => setActiveView('list')}
+            onWin={handlePracticeWin}
           />
         </div>
       </div>
@@ -224,6 +268,7 @@ export default function OurCommunitySkills() {
         <div style={{ padding: '40px 24px' }}>
           <JuniorEvsAssessmentEngine
             questions={assessQuestions}
+            nodeId={currentSkill.nodeId}
             onComplete={() => setActiveView('list')}
           />
         </div>

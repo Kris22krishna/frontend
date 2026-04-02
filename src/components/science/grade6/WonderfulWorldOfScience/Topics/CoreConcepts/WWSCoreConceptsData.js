@@ -9,6 +9,7 @@ export const CORE_CONCEPTS = [
         desc: 'Science as exploration, and the 6 great areas of study.',
         icon: '🔬',
         color: '#0891b2',
+        nodeId: 'b4061001-0001-0000-0000-000000000000',
 
         learn: {
             concept: 'Science is a way of thinking, observing, and understanding the world around us. It is like a never-ending jigsaw puzzle — every piece you discover reveals something new. Science covers everything from tiny seeds to faraway galaxies. There are six main areas of exploration: Earth & Environment, the Living World, Food & Materials, Materials Around Us, Water, and Beyond Earth.',
@@ -91,6 +92,7 @@ export const CORE_CONCEPTS = [
         desc: 'Learn the step-by-step process scientists use to solve problems.',
         icon: '🧪',
         color: '#7c3aed',
+        nodeId: 'b4061001-0002-0000-0000-000000000000',
 
         learn: {
             concept: 'The scientific method is a step-by-step process that anyone can use to find answers. Think of it as a recipe for solving mysteries! The steps are: (1) Observe something interesting, (2) Ask a question, (3) Make a guess called a hypothesis, (4) Test your guess through an experiment, and (5) Analyse your results to draw a conclusion. Even when an experiment "fails", scientists learn something new!',
@@ -173,6 +175,7 @@ export const CORE_CONCEPTS = [
         desc: 'See how you already use science to solve everyday problems.',
         icon: '🏠',
         color: '#f59e0b',
+        nodeId: 'b4061001-0003-0000-0000-000000000000',
 
         learn: {
             concept: 'You don\'t need a lab coat to be a scientist — you use science every single day! When your pen stops writing, when your bicycle tyre goes flat, when dal spills over on the stove, or when a light bulb stops working — you use scientific thinking to fix the problem. Science in daily life means applying observation, questioning, and problem-solving to the challenges you face.',

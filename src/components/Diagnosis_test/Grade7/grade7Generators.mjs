@@ -887,30 +887,6 @@ export const generateTrianglesProperties = () => {
         answer = String(findAngle);
     }
 
-    const options = shuffleArray([
-        { value: answer, label: `${answer}$^\\circ$` },
-        { value: String(Number(answer) + 10), label: `${Number(answer) + 10}$^\\circ$` },
-        { value: String(Number(answer) - 10), label: `${Number(answer) - 10}$^\\circ$` },
-        { value: String(180 - Number(answer)), label: `${180 - Number(answer)}$^\\circ$` }
-    ]);
-
-    // Dedupe
-    const uniqueOptions = [];
-    const seen = new Set();
-    for (const opt of options) {
-        if (!seen.has(opt.value)) {
-            seen.add(opt.value);
-            uniqueOptions.push(opt);
-        }
-    }
-    while (uniqueOptions.length < 4) {
-        const r = getRandomInt(30, 150);
-        if (!seen.has(String(r))) {
-            seen.add(String(r));
-            uniqueOptions.push({ value: String(r), label: `${r}$^\\circ$` });
-        }
-    }
-
     const isoSvg = `
         <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <polygon points="50,10 20,90 80,90" fill="none" stroke="crimson" stroke-width="2" />
@@ -929,11 +905,10 @@ export const generateTrianglesProperties = () => {
         </svg>`;
 
     return {
-        type: "mcq",
-        question: question,
+        type: "userInput",
+        question: question + " (number only)",
         image: typeIdx === 0 ? isoSvg : rightSvg,
         topic: "Triangles and Properties",
-        options: uniqueOptions,
         answer: answer
     };
 };

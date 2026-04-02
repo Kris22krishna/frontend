@@ -7,7 +7,7 @@ const MODULES = [
         id: 'introduction',
         icon: '🌟',
         label: 'Introduction',
-        tagline: 'Module 1 · 5 Big Questions',
+        tagline: 'Module 1 · 6 Big Questions',
         desc: 'Discover the WHAT, WHO, WHEN, WHERE, and WHY of Polynomials through rich real-world examples.',
         color: '#0f4c81', // Can keep or change later if needed
         path: '/senior/grade/9/polynomials/introduction',
@@ -33,7 +33,7 @@ const MODULES = [
 ];
 
 const STATS = [
-    { num: '5', lbl: 'Big Questions' },
+    { num: '6', lbl: 'Big Questions' },
     { num: '8', lbl: 'Key Terms' },
     { num: '2', lbl: 'Key Ideas' },
     { num: '4', lbl: 'Skills' },
