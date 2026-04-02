@@ -224,7 +224,7 @@ const ShapesAndSpace = () => {
                 const otherOptions = shapesPool.filter(s => s !== target);
                 question = {
                     text: `What shape is this?`,
-                    options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
+                    options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random()),
                     correct: target,
                     type: 'shape',
                     visualData: { shape: target, color: colors[i % colors.length] },

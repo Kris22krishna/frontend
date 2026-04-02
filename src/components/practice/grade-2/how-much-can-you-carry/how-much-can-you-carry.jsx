@@ -202,7 +202,7 @@ const Grade2HowMuchCanYouCarry = () => {
             const askingHeavier = heavierFlags[i];
 
             questions.push({
-                text: askingHeavier ? `Which bag is HEAVIER? ⚖️` : `Which bag is LIGHTER? ⚖️`,
+                text: askingHeavier ? `Which bag is HEAVIER?` : `Which bag is LIGHTER?`,
                 options: [`${g1.name} (${w1} kg)`, `${g2.name} (${w2} kg)`].sort(() => 0.5 - Math.random()),
                 correct: askingHeavier ? (w1 > w2 ? `${g1.name} (${w1} kg)` : `${g2.name} (${w2} kg)`) : (w1 < w2 ? `${g1.name} (${w1} kg)` : `${g2.name} (${w2} kg)`),
                 type: 'weight-compare',
@@ -239,7 +239,7 @@ const Grade2HowMuchCanYouCarry = () => {
             const objB = isReverse ? pair.h : pair.l;
 
             questions.push({
-                text: askingHeavier ? `Which one is HEAVIER? ⚖️` : `Which one is LIGHTER? 🪶`,
+                text: askingHeavier ? `Which one is HEAVIER?` : `Which one is LIGHTER?`,
                 options: [objA.name, objB.name],
                 correct: askingHeavier ? (objA.w > objB.w ? objA.name : objB.name) : (objA.w < objB.w ? objA.name : objB.name),
                 type: 'compare',
@@ -276,7 +276,7 @@ const Grade2HowMuchCanYouCarry = () => {
             const article = /^[aeiou]/i.test(scenario.obj) ? 'an' : 'a';
 
             questions.push({
-                text: `Is ${article} ${scenario.obj} usually HEAVY or LIGHT? ${scenario.emoji}`,
+                text: `Is ${article} ${scenario.obj} usually HEAVY or LIGHT?`,
                 options: ['Heavy', 'Light'],
                 correct: scenario.heaviness,
                 type: 'estimate',

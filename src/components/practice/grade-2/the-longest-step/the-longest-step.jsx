@@ -188,7 +188,7 @@ const Grade2TheLongestStep = () => {
             const item = items[i % items.length];
             qs.push({
                 text: `Which unit is best to measure the length of a ${item.name.toLowerCase()}?`,
-                options: ['Fingers', 'Handspans', 'Steps'].sort(() => 0.5 - Math.random()),
+                options: ['Fingers', 'Handspans', 'Steps', 'Arm lengths'].sort(() => 0.5 - Math.random()),
                 correct: item.unit,
                 type: 'estimate',
                 visualData: { emoji: item.emoji, name: item.name },

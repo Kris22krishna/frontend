@@ -190,7 +190,7 @@ const Grade2WhatIsLong = () => {
             const otherOptions = shapes.filter(s => s !== target);
             questions.push({
                 text: `Identify this 2D shape!`,
-                options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
+                options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random()),
                 correct: target,
                 type: 'shape',
                 visualData: { shape: target, color: colors[i % colors.length] },
@@ -406,7 +406,7 @@ const Grade2WhatIsLong = () => {
             }
         }));
 
-        if (!isTest && !isRight) {
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);

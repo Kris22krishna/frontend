@@ -200,15 +200,15 @@ const Grade2CountingInGroups = () => {
             const obviousWrong = askTotal ? pairCount.toString() : (pairCount * 2).toString();
             wrongOptions.push(obviousWrong);
 
-            while (wrongOptions.length < 2) {
+            while (wrongOptions.length < 3) {
                 const wrong = askTotal ? (pairCount * 2 + (Math.random() > 0.5 ? 2 : -2)).toString() : (pairCount + (Math.random() > 0.5 ? 1 : -1)).toString();
-                if (wrong !== target && wrong !== '0' && !wrongOptions.includes(wrong)) {
+                if (wrong !== target && wrong !== '0' && parseInt(wrong) > 0 && !wrongOptions.includes(wrong)) {
                     wrongOptions.push(wrong);
                 }
             }
 
             questions.push({
-                text: askTotal ? `How many individual items ${emoji} are there in total?` : `How many PAIRS of ${emoji} do you see?`,
+                text: askTotal ? `How many individual items are there in total?` : `How many PAIRS do you see?`,
                 options: [target, ...wrongOptions].sort((a, b) => parseInt(a) - parseInt(b)),
                 correct: target,
                 type: 'pairs',
@@ -233,7 +233,7 @@ const Grade2CountingInGroups = () => {
             const color = colors[i % colors.length];
 
             const wrongOptions = [];
-            while (wrongOptions.length < 2) {
+            while (wrongOptions.length < 3) {
                 let wrong = (start + Math.floor(Math.random() * 10) * (step / 2 === parseInt(step / 2) ? (step / 2) : 1)).toString();
                 if (wrong === '0') wrong = '2'; // Just adjusting simple random edge case
                 if (wrong !== target && !wrongOptions.includes(wrong) && wrong !== '0') {
@@ -242,7 +242,7 @@ const Grade2CountingInGroups = () => {
             }
 
             questions.push({
-                text: `What number comes next in the skip counting by ${step}s? 🔢`,
+                text: `What number comes next in the skip counting by ${step}s?`,
                 options: [target, ...wrongOptions].sort((a, b) => parseInt(a) - parseInt(b)),
                 correct: target,
                 type: 'skip',
@@ -269,7 +269,7 @@ const Grade2CountingInGroups = () => {
             const target = `${repeatedStr} = ${total}`;
 
             const wrongOptions = [];
-            while (wrongOptions.length < 2) {
+            while (wrongOptions.length < 3) {
                 const wGroups = groupCount + (Math.random() > 0.5 ? 1 : -1);
                 const wPer = perGroup + (Math.random() > 0.5 ? 1 : -1);
                 if (wGroups > 0 && wPer > 0) {
@@ -283,7 +283,7 @@ const Grade2CountingInGroups = () => {
             }
 
             questions.push({
-                text: `How many ${type}s are there in total? Write as repeated addition! ➕`,
+                text: `How many ${type}s are there in total? Write as repeated addition!`,
                 options: [target, ...wrongOptions].sort(() => 0.5 - Math.random()),
                 correct: target,
                 type: 'repeated',

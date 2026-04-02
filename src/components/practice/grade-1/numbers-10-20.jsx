@@ -196,7 +196,7 @@ const Numbers10to20 = () => {
                 const count = isTest ? (10 + i) : (Math.floor(Math.random() * 11) + 10);
                 const isWord = isTest ? (i % 2 === 0) : (Math.random() > 0.5);
                 question = {
-                    text: isWord ? "Can you pick the name for this number?" : "What number is shown here? 🎯",
+                    text: isWord ? "Can you pick the name for this number?" : "What number is shown here?",
                     options: isWord ?
                         [names[count], names[(count + 1) % 11 + 10], names[(count - 1) % 11 + 10]].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()) :
                         [count, count + 1, count - 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),

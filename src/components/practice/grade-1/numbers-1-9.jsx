@@ -173,6 +173,18 @@ const Numbers1to9 = () => {
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
         const objTypes = ['circle', 'star', 'square'];
 
+        // Helper to always produce exactly 4 unique numeric options including the correct answer
+        const makeOptions = (correct) => {
+            const opts = new Set([correct]);
+            const offsets = [1, -1, 2, -2, 3, -3, 4];
+            for (const off of offsets) {
+                if (opts.size >= 4) break;
+                const v = correct + off;
+                if (v >= 0) opts.add(v);
+            }
+            return [...opts].sort(() => 0.5 - Math.random());
+        };
+
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
 
@@ -200,7 +212,7 @@ const Numbers1to9 = () => {
                 const objType = objTypes[i % objTypes.length];
                 question = {
                     text: `How many ${objType}s can you count?`,
-                    options: [count, (count + 1) % 10 || 1, (count - 1) || 9].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(count),
                     correct: count,
                     type: 'counting',
                     visualData: { count, objType, color: colors[i % colors.length] },
@@ -217,7 +229,7 @@ const Numbers1to9 = () => {
                 }
                 question = {
                     text: `What is the name of this number?`,
-                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9]].sort(() => 0.5 - Math.random()),
+                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9], names[(num + 4) % 9]].filter((v, i, self) => self.indexOf(v) === i).sort(() => 0.5 - Math.random()),
                     correct: names[num - 1],
                     type: 'recognition',
                     visualData: { num, color: colors[i % colors.length] },

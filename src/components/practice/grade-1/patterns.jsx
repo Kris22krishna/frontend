@@ -214,7 +214,7 @@ const Patterns = () => {
             }
 
             questions.push({
-                text: missingIdx >= seq.length ? "Look at the pattern belt! What comes next? 🚂" : "Someone is missing! Who goes in the empty spot? 🕵️",
+                text: missingIdx >= seq.length ? "Look at the pattern belt! What comes next?" : "Someone is missing! Who goes in the empty spot?",
                 options: [pType.items[0], pType.items[1]].sort(() => 0.5 - Math.random()),
                 correct: correct,
                 type: 'pattern',

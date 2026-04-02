@@ -153,12 +153,13 @@ const Grade2MyFunday = () => {
     };
 
     const getOptions = (correct, allList) => {
-        let opts = [correct];
+        const opts = new Set([correct]);
         const shuffled = [...allList].sort(() => 0.5 - Math.random());
-        for (let item of shuffled) {
-            if (opts.length < 4 && !opts.includes(item)) opts.push(item);
+        for (const item of shuffled) {
+            if (opts.size >= 4) break;
+            if (item !== correct) opts.add(item);
         }
-        return opts.sort(() => 0.5 - Math.random());
+        return [...opts].sort(() => 0.5 - Math.random());
     };
 
     const generateDayQuestions = () => {
@@ -206,7 +207,18 @@ const Grade2MyFunday = () => {
             const h = Math.floor(Math.random() * 12) + 1;
             const m = Math.random() > 0.5 ? 0 : 30;
             const timeStr = m === 0 ? `${h} o'clock` : `Half past ${h}`;
-            qs.push({ text: "Read the time on the clock:", options: [timeStr, `${(h % 12) + 1} o'clock`, `Half past ${(h % 12) + 1}`, `${h}:15`].sort(() => 0.5 - Math.random()), correct: timeStr, type: 'read-clock', visualData: { hour: h, minute: m }, explanation: `The hour hand is at ${h} and the minute hand is at ${m === 0 ? '12' : '6'}. So it's ${timeStr}.` });
+            // Build 4 unique clock options
+            const optSet = new Set([timeStr]);
+            const h2 = (h % 12) + 1;
+            const h3 = ((h + 1) % 12) + 1;
+            const h4 = ((h + 9) % 12) + 1;
+            const candidates = [`${h2} o'clock`, `Half past ${h2}`, `${h3} o'clock`, `Half past ${h3}`, `${h4} o'clock`, `Half past ${h4}`];
+            for (const c of candidates) {
+                if (optSet.size >= 4) break;
+                optSet.add(c);
+            }
+            const options = [...optSet].sort(() => 0.5 - Math.random());
+            qs.push({ text: "Read the time on the clock:", options, correct: timeStr, type: 'read-clock', visualData: { hour: h, minute: m }, explanation: `The hour hand is at ${h} and the minute hand is at ${m === 0 ? '12' : '6'}. So it's ${timeStr}.` });
         }
         return qs;
     };

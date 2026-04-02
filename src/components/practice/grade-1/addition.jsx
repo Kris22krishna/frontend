@@ -219,6 +219,18 @@ const Addition = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
+    // Helper to always produce exactly 4 unique numeric options including the correct answer
+    const makeOptions = (correct) => {
+        const opts = new Set([correct]);
+        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        for (const off of offsets) {
+            if (opts.size >= 4) break;
+            const v = correct + off;
+            if (v >= 0) opts.add(v);
+        }
+        return [...opts].sort(() => 0.5 - Math.random());
+    };
+
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'].sort(() => 0.5 - Math.random());
@@ -254,8 +266,8 @@ const Addition = () => {
                     n2 = Math.floor(Math.random() * 4) + 1;
                 }
                 question = {
-                    text: `Count all the circles together! 🍭`,
-                    options: [n1 + n2, (n1 + n2 + 1) % 11 || 1, Math.max(1, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: `Count all the circles together!`,
+                    options: makeOptions(n1 + n2),
                     correct: n1 + n2,
                     type: 'visual',
                     visualData: { n1, n2, color1, color2 },
@@ -271,8 +283,8 @@ const Addition = () => {
                     n2 = Math.floor(Math.random() * (10 - n1));
                 }
                 question = {
-                    text: `What is ${n1} plus ${n2}? ➕`,
-                    options: [n1 + n2, n1 + n2 + 2, Math.max(0, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: `What is ${n1} plus ${n2}?`,
+                    options: makeOptions(n1 + n2),
                     correct: n1 + n2,
                     type: 'numeric',
                     visualData: { n1, n2, color1, color2 },
@@ -291,7 +303,7 @@ const Addition = () => {
                     }
                     question = {
                         text: `Use the number line to find: ${n1} + ${n2}`,
-                        options: [n1 + n2, n1 + n2 + 1, Math.max(0, n1 + n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                        options: makeOptions(n1 + n2),
                         correct: n1 + n2,
                         type: 'numberline',
                         visualData: { n1, n2, color1, color2 },
@@ -304,8 +316,8 @@ const Addition = () => {
                     const z1 = withZeroFirst ? 0 : val;
                     const z2 = withZeroFirst ? val : 0;
                     question = {
-                        text: `Add zero to the number! ✨`,
-                        options: [val, 0, val + 1].sort(() => 0.5 - Math.random()),
+                        text: `Add zero to the number!`,
+                        options: makeOptions(val),
                         correct: val,
                         type: 'numeric',
                         visualData: { n1: z1, n2: z2, color1, color2 },

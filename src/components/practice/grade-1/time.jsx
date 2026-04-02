@@ -314,17 +314,17 @@ const Time = () => {
                     const idx = Math.floor(Math.random() * 7);
                     question = {
                         text: `If Sunday is the first day, which day is the ${orderText[idx]} day of the week?`,
-                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7]].sort(() => 0.5 - Math.random()),
+                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7], days[(idx + 5) % 7]].sort(() => 0.5 - Math.random()),
                         correct: days[idx],
                         type: 'days-week',
-                        visualData: { day: days[idx], isAfter: true, label: 'ORDER' }, // Custom label for visual
+                        visualData: { day: days[idx], isAfter: true, label: 'ORDER' },
                         explanation: `Counting from Sunday, the ${orderText[idx]} day is ${days[idx]}.`
                     };
                 } else {
                     const idx = Math.floor(Math.random() * 7);
                     question = {
-                        text: `Look at this day! Can you find its name from the options? 🎯`,
-                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7]].sort(() => 0.5 - Math.random()),
+                        text: `Look at this day! Can you find its name from the options?`,
+                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7], days[(idx + 5) % 7]].sort(() => 0.5 - Math.random()),
                         correct: days[idx],
                         type: 'days-week',
                         visualData: { day: days[idx], isAfter: true, label: 'NAME' },
@@ -337,18 +337,18 @@ const Time = () => {
                 const isAfter = Math.random() > 0.5;
                 const targetIdx = isAfter ? (dayIdx + 1) % 7 : (dayIdx - 1 + 7) % 7;
                 question = {
-                    text: `Checking the calendar! Which day comes ${isAfter ? 'AFTER' : 'BEFORE'} ${days[dayIdx]}? 📅`,
-                    options: [days[targetIdx], days[(targetIdx + 2) % 7], days[(targetIdx + 4) % 7]].sort(() => 0.5 - Math.random()),
+                    text: `Checking the calendar! Which day comes ${isAfter ? 'AFTER' : 'BEFORE'} ${days[dayIdx]}?`,
+                    options: [days[targetIdx], days[(targetIdx + 2) % 7], days[(targetIdx + 4) % 7], days[(targetIdx + 5) % 7]].sort(() => 0.5 - Math.random()),
                     correct: days[targetIdx],
-                    type: 'days-week', // Reuse visual
+                    type: 'days-week',
                     visualData: { day: days[dayIdx], isAfter },
                     explanation: `Following the standard sequence of days, the day immediately ${isAfter ? 'after' : 'before'} ${days[dayIdx]} is ${days[targetIdx]}.`
                 };
             } else {
                 const hour = Math.floor(Math.random() * 12) + 1;
                 question = {
-                    text: `Look at the clock! What hour is the little hand showing? 🕒`,
-                    options: [`${hour} o'clock`, `${(hour % 12) + 1} o'clock`, `${(hour + 10) % 12 + 1} o'clock`].sort(() => 0.5 - Math.random()),
+                    text: `Look at the clock! What hour is the little hand showing?`,
+                    options: [`${hour} o'clock`, `${(hour % 12) + 1} o'clock`, `${(hour + 10) % 12 + 1} o'clock`, `${(hour + 9) % 12 + 1} o'clock`].sort(() => 0.5 - Math.random()),
                     correct: `${hour} o'clock`,
                     type: 'clock',
                     visualData: { hour },

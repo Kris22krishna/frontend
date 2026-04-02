@@ -181,7 +181,7 @@ const Grade2Patterns = () => {
             displaySeq[missingIdx] = null;
 
             questions.push({
-                text: useSkill === '1016' ? "What comes next in the pattern? 🏁" : "Find the missing piece! 🧩",
+                text: useSkill === '1016' ? "What comes next in the pattern?" : "Find the missing piece!",
                 options: options.map(String),
                 correct: String(correct),
                 type: type,

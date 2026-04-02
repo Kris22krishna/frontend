@@ -207,7 +207,7 @@ const Grade2TensAndOnes = () => {
             const num = Math.floor(Math.random() * 90) + 10;
             const t = Math.floor(num / 10), o = num % 10;
             qs.push({ 
-                text: `Look at the table. How many Tens and Ones are there in total? 🧐`, 
+                text: `Look at the table. How many Tens and Ones are there in total?`, 
                 options: [`${t} Tens, ${o} Ones`, `${o} Tens, ${t} Tens`, `${t} Tens, 0 Ones`, `10 Tens, ${num} Ones`].sort(() => 0.5 - Math.random()), 
                 correct: `${t} Tens, ${o} Ones`, 
                 type: 'tens-ones', 
@@ -224,7 +224,7 @@ const Grade2TensAndOnes = () => {
             const num = Math.floor(Math.random() * 90) + 10;
             const t = Math.floor(num / 10) * 10, o = num % 10;
             qs.push({ 
-                text: `Look at the blocks. Can you write this number in expanded form? 📝`, 
+                text: `Look at the blocks. Can you write this number in expanded form?`, 
                 options: [`${t} + ${o}`, `${num} + 10`, `${t}0 + ${o}`, `${t} + ${o}0`].sort(() => 0.5 - Math.random()), 
                 correct: `${t} + ${o}`, 
                 type: 'tens-ones', 
