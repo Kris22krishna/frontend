@@ -107,6 +107,7 @@ const Numbers1to9 = () => {
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
 
     const [userInput, setUserInput] = useState('');
     const [showExplanationModal, setShowExplanationModal] = useState(false);
@@ -172,6 +173,18 @@ const Numbers1to9 = () => {
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
         const objTypes = ['circle', 'star', 'square'];
 
+        // Helper to always produce exactly 4 unique numeric options including the correct answer
+        const makeOptions = (correct) => {
+            const opts = new Set([correct]);
+            const offsets = [1, -1, 2, -2, 3, -3, 4];
+            for (const off of offsets) {
+                if (opts.size >= 4) break;
+                const v = correct + off;
+                if (v >= 0) opts.add(v);
+            }
+            return [...opts].sort(() => 0.5 - Math.random());
+        };
+
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
 
@@ -199,7 +212,7 @@ const Numbers1to9 = () => {
                 const objType = objTypes[i % objTypes.length];
                 question = {
                     text: `How many ${objType}s can you count?`,
-                    options: [count, (count + 1) % 10 || 1, (count - 1) || 9].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(count),
                     correct: count,
                     type: 'counting',
                     visualData: { count, objType, color: colors[i % colors.length] },
@@ -216,7 +229,7 @@ const Numbers1to9 = () => {
                 }
                 question = {
                     text: `What is the name of this number?`,
-                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9]].sort(() => 0.5 - Math.random()),
+                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9], names[(num + 4) % 9]].filter((v, i, self) => self.indexOf(v) === i).sort(() => 0.5 - Math.random()),
                     correct: names[num - 1],
                     type: 'recognition',
                     visualData: { num, color: colors[i % colors.length] },
@@ -374,12 +387,17 @@ const Numbers1to9 = () => {
 
         // Show modal for all answers in practice mode
         if (!isTest) {
-            setShowExplanationModal(true);
+            if (isCorrect) {
+                setIsAutoAdvancing(true);
+                setTimeout(() => {
+                    handleNext();
+                    setIsAutoAdvancing(false);
+                }, 800);
+            } else {
+                setShowExplanationModal(true);
+            }
         } else {
-            // Give a tiny delay so they see the option highlight green
-            setTimeout(() => {
-                handleNext();
-            }, 800);
+            handleNext();
         }
     };
 
@@ -706,10 +724,10 @@ const Numbers1to9 = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}

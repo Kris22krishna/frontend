@@ -273,6 +273,14 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/prime-time'
+                        },
+                        {
+                            skill_id: 'local-mensuration-6-chapter',
+                            skill_name: 'Perimeter and Area: Interactive Chapter',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/mensuration-6'
                         }
                     ];
                 }
@@ -303,6 +311,30 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/fractions-and-decimals'
+                        },
+                        {
+                            skill_id: 'local-lines-angles-chapter',
+                            skill_name: 'Lines and Angles: Interactive Chapter',
+                            topic: 'Lines and Angles',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/lines-and-angles'
+                        },
+                        {
+                            skill_id: 'local-simple-equations-chapter',
+                            skill_name: 'Simple Equations: Interactive Chapter',
+                            topic: 'Simple Equations',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/simple-equations'
+                        },
+                        {
+                            skill_id: 'local-triangles-properties-chapter',
+                            skill_name: 'The Triangle and Its Properties: Interactive Chapter',
+                            topic: 'The Triangle and Its Properties',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/the-triangle-and-its-properties'
                         },
                         {
                             skill_id: 'local-use-percent',
@@ -665,8 +697,8 @@ const MiddleGradeSyllabus = () => {
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (activeSubject === 'mathematics') {
             if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time"].some(t => topicName.includes(t.toLowerCase()))) return acc;
-            if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
-            if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
+            if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling" && topicName !== "lines and angles" && topicName !== "simple equations" && topicName !== "the triangle and its properties") return acc;
+            if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling" || topicName === "lines and angles" || topicName === "simple equations" || topicName === "the triangle and its properties") && !skill.isLocal) return acc;
         }
 
 
@@ -772,6 +804,14 @@ const MiddleGradeSyllabus = () => {
             ],
             'Chapter Test': [
                 { skill_id: 'BMF-TEST', skill_name: 'Chapter Test', topic: 'Be My Multiple, I’ll be Your Factor', sub_topic: 'Chapter Test', isLocal: true, path: '/middle/grade/5/be-my-multiple/test' }
+            ]
+        };
+
+        skillsByTopic['Mapping Your Way'] = {
+            'Learn': [
+                { skill_id: 'MYW-5W1H', skill_name: '5W1H Introduction', topic: 'Mapping Your Way', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/mapping-your-way/introduction' },
+                { skill_id: 'MYW-TERM', skill_name: 'Terminology', topic: 'Mapping Your Way', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/mapping-your-way/terminology' },
+                { skill_id: 'MYW-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Mapping Your Way', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/mapping-your-way/skills' }
             ]
         };
 

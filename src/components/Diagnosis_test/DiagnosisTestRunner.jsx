@@ -365,7 +365,6 @@ const DiagnosisTestRunner = () => {
                         correctCount += qScore;
                         if (qScore === 1) isCorrect = true;
                     }
-                    displayAnswer = "Table completed";
                 } catch (e) {
                     console.error("Error parsing table answer:", e);
                 }
@@ -387,7 +386,6 @@ const DiagnosisTestRunner = () => {
                         correctCount += qScore;
                         if (qScore === 1) isCorrect = true;
                     }
-                    displayAnswer = "Factor tree completed";
                 } catch (e) {
                     console.error("Error parsing factor tree answer:", e);
                 }
@@ -657,9 +655,9 @@ const DiagnosisTestRunner = () => {
                         </div>
                         {(q.img || q.image) && (
                             <div className="mt-6 flex justify-center bg-slate-50 p-6 rounded-2xl border border-dashed border-slate-200">
-                                {(typeof (q.img || q.image) === 'string' && (q.img || q.image).includes('<svg')) ? (
+                                {(typeof (q.img || q.image) === 'string' && (q.img || q.image).trim().startsWith('<')) ? (
                                     <div
-                                        className="max-h-64 flex items-center justify-center svg-container"
+                                        className="max-h-64 flex items-center justify-center svg-container w-full"
                                         dangerouslySetInnerHTML={{ __html: (q.img || q.image) }}
                                     />
                                 ) : (

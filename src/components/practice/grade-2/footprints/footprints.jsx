@@ -127,7 +127,7 @@ const ANIMALS = [
 const TRACE_OBJECTS = [
     { obj: 'Coin', emoji: '🪙', shape: 'Circle', shapeEmoji: '⭕' },
     { obj: 'Eraser', emoji: '🧽', shape: 'Rectangle', shapeEmoji: '🟩' },
-    { obj: 'Sandwich', emoji: '🥪', shape: 'Triangle', shapeEmoji: '🔺' },
+    { obj: 'Television', emoji: '📺', shape: 'Rectangle', shapeEmoji: '🟩' },
     { obj: 'Biscuit', emoji: '🍪', shape: 'Circle', shapeEmoji: '⭕' },
     { obj: 'Book', emoji: '📕', shape: 'Rectangle', shapeEmoji: '🟩' },
     { obj: 'Pizza Slice', emoji: '🍕', shape: 'Triangle', shapeEmoji: '🔺' },
@@ -329,7 +329,7 @@ const Grade2Footprints = () => {
             const options = [animal.name, ...otherAnimals.map(a => a.name)].sort(() => 0.5 - Math.random());
 
             questions.push({
-                text: `Whose footprint is this? 🐾`,
+                text: `Whose footprint is this?`,
                 options,
                 correct: animal.name,
                 type: 'match-footprint',
@@ -364,7 +364,7 @@ const Grade2Footprints = () => {
             const animalB = isSwapped ? pair.a : pair.b;
 
             questions.push({
-                text: askingBigger ? `Which animal has a BIGGER footprint? 🐾` : `Which animal has a SMALLER footprint? 🐾`,
+                text: askingBigger ? `Which animal has a BIGGER footprint?` : `Which animal has a SMALLER footprint?`,
                 options: [animalA.name, animalB.name],
                 correct: askingBigger
                     ? (animalA.size > animalB.size ? animalA.name : animalB.name)
@@ -392,7 +392,7 @@ const Grade2Footprints = () => {
             const options = [obj.shape, ...wrongShapes].sort(() => 0.5 - Math.random());
 
             questions.push({
-                text: `If you trace around a ${obj.obj}, what shape will you get? ${obj.emoji}`,
+                text: `If you trace around a ${obj.obj}, what shape will you get?`,
                 options,
                 correct: obj.shape,
                 type: 'shape-trace',

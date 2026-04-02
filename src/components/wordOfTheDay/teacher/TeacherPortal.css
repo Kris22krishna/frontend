@@ -1,0 +1,269 @@
+/* ===== Teacher Portal — Word of the Day ===== */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+.wotd-teacher-portal {
+  --wotd-purple: #6c5ce7;
+  --wotd-purple-light: #a29bfe;
+  --wotd-teal: #00cec9;
+  --wotd-orange: #fdcb6e;
+  --wotd-pink: #fd79a8;
+  --wotd-bg: #f8f7ff;
+  --wotd-card: #ffffff;
+  --wotd-text: #2d3436;
+  --wotd-muted: #636e72;
+  --wotd-border: #dfe6e9;
+  --wotd-radius: 16px;
+  --wotd-shadow: 0 8px 30px rgba(108, 92, 231, 0.12);
+
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f7ff 0%, #eef1ff 50%, #fdf2f8 100%);
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ── Card wrapper ── */
+.wotd-teacher-card {
+  background: var(--wotd-card);
+  border-radius: var(--wotd-radius);
+  box-shadow: var(--wotd-shadow);
+  width: 100%;
+  max-width: 620px;
+  padding: 40px 36px 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* decorative top bar */
+.wotd-teacher-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--wotd-purple), var(--wotd-teal), var(--wotd-orange), var(--wotd-pink));
+  border-radius: var(--wotd-radius) var(--wotd-radius) 0 0;
+}
+
+/* ── Header ── */
+.wotd-teacher-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.wotd-teacher-header .wotd-emoji {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 8px;
+  animation: wotd-bounce 2s ease-in-out infinite;
+}
+
+@keyframes wotd-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.wotd-teacher-header h1 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--wotd-purple);
+  margin: 0 0 6px;
+}
+
+.wotd-teacher-header p {
+  font-size: 0.95rem;
+  color: var(--wotd-muted);
+  margin: 0;
+}
+
+/* ── Form ── */
+.wotd-teacher-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Field group */
+.wotd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wotd-field label {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--wotd-text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wotd-field label .wotd-label-icon {
+  font-size: 1.1rem;
+}
+
+.wotd-field input[type="text"],
+.wotd-field textarea,
+.wotd-field input[type="date"] {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--wotd-border);
+  border-radius: 12px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  color: var(--wotd-text);
+  background: #fafafe;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.wotd-field input[type="text"]:focus,
+.wotd-field textarea:focus,
+.wotd-field input[type="date"]:focus {
+  border-color: var(--wotd-purple-light);
+  box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+}
+
+.wotd-field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* ── Image upload ── */
+.wotd-image-upload-area {
+  border: 2px dashed var(--wotd-border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease;
+  background: #fafafe;
+  position: relative;
+}
+
+.wotd-image-upload-area:hover {
+  border-color: var(--wotd-purple-light);
+  background: #f3f0ff;
+}
+
+.wotd-image-upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.wotd-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--wotd-muted);
+}
+
+.wotd-upload-placeholder .wotd-upload-icon {
+  font-size: 2rem;
+}
+
+.wotd-upload-placeholder span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Image preview */
+.wotd-image-preview {
+  position: relative;
+  display: inline-block;
+}
+
+.wotd-image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.wotd-remove-image {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--wotd-pink);
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(253, 121, 168, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.wotd-remove-image:hover {
+  transform: scale(1.15);
+}
+
+/* ── Publish button ── */
+.wotd-publish-btn {
+  margin-top: 8px;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--wotd-purple), var(--wotd-purple-light));
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.3);
+}
+
+.wotd-publish-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(108, 92, 231, 0.4);
+}
+
+.wotd-publish-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .wotd-teacher-portal {
+    padding: 20px 12px;
+  }
+
+  .wotd-teacher-card {
+    padding: 28px 20px 24px;
+  }
+
+  .wotd-teacher-header h1 {
+    font-size: 1.35rem;
+  }
+
+  .wotd-field input[type="text"],
+  .wotd-field textarea,
+  .wotd-field input[type="date"] {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .wotd-publish-btn {
+    padding: 14px;
+    font-size: 1rem;
+  }
+}

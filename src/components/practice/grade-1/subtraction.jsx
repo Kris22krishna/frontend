@@ -90,6 +90,18 @@ const Subtraction = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
+    // Helper to always produce exactly 4 unique numeric options including the correct answer
+    const makeOptions = (correct) => {
+        const opts = new Set([correct]);
+        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        for (const off of offsets) {
+            if (opts.size >= 4) break;
+            const v = correct + off;
+            if (v >= 0) opts.add(v);
+        }
+        return [...opts].sort(() => 0.5 - Math.random());
+    };
+
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
@@ -122,7 +134,7 @@ const Subtraction = () => {
                 }
                 question = {
                     text: `How many objects are left after taking away ${n2}?`,
-                    options: [n1 - n2, (n1 - n2 + 1), Math.max(0, n1 - n2 - 2)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(n1 - n2),
                     correct: n1 - n2,
                     type: 'visual',
                     visualData: { n1, n2, color: color1 },
@@ -140,8 +152,8 @@ const Subtraction = () => {
                     n2 = Math.floor(Math.random() * n1);
                 }
                 question = {
-                    text: `What is ${n1} take away ${n2}? ➖`,
-                    options: [n1 - n2, n1 - n2 + 1, Math.max(0, n1 - n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: `What is ${n1} take away ${n2}?`,
+                    options: makeOptions(n1 - n2),
                     correct: n1 - n2,
                     type: 'numeric',
                     visualData: { n1, n2, color1, color2 },
@@ -160,7 +172,7 @@ const Subtraction = () => {
                 const n2 = subtractSame ? n : 0;
                 question = {
                     text: `Subtract ${n2} from ${n}!`,
-                    options: [n - n2, n, 0].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(n - n2),
                     correct: n - n2,
                     type: 'zero',
                     visualData: { n1: n, n2, color1, color2 },
@@ -283,10 +295,7 @@ const Subtraction = () => {
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            // Give a tiny delay so they see the option highlight green
-            setTimeout(() => {
-                handleNext();
-            }, 800);
+            handleNext();
         }
     };
 
@@ -596,7 +605,7 @@ const Subtraction = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>

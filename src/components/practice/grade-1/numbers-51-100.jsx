@@ -211,7 +211,7 @@ const Numbers51to100 = () => {
             if (typeToGen === 'counting') {
                 const num = Math.floor(Math.random() * 49) + 51;
                 question = {
-                    text: `Count the blocks carefully! What number is shown? 🔢`,
+                    text: `Count the blocks carefully! What number is shown?`,
                     options: [num, (num + 10) % 101 || 51, Math.max(51, num - 5)].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: num,
                     type: 'counting',
@@ -225,7 +225,7 @@ const Numbers51to100 = () => {
                 const wrong1 = numberWords(Math.min(100, num + Math.floor(Math.random() * 5) + 1));
                 const wrong2 = numberWords(Math.max(51, num - Math.floor(Math.random() * 5) - 1));
                 question = {
-                    text: `How do you write the number shown in the table in words? ✍️`,
+                    text: `How do you write the number shown in the table in words?`,
                     options: [correctWord, wrong1, wrong2].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: correctWord,
                     type: 'counting',
@@ -239,7 +239,7 @@ const Numbers51to100 = () => {
                 const wrong1 = Math.min(100, num + Math.floor(Math.random() * 10) + 1);
                 const wrong2 = Math.max(51, num - Math.floor(Math.random() * 10) - 1);
                 question = {
-                    text: `Which number matches the name: "${word}"? 🔤`,
+                    text: `Which number matches the name: "${word}"?`,
                     options: [num, wrong1, wrong2].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: num,
                     type: 'counting',
@@ -252,7 +252,7 @@ const Numbers51to100 = () => {
                 const seq = [start, start + step, start + step * 2];
                 const nextValue = start + step * 3;
                 question = {
-                    text: `What is the next number in this pattern? ⚡`,
+                    text: `What is the next number in this pattern?`,
                     options: [nextValue, nextValue + step, nextValue - 1].sort(() => 0.5 - Math.random()),
                     correct: nextValue,
                     type: 'skip',

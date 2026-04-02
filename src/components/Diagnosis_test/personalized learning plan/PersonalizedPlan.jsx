@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { CalendarDays, Clock, Download, BookOpen, GraduationCap, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const PersonalizedPlan = ({ questionResults, grade }) => {
     const [isPlanExpanded, setIsPlanExpanded] = useState(false);
     // 1. Identify missing topics
     // Filter out only the questions that were not correct
-    const missedQuestions = questionResults.filter(q => q.status !== 'correct');
+    const missedQuestions = questionResults.filter(q => !q.isCorrect);
     
     // Get unique topics from those missed questions
     const topicsToLearn = [...new Set(missedQuestions.map(q => q.topic || 'General Foundational Skills'))];
@@ -50,7 +50,7 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
         doc.text(`Created based on your recent skill discovery assessment.`, 14, 32);
 
         // Table
-        doc.autoTable({
+        autoTable(doc, {
             startY: 40,
             head: [['Day', 'Topic to Learn', 'Suggested Time', 'What to Focus On']],
             body: planData.map(item => [item.day, item.learning, item.time, item.details]),

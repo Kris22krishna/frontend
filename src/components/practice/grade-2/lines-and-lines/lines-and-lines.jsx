@@ -191,14 +191,25 @@ const Grade2LinesAndLines = () => {
         const types = ['Standing', 'Sleeping', 'Slanting'];
         const qs = [];
         for (let i = 0; i < totalQuestions; i++) {
-            const type = types[i % 3];
+            const numLines = Math.floor(Math.random() * 3) + 3;
+            const pattern = Array.from({ length: numLines }, () => types[Math.floor(Math.random() * 3)]);
+            const targetType = types[Math.floor(Math.random() * 3)];
+            const correctCount = pattern.filter(p => p === targetType).length;
+            
+            let opts = [String(correctCount)];
+            const pool = ['0', '1', '2', '3', '4', '5'].sort(() => 0.5 - Math.random());
+            for (let num of pool) {
+                if (opts.length < 4 && !opts.includes(num)) opts.push(num);
+            }
+            opts = opts.sort(() => 0.5 - Math.random());
+
             qs.push({
-                text: `What type of lines are shown here?`,
-                options: types,
-                correct: type,
+                text: `How many ${targetType.toLowerCase()} lines are in this pattern?`,
+                options: opts,
+                correct: String(correctCount),
                 type: 'line-pattern',
-                visualData: { pattern: [type, type, type] },
-                explanation: `These are ${type.toLowerCase()} lines.`
+                visualData: { patternType: 'mixed', pattern },
+                explanation: `Count the ${targetType.toLowerCase()} lines. There are exactly ${correctCount}.`
             });
         }
         return qs;
