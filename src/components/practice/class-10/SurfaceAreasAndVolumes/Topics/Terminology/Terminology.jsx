@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../surface-volumes.css';
 import '../../hide-footer.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+
+const TERMINOLOGY_QUIZ_NODE_ID = 'a4101013-0010-0000-0000-000000000000';
 
 // Import Assets
 import tsaImg from '../../../../../../assets/surface-volumes/tsa.png';
@@ -198,6 +201,16 @@ export default function Terminology() {
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
 
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const quizAnswers = useRef([]);
+
+    useEffect(() => {
+        if (view === 'quiz') {
+            startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'quiz' });
+            quizAnswers.current = [];
+        }
+    }, [view]);
+
     React.useEffect(() => {
         document.body.classList.add('hide-main-footer');
         return () => document.body.classList.remove('hide-main-footer');
@@ -206,20 +219,26 @@ export default function Terminology() {
     const term = TERMS[selectedIdx];
     const activeRule = RULES[selectedRuleIdx];
 
-    const handleAns = (idx) => {
+    const handleAns = async (idx) => {
         if (answered) return;
         setAnsSelected(idx);
         setAnswered(true);
-        if (idx === QUIZ[quizIdx].corr) setScore(s => s + 1);
+        const isCorrect = idx === QUIZ[quizIdx].corr;
+        if (isCorrect) setScore(s => s + 1);
+        const answerData = { question_index: quizIdx + 1, answer_json: { selected: idx }, is_correct: isCorrect ? 1.0 : 0.0, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        quizAnswers.current[quizIdx] = answerData;
+        await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
     };
 
-    const nextQ = () => {
+    const nextQ = async () => {
         if (quizIdx + 1 < QUIZ.length) {
             setQuizIdx(i => i + 1);
             setAnsSelected(null);
             setAnswered(false);
         } else {
             setFinished(true);
+            const payload = quizAnswers.current.filter(Boolean);
+            await finishSession({ totalQuestions: QUIZ.length, questionsAnswered: payload.length, answersPayload: payload });
         }
     };
 

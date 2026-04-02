@@ -79,6 +79,17 @@ export const NODE_IDS = {
   mathBranchAlgebraExponentsComparing:      'f3000000-0000-0000-0000-000000000011',
   // ── 5. CLASS 10 MATH ─────────────────────────────────────────────────────
 
+  // Grade 10 Math: Surface Areas and Volumes (Chapter 13)
+  g10MathSurfaceAreasAndVolumes:            'a3101013-0000-0000-0000-000000000001',
+  g10MathSAVVisualization:                  'a4101013-0001-0000-0000-000000000000',
+  g10MathSAVSurfaceArea:                    'a4101013-0002-0000-0000-000000000000',
+  g10MathSAVVolume:                         'a4101013-0003-0000-0000-000000000000',
+  g10MathSAVConversion:                     'a4101013-0004-0000-0000-000000000000',
+  g10MathSAVHollowParts:                    'a4101013-0005-0000-0000-000000000000',
+  g10MathSAVCapacity:                       'a4101013-0006-0000-0000-000000000000',
+  g10MathSAVRealWorldProblems:              'a4101013-0007-0000-0000-000000000000',
+  g10MathSAVTerminologyQuiz:                'a4101013-0010-0000-0000-000000000000',
+
   // Grade 10 Math: Areas Related to Circles (Chapter 12)
   g10MathAreasCircles:                    'a3101012-0000-0000-0000-000000000001',
   g10MathAreasCirclesRegions:             'a4101012-0001-0000-0000-000000000000',
