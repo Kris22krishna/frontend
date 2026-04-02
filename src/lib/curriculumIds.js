@@ -109,6 +109,17 @@ export const NODE_IDS = {
   g10MathCirclesComplexApplications:        'a4101010-0007-0000-0000-000000000000',
   g10MathCirclesTerminologyQuiz:            'a4101010-0010-0000-0000-000000000000',
 
+  // Grade 10 Math: Pair of Linear Equations (Chapter 3)
+  g10MathLinearEquations:                   'a3101003-0000-0000-0000-000000000001',
+  g10MathLEIntro:                           'a4101003-0001-0000-0000-000000000000',
+  g10MathLEGraphical:                       'a4101003-0002-0000-0000-000000000000',
+  g10MathLEConsistency:                     'a4101003-0003-0000-0000-000000000000',
+  g10MathLESubstitution:                    'a4101003-0004-0000-0000-000000000000',
+  g10MathLEElimination:                     'a4101003-0005-0000-0000-000000000000',
+  g10MathLEApplications:                    'a4101003-0006-0000-0000-000000000000',
+  g10MathLEStandardForm:                    'a4101003-0007-0000-0000-000000000000',
+  g10MathLEChapterTest:                     'a4101003-0010-0000-0000-000000000000',
+
   // Grade 10 Math: Coordinate Geometry (Chapter 7)
   g10MathCoordinateGeometry:                'a3101007-0000-0000-0000-000000000001',
   g10MathCGDistanceFormula:                 'a4101007-0001-0000-0000-000000000000',

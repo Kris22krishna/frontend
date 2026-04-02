@@ -10,7 +10,10 @@ import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
+
+const NODE_ID = 'a4101003-0007-0000-0000-000000000000'; // Rewrite linear equations in the form ax + by + c = 0
 
 const StandardFormEquations = () => {
     const navigate = useNavigate();
@@ -25,7 +28,8 @@ const StandardFormEquations = () => {
     const [questions, setQuestions] = useState([]);
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = useRef([]);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
@@ -166,12 +170,8 @@ const StandardFormEquations = () => {
     ];
 
     useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && !sessionId) {
-            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            }).catch(err => console.error("Failed to start session", err));
-        }
+        startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+        v4Answers.current = [];
 
         let timer;
         if (!showReportModal) {
@@ -250,6 +250,25 @@ const StandardFormEquations = () => {
                 isCorrect: isRight
             }
         }));
+
+        // v4 Log
+        let t = accumulatedTime.current;
+        if (isTabActive.current) t += Date.now() - questionStartTime.current;
+        const entry = {
+            question_index: qIndex + 1,
+            answer_json: { selected: selectedOption },
+            is_correct: isRight ? 1.0 : 0.0,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: t
+        };
+        v4Answers.current[qIndex] = entry;
+        logAnswer({
+            questionIndex: entry.question_index,
+            answerJson: entry.answer_json,
+            isCorrect: entry.is_correct
+        });
+
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
     };
 
@@ -267,7 +286,13 @@ const StandardFormEquations = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            // v4 finish
+            const payload = v4Answers.current.filter(Boolean);
+            await finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: payload.length,
+                answersPayload: payload
+            });
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
@@ -360,7 +385,7 @@ const StandardFormEquations = () => {
             <footer className="junior-bottom-bar">
                 <div className="desktop-footer-controls">
                     <div className="bottom-left">
-                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>
+                        <button className="bg-red-50 text-red-500 px-6 py-2 rounded-xl border-2 border-red-100 font-bold hover:bg-red-100 transition-colors flex items-center gap-2" onClick={async () => { navigate(-1); }}>
                             Exit Practice
                         </button>
                     </div>
@@ -396,7 +421,7 @@ const StandardFormEquations = () => {
                 </div>
                 <div className="mobile-footer-controls" style={{ justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                     <div className="mobile-footer-left">
-                        <button className="bg-red-50 text-red-500 px-3 py-2 rounded-xl border-2 border-red-100 font-bold" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center' }} onClick={async () => { if (sessionId) await api.finishSession(sessionId).catch(console.error); navigate(-1); }}>
+                        <button className="bg-red-50 text-red-500 px-3 py-2 rounded-xl border-2 border-red-100 font-bold" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center' }} onClick={async () => { navigate(-1); }}>
                             Exit
                         </button>
                     </div>
