@@ -1,6 +1,7 @@
 export const SKILLS = [
     {
         id: 'distance-formula',
+        nodeId: 'a4101007-0001-0000-0000-000000000000',
         title: 'The Distance Formula',
         subtitle: 'Measuring Space',
         desc: 'Calculate the exact straight-line distance between any two points on the Cartesian plane.',
@@ -52,6 +53,7 @@ To find the distance $d$ between two points $A(x_1, y_1)$ and $B(x_2, y_2)$:
     },
     {
         id: 'section-formula',
+        nodeId: 'a4101007-0002-0000-0000-000000000000',
         title: 'The Section Formula',
         subtitle: 'Dividing the Line',
         desc: 'Find the exact coordinates of a point that divides a line segment in a specific ratio.',
@@ -103,6 +105,7 @@ Tip: The "cross-multiplication" trick helps you remember which ratio goes with w
     },
     {
         id: 'area-of-triangle',
+        nodeId: 'a4101007-0003-0000-0000-000000000000',
         title: 'Area of a Triangle',
         subtitle: 'Measuring Enclosed Space',
         desc: 'Calculate the area of a triangle given the coordinates of its three vertices.',
@@ -153,6 +156,7 @@ The absolute value lines $| ... |$ are required because area cannot be negative!
     },
     {
         id: 'collinear-points',
+        nodeId: 'a4101007-0004-0000-0000-000000000000',
         title: 'Collinear Points',
         subtitle: 'Proving Lines are Straight',
         desc: 'Prove that three or more points lie exactly on the same straight line.',
@@ -203,6 +207,7 @@ Method 2 (Area): Show that the Area of triangle $ABC = 0$.`,
     },
     {
         id: 'geometric-figures',
+        nodeId: 'a4101007-0005-0000-0000-000000000000',
         title: 'Verifying Figures',
         subtitle: 'Proving Shapes from Points',
         desc: 'Use distances and coordinates to prove that four points form a specific quadrilateral (like a square or rhombus).',

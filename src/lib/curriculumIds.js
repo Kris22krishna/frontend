@@ -109,6 +109,14 @@ export const NODE_IDS = {
   g10MathCirclesComplexApplications:        'a4101010-0007-0000-0000-000000000000',
   g10MathCirclesTerminologyQuiz:            'a4101010-0010-0000-0000-000000000000',
 
+  // Grade 10 Math: Coordinate Geometry (Chapter 7)
+  g10MathCoordinateGeometry:                'a3101007-0000-0000-0000-000000000001',
+  g10MathCGDistanceFormula:                 'a4101007-0001-0000-0000-000000000000',
+  g10MathCGSectionFormula:                  'a4101007-0002-0000-0000-000000000000',
+  g10MathCGAreaOfTriangle:                  'a4101007-0003-0000-0000-000000000000',
+  g10MathCGCollinearPoints:                 'a4101007-0004-0000-0000-000000000000',
+  g10MathCGGeometricFigures:                'a4101007-0005-0000-0000-000000000000',
+
   // ── 6. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
   
   // Grade 10 Science: Chemical Reactions
