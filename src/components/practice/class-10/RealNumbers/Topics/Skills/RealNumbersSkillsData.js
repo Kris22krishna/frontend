@@ -1,6 +1,7 @@
 export const SKILLS = [
     {
         id: 'understanding-real-numbers',
+        nodeId: 'a4101001-0001-0000-0000-000000000000',
         title: 'Understanding Real Numbers',
         subtitle: 'Number Classification',
         desc: 'Explore the classification of numbers into rational and irrational categories.',
@@ -49,6 +50,7 @@ export const SKILLS = [
     },
     {
         id: 'euclids-algorithm',
+        nodeId: 'a4101001-0002-0000-0000-000000000000',
         title: 'Euclid’s Division Algorithm',
         subtitle: 'Finding HCF',
         desc: 'Learn the systematic way to find the HCF of two large numbers.',
@@ -97,6 +99,7 @@ export const SKILLS = [
     },
     {
         id: 'prime-factorisation',
+        nodeId: 'a4101001-0003-0000-0000-000000000000',
         title: 'Prime Factorisation',
         subtitle: 'Building Blocks',
         desc: 'Break down composite numbers into their prime building blocks.',
@@ -144,6 +147,7 @@ export const SKILLS = [
     },
     {
         id: 'fundamental-theorem',
+        nodeId: 'a4101001-0004-0000-0000-000000000000',
         title: 'Fundamental Theorem of Arithmetic',
         subtitle: 'Unique Factorisation',
         desc: 'Understand why prime factorisation is unique for every number.',
@@ -191,6 +195,7 @@ export const SKILLS = [
     },
     {
         id: 'hcf-lcm-method',
+        nodeId: 'a4101001-0005-0000-0000-000000000000',
         title: 'HCF and LCM using Prime Factorisation',
         subtitle: 'The Power Method',
         desc: 'Calculate divisors and multiples using the power of prime factors.',
@@ -238,6 +243,7 @@ export const SKILLS = [
     },
     {
         id: 'applications-hcf-lcm',
+        nodeId: 'a4101001-0006-0000-0000-000000000000',
         title: 'Applications of HCF and LCM',
         subtitle: 'Real World Math',
         desc: 'Solve real-world timing and grouping problems using factors and multiples.',
@@ -285,6 +291,7 @@ export const SKILLS = [
     },
     {
         id: 'proving-irrational',
+        nodeId: 'a4101001-0007-0000-0000-000000000000',
         title: 'Proving Irrational Numbers',
         subtitle: 'The Contradiction Method',
         desc: 'Learn the method of contradiction for numbers like $\\sqrt{2}$ and $\\sqrt{3}$.',
@@ -332,6 +339,7 @@ export const SKILLS = [
     },
     {
         id: 'operations-irrational',
+        nodeId: 'a4101001-0008-0000-0000-000000000000',
         title: 'Operations on Irrational Numbers',
         subtitle: 'Mixing Types',
         desc: 'Combine rational and irrational numbers and predict the outcome.',

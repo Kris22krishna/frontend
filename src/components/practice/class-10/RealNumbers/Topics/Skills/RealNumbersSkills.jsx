@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SKILLS } from './RealNumbersSkillsData';
 import '../../RealNumbersBranch.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function RealNumbersSkills() {
     const navigate = useNavigate();
@@ -249,9 +250,24 @@ function PracticeView({ skill, onAssess }) {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [visited, setVisited] = useState({ 0: true });
 
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     const questions = skill.practice;
     const q = questions[current];
     const color = skill.color;
+
+    useEffect(() => {
+        if (!skill.nodeId) return;
+        startSession({ nodeId: skill.nodeId, sessionType: 'practice' });
+        answersPayload.current = [];
+        isFinishedRef.current = false;
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0)
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+        };
+    }, [skill.nodeId]);
 
     // Timer logic
     useEffect(() => {
@@ -267,27 +283,31 @@ function PracticeView({ skill, onAssess }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished || selected !== null) return; // Lock after selection in practice
 
+        const isCorrect = optIdx === q.correct;
         setSelected(optIdx);
         setResponses(prev => ({
             ...prev,
-            [current]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [current]: { selected: optIdx, isCorrect }
         }));
+        const answerData = { question_index: current + 1, answer_json: { selected: optIdx }, is_correct: isCorrect ? 1.0 : 0.0, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        answersPayload.current[current] = answerData;
+        await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 < questions.length) {
             const nextIdx = current + 1;
             setCurrent(nextIdx);
             setSelected(responses[nextIdx]?.selected ?? null);
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
+            isFinishedRef.current = true;
             setFinished(true);
+            const payload = answersPayload.current.filter(Boolean);
+            if (skill.nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: payload.length, answersPayload: payload });
         }
     };
 
@@ -306,6 +326,11 @@ function PracticeView({ skill, onAssess }) {
         setFinished(false);
         setTimeElapsed(0);
         setVisited({ 0: true });
+        if (skill.nodeId) {
+            startSession({ nodeId: skill.nodeId, sessionType: 'practice' });
+            answersPayload.current = [];
+            isFinishedRef.current = false;
+        }
     };
 
     if (finished) {
@@ -493,9 +518,18 @@ function AssessView({ skill, onComplete }) {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [visited, setVisited] = useState({ 0: true });
 
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+
     const questions = skill.assessment;
     const q = questions[qIdx];
     const color = 'var(--rn-indigo)';
+
+    useEffect(() => {
+        if (!skill.nodeId) return;
+        startSession({ nodeId: skill.nodeId, sessionType: 'assessment' });
+        answersPayload.current = new Array(questions.length).fill(null);
+    }, [skill.nodeId]);
 
     // Timer logic
     useEffect(() => {
@@ -511,16 +545,23 @@ function AssessView({ skill, onComplete }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished) return;
+        const isCorrect = optIdx === q.correct;
         setSelected(optIdx);
         setResponses(prev => ({
             ...prev,
-            [qIdx]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [qIdx]: { selected: optIdx, isCorrect }
         }));
+        const answerData = { question_index: qIdx + 1, answer_json: { selected: optIdx }, is_correct: isCorrect ? 1.0 : 0.0, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        answersPayload.current[qIdx] = answerData;
+        await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
+    };
+
+    const handleFinishAssess = async () => {
+        setFinished(true);
+        const payload = answersPayload.current.filter(Boolean);
+        if (skill.nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: payload.length, answersPayload: payload });
     };
 
     const handleNext = () => {
@@ -530,7 +571,7 @@ function AssessView({ skill, onComplete }) {
             setSelected(responses[nextIdx]?.selected ?? null);
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
-            setFinished(true);
+            handleFinishAssess();
         }
     };
 
@@ -808,7 +849,7 @@ function AssessView({ skill, onComplete }) {
                         </div>
 
                         <button
-                            onClick={() => setFinished(true)}
+                            onClick={handleFinishAssess}
                             style={{
                                 width: '100%', padding: '12px', borderRadius: '12px', border: 'none',
                                 background: '#EF4444', color: '#fff', fontWeight: 900, cursor: 'pointer',

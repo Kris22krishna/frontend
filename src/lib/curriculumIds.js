@@ -109,6 +109,18 @@ export const NODE_IDS = {
   g10MathCirclesComplexApplications:        'a4101010-0007-0000-0000-000000000000',
   g10MathCirclesTerminologyQuiz:            'a4101010-0010-0000-0000-000000000000',
   
+  // Grade 10 Math: Real Numbers (Chapter 1)
+  g10MathRealNumbers:                       'a3101001-0000-0000-0000-000000000001',
+  g10MathRNUnderstanding:                   'a4101001-0001-0000-0000-000000000000',
+  g10MathRNEuclidsAlgorithm:                'a4101001-0002-0000-0000-000000000000',
+  g10MathRNPrimeFactorisation:              'a4101001-0003-0000-0000-000000000000',
+  g10MathRNFundamentalTheorem:              'a4101001-0004-0000-0000-000000000000',
+  g10MathRNHCFLCMMethod:                    'a4101001-0005-0000-0000-000000000000',
+  g10MathRNApplicationsHCFLCM:             'a4101001-0006-0000-0000-000000000000',
+  g10MathRNProvingIrrational:               'a4101001-0007-0000-0000-000000000000',
+  g10MathRNOperationsIrrational:            'a4101001-0008-0000-0000-000000000000',
+  g10MathRNTerminologyQuiz:                 'a4101001-0010-0000-0000-000000000000',
+
   // Grade 10 Math: Polynomials (Chapter 2)
   g10MathPolynomials:                       'a3101002-0000-0000-0000-000000000001',
   g10MathPolyTypesDegrees:                  'a4101002-0001-0000-0000-000000000000',
