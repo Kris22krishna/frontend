@@ -63,7 +63,7 @@ function VisualCountQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, 
         rows.push(<div key={r} style={{ display: 'flex', gap: 3, padding: '4px 8px', background: `${color}08`, borderRadius: 10, marginBottom: 4 }}>{items}</div>);
     }
 
-    useEffect(() => { onHasInput(userAns.trim() !== ''); }, [userAns]);
+    useEffect(() => { onHasInput(userAns.trim() !== '', { userAns }); }, [userAns]);
     useEffect(() => {
         if (checkTrigger > 0 && !checkedRef.current && !result) {
             checkedRef.current = true;
@@ -98,7 +98,7 @@ function FillBlankQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, is
 
     useEffect(() => {
         const has = data.twoAnswers ? (ans1.trim() !== '' && ans2.trim() !== '') : (ans1.trim() !== '');
-        onHasInput(has);
+        onHasInput(has, { ans1, ans2 });
     }, [ans1, ans2]);
 
     useEffect(() => {
@@ -244,7 +244,7 @@ function PictureProblemQ({ data, color, onHasInput, onAnswer, checkTrigger, save
     const count = Math.min(data.sceneCount, 20);
     for (let i = 0; i < count; i++) sceneEmojis.push(<span key={i} style={{ fontSize: 24, animation: saved ? 'none' : `tmBounceIn 0.3s ${i * 0.05}s both` }}>{data.scene}</span>);
 
-    useEffect(() => { onHasInput(userAns.trim() !== ''); }, [userAns]);
+    useEffect(() => { onHasInput(userAns.trim() !== '', { userAns }); }, [userAns]);
     useEffect(() => {
         if (checkTrigger > 0 && !checkedRef.current && !result) {
             checkedRef.current = true;
