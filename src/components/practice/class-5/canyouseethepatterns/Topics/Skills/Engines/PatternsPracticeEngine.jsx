@@ -192,7 +192,7 @@ export default function PatternsPracticeEngine({ questionPool, sampleSize = 10, 
                             <img src={mascotImg} alt="Mascot" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
                         <div style={{ fontSize: 14, lineHeight: 1.6, color: '#0369a1' }}>
-                            <strong style={{ display: 'block', marginBottom: 4, color: '#0ea5e9', display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <strong style={{ marginBottom: 4, color: '#0ea5e9', display: 'flex', alignItems: 'center', gap: 6 }}>
                                 <Lightbulb size={16} /> Explanation
                             </strong>
                             <MathRenderer text={q.explanation} />

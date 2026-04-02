@@ -365,7 +365,6 @@ const DiagnosisTestRunner = () => {
                         correctCount += qScore;
                         if (qScore === 1) isCorrect = true;
                     }
-                    displayAnswer = "Table completed";
                 } catch (e) {
                     console.error("Error parsing table answer:", e);
                 }
@@ -387,7 +386,6 @@ const DiagnosisTestRunner = () => {
                         correctCount += qScore;
                         if (qScore === 1) isCorrect = true;
                     }
-                    displayAnswer = "Factor tree completed";
                 } catch (e) {
                     console.error("Error parsing factor tree answer:", e);
                 }

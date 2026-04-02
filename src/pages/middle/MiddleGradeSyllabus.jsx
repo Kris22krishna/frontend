@@ -313,6 +313,30 @@ const MiddleGradeSyllabus = () => {
                             path: '/middle/grade/7/fractions-and-decimals'
                         },
                         {
+                            skill_id: 'local-lines-angles-chapter',
+                            skill_name: 'Lines and Angles: Interactive Chapter',
+                            topic: 'Lines and Angles',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/lines-and-angles'
+                        },
+                        {
+                            skill_id: 'local-simple-equations-chapter',
+                            skill_name: 'Simple Equations: Interactive Chapter',
+                            topic: 'Simple Equations',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/simple-equations'
+                        },
+                        {
+                            skill_id: 'local-triangles-properties-chapter',
+                            skill_name: 'The Triangle and Its Properties: Interactive Chapter',
+                            topic: 'The Triangle and Its Properties',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/the-triangle-and-its-properties'
+                        },
+                        {
                             skill_id: 'local-use-percent',
                             skill_name: 'Use of Percentages',
                             topic: 'Comparing Quantities',
@@ -673,8 +697,8 @@ const MiddleGradeSyllabus = () => {
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (activeSubject === 'mathematics') {
             if (gradeNum === 6 && !["perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time"].some(t => topicName.includes(t.toLowerCase()))) return acc;
-            if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling") return acc;
-            if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling") && !skill.isLocal) return acc;
+            if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling" && topicName !== "lines and angles" && topicName !== "simple equations" && topicName !== "the triangle and its properties") return acc;
+            if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling" || topicName === "lines and angles" || topicName === "simple equations" || topicName === "the triangle and its properties") && !skill.isLocal) return acc;
         }
 
 

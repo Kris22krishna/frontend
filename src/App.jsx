@@ -576,6 +576,27 @@ import FractionsAndDecimalsSkills from './components/practice/class-7/FractionsA
 import FractionsAndDecimalsEasyTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsEasyTest';
 import FractionsAndDecimalsMediumTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsMediumTest';
 import FractionsAndDecimalsHardTest from './components/practice/class-7/FractionsAndDecimals/DeepDive/Tests/FractionsAndDecimalsHardTest';
+import LinesAndAnglesHub from './components/practice/class-7/LinesAndAngles/LinesAndAngles';
+import LinesAndAnglesIntro5W1H from './components/practice/class-7/LinesAndAngles/Topics/5W1H/LinesAndAnglesIntro5W1H';
+import LinesAndAnglesTerminology from './components/practice/class-7/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
+import LinesAndAnglesSkills from './components/practice/class-7/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
+import LinesAndAnglesEasyTest from './components/practice/class-7/LinesAndAngles/DeepDive/Tests/LinesAndAnglesEasyTest';
+import LinesAndAnglesMediumTest from './components/practice/class-7/LinesAndAngles/DeepDive/Tests/LinesAndAnglesMediumTest';
+import LinesAndAnglesHardTest from './components/practice/class-7/LinesAndAngles/DeepDive/Tests/LinesAndAnglesHardTest';
+import SimpleEquationsHub from './components/practice/class-7/SimpleEquations/SimpleEquations';
+import SimpleEquationsIntro5W1H from './components/practice/class-7/SimpleEquations/Topics/5W1H/SimpleEquationsIntro5W1H';
+import SimpleEquationsTerminology from './components/practice/class-7/SimpleEquations/Topics/Terminology/SimpleEquationsTerminology';
+import SimpleEquationsSkills from './components/practice/class-7/SimpleEquations/Topics/Skills/SimpleEquationsSkills';
+import SimpleEquationsEasyTest from './components/practice/class-7/SimpleEquations/DeepDive/Tests/SimpleEquationsEasyTest';
+import SimpleEquationsMediumTest from './components/practice/class-7/SimpleEquations/DeepDive/Tests/SimpleEquationsMediumTest';
+import SimpleEquationsHardTest from './components/practice/class-7/SimpleEquations/DeepDive/Tests/SimpleEquationsHardTest';
+import TheTriangleAndItsPropertiesHub from './components/practice/class-7/TheTriangleAndItsProperties/TheTriangleAndItsProperties';
+import TheTriangleAndItsPropertiesIntro5W1H from './components/practice/class-7/TheTriangleAndItsProperties/Topics/5W1H/TheTriangleAndItsPropertiesIntro5W1H';
+import TheTriangleAndItsPropertiesTerminology from './components/practice/class-7/TheTriangleAndItsProperties/Topics/Terminology/TheTriangleAndItsPropertiesTerminology';
+import TheTriangleAndItsPropertiesSkills from './components/practice/class-7/TheTriangleAndItsProperties/Topics/Skills/TheTriangleAndItsPropertiesSkills';
+import TheTriangleAndItsPropertiesEasyTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesEasyTest';
+import TheTriangleAndItsPropertiesMediumTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesMediumTest';
+import TheTriangleAndItsPropertiesHardTest from './components/practice/class-7/TheTriangleAndItsProperties/DeepDive/Tests/TheTriangleAndItsPropertiesHardTest';
 import DataHandlingHub from './components/practice/class-7/DataHandling/DataHandling';
 import DataHandlingIntro5W1H from './components/practice/class-7/DataHandling/Topics/5W1H/DataHandlingIntro5W1H';
 import DataHandlingTerminology from './components/practice/class-7/DataHandling/Topics/Terminology/DataHandlingTerminology';
@@ -774,6 +795,18 @@ import RelationsTerminology from './components/practice/class-12/Relations/Topic
 import RelationsSkills from './components/practice/class-12/Relations/Topics/Skills/RelationsSkills';
 import RelationsConnectomics from './components/practice/class-12/Relations/Topics/Connectomics/RelationsConnectomics';
 import RelationsExamEdge from './components/practice/class-12/Relations/Topics/ExamEdge/RelationsExamEdge';
+import Functions12Hub from './components/practice/class-12/Functions/Functions';
+import Functions12Intro5W1H from './components/practice/class-12/Functions/Topics/5W1H/FunctionsIntro5W1H';
+import Functions12Terminology from './components/practice/class-12/Functions/Topics/Terminology/FunctionsTerminology';
+import Functions12Skills from './components/practice/class-12/Functions/Topics/Skills/FunctionsSkills';
+import Functions12Connectomics from './components/practice/class-12/Functions/Topics/Connectomics/FunctionsConnectomics';
+import Functions12ExamEdge from './components/practice/class-12/Functions/Topics/ExamEdge/FunctionsExamEdge';
+import InverseTrigonometricFunctionsHub from './components/practice/class-12/InverseTrigonometricFunctions/InverseTrigonometricFunctions';
+import InverseTrigonometricFunctionsIntro5W1H from './components/practice/class-12/InverseTrigonometricFunctions/Topics/5W1H/InverseTrigonometricFunctionsIntro5W1H';
+import InverseTrigonometricFunctionsTerminology from './components/practice/class-12/InverseTrigonometricFunctions/Topics/Terminology/InverseTrigonometricFunctionsTerminology';
+import InverseTrigonometricFunctionsSkills from './components/practice/class-12/InverseTrigonometricFunctions/Topics/Skills/InverseTrigonometricFunctionsSkills';
+import InverseTrigonometricFunctionsConnectomics from './components/practice/class-12/InverseTrigonometricFunctions/Topics/Connectomics/InverseTrigonometricFunctionsConnectomics';
+import InverseTrigonometricFunctionsExamEdge from './components/practice/class-12/InverseTrigonometricFunctions/Topics/ExamEdge/InverseTrigonometricFunctionsExamEdge';
 
 // Class 11 - Biology
 import CellStructureTest from './components/practice/class-11/biology/CellStructureTest';
@@ -1389,6 +1422,22 @@ function App() {
           <Route path="senior/grade/12/relations/connectomics" element={<ProtectedRoute redirectTo="/login"><RelationsConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/12/relations/exam-edge" element={<ProtectedRoute redirectTo="/login"><RelationsExamEdge /></ProtectedRoute>} />
 
+          {/* Class 12: Functions */}
+          <Route path="senior/grade/12/functions" element={<ProtectedRoute redirectTo="/login"><Functions12Hub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/introduction" element={<ProtectedRoute redirectTo="/login"><Functions12Intro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/terminology" element={<ProtectedRoute redirectTo="/login"><Functions12Terminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/skills" element={<ProtectedRoute redirectTo="/login"><Functions12Skills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/connectomics" element={<ProtectedRoute redirectTo="/login"><Functions12Connectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><Functions12ExamEdge /></ProtectedRoute>} />
+
+          {/* Class 12: Inverse Trigonometric Functions */}
+          <Route path="senior/grade/12/inverse-trigonometric-functions" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsHub /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/introduction" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/terminology" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/skills" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/connectomics" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/inverse-trigonometric-functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><InverseTrigonometricFunctionsExamEdge /></ProtectedRoute>} />
+
           {/* Class 7: Integers */}
           <Route path="middle/grade/7/integers" element={<ProtectedRoute redirectTo="/login"><IntegersHub /></ProtectedRoute>} />
           <Route path="middle/grade/7/integers/introduction" element={<ProtectedRoute redirectTo="/login"><IntegersIntro5W1H /></ProtectedRoute>} />
@@ -1406,6 +1455,27 @@ function App() {
           <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsEasyTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsMediumTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/fractions-and-decimals/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><FractionsAndDecimalsHardTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/introduction" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/lines-and-angles/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><LinesAndAnglesHardTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/introduction" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/terminology" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/skills" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/simple-equations/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><SimpleEquationsHardTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesHub /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/introduction" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesIntro5W1H /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/terminology" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesTerminology /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/skills" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesSkills /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/easy" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesEasyTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/medium" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesMediumTest /></ProtectedRoute>} />
+          <Route path="middle/grade/7/the-triangle-and-its-properties/deep-dive/test/hard" element={<ProtectedRoute redirectTo="/login"><TheTriangleAndItsPropertiesHardTest /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling" element={<ProtectedRoute redirectTo="/login"><DataHandlingHub /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling/introduction" element={<ProtectedRoute redirectTo="/login"><DataHandlingIntro5W1H /></ProtectedRoute>} />
           <Route path="middle/grade/7/data-handling/terminology" element={<ProtectedRoute redirectTo="/login"><DataHandlingTerminology /></ProtectedRoute>} />
