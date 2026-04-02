@@ -440,10 +440,7 @@ const Addition = () => {
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            // Give a tiny delay so they see the option highlight green
-            setTimeout(() => {
-                handleNext();
-            }, 800);
+            handleNext();
         }
     };
 
@@ -765,7 +762,7 @@ const Addition = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>
