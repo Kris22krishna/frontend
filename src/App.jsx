@@ -906,6 +906,11 @@ const WordPopupController = ({ user }) => {
   const location = useLocation();
   const [showPopup, setShowPopup] = useState(false);
   const [wordData, setWordData] = useState(null);
+  const [dismissed, setDismissed] = useState(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return sessionStorage.getItem('wotd_dismissed') === today;
+  });
+  const [isEligible, setIsEligible] = useState(false);
 
   useEffect(() => {
     const rawUserType = user?.role || user?.user_type || sessionStorage.getItem('activeRole') || sessionStorage.getItem('userType') || '';
@@ -919,24 +924,75 @@ const WordPopupController = ({ user }) => {
     const gradeMatch = rawGrade.match(/\d+/);
     const grade = gradeMatch ? Number(gradeMatch[0]) : 0;
 
-    if (isStudent && grade >= 3 && grade <= 5) {
-      if (!wordData) {
-        wordApi.getTodayWord()
-          .then(data => {
-            if (data && data.word) {
-              setWordData(data);
-              setShowPopup(true);
-            }
-          })
-          .catch(err => console.error("Could not fetch today's word", err));
-      } else {
-        setShowPopup(true);
-      }
+    const eligible = isStudent && grade >= 3 && grade <= 5;
+    setIsEligible(eligible);
+
+    if (eligible && !wordData) {
+      wordApi.getTodayWord()
+        .then(data => {
+          if (data && data.word) {
+            setWordData(data);
+            if (!dismissed) setShowPopup(true);
+          }
+        })
+        .catch(err => console.error("Could not fetch today's word", err));
+    } else if (eligible && wordData && !dismissed && !showPopup) {
+      setShowPopup(true);
     }
   }, [user, location.pathname]);
 
-  if (!showPopup) return null;
-  return <WordPopup data={wordData} onClose={() => setShowPopup(false)} />;
+  const handleClose = () => {
+    setShowPopup(false);
+    setDismissed(true);
+    const today = new Date().toISOString().split('T')[0];
+    sessionStorage.setItem('wotd_dismissed', today);
+  };
+
+  const handleReopen = () => {
+    setShowPopup(true);
+  };
+
+  // Show popup
+  if (showPopup && wordData) {
+    return <WordPopup data={wordData} onClose={handleClose} />;
+  }
+
+  // Show floating button when eligible + dismissed + has data
+  if (isEligible && dismissed && wordData) {
+    return (
+      <button
+        onClick={handleReopen}
+        title="Word of the Day"
+        style={{
+          position: 'fixed',
+          top: '90px',
+          right: '20px',
+          zIndex: 9998,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '10px 18px',
+          background: 'linear-gradient(135deg, #6c5ce7, #a29bfe)',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '50px',
+          fontFamily: "'Nunito', sans-serif",
+          fontWeight: 700,
+          fontSize: '0.85rem',
+          cursor: 'pointer',
+          boxShadow: '0 4px 18px rgba(108, 92, 231, 0.4)',
+          transition: 'all 0.3s ease',
+          animation: 'wotd-btn-pulse 2s ease-in-out infinite',
+        }}
+        onMouseEnter={e => { e.target.style.transform = 'scale(1.08)'; e.target.style.boxShadow = '0 6px 24px rgba(108, 92, 231, 0.5)'; }}
+        onMouseLeave={e => { e.target.style.transform = 'scale(1)'; e.target.style.boxShadow = '0 4px 18px rgba(108, 92, 231, 0.4)'; }}
+      >
+        ⭐ Word
+      </button>
+    );
+  }
+
+  return null;
 };
 
 function App() {
