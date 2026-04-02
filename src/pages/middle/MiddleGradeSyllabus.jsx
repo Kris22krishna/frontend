@@ -273,6 +273,14 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/prime-time'
+                        },
+                        {
+                            skill_id: 'local-mensuration-6-chapter',
+                            skill_name: 'Perimeter and Area: Interactive Chapter',
+                            topic: 'Perimeter and Area',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/mensuration-6'
                         }
                     ];
                 }
