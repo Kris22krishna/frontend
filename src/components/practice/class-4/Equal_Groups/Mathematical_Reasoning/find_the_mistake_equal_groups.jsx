@@ -92,6 +92,7 @@ const FindTheMistakeEqualGroups = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         const questions = [];
+        const seenProblems = new Set();
 
         // Define potential mistakes
         // 1. Added instead of Multiplied
@@ -181,8 +182,11 @@ const FindTheMistakeEqualGroups = () => {
             }
 
             // Shuffle options if not already set (mostly they are set above for specific distractors)
-            q.shuffledOptions = q.shuffledOptions.sort(() => Math.random() - 0.5);
-            questions.push(q);
+            if (!seenProblems.has(q.problemStr)) {
+                seenProblems.add(q.problemStr);
+                q.shuffledOptions = q.shuffledOptions.sort(() => Math.random() - 0.5);
+                questions.push(q);
+            }
         }
 
         setSessionQuestions(questions);
