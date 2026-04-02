@@ -1,4 +1,4 @@
-import { getRandomInt, shuffleArray, formatLinearExpression } from '../mathUtils.mjs';
+import { getRandomInt, shuffleArray, ensureUniqueOptions, formatLinearExpression } from '../mathUtils.mjs';
 
 // --- Number System ---
 
@@ -38,8 +38,7 @@ export const generateRealNumbers = () => {
         question = `Simplify: $(${base}^{${m}})^{${n}}$`;
         answer = `$${base}^{${m * n}}$`;
 
-        const options = shuffleArray([
-            { value: answer, label: answer },
+        const options = ensureUniqueOptions({ value: answer, label: answer }, [
             { value: `$${base}^{${m + n}}$`, label: `$${base}^{${m + n}}$` },
             { value: `$${base}^{${Math.abs(m - n)}}$`, label: `$${base}^{${Math.abs(m - n)}}$` },
             { value: `$${base * 2}^{${m}}$`, label: `$${base * 2}^{${m}}$` }

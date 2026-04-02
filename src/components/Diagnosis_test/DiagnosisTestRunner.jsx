@@ -360,6 +360,55 @@ const DiagnosisTestRunner = () => {
         }
     };
 
+    const normalizeMath = (str) => {
+        if (!str) return "";
+        return String(str)
+            .replace(/\$/g, "") // Remove LaTeX delimiters
+            .replace(/\\ /g, "") // Remove escaped spaces
+            .replace(/\s+/g, "") // Remove all whitespace
+            .replace(/\{/g, "") // Remove LaTeX braces
+            .replace(/\}/g, "") // Remove LaTeX braces
+            .replace(/\\cdot/g, "*") // Normalize multiplication dot
+            .replace(/\\times/g, "*")
+            .toLowerCase();
+    };
+
+    const isEquivalentFractions = (val1, val2) => {
+        const parseFraction = (s) => {
+            const normalized = normalizeMath(s);
+            if (!normalized.includes("/")) {
+                if (normalized.includes("^")) {
+                    const parts = normalized.split("^");
+                    return { n: Math.pow(parseFloat(parts[0]), parseFloat(parts[1])), d: 1 };
+                }
+                return { n: parseFloat(normalized), d: 1 };
+            }
+            const parts = normalized.split("/");
+            
+            const parsePart = (p) => {
+                if (p.includes("^")) {
+                    const [b, e] = p.split("^").map(parseFloat);
+                    return Math.pow(b, e);
+                }
+                return parseFloat(p);
+            };
+            
+            return { n: parsePart(parts[0]), d: parsePart(parts[1]) };
+        };
+
+        try {
+            const f1 = parseFraction(val1);
+            const f2 = parseFraction(val2);
+
+            if (isNaN(f1.n) || isNaN(f1.d) || isNaN(f2.n) || isNaN(f2.d)) return false;
+            if (f1.d === 0 || f2.d === 0) return false;
+            
+            return Math.abs((f1.n / f1.d) - (f2.n / f2.d)) < 0.0001;
+        } catch (e) {
+            return false;
+        }
+    };
+
     const calculateDetailedResults = () => {
         let correctCount = 0;
         let totalCorrect = 0;
@@ -429,10 +478,25 @@ const DiagnosisTestRunner = () => {
                     console.error("Error parsing factor tree answer:", e);
                 }
             } else {
-                if (String(userAnswer || '').trim().toLowerCase() === String(q.answer || '').trim().toLowerCase()) {
+                const normUser = normalizeMath(userAnswer);
+                const normCorrect = normalizeMath(q.answer);
+
+                if (normUser === normCorrect) {
                     isCorrect = true;
                     qScore = 1;
                     correctCount++;
+                } else if (isEquivalentFractions(userAnswer, q.answer)) {
+                    isCorrect = true;
+                    qScore = 1;
+                    correctCount++;
+                } else if (q.type === 'mcq') {
+                    // Fallback for duplicates: if selected option text matches correct answer text
+                    const selectedOption = q.options?.find(opt => opt.value === userAnswer);
+                    if (selectedOption && normalizeMath(selectedOption.label) === normCorrect) {
+                        isCorrect = true;
+                        qScore = 1;
+                        correctCount++;
+                    }
                 }
             }
 
