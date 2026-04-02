@@ -133,7 +133,7 @@ const FindTheMistakeEqualGroups = () => {
                 q = {
                     text: "Check this multiplication work:",
                     problemStr: `Solve: $${n1} \\times ${n2} = ?$`,
-                    studentWorkStr: `${n1} \\times ${n2} = ${wrong}`,
+                    studentWorkStr: `${n1} × ${n2} = ${wrong}`,
                     correctAnswer: "They made a calculation error.",
                     solution: `The operation is correct, but the answer is wrong. ${n1} $\\times$ ${n2} is ${actual}, not ${wrong}.`,
                     type: 'calc_error',
@@ -166,11 +166,11 @@ const FindTheMistakeEqualGroups = () => {
                 q = {
                     text: "Identify the error:",
                     problemStr: `Usually, we have <strong>${n1} groups</strong> of <strong>${n2}</strong>. How many in all?`,
-                    studentWorkStr: `${n1} \\div ${n2} = ?`,
+                    studentWorkStr: `${n1} ÷ ${n2} = ?`,
                     correctAnswer: "They picked the wrong operation (Division).",
                     solution: `To find the total of groups, we multiply, not divide.`,
                     type: 'wrong_op',
-                    visualData: { problemStr: `Total of ${n1} groups of ${n2}`, studentWorkStr: `${n1} \\div ${n2}` }
+                    visualData: { problemStr: `Total of ${n1} groups of ${n2}`, studentWorkStr: `${n1} ÷ ${n2}` }
                 };
                 q.shuffledOptions = [
                     "They picked the wrong operation (Division).",
