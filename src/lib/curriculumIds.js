@@ -309,6 +309,14 @@ export const NODE_IDS = {
   g9MathCGPlottingPoints:                  'a4091003-0003-0000-0000-000000000000',
   g9MathCGDistanceReflections:             'a4091003-0004-0000-0000-000000000000',
   g9MathCGTerminologyQuiz:                 'a4091003-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Polynomials (Chapter 2)
+  g9MathPolynomials:                       'a3091002-0000-0000-0000-000000000001',
+  g9MathPolyIdentifying:                   'a4091002-0001-0000-0000-000000000000',
+  g9MathPolyZeroes:                        'a4091002-0002-0000-0000-000000000000',
+  g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
+  g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
+  g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
 };
 
 /**
@@ -408,4 +416,12 @@ export const SLUG_TO_NODE_ID = {
   'g8-science-eis-measurements':       NODE_IDS.g8ScienceInvestigativeMeasurements,
   'g8-science-eis-analysis':           NODE_IDS.g8ScienceInvestigativeAnalysis,
   'g8-science-eis-terminology':         NODE_IDS.g8ScienceInvestigativeTerminologyQuiz,
+
+  // Grade 9 Math: Polynomials
+  'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
+  'g9-math-poly-identifying':           NODE_IDS.g9MathPolyIdentifying,
+  'g9-math-poly-zeroes':                NODE_IDS.g9MathPolyZeroes,
+  'g9-math-poly-factorisation':          NODE_IDS.g9MathPolyFactorisation,
+  'g9-math-poly-identities':             NODE_IDS.g9MathPolyIdentities,
+  'g9-math-poly-terminology':           NODE_IDS.g9MathPolyTerminologyQuiz,
 };

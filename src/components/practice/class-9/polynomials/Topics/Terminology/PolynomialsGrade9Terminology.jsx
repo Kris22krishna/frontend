@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../polynomials_grade_9.css';
 import { LatexText } from '../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 // ─── TERMS DATA ──────────────────────────────────────────────────────────────
 const TERMS = [
+
     {
         name: 'Polynomial',
         icon: '🧊',
@@ -139,11 +142,17 @@ const QUIZ_QUESTIONS = [
 
 // ─── QUIZ ENGINE ─────────────────────────────────────────────────────────────
 function QuizEngine({ onBack }) {
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
+    const [userAnswers, setUserAnswers] = useState({});
+
+    useEffect(() => {
+        startSession({ nodeId: NODE_IDS.g9MathPolyTerminologyQuiz, sessionType: 'practice' });
+    }, [startSession]);
 
     const q = QUIZ_QUESTIONS[current];
     const color = '#0f4c81';
@@ -151,14 +160,44 @@ function QuizEngine({ onBack }) {
 
     const handleSelect = (idx) => {
         if (answered) return;
+        const isCorrect = idx === q.ans;
         setSelected(idx);
         setAnswered(true);
-        if (idx === q.ans) setScore((s) => s + 1);
+        if (isCorrect) setScore((s) => s + 1);
+
+        const newUserAnswers = {
+            ...userAnswers,
+            [current]: { selectedOption: q.opts[idx], isCorrect }
+        };
+        setUserAnswers(newUserAnswers);
+
+        logAnswer({
+            question_index: current,
+            answer_json: {
+                question_text: q.q,
+                selected_option: q.opts[idx],
+                correct_answer: q.opts[q.ans],
+                difficulty: 'Easy'
+            },
+            is_correct: isCorrect ? 1 : 0
+        });
     };
 
     const handleNext = () => {
-        if (current + 1 >= QUIZ_QUESTIONS.length) setFinished(true);
+        if (current + 1 >= QUIZ_QUESTIONS.length) {
+            finishSession({
+                totalQuestions: QUIZ_QUESTIONS.length,
+                questionsAnswered: Object.keys(userAnswers).length,
+                answersPayload: userAnswers
+            });
+            setFinished(true);
+        }
         else { setCurrent((c) => c + 1); setSelected(null); setAnswered(false); }
+    };
+
+    const handleRetry = () => {
+        setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); setUserAnswers({});
+        startSession({ nodeId: NODE_IDS.g9MathPolyTerminologyQuiz, sessionType: 'practice' });
     };
 
     if (finished) {
@@ -182,7 +221,7 @@ function QuizEngine({ onBack }) {
                     {pct >= 75 ? 'Great understanding of Polynomials vocabulary!' : 'Review the terms and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className="poly-btn-primary" onClick={() => { setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
+                    <button className="poly-btn-primary" onClick={handleRetry}>
                         Try Again
                     </button>
                     <button className="poly-btn-secondary" onClick={onBack}>Return to Terminology</button>
