@@ -117,6 +117,17 @@ export const NODE_IDS = {
   g10MathCGCollinearPoints:                 'a4101007-0004-0000-0000-000000000000',
   g10MathCGGeometricFigures:                'a4101007-0005-0000-0000-000000000000',
 
+  // Grade 10 Math: Introduction to Trigonometry (Chapter 8)
+  g10MathTrigonometry:                      'a3101008-0000-0000-0000-000000000001',
+  g10MathTrigRealLife:                      'a4101008-0001-0000-0000-000000000000',
+  g10MathTrigRatios:                        'a4101008-0002-0000-0000-000000000000',
+  g10MathTrigTriangleSides:                 'a4101008-0003-0000-0000-000000000000',
+  g10MathTrigStandardAngles:                'a4101008-0004-0000-0000-000000000000',
+  g10MathTrigEvaluatingValues:              'a4101008-0005-0000-0000-000000000000',
+  g10MathTrigIdentities:                    'a4101008-0006-0000-0000-000000000000',
+  g10MathTrigSimplifyProve:                 'a4101008-0007-0000-0000-000000000000',
+  g10MathTrigAngleProblems:                 'a4101008-0008-0000-0000-000000000000',
+
   // ── 6. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
   
   // Grade 10 Science: Chemical Reactions
