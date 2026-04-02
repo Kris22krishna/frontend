@@ -292,6 +292,16 @@ export const NODE_IDS = {
   g8ScienceInvestigativeAnalysis:          'b4081001-0003-0000-0000-000000000000',
   g8ScienceInvestigativeTerminologyQuiz:   'b4081001-0010-0000-0000-000000000000',
 
+  // Grade 9 Math: Number System (Chapter 1)
+  g9MathNumberSystem:                      'a3091001-0000-0000-0000-000000000001',
+  g9MathNSClassification:                  'a4091001-0001-0000-0000-000000000000',
+  g9MathNSDecimalExpansion:                'a4091001-0002-0000-0000-000000000000',
+  g9MathNSSurds:                           'a4091001-0003-0000-0000-000000000000',
+  g9MathNSRationalisation:                 'a4091001-0004-0000-0000-000000000000',
+  g9MathNSLawsOfExponents:                 'a4091001-0005-0000-0000-000000000000',
+  g9MathNSChapterAssessment:               'a4091001-0006-0000-0000-000000000000',
+  g9MathNSTerminologyQuiz:                 'a4091001-0010-0000-0000-000000000000',
+
   // Grade 9 Math: Coordinate Geometry (Chapter 3)
   g9MathCoordinateGeometry:                'a3091003-0000-0000-0000-000000000001',
   g9MathCGIdentifyQuadrants:               'a4091003-0001-0000-0000-000000000000',

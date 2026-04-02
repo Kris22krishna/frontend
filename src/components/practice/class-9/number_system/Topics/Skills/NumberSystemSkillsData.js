@@ -130,6 +130,7 @@ const chapterAssessment = [
 export const SKILLS = [
     {
         id: 'classification',
+        nodeId: 'a4091001-0001-0000-0000-000000000000',
         title: 'Real Number Classification',
         subtitle: 'Skill 1',
         icon: '🔬',
