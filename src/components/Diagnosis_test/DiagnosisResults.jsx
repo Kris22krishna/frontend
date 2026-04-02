@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, XCircle, Clock, RotateCcw, Home, GraduationCap, ArrowRight, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, RotateCcw, Home, GraduationCap, ArrowRight, ChevronDown, ChevronUp, X, Target } from 'lucide-react';
 import MathRenderer from '../MathRenderer';
 import './DiagnosisTest.css';
 import PersonalizedPlan from './personalized learning plan/PersonalizedPlan';
@@ -9,7 +9,8 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
     const navigate = useNavigate();
     const [isAnalysisExpanded, setIsAnalysisExpanded] = useState(false);
     const { score, total, timeTaken, questionResults } = results;
-    const percentage = Math.round((score / total) * 100);
+    const rawPercentage = (score / total) * 100;
+    const percentage = rawPercentage > 0 && rawPercentage < 1 ? 1 : Math.round(rawPercentage);
     const wrongCount = total - score;
 
     const formatTime = (seconds) => {
@@ -25,10 +26,17 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
         return "Keep practicing! You can do better next time.";
     };
 
+    const renderAnswer = (ans) => {
+        if (typeof ans === 'string' && (ans.startsWith('/assets/') || ans.includes('.jpg') || ans.includes('.png'))) {
+            return <img src={ans} alt="Answer" className="max-h-16 object-contain inline-block" />;
+        }
+        return <MathRenderer text={typeof ans === 'object' ? JSON.stringify(ans) : String(ans)} />;
+    };
+
     return (
         <div className="diagnosis-runner bg-slate-50 min-h-screen pb-20">
             {/* Global Navbar */}
-            <header className="cbt-header shadow-md px-3 sm:px-10 h-auto sm:h-20 py-2 sm:py-0 flex-wrap gap-2 mb-0">
+            <header className="cbt-header shadow-md px-3 sm:px-10 h-auto sm:h-20 py-2 sm:py-0 flex items-center justify-between gap-2 mb-0">
                 <div className="flex items-center gap-2 sm:gap-4">
                     <span className="font-extrabold text-sm sm:text-2xl bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
                         Skill Discovery Results • Grade {grade}
@@ -40,8 +48,7 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                             className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-slate-900 text-white hover:bg-slate-800 rounded-lg sm:rounded-xl font-bold transition-all shadow-lg active:scale-95 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base"
                             onClick={onClose}
                         >
-                            <X size={14} className="sm:hidden" />
-                            <X size={18} className="hidden sm:block" />
+                            <X size={18} />
                             Close Report
                         </button>
                     ) : (
@@ -50,16 +57,14 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                                 className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg sm:rounded-xl font-bold transition-all flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base"
                                 onClick={() => navigate('/')}
                             >
-                                <Home size={14} className="sm:hidden" />
-                                <Home size={18} className="hidden sm:block" />
+                                <Home size={18} />
                                 Back Home
                             </button>
                             <button
-                                className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-indigo-600 text-white rounded-lg sm:rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base"
+                                className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-indigo-600 text-white rounded-lg sm:rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg active:scale-95 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base"
                                 onClick={onRetake}
                             >
-                                <RotateCcw size={14} className="sm:hidden" />
-                                <RotateCcw size={18} className="hidden sm:block" />
+                                <RotateCcw size={18} />
                                 Retake
                             </button>
                         </>
@@ -67,163 +72,147 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                 </div>
             </header>
 
-            {/* Header / Hero Section */}
-            <div className="bg-white border-b border-slate-200 pt-8 sm:pt-16 pb-6 sm:pb-12 px-4 sm:px-6">
-                <div className="max-w-6xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-indigo-50 text-indigo-700 rounded-full font-bold text-xs sm:text-sm mb-4 sm:mb-6 animate-bounce">
-                        <GraduationCap size={16} className="sm:hidden" />
-                        <GraduationCap size={18} className="hidden sm:block" />
-                        Grade {grade} Skill Discovery
-                    </div>
-                    <h1 className="text-2xl sm:text-5xl font-black text-slate-900 mb-2 sm:mb-4 tracking-tight">
-                        Skill Discovery Result
-                    </h1>
-                    <p className="text-sm sm:text-xl text-slate-500 font-medium max-w-2xl mx-auto">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10">
+                {/* Score Summary */}
+                <div className="text-center mb-10">
+                    <h1 className="text-4xl font-black text-slate-900 mb-2">Final Summary</h1>
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">
                         {getPerformanceMessage(percentage)}
                     </p>
                 </div>
-            </div>
 
-            <div className="max-w-6xl mx-auto px-3 sm:px-6 -mt-4 sm:-mt-8">
-                {/* Summary Dashboard */}
-                <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-5 gap-2 sm:gap-4 mb-6 sm:mb-12">
-                    {/* Main Score Card */}
-                    <div className="col-span-2 sm:col-span-1 md:col-span-1 bg-white p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center justify-center relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-16 sm:w-24 h-16 sm:h-24 bg-indigo-50 rounded-full -mr-8 sm:-mr-12 -mt-8 sm:-mt-12 transition-all group-hover:scale-110" />
-                        <div className="relative">
-                            <div className="text-2xl sm:text-4xl font-black text-indigo-600 mb-1">{percentage}%</div>
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Accuracy</div>
+                {/* 5 Card Stats Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
+                    {/* Correct */}
+                    <div className="bg-white p-6 rounded-[2rem] border-b-8 border-green-500 shadow-xl shadow-green-100 flex flex-col items-center justify-center text-center">
+                        <div className="w-12 h-12 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mb-3">
+                            <CheckCircle2 size={28} />
                         </div>
+                        <div className="text-2xl font-black text-slate-900 leading-none mb-1">
+                            {score % 1 === 0 ? score : score.toFixed(1)}
+                        </div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Correct</div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="bg-white p-3 sm:p-6 rounded-xl sm:rounded-[2rem] shadow-lg shadow-slate-200/50 border border-slate-100 flex items-center gap-3 sm:gap-4">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 bg-green-50 rounded-lg sm:rounded-xl flex items-center justify-center text-green-500 shrink-0">
-                            <CheckCircle2 size={18} className="sm:hidden" />
-                            <CheckCircle2 size={24} className="hidden sm:block" />
+                    {/* Wrong */}
+                    <div className="bg-white p-6 rounded-[2rem] border-b-8 border-red-500 shadow-xl shadow-red-100 flex flex-col items-center justify-center text-center">
+                        <div className="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mb-3">
+                            <XCircle size={28} />
                         </div>
-                        <div>
-                            <div className="text-lg sm:text-2xl font-black text-slate-900">{results.totalCorrect || 0}</div>
-                            <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Correct</div>
+                        <div className="text-2xl font-black text-slate-900 leading-none mb-1">
+                            {results.totalWrong || (total - Math.ceil(score))}
                         </div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Wrong</div>
                     </div>
 
-                    <div className="bg-white p-3 sm:p-6 rounded-xl sm:rounded-[2rem] shadow-lg shadow-slate-200/50 border border-slate-100 flex items-center gap-3 sm:gap-4">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 bg-red-50 rounded-lg sm:rounded-xl flex items-center justify-center text-red-500 shrink-0">
-                            <XCircle size={18} className="sm:hidden" />
-                            <XCircle size={24} className="hidden sm:block" />
+                    {/* Partial */}
+                    <div className="bg-white p-6 rounded-[2rem] border-b-8 border-amber-500 shadow-xl shadow-amber-100 flex flex-col items-center justify-center text-center">
+                        <div className="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mb-3">
+                            <Clock size={28} className="rotate-45" />
                         </div>
-                        <div>
-                            <div className="text-lg sm:text-2xl font-black text-slate-900">{results.totalWrong || 0}</div>
-                            <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Wrong</div>
+                        <div className="text-2xl font-black text-slate-900 leading-none mb-1">
+                            {results.totalPartial || 0}
                         </div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Partial</div>
                     </div>
 
-                    <div className="bg-white p-3 sm:p-6 rounded-xl sm:rounded-[2rem] shadow-lg shadow-slate-200/50 border border-slate-100 flex items-center gap-3 sm:gap-4">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 bg-orange-50 rounded-lg sm:rounded-xl flex items-center justify-center text-orange-500 shrink-0">
-                            <Clock size={18} className="rotate-45 sm:hidden" />
-                            <Clock size={24} className="rotate-45 hidden sm:block" />
+                    {/* Accuracy */}
+                    <div className="bg-white p-6 rounded-[2rem] border-b-8 border-indigo-500 shadow-xl shadow-indigo-100 flex flex-col items-center justify-center text-center">
+                        <div className="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center mb-3">
+                            <Target size={28} />
                         </div>
-                        <div>
-                            <div className="text-lg sm:text-2xl font-black text-slate-900">{results.totalPartial || 0}</div>
-                            <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Partial</div>
+                        <div className="text-2xl font-black text-slate-900 leading-none mb-1">
+                            {percentage}%
                         </div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Accuracy</div>
                     </div>
 
-                    <div className="bg-white p-3 sm:p-6 rounded-xl sm:rounded-[2rem] shadow-lg shadow-slate-200/50 border border-slate-100 flex items-center gap-3 sm:gap-4">
-                        <div className="w-9 h-9 sm:w-12 sm:h-12 bg-blue-50 rounded-lg sm:rounded-xl flex items-center justify-center text-blue-500 shrink-0">
-                            <Clock size={18} className="sm:hidden" />
-                            <Clock size={24} className="hidden sm:block" />
+                    {/* Time */}
+                    <div className="bg-white p-6 rounded-[2rem] border-b-8 border-violet-500 shadow-xl shadow-violet-100 flex flex-col items-center justify-center text-center col-span-2 md:col-span-1">
+                        <div className="w-12 h-12 bg-violet-50 text-violet-500 rounded-2xl flex items-center justify-center mb-3">
+                            <Clock size={28} />
                         </div>
-                        <div>
-                            <div className="text-lg sm:text-2xl font-black text-slate-900">{formatTime(timeTaken)}</div>
-                            <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-widest">Time</div>
+                        <div className="text-2xl font-black text-slate-900 leading-none mb-1">
+                            {formatTime(timeTaken)}
                         </div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Time Taken</div>
                     </div>
                 </div>
 
-                {/* Question Breakdown Section */}
-                <div className="mb-6 sm:mb-12">
-                    <button 
+                {/* Question Analysis */}
+                <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 mb-12">
+                    <button
+                        className="w-full flex items-center justify-between mb-10 border-b border-slate-100 pb-6 group"
                         onClick={() => setIsAnalysisExpanded(!isAnalysisExpanded)}
-                        className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 bg-white rounded-2xl sm:rounded-[2rem] shadow-sm border border-slate-200 hover:border-indigo-300 transition-colors group gap-4 sm:gap-0"
                     >
-                        <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight text-left">Question Analysis</h2>
-                        <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-                            <div className="flex gap-4">
-                                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-500">
-                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500" /> Correct
-                                </div>
-                                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-500">
-                                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500" /> Incorrect
-                                </div>
-                            </div>
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors shrink-0">
-                                {isAnalysisExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                            </div>
+                        <div className="text-left">
+                            <h2 className="text-3xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors">Question Analysis</h2>
+                            <p className="text-slate-400 font-bold uppercase tracking-widest text-xs mt-1">Review your performance by topic</p>
+                        </div>
+                        <div className={`p-3 rounded-full bg-slate-50 text-slate-400 transition-all ${isAnalysisExpanded ? 'rotate-180 bg-indigo-50 text-indigo-600' : ''}`}>
+                            <ChevronDown size={28} />
                         </div>
                     </button>
 
                     {isAnalysisExpanded && (
-                    <div className="grid grid-cols-1 gap-3 sm:gap-6 mt-6 animate-in fade-in slide-in-from-top-4 duration-300">
+                        <div className="grid grid-cols-1 gap-6">
                         {questionResults.map((q, idx) => (
-                            <div
-                                key={idx}
-                                className={`p-4 sm:p-8 bg-white rounded-xl sm:rounded-[2rem] border-l-[6px] sm:border-l-[12px] shadow-sm hover:shadow-md transition-all ${q.isCorrect ? 'border-l-green-500' : 'border-l-red-500'}`}
-                            >
-                                <div className="flex flex-col md:flex-row gap-4 sm:gap-8">
+                            <div key={idx} className={`p-6 sm:p-8 rounded-[2rem] border-l-[12px] bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all duration-300 ${q.isCorrect ? 'border-l-green-500' : q.marks > 0 ? 'border-l-amber-500' : 'border-l-red-500'}`}>
+                                <div className="flex flex-col md:flex-row gap-8">
                                     <div className="flex-1">
-                                        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 flex-wrap">
-                                            <span className="w-7 h-7 sm:w-10 sm:h-10 bg-slate-100 rounded-lg sm:rounded-xl flex items-center justify-center font-black text-slate-600 text-xs sm:text-base">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <span className="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black text-slate-600 border border-slate-100 shadow-sm">
                                                 {idx + 1}
                                             </span>
-                                            <span className="px-2 sm:px-3 py-0.5 sm:py-1 bg-slate-50 text-slate-500 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-widest">
-                                                {q.topic || 'General'}
+                                            <span className="px-4 py-1.5 bg-white text-indigo-600 rounded-lg text-xs font-black uppercase tracking-widest border border-indigo-50">
+                                                {q.topic}
                                             </span>
-                                            {q.status === 'correct' ? (
-                                                <span className="flex items-center gap-1 text-green-600 font-bold text-[10px] sm:text-sm bg-green-50 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full">
-                                                    <CheckCircle2 size={12} /> Correct
+                                            {q.isCorrect ? (
+                                                <span className="flex items-center gap-1.5 text-green-600 font-bold text-sm bg-green-50 px-4 py-1 rounded-full">
+                                                    <CheckCircle2 size={16} /> Correct
                                                 </span>
-                                            ) : q.status === 'partial' ? (
-                                                <span className="flex items-center gap-1 text-orange-600 font-bold text-[10px] sm:text-sm bg-orange-50 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full">
-                                                    <Clock size={12} className="rotate-45" /> Partial
+                                            ) : q.marks > 0 ? (
+                                                <span className="flex items-center gap-1.5 text-amber-600 font-bold text-sm bg-amber-50 px-4 py-1 rounded-full">
+                                                    <Clock size={16} className="rotate-45" /> Partial ({q.marks.toFixed(1)})
                                                 </span>
                                             ) : (
-                                                <span className="flex items-center gap-1 text-red-600 font-bold text-[10px] sm:text-sm bg-red-50 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full">
-                                                    <XCircle size={12} /> Incorrect
+                                                <span className="flex items-center gap-1.5 text-red-600 font-bold text-sm bg-red-50 px-4 py-1 rounded-full">
+                                                    <XCircle size={16} /> Incorrect
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="text-base sm:text-xl font-bold text-slate-800 leading-snug mb-3 sm:mb-6">
+                                        
+                                        <div className="text-xl font-bold text-slate-800 leading-snug mb-8">
                                             <MathRenderer text={q.question} />
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4">
-                                            <div className="p-3 sm:p-5 bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-100">
-                                                <div className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 sm:mb-2">Your Answer</div>
-                                                <div className={`text-sm sm:text-lg font-bold ${q.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
-                                                    <MathRenderer text={typeof q.userAnswer === 'object' ? 'Completed' : q.userAnswer || 'Not Answered'} />
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Your Answer</div>
+                                                <div className={`text-lg font-bold ${q.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
+                                                    {renderAnswer(q.userAnswer || 'Not Answered')}
                                                 </div>
                                             </div>
                                             {!q.isCorrect && (
-                                                <div className="p-3 sm:p-5 bg-green-50/50 rounded-xl sm:rounded-2xl border border-green-100">
-                                                    <div className="text-sm sm:text-lg font-bold text-green-700">
-                                                        <MathRenderer text={typeof q.correctAnswer === 'string' ? q.correctAnswer : JSON.stringify(q.correctAnswer)} />
+                                                <div className="p-5 bg-green-50/30 rounded-2xl border border-green-100 shadow-sm">
+                                                    <div className="text-[10px] font-black text-green-600 uppercase tracking-widest mb-2">Correct Answer</div>
+                                                    <div className="text-lg font-bold text-green-700">
+                                                        {renderAnswer(q.correctAnswer)}
                                                     </div>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
 
-                                    {q.image && (
-                                        <div className="w-full md:w-64 h-48 bg-slate-50 rounded-2xl flex items-center justify-center p-4 border border-slate-100 shrink-0">
-                                            {q.image.includes('<svg') ? (
+                                    {(q.img || q.image) && (
+                                        <div className="w-full md:w-64 h-auto min-h-[12rem] bg-white rounded-3xl flex items-center justify-center p-6 border border-slate-100 shadow-inner shrink-0 overflow-hidden">
+                                            {(q.img || q.image).trim().startsWith('<') ? (
                                                 <div
-                                                    className="w-full h-full flex items-center justify-center overflow-hidden"
-                                                    dangerouslySetInnerHTML={{ __html: q.image }}
+                                                    className="w-full h-full flex items-center justify-center overflow-hidden svg-container"
+                                                    dangerouslySetInnerHTML={{ __html: (q.img || q.image) }}
                                                 />
                                             ) : (
-                                                <img src={q.image} alt="Question" className="max-w-full max-h-full object-contain" />
+                                                <img src={q.img || q.image} alt="Question" className="max-w-full max-h-48 object-contain" />
                                             )}
                                         </div>
                                     )}
@@ -234,31 +223,23 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                     )}
                 </div>
 
-                {/* Personalized Learning Plan */}
                 <PersonalizedPlan questionResults={questionResults} grade={grade} />
 
-                {/* Footer Actions */}
+                {/* Actions */}
                 {!isAdmin && (
-                    <div className="flex flex-col md:flex-row gap-3 sm:gap-4 justify-center items-center mt-6 sm:mt-12 bg-white p-4 sm:p-10 rounded-2xl sm:rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100">
+                    <div className="flex flex-col md:flex-row gap-4 justify-center items-center mt-12">
                         <button
-                            className="w-full md:w-auto px-6 sm:px-10 py-3 sm:py-5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl sm:rounded-2xl font-black transition-all flex items-center justify-center gap-2 sm:gap-3 active:scale-95 text-sm sm:text-base"
-                            onClick={() => navigate('/diagnosis-test')}
-                        >
-                            <ArrowRight className="rotate-180" size={18} />
-                            Other Grade
-                        </button>
-                        <button
-                            className="w-full md:w-auto px-8 sm:px-12 py-3 sm:py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl sm:rounded-2xl font-black shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-2 sm:gap-3 active:scale-95 text-sm sm:text-base"
+                            className="w-full md:w-auto px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 active:scale-95"
                             onClick={onRetake}
                         >
-                            <RotateCcw size={18} />
+                            <RotateCcw size={20} />
                             Retake Test
                         </button>
                         <button
-                            className="w-full md:w-auto px-6 sm:px-10 py-3 sm:py-5 border-2 sm:border-4 border-indigo-600 text-indigo-600 hover:bg-indigo-50 rounded-xl sm:rounded-2xl font-black transition-all flex items-center justify-center gap-2 sm:gap-3 active:scale-95 text-sm sm:text-base"
+                            className="w-full md:w-auto px-10 py-5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-black transition-all flex items-center justify-center gap-3 active:scale-95"
                             onClick={() => navigate('/')}
                         >
-                            <Home size={18} />
+                            <Home size={20} />
                             Back Home
                         </button>
                     </div>

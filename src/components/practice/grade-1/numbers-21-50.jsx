@@ -245,7 +245,7 @@ const Numbers21to50 = () => {
                 // Counting and recognition 21-50
                 const num = Math.floor(Math.random() * 30) + 21;
                 question = {
-                    text: `Look at the table. What number is shown in the blocks? 🔢`,
+                    text: `Look at the table. What number is shown in the blocks?`,
                     options: [num, num + 1, num - (num > 30 ? 10 : 1)].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: num,
                     type: 'counting',
@@ -263,7 +263,7 @@ const Numbers21to50 = () => {
                     `${tens - 1} Tens, ${ones} Ones`
                 ].sort(() => 0.5 - Math.random());
                 question = {
-                    text: `Break it down! How many Tens and Ones do you see? 🧐`,
+                    text: `Break it down! How many Tens and Ones do you see?`,
                     options: options,
                     correct: `${tens} Tens, ${ones} Ones`,
                     type: 'tens-ones',

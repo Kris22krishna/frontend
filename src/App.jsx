@@ -81,6 +81,10 @@ import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheF
 import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
 import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
 import FishTaleSkills from './components/practice/class-5/The_Fish_Tale/Topics/Skills/FishTaleSkills';
+import MappingYourWayLanding from './components/practice/class-5/mappingyourway/MappingYourWay';
+import MappingYourWayIntro5W1H from './components/practice/class-5/mappingyourway/Topics/5W1H/MappingYourWayIntro5W1H';
+import MappingYourWayTerminology from './components/practice/class-5/mappingyourway/Topics/Terminology/MappingYourWayTerminology';
+import MappingYourWaySkills from './components/practice/class-5/mappingyourway/Topics/Skills/MappingYourWaySkills';
 import SurfaceAreasAndVolumes from './components/practice/class-10/SurfaceAreasAndVolumes/SurfaceAreasAndVolumes';
 import SurfaceVolumesIntro from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/5W1H/Intro5W1H';
 import SurfaceVolumesTerminology from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Terminology/Terminology';
@@ -1055,6 +1059,12 @@ function App() {
           <Route path="the-fish-tale/terminology" element={<ProtectedRoute redirectTo="/login"><FishTaleTerminology /></ProtectedRoute>} />
           <Route path="the-fish-tale/skills" element={<ProtectedRoute redirectTo="/login"><FishTaleSkills /></ProtectedRoute>} />
 
+          {/* Chapter 8: Mapping Your Way */}
+          <Route path="mapping-your-way" element={<ProtectedRoute redirectTo="/login"><MappingYourWayLanding /></ProtectedRoute>} />
+          <Route path="mapping-your-way/introduction" element={<ProtectedRoute redirectTo="/login"><MappingYourWayIntro5W1H /></ProtectedRoute>} />
+          <Route path="mapping-your-way/terminology" element={<ProtectedRoute redirectTo="/login"><MappingYourWayTerminology /></ProtectedRoute>} />
+          <Route path="mapping-your-way/skills" element={<ProtectedRoute redirectTo="/login"><MappingYourWaySkills /></ProtectedRoute>} />
+
           {/* Chapter 2: Shapes and Angles */}
           <Route path="shapes-and-angles" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesLanding /></ProtectedRoute>} />
           <Route path="shapes-and-angles/introduction" element={<ProtectedRoute redirectTo="/login"><ShapesAndAnglesIntro /></ProtectedRoute>} />
@@ -1595,6 +1605,12 @@ function App() {
         <Route path="/middle/grade/5/the-fish-tale/estimation-skills" element={<ProtectedRoute redirectTo="/login"><EstimationSkills /></ProtectedRoute>} />
         <Route path="/middle/grade/5/the-fish-tale/interpreting-real-life-data" element={<ProtectedRoute redirectTo="/login"><InterpretingRealLifeData /></ProtectedRoute>} />
         <Route path="/middle/grade/5/the-fish-tale/chapter-test" element={<ProtectedRoute redirectTo="/login"><TheFishTaleTest /></ProtectedRoute>} />
+
+        {/* Grade 5 - Mapping Your Way */}
+        <Route path="/middle/grade/5/mapping-your-way" element={<ProtectedRoute redirectTo="/login"><MappingYourWayLanding /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/mapping-your-way/introduction" element={<ProtectedRoute redirectTo="/login"><MappingYourWayIntro5W1H /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/mapping-your-way/terminology" element={<ProtectedRoute redirectTo="/login"><MappingYourWayTerminology /></ProtectedRoute>} />
+        <Route path="/middle/grade/5/mapping-your-way/skills" element={<ProtectedRoute redirectTo="/login"><MappingYourWaySkills /></ProtectedRoute>} />
 
         {/* Grade 5 - How Many Squares? */}
         <Route path="/middle/grade/5/how-many-squares" element={<ProtectedRoute redirectTo="/login"><HowManySquares /></ProtectedRoute>} />

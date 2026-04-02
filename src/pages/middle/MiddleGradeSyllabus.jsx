@@ -775,6 +775,14 @@ const MiddleGradeSyllabus = () => {
             ]
         };
 
+        skillsByTopic['Mapping Your Way'] = {
+            'Learn': [
+                { skill_id: 'MYW-5W1H', skill_name: '5W1H Introduction', topic: 'Mapping Your Way', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/mapping-your-way/introduction' },
+                { skill_id: 'MYW-TERM', skill_name: 'Terminology', topic: 'Mapping Your Way', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/mapping-your-way/terminology' },
+                { skill_id: 'MYW-SKILLS', skill_name: 'Skills Practice & Assessment', topic: 'Mapping Your Way', sub_topic: 'Learn', isLocal: true, path: '/middle/grade/5/mapping-your-way/skills' }
+            ]
+        };
+
         skillsByTopic['Tenths and Hundredths'] = {
             'Decimals': [
                 {

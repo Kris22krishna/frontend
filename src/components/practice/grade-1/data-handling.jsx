@@ -206,7 +206,7 @@ const DataHandling = () => {
                 const target = fruits[Math.floor(Math.random() * 3)];
                 const count = items.filter(f => f === target).length;
                 question = {
-                    text: `Look at this big collection! How many ${target} fruits are there in total? 🧺`,
+                    text: `Look at this big collection! How many ${target} fruits are there in total?`,
                     options: [count, count + 1, count + 2].filter(v => v >= 0),
                     correct: count,
                     type: 'sorting',
@@ -221,7 +221,7 @@ const DataHandling = () => {
                 ];
                 const targetObj = items[Math.floor(Math.random() * 3)];
                 question = {
-                    text: `This chart shows our favorite things. How many ${targetObj.label} do we have? 📊`,
+                    text: `This chart shows our favorite things. How many ${targetObj.label} do we have?`,
                     options: [targetObj.count, targetObj.count + 1, targetObj.count + 2].sort(() => 0.5 - Math.random()),
                     correct: targetObj.count,
                     type: 'pictograph',
@@ -234,7 +234,7 @@ const DataHandling = () => {
                 const target = animals[Math.floor(Math.random() * 3)];
                 const count = items.filter(a => a === target).length;
                 question = {
-                    text: `Count the ${target} pets! 🐾`,
+                    text: `Count the ${target} pets!`,
                     options: [count, count + 1, count > 0 ? count - 1 : 10].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: count,
                     type: 'counting',
