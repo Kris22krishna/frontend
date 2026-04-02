@@ -131,6 +131,18 @@ export const NODE_IDS = {
   g10MathLEStandardForm:                    'a4101003-0007-0000-0000-000000000000',
   g10MathLEChapterTest:                     'a4101003-0010-0000-0000-000000000000',
 
+  // Grade 10 Math: Quadratic Equations (Chapter 4)
+  g10MathQuadraticEquations:                'a3101004-0000-0000-0000-000000000001',
+  g10MathQuadraticFoundations:              'a4101004-0001-0000-0000-000000000000',
+  g10MathQuadraticRepresenting:             'a4101004-0002-0000-0000-000000000000',
+  g10MathQuadraticIdentifying:              'a4101004-0003-0000-0000-000000000000',
+  g10MathQuadraticFactorisation:            'a4101004-0004-0000-0000-000000000000',
+  g10MathQuadraticWordProblemsFactorisation: 'a4101004-0005-0000-0000-000000000000',
+  g10MathQuadraticNatureOfRoots:            'a4101004-0006-0000-0000-000000000000',
+  g10MathQuadraticDiscriminant:             'a4101004-0007-0000-0000-000000000000',
+  g10MathQuadraticRealLife:                 'a4101004-0008-0000-0000-000000000000',
+  g10MathQuadraticChapterTest:              'a4101004-0010-0000-0000-000000000000',
+
   // Grade 10 Math: Coordinate Geometry (Chapter 7)
   g10MathCoordinateGeometry:                'a3101007-0000-0000-0000-000000000001',
   g10MathCGDistanceFormula:                 'a4101007-0001-0000-0000-000000000000',
@@ -279,6 +291,18 @@ export const SLUG_TO_NODE_ID = {
   // Grade 8 Slugs (Skills)
   'g8-math-linear-solving':             NODE_IDS.g8MathLinearSolving,
   'g8-math-linear-word-problems':       NODE_IDS.g8MathLinearWordProblems,
+
+  // Grade 10 Math: Quadratic Equations
+  'g10-math-quadratic-equations':       NODE_IDS.g10MathQuadraticEquations,
+  'g10-math-quadratic-foundations':     NODE_IDS.g10MathQuadraticFoundations,
+  'g10-math-quadratic-representing':     NODE_IDS.g10MathQuadraticRepresenting,
+  'g10-math-quadratic-identifying':      NODE_IDS.g10MathQuadraticIdentifying,
+  'g10-math-quadratic-factorisation':    NODE_IDS.g10MathQuadraticFactorisation,
+  'g10-math-quadratic-wp-factorisation': NODE_IDS.g10MathQuadraticWordProblemsFactorisation,
+  'g10-math-quadratic-nature-roots':     NODE_IDS.g10MathQuadraticNatureOfRoots,
+  'g10-math-quadratic-discriminant':     NODE_IDS.g10MathQuadraticDiscriminant,
+  'g10-math-quadratic-real-life':        NODE_IDS.g10MathQuadraticRealLife,
+  'g10-math-quadratic-chapter-test':     NODE_IDS.g10MathQuadraticChapterTest,
 
   // Grade 10 Math: Probability
   'g10-math-probability':               NODE_IDS.g10MathProbability,

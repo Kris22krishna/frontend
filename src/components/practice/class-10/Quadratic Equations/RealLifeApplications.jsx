@@ -7,6 +7,8 @@ import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import '../TenthPracticeSession.css';
 
 const RealLifeApplications = () => {
@@ -30,6 +32,10 @@ const RealLifeApplications = () => {
     const SKILL_ID = 1127; // Applying Quadratic Equations to Real-Life Situations
     const SKILL_NAME = "Applying Quadratic Equations to Real-Life Situations";
     const [answers, setAnswers] = useState({});
+
+    const NODE_ID = NODE_IDS.g10MathQuadraticRealLife;
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
 
     const generateQuestions = () => {
         const newQuestions = [];
@@ -118,6 +124,8 @@ If $x=3.75$, larger tap takes $3.75 - 10$ (negative). So $x=25$.`
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
+        startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+        v4Answers.current = [];
         let timer;
         if (!showReportModal) {
             timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
@@ -147,6 +155,10 @@ If $x=3.75$, larger tap takes $3.75 - 10$ (negative). So $x=25$.`
             }
         }));
 
+        const v4Entry = { question_index: qIndex + 1, answer_json: { selected: selectedOption }, is_correct: isRight ? 1.0 : 0.0, marks_awarded: isRight ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current[qIndex] = v4Entry;
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
+
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId) {
             let t = accumulatedTime.current;
@@ -169,6 +181,8 @@ If $x=3.75$, larger tap takes $3.75 - 10$ (negative). So $x=25$.`
             questionStartTime.current = Date.now();
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            const fPayload = v4Answers.current.filter(Boolean);
+            await finishV4Session({ totalQuestions: questions.length, questionsAnswered: fPayload.length, answersPayload: fPayload });
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
