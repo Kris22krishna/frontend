@@ -89,6 +89,15 @@ export const NODE_IDS = {
   g10MathAreasCirclesComposite:           'a4101012-0006-0000-0000-000000000000',
   g10MathAreasCirclesTerminologyQuiz:     'a4101012-0010-0000-0000-000000000000',
 
+  // Grade 10 Math: Arithmetic Progressions (Chapter 5)
+  g10MathArithmeticProgressions:              'a3101005-0000-0000-0000-000000000001',
+  g10MathAPRecognisingPatterns:               'a4101005-0001-0000-0000-000000000000',
+  g10MathAPUnderstanding:                     'a4101005-0002-0000-0000-000000000000',
+  g10MathAPIdentifyingTerms:                  'a4101005-0003-0000-0000-000000000000',
+  g10MathAPFindingSpecificTerms:              'a4101005-0004-0000-0000-000000000000',
+  g10MathAPSumOfTerms:                        'a4101005-0005-0000-0000-000000000000',
+  g10MathAPChapterTest:                       'a4101005-0010-0000-0000-000000000000',
+
   // ── 6. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
   
   // Grade 10 Science: Chemical Reactions
