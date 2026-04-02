@@ -104,7 +104,7 @@ const JuniorGradeSyllabus = () => {
                     const topicName = (skill.topic || 'General').toLowerCase();
 
                     if (isGrade3) {
-                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii") || topicName.toLowerCase().includes("time goes on");
+                        return (topicName.includes("raksha") && topicName.includes("bandhan")) || topicName.includes("house of hundreds ii") || topicName.toLowerCase().includes("time goes on") || topicName.toLowerCase().includes("toy joy");
                     }
                     if (isGrade4) {
                         return topicName.includes("cleanest village") || topicName.includes("elephants") || topicName.includes("tigers") || topicName.includes("data handling") || topicName.includes("sharing and measuring") || topicName.includes("measuring length") || topicName.includes("transport museum");
@@ -178,7 +178,34 @@ const JuniorGradeSyllabus = () => {
                 }
 
                 let fetchedTopics = Object.values(topicMap);
-                
+
+                if (isGrade3) {
+                    const grade3Order = [
+                        "What's in a Name?",
+                        'Toy Joy',
+                        'Double Century',
+                        'Vacation with My Nani Maa',
+                        'Fun with Shapes',
+                        'House of Hundreds – I',
+                        'Raksha Bandhan',
+                        'Fair Share',
+                        'Fun at Class Party',
+                        'Filling and Lifting',
+                        'Give and Take',
+                        'House of Hundreds II',
+                        'The Surajkund Fair',
+                        'Time Goes On',
+                    ];
+                    fetchedTopics.sort((a, b) => {
+                        const idxA = grade3Order.indexOf(a.name);
+                        const idxB = grade3Order.indexOf(b.name);
+                        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                        if (idxA !== -1) return -1;
+                        if (idxB !== -1) return 1;
+                        return a.name.localeCompare(b.name);
+                    });
+                }
+
                 if (isGrade4) {
                     const grade4Order = [
                         'Shapes Around Us',

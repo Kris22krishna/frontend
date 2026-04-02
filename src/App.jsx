@@ -241,6 +241,7 @@ import AssessmentStudentDashboard from './pages/dashboards/AssessmentStudentDash
 import AssessmentRunner from './pages/AssessmentRunner';
 
 // Junior Pages (Grades 1-4 child-friendly design)
+import Grade3Practice from './components/practice/grade-3/Grade3Practice';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
@@ -270,6 +271,17 @@ import AgeDuration from './components/practice/class-3/Time-Goes-On/age-duration
 import ClockTime from './components/practice/class-3/Time-Goes-On/clock-time';
 import TimeDurations from './components/practice/class-3/Time-Goes-On/time-durations';
 import TimeGoesOnTest from './components/practice/class-3/Time-Goes-On/TimeGoesOnTest';
+
+// Toy Joy
+import Identifying3DShapes from './components/practice/class-3/Toy-Joy/Identifying3DShapes';
+import CountingShapes from './components/practice/class-3/Toy-Joy/CountingShapes';
+import DescribingPosition from './components/practice/class-3/Toy-Joy/DescribingPosition';
+import PropertiesOf3DShapes from './components/practice/class-3/Toy-Joy/PropertiesOf3DShapes';
+import ClassifyingShapes from './components/practice/class-3/Toy-Joy/ClassifyingShapes';
+import OppositeFacesCube from './components/practice/class-3/Toy-Joy/OppositeFacesCube';
+import BuildingCombiningShapes from './components/practice/class-3/Toy-Joy/BuildingCombiningShapes';
+import SequencingModelConstruction from './components/practice/class-3/Toy-Joy/SequencingModelConstruction';
+import ToyJoyTest from './components/practice/class-3/Toy-Joy/ToyJoyTest';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -1382,7 +1394,14 @@ function App() {
         <Route path="/neet" element={<NeetMockTest />} />
 
         {/* Junior Routes (Grades 1-4 child-friendly design) */}
-        
+
+        {/* Grade 3 Practice Hub */}
+        <Route path="/junior/grade/3/math-practice" element={
+          <ProtectedRoute redirectTo="/login">
+            <Grade3Practice />
+          </ProtectedRoute>
+        } />
+
         {/* Grade 3 EVS Routes */}
         <Route path="/junior/grade/3/science/our-families-and-communities" element={
           <ProtectedRoute redirectTo="/login">
@@ -1577,6 +1596,17 @@ function App() {
         <Route path="/junior/grade/:grade/time-goes-on/clock-time" element={<ProtectedRoute redirectTo="/login"><ClockTime /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/time-goes-on/time-durations" element={<ProtectedRoute redirectTo="/login"><TimeDurations /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/time-goes-on/chapter-test" element={<ProtectedRoute redirectTo="/login"><TimeGoesOnTest /></ProtectedRoute>} />
+
+        {/* Toy Joy Routes */}
+        <Route path="/junior/grade/:grade/toy-joy/identifying-3d-shapes" element={<ProtectedRoute redirectTo="/login"><Identifying3DShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/counting-shapes" element={<ProtectedRoute redirectTo="/login"><CountingShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/describing-position" element={<ProtectedRoute redirectTo="/login"><DescribingPosition /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/properties-of-3d-shapes" element={<ProtectedRoute redirectTo="/login"><PropertiesOf3DShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/classifying-shapes" element={<ProtectedRoute redirectTo="/login"><ClassifyingShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/opposite-faces-cube" element={<ProtectedRoute redirectTo="/login"><OppositeFacesCube /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/building-combining-shapes" element={<ProtectedRoute redirectTo="/login"><BuildingCombiningShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/sequencing-model-construction" element={<ProtectedRoute redirectTo="/login"><SequencingModelConstruction /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/toy-joy/chapter-test" element={<ProtectedRoute redirectTo="/login"><ToyJoyTest /></ProtectedRoute>} />
 
         {/* Grade 8 Exponents and Powers - Negative Exponents */}
         <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
