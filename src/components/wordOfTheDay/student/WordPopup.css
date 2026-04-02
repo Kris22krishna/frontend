@@ -1,0 +1,308 @@
+/* ===== Word Popup — Student View ===== */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+/* ── Overlay ── */
+.wotd-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(45, 52, 54, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: wotd-fadeIn 0.3s ease;
+}
+
+@keyframes wotd-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal card ── */
+.wotd-popup-card {
+  font-family: 'Nunito', sans-serif;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(108, 92, 231, 0.2), 0 4px 20px rgba(0,0,0,0.06);
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  position: relative;
+  overflow: hidden;
+  animation: wotd-slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes wotd-slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* decorative gradient strip */
+.wotd-popup-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #6c5ce7, #00cec9, #fdcb6e, #fd79a8);
+}
+
+/* ── Close button ── */
+.wotd-popup-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f0efff;
+  color: #6c5ce7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+
+.wotd-popup-close:hover {
+  background: #6c5ce7;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* ── Navigation Arrows ── */
+.wotd-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(108, 92, 231, 0.1);
+  color: #6c5ce7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  z-index: 3;
+}
+
+.wotd-nav-btn:hover:not(.wotd-nav-disabled) {
+  background: #6c5ce7;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.35);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.wotd-nav-left {
+  left: 10px;
+}
+
+.wotd-nav-right {
+  right: 10px;
+}
+
+.wotd-nav-disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ── Content ── */
+.wotd-popup-content {
+  padding: 36px 48px 32px;
+  text-align: center;
+  overflow-y: auto;
+  max-height: calc(85vh - 6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Slide animations */
+.wotd-popup-content.slide-left {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.wotd-popup-content.slide-right {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+/* Badge */
+.wotd-popup-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: linear-gradient(135deg, #f0efff, #e8f8f5);
+  color: #6c5ce7;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+/* Word */
+.wotd-popup-word {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #2d3436;
+  margin: 0 0 8px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #6c5ce7, #00b894);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Date */
+.wotd-popup-date {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b2bec3;
+  margin: 0 0 18px;
+  letter-spacing: 0.5px;
+}
+
+/* Image */
+.wotd-popup-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+/* Meaning */
+.wotd-popup-meaning {
+  background: #f8f7ff;
+  border-left: 4px solid #6c5ce7;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.wotd-popup-meaning .wotd-popup-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #6c5ce7;
+  margin-bottom: 4px;
+}
+
+.wotd-popup-meaning p {
+  margin: 0;
+  font-size: 1rem;
+  color: #2d3436;
+  line-height: 1.5;
+}
+
+/* Sentence */
+.wotd-popup-sentence {
+  background: #eafaf1;
+  border-left: 4px solid #00b894;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.wotd-popup-sentence .wotd-popup-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #00b894;
+  margin-bottom: 4px;
+}
+
+.wotd-popup-sentence p {
+  margin: 0;
+  font-size: 1rem;
+  color: #2d3436;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ── Dot indicators ── */
+.wotd-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.wotd-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #dfe6e9;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.wotd-dot:hover {
+  background: #b2bec3;
+  transform: scale(1.2);
+}
+
+.wotd-dot-active {
+  background: linear-gradient(135deg, #6c5ce7, #00b894);
+  width: 24px;
+  border-radius: 5px;
+  transform: scale(1);
+}
+
+/* ── Spinner ── */
+.wotd-spinner {
+  animation: wotd-spin 1s linear infinite;
+  color: #6c5ce7;
+}
+
+@keyframes wotd-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .wotd-popup-card {
+    border-radius: 20px;
+    max-height: 90vh;
+  }
+
+  .wotd-popup-content {
+    padding: 28px 36px 24px;
+    max-height: calc(90vh - 6px);
+  }
+
+  .wotd-popup-word {
+    font-size: 1.8rem;
+  }
+
+  .wotd-popup-image {
+    max-height: 160px;
+  }
+
+  .wotd-nav-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .wotd-nav-left {
+    left: 6px;
+  }
+
+  .wotd-nav-right {
+    right: 6px;
+  }
+}

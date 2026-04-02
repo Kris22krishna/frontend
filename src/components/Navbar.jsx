@@ -14,7 +14,9 @@ const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Derived state
-    const userType = user?.role || sessionStorage.getItem('activeRole'); // Ensure user object has role
+    const rawUserType = user?.role || sessionStorage.getItem('activeRole') || sessionStorage.getItem('userType') || '';
+    const userTypeStr = Array.isArray(rawUserType) ? rawUserType[0] : String(rawUserType);
+    const userType = userTypeStr.toLowerCase();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -96,7 +98,14 @@ const Navbar = () => {
                                 <Link to="/register" className="btn-primary">Sign Up</Link>
                             </>
                         ) : (
-                            <button onClick={handleLogout} className="btn-primary">Logout</button>
+                            <>
+                                {(userType === 'teacher' || userType === 'mentor') && (
+                                    <Link to="/word-of-the-day/teacher" className="btn-login" style={{ marginRight: '12px' }}>
+                                        Add word +
+                                    </Link>
+                                )}
+                                <button onClick={handleLogout} className="btn-primary">Logout</button>
+                            </>
                         )}
                     </div>
 
@@ -133,6 +142,11 @@ const Navbar = () => {
                                 {userType === 'student' && (
                                     <Link to="/diagnosis-test" className={`mobile-dropdown-item ${isActive('/diagnosis-test') ? 'active' : ''}`}>
                                         Skill Discovery
+                                    </Link>
+                                )}
+                                {(userType === 'teacher' || userType === 'mentor') && (
+                                    <Link to="/word-of-the-day/teacher" className="mobile-dropdown-item" style={{ color: '#4f46e5', fontWeight: '500' }}>
+                                        Add word +
                                     </Link>
                                 )}
                                 <button onClick={handleLogout} className="mobile-dropdown-item logout-btn">Logout</button>

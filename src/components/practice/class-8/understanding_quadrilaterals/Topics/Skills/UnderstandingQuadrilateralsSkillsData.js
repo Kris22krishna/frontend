@@ -1,0 +1,158 @@
+/**
+ * UnderstandingQuadrilateralsSkillsData.js
+ * NCERT Class 8 Mathematics - Chapter 3: Understanding Quadrilaterals
+ *
+ * The question pools below follow the chapter flow from the textbook:
+ * 1. Polygons, classification, and diagonals
+ * 2. Interior and exterior angle sums
+ * 3. Kinds of quadrilaterals and parallelogram basics
+ * 4. Special parallelograms: rhombus, rectangle, and square
+ */
+
+export const polygonsClassificationAndDiagonals = {
+    practice: [
+        { type: 'truefalse', question: 'A polygon is a simple closed curve made only of line segments.', options: ['True', 'False'], correct: 0, explanation: 'That is the definition of a polygon used in the chapter.' },
+        { type: 'mcq', question: 'Which figure is a polygon?', options: ['An open zig-zag', 'A closed figure made of line segments', 'A circle', 'A curved loop'], correct: 1, explanation: 'A polygon must be simple, closed, and made of line segments.' },
+        { type: 'mcq', question: 'A 6-sided polygon is called a:', options: ['Pentagon', 'Hexagon', 'Heptagon', 'Octagon'], correct: 1, explanation: 'A 6-sided polygon is a hexagon.' },
+        { type: 'fill', question: 'A decagon has _____ sides.', correctValue: 10, explanation: 'A decagon is a 10-sided polygon.' },
+        { type: 'mcq', question: 'A diagonal joins:', options: ['Adjacent vertices', 'Non-adjacent vertices', 'Midpoints of sides', 'Only opposite sides'], correct: 1, explanation: 'A diagonal joins 2 non-adjacent vertices of a polygon.' },
+        { type: 'fill', question: 'A quadrilateral has _____ diagonals.', correctValue: 2, explanation: 'A quadrilateral has exactly 2 diagonals.' },
+        { type: 'mcq', question: 'From one vertex, a pentagon can be divided into how many triangles?', options: ['2', '3', '4', '5'], correct: 1, explanation: 'For an n-gon, the number is n - 2. For a pentagon, 5 - 2 = 3.' },
+        { type: 'fill', question: 'From one vertex, a hexagon can be divided into _____ triangles.', correctValue: 4, explanation: 'A hexagon gives 6 - 2 = 4 triangles.' },
+        { type: 'truefalse', question: 'A circle is a polygon.', options: ['True', 'False'], correct: 1, explanation: 'A polygon has straight sides, so a circle is not a polygon.' },
+        { type: 'mcq', question: 'Which of these is a convex polygon?', options: ['A polygon with one inward dent', 'A regular pentagon', 'A self-intersecting star', 'An open figure'], correct: 1, explanation: 'A regular pentagon is convex because all its interior angles are less than 180 degrees.' },
+        { type: 'truefalse', question: 'In a convex polygon, every diagonal lies inside the polygon.', options: ['True', 'False'], correct: 0, explanation: 'That is a standard property of convex polygons.' },
+        { type: 'mcq', question: 'A regular polygon has:', options: ['Only equal sides', 'Only equal angles', 'Equal sides and equal angles', 'Unequal sides and angles'], correct: 2, explanation: 'A regular polygon is both equilateral and equiangular.' },
+        { type: 'truefalse', question: 'Every regular polygon is irregular.', options: ['True', 'False'], correct: 1, explanation: 'Regular and irregular are opposites here.' },
+        { type: 'mcq', question: 'Which figure is not a polygon?', options: ['Triangle', 'Rectangle', 'Pentagon', 'Curve made with an arc'], correct: 3, explanation: 'A polygon cannot contain curved parts.' },
+        { type: 'fill', question: 'A heptagon has _____ sides.', correctValue: 7, explanation: 'A heptagon is a 7-sided polygon.' },
+        { type: 'mcq', question: 'In quadrilateral ABCD, which segment is a diagonal?', options: ['AB', 'BC', 'CD', 'AC'], correct: 3, explanation: 'AC joins non-adjacent vertices.' },
+        { type: 'truefalse', question: 'A quadrilateral is a polygon.', options: ['True', 'False'], correct: 0, explanation: 'A quadrilateral is a 4-sided polygon.' },
+        { type: 'mcq', question: 'Which polygon name matches 8 sides?', options: ['Heptagon', 'Octagon', 'Nonagon', 'Decagon'], correct: 1, explanation: 'An 8-sided polygon is an octagon.' },
+        { type: 'fill', question: 'From one vertex, a quadrilateral can be divided into _____ triangles.', correctValue: 2, explanation: 'A quadrilateral gives 4 - 2 = 2 triangles.' },
+        { type: 'mcq', question: 'A concave polygon differs from a convex polygon because:', options: ['It is always open', 'It has all diagonals outside', 'At least one interior angle is greater than 180 degrees', 'It has curved sides'], correct: 2, explanation: 'A concave polygon has at least one interior angle greater than 180 degrees.' },
+    ],
+    assess: [
+        { type: 'mcq', question: 'A polygon must be:', options: ['Open', 'Made only of curves', 'Simple, closed, and made of line segments', 'Always regular'], correct: 2, explanation: 'That is the correct definition of a polygon.' },
+        { type: 'mcq', question: 'A nonagon has how many sides?', options: ['7', '8', '9', '10'], correct: 2, explanation: 'A nonagon is a 9-sided polygon.' },
+        { type: 'truefalse', question: 'A diagonal joins two adjacent vertices.', options: ['True', 'False'], correct: 1, explanation: 'Adjacent vertices form a side, not a diagonal.' },
+        { type: 'mcq', question: 'A quadrilateral has how many diagonals?', options: ['1', '2', '3', '4'], correct: 1, explanation: 'A quadrilateral has exactly 2 diagonals.' },
+        { type: 'mcq', question: 'Which of these is convex?', options: ['A regular hexagon', 'A figure with one inward dent', 'An open figure', 'A circle'], correct: 0, explanation: 'A regular hexagon is convex.' },
+        { type: 'truefalse', question: 'Every regular polygon is equiangular and equilateral.', options: ['True', 'False'], correct: 0, explanation: 'Both conditions hold for a regular polygon.' },
+        { type: 'mcq', question: 'From one vertex, a heptagon can be divided into how many triangles?', options: ['4', '5', '6', '7'], correct: 1, explanation: 'For a heptagon, 7 - 2 = 5.' },
+        { type: 'mcq', question: 'Which figure is not a polygon?', options: ['Square', 'Pentagon', 'Circle', 'Rhombus'], correct: 2, explanation: 'A circle has no line segments.' },
+        { type: 'truefalse', question: 'In a convex polygon, every diagonal lies inside the figure.', options: ['True', 'False'], correct: 0, explanation: 'That is a defining property of convex polygons in this chapter.' },
+        { type: 'mcq', question: 'A 10-sided polygon is called a:', options: ['Decagon', 'Octagon', 'Heptagon', 'Hexagon'], correct: 0, explanation: 'A 10-sided polygon is a decagon.' },
+    ],
+};
+
+export const angleSumAndExteriorAngles = {
+    practice: [
+        { type: 'fill', question: 'The sum of the interior angles of a quadrilateral is _____ degrees.', correctValue: 360, explanation: 'Every quadrilateral has interior angle sum 360 degrees.' },
+        { type: 'mcq', question: 'Three angles of a quadrilateral are 90 degrees, 80 degrees, and 70 degrees. The fourth angle is:', options: ['100 degrees', '110 degrees', '120 degrees', '130 degrees'], correct: 2, explanation: '360 - (90 + 80 + 70) = 120 degrees.' },
+        { type: 'mcq', question: 'The interior angle sum of a pentagon is:', options: ['360 degrees', '540 degrees', '720 degrees', '900 degrees'], correct: 1, explanation: 'For a pentagon, (5 - 2) x 180 = 540 degrees.' },
+        { type: 'fill', question: 'The interior angle sum of a hexagon is _____.', correctValue: 720, explanation: 'For a hexagon, (6 - 2) x 180 = 720.' },
+        { type: 'mcq', question: 'The interior angle sum formula of an n-gon is:', options: ['n x 180', '(n - 1) x 180', '(n - 2) x 180', '360 / n'], correct: 2, explanation: 'An n-gon can be divided into n - 2 triangles.' },
+        { type: 'truefalse', question: 'The sum of the exterior angles of any convex polygon is 360 degrees.', options: ['True', 'False'], correct: 0, explanation: 'One full turn around the polygon is 360 degrees.' },
+        { type: 'fill', question: 'Each exterior angle of a regular pentagon is _____ degrees.', correctValue: 72, explanation: '360 / 5 = 72.' },
+        { type: 'mcq', question: 'Each exterior angle of a regular octagon is:', options: ['36 degrees', '40 degrees', '45 degrees', '60 degrees'], correct: 2, explanation: '360 / 8 = 45 degrees.' },
+        { type: 'fill', question: 'The interior angle sum of a heptagon is _____.', correctValue: 900, explanation: 'For a heptagon, (7 - 2) x 180 = 900.' },
+        { type: 'mcq', question: 'Each interior angle of a regular pentagon is:', options: ['72 degrees', '90 degrees', '108 degrees', '120 degrees'], correct: 2, explanation: 'Interior angle = 540 / 5 = 108 degrees.' },
+        { type: 'truefalse', question: 'The sum of the interior angles of a quadrilateral is 180 degrees.', options: ['True', 'False'], correct: 1, explanation: 'The correct sum is 360 degrees.' },
+        { type: 'fill', question: 'The sum of the interior angles of an octagon is _____.', correctValue: 1080, explanation: 'For an octagon, (8 - 2) x 180 = 1080.' },
+        { type: 'mcq', question: 'If each exterior angle of a regular polygon is 60 degrees, the polygon has:', options: ['4 sides', '5 sides', '6 sides', '8 sides'], correct: 2, explanation: 'Number of sides = 360 / 60 = 6.' },
+        { type: 'fill', question: 'Three angles of a quadrilateral are 95 degrees, 85 degrees, and 110 degrees. The fourth angle is _____.', correctValue: 70, explanation: '360 - (95 + 85 + 110) = 70.' },
+        { type: 'mcq', question: 'The sum of the exterior angles of a regular hexagon is:', options: ['180 degrees', '270 degrees', '360 degrees', '540 degrees'], correct: 2, explanation: 'The exterior-angle sum is 360 degrees for every convex polygon.' },
+        { type: 'truefalse', question: 'All exterior angles of a regular polygon are equal.', options: ['True', 'False'], correct: 0, explanation: 'A regular polygon has equal exterior angles.' },
+        { type: 'mcq', question: 'If each exterior angle of a regular polygon is 45 degrees, the polygon is a:', options: ['Hexagon', 'Heptagon', 'Octagon', 'Nonagon'], correct: 2, explanation: '360 / 45 = 8, so it is an octagon.' },
+        { type: 'fill', question: 'Each exterior angle of a regular decagon is _____ degrees.', correctValue: 36, explanation: '360 / 10 = 36.' },
+        { type: 'mcq', question: 'The interior angle sum of a nonagon is:', options: ['900 degrees', '1080 degrees', '1260 degrees', '1440 degrees'], correct: 2, explanation: 'For a nonagon, (9 - 2) x 180 = 1260 degrees.' },
+        { type: 'mcq', question: 'A polygon has each exterior angle equal to 30 degrees. It has:', options: ['10 sides', '12 sides', '14 sides', '15 sides'], correct: 1, explanation: 'Number of sides = 360 / 30 = 12.' },
+    ],
+    assess: [
+        { type: 'mcq', question: 'The interior angle sum of a quadrilateral is:', options: ['180 degrees', '270 degrees', '360 degrees', '540 degrees'], correct: 2, explanation: 'The interior angles of a quadrilateral add up to 360 degrees.' },
+        { type: 'mcq', question: 'The interior angle sum of a hexagon is:', options: ['540 degrees', '720 degrees', '900 degrees', '1080 degrees'], correct: 1, explanation: 'For a hexagon, (6 - 2) x 180 = 720.' },
+        { type: 'truefalse', question: 'The sum of the exterior angles of any convex polygon is 360 degrees.', options: ['True', 'False'], correct: 0, explanation: 'That sum is always 360 degrees.' },
+        { type: 'mcq', question: 'Each exterior angle of a regular pentagon is:', options: ['60 degrees', '72 degrees', '90 degrees', '108 degrees'], correct: 1, explanation: '360 / 5 = 72.' },
+        { type: 'mcq', question: 'The interior angle sum of an octagon is:', options: ['900 degrees', '960 degrees', '1080 degrees', '1260 degrees'], correct: 2, explanation: 'For an octagon, (8 - 2) x 180 = 1080.' },
+        { type: 'mcq', question: 'If three angles of a quadrilateral are 100 degrees, 90 degrees, and 80 degrees, the fourth angle is:', options: ['70 degrees', '80 degrees', '90 degrees', '110 degrees'], correct: 2, explanation: '360 - (100 + 90 + 80) = 90.' },
+        { type: 'truefalse', question: 'In a regular polygon, each exterior angle equals 360 divided by the number of sides.', options: ['True', 'False'], correct: 0, explanation: 'That is the textbook formula for regular polygons.' },
+        { type: 'mcq', question: 'A regular polygon has each exterior angle equal to 40 degrees. It has:', options: ['8 sides', '9 sides', '10 sides', '12 sides'], correct: 1, explanation: '360 / 40 = 9, so it is a nonagon.' },
+        { type: 'mcq', question: 'Each interior angle of a regular hexagon is:', options: ['60 degrees', '90 degrees', '120 degrees', '135 degrees'], correct: 2, explanation: 'The interior-angle sum is 720, and 720 / 6 = 120.' },
+        { type: 'mcq', question: 'The formula for the interior angle sum of an n-gon is:', options: ['n x 180', '(n - 2) x 180', '360 / n', '(n + 2) x 180'], correct: 1, explanation: 'The polygon can be divided into n - 2 triangles.' },
+    ],
+};
+
+export const kindsOfQuadrilaterals = {
+    practice: [
+        { type: 'mcq', question: 'A quadrilateral with one pair of opposite sides parallel is a:', options: ['Kite', 'Trapezium', 'Rhombus', 'Rectangle'], correct: 1, explanation: 'A trapezium has one pair of opposite sides parallel.' },
+        { type: 'truefalse', question: 'An isosceles trapezium has equal non-parallel sides.', options: ['True', 'False'], correct: 0, explanation: 'That is the defining feature of an isosceles trapezium.' },
+        { type: 'mcq', question: 'A quadrilateral with 2 pairs of equal adjacent sides is a:', options: ['Kite', 'Parallelogram', 'Rectangle', 'Trapezium'], correct: 0, explanation: 'That is the definition of a kite.' },
+        { type: 'truefalse', question: 'A kite has to have 4 equal sides.', options: ['True', 'False'], correct: 1, explanation: 'A kite needs 2 pairs of equal adjacent sides, not all 4 equal sides.' },
+        { type: 'mcq', question: 'A quadrilateral with both pairs of opposite sides parallel is a:', options: ['Parallelogram', 'Kite', 'Trapezium', 'General quadrilateral'], correct: 0, explanation: 'That is the definition of a parallelogram.' },
+        { type: 'fill', question: 'A parallelogram has _____ pairs of opposite sides parallel.', correctValue: 2, explanation: 'Both pairs of opposite sides are parallel in a parallelogram.' },
+        { type: 'truefalse', question: 'Opposite sides of a parallelogram are equal.', options: ['True', 'False'], correct: 0, explanation: 'Opposite sides are both equal and parallel.' },
+        { type: 'mcq', question: 'If one angle of a parallelogram is 70 degrees, an adjacent angle is:', options: ['70 degrees', '90 degrees', '110 degrees', '120 degrees'], correct: 2, explanation: 'Adjacent angles in a parallelogram are supplementary.' },
+        { type: 'fill', question: 'If one angle of a parallelogram is 65 degrees, the opposite angle is _____.', correctValue: 65, explanation: 'Opposite angles of a parallelogram are equal.' },
+        { type: 'truefalse', question: 'The diagonals of a parallelogram bisect each other.', options: ['True', 'False'], correct: 0, explanation: 'The diagonals cut each other into equal halves.' },
+        { type: 'mcq', question: 'In parallelogram ABCD, diagonals AC and BD intersect at O. If AO = 6 cm, then OC =', options: ['3 cm', '6 cm', '9 cm', '12 cm'], correct: 1, explanation: 'Because the diagonals bisect each other, AO = OC.' },
+        { type: 'fill', question: 'If AB = 12 cm in a parallelogram, then CD = _____.', correctValue: 12, explanation: 'Opposite sides of a parallelogram are equal.' },
+        { type: 'mcq', question: 'Which quadrilateral definitely has one pair of opposite sides parallel?', options: ['Kite', 'Trapezium', 'General quadrilateral', 'Pentagon'], correct: 1, explanation: 'That is the defining property of a trapezium.' },
+        { type: 'truefalse', question: 'Every rectangle is a parallelogram.', options: ['True', 'False'], correct: 0, explanation: 'A rectangle has both pairs of opposite sides parallel.' },
+        { type: 'mcq', question: 'Which quadrilateral is most closely identified by 2 pairs of equal adjacent sides?', options: ['Square', 'Rectangle', 'Kite', 'Parallelogram'], correct: 2, explanation: 'That property points to a kite.' },
+        { type: 'fill', question: 'The sum of adjacent angles of a parallelogram is _____ degrees.', correctValue: 180, explanation: 'Adjacent angles of a parallelogram are supplementary.' },
+        { type: 'mcq', question: 'Which statement is true for a parallelogram?', options: ['Only one pair of opposite sides is parallel', 'Opposite angles are equal', 'All angles are right angles', 'All sides are equal'], correct: 1, explanation: 'Opposite angles are equal in every parallelogram.' },
+        { type: 'truefalse', question: 'In a parallelogram, if one angle is known, all the other angles can be found.', options: ['True', 'False'], correct: 0, explanation: 'Use opposite angles equal and adjacent angles supplementary.' },
+        { type: 'mcq', question: 'A trapezium and a kite are different because:', options: ['Both are polygons', 'A trapezium is defined by parallel sides, a kite by equal adjacent sides', 'A kite always has right angles', 'A trapezium has 5 sides'], correct: 1, explanation: 'Their classifications are based on different properties.' },
+        { type: 'fill', question: 'If BO = 9 cm in a parallelogram, then OD = _____.', correctValue: 9, explanation: 'Because the diagonals bisect each other, BO = OD.' },
+    ],
+    assess: [
+        { type: 'mcq', question: 'A quadrilateral with one pair of opposite sides parallel is a:', options: ['Kite', 'Trapezium', 'Rhombus', 'Rectangle'], correct: 1, explanation: 'That is the definition of a trapezium.' },
+        { type: 'mcq', question: 'A kite has:', options: ['2 pairs of equal adjacent sides', '4 equal sides', '4 right angles', 'Only one equal side pair'], correct: 0, explanation: 'That is the chapter definition of a kite.' },
+        { type: 'truefalse', question: 'Every parallelogram has opposite angles equal.', options: ['True', 'False'], correct: 0, explanation: 'Opposite angles are equal in every parallelogram.' },
+        { type: 'mcq', question: 'If one angle of a parallelogram is 80 degrees, an adjacent angle is:', options: ['80 degrees', '90 degrees', '100 degrees', '120 degrees'], correct: 2, explanation: '180 - 80 = 100.' },
+        { type: 'mcq', question: 'If AO = 5 cm in a parallelogram and O is the intersection of diagonals, then OC =', options: ['2.5 cm', '5 cm', '10 cm', 'Cannot be found'], correct: 1, explanation: 'The diagonals of a parallelogram bisect each other.' },
+        { type: 'truefalse', question: 'Opposite sides of a parallelogram are equal and parallel.', options: ['True', 'False'], correct: 0, explanation: 'Both properties hold.' },
+        { type: 'mcq', question: 'An isosceles trapezium is a trapezium in which:', options: ['Both diagonals are perpendicular', 'The non-parallel sides are equal', 'All sides are equal', 'All angles are right angles'], correct: 1, explanation: 'That is the identifying feature of an isosceles trapezium.' },
+        { type: 'mcq', question: 'Which quadrilateral is defined by both pairs of opposite sides parallel?', options: ['Kite', 'Parallelogram', 'Trapezium', 'General quadrilateral'], correct: 1, explanation: 'That is a parallelogram.' },
+        { type: 'truefalse', question: 'The diagonals of a kite must be equal.', options: ['True', 'False'], correct: 1, explanation: 'Equal diagonals are not a defining property of every kite.' },
+        { type: 'mcq', question: 'The sum of adjacent angles of a parallelogram is:', options: ['90 degrees', '180 degrees', '270 degrees', '360 degrees'], correct: 1, explanation: 'Adjacent angles are supplementary.' },
+    ],
+};
+
+export const specialParallelograms = {
+    practice: [
+        { type: 'mcq', question: 'A rhombus is a parallelogram with:', options: ['4 equal sides', '4 right angles', '1 pair of equal sides', 'No parallel sides'], correct: 0, explanation: 'A rhombus is a parallelogram with all 4 sides equal.' },
+        { type: 'truefalse', question: 'The diagonals of a rhombus bisect each other at right angles.', options: ['True', 'False'], correct: 0, explanation: 'In a rhombus, the diagonals are perpendicular bisectors of each other.' },
+        { type: 'mcq', question: 'A rectangle is a parallelogram with:', options: ['4 equal sides', '4 right angles', 'Only one pair of parallel sides', 'Perpendicular diagonals in every case'], correct: 1, explanation: 'A rectangle is a parallelogram with 4 right angles.' },
+        { type: 'truefalse', question: 'The diagonals of a rectangle are equal.', options: ['True', 'False'], correct: 0, explanation: 'Equal diagonals are a key property of rectangles.' },
+        { type: 'mcq', question: 'A square is:', options: ['Only a rectangle', 'Only a rhombus', 'A rectangle and a rhombus', 'Only a kite'], correct: 2, explanation: 'A square has both 4 equal sides and 4 right angles.' },
+        { type: 'truefalse', question: 'Every square is a parallelogram.', options: ['True', 'False'], correct: 0, explanation: 'A square has both pairs of opposite sides parallel.' },
+        { type: 'mcq', question: 'Which quadrilateral has equal diagonals and 4 right angles?', options: ['Rhombus', 'Rectangle', 'Kite', 'General trapezium'], correct: 1, explanation: 'Those are rectangle properties.' },
+        { type: 'mcq', question: 'Which quadrilateral has diagonals that are perpendicular and 4 equal sides?', options: ['Rectangle', 'Rhombus', 'Trapezium', 'Isosceles trapezium'], correct: 1, explanation: 'That matches a rhombus.' },
+        { type: 'truefalse', question: 'A square has diagonals that are equal and perpendicular.', options: ['True', 'False'], correct: 0, explanation: 'A square combines rectangle and rhombus diagonal properties.' },
+        { type: 'mcq', question: 'A quadrilateral with 4 equal sides and 4 right angles is a:', options: ['Rectangle', 'Rhombus', 'Square', 'Kite'], correct: 2, explanation: 'That is the definition of a square.' },
+        { type: 'truefalse', question: 'Every rectangle is a square.', options: ['True', 'False'], correct: 1, explanation: 'A rectangle need not have all 4 sides equal.' },
+        { type: 'truefalse', question: 'Every square is a rectangle.', options: ['True', 'False'], correct: 0, explanation: 'A square has all the properties of a rectangle.' },
+        { type: 'truefalse', question: 'Every square is a rhombus.', options: ['True', 'False'], correct: 0, explanation: 'A square also has all 4 sides equal, so it is a rhombus.' },
+        { type: 'mcq', question: 'Which special parallelogram has diagonals that bisect each other and are equal, but not always perpendicular?', options: ['Rhombus', 'Rectangle', 'Square', 'Kite'], correct: 1, explanation: 'That is the rectangle case.' },
+        { type: 'mcq', question: 'Which special parallelogram has diagonals that bisect each other and are perpendicular, but not always equal?', options: ['Rectangle', 'Rhombus', 'Square', 'Trapezium'], correct: 1, explanation: 'That is the rhombus case.' },
+        { type: 'mcq', question: 'A square belongs to which family?', options: ['Rectangle only', 'Rhombus only', 'Parallelogram only', 'Rectangle, rhombus, and parallelogram'], correct: 3, explanation: 'A square fits all three families.' },
+        { type: 'mcq', question: 'If one angle of a rectangle is 90 degrees, the other 3 angles are:', options: ['90 degrees each', 'Only two are 90 degrees', 'All depend on side lengths', 'Acute angles'], correct: 0, explanation: 'All angles of a rectangle are right angles.' },
+        { type: 'truefalse', question: 'A rhombus must have 4 right angles.', options: ['True', 'False'], correct: 1, explanation: 'A rhombus does not need right angles unless it is a square.' },
+        { type: 'mcq', question: 'Which shape is most specialised in the hierarchy of quadrilaterals in this chapter?', options: ['Trapezium', 'Kite', 'Parallelogram', 'Square'], correct: 3, explanation: 'A square satisfies the most properties.' },
+        { type: 'mcq', question: 'The diagonals of a square are:', options: ['Only equal', 'Only perpendicular', 'Equal and perpendicular', 'Neither equal nor perpendicular'], correct: 2, explanation: 'A square combines both rectangle and rhombus diagonal properties.' },
+    ],
+    assess: [
+        { type: 'mcq', question: 'A rhombus is a parallelogram with:', options: ['4 equal sides', '4 right angles', 'Only 2 equal sides', 'No equal sides'], correct: 0, explanation: 'All 4 sides of a rhombus are equal.' },
+        { type: 'truefalse', question: 'The diagonals of a rectangle are equal.', options: ['True', 'False'], correct: 0, explanation: 'That is a standard rectangle property.' },
+        { type: 'mcq', question: 'A square is both a:', options: ['Trapezium and kite', 'Rectangle and rhombus', 'Kite and pentagon', 'Parallelogram and trapezium only'], correct: 1, explanation: 'A square fits both the rectangle and rhombus families.' },
+        { type: 'truefalse', question: 'Every square is a rectangle.', options: ['True', 'False'], correct: 0, explanation: 'A square has 4 right angles, so it is a rectangle.' },
+        { type: 'mcq', question: 'Which quadrilateral has diagonals that are perpendicular bisectors of each other?', options: ['Rectangle', 'Rhombus', 'Isosceles trapezium', 'General kite only'], correct: 1, explanation: 'That is the rhombus property described in the chapter.' },
+        { type: 'mcq', question: 'Which shape has 4 right angles and opposite sides equal?', options: ['Rectangle', 'Rhombus', 'Kite', 'Trapezium'], correct: 0, explanation: 'That is a rectangle.' },
+        { type: 'truefalse', question: 'Every rectangle is a rhombus.', options: ['True', 'False'], correct: 1, explanation: 'A rectangle does not need all sides equal.' },
+        { type: 'mcq', question: 'A square has diagonals that are:', options: ['Equal only', 'Perpendicular only', 'Equal and perpendicular', 'Unequal and perpendicular'], correct: 2, explanation: 'A square combines both diagonal properties.' },
+        { type: 'mcq', question: 'Which of these is the most specialised figure?', options: ['Parallelogram', 'Rectangle', 'Rhombus', 'Square'], correct: 3, explanation: 'A square has the greatest number of special properties.' },
+        { type: 'truefalse', question: 'Every square is a parallelogram.', options: ['True', 'False'], correct: 0, explanation: 'A square has both pairs of opposite sides parallel.' },
+    ],
+};

@@ -76,14 +76,14 @@ const DynamicVisual = ({ type, data }) => {
         const { pos } = data;
         return (
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{ border: "none" }}>
-                <svg width="100%" height="100%" style={{ maxWidth: '300px' }} viewBox="0 0 220 120">
+                <svg width="100%" height="100%" style={{ maxWidth: '300px' }} viewBox="0 0 220 150">
                     <rect x="50" y="40" width="100" height="70" rx="10" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="2" />
                     <text x="100" y="85" textAnchor="middle" fill="#64748B" fontSize="14" fontWeight="600">BOX</text>
-                    {pos === 'top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'bottom' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="95" r="18" fill="url(#ballGradient)" />}
+                    {pos === 'on top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
+                    {pos === 'underneath' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="130" r="18" fill="url(#ballGradient)" />}
                     {pos === 'inside' && <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx="100" cy="75" r="18" fill="url(#ballGradient)" />}
                     {pos === 'outside' && <motion.circle initial={{ x: -20 }} animate={{ x: 0 }} cx="25" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'far' && <motion.circle initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} cx="205" cy="35" r="10" fill="url(#ballGradient)" />}
+                    {pos === 'far away' && <motion.circle initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} cx="205" cy="35" r="10" fill="url(#ballGradient)" />}
                     <defs>
                         <radialGradient id="ballGradient">
                             <stop offset="0%" stopColor="#FFD54F" />
@@ -187,11 +187,11 @@ const ShapesAndSpace = () => {
         // Pre-shuffled pools for 100% uniqueness per session
         const shapesPool = ['circle', 'square', 'triangle', 'rectangle', 'oval'].sort(() => 0.5 - Math.random());
         const posPool = [
-            { q: 'Where is the yellow ball?', a: 'top' },
-            { q: 'Is the ball inside or outside the box?', a: 'inside' },
-            { q: 'Where is the ball located?', a: 'bottom' },
-            { q: 'Where can you see the ball?', a: 'outside' },
-            { q: 'Look closely, where is the ball?', a: 'far' }
+            { q: 'Where is the ball located?', a: 'on top' },
+            { q: 'Where is the ball located?', a: 'inside' },
+            { q: 'Where is the ball located?', a: 'underneath' },
+            { q: 'Where is the ball located?', a: 'outside' },
+            { q: 'Where is the ball located?', a: 'far away' }
         ].sort(() => 0.5 - Math.random());
         const sizePool = [
             { q: 'Which bar is HIGHER?', a: 'A', aSize: 120, bSize: 60, orient: 'vertical', exp: 'Bar A has a greater height than Bar B.' },
@@ -224,7 +224,7 @@ const ShapesAndSpace = () => {
                 const otherOptions = shapesPool.filter(s => s !== target);
                 question = {
                     text: `What shape is this?`,
-                    options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
+                    options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random()),
                     correct: target,
                     type: 'shape',
                     visualData: { shape: target, color: colors[i % colors.length] },
@@ -232,7 +232,7 @@ const ShapesAndSpace = () => {
                 };
             } else if (typeToGen === 'position') {
                 const item = posPool[i % posPool.length];
-                const pool = ['top', 'bottom', 'inside', 'outside', 'far'];
+                const pool = ['on top', 'underneath', 'inside', 'outside', 'far away'];
                 const otherOptions = pool.filter(p => p !== item.a);
                 question = {
                     text: item.q,
@@ -240,7 +240,7 @@ const ShapesAndSpace = () => {
                     correct: item.a,
                     type: 'position',
                     visualData: { pos: item.a },
-                    explanation: `The ball is positioned at the ${item.a.toUpperCase()} in this visual representation.`
+                    explanation: `The ball is positioned ${item.a.toUpperCase()} in this visual representation.`
                 };
             } else if (typeToGen === 'size') {
                 const item = sizePool[i % sizePool.length];
@@ -376,12 +376,7 @@ const ShapesAndSpace = () => {
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            // Clear any existing timeout just in case
-            if (nextTimeoutRef.current) clearTimeout(nextTimeoutRef.current);
-            // Give a tiny delay so they see the option highlight green
-            nextTimeoutRef.current = setTimeout(() => {
-                handleNext();
-            }, 800);
+            handleNext();
         }
     };
 
@@ -695,7 +690,7 @@ const ShapesAndSpace = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>

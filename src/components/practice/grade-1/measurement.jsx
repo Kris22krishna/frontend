@@ -232,7 +232,7 @@ const Measurement = () => {
                 const correct = (isLonger ? (l1 > l2 ? label1 : label2) : (l1 < l2 ? label1 : label2));
 
                 question = {
-                    text: `Which one is ${adj}? ${icon}`,
+                    text: `Which one is ${adj}?`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type,
@@ -281,7 +281,7 @@ const Measurement = () => {
                 const correct = (isMore ? (f1 > f2 ? label1 : label2) : (f1 < f2 ? label1 : label2));
 
                 question = {
-                    text: `Which ${containerType.name.toLowerCase()} ${adj}? 🧐 ${containerType.emoji}`,
+                    text: `Which ${containerType.name.toLowerCase()} ${adj}?`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type: 'capacity',
