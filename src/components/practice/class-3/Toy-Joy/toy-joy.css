@@ -1,0 +1,127 @@
+
+:root{
+  --bg:#fffbf2;
+  --yellow:#ffd600;
+  --orange:#ff7c2a;
+  --teal:#00b8a9;
+  --pink:#f72585;
+  --purple:#6a0dad;
+  --blue:#3a86ff;
+  --green:#43aa8b;
+  --red:#e63946;
+  --sky:#90e0ef;
+  --card:#ffffff;
+  --text:#1a1a2e;
+  --muted:#6b7280;
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#6a0dad,#3a86ff);
+  padding:44px 20px 32px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+header::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.08) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.toy-joy-ch-badge{display:inline-block;background:var(--yellow);color:#333;font-family:'Baloo 2',cursive;font-weight:800;font-size:.8rem;padding:3px 16px;border-radius:30px;margin-bottom:10px;position:relative;}
+header h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(1.8rem,5vw,3rem);color:#fff;position:relative;}
+header p{color:rgba(255,255,255,.8);font-size:1rem;margin-top:6px;position:relative;}
+
+/* LAYOUT */
+.toy-joy-main{max-width:900px;margin:0 auto;padding:36px 16px 80px;}
+
+/* SKILL HEADER */
+.toy-joy-skill-section{margin-bottom:56px;}
+.toy-joy-skill-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
+.toy-joy-snum{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:1.2rem;color:#fff;flex-shrink:0;}
+.toy-joy-stitle{font-family:'Baloo 2',cursive;font-weight:700;font-size:1.3rem;}
+.toy-joy-stitle small{display:block;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:600;color:var(--muted);margin-top:2px;}
+
+/* CARD */
+.toy-joy-qcard{background:var(--card);border-radius:var(--r);padding:20px 22px 22px;margin-bottom:14px;box-shadow:0 3px 18px rgba(0,0,0,.07);border-left:5px solid transparent;transition:transform .18s,box-shadow .18s;}
+.toy-joy-qcard:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.11);}
+
+.toy-joy-qmeta{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap;}
+.toy-joy-qbadge{font-family:'Baloo 2',cursive;font-weight:800;font-size:.72rem;color:#fff;padding:2px 11px;border-radius:20px;}
+.toy-joy-qtype{font-size:.72rem;font-weight:700;color:var(--muted);background:#f3f4f6;padding:3px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px;}
+.toy-joy-qtext{font-size:.98rem;font-weight:700;line-height:1.6;color:var(--text);}
+
+/* OPTIONS */
+.toy-joy-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.toy-joy-opt{display:flex;align-items:center;gap:9px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:11px;padding:10px 14px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .15s;user-select:none;}
+.toy-joy-opt:hover{background:#eff6ff;border-color:var(--blue);}
+.toy-joy-opt.toy-joy-selected{background:#dbeafe;border-color:var(--blue);}
+.toy-joy-opt.toy-joy-correct{background:#dcfce7!important;border-color:#16a34a!important;color:#15803d;}
+.toy-joy-opt.toy-joy-wrong{background:#fee2e2!important;border-color:#dc2626!important;color:#dc2626;}
+.toy-joy-opt-letter{width:26px;height:26px;border-radius:8px;background:var(--blue);color:#fff;font-family:'Baloo 2',cursive;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* TRUE FALSE */
+.toy-joy-tfopts{display:flex;gap:10px;margin-top:12px;}
+.toy-joy-tfbtn{flex:1;padding:11px;border:2px solid #e2e8f0;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;background:#f8fafc;transition:all .15s;}
+.toy-joy-tfbtn:hover{transform:scale(1.02);}
+.toy-joy-tfbtn.toy-joy-t:hover,.toy-joy-tfbtn.toy-joy-t.toy-joy-selected{background:#dcfce7;border-color:#16a34a;color:#15803d;}
+.toy-joy-tfbtn.toy-joy-f:hover,.toy-joy-tfbtn.toy-joy-f.toy-joy-selected{background:#fee2e2;border-color:#dc2626;color:#dc2626;}
+.toy-joy-tfbtn.toy-joy-correct{background:#dcfce7!important;border-color:#16a34a!important;color:#15803d!important;}
+.toy-joy-tfbtn.toy-joy-wrong{background:#fee2e2!important;border-color:#dc2626!important;color:#dc2626!important;}
+
+/* MATCH */
+.toy-joy-match-wrap{margin-top:14px;display:flex;gap:16px;flex-wrap:wrap;}
+.toy-joy-match-col{display:flex;flex-direction:column;gap:8px;flex:1;min-width:130px;}
+.toy-joy-match-item{background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;padding:9px 14px;font-size:.88rem;font-weight:700;text-align:center;cursor:pointer;transition:all .15s;user-select:none;}
+.toy-joy-match-item:hover{border-color:var(--blue);background:#eff6ff;}
+.toy-joy-match-item.toy-joy-active{border-color:var(--orange);background:#fff7ed;}
+.toy-joy-match-item.toy-joy-matched{border-color:var(--green);background:#f0fdf4;color:#15803d;}
+.toy-joy-match-center{display:flex;flex-direction:column;justify-content:space-around;gap:8px;align-items:center;}
+.toy-joy-match-line{font-size:1.4rem;color:#cbd5e1;}
+.toy-joy-match-hint{font-size:.75rem;color:var(--muted);margin-top:8px;text-align:center;}
+
+/* PICTURE Q */
+.toy-joy-pic-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;justify-content:center;}
+.toy-joy-pic-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;}
+.toy-joy-pic-item svg{border:3px solid #e2e8f0;border-radius:12px;padding:6px;background:#f8fafc;transition:border-color .15s,box-shadow .15s;}
+.toy-joy-pic-item:hover svg{border-color:var(--blue);box-shadow:0 0 0 3px rgba(58,134,255,.15);}
+.toy-joy-pic-item svg.toy-joy-selected{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,124,42,.2);}
+.toy-joy-pic-item svg.toy-joy-correct{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.2);}
+.toy-joy-pic-item svg.toy-joy-wrong{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.2);}
+.toy-joy-pic-label{font-size:.78rem;font-weight:700;color:var(--muted);}
+
+/* CHECK BTN */
+.toy-joy-check-btn{margin-top:14px;padding:9px 22px;border-radius:10px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer;background:var(--purple);color:#fff;transition:all .15s;}
+.toy-joy-check-btn:hover{opacity:.88;transform:scale(1.02);}
+.toy-joy-feedback{margin-top:10px;font-size:.85rem;font-weight:700;padding:7px 12px;border-radius:9px;display:none;}
+.toy-joy-feedback.toy-joy-show{display:block;}
+.toy-joy-feedback.toy-joy-ok{background:#dcfce7;color:#15803d;}
+.toy-joy-feedback.toy-joy-no{background:#fee2e2;color:#b91c1c;}
+
+/* COUNT BOXES */
+.toy-joy-count-boxes{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+.toy-joy-cbox{background:#f8fafc;border:2px solid #e2e8f0;border-radius:11px;padding:9px 16px;font-size:.88rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+.toy-joy-cbox input{width:46px;border:2px solid #e2e8f0;border-radius:7px;padding:4px 6px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;text-align:center;outline:none;}
+.toy-joy-cbox input:focus{border-color:var(--blue);}
+
+/* COLOUR THEMES */
+.toy-joy-s1 .toy-joy-snum,.toy-joy-s1 .toy-joy-qbadge{background:#ff7c2a;}  .toy-joy-s1 .toy-joy-qcard{border-left-color:#ff7c2a;}
+.toy-joy-s2 .toy-joy-snum,.toy-joy-s2 .toy-joy-qbadge{background:#00b8a9;}  .toy-joy-s2 .toy-joy-qcard{border-left-color:#00b8a9;}
+.toy-joy-s3 .toy-joy-snum,.toy-joy-s3 .toy-joy-qbadge{background:#3a86ff;}  .toy-joy-s3 .toy-joy-qcard{border-left-color:#3a86ff;}
+.toy-joy-s4 .toy-joy-snum,.toy-joy-s4 .toy-joy-qbadge{background:#f72585;}  .toy-joy-s4 .toy-joy-qcard{border-left-color:#f72585;}
+.toy-joy-s5 .toy-joy-snum,.toy-joy-s5 .toy-joy-qbadge{background:#6a0dad;}  .toy-joy-s5 .toy-joy-qcard{border-left-color:#6a0dad;}
+.toy-joy-s6 .toy-joy-snum,.toy-joy-s6 .toy-joy-qbadge{background:#e63946;}  .toy-joy-s6 .toy-joy-qcard{border-left-color:#e63946;}
+.toy-joy-s7 .toy-joy-snum,.toy-joy-s7 .toy-joy-qbadge{background:#43aa8b;}  .toy-joy-s7 .toy-joy-qcard{border-left-color:#43aa8b;}
+.toy-joy-s8 .toy-joy-snum,.toy-joy-s8 .toy-joy-qbadge{background:#e67e22;}  .toy-joy-s8 .toy-joy-qcard{border-left-color:#e67e22;}
+
+hr.toy-joy-div{border:none;border-top:2px dashed #e2e8f0;margin:44px 0;}
+
+/* ORDER DRAG */
+.toy-joy-order-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+.toy-joy-order-item{background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:10px;cursor:grab;}
+.toy-joy-order-item:active{cursor:grabbing;box-shadow:0 4px 16px rgba(0,0,0,.13);}
+.toy-joy-order-num{width:28px;height:28px;border-radius:8px;background:var(--orange);color:#fff;font-family:'Baloo 2',cursive;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+@media(max-width:520px){.toy-joy-opts{grid-template-columns:1fr;}}
