@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
+import { wordApi } from './components/wordOfTheDay/services/wordApi';
 import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
 import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
 import MultiplicationPracticeMultiple from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_multiple_numbers';
@@ -484,6 +486,12 @@ import Grade6DataHandlingIntro from './components/practice/grade-6/DataHandling6
 import Grade6DataHandlingTerminology from './components/practice/grade-6/DataHandling6/Topics/Terminology/DataHandling6Terminology';
 import Grade6DataHandlingSkills from './components/practice/grade-6/DataHandling6/Topics/Skills/DataHandling6Skills';
 
+// Grade 6 Mensuration (Perimeter and Area) Chapter
+import Grade6Mensuration from './components/practice/grade-6/Mensuration6/Mensuration6';
+import Grade6MensurationIntro from './components/practice/grade-6/Mensuration6/Topics/5W1H/Mensuration6Intro';
+import Grade6MensurationTerminology from './components/practice/grade-6/Mensuration6/Topics/Terminology/Mensuration6Terminology';
+import Grade6MensurationSkills from './components/practice/grade-6/Mensuration6/Topics/Skills/Mensuration6Skills';
+
 // Grade 6 Prime Time Chapter
 import Grade6PrimeTime from './components/practice/grade-6/PrimeTime6/PrimeTime6';
 import Grade6PrimeTimeIntro from './components/practice/grade-6/PrimeTime6/Topics/5W1H/PrimeTime6Intro';
@@ -863,6 +871,11 @@ import ThousandsAroundUsSkills from './components/practice/class-4/Thousands_Aro
 import DiagnosisLanding from './components/Diagnosis_test/DiagnosisLanding';
 import DiagnosisTestRunner from './components/Diagnosis_test/DiagnosisTestRunner';
 
+// Word of the Day
+import TeacherPortal from './components/wordOfTheDay/teacher/TeacherPortal';
+import WordPopup from './components/wordOfTheDay/student/WordPopup';
+import WordHistory from './components/wordOfTheDay/student/WordHistory';
+
 const ComingSoon = () => (
   <div className="flex flex-col items-center justify-center h-screen bg-slate-50">
     <h1 className="text-6xl mb-4">🚧</h1>
@@ -877,7 +890,46 @@ const ComingSoon = () => (
   </div>
 );
 
+const WordPopupController = ({ user }) => {
+  const location = useLocation();
+  const [showPopup, setShowPopup] = useState(false);
+  const [wordData, setWordData] = useState(null);
+
+  useEffect(() => {
+    const rawUserType = user?.role || user?.user_type || sessionStorage.getItem('activeRole') || sessionStorage.getItem('userType') || '';
+    const userTypeStr = Array.isArray(rawUserType) ? rawUserType[0] : String(rawUserType);
+    const isStudent = userTypeStr.toLowerCase() === 'student';
+
+    const pathMatch = location.pathname.match(/grade\/(\d+)/i);
+    const pathGrade = pathMatch ? pathMatch[1] : '';
+
+    const rawGrade = String(user?.grade || user?.grade_level || sessionStorage.getItem('studentGrade') || pathGrade || '');
+    const gradeMatch = rawGrade.match(/\d+/);
+    const grade = gradeMatch ? Number(gradeMatch[0]) : 0;
+
+    if (isStudent && grade >= 3 && grade <= 5) {
+      if (!wordData) {
+        wordApi.getTodayWord()
+          .then(data => {
+            if (data && data.word) {
+              setWordData(data);
+              setShowPopup(true);
+            }
+          })
+          .catch(err => console.error("Could not fetch today's word", err));
+      } else {
+        setShowPopup(true);
+      }
+    }
+  }, [user, location.pathname]);
+
+  if (!showPopup) return null;
+  return <WordPopup data={wordData} onClose={() => setShowPopup(false)} />;
+};
+
 function App() {
+  const { user } = useAuth();
+
   // Initialize GA4 tracking
   useEffect(() => {
     // Add Google Analytics script
@@ -1311,6 +1363,12 @@ function App() {
           <Route path="middle/grade/6/data-handling-6/introduction" element={<Grade6DataHandlingIntro />} />
           <Route path="middle/grade/6/data-handling-6/terminology" element={<Grade6DataHandlingTerminology />} />
           <Route path="middle/grade/6/data-handling-6/skills" element={<Grade6DataHandlingSkills />} />
+
+          {/* Grade 6 Mensuration Routes */}
+          <Route path="middle/grade/6/mensuration-6" element={<Grade6Mensuration />} />
+          <Route path="middle/grade/6/mensuration-6/introduction" element={<Grade6MensurationIntro />} />
+          <Route path="middle/grade/6/mensuration-6/terminology" element={<Grade6MensurationTerminology />} />
+          <Route path="middle/grade/6/mensuration-6/skills" element={<Grade6MensurationSkills />} />
 
           {/* Grade 6 Prime Time Chapter */}
           <Route path="middle/grade/6/prime-time" element={<Grade6PrimeTime />} />
@@ -2408,11 +2466,18 @@ function App() {
         <Route path="/senior/grade/12/matrices/test/invertible-matrices" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test/invertible-matrices" replace /></ProtectedRoute>} />
         <Route path="/senior/grade/12/matrices/test" element={<ProtectedRoute redirectTo="/login"><Navigate to="/senior/grade/12/matrices/deep-dive/test" replace /></ProtectedRoute>} />
 
+        {/* Word of the Day Routes */}
+        <Route path="/word-of-the-day/teacher" element={<TeacherPortal />} />
+        <Route path="/word-of-the-day/popup" element={<WordPopup />} />
+        <Route path="/word-of-the-day/history" element={<WordHistory />} />
+
         {/* Fullscreen Routes (Outside MainLayout) */}
         <Route path="diagnosis-test/:grade" element={<ProtectedRoute redirectTo="/login"><DiagnosisTestRunner /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      
+      <WordPopupController user={user} />
     </Router>
   );
 }
