@@ -12,13 +12,13 @@ export const generateShapesSkillsData = () => {
     };
 
     const shapes3D = [
-        { name: 'Cube', text: 'A cube', faces: 6, edges: 12, vertices: 8, image: '🎲', flatFaces: 6, curvedFaces: 0 },
-        { name: 'Cuboid', text: 'A cuboid', faces: 6, edges: 12, vertices: 8, image: '🧱', flatFaces: 6, curvedFaces: 0 },
+        { name: 'Cube', text: 'A cube', faces: 6, edges: 12, vertices: 8, image: '<svg width="1em" height="1em" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,15 85,32 50,50 15,32" fill="#dbeafe" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="15,32 50,50 50,85 15,68" fill="#60a5fa" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="50,50 85,32 85,68 50,85" fill="#93c5fd" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/></svg>', flatFaces: 6, curvedFaces: 0 },
+        { name: 'Cuboid', text: 'A cuboid', faces: 6, edges: 12, vertices: 8, image: '<svg width="1.2em" height="0.9em" viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg"><polygon points="60,15 105,30 60,45 15,30" fill="#dbeafe" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="15,30 60,45 60,75 15,60" fill="#60a5fa" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="60,45 105,30 105,60 60,75" fill="#93c5fd" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/></svg>', flatFaces: 6, curvedFaces: 0 },
         { name: 'Sphere', text: 'A sphere', faces: 1, edges: 0, vertices: 0, image: '⚽', flatFaces: 0, curvedFaces: 1 },
         { name: 'Cylinder', text: 'A cylinder', faces: 3, edges: 2, vertices: 0, image: '🥫', flatFaces: 2, curvedFaces: 1 },
         { name: 'Cone', text: 'A cone', faces: 2, edges: 1, vertices: 1, image: '🍦', flatFaces: 1, curvedFaces: 1 },
-        { name: 'Square Pyramid', text: 'A square pyramid', faces: 5, edges: 8, vertices: 5, image: '🔺', flatFaces: 5, curvedFaces: 0 },
-        { name: 'Triangular Prism', text: 'A triangular prism', faces: 5, edges: 9, vertices: 6, image: '⛺', flatFaces: 5, curvedFaces: 0 },
+        { name: 'Square Pyramid', text: 'A square pyramid', faces: 5, edges: 8, vertices: 5, image: '<svg width="1em" height="1em" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,15 20,75 50,90" fill="#60a5fa" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="50,15 50,90 80,75" fill="#93c5fd" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/></svg>', flatFaces: 5, curvedFaces: 0 },
+        { name: 'Triangular Prism', text: 'A triangular prism', faces: 5, edges: 9, vertices: 6, image: '<svg width="1.1em" height="0.9em" viewBox="0 0 110 90" xmlns="http://www.w3.org/2000/svg"><polygon points="35,25 55,85 95,75 75,15" fill="#93c5fd" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="35,25 15,75 55,85" fill="#60a5fa" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/></svg>', flatFaces: 5, curvedFaces: 0 },
     ];
 
     /* ─────────────────────────────────────────────
@@ -210,7 +210,7 @@ export const generateShapesSkillsData = () => {
                     text: `A net consisting of ${descriptions[target]} folds into a...`,
                     options, answer: options.indexOf(target),
                     explanation: `A ${target} is formed by folding the net with ${descriptions[target]}.`,
-                    image: '📦'
+                    image: '<svg width="1em" height="1em" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,15 85,32 50,50 15,32" fill="#dbeafe" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="15,32 50,50 50,85 15,68" fill="#60a5fa" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="50,50 85,32 85,68 50,85" fill="#93c5fd" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/></svg>'
                 };
             },
             // Template 2: cannot be formed from a net
@@ -579,7 +579,7 @@ export const generateShapesSkillsData = () => {
             title: 'Identifying 3D Shapes',
             desc: 'Learn about faces, edges, and corners of 3D solids.',
             color: '#d97706',
-            icon: '🧊',
+            icon: '<svg width="1em" height="1em" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,15 85,32 50,50 15,32" fill="#dbeafe" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="15,32 50,50 50,85 15,68" fill="#60a5fa" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="50,50 85,32 85,68 50,85" fill="#93c5fd" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/></svg>',
             learnSections: [
                 {
                     heading: 'Faces, Edges, and Vertices',
@@ -600,7 +600,7 @@ export const generateShapesSkillsData = () => {
             title: 'Nets of Solids',
             desc: 'Understand how flat 2D shapes fold into 3D objects.',
             color: '#059669',
-            icon: '📦',
+            icon: '<svg width="1em" height="1em" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,15 85,32 50,50 15,32" fill="#dbeafe" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="15,32 50,50 50,85 15,68" fill="#60a5fa" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/><polygon points="50,50 85,32 85,68 50,85" fill="#93c5fd" stroke="#1e3a8a" stroke-width="4" stroke-linejoin="miter"/></svg>',
             learnSections: [
                 {
                     heading: 'What is a Net?',

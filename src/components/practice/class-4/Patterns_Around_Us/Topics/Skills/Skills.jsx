@@ -1,22 +1,257 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../shapes-around-us.css';
-import { generateShapesSkillsData } from './shapesSkillsData';
+import '../../patterns-around-us.css';
+import { skillsData } from './skillsData';
 
 /* ═══════════════════════════════════════════════════════════════
    QUESTION CARD — renders MCQ with optional image
    ═══════════════════════════════════════════════════════════════ */
-function QuestionCard({ type, question, options, answer, onAnswer, disabled, selectedOption, image, showCorrect = true }) {
-    const [val, setVal] = useState(selectedOption || '');
+function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabled, selectedOption, image, showCorrect = true, ...qProps }) {
+    const answer = correctAnswer;
+    const [val, setVal] = useState('');
 
-    if (type === 'multiple-choice') {
+    // For multi-select - restore from selectedOption if it's an array
+    const [selectedIndices, setSelectedIndices] = useState(Array.isArray(selectedOption) ? selectedOption : []);
+    const [msAnim, setMsAnim] = useState(null); // {idx: 'shake' | 'pop'}
+
+    // For interactive-grouping (drag n drop / click mock)
+    // If we have a selected answer, we assume everything was grouped
+    const isPackMode = type === 'interactive-grouping' || type === 'visual-pairing';
+    const [groupedCount, setGroupedCount] = useState(isPackMode && selectedOption !== null ? Math.floor(qProps.totalItems / (qProps.groupSize || 2)) : 0);
+    const [pendingGroupCount, setPendingGroupCount] = useState(0);
+
+    const isMultipleChoice = type === 'multiple-choice';
+    const isMultiSelect = type === 'multi-select';
+    const isFillBlank = type === 'fill-blank' || type === 'fill-blank-eq';
+    const isGrouping = type === 'interactive-grouping';
+    const isPairing = type === 'visual-pairing';
+
+    // Helper for multi-select
+    const handleMSClick = (idx) => {
+        if (disabled) return;
+        const isCorrectClick = qProps.correctIndices.includes(idx);
+
+        // Trigger animation
+        setMsAnim({ idx, type: isCorrectClick ? 'pop' : 'shake' });
+        setTimeout(() => setMsAnim(null), 500);
+
+        if (!showCorrect) {
+            // ASSESSMENT MODE: Toggle selection and report current array
+            const newSelections = selectedIndices.includes(idx)
+                ? selectedIndices.filter(i => i !== idx)
+                : [...selectedIndices, idx];
+            setSelectedIndices(newSelections);
+            onAnswer(newSelections);
+            return;
+        }
+
+        // PRACTICE MODE: Correctness matters immediately
+        if (isCorrectClick) {
+            const newSelections = selectedIndices.includes(idx) ? selectedIndices : [...selectedIndices, idx];
+            setSelectedIndices(newSelections);
+            if (newSelections.length === qProps.correctIndices.length) {
+                // all correct found
+                onAnswer(true); // they won the multi-select game
+            }
+        } else {
+            // clicked wrong one
+            onAnswer(false); // lose game immediately
+        }
+    };
+
+    if (isMultiSelect) {
         return (
             <div style={{ marginBottom: 20 }}>
-                {image && (
-                    <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word', display: 'flex', justifyContent: 'center' }}>
-                        {typeof image === 'string' && image.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: image}} /> : image}
+                <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, maxWidth: 400, margin: '0 auto' }}>
+                    {qProps.gridNumbers.map((num, i) => {
+                        const isSel = selectedIndices.includes(i) || (disabled && showCorrect && qProps.correctIndices.includes(i));
+                        const animClass = msAnim?.idx === i ? (msAnim.type === 'pop' ? 'pau-anim-pop' : 'pau-anim-shake') : '';
+
+                        let bg = '#fff'; let bdr = '#e2e8f0'; let clr = '#0f172a';
+                        if (isSel) {
+                            if (showCorrect) {
+                                bg = '#f0fdf4'; bdr = '#10b981'; clr = '#059669';
+                            } else {
+                                // Assessment: generic blue for everything chosen
+                                bg = '#eff6ff'; bdr = '#3b82f6'; clr = '#1d4ed8';
+                            }
+                        }
+
+                        return (
+                            <button key={i} onClick={() => handleMSClick(i)} disabled={disabled || (showCorrect && isSel)}
+                                className={animClass}
+                                style={{
+                                    padding: '24px 0', borderRadius: 16, border: `3px solid ${bdr}`, background: bg, color: clr,
+                                    fontSize: 28, fontWeight: 900, cursor: (disabled || isSel) ? 'default' : 'pointer',
+                                    transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                    boxShadow: isSel ? '0 0 15px rgba(16, 185, 129, 0.2)' : '0 4px 10px rgba(0,0,0,0.05)'
+                                }}>
+                                {num}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    if (isFillBlank) {
+        return (
+            <div style={{ marginBottom: 20 }}>
+                <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, textAlign: 'center', marginBottom: 24, border: '2px dashed #cbd5e1' }}>
+                    <p style={{ fontSize: 28, fontWeight: 900, letterSpacing: 1, margin: 0, color: '#334155', wordBreak: 'break-word' }}>
+                        {question.split('___').map((part, i, arr) => (
+                            <React.Fragment key={i}>
+                                {part}
+                                {i < arr.length - 1 && (
+                                    <span style={{
+                                        display: 'inline-block', width: 80, height: 40, borderBottom: `4px solid ${disabled ? (showCorrect ? '#10b981' : '#ef4444') : '#94a3b8'}`,
+                                        margin: '0 8px', verticalAlign: 'middle', color: '#0f172a', textAlign: 'center', lineHeight: '40px'
+                                    }}>
+                                        {(selectedOption !== null && options[selectedOption]) ? options[selectedOption] : (disabled ? val : '?')}
+                                    </span>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </p>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    {options.map((opt, i) => {
+                        const isSelected = i === selectedOption;
+                        let bg = '#fff';
+                        let bdr = '#e2e8f0';
+                        let clr = '#0f172a';
+
+                        if (showCorrect && (disabled || selectedOption !== null)) {
+                            if (i == answer) { bg = '#f0fdf4'; bdr = '#10b981'; }
+                            else if (i == selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
+                            else if (selectedOption !== null) { clr = '#94a3b8'; }
+                        } else if (isSelected) {
+                            bg = '#eff6ff'; bdr = '#3b82f6';
+                        }
+
+                        return (
+                            <button key={i} onClick={() => onAnswer(i)} disabled={disabled}
+                                style={{
+                                    padding: '16px', borderRadius: 16, border: `2px solid ${bdr}`, background: bg,
+                                    fontSize: 20, fontWeight: 800, color: clr, cursor: disabled ? 'default' : 'pointer', transition: 'all 0.2s',
+                                    boxShadow: isSelected ? '0 0 15px rgba(59, 130, 246, 0.2)' : '0 4px 12px rgba(0,0,0,0.04)'
+                                }}
+                                onMouseOver={e => { if (!disabled) { e.currentTarget.style.borderColor = '#0284c7'; e.currentTarget.style.transform = 'translateY(-2px)'; } }}
+                                onMouseOut={e => { if (!disabled) { e.currentTarget.style.borderColor = bdr; e.currentTarget.style.transform = 'none'; } }}
+                            >
+                                {opt}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    if (isGrouping || isPairing) {
+        const groupSize = qProps.groupSize || 2; // pairing is 2
+        const totalItems = qProps.totalItems;
+        const totalGroups = Math.floor(totalItems / groupSize);
+        const remainder = totalItems % groupSize;
+        const renderBlocks = [];
+
+        let itId = 0;
+        const itemsToRender = disabled ? totalItems : Math.max(0, totalItems - (groupedCount * groupSize));
+
+        return (
+            <div style={{ marginBottom: 20 }}>
+                <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
+
+                {/* Visual Area */}
+                <div style={{ background: '#f8fafc', padding: 24, borderRadius: 20, marginBottom: 24, border: '2px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+                    {/* Groups created */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', minHeight: 60 }}>
+                        {Array.from({ length: disabled ? totalGroups : groupedCount }).map((_, i) => (
+                            <div key={i} className="pau-anim-pop" style={{ padding: '8px 12px', background: '#fef3c7', border: '2px solid #f59e0b', borderRadius: 12, display: 'flex', gap: 4, alignItems: 'center', fontSize: 24 }}>
+                                {Array.from({ length: groupSize }).map((_, j) => <span key={j}>{qProps.emoji}</span>)}
+                            </div>
+                        ))}
+                        {(disabled && remainder > 0) && (
+                            <div className="pau-anim-pop" style={{ padding: '8px 12px', background: '#fef2f2', border: '2px solid #ef4444', borderRadius: 12, display: 'flex', gap: 4, alignItems: 'center', fontSize: 24, opacity: 0.7 }}>
+                                {Array.from({ length: remainder }).map((_, j) => <span key={j}>{qProps.emoji}</span>)}
+                            </div>
+                        )}
                     </div>
-                )}
+
+                    {/* Ungrouped items */}
+                    {!disabled && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', padding: 16, background: '#fff', borderRadius: 16, minHeight: 60 }}>
+                            {Array.from({ length: itemsToRender }).map((_, i) => {
+                                const isPending = i < pendingGroupCount;
+                                return (
+                                    <div key={i} style={{
+                                        fontSize: 32, cursor: 'pointer', transition: 'all 0.2s',
+                                        transform: isPending ? 'scale(1.1) translateY(-4px)' : 'scale(1)',
+                                        opacity: isPending ? 0.7 : 1,
+                                        filter: isPending ? 'drop-shadow(0 4px 6px rgba(59,130,246,0.5))' : 'none'
+                                    }}
+                                        onMouseOver={e => { if (!isPending) e.currentTarget.style.transform = 'scale(1.2)' }}
+                                        onMouseOut={e => { if (!isPending) e.currentTarget.style.transform = 'scale(1)' }}
+                                        onClick={() => {
+                                            if (itemsToRender >= groupSize) {
+                                                if (pendingGroupCount + 1 === groupSize) {
+                                                    setGroupedCount(prev => prev + 1);
+                                                    setPendingGroupCount(0);
+                                                } else {
+                                                    setPendingGroupCount(prev => prev + 1);
+                                                }
+                                            }
+                                        }}>
+                                        {qProps.emoji}
+                                    </div>
+                                );
+                            })}
+                            {itemsToRender === 0 && <div style={{ color: '#10b981', fontWeight: 800, fontSize: 18 }}>All packed up!</div>}
+                        </div>
+                    )}
+                </div>
+
+                {/* Final Question options */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    {options.map((opt, i) => {
+                        let bg = '#fff'; let bdr = '#e2e8f0'; let clr = '#0f172a';
+                        const isSelected = i === selectedOption;
+
+                        if (showCorrect && (disabled || selectedOption !== null)) {
+                            if (i == answer) { bg = '#f0fdf4'; bdr = '#10b981'; clr = '#059669'; }
+                            else if (i == selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; clr = '#dc2626'; }
+                            else if (selectedOption !== null) { clr = '#94a3b8'; }
+                        } else if (isSelected) {
+                            bg = '#eff6ff'; bdr = '#3b82f6'; clr = '#1d4ed8';
+                        }
+
+                        // Don't let them answer until packed, unless they can't pack anymore
+                        const canAnswer = disabled || (itemsToRender < groupSize);
+
+                        return (
+                            <button key={i} onClick={() => onAnswer(i)} disabled={!canAnswer || disabled}
+                                style={{
+                                    padding: '16px', borderRadius: 16, border: `2px solid ${bdr}`, background: bg,
+                                    fontSize: 18, fontWeight: 800, color: clr, cursor: (!canAnswer || disabled) ? 'default' : 'pointer',
+                                    transition: 'all 0.2s', opacity: canAnswer ? 1 : 0.5
+                                }}
+                            >
+                                {opt}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    if (isMultipleChoice) {
+        return (
+            <div style={{ marginBottom: 20 }}>
+                {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{image}</div>}
                 <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {options.map((opt, i) => {
@@ -24,19 +259,20 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
                         let bdr = '#e2e8f0';
                         let clr = '#0f172a';
                         const letter = String.fromCharCode(65 + i); // A, B, C, D
+                        const isSelected = i === selectedOption;
 
-                        if (disabled && showCorrect) {
-                            if (i === answer) { bg = '#f0fdf4'; bdr = '#10b981'; }
-                            else if (i === selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
-                            else { clr = '#94a3b8'; }
-                        } else if (i === selectedOption) {
+                        if (showCorrect && (disabled || selectedOption !== null)) {
+                            if (i == answer) { bg = '#f0fdf4'; bdr = '#10b981'; }
+                            else if (i == selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
+                            else if (selectedOption !== null) { clr = '#94a3b8'; }
+                        } else if (isSelected) {
                             bg = '#eff6ff'; bdr = '#3b82f6';
                         }
 
                         return (
                             <button
                                 key={i}
-                                onClick={() => onAnswer(i === selectedOption ? null : i)}
+                                onClick={() => onAnswer(i)}
                                 disabled={disabled}
                                 style={{
                                     display: 'flex', alignItems: 'center', gap: 12,
@@ -63,14 +299,10 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
     // Short answer
     return (
         <div style={{ marginBottom: 20 }}>
-            {image && (
-                <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word', display: 'flex', justifyContent: 'center' }}>
-                    {typeof image === 'string' && image.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: image}} /> : image}
-                </div>
-            )}
+            {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{image}</div>}
             <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
             <div style={{ display: 'flex', gap: 10 }}>
-                <input type="text" value={val} onChange={e => setVal(e.target.value)} disabled={disabled}
+                <input type="text" value={disabled ? (selectedOption || '') : val} onChange={e => setVal(e.target.value)} disabled={disabled}
                     placeholder="Type answer..." style={{ padding: '12px 16px', borderRadius: 12, border: '2px solid #e2e8f0', fontSize: 16, flex: 1 }} />
                 <button disabled={disabled || !val} onClick={() => onAnswer(val.trim())}
                     style={{ padding: '0 20px', background: disabled ? '#e2e8f0' : '#0284c7', color: '#fff', borderRadius: 12, fontWeight: 600, border: 'none', cursor: disabled ? 'default' : 'pointer' }}>Submit</button>
@@ -114,12 +346,10 @@ function fmtTime(ms) {
    ═══════════════════════════════════════════════════════════════ */
 function LearnMode({ skill, onBack }) {
     return (
-        <div className="sau-detail-anim" style={{ maxWidth: 800, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+        <div className="pau-detail-anim" style={{ maxWidth: 800, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
             <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Skills</button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-                <div style={{ fontSize: 40 }}>
-                    {typeof skill.icon === 'string' && skill.icon.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: skill.icon}} /> : skill.icon}
-                </div>
+                <div style={{ fontSize: 40 }}>{skill.icon}</div>
                 <div>
                     <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: skill.color, margin: 0 }}>{skill.title}</h2>
                     <p style={{ margin: 0, fontSize: 16, color: '#64748b' }}>Learn the concepts</p>
@@ -173,7 +403,8 @@ function PracticeMode({ skill, onBack }) {
         if (answered) return;
         let correct = false;
         if (q.type === 'multiple-choice') correct = val === q.correctAnswer;
-        else correct = val.toString().toLowerCase() === q.correctAnswer.toString().toLowerCase();
+        else if (q.type === 'multi-select') correct = val === true;
+        else correct = val?.toString().toLowerCase() === q.correctAnswer?.toString().toLowerCase();
         setAnswersMap(prev => ({ ...prev, [qIdx]: { selectedOpt: val, isCorrect: correct } }));
     };
 
@@ -194,7 +425,7 @@ function PracticeMode({ skill, onBack }) {
         else if (pct >= 70) { msg = 'Great Job!'; emoji = '🌟'; sub = 'You\'re almost there, keep going!'; }
 
         return (
-            <div className="sau-detail-anim" style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '40px 24px' }}>
+            <div className="pau-detail-anim" style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '40px 24px' }}>
                 <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#3b82f6', fontWeight: 700, cursor: 'pointer', marginBottom: 16, fontSize: 14 }}>← Back to Skills</button>
                 <ScoreRing score={score} total={total} color={skill.color} />
                 <div style={{ margin: '16px 0 8px', padding: '8px 24px', background: '#f8fafc', borderRadius: 100, display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 700, color: '#64748b', fontSize: 14 }}>
@@ -212,7 +443,7 @@ function PracticeMode({ skill, onBack }) {
 
     // ── PRACTICE QUESTION VIEW ──
     return (
-        <div className="sau-detail-anim" style={{ maxWidth: 700, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+        <div className="pau-detail-anim" style={{ maxWidth: 700, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer' }}>← Exit Practice</button>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -223,7 +454,7 @@ function PracticeMode({ skill, onBack }) {
                     <div style={{ fontWeight: 800, color: skill.color }}>Practice {qIdx + 1}/{questions.length}</div>
                 </div>
             </div>
-            <QuestionCard key={qIdx} type={q.type} question={q.question} options={q.options} answer={q.correctAnswer} onAnswer={handleAnswer} disabled={answered} selectedOption={selectedOpt} image={q.image} />
+            <QuestionCard key={qIdx} {...q} onAnswer={handleAnswer} disabled={answered} selectedOption={selectedOpt} />
             {answered && (
                 <div style={{ padding: 16, borderRadius: 12, marginBottom: 20, background: isCorrect ? '#f0fdf4' : '#fef2f2', border: `2px solid ${isCorrect ? '#10b981' : '#ef4444'}` }}>
                     <div style={{ fontSize: 18, fontWeight: 800, color: isCorrect ? '#059669' : '#dc2626', marginBottom: 6 }}>{isCorrect ? '🎉 Correct!' : '❌ Not quite!'}</div>
@@ -269,15 +500,7 @@ function AssessMode({ skill, onBack }) {
     const handleAnswer = (val) => {
         const now = Date.now();
         const timeSpent = now - qStartRef.current;
-        if (val === null) {
-            setAnswersMap(prev => {
-                const next = { ...prev };
-                delete next[qIdx];
-                return next;
-            });
-        } else {
-            setAnswersMap(prev => ({ ...prev, [qIdx]: val }));
-        }
+        setAnswersMap(prev => ({ ...prev, [qIdx]: val }));
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + timeSpent }));
         qStartRef.current = now;
     };
@@ -305,13 +528,19 @@ function AssessMode({ skill, onBack }) {
             const ans = answersMap[i];
             if (ans !== undefined) {
                 if (qq.type === 'multiple-choice' && ans === qq.correctAnswer) score++;
-                else if (qq.type !== 'multiple-choice' && ans?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase()) score++;
+                else if (qq.type === 'multi-select') {
+                    if (Array.isArray(ans)) {
+                        const correct = ans.length === qq.correctIndices.length && ans.every(idx => qq.correctIndices.includes(idx));
+                        if (correct) score++;
+                    } else if (ans === true) score++;
+                }
+                else if (ans?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase()) score++;
             }
         });
         const accuracy = Math.round((score / questions.length) * 100);
 
         return (
-            <div className="sau-detail-anim" style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
+            <div className="pau-detail-anim" style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px' }}>
                 {/* Header */}
                 <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 12, margin: '0 0 28px' }}>
                     📊 Assessment Report
@@ -342,6 +571,13 @@ function AssessMode({ skill, onBack }) {
                         let correct = false;
                         if (!skipped) {
                             if (qq.type === 'multiple-choice') correct = userAns === qq.correctAnswer;
+                            else if (qq.type === 'multi-select') {
+                                if (Array.isArray(userAns)) {
+                                    correct = userAns.length === qq.correctIndices.length && userAns.every(idx => qq.correctIndices.includes(idx));
+                                } else {
+                                    correct = userAns === true;
+                                }
+                            }
                             else correct = userAns?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase();
                         }
                         const pillColor = skipped ? '#f59e0b' : correct ? '#10b981' : '#ef4444';
@@ -354,11 +590,7 @@ function AssessMode({ skill, onBack }) {
                                     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flex: 1 }}>
                                         <span style={{ width: 28, height: 28, borderRadius: '50%', background: pillColor, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>{i + 1}</span>
                                         <div>
-                                            {qq.image && (
-                                                <div style={{ fontSize: 32, marginBottom: 8, wordBreak: 'break-all', overflowWrap: 'break-word', display: 'flex' }}>
-                                                    {typeof qq.image === 'string' && qq.image.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: qq.image}} /> : qq.image}
-                                                </div>
-                                            )}
+                                            {qq.image && <div style={{ fontSize: 32, marginBottom: 8, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{qq.image}</div>}
                                             <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#0f172a', lineHeight: 1.5 }}>{qq.question}</p>
                                         </div>
                                     </div>
@@ -370,13 +602,30 @@ function AssessMode({ skill, onBack }) {
                                     </div>
                                 </div>
 
-                                {/* Options grid */}
-                                {qq.type === 'multiple-choice' && (
+                                {/* Options or Grid */}
+                                {qq.type === 'multi-select' ? (
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 8, maxWidth: 300 }}>
+                                        {qq.gridNumbers.map((num, ni) => {
+                                            const isCorrectGrid = qq.correctIndices.includes(ni);
+                                            const isUserPicked = Array.isArray(userAns) && userAns.includes(ni);
+                                            
+                                            let bg = '#f8fafc', bdr = '#e2e8f0', clr = '#334155';
+                                            if (isCorrectGrid) { bg = '#f0fdf4'; bdr = '#10b981'; clr = '#059669'; }
+                                            else if (isUserPicked) { bg = '#fef2f2'; bdr = '#ef4444'; clr = '#dc2626'; }
+                                            
+                                            return (
+                                                <div key={ni} style={{ padding: '8px 0', textAlign: 'center', borderRadius: 10, border: `2px solid ${bdr}`, background: bg, fontSize: 16, fontWeight: 800, color: clr }}>
+                                                    {num}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : qq.options && (
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
                                         {qq.options.map((opt, oi) => {
                                             const letter = String.fromCharCode(65 + oi);
-                                            const isUserPick = userAns === oi;
-                                            const isCorrectOpt = oi === qq.correctAnswer;
+                                            const isUserPick = userAns == oi;
+                                            const isCorrectOpt = oi == qq.correctAnswer;
                                             let bg = '#f8fafc', bdr = '#e2e8f0', clr = '#334155';
                                             if (isCorrectOpt) { bg = '#f0fdf4'; bdr = '#10b981'; }
                                             else if (isUserPick && !isCorrectOpt) { bg = '#fef2f2'; bdr = '#ef4444'; }
@@ -423,21 +672,17 @@ function AssessMode({ skill, onBack }) {
     const currentAnswered = answersMap[qIdx] !== undefined;
 
     return (
-        <div className="sau-detail-anim" style={{ display: 'flex', gap: 24, maxWidth: 1100, margin: '0 auto', alignItems: 'flex-start' }}>
+        <div className="pau-detail-anim" style={{ display: 'flex', gap: 24, maxWidth: 1100, margin: '0 auto', alignItems: 'flex-start' }}>
             {/* LEFT: Question panel */}
             <div style={{ flex: '1 1 60%', background: '#fff', borderRadius: 24, padding: 32, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
                 <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 100, border: '2px solid #0f172a', fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Question {qIdx + 1}</div>
 
                 <QuestionCard
                     key={qIdx}
-                    type={q.type}
-                    question={q.question}
-                    options={q.options}
-                    answer={q.correctAnswer}
+                    {...q}
                     onAnswer={handleAnswer}
                     disabled={false}
-                    selectedOption={answersMap[qIdx] ?? null}
-                    image={q.image}
+                    selectedOption={answersMap[qIdx] !== undefined ? answersMap[qIdx] : null}
                     showCorrect={false}
                 />
 
@@ -505,57 +750,48 @@ function AssessMode({ skill, onBack }) {
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
-export default function ShapesSkills() {
+export default function PatternsSkills() {
     const navigate = useNavigate();
     const [view, setView] = useState('list');
     const [activeSkill, setActiveSkill] = useState(null);
-    const [skillsData, setSkillsData] = useState(() => generateShapesSkillsData());
 
-    const openMode = (skill, mode) => {
-    const freshData = generateShapesSkillsData();
-    const found = freshData.find(s => s.id === skill.id);
-    setSkillsData(freshData);
-    setActiveSkill(found ?? skill);
-    setView(mode);
-};
-console.log("hi");
+    const openMode = (skill, mode) => { setActiveSkill(skill); setView(mode); };
+
     return (
-        <div className="sau-skills-page">
-            <nav className="sau-nav">
+        <div className="pau-skills-page">
+            <nav className="pau-nav">
                 {view === 'list' ? (
-                    <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/shapes-around-us')}>← Back to Shapes Around Us</button>
+                    <button className="pau-nav-back" onClick={() => navigate('/junior/grade/4/patterns-around-us')}>← Back to Patterns Around Us</button>
                 ) : (
-                    <button className="sau-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
+                    <button className="pau-nav-back" onClick={() => setView('list')}>← Back to Skills</button>
                 )}
-                <div className="sau-nav-links">
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/introduction')}>🌟 Introduction</button>
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/terminology')}>📖 Terminology</button>
-                    <button className="sau-nav-link sau-nav-link--active">🎯 Skills</button>
+                <div className="pau-nav-links">
+                    <button className="pau-nav-link" onClick={() => navigate('/junior/grade/4/patterns-around-us/introduction')}>🌟 Introduction</button>
+                    <button className="pau-nav-link" onClick={() => navigate('/junior/grade/4/patterns-around-us/terminology')}>📖 Terminology</button>
+                    <button className="pau-nav-link pau-nav-link--active">🎯 Skills</button>
                 </div>
             </nav>
 
             <div style={{ padding: '40px 24px', maxWidth: 1100, margin: '0 auto' }}>
                 {view === 'list' && (
-                    <div className="sau-detail-anim">
+                    <div className="pau-detail-anim">
                         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, color: '#0f172a', margin: '0 0 12px' }}>Master Your Shapes</h1>
+                            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, color: '#0f172a', margin: '0 0 12px' }}>Master Your Patterns</h1>
                             <p style={{ fontSize: 18, color: '#64748b', margin: 0, maxWidth: 600, marginInline: 'auto' }}>
                                 Choose a skill below. Read the lesson, practice to build confidence, and take the assessment to earn your mastery!
                             </p>
                         </div>
-                        <div className="sau-skills-list">
+                        <div className="pau-skills-list">
                             {skillsData.map((skill) => (
-                                <div key={skill.id} className="sau-skill-card">
-                                    <div className="sau-skill-info">
-                                        <div className="sau-skill-icon" style={{ background: `${skill.color}15`, color: skill.color }}>
-                                            {typeof skill.icon === 'string' && skill.icon.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: skill.icon}} /> : skill.icon}
-                                        </div>
+                                <div key={skill.id} className="pau-skill-card">
+                                    <div className="pau-skill-info">
+                                        <div className="pau-skill-icon" style={{ background: `${skill.color}15`, color: skill.color }}>{skill.icon}</div>
                                         <div>
                                             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>{skill.title}</div>
                                             <div style={{ fontSize: 14, color: '#64748b' }}>{skill.desc}</div>
                                         </div>
                                     </div>
-                                    <div className="sau-skill-actions">
+                                    <div className="pau-skill-actions">
                                         <button onClick={() => openMode(skill, 'learn')}
                                             style={{ padding: '10px 20px', borderRadius: 12, background: '#f8fafc', border: '1px solid #e2e8f0', color: '#334155', fontWeight: 700, cursor: 'pointer' }}
                                             onMouseOver={e => { e.currentTarget.style.borderColor = skill.color; e.currentTarget.style.color = skill.color; }}
