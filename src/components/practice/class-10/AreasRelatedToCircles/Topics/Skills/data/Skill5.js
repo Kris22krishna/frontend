@@ -1,5 +1,6 @@
 export const skill5 = {
     id: 'real-life-applications',
+    nodeId: 'a4101012-0005-0000-0000-000000000000',
     title: 'Applications in Clocks & Wheels',
     subtitle: 'Bringing Geometry to Life',
     desc: 'Apply circle formulas to solve problems involving clock hands, rotating wheels, and grazing animals.',

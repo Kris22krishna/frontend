@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SKILLS } from './AreasRelatedToCirclesSkillsData';
 import '../../AreasRelatedToCirclesBranch.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function AreasRelatedToCirclesSkills() {
     const navigate = useNavigate();
@@ -245,6 +246,26 @@ function PracticeView({ skill, onAssess }) {
     const q = questions[current];
     const color = skill.color;
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    useEffect(() => {
+        if (!skill.nodeId) return;
+        startSession({ nodeId: skill.nodeId, sessionType: 'practice' });
+        answersPayload.current = [];
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+            }
+        };
+    }, [skill.nodeId]);
+
     useEffect(() => {
         if (!finished) {
             const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
@@ -258,19 +279,34 @@ function PracticeView({ skill, onAssess }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished || selected !== null) return;
+        const isCorrect = optIdx === q.correct;
         setSelected(optIdx);
         setResponses(prev => ({
             ...prev,
-            [current]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [current]: { selected: optIdx, isCorrect }
         }));
+        // v4 Log
+        if (skill.nodeId) {
+            const answerData = {
+                question_index: current + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+            answersPayload.current.push(answerData);
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct,
+            });
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 < questions.length) {
             const nextIdx = current + 1;
             setCurrent(nextIdx);
@@ -278,6 +314,14 @@ function PracticeView({ skill, onAssess }) {
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
             setFinished(true);
+            // v4 Finish
+            if (skill.nodeId) {
+                await finishSession({
+                    totalQuestions: questions.length,
+                    questionsAnswered: answersPayload.current.length,
+                    answersPayload: answersPayload.current,
+                });
+            }
         }
     };
 
@@ -296,6 +340,8 @@ function PracticeView({ skill, onAssess }) {
         setFinished(false);
         setTimeElapsed(0);
         setVisited({ 0: true });
+        answersPayload.current = [];
+        if (skill.nodeId) startSession({ nodeId: skill.nodeId, sessionType: 'practice' });
     };
 
     if (finished) {
@@ -481,6 +527,29 @@ function AssessView({ skill, onComplete }) {
     const q = questions[qIdx];
     const color = 'var(--rn-indigo)';
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    useEffect(() => {
+        if (!skill.nodeId) return;
+        startSession({ nodeId: skill.nodeId, sessionType: 'assessment' });
+        answersPayload.current = Array(questions.length).fill(null);
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.some(a => a !== null)) {
+                abandonSession({
+                    answersPayload: answersPayload.current.filter(Boolean),
+                    totalQuestions: questions.length,
+                });
+            }
+        };
+    }, [skill.nodeId]);
+
     useEffect(() => {
         if (!finished) {
             const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
@@ -494,19 +563,34 @@ function AssessView({ skill, onComplete }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished) return;
+        const isCorrect = optIdx === q.correct;
         setSelected(optIdx);
         setResponses(prev => ({
             ...prev,
-            [qIdx]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [qIdx]: { selected: optIdx, isCorrect }
         }));
+        // v4 Log
+        if (skill.nodeId) {
+            const answerData = {
+                question_index: qIdx + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+            answersPayload.current[qIdx] = answerData;
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct,
+            });
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (qIdx + 1 < questions.length) {
             const nextIdx = qIdx + 1;
             setQIdx(nextIdx);
@@ -514,6 +598,15 @@ function AssessView({ skill, onComplete }) {
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
             setFinished(true);
+            // v4 Finish
+            if (skill.nodeId) {
+                const fPayload = answersPayload.current.filter(Boolean);
+                await finishSession({
+                    totalQuestions: questions.length,
+                    questionsAnswered: fPayload.length,
+                    answersPayload: fPayload,
+                });
+            }
         }
     };
 

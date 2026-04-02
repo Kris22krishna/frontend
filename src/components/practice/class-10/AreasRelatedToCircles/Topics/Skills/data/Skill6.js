@@ -1,5 +1,6 @@
 export const skill6 = {
     id: 'formula-application',
+    nodeId: 'a4101012-0006-0000-0000-000000000000',
     title: 'Composite Area Problems',
     subtitle: 'Connecting the Dots',
     desc: 'Combine formulas of squares, circles, sectors, and triangles to solve complex area problems.',

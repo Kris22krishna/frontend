@@ -77,7 +77,19 @@ export const NODE_IDS = {
   mathBranchAlgebraExponentsFractionalLaw:  'f3000000-0000-0000-0000-000000000009',
   mathBranchAlgebraExponentsStandardForm:   'f3000000-0000-0000-0000-000000000010',
   mathBranchAlgebraExponentsComparing:      'f3000000-0000-0000-0000-000000000011',
-  // ── 5. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
+  // ── 5. CLASS 10 MATH ─────────────────────────────────────────────────────
+
+  // Grade 10 Math: Areas Related to Circles (Chapter 12)
+  g10MathAreasCircles:                    'a3101012-0000-0000-0000-000000000001',
+  g10MathAreasCirclesRegions:             'a4101012-0001-0000-0000-000000000000',
+  g10MathAreasCirclesArcLength:           'a4101012-0002-0000-0000-000000000000',
+  g10MathAreasCirclesSectorArea:          'a4101012-0003-0000-0000-000000000000',
+  g10MathAreasCirclesSegmentArea:         'a4101012-0004-0000-0000-000000000000',
+  g10MathAreasCirclesRealLife:            'a4101012-0005-0000-0000-000000000000',
+  g10MathAreasCirclesComposite:           'a4101012-0006-0000-0000-000000000000',
+  g10MathAreasCirclesTerminologyQuiz:     'a4101012-0010-0000-0000-000000000000',
+
+  // ── 6. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
   
   // Grade 10 Science: Chemical Reactions
   g10ScienceChemicalReactions:          'b3101001-0000-0000-0000-000000000001',
