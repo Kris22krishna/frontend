@@ -32,7 +32,8 @@ const DiagnosisTestRunner = () => {
         showWarning,
         violationMessage,
         dismissWarning,
-        requestFullscreen
+        requestFullscreen,
+        resetViolations
     } = useViolationTracker(maxViolations);
 
     useEffect(() => {
@@ -539,6 +540,7 @@ const DiagnosisTestRunner = () => {
                 grade={grade}
                 onRetake={() => {
                     localStorage.removeItem(STORAGE_KEY);
+                    resetViolations();
                     setIsSubmitted(false);
                     setAnswers({});
                     setCurrentIndex(0);
