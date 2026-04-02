@@ -10,12 +10,14 @@ function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabl
     const answer = correctAnswer;
     const [val, setVal] = useState('');
 
-    // For multi-select
-    const [selectedIndices, setSelectedIndices] = useState([]);
+    // For multi-select - restore from selectedOption if it's an array
+    const [selectedIndices, setSelectedIndices] = useState(Array.isArray(selectedOption) ? selectedOption : []);
     const [msAnim, setMsAnim] = useState(null); // {idx: 'shake' | 'pop'}
 
     // For interactive-grouping (drag n drop / click mock)
-    const [groupedCount, setGroupedCount] = useState(0);
+    // If we have a selected answer, we assume everything was grouped
+    const isPackMode = type === 'interactive-grouping' || type === 'visual-pairing';
+    const [groupedCount, setGroupedCount] = useState(isPackMode && selectedOption !== null ? Math.floor(qProps.totalItems / (qProps.groupSize || 2)) : 0);
     const [pendingGroupCount, setPendingGroupCount] = useState(0);
 
     const isMultipleChoice = type === 'multiple-choice';
@@ -33,6 +35,17 @@ function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabl
         setMsAnim({ idx, type: isCorrectClick ? 'pop' : 'shake' });
         setTimeout(() => setMsAnim(null), 500);
 
+        if (!showCorrect) {
+            // ASSESSMENT MODE: Toggle selection and report current array
+            const newSelections = selectedIndices.includes(idx)
+                ? selectedIndices.filter(i => i !== idx)
+                : [...selectedIndices, idx];
+            setSelectedIndices(newSelections);
+            onAnswer(newSelections);
+            return;
+        }
+
+        // PRACTICE MODE: Correctness matters immediately
         if (isCorrectClick) {
             const newSelections = selectedIndices.includes(idx) ? selectedIndices : [...selectedIndices, idx];
             setSelectedIndices(newSelections);
@@ -42,7 +55,7 @@ function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabl
             }
         } else {
             // clicked wrong one
-            onAnswer(false); // lose game immediately to show explanation if desired, or let them keep guessing
+            onAnswer(false); // lose game immediately
         }
     };
 
@@ -56,10 +69,17 @@ function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabl
                         const animClass = msAnim?.idx === i ? (msAnim.type === 'pop' ? 'pau-anim-pop' : 'pau-anim-shake') : '';
 
                         let bg = '#fff'; let bdr = '#e2e8f0'; let clr = '#0f172a';
-                        if (isSel) { bg = '#f0fdf4'; bdr = '#10b981'; clr = '#059669'; }
+                        if (isSel) {
+                            if (showCorrect) {
+                                bg = '#f0fdf4'; bdr = '#10b981'; clr = '#059669';
+                            } else {
+                                // Assessment: generic blue for everything chosen
+                                bg = '#eff6ff'; bdr = '#3b82f6'; clr = '#1d4ed8';
+                            }
+                        }
 
                         return (
-                            <button key={i} onClick={() => handleMSClick(i)} disabled={disabled || isSel}
+                            <button key={i} onClick={() => handleMSClick(i)} disabled={disabled || (showCorrect && isSel)}
                                 className={animClass}
                                 style={{
                                     padding: '24px 0', borderRadius: 16, border: `3px solid ${bdr}`, background: bg, color: clr,
@@ -87,32 +107,45 @@ function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabl
                                 {i < arr.length - 1 && (
                                     <span style={{
                                         display: 'inline-block', width: 80, height: 40, borderBottom: `4px solid ${disabled ? (showCorrect ? '#10b981' : '#ef4444') : '#94a3b8'}`,
-                                        margin: '0 8px', verticalAlign: 'middle', color: disabled ? '#0f172a' : 'transparent', textAlign: 'center', lineHeight: '40px'
+                                        margin: '0 8px', verticalAlign: 'middle', color: '#0f172a', textAlign: 'center', lineHeight: '40px'
                                     }}>
-                                        {disabled ? (selectedOption !== null && options[selectedOption] ? options[selectedOption] : val) : '?'}
+                                        {(selectedOption !== null && options[selectedOption]) ? options[selectedOption] : (disabled ? val : '?')}
                                     </span>
                                 )}
                             </React.Fragment>
                         ))}
                     </p>
                 </div>
-                {!disabled && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                        {options.map((opt, i) => (
-                            <button key={i} onClick={() => onAnswer(i)}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    {options.map((opt, i) => {
+                        const isSelected = i === selectedOption;
+                        let bg = '#fff';
+                        let bdr = '#e2e8f0';
+                        let clr = '#0f172a';
+
+                        if (showCorrect && (disabled || selectedOption !== null)) {
+                            if (i == answer) { bg = '#f0fdf4'; bdr = '#10b981'; }
+                            else if (i == selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
+                            else if (selectedOption !== null) { clr = '#94a3b8'; }
+                        } else if (isSelected) {
+                            bg = '#eff6ff'; bdr = '#3b82f6';
+                        }
+
+                        return (
+                            <button key={i} onClick={() => onAnswer(i)} disabled={disabled}
                                 style={{
-                                    padding: '16px', borderRadius: 16, border: '2px solid #e2e8f0', background: '#fff',
-                                    fontSize: 20, fontWeight: 800, color: '#0f172a', cursor: 'pointer', transition: 'all 0.2s',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.04)'
+                                    padding: '16px', borderRadius: 16, border: `2px solid ${bdr}`, background: bg,
+                                    fontSize: 20, fontWeight: 800, color: clr, cursor: disabled ? 'default' : 'pointer', transition: 'all 0.2s',
+                                    boxShadow: isSelected ? '0 0 15px rgba(59, 130, 246, 0.2)' : '0 4px 12px rgba(0,0,0,0.04)'
                                 }}
-                                onMouseOver={e => { e.currentTarget.style.borderColor = '#0284c7'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                                onMouseOut={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.transform = 'none'; }}
+                                onMouseOver={e => { if (!disabled) { e.currentTarget.style.borderColor = '#0284c7'; e.currentTarget.style.transform = 'translateY(-2px)'; } }}
+                                onMouseOut={e => { if (!disabled) { e.currentTarget.style.borderColor = bdr; e.currentTarget.style.transform = 'none'; } }}
                             >
                                 {opt}
                             </button>
-                        ))}
-                    </div>
-                )}
+                        );
+                    })}
+                </div>
             </div>
         );
     }
@@ -185,12 +218,14 @@ function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabl
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {options.map((opt, i) => {
                         let bg = '#fff'; let bdr = '#e2e8f0'; let clr = '#0f172a';
-                        if (disabled && showCorrect) {
+                        const isSelected = i === selectedOption;
+
+                        if (showCorrect && (disabled || selectedOption !== null)) {
                             if (i == answer) { bg = '#f0fdf4'; bdr = '#10b981'; clr = '#059669'; }
                             else if (i == selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; clr = '#dc2626'; }
-                            else { clr = '#94a3b8'; }
-                        } else if (disabled && !showCorrect) {
-                            if (i == selectedOption) { bg = '#eff6ff'; bdr = '#3b82f6'; clr = '#1d4ed8'; }
+                            else if (selectedOption !== null) { clr = '#94a3b8'; }
+                        } else if (isSelected) {
+                            bg = '#eff6ff'; bdr = '#3b82f6'; clr = '#1d4ed8';
                         }
 
                         // Don't let them answer until packed, unless they can't pack anymore
@@ -224,13 +259,14 @@ function QuestionCard({ type, question, options, correctAnswer, onAnswer, disabl
                         let bdr = '#e2e8f0';
                         let clr = '#0f172a';
                         const letter = String.fromCharCode(65 + i); // A, B, C, D
+                        const isSelected = i === selectedOption;
 
-                        if (disabled && showCorrect) {
+                        if (showCorrect && (disabled || selectedOption !== null)) {
                             if (i == answer) { bg = '#f0fdf4'; bdr = '#10b981'; }
                             else if (i == selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
-                            else { clr = '#94a3b8'; }
-                        } else if (disabled && !showCorrect) {
-                            if (i == selectedOption) { bg = '#eff6ff'; bdr = '#3b82f6'; }
+                            else if (selectedOption !== null) { clr = '#94a3b8'; }
+                        } else if (isSelected) {
+                            bg = '#eff6ff'; bdr = '#3b82f6';
                         }
 
                         return (
@@ -492,7 +528,13 @@ function AssessMode({ skill, onBack }) {
             const ans = answersMap[i];
             if (ans !== undefined) {
                 if (qq.type === 'multiple-choice' && ans === qq.correctAnswer) score++;
-                else if (qq.type !== 'multiple-choice' && ans?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase()) score++;
+                else if (qq.type === 'multi-select') {
+                    if (Array.isArray(ans)) {
+                        const correct = ans.length === qq.correctIndices.length && ans.every(idx => qq.correctIndices.includes(idx));
+                        if (correct) score++;
+                    } else if (ans === true) score++;
+                }
+                else if (ans?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase()) score++;
             }
         });
         const accuracy = Math.round((score / questions.length) * 100);
@@ -529,7 +571,13 @@ function AssessMode({ skill, onBack }) {
                         let correct = false;
                         if (!skipped) {
                             if (qq.type === 'multiple-choice') correct = userAns === qq.correctAnswer;
-                            else if (qq.type === 'multi-select') correct = userAns === true;
+                            else if (qq.type === 'multi-select') {
+                                if (Array.isArray(userAns)) {
+                                    correct = userAns.length === qq.correctIndices.length && userAns.every(idx => qq.correctIndices.includes(idx));
+                                } else {
+                                    correct = userAns === true;
+                                }
+                            }
                             else correct = userAns?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase();
                         }
                         const pillColor = skipped ? '#f59e0b' : correct ? '#10b981' : '#ef4444';
@@ -559,10 +607,12 @@ function AssessMode({ skill, onBack }) {
                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 8, maxWidth: 300 }}>
                                         {qq.gridNumbers.map((num, ni) => {
                                             const isCorrectGrid = qq.correctIndices.includes(ni);
-                                            // The userAns for multi-select is actually a boolean (true if won, false if wrong) 
-                                            // but to show the grid correctly in the report, we just highlight the correct answers
+                                            const isUserPicked = Array.isArray(userAns) && userAns.includes(ni);
+                                            
                                             let bg = '#f8fafc', bdr = '#e2e8f0', clr = '#334155';
                                             if (isCorrectGrid) { bg = '#f0fdf4'; bdr = '#10b981'; clr = '#059669'; }
+                                            else if (isUserPicked) { bg = '#fef2f2'; bdr = '#ef4444'; clr = '#dc2626'; }
+                                            
                                             return (
                                                 <div key={ni} style={{ padding: '8px 0', textAlign: 'center', borderRadius: 10, border: `2px solid ${bdr}`, background: bg, fontSize: 16, fontWeight: 800, color: clr }}>
                                                     {num}
@@ -631,8 +681,8 @@ function AssessMode({ skill, onBack }) {
                     key={qIdx}
                     {...q}
                     onAnswer={handleAnswer}
-                    disabled={currentAnswered}
-                    selectedOption={answersMap[qIdx] ?? null}
+                    disabled={false}
+                    selectedOption={answersMap[qIdx] !== undefined ? answersMap[qIdx] : null}
                     showCorrect={false}
                 />
 
