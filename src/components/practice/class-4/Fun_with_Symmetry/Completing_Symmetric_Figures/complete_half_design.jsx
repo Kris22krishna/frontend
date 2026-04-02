@@ -524,17 +524,21 @@ const CompleteHalfDesign = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            const userId = sessionStorage.getItem('userId');
-            if (userId && sessionId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / TOTAL_QUESTIONS) * 100,
-                    parameters: { skill_id: SKILL_ID, total_questions: TOTAL_QUESTIONS, correct_answers: totalCorrect, timestamp: new Date().toISOString(), time_taken_seconds: timeElapsed },
-                    user_id: parseInt(userId, 10)
-                });
-                await api.finishSession(sessionId);
+            try {
+                const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+                if (userId && sessionId) {
+                    const totalCorrect = Object.values(answers).filter(val => val.isCorrect).length;
+                    await api.createReport({
+                        title: SKILL_NAME,
+                        type: 'practice',
+                        score: (totalCorrect / TOTAL_QUESTIONS) * 100,
+                        parameters: { skill_id: SKILL_ID, total_questions: TOTAL_QUESTIONS, correct_answers: totalCorrect, timestamp: new Date().toISOString(), time_taken_seconds: timeElapsed },
+                        user_id: parseInt(userId, 10)
+                    });
+                    await api.finishSession(sessionId);
+                }
+            } catch (error) {
+                console.error("Error finalizing practice session:", error);
             }
             setShowResults(true);
         }
@@ -544,7 +548,6 @@ const CompleteHalfDesign = () => {
 
     if (showResults) {
         const score = Object.values(answers).filter(a => a.isCorrect).length;
-        const total = TOTAL_QUESTIONS;
 
         return (
             <div className="junior-practice-page symmetry-theme" style={{ fontFamily: '"Open Sans", sans-serif', minHeight: '100vh' }}>
@@ -553,7 +556,7 @@ const CompleteHalfDesign = () => {
                     stats={{
                         timeTaken: formatTime(timeElapsed),
                         correctAnswers: score,
-                        totalQuestions: total
+                        totalQuestions: TOTAL_QUESTIONS
                     }}
                     onContinue={() => navigate(-1)}
                 />

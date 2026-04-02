@@ -53,14 +53,29 @@ export const LEARN_CONTENT = {
 };
 
 export const generatePracticeQs = (skillId) => {
-    const qs = [];
+    const originalQs = [];
+    const seenQs = new Set();
+    const qs = {
+        push: (qObj) => {
+            if (qObj && qObj.type === 'mcq' && qObj.opts) {
+                if (new Set(qObj.opts).size < qObj.opts.length) return false;
+            }
+            if (qObj && !seenQs.has(qObj.q)) {
+                seenQs.add(qObj.q);
+                originalQs.push(qObj);
+                return true;
+            }
+            return false;
+        },
+        get length() { return originalQs.length; }
+    };
     const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
     // Skill 1: Multiplying by 10 and 100
     if (skillId === 1) {
         // Easy (1-6)
-        for (let i = 0; i < 6; i++) {
+        for (let target = qs.length + 6, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let n = rand(2, 9);
             let mult = pick([10, 10, 100]); // more 10s
             let ans = n * mult;
@@ -77,7 +92,7 @@ export const generatePracticeQs = (skillId) => {
             }
         }
         // Medium (7-13)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let isDiv = Math.random() > 0.4;
             let n = rand(11, 80);
             let mult = pick([10, 100]);
@@ -85,13 +100,10 @@ export const generatePracticeQs = (skillId) => {
                 let total = n * mult;
                 let ans = n;
                 let act = rand(1, 3);
-                if (act === 1) qs.push({ type: 'mcq', q: `${total} ÷ ${mult} = ?`, opts: [ans.toString(), (ans * 10).toString(), (ans / 10).toString(), (ans + mult).toString()].sort(() => Math.random() - 0.5), ans: -1, expl: `Dividing removes zero(s): ${total} → ${ans}.` });
-                else qs.push({ type: 'fill_blank', q: `${total} ÷ ${mult} = ___`, answer: ans, hint: 'Chop off zero(s)!', expl: `${total} ÷ ${mult} = ${ans}.` });
-                // fix mcq ans
                 if (act === 1) {
-                    let lastItem = qs[qs.length - 1];
-                    lastItem.ans = lastItem.opts.indexOf(ans.toString());
-                }
+                    let opts = [ans.toString(), (ans * 10).toString(), (ans / 10).toString(), (ans + mult).toString()].sort(() => Math.random() - 0.5);
+                    qs.push({ type: 'mcq', q: `${total} ÷ ${mult} = ?`, opts, ans: opts.indexOf(ans.toString()), expl: `Dividing removes zero(s): ${total} → ${ans}.` });
+                } else qs.push({ type: 'fill_blank', q: `${total} ÷ ${mult} = ___`, answer: ans, hint: 'Chop off zero(s)!', expl: `${total} ÷ ${mult} = ${ans}.` });
             } else {
                 let ans = n * mult;
                 let act = rand(1, 3);
@@ -101,19 +113,17 @@ export const generatePracticeQs = (skillId) => {
             }
         }
         // Hard (14-20)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let isDiv = Math.random() > 0.5;
             let n = rand(20, 99);
             let mult = pick([10, 100]);
             if (isDiv) {
                 let total = n * mult;
                 let act = rand(1, 2);
-                if (act === 1) qs.push({ type: 'mcq', q: `A car travels ${n} km/hour. Distance in ${mult} hours?`, opts: [(n * mult).toString(), n.toString(), (n * mult * 10).toString(), (n * 10).toString()].sort(() => Math.random() - 0.5), ans: -1, expl: `${n} × ${mult} = ${n * mult}.` });
-                else qs.push({ type: 'fill_blank', q: `${total} ÷ ${mult} = ___`, answer: n, hint: 'Remove zero(s)!', expl: `${total} ÷ ${mult} = ${n}.` });
                 if (act === 1) {
-                    let lastItem = qs[qs.length - 1];
-                    lastItem.ans = lastItem.opts.indexOf((n * mult).toString());
-                }
+                    let opts = [(n * mult).toString(), n.toString(), (n * mult * 10).toString(), (n * 10).toString()].sort(() => Math.random() - 0.5);
+                    qs.push({ type: 'mcq', q: `A car travels ${n} km/hour. Distance in ${mult} hours?`, opts, ans: opts.indexOf((n * mult).toString()), expl: `${n} × ${mult} = ${n * mult}.` });
+                } else qs.push({ type: 'fill_blank', q: `${total} ÷ ${mult} = ___`, answer: n, hint: 'Remove zero(s)!', expl: `${total} ÷ ${mult} = ${n}.` });
             } else {
                 let ans = n * mult;
                 let act = rand(1, 3);
@@ -123,7 +133,11 @@ export const generatePracticeQs = (skillId) => {
                     let bigger = (ans > comp * compN) ? 0 : (ans < comp * compN) ? 1 : 2;
                     let opts = [`${n} × ${mult}`, `${compN} × ${comp}`, 'They are equal', 'Cannot tell'];
                     qs.push({ type: 'mcq', q: `Which is bigger: ${n} × ${mult} or ${compN} × ${comp}?`, opts, ans: bigger, expl: `${n} × ${mult} = ${ans}. ${compN} × ${comp} = ${compN * comp}.` });
-                } else if (act === 2) qs.push({ type: 'picture_problem', scene: pick(['✈️', '🚢']), sceneCount: mult, perItem: `👤 × ${n}`, q: `${mult} flights with ${n} passengers each. Total?`, answer: ans, expl: `${n} × ${mult} = ${ans}.` });
+                } else if (act === 2) {
+                    let s = pick(['✈️', '🚢']);
+                    let noun = s === '✈️' ? 'flights' : 'cruises';
+                    qs.push({ type: 'picture_problem', scene: s, sceneCount: mult, perItem: `👤 × ${n}`, q: `${mult} ${noun} with ${n} passengers each. Total?`, answer: ans, expl: `${n} × ${mult} = ${ans}.` });
+                }
                 else qs.push({ type: 'fill_blank', q: `${n} × ${mult} = ___`, answer: ans, hint: 'Attach zeros!', expl: `${n} × ${mult} = ${ans}.` });
             }
         }
@@ -132,7 +146,7 @@ export const generatePracticeQs = (skillId) => {
     // Skill 2: Constructing Times Tables
     if (skillId === 2) {
         // Easy (1-6)
-        for (let i = 0; i < 6; i++) {
+        for (let target = qs.length + 6, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let n = rand(11, 15);
             let mult = rand(3, 6);
             let splitA = 10;
@@ -144,7 +158,7 @@ export const generatePracticeQs = (skillId) => {
             else qs.push({ type: 'true_false', statement: `${n} × ${mult} = (${splitA}×${mult}) + (${splitB}×${mult}) = ${ans}`, correct: true, visual: `${n} → ${splitA} + ${splitB}`, expl: `Yes! ${splitA * mult} + ${splitB * mult} = ${ans}.` });
         }
         // Medium (7-13)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let n = rand(12, 19);
             let mult = rand(4, 8);
             let splitA = 10;
@@ -156,7 +170,7 @@ export const generatePracticeQs = (skillId) => {
             else qs.push({ type: 'picture_problem', scene: pick(['🚌', '🚐']), sceneCount: n, perItem: `👤 × ${mult}`, q: `${n} rows of ${mult} seats. Total seats?`, answer: ans, expl: `${n}×${mult} = (10×${mult})+(${splitB}×${mult}) = ${ans}.` });
         }
         // Hard (14-20)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let n = rand(18, 25);
             let mult = rand(4, 9);
             let splitA = n >= 20 ? 20 : 10;
@@ -175,7 +189,7 @@ export const generatePracticeQs = (skillId) => {
     // Skill 3: Division & Remainders
     if (skillId === 3) {
         // Easy (1-6)
-        for (let i = 0; i < 6; i++) {
+        for (let target = qs.length + 6, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let divisor = rand(2, 5);
             let quotient = rand(3, 8);
             let rem = rand(0, divisor - 1);
@@ -186,18 +200,22 @@ export const generatePracticeQs = (skillId) => {
             else qs.push({ type: 'mcq', q: `What is ${total} ÷ ${divisor}?`, opts: [`${quotient} R${rem}`, `${quotient + 1} R0`, `${quotient - 1} R${rem + divisor}`, `${quotient} R${rem + 1}`], ans: 0, expl: `${divisor} × ${quotient} = ${divisor * quotient}. Remainder is ${rem}.` });
         }
         // Medium (7-13)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let divisor = rand(4, 8);
             let quotient = rand(4, 9);
             let rem = rand(1, divisor - 1); // always remainder
             let total = divisor * quotient + rem;
             let act = rand(1, 3);
-            if (act === 1) qs.push({ type: 'picture_problem', scene: pick(['⛵', '🚌']), sceneCount: total, perItem: `👤 ÷ ${divisor}`, q: `${total} kids in boats of ${divisor}. How many FULL boats?`, answer: quotient, expl: `${divisor}×${quotient}=${divisor * quotient}. So ${quotient} full boats.` });
+            if (act === 1) {
+                let s = pick(['⛵', '🚌']);
+                let noun = s === '⛵' ? 'boats' : 'buses';
+                qs.push({ type: 'picture_problem', scene: s, sceneCount: total, perItem: `👤 ÷ ${divisor}`, q: `${total} kids in ${noun} of ${divisor}. How many FULL ${noun}?`, answer: quotient, expl: `${divisor}×${quotient}=${divisor * quotient}. So ${quotient} full ${noun}.` });
+            }
             else if (act === 2) qs.push({ type: 'group_maker', total, groupSize: divisor, emoji: pick(['🎫', '🍪', '🎒']), q: `${total} shared in groups of ${divisor}.`, answer: quotient, remainder: rem, expl: `${divisor} × ${quotient} = ${divisor * quotient}. Remainder = ${rem}.` });
             else qs.push({ type: 'true_false', statement: `A remainder can be larger than the divisor`, correct: false, visual: '❌ Remainder < Divisor always!', expl: 'No! If the remainder is larger, you can make another group.' });
         }
         // Hard (14-20)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let divisor = rand(6, 12);
             let quotient = rand(5, 12);
             let rem = rand(1, divisor - 1);
@@ -212,7 +230,7 @@ export const generatePracticeQs = (skillId) => {
     // Skill 4: Transport Word Problems
     if (skillId === 4) {
         // Easy (1-6)
-        for (let i = 0; i < 6; i++) {
+        for (let target = qs.length + 6, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let n = rand(3, 8);
             let mult = pick([10, 20, 30, 40]);
             let ans = n * mult;
@@ -222,7 +240,7 @@ export const generatePracticeQs = (skillId) => {
             else qs.push({ type: 'mcq', q: `A train has ${n} coaches, ${mult} people each. Total?`, opts: [`${ans}`, `${ans + 10}`, `${ans - 10}`, `${n * 10}`], ans: 0, expl: `${n} × ${mult} = ${ans}.` });
         }
         // Medium (7-13)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let n = rand(4, 12);
             let mult = rand(25, 85);
             let ans = n * mult;
@@ -232,7 +250,7 @@ export const generatePracticeQs = (skillId) => {
             else qs.push({ type: 'mcq', q: `A car uses ${n}L for 100 km. Litres for 300 km?`, opts: [`${n * 3}L`, `${n * 2}L`, `${n * 4}L`, `${n + 3}L`], ans: 0, expl: `300 is 3 hundreds. 3 × ${n} = ${n * 3} litres.` });
         }
         // Hard (14-20)
-        for (let i = 0; i < 7; i++) {
+        for (let target = qs.length + 7, attempts = 0; qs.length < target && attempts < 50; attempts++) {
             let isDiv = Math.random() > 0.5;
             if (isDiv) {
                 let seats = rand(12, 25);
@@ -252,5 +270,5 @@ export const generatePracticeQs = (skillId) => {
         }
     }
 
-    return qs;
+    return originalQs;
 };

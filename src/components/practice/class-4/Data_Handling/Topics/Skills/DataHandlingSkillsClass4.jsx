@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SKILLS, LEARN_CONTENT, generatePracticeQs } from './skillsData';
+import { SKILLS, LEARN_CONTENT, generateQuestionSets } from './skillsData';
 import '../../data-handling.css';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -64,7 +64,7 @@ function VisualCountQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, 
         rows.push(<div key={r} style={{ display: 'flex', gap: 3, padding: '4px 8px', background: `${color}08`, borderRadius: 10, marginBottom: 4 }}>{items}</div>);
     }
 
-    useEffect(() => { onHasInput(userAns.trim() !== ''); }, [userAns]);
+    useEffect(() => { onHasInput(userAns.trim() !== '', { userAns }); }, [userAns]);
     useEffect(() => {
         if (checkTrigger > 0 && !checkedRef.current && !result) {
             checkedRef.current = true;
@@ -96,7 +96,7 @@ function TallyCountQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, i
     const [result, setResult] = useState(saved?.result || null);
     const checkedRef = useRef(false);
 
-    useEffect(() => { onHasInput(userAns.trim() !== ''); }, [userAns]);
+    useEffect(() => { onHasInput(userAns.trim() !== '', { userAns }); }, [userAns]);
     useEffect(() => {
         if (checkTrigger > 0 && !checkedRef.current && !result && !isAssessment) {
             checkedRef.current = true;
@@ -163,7 +163,7 @@ function FillBlankQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, is
 
     useEffect(() => {
         const has = data.twoAnswers ? (ans1.trim() !== '' && ans2.trim() !== '') : (ans1.trim() !== '');
-        onHasInput(has);
+        onHasInput(has, { ans1, ans2 });
     }, [ans1, ans2]);
 
     useEffect(() => {
@@ -327,7 +327,7 @@ function PictureProblemQ({ data, color, onHasInput, onAnswer, checkTrigger, save
     const count = Math.min(data.sceneCount, 20);
     for (let i = 0; i < count; i++) sceneEmojis.push(<span key={i} style={{ fontSize: 24, animation: saved ? 'none' : `dhBounceIn 0.3s ${i * 0.05}s both` }}>{data.scene}</span>);
 
-    useEffect(() => { onHasInput(userAns.trim() !== ''); }, [userAns]);
+    useEffect(() => { onHasInput(userAns.trim() !== '', { userAns }); }, [userAns]);
     useEffect(() => {
         if (checkTrigger > 0 && !checkedRef.current && !result) {
             checkedRef.current = true;
@@ -754,11 +754,15 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
 
     const handleHasInput = (hasVal, stateObj) => {
         setHasInput(hasVal);
-        if (stateObj) setTempState(stateObj);
+        setTempState(stateObj ?? null);
 
         setQStates(prev => {
             const next = [...prev];
-            next[idx] = { ...next[idx], answered: hasVal, savedState: stateObj || next[idx].savedState };
+            next[idx] = {
+                ...next[idx],
+                answered: hasVal,
+                savedState: stateObj !== undefined ? stateObj : (hasVal ? next[idx].savedState : null)
+            };
             return next;
         });
     };
@@ -1088,6 +1092,7 @@ export default function DataHandlingSkillsClass4() {
     const [mode, setMode] = useState('menu');
     const [selectedSkill, setSelectedSkill] = useState(null);
     const [practiceQs, setPracticeQs] = useState([]);
+    const [assessmentQs, setAssessmentQs] = useState([]);
     const [retryCount, setRetryCount] = useState(0);
 
     const onBack = () => { setMode('menu'); setSelectedSkill(null); };
@@ -1096,18 +1101,21 @@ export default function DataHandlingSkillsClass4() {
         const skillInfo = SKILLS.find(s => s.id === selectedSkill);
         if (mode === 'learn') return <LearnView skill={skillInfo} onBack={onBack} />;
 
-        if (practiceQs.length === 0) return <div>Data pending...</div>;
+        const activeQuestions = mode === 'assess' ? assessmentQs : practiceQs;
+        if (activeQuestions.length === 0) return <div>Data pending...</div>;
 
         if (mode === 'assess') {
             return (
                 <AssessmentPractice
                     key={retryCount}
-                    questions={practiceQs}
+                    questions={assessmentQs}
                     title={`${skillInfo.title} — Assessment`}
                     color={skillInfo.color}
                     onBack={onBack}
                     onRetry={() => {
-                        setPracticeQs(generatePracticeQs(selectedSkill));
+                        const { practice, assessment } = generateQuestionSets(selectedSkill);
+                        setPracticeQs(practice);
+                        setAssessmentQs(assessment);
                         setRetryCount(c => c + 1);
                     }}
                 />
@@ -1122,7 +1130,9 @@ export default function DataHandlingSkillsClass4() {
                 color={skillInfo.color}
                 onBack={onBack}
                 onRetry={() => {
-                    setPracticeQs(generatePracticeQs(selectedSkill));
+                    const { practice, assessment } = generateQuestionSets(selectedSkill);
+                    setPracticeQs(practice);
+                    setAssessmentQs(assessment);
                     setRetryCount(c => c + 1);
                 }}
             />
@@ -1171,8 +1181,8 @@ export default function DataHandlingSkillsClass4() {
                                     </div>
                                     <div style={{ display: 'flex', gap: 8 }}>
                                         <button style={{ padding: '8px 18px', fontSize: 13, background: '#f1f5f9', color: '#475569', borderRadius: 50, border: 'none', fontWeight: 700, cursor: 'pointer' }} onClick={() => { setSelectedSkill(s.id); setMode('learn'); }}>📘 Learn</button>
-                                        <button style={{ padding: '8px 18px', fontSize: 13, background: `${s.color}15`, color: s.color, borderRadius: 50, border: 'none', fontWeight: 700, cursor: 'pointer' }} onClick={() => { setSelectedSkill(s.id); setPracticeQs(generatePracticeQs(s.id)); setRetryCount(1); setMode('practice'); }}>🎮 Practice</button>
-                                        <button style={{ padding: '8px 18px', fontSize: 13, background: `linear-gradient(135deg, ${s.color}, ${s.color}dd)`, color: '#fff', borderRadius: 50, border: 'none', fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 12px ${s.color}40` }} onClick={() => { setSelectedSkill(s.id); setPracticeQs(generatePracticeQs(s.id)); setRetryCount(1); setMode('assess'); }}>🎯 Assess</button>
+                                        <button style={{ padding: '8px 18px', fontSize: 13, background: `${s.color}15`, color: s.color, borderRadius: 50, border: 'none', fontWeight: 700, cursor: 'pointer' }} onClick={() => { const { practice, assessment } = generateQuestionSets(s.id); setSelectedSkill(s.id); setPracticeQs(practice); setAssessmentQs(assessment); setRetryCount(1); setMode('practice'); }}>🎮 Practice</button>
+                                        <button style={{ padding: '8px 18px', fontSize: 13, background: `linear-gradient(135deg, ${s.color}, ${s.color}dd)`, color: '#fff', borderRadius: 50, border: 'none', fontWeight: 700, cursor: 'pointer', boxShadow: `0 4px 12px ${s.color}40` }} onClick={() => { const { practice, assessment } = generateQuestionSets(s.id); setSelectedSkill(s.id); setPracticeQs(practice); setAssessmentQs(assessment); setRetryCount(1); setMode('assess'); }}>🎯 Assess</button>
                                     </div>
                                 </div>
                             ))}

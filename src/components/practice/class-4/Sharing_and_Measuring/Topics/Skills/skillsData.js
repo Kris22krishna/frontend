@@ -18,13 +18,76 @@ const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) +
 // Skill 1: Identifying Halves & Quarters
 function generateVisualFractionQuestion(usedValues) {
     const fractions = [
-        { val: '1/2', name: 'Half', visuals: ['🌗', '🌮', '🎭', '🍉', '🥥'], wrongVals: ['1/4', '3/4', '1/3', '1/1'] },
-        { val: '1/4', name: 'Quarter', visuals: ['🌘', '🍕', '🍰', '🧀', '🧈'], wrongVals: ['1/2', '3/4', '1/3', '1/8'] },
-        { val: '3/4', name: 'Three-Quarters', visuals: ['🌖', '🥧', '🍩', '🍪'], wrongVals: ['1/4', '1/2', '4/4', '1/3'] },
-        { val: '1/3', name: 'One-Third', visuals: ['🚥', '🔋', '🍫'], wrongVals: ['1/2', '1/4', '2/3', '3/4'] }
+        {
+            val: '1/2',
+            name: 'Half',
+            imagePrompts: [
+                {
+                    image: '🌗',
+                    question: 'Half of the moon is bright in the picture. Which fraction is shown?',
+                    explanation: 'Half means 1 out of 2 equal parts, so the picture shows 1/2.'
+                },
+                {
+                    image: '🌓',
+                    question: 'Half of the moon is bright in the picture. Which fraction is shown?',
+                    explanation: 'Half means 1 out of 2 equal parts, so the picture shows 1/2.'
+                }
+            ],
+            wrongVals: ['1/4', '3/4', '1/3', '1/1']
+        },
+        {
+            val: '1/4',
+            name: 'Quarter',
+            imagePrompts: [
+                {
+                    image: '🌘',
+                    question: 'Only one quarter of the moon is bright in the picture. Which fraction is shown?',
+                    explanation: 'One quarter means 1 out of 4 equal parts, so the picture shows 1/4.'
+                },
+                {
+                    image: '🌒',
+                    question: 'Only one quarter of the moon is bright in the picture. Which fraction is shown?',
+                    explanation: 'One quarter means 1 out of 4 equal parts, so the picture shows 1/4.'
+                }
+            ],
+            wrongVals: ['1/2', '3/4', '1/3', '1/8']
+        },
+        {
+            val: '3/4',
+            name: 'Three-Quarters',
+            imagePrompts: [
+                {
+                    image: '🌖',
+                    question: 'Three quarters of the moon are bright in the picture. Which fraction is shown?',
+                    explanation: 'Three quarters means 3 out of 4 equal parts, so the picture shows 3/4.'
+                },
+                {
+                    image: '🌔',
+                    question: 'Three quarters of the moon are bright in the picture. Which fraction is shown?',
+                    explanation: 'Three quarters means 3 out of 4 equal parts, so the picture shows 3/4.'
+                }
+            ],
+            wrongVals: ['1/4', '1/2', '4/4', '1/3']
+        },
+        {
+            val: '1/3',
+            name: 'One-Third',
+            imagePrompts: [],
+            wrongVals: ['1/2', '1/4', '2/3', '3/4']
+        }
     ];
 
     const objects = ['pizza', 'cake', 'chocolate bar', 'sandwich', 'apple', 'watermelon', 'paper', 'ribbon'];
+    const objectImages = {
+        pizza: '🍕',
+        cake: '🍰',
+        'chocolate bar': '🍫',
+        sandwich: '🥪',
+        apple: '🍎',
+        watermelon: '🍉',
+        paper: '📄',
+        ribbon: '🎀'
+    };
     
     let isInteractive, fracObj, objectName, shapeType, key, question, options, answer, image, type, explanation, totalParts, requiredParts;
 
@@ -51,19 +114,19 @@ function generateVisualFractionQuestion(usedValues) {
             const isImageQ = Math.random() > 0.5;
             type = 'multiple-choice';
             
-            if (isImageQ) {
-                const visual = fracObj.visuals[getRandomInt(0, fracObj.visuals.length - 1)];
-                key = `mcq-img-${fracObj.val}-${visual}`;
-                question = `Which fraction best describes the part of this shape that is shaded/eaten?`;
-                image = visual;
+            if (isImageQ && fracObj.imagePrompts.length > 0) {
+                const visualPrompt = fracObj.imagePrompts[getRandomInt(0, fracObj.imagePrompts.length - 1)];
+                key = `mcq-img-${fracObj.val}-${visualPrompt.image}`;
+                question = visualPrompt.question;
+                image = visualPrompt.image;
                 answer = fracObj.val;
                 options = shuffle([answer, ...shuffle(fracObj.wrongVals).slice(0, 3)]);
-                explanation = `When a whole is divided into ${fracObj.val.split('/')[1]} equal parts, one part is ${fracObj.val}.`;
+                explanation = visualPrompt.explanation;
             } else {
                 key = `mcq-txt-${fracObj.name}-${objectName}`;
                 const partsStr = fracObj.name.includes('Quarter') ? '4' : fracObj.name.includes('Third') ? '3' : '2';
                 question = `If you cut a ${objectName} into exactly ${partsStr} equal pieces, what do we call one piece?`;
-                image = '🔪';
+                image = objectImages[objectName] || '🍽️';
                 answer = fracObj.name;
                 const otherNames = fractions.filter(f => f.name !== fracObj.name).map(f => f.name);
                 options = shuffle([answer, ...shuffle(otherNames).slice(0, 3)]);
