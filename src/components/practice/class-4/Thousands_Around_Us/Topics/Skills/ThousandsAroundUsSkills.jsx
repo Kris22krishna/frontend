@@ -338,7 +338,7 @@ function OrderingChallenge({ q, onAnswer, disabled, result }) {
 /* ═══════════════════════════════════
    MCQ QUESTION CARD
    ═══════════════════════════════════ */
-function McqCard({ q, onAnswer, disabled, selectedOption }) {
+function McqCard({ q, onAnswer, disabled, selectedOption, revealFeedback = true }) {
   return (
     <div style={{ marginBottom: 20 }}>
       {q.image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16 }}>{q.image}</div>}
@@ -347,10 +347,14 @@ function McqCard({ q, onAnswer, disabled, selectedOption }) {
         {q.options.map((opt, i) => {
           let bg = '#fff', bdr = '#e2e8f0', clr = '#0f172a';
           const letter = String.fromCharCode(65 + i);
-          if (disabled) {
+          const showCorrectness = disabled && revealFeedback;
+          if (showCorrectness) {
             if (i === q.correctAnswer) { bg = '#f0fdf4'; bdr = '#10b981'; }
             else if (i === selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
             else { clr = '#94a3b8'; }
+          } else if (i === selectedOption) {
+            bg = '#eff6ff';
+            bdr = '#3b82f6';
           }
           return (
             <button key={i} onClick={() => onAnswer(i)} disabled={disabled}
@@ -363,7 +367,9 @@ function McqCard({ q, onAnswer, disabled, selectedOption }) {
               <span style={{
                 width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 13, fontWeight: 800, flexShrink: 0,
-                background: i === selectedOption ? (i === q.correctAnswer ? '#10b981' : '#ef4444') : '#f1f5f9',
+                background: i === selectedOption
+                  ? (showCorrectness ? (i === q.correctAnswer ? '#10b981' : '#ef4444') : '#3b82f6')
+                  : '#f1f5f9',
                 color: i === selectedOption ? '#fff' : '#64748b'
               }}>{letter}</span>
               {opt}
@@ -378,8 +384,8 @@ function McqCard({ q, onAnswer, disabled, selectedOption }) {
 /* ═══════════════════════════════════
    UNIFIED QUESTION CARD
    ═══════════════════════════════════ */
-function QuestionCard({ q, onAnswer, disabled, answerResult, selectedOption }) {
-  if (q.type === 'multiple-choice') return <McqCard q={q} onAnswer={onAnswer} disabled={disabled} selectedOption={selectedOption} />;
+function QuestionCard({ q, onAnswer, disabled, answerResult, selectedOption, revealFeedback = true }) {
+  if (q.type === 'multiple-choice') return <McqCard q={q} onAnswer={onAnswer} disabled={disabled} selectedOption={selectedOption} revealFeedback={revealFeedback} />;
   if (q.type === 'place-value-slots') return <PlaceValueSlots q={q} onAnswer={onAnswer} disabled={disabled} result={answerResult} />;
   if (q.type === 'number-builder') return <NumberBuilder q={q} onAnswer={onAnswer} disabled={disabled} result={answerResult} />;
   if (q.type === 'expanded-fill') return <ExpandedFill q={q} onAnswer={onAnswer} disabled={disabled} result={answerResult} />;
@@ -1447,6 +1453,7 @@ function AssessMode({ skill, onBack }) {
           disabled={false}
           answerResult={null}
           selectedOption={q.type === 'multiple-choice' ? (answersMap[qIdx] ?? null) : null}
+          revealFeedback={false}
         />
 
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 16 }}>
