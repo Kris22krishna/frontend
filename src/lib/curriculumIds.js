@@ -291,6 +291,14 @@ export const NODE_IDS = {
   g8ScienceInvestigativeMeasurements:      'b4081001-0002-0000-0000-000000000000',
   g8ScienceInvestigativeAnalysis:          'b4081001-0003-0000-0000-000000000000',
   g8ScienceInvestigativeTerminologyQuiz:   'b4081001-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Coordinate Geometry (Chapter 3)
+  g9MathCoordinateGeometry:                'a3091003-0000-0000-0000-000000000001',
+  g9MathCGIdentifyQuadrants:               'a4091003-0001-0000-0000-000000000000',
+  g9MathCGReadingCoordinates:              'a4091003-0002-0000-0000-000000000000',
+  g9MathCGPlottingPoints:                  'a4091003-0003-0000-0000-000000000000',
+  g9MathCGDistanceReflections:             'a4091003-0004-0000-0000-000000000000',
+  g9MathCGTerminologyQuiz:                 'a4091003-0010-0000-0000-000000000000',
 };
 
 /**

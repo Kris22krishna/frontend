@@ -20,6 +20,7 @@ import {
 const SKILLS = [
     {
         id: 'identify-quadrants',
+        nodeId: 'a4091003-0001-0000-0000-000000000000',
         title: 'Identifying Quadrants & Axes',
         subtitle: 'Skill 1 · Signs & Regions',
         icon: '🪟',
@@ -57,6 +58,7 @@ const SKILLS = [
     },
     {
         id: 'reading-coordinates',
+        nodeId: 'a4091003-0002-0000-0000-000000000000',
         title: 'Reading Coordinates',
         subtitle: 'Skill 2 · Graph Interpretation',
         icon: '🔍',
@@ -86,6 +88,7 @@ const SKILLS = [
     },
     {
         id: 'plotting-points',
+        nodeId: 'a4091003-0003-0000-0000-000000000000',
         title: 'Plotting Points',
         subtitle: 'Skill 3 · Interactive Placement',
         icon: '🎯',
@@ -123,6 +126,7 @@ const SKILLS = [
     },
     {
         id: 'distance',
+        nodeId: 'a4091003-0004-0000-0000-000000000000',
         title: 'Distance & Reflections',
         subtitle: 'Skill 4 · Geometric Properties',
         icon: '📏',
@@ -259,6 +263,7 @@ export default function CoordinateGeometry9Skills() {
                                 title={`Practice: ${skill.title}`}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={skill.nodeId}
                             />
                         </div>
                     ) : (
@@ -268,6 +273,7 @@ export default function CoordinateGeometry9Skills() {
                                 title={skill.title}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={skill.nodeId}
                             />
                         </div>
                     )}
