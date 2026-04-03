@@ -1,7 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../shapes-around-us.css';
 import { generateShapesSkillsData } from './shapesSkillsData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = {
+    'identifying-3d-shapes': NODE_IDS.g4MathShapesIdentifying3D,
+    'nets-of-shapes': NODE_IDS.g4MathShapesNets,
+    'types-of-angles': NODE_IDS.g4MathShapesAngles,
+    'exploring-circles': NODE_IDS.g4MathShapesCircles,
+};
 
 /* ═══════════════════════════════════════════════════════════════
    QUESTION CARD — renders MCQ with optional image
@@ -113,9 +122,24 @@ function fmtTime(ms) {
    MODE: LEARN
    ═══════════════════════════════════════════════════════════════ */
 function LearnMode({ skill, onBack }) {
+    const { startSession, finishSession } = useSessionLogger();
+    
+    useEffect(() => {
+        startSession({ nodeId: SKILL_NODE_IDS[skill.id], sessionType: 'practice' });
+    }, [skill.id, startSession]);
+
+    const handleBack = () => {
+        finishSession({
+            totalQuestions: 1,
+            questionsAnswered: 1,
+            answersPayload: { mode: 'learn', completed: true }
+        });
+        onBack();
+    };
+
     return (
         <div className="sau-detail-anim" style={{ maxWidth: 800, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-            <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Skills</button>
+            <button onClick={handleBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Skills</button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
                 <div style={{ fontSize: 40 }}>
                     {typeof skill.icon === 'string' && skill.icon.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: skill.icon}} /> : skill.icon}
@@ -137,7 +161,7 @@ function LearnMode({ skill, onBack }) {
                 ))}
             </div>
             <div style={{ marginTop: 30, display: 'flex', justifyContent: 'center' }}>
-                <button onClick={onBack} style={{ padding: '12px 32px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Got it! →</button>
+                <button onClick={handleBack} style={{ padding: '12px 32px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Got it! →</button>
             </div>
         </div>
     );
@@ -147,11 +171,16 @@ function LearnMode({ skill, onBack }) {
    MODE: PRACTICE (with Previous, state preservation, & report)
    ═══════════════════════════════════════════════════════════════ */
 function PracticeMode({ skill, onBack }) {
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
     const [finished, setFinished] = useState(false);
     const startTime = useRef(Date.now());
     const [elapsedMs, setElapsedMs] = useState(0);
+
+    useEffect(() => {
+        startSession({ nodeId: SKILL_NODE_IDS[skill.id], sessionType: 'practice' });
+    }, [skill.id, startSession]);
 
     // Live timer
     useEffect(() => {
@@ -174,12 +203,32 @@ function PracticeMode({ skill, onBack }) {
         let correct = false;
         if (q.type === 'multiple-choice') correct = val === q.correctAnswer;
         else correct = val.toString().toLowerCase() === q.correctAnswer.toString().toLowerCase();
-        setAnswersMap(prev => ({ ...prev, [qIdx]: { selectedOpt: val, isCorrect: correct } }));
+        
+        const answerData = { selectedOpt: val, isCorrect: correct };
+        setAnswersMap(prev => ({ ...prev, [qIdx]: answerData }));
+
+        logAnswer({
+            question_index: qIdx,
+            answer_json: {
+                question_text: q.question,
+                selected_option: q.type === 'multiple-choice' ? q.options[val] : val,
+                correct_answer: q.type === 'multiple-choice' ? q.options[q.correctAnswer] : q.correctAnswer,
+                difficulty: 'Medium'
+            },
+            is_correct: correct ? 1 : 0
+        });
     };
 
     const nextQ = () => {
         if (qIdx + 1 < questions.length) setQIdx(qIdx + 1);
-        else setFinished(true);
+        else {
+            finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: Object.keys(answersMap).length,
+                answersPayload: answersMap
+            });
+            setFinished(true);
+        }
     };
     const prevQ = () => { if (qIdx > 0) setQIdx(qIdx - 1); };
 
@@ -259,6 +308,10 @@ function AssessMode({ skill, onBack }) {
     const questions = skill.assessment;
     const q = questions[qIdx];
 
+    useEffect(() => {
+        startSession({ nodeId: SKILL_NODE_IDS[skill.id], sessionType: 'assessment' });
+    }, [skill.id, startSession]);
+
     // Timer tick
     useEffect(() => {
         if (finished) return;
@@ -294,6 +347,27 @@ function AssessMode({ skill, onBack }) {
     const submitAssessment = () => {
         const now = Date.now();
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + (now - qStartRef.current) }));
+        
+        const finalResults = {};
+        questions.forEach((qq, i) => {
+            const ans = answersMap[i];
+            if (ans !== undefined) {
+                let isCorrect = false;
+                if (qq.type === 'multiple-choice') isCorrect = ans === qq.correctAnswer;
+                else isCorrect = ans?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase();
+                
+                finalResults[i] = {
+                    selectedOption: qq.type === 'multiple-choice' ? qq.options[ans] : ans,
+                    isCorrect
+                };
+            }
+        });
+
+        finishSession({
+            totalQuestions: questions.length,
+            questionsAnswered: Object.keys(answersMap).length,
+            answersPayload: finalResults
+        });
         setFinished(true);
     };
 

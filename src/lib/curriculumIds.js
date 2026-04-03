@@ -14,8 +14,9 @@ export const NODE_IDS = {
   math: 'a1000000-0000-0000-0000-000000000001',
 
   // ── 1. GRADES ─────────────────────────────────────────────────────────────
-  grade8: 'a2000000-0000-0000-0000-000000000008',
-  grade9: 'a2000000-0000-0000-0000-000000000009',
+  grade4:  'a2000000-0000-0000-0000-000000000004',
+  grade8:  'a2000000-0000-0000-0000-000000000008',
+  grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
 
   // ── 2. GRADE 8 CHAPTERS ───────────────────────────────────────────────────
@@ -340,6 +341,15 @@ export const NODE_IDS = {
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
   g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
+  
+  // Grade 4 Math: Shapes Around Us (Chapter 5)
+  g4MathShapesAroundUs:                    'a3041005-0000-0000-0000-000000000001',
+  g4MathShapesIntro:                       'a4041005-0000-0000-0000-000000000000',
+  g4MathShapesIdentifying3D:               'a4041005-0001-0000-0000-000000000000',
+  g4MathShapesNets:                        'a4041005-0002-0000-0000-000000000000',
+  g4MathShapesAngles:                       'a4041005-0003-0000-0000-000000000000',
+  g4MathShapesCircles:                      'a4041005-0004-0000-0000-000000000000',
+  g4MathShapesTerminologyQuiz:              'a4041005-0010-0000-0000-000000000000',
 };
 
 /**
@@ -456,4 +466,13 @@ export const SLUG_TO_NODE_ID = {
   'g8-math-cq-simple-interest':         NODE_IDS.g8MathComparingSimpleInterest,
   'g8-math-cq-compound-interest':       NODE_IDS.g8MathComparingCompoundInterest,
   'g8-math-cq-terminology':             NODE_IDS.g8MathCQTerminologyQuiz,
+
+  // Grade 4 Math: Shapes Around Us
+  'g4-math-shapes-around-us':           NODE_IDS.g4MathShapesAroundUs,
+  'g4-math-shapes-intro':               NODE_IDS.g4MathShapesIntro,
+  'g4-math-shapes-identifying-3d':      NODE_IDS.g4MathShapesIdentifying3D,
+  'g4-math-shapes-nets':                NODE_IDS.g4MathShapesNets,
+  'g4-math-shapes-angles':               NODE_IDS.g4MathShapesAngles,
+  'g4-math-shapes-circles':              NODE_IDS.g4MathShapesCircles,
+  'g4-math-shapes-terminology':          NODE_IDS.g4MathShapesTerminologyQuiz,
 };
