@@ -172,9 +172,7 @@ export const generateEvenOdd = () => {
     topic: "Number Sense / Even & Odd",
     options: [
       { value: "Even", label: "Even" },
-      { value: "Odd", label: "Odd" },
-      { value: "Both", label: "Both" },
-      { value: "Neither", label: "Neither" }
+      { value: "Odd", label: "Odd" }
     ],
     answer: answer
   };
@@ -221,6 +219,7 @@ export const generateAdditionObjects = () => {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Addition / Basics",
       answer: String(answer)
     };
@@ -294,6 +293,7 @@ export const generateSubtractionObjects = () => {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Subtraction / Basics",
       answer: String(answer)
     };
@@ -445,9 +445,7 @@ export const generateSpatial = () => {
 
   const options = shuffleArray([
     { value: concept.answer, label: concept.answer },
-    { value: concept.other, label: concept.other },
-    { value: "Both", label: "Both" },
-    { value: "Neither", label: "Neither" }
+    { value: concept.other, label: concept.other }
   ]);
 
   return {
@@ -509,9 +507,7 @@ export const generateWeightComparison = () => {
 
   const options = shuffleArray([
     { value: comp.heavy, label: comp.heavy },
-    { value: comp.light, label: comp.light },
-    { value: "Same weight", label: "Same weight" },
-    { value: "None", label: "None" }
+    { value: comp.light, label: comp.light }
   ]);
 
   return {
@@ -543,9 +539,7 @@ export const generateCapacityComparison = () => {
 
   const options = shuffleArray([
     { value: comp.more, label: comp.more },
-    { value: comp.less, label: comp.less },
-    { value: "Equal", label: "Equal" },
-    { value: "None", label: "None" }
+    { value: comp.less, label: comp.less }
   ]);
 
   return {
@@ -598,12 +592,14 @@ export const generateMoneyCounting = () => {
     total += note;
   }
 
-  const question = `Count the money:</br> ${selectedNotes.map(n => `₹${n}`).join(" + ")} = ?`;
+  const visual = selectedNotes.map(n => `₹${n}`).join(" + ");
+  const question = `Count the money:`;
 
   if (Math.random() > 0) {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 1.5rem; padding: 10px;">${visual}</div>`,
       topic: "Money / Basics",
       answer: String(total)
     };
@@ -641,9 +637,7 @@ export const generatePatterns = () => {
 
   const options = shuffleArray([
     { value: pattern.next, label: pattern.next },
-    { value: pattern.wrong, label: pattern.wrong },
-    { value: "Both", label: "Both" },
-    { value: "None", label: "None" }
+    { value: pattern.wrong, label: pattern.wrong }
   ]);
 
   return {
@@ -731,6 +725,7 @@ export const generateCountingObjects = () => {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Number Sense / Counting Objects",
       answer: String(count)
     };
@@ -798,6 +793,7 @@ export const generatePictureGraph = () => {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Data Handling / Picture Graph",
       answer: String(count)
     };
