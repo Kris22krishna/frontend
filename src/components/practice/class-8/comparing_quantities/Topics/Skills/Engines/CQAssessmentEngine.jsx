@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../../../comparing_quantities.css';
 import { LatexText } from '../../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 function sample(arr, n) {
     const copy = [...arr];
@@ -12,8 +13,9 @@ function sample(arr, n) {
 }
 
 // Assessment uses only MCQ questions (timed exam format)
-// Receives: questionPool, sampleSize (default 10), title, color, onBack
-export default function CQAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+// Receives: questionPool, sampleSize (default 10), title, color, onBack, nodeId
+export default function CQAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack, nodeId }) {
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     // Filter to only MCQ for assessment (exclude fill questions)
     const safeQuestionPool = Array.isArray(questionPool) ? questionPool : [];
     const [questions] = useState(() => {
@@ -34,7 +36,28 @@ export default function CQAssessmentEngine({ questionPool, sampleSize = 10, titl
     const [timeLeft, setTimeLeft] = useState(600); // 10-minute countdown
     const [finished, setFinished] = useState(false);
 
-    const finish = useCallback(() => setFinished(true), []);
+    useEffect(() => {
+        startSession({ nodeId, sessionType: 'assessment' });
+    }, [nodeId, startSession]);
+
+    const finish = useCallback(() => {
+        const userAnswersPayload = {};
+        questions.forEach((q, i) => {
+            if (answers[i] !== null) {
+                userAnswersPayload[i] = {
+                    selectedOption: q.options[answers[i]],
+                    isCorrect: answers[i] === q.correct
+                };
+            }
+        });
+
+        finishSession({
+            totalQuestions: questions.length,
+            questionsAnswered: Object.keys(userAnswersPayload).length,
+            answersPayload: userAnswersPayload
+        });
+        setFinished(true);
+    }, [answers, finishSession, questions]);
 
     useEffect(() => {
         if (finished) return;
@@ -51,9 +74,22 @@ export default function CQAssessmentEngine({ questionPool, sampleSize = 10, titl
 
     const handleSelect = (optIdx) => {
         if (finished) return;
+        const q = questions[current];
+        const isCorrect = optIdx === q.correct;
         const next = [...answers];
         next[current] = optIdx;
         setAnswers(next);
+
+        logAnswer({
+            question_index: current,
+            answer_json: {
+                question_text: q.question,
+                selected_option: q.options[optIdx],
+                correct_answer: q.options[q.correct],
+                difficulty: q.difficulty || 'Medium'
+            },
+            is_correct: isCorrect ? 1 : 0
+        });
     };
 
     const handleSubmit = () => {

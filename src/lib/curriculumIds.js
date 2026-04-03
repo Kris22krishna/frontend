@@ -47,10 +47,12 @@ export const NODE_IDS = {
   g8MathExponentsStandardForm:   'a4000000-0000-0000-0000-000000050002',
 
   // Comparing Quantities
+  g8MathCQIntro:                 'a4000000-0000-0000-0000-000000060000',
   g8MathComparingPercentages:    'a4000000-0000-0000-0000-000000060001',
   g8MathComparingProfitLoss:     'a4000000-0000-0000-0000-000000060002',
   g8MathComparingSimpleInterest: 'a4000000-0000-0000-0000-000000060003',
   g8MathComparingCompoundInterest:'a4000000-0000-0000-0000-000000060004',
+  g8MathCQTerminologyQuiz:       'a4000000-0000-0000-0000-000000060010',
 
   // ── 4. MATH-BRANCHES MODULE (Independent) ─────────────────────────────────
   mathBranchAlgebra:             'f1000000-0000-0000-0000-000000000001',
@@ -424,4 +426,13 @@ export const SLUG_TO_NODE_ID = {
   'g9-math-poly-factorisation':          NODE_IDS.g9MathPolyFactorisation,
   'g9-math-poly-identities':             NODE_IDS.g9MathPolyIdentities,
   'g9-math-poly-terminology':           NODE_IDS.g9MathPolyTerminologyQuiz,
+
+  // Grade 8 Math: Comparing Quantities
+  'g8-math-comparing-quantities':       NODE_IDS.g8MathComparingQuantities,
+  'g8-math-cq-intro':                   NODE_IDS.g8MathCQIntro,
+  'g8-math-cq-percentages':             NODE_IDS.g8MathComparingPercentages,
+  'g8-math-cq-profit-loss':             NODE_IDS.g8MathComparingProfitLoss,
+  'g8-math-cq-simple-interest':         NODE_IDS.g8MathComparingSimpleInterest,
+  'g8-math-cq-compound-interest':       NODE_IDS.g8MathComparingCompoundInterest,
+  'g8-math-cq-terminology':             NODE_IDS.g8MathCQTerminologyQuiz,
 };
