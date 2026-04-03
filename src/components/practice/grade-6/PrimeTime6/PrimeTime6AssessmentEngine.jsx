@@ -26,7 +26,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         const type = getQuestionType(question);
         if (type === 'text') return normalizeTextAnswer(answer) === normalizeTextAnswer(question.answer);
         if (type === 'factor-tree' || type === 'division-table') return normalizeTextAnswer(answer.finalAnswer).replace(/\s+/g,'') === normalizeTextAnswer(question.correctAnswer).replace(/\s+/g,'');
-        return answer === question.correct;
+        return answer === question.correct || (question.options && question.options[answer] !== undefined && String(question.options[answer]) === String(question.correct));
     };
 
     const getCorrectAnswerLabel = (question) => {
@@ -179,6 +179,10 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         const isCorrect = isAnswerCorrect(question, answers[index]);
                         const correctOptText = getCorrectAnswerLabel(question);
                         const userOptText = getUserAnswerLabel(question, answers[index]);
+                        const isSkipped = userOptText === 'Not Answered';
+                        const statusColor = isSkipped ? '#eab308' : isCorrect ? '#10b981' : '#ef4444';
+                        const statusBg = isSkipped ? 'rgba(234,179,8,0.05)' : isCorrect ? 'rgba(16,185,129,0.03)' : 'rgba(239,68,68,0.03)';
+                        const statusText = isSkipped ? 'Skipped ⚠️' : isCorrect ? 'Correct ✅' : 'Incorrect ❌';
 
                         return (
                             <div
@@ -186,12 +190,12 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                 style={{
                                     padding: 24,
                                     borderRadius: 16,
-                                    border: `2px solid ${isCorrect ? '#10b981' : '#ef4444'}`,
-                                    background: isCorrect ? 'rgba(16,185,129,0.03)' : 'rgba(239,68,68,0.03)'
+                                    border: `2px solid ${statusColor}`,
+                                    background: statusBg,
                                 }}
                             >
-                                <div style={{ fontWeight: 800, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: isCorrect ? '#10b981' : '#ef4444' }}>
-                                    <span style={{ fontSize: 18 }}>Question {index + 1} &mdash; {isCorrect ? 'Correct ✅' : 'Incorrect ❌'}</span>
+                                <div style={{ fontWeight: 800, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: statusColor }}>
+                                    <span style={{ fontSize: 18 }}>Question {index + 1} &mdash; {statusText}</span>
                                     <span style={{ fontSize: 13, fontWeight: 700, color: '#64748b', background: '#fff', border: '1px solid #e2e8f0', padding: '4px 12px', borderRadius: 100 }}>⏱️ {formatTime(questionTimes[index])}</span>
                                 </div>
                                 <div style={{ fontSize: 17, marginBottom: 20, color: '#0f172a', fontWeight: 600, lineHeight: 1.6 }}>
@@ -214,7 +218,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                         </div>
                                     </div>
                                     <div style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                                        <strong style={{ color: isCorrect ? '#10b981' : '#ef4444', display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Your Answer</strong>
+                                        <strong style={{ color: statusColor, display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Your Answer</strong>
                                         <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 15 }}>
                                             {userOptText === 'Not Answered'
                                                 ? <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Not Answered</span>
