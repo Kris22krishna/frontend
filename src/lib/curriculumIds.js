@@ -154,21 +154,88 @@ export const NODE_IDS = {
   g8MathGraphs:            'a3000000-0000-0000-0000-000000000011',
   g8MathDataHandling:      'a3000000-0000-0000-0000-000000000012',
 
-  // ── 3. GRADE 8 SKILLS (Representative selection) ──────────────────────────
-  
-  // Rational Numbers
+  // ── 3. GRADE 8 SKILLS — NEW UUID SCHEME ───────────────────────────────────
+
+  // Ch 1: Rational Numbers
+  g8MathRNChapter:                   'a3081001-0000-0000-0000-000000000001',
+  g8MathRNCommutativity:             'a4081001-0001-0000-0000-000000000000',
+  g8MathRNAssociativity:             'a4081001-0002-0000-0000-000000000000',
+  g8MathRNDistributivity:            'a4081001-0003-0000-0000-000000000000',
+  g8MathRNIdentities:                'a4081001-0004-0000-0000-000000000000',
+  g8MathRNChapterTest:               'a4081001-0010-0000-0000-000000000000',
+
+  // Ch 3: Understanding Quadrilaterals
+  g8MathUQChapter:                   'a3081003-0000-0000-0000-000000000001',
+  g8MathUQAngleSumExterior:          'a4081003-0001-0000-0000-000000000000',
+  g8MathUQKindsOfQuadrilaterals:     'a4081003-0002-0000-0000-000000000000',
+  g8MathUQSpecialParallelograms:     'a4081003-0003-0000-0000-000000000000',
+
+  // Ch 5: Data Handling
+  g8MathDHChapter:                   'a3081005-0000-0000-0000-000000000001',
+  g8MathDHOrganisingData:            'a4081005-0001-0000-0000-000000000000',
+  g8MathDHBarGraphs:                 'a4081005-0002-0000-0000-000000000000',
+  g8MathDHPieCharts:                 'a4081005-0003-0000-0000-000000000000',
+  g8MathDHProbability:               'a4081005-0004-0000-0000-000000000000',
+
+  // Ch 6: Squares and Square Roots
+  g8MathSSRChapter:                  'a3081006-0000-0000-0000-000000000001',
+  g8MathSSRIdentifyPerfect:          'a4081006-0001-0000-0000-000000000000',
+  g8MathSSRProperties:               'a4081006-0002-0000-0000-000000000000',
+  g8MathSSRPythagorean:              'a4081006-0003-0000-0000-000000000000',
+  g8MathSSRConceptRoot:              'a4081006-0004-0000-0000-000000000000',
+  g8MathSSRPrimeFactorization:       'a4081006-0005-0000-0000-000000000000',
+  g8MathSSRLongDivision:             'a4081006-0006-0000-0000-000000000000',
+  g8MathSSRDecimals:                 'a4081006-0007-0000-0000-000000000000',
+  g8MathSSRIdentityPatterns:         'a4081006-0008-0000-0000-000000000000',
+  g8MathSSRChapterTest:              'a4081006-0010-0000-0000-000000000000',
+
+  // Ch 7: Cubes and Cube Roots
+  g8MathCCRChapter:                  'a3081007-0000-0000-0000-000000000001',
+  g8MathCCRPerfectCubes:             'a4081007-0001-0000-0000-000000000000',
+  g8MathCCRPrimeFactorisation:       'a4081007-0002-0000-0000-000000000000',
+  g8MathCCREstimatingRoots:          'a4081007-0003-0000-0000-000000000000',
+  g8MathCCRMissingMultiples:         'a4081007-0004-0000-0000-000000000000',
+
+  // Ch 11: Mensuration
+  g8MathMensChapter:                 'a3081011-0000-0000-0000-000000000001',
+  g8MathMensAreaPolygon:             'a4081011-0001-0000-0000-000000000000',
+  g8MathMensSACube:                  'a4081011-0002-0000-0000-000000000000',
+  g8MathMensSACuboid:                'a4081011-0003-0000-0000-000000000000',
+  g8MathMensSACylinder:              'a4081011-0004-0000-0000-000000000000',
+  g8MathMensVolCube:                 'a4081011-0005-0000-0000-000000000000',
+  g8MathMensVolCuboid:               'a4081011-0006-0000-0000-000000000000',
+  g8MathMensVolCylinder:             'a4081011-0007-0000-0000-000000000000',
+  g8MathMensVolCapacity:             'a4081011-0008-0000-0000-000000000000',
+  g8MathMensChapterTest:             'a4081011-0010-0000-0000-000000000000',
+
+  // Ch 13: Direct and Inverse Proportions
+  g8MathDIPChapter:                  'a3081013-0000-0000-0000-000000000001',
+  g8MathDIPDirect:                   'a4081013-0001-0000-0000-000000000000',
+  g8MathDIPInverse:                  'a4081013-0002-0000-0000-000000000000',
+
+  // Ch 14: Factorisation
+  g8MathFactChapter:                 'a3081014-0000-0000-0000-000000000001',
+  g8MathFactCommonFactors:           'a4081014-0001-0000-0000-000000000000',
+  g8MathFactRegrouping:              'a4081014-0002-0000-0000-000000000000',
+  g8MathFactIdentities:              'a4081014-0003-0000-0000-000000000000',
+  g8MathFactXplusAXplusB:            'a4081014-0004-0000-0000-000000000000',
+  g8MathFactDivMonomialMonomial:     'a4081014-0005-0000-0000-000000000000',
+  g8MathFactDivPolyMonomial:         'a4081014-0006-0000-0000-000000000000',
+  g8MathFactDivPolyPoly:             'a4081014-0007-0000-0000-000000000000',
+  g8MathFactChapterTest:             'a4081014-0010-0000-0000-000000000000',
+
+  // Ch 15: Introduction to Graphs
+  g8MathGraphsChapter:               'a3081015-0000-0000-0000-000000000001',
+  g8MathGraphsLineGraph:             'a4081015-0001-0000-0000-000000000000',
+  g8MathGraphsLinearGraph:           'a4081015-0002-0000-0000-000000000000',
+
+  // ── LEGACY GRADE 8 SKILL IDs (kept for backward compat) ──────────────────
   g8MathRationalAssociativity:   'a4000000-0000-0000-0000-000000010001',
   g8MathRationalDistributivity:  'a4000000-0000-0000-0000-000000010002',
-  
-  // Linear Equations
   g8MathLinearSolving:           'a4000000-0000-0000-0000-000000020001',
   g8MathLinearWordProblems:      'a4000000-0000-0000-0000-000000020002',
-
-  // Exponents & Powers
   g8MathExponentsLaws:           'a4000000-0000-0000-0000-000000050001',
   g8MathExponentsStandardForm:   'a4000000-0000-0000-0000-000000050002',
-
-  // Comparing Quantities
   g8MathCQIntro:                 'a4000000-0000-0000-0000-000000060000',
   g8MathComparingPercentages:    'a4000000-0000-0000-0000-000000060001',
   g8MathComparingProfitLoss:     'a4000000-0000-0000-0000-000000060002',

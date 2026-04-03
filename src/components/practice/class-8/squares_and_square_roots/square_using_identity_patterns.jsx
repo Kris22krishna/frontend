@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import Class8PracticeReportModal from '../Class8PracticeReportModal';
@@ -113,6 +115,9 @@ const SquareUsingIdentityPatterns = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1249;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
     const SKILL_NAME = "Square Using Identity Patterns";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
@@ -138,7 +143,8 @@ const SquareUsingIdentityPatterns = () => {
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+            startSession({ nodeId: NODE_IDS.g8MathSSRIdentityPatterns, sessionType: 'practice' });
+        api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
@@ -271,6 +277,10 @@ const SquareUsingIdentityPatterns = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+            }
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }

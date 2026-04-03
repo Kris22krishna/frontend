@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { generateLGScenarios, GraphMini } from './LinearGraphUtils';
 import '../../graphs.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 /**
  * LinearGraphAssessmentEngine
@@ -10,7 +11,9 @@ import '../../graphs.css';
  * - No live feedback during quiz
  * - Report shows plot steps in same format as MCQ (Correct Answer / Your Answer)
  */
-export default function LinearGraphAssessmentEngine({ color, onBack }) {
+export default function LinearGraphAssessmentEngine({ color, onBack, nodeId }) {
+    const { startSession, finishSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
 
     // Build 3 scenarios (one gets 3 MCQs, two get 2 MCQs) = 10 steps
     const [scenarios] = useState(() => {
@@ -52,6 +55,17 @@ export default function LinearGraphAssessmentEngine({ color, onBack }) {
     const [toast, setToast] = useState('');
     const [finished, setFinished] = useState(false);
     const [timeLeft, setTimeLeft] = useState(TOTAL * 60);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || isFinishedRef.current) return;
+        isFinishedRef.current = true;
+        finishSession({ answers_payload: [] });
+    }, [finished]);
 
     // Countdown timer
     useEffect(() => {

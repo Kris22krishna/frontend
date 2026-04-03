@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import Class8PracticeReportModal from '../Class8PracticeReportModal';
@@ -114,6 +116,9 @@ const IdentifyPerfectSquares = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1247;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
     const SKILL_NAME = "Identify Perfect Squares";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
@@ -139,7 +144,8 @@ const IdentifyPerfectSquares = () => {
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+            startSession({ nodeId: NODE_IDS.g8MathSSRIdentifyPerfect, sessionType: 'practice' });
+        api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
@@ -252,6 +258,17 @@ const IdentifyPerfectSquares = () => {
             }
         }));
 
+        const timeTakenMs = accumulatedTime.current + (isTabActive.current ? (Date.now() - questionStartTime.current) : 0);
+        const v4Entry = {
+            question_index: qIndex,
+            answer_json: { selected: selectedOption, correct_answer: currentQuestion.correctAnswer },
+            is_correct: isRight,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: Math.round(timeTakenMs),
+        };
+        answersPayload.current[qIndex] = v4Entry;
+        logAnswer(v4Entry);
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
     };
 
@@ -272,6 +289,10 @@ const IdentifyPerfectSquares = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+            }
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }

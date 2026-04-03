@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../proportions.css';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = [
+    NODE_IDS.g8MathDIPDirect,   // index 0 — direct
+    NODE_IDS.g8MathDIPInverse,  // index 1 — inverse
+];
 
 import ProportionsPracticeEngine from './Engines/ProportionsPracticeEngine';
 import ProportionsAssessmentEngine from './Engines/ProportionsAssessmentEngine';
@@ -206,6 +212,7 @@ export default function ProportionsSkills() {
                                 title={`Practice: ${skill.title}`}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={SKILL_NODE_IDS[activeSkill]}
                             />
                         </div>
                     ) : (
@@ -216,6 +223,7 @@ export default function ProportionsSkills() {
                                 title={skill.title}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={SKILL_NODE_IDS[activeSkill]}
                             />
                         </div>
                     )}
