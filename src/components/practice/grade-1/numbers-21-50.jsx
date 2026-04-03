@@ -151,9 +151,8 @@ import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
 import ExplanationModal from '../../ExplanationModal';
 import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+
+
 
 /* ... (DynamicVisual omitted) */
 
