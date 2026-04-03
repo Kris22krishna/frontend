@@ -33,14 +33,14 @@ import {
 const ChapterAccordion = ({ chapter, skills, mode }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    // Filter to hide skills with NO attempts
-    const attemptedSkills = (skills || []).filter(s => s.attempts > 0);
-    
-    // Simple average of all skills in the chapter
+    // Filter to hide skills with NO attempts (optional, but user wants "content" so maybe show all?)
     const accuracies = (skills || []).map(s => mode === 'best' ? s.best_accuracy : s.latest_accuracy);
     const chapterProgress = accuracies.length > 0 
         ? Math.round(accuracies.reduce((a, b) => a + b, 0) / accuracies.length) 
         : 0;
+    
+    const totalTimeSeconds = (skills || []).reduce((acc, s) => acc + (s.time_spent || 0), 0);
+    const totalMinutes = Math.round(totalTimeSeconds / 60);
 
     return (
         <div className="border border-slate-200 rounded-2xl mb-4 overflow-hidden bg-white shadow-sm hover:shadow-md transition-all group/chapter">
@@ -49,33 +49,40 @@ const ChapterAccordion = ({ chapter, skills, mode }) => {
                 className={`w-full flex justify-between items-center p-5 transition-colors ${isOpen ? 'bg-slate-50' : 'bg-white'}`}
             >
                 <div className="flex flex-col items-start gap-1">
-                    <div className="font-extrabold text-slate-800 text-left text-base group-hover/chapter:text-cyan-600 transition-colors">{chapter}</div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-24 bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                            <div 
-                                className="h-full bg-cyan-500 rounded-full transition-all duration-700" 
-                                style={{ width: `${chapterProgress}%` }} 
-                            />
+                    <div className="font-extrabold text-slate-800 text-left text-base group-hover/chapter:text-cyan-600 transition-colors uppercase tracking-tight">{chapter}</div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                            <div className="w-16 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                <div 
+                                    className="h-full bg-cyan-500 rounded-full transition-all duration-700" 
+                                    style={{ width: `${chapterProgress}%` }} 
+                                />
+                            </div>
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">{chapterProgress}%</span>
                         </div>
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">{chapterProgress}% Total</span>
+                        <div className="flex items-center gap-1 text-slate-400 text-[10px] font-bold uppercase tracking-wider">
+                            <Clock className="h-3 w-3" />
+                            {totalMinutes}m
+                        </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="hidden sm:flex flex-col items-end">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Skills</span>
-                        <span className="text-sm font-bold text-slate-600">{attemptedSkills.length} of {skills.length}</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Modules</span>
+                        <span className="text-sm font-bold text-slate-600">{skills.filter(s => s.attempts > 0).length} / {skills.length}</span>
                     </div>
                     {isOpen ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
                 </div>
             </button>
             {isOpen && (
                 <div className="p-5 space-y-5 bg-white border-t border-slate-50">
-                    {attemptedSkills.length > 0 ? (
-                        attemptedSkills.map((skill, idx) => {
+                    {skills.length > 0 ? (
+                        skills.map((skill, idx) => {
                             const minutes = Math.round(skill.time_spent / 60);
                             const displayAccuracy = mode === 'best' ? skill.best_accuracy : skill.latest_accuracy;
+                            const isAttempted = skill.attempts > 0;
                             return (
-                                <div key={idx} className="space-y-1.5 group/skill">
+                                <div key={idx} className={`space-y-1.5 group/skill ${!isAttempted ? 'opacity-40' : ''}`}>
                                     <div className="flex justify-between text-sm">
                                         <span className="font-bold text-slate-700 group-hover/skill:text-cyan-600 transition-colors">{skill.skill_name}</span>
                                         <div className="flex items-center gap-3">
@@ -102,13 +109,94 @@ const ChapterAccordion = ({ chapter, skills, mode }) => {
                             );
                         })
                     ) : (
-                        <div className="text-center py-4 text-xs text-slate-400 italic">No progress recorded for these skills yet.</div>
+                        <div className="text-center py-4 text-xs text-slate-400 italic">No modules found.</div>
                     )}
                 </div>
             )}
         </div>
     );
 };
+
+const CurriculumSummaryTable = ({ chapterWise, mode }) => {
+    if (!chapterWise || Object.keys(chapterWise).length === 0) return null;
+
+    // Flatten data for table view
+    const tableData = [];
+    Object.entries(chapterWise).forEach(([chapterName, skills]) => {
+        skills.forEach(skill => {
+            tableData.push({
+                chapter: chapterName,
+                ...skill
+            });
+        });
+    });
+
+    return (
+        <div className="bg-white p-6 md:p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 mt-8 w-full overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="flex justify-between items-center mb-6">
+                <div>
+                    <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3">
+                        <div className="p-2 bg-indigo-100 rounded-xl">
+                            <BookOpen className="h-6 w-6 text-indigo-600" />
+                        </div>
+                        Curriculum Content & Time Breakdown
+                    </h2>
+                    <p className="text-slate-500 text-sm mt-1 ml-11">Detailed breakdown of time spent and accuracy by module</p>
+                </div>
+            </div>
+
+            <div className="overflow-x-auto -mx-6 md:mx-0">
+                <table className="w-full text-left border-separate border-spacing-0">
+                    <thead>
+                        <tr className="bg-slate-50/50">
+                            <th className="py-4 px-6 font-bold text-slate-500 text-[11px] uppercase tracking-wider rounded-l-2xl border-y border-slate-100">Chapter</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Module (Skill)</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100">Time Spent</th>
+                            <th className="py-4 px-4 font-bold text-slate-500 text-[11px] uppercase tracking-wider border-y border-slate-100 uppercase">Attempts</th>
+                            <th className="py-4 px-6 font-bold text-slate-500 text-[11px] uppercase tracking-wider rounded-r-2xl border-y border-slate-100">Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50 text-slate-600">
+                        {tableData.map((row, idx) => {
+                            const displayAccuracy = mode === 'best' ? row.best_accuracy : row.latest_accuracy;
+                            const isAttempted = row.attempts > 0;
+                            return (
+                                <tr key={idx} className={`hover:bg-slate-50/80 transition-all ${!isAttempted ? 'bg-slate-50/30' : ''}`}>
+                                    <td className="py-5 px-6 text-xs text-slate-400 font-black uppercase tracking-widest">{row.chapter}</td>
+                                    <td className="py-5 px-4 text-sm text-slate-800 font-bold">{row.skill_name}</td>
+                                    <td className="py-5 px-4 text-sm text-slate-600 font-black tabular-nums">
+                                        {Math.floor(row.time_spent / 60)}m {row.time_spent % 60}s
+                                    </td>
+                                    <td className="py-5 px-4 text-sm text-slate-500 font-black">{row.attempts}</td>
+                                    <td className="py-5 px-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden shadow-inner">
+                                                <div 
+                                                    className={`h-full rounded-full transition-all duration-700 ${
+                                                        displayAccuracy >= 80 ? 'bg-gradient-to-r from-emerald-400 to-emerald-500' 
+                                                        : displayAccuracy >= 50 ? 'bg-gradient-to-r from-amber-400 to-amber-500' 
+                                                        : 'bg-gradient-to-r from-cyan-400 to-blue-400'
+                                                    }`}
+                                                    style={{ width: `${displayAccuracy}%` }} 
+                                                />
+                                            </div>
+                                            <span className={`text-xs font-black sm:w-8 ${
+                                                displayAccuracy >= 80 ? 'text-emerald-500' 
+                                                : displayAccuracy >= 50 ? 'text-amber-500' 
+                                                : 'text-slate-400'
+                                            }`}>{displayAccuracy}%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
 
 const ChronologicalSummary = ({ sessions }) => {
     const [filterCategory, setFilterCategory] = React.useState('all');
@@ -300,6 +388,20 @@ const StudentDashboard = ({ studentId, isEmbedded = false }) => {
     const [analytics, setAnalytics] = useState(null);
     const [sessions, setSessions] = useState([]);
     const [mode, setMode] = useState('latest'); // 'latest' | 'best'
+    const { quick_stats, chapter_time, chapter_wise, learning_insights } = analytics || {};
+
+    // Filter Chapter Wise progress to only show active skills
+    const filtered_chapter_wise = React.useMemo(() => {
+        if (!chapter_wise) return {};
+        const filtered = {};
+        Object.entries(chapter_wise).forEach(([chapter, skills]) => {
+            const activeSkills = skills.filter(s => (s.attempts || 0) > 0);
+            if (activeSkills.length > 0) {
+                filtered[chapter] = activeSkills;
+            }
+        });
+        return filtered;
+    }, [chapter_wise]);
 
     useEffect(() => {
         fetchDashboardData();
@@ -374,7 +476,6 @@ const StudentDashboard = ({ studentId, isEmbedded = false }) => {
         );
     }
 
-    const { quick_stats, chapter_time, chapter_wise, learning_insights } = analytics || {};
 
     // Quick Stats Preparation
     const accuracy = quick_stats?.total_questions >
@@ -382,12 +483,15 @@ const StudentDashboard = ({ studentId, isEmbedded = false }) => {
         : 0;
     const totalMinutes = Math.round((quick_stats?.total_time_seconds || 0) / 60);
 
-    // Chart Data Preparation
-    const chartData = (chapter_time || []).map(c => ({
-        name: c.chapter_name.length > 9 ? c.chapter_name.substring(0, 9) + '..' : c.chapter_name,
-        full_name: c.chapter_name,
-        minutes: Math.round(c.time_spent / 60)
-    }));
+    // Chart Data Preparation - Filter for > 0 minutes spent
+    const chartData = (chapter_time || [])
+        .filter(c => c.time_spent > 0)
+        .map(c => ({
+            name: c.chapter_name.length > 9 ? c.chapter_name.substring(0, 9) + '..' : c.chapter_name,
+            full_name: c.chapter_name,
+            minutes: Math.round(c.time_spent / 60)
+        }));
+
 
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
@@ -542,7 +646,7 @@ const StudentDashboard = ({ studentId, isEmbedded = false }) => {
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                         <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                             <BookOpen className="h-5 w-5 text-cyan-500" />
-                            Curriculum Progress
+                            Curriculum Content & Progress
                         </h2>
                         
                         {/* Latest/Best Toggle */}
@@ -570,22 +674,26 @@ const StudentDashboard = ({ studentId, isEmbedded = false }) => {
                         </div>
                     </div>
 
-                    {chapter_wise && Object.keys(chapter_wise).length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                            {Object.entries(chapter_wise)
-                                .map(([chapter, skills]) => (
-                                    <ChapterAccordion key={chapter} chapter={chapter} skills={skills} mode={mode} />
-                                ))
-                            }
-                        </div>
+                    {filtered_chapter_wise && Object.keys(filtered_chapter_wise).length > 0 ? (
+                        <>
+                            {/* Visual Accordion View (Good for Mobile) */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-12">
+                                {Object.entries(filtered_chapter_wise)
+                                    .map(([chapter, skills]) => (
+                                        <ChapterAccordion key={chapter} chapter={chapter} skills={skills} mode={mode} />
+                                    ))
+                                }
+                            </div>
+
+                            {/* Detailed Table View (The "Content" View user likes) */}
+                            <CurriculumSummaryTable chapterWise={filtered_chapter_wise} mode={mode} />
+                        </>
                     ) : (
                         <div className="text-center py-8 text-slate-500 font-medium bg-slate-50 rounded-xl border border-slate-100 dashed">
-                            No chapter data found. Complete some practices to see a breakdown!
+                            No curriculum data found. Start practicing to see your progress!
                         </div>
                     )}
                 </div>
-
-
 
             </div>
         </div>

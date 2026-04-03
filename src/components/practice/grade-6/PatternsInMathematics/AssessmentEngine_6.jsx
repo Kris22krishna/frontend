@@ -33,7 +33,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
             const actual = Array.isArray(answer) ? [...answer].sort((a, b) => a - b) : [];
             return expected.length === actual.length && expected.every((value, index) => value === actual[index]);
         }
-        return answer === question.correct;
+        return answer === question.correct || (question.options && question.options[answer] !== undefined && String(question.options[answer]) === String(question.correct));
     };
 
     const formatAnswer = (value) => String(value ?? '');
@@ -252,6 +252,10 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         const isCorrect = isAnswerCorrect(question, answers[index]);
                         const correctOptText = getCorrectAnswerLabel(question);
                         const userOptText = getUserAnswerLabel(question, answers[index]);
+                        const isSkipped = userOptText === 'Not Answered';
+                        const statusColor = isSkipped ? '#eab308' : isCorrect ? '#10b981' : '#ef4444';
+                        const statusBg = isSkipped ? 'rgba(234,179,8,0.05)' : isCorrect ? 'rgba(16,185,129,0.03)' : 'rgba(239,68,68,0.03)';
+                        const statusText = isSkipped ? 'Skipped ⚠️' : isCorrect ? 'Correct ✅' : 'Incorrect ❌';
 
                         return (
                             <div
@@ -264,10 +268,18 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                 }}
                             >
                                 <div style={{ fontWeight: 800, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>
-                                    <span>Question {index + 1} - {isCorrect ? 'Correct' : 'Incorrect'}</span>
+                                    <span>Question {index + 1} - {statusText}</span>
                                     <span style={{ fontSize: 12, fontWeight: 700, color: `var(--${prefix}-muted, #64748b)`, background: '#f1f5f9', padding: '3px 10px', borderRadius: 6 }}>⏱️ {formatTime(questionTimes[index])}</span>
                                 </div>
                                 <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 16, marginBottom: 16, color: `var(--${prefix}-text, #1e293b)`, fontWeight: 600 }}>
+                                    {question.image && (
+                                        <div style={{ marginBottom: 24, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                                            <img src={question.image} alt="Problem Illustration" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                                        </div>
+                                    )}
+                                    {question.svg && (
+                                        <div style={{ marginBottom: 24, textAlign: 'center', background: '#f8fafc', padding: 20, borderRadius: 16 }} dangerouslySetInnerHTML={{ __html: question.svg }} />
+                                    )}
                                     <MathRenderer text={question.question} />
                                 </div>
                                 <div className={`${prefix}-summary-split`}>

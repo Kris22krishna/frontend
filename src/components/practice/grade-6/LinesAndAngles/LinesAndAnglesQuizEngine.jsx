@@ -52,7 +52,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
     // ── Handlers ──────────────────────────────────────────
     const handleSelect = (optIdx) => {
         if (isAnswered) return;
-        const isCorrect = optIdx === q.correct;
+        const isCorrect = optIdx === q.correct || (q.options && q.options[optIdx] !== undefined && String(q.options[optIdx]) === String(q.correct));
         setAnswersMap(prev => ({ ...prev, [current]: { selectedIdx: optIdx, isCorrect } }));
     };
 

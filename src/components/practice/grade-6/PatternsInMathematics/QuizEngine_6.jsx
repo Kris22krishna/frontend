@@ -60,7 +60,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
     // ── Handlers ──────────────────────────────────────────
     const handleSelect = (optIdx) => {
         if (isAnswered) return;
-        const isCorrect = optIdx === q.correct;
+        const isCorrect = optIdx === q.correct || (q.options && q.options[optIdx] !== undefined && String(q.options[optIdx]) === String(q.correct));
         setAnswersMap(prev => ({ ...prev, [current]: { selectedIdx: optIdx, isCorrect } }));
         if (nodeId) {
             const entry = { question_index: current, answer_json: { selected: optIdx, correct_answer: q.correct }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
