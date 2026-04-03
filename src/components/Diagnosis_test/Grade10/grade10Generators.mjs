@@ -1,43 +1,9 @@
-import { getRandomInt, shuffleArray } from '../mathUtils.mjs';
+import { getRandomInt, shuffleArray, ensureUniqueOptions } from '../mathUtils.mjs';
 
 const formatOption = (val) => {
     return { value: String(val), label: String(val) };
 };
 
-const ensureUnique = (correct, distractors) => {
-    const options = [correct];
-    const seen = new Set([correct.value]);
-
-    for (const opt of distractors) {
-        if (options.length >= 4) break;
-        if (!seen.has(opt.value)) {
-            seen.add(opt.value);
-            options.push(opt);
-        }
-    }
-
-    let safety = 0;
-    while (options.length < 4 && safety < 20) {
-        const val = options[0].value + " " + (safety + 1);
-        let newVal = val;
-        let newLabel = options[0].label;
-
-        const numVal = parseFloat(options[0].value);
-        if (!isNaN(numVal)) {
-            const jitter = numVal + (Math.random() > 0.5 ? 1 : -1) * (safety + 1);
-            newVal = String(jitter);
-            newLabel = String(jitter);
-        }
-
-        if (!seen.has(newVal)) {
-            seen.add(newVal);
-            options.push({ value: newVal, label: newLabel });
-        }
-        safety++;
-    }
-
-    return shuffleArray(options).slice(0, 4);
-};
 
 const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
 const lcm = (a, b) => (a * b) / gcd(a, b);
@@ -515,7 +481,7 @@ export const generateExponentsNegative = () => {
     const wrongSignFraction = (den > 0) ? `$-\\frac{1}{${den}}$` : `$\\frac{1}{${Math.abs(den)}}$`;
 
     // Custom distractors for this type
-    const options = ensureUnique({ value: answerStr, label: answerStr }, [
+    const options = ensureUniqueOptions({ value: answerStr, label: answerStr }, [
         { value: `$${den}$`, label: `$${den}$` },          // 4 or -8
         { value: `$${-den}$`, label: `$${-den}$` },        // -4 or 8
         { value: wrongSignFraction, label: wrongSignFraction } // wrong sign fraction
@@ -635,7 +601,7 @@ export const generateAlgebraicAdditionSubtraction = () => {
     // Helper to wrap
     const wrap = (s) => `$${s}$`;
 
-    const options = ensureUnique({ value: wrap(ansStrFinal), label: wrap(ansStrFinal) }, [
+    const options = ensureUniqueOptions({ value: wrap(ansStrFinal), label: wrap(ansStrFinal) }, [
         { value: wrap(d1), label: wrap(d1) },
         { value: wrap(d2), label: wrap(d2) },
         { value: wrap(d3), label: wrap(d3) },
@@ -690,7 +656,7 @@ export const generateAlgebraicMultiplication = () => {
     // Distractor 3: Coefficient error in x^2
     const d3 = `${term1 + 1}x^2${term2Str} - ${term3}y^2`;
 
-    const options = ensureUnique(fo(ansStr), [
+    const options = ensureUniqueOptions(fo(ansStr), [
         fo(d1),
         fo(d2),
         fo(d3),

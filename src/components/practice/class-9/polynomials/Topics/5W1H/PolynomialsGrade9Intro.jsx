@@ -92,11 +92,22 @@ const CARDS = [
 
 export default function PolynomialsGrade9Intro() {
     const navigate = useNavigate();
+    const { startSession, finishSession } = useSessionLogger();
     const [openCard, setOpenCard] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+        startSession({ nodeId: NODE_IDS.g9MathPolynomials, sessionType: 'practice' });
+    }, [startSession]);
+
+    const handleNext = () => {
+        finishSession({
+            totalQuestions: CARDS.length,
+            questionsAnswered: CARDS.length, // Assume they read it all if they click next
+            status: 'completed'
+        });
+        navigate('/senior/grade/9/polynomials/terminology');
+    };
 
     const toggle = (idx) => setOpenCard((prev) => (prev === idx ? null : idx));
 
@@ -188,7 +199,7 @@ export default function PolynomialsGrade9Intro() {
                     </p>
                     <button
                         className="poly-btn-primary poly-btn-large"
-                        onClick={() => navigate('/senior/grade/9/polynomials/terminology')}
+                        onClick={handleNext}
                     >
                         Next: Terminology →
                     </button>

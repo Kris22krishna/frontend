@@ -3,6 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import '../../probability.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { SKILLS } from './ProbabilitySkillsData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = {
+    's1': NODE_IDS.g10MathProbRandomExperiments,
+    's2': NODE_IDS.g10MathProbTheoretical,
+    's3': NODE_IDS.g10MathProbElementary,
+    's4': NODE_IDS.g10MathProbComplementary,
+    's5': NODE_IDS.g10MathProbImpossibleSure,
+    's6': NODE_IDS.g10MathProbCoinsDice,
+    's7': NODE_IDS.g10MathProbCards,
+    's8': NODE_IDS.g10MathProbSelections,
+};
 
 function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
     const [current, setCurrent] = useState(0);
@@ -10,10 +23,36 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
     const [responses, setResponses] = useState({}); // { index: { selected: number, isCorrect: boolean } }
     const [finished, setFinished] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
+
     const [visited, setVisited] = useState({ 0: true });
+
+    const skillId = questions === SKILLS.find(s => title.includes(s.title))?.practice 
+        ? SKILLS.find(s => title.includes(s.title))?.id 
+        : SKILLS.find(s => title.includes(s.title))?.id;
+    
+    // Better way: pass skill object to QuizEngine. But for now, let's find it.
+    // Actually, I'll pass the nodeId directly to QuizEngine in the parent.
+    // Wait, I'll just change the signature of QuizEngine.
+    
+    /* ... wait, I'll just look it up based on title for now to avoid breaking signature if used elsewhere ... */
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = React.useRef([]);
 
     const isAssessment = mode === 'assessment';
     const q = questions[current];
+
+    const currentSkill = SKILLS.find(s => title.includes(s.title));
+    const nodeId = currentSkill ? SKILL_NODE_IDS[currentSkill.id] : null;
+
+    // Session Start
+    useEffect(() => {
+        if (nodeId) {
+            startSession({ 
+                nodeId, 
+                sessionType: isAssessment ? 'assessment' : 'practice' 
+            });
+        }
+    }, [nodeId, isAssessment, startSession]);
 
     // Timer logic
     useEffect(() => {
@@ -35,6 +74,20 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
 
         setSelected(optIdx);
 
+        const answerData = {
+            question_index: current,
+            answer_json: {
+                question: q.question,
+                selected: q.options[optIdx],
+                correct: q.options[q.correct]
+            },
+            is_correct: optIdx === q.correct ? 1 : 0,
+            time_taken_ms: 0 
+        };
+
+        v4Answers.current[current] = answerData;
+        logAnswer(answerData);
+
         setResponses(prev => ({
             ...prev,
             [current]: {
@@ -52,6 +105,11 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
             setFinished(true);
+            finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: v4Answers.current.filter(Boolean).length,
+                answersPayload: v4Answers.current.filter(Boolean)
+            });
         }
     };
 

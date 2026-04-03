@@ -1,4 +1,4 @@
-import { getRandomInt, shuffleArray } from '../mathUtils.mjs';
+import { getRandomInt, shuffleArray, ensureUniqueOptions } from '../mathUtils.mjs';
 
 // --- SVG Helpers ---
 
@@ -143,35 +143,17 @@ export const generateRationalNumbers = () => {
         answer = `-${num}/${den}`;
     }
 
-    const options = shuffleArray([
-        { value: answer, label: answer.includes('-') ? `$-\\frac{${answer.replace('-', '').split('/')[0]}}{${answer.split('/')[1]}}$` : `$\\frac{${answer.split('/')[0]}}{${answer.split('/')[1]}}$` },
+    const options = ensureUniqueOptions({ value: answer, label: answer.includes('-') ? `$-\\frac{${answer.replace('-', '').split('/')[0]}}{${answer.split('/')[1]}}$` : `$\\frac{${answer.split('/')[0]}}{${answer.split('/')[1]}}$` }, [
         { value: type === "Between" ? `${parseFloat(answer) + 1}` : answer.replace("-", ""), label: type === "Between" ? `${parseFloat(answer) + 1}` : `$\\frac{${answer.replace("-", "").split('/')[0]}}{${answer.replace("-", "").split('/')[1]}}$` },
         { value: type === "Between" ? `${parseFloat(answer) - 0.5}` : `1/${answer.replace("-", "")}`, label: type === "Between" ? `${parseFloat(answer) - 0.5}` : `$\\frac{1}{${answer.replace("-", "")}}$` },
         { value: "0", label: "$0$" }
     ]);
 
-    const uniqueOptions = [];
-    const seen = new Set();
-    for (const opt of options) {
-        if (!seen.has(opt.value)) {
-            seen.add(opt.value);
-            uniqueOptions.push(opt);
-        }
-    }
-    while (uniqueOptions.length < 4) {
-        const r = getRandomInt(1, 20);
-        const val = String(r);
-        if (!seen.has(val)) {
-            seen.add(val);
-            uniqueOptions.push({ value: val, label: val });
-        }
-    }
-
     return {
         type: "mcq",
         question: question,
         topic: "Rational Numbers",
-        options: uniqueOptions,
+        options: options,
         answer: answer
     };
 };
@@ -183,39 +165,21 @@ export const generateExponentsGrade8 = () => {
     const question = `Evaluate: $${base}^{-${pow}}$`;
     const val = Math.pow(base, pow);
     const answer = `1/${val}`;
-
-    const options = shuffleArray([
-        { value: answer, label: `$\\frac{1}{${val}}$` },
+    const options = ensureUniqueOptions({ value: answer, label: `$\\frac{1}{${val}}$` }, [
         { value: String(val), label: `$${val}$` },
         { value: `-${val}`, label: `$-${val}$` },
         { value: `1/${val + 1}`, label: `$\\frac{1}{${val + 1}}$` }
     ]);
 
-    const uniqueOptions = [];
-    const seen = new Set();
-    for (const opt of options) {
-        if (!seen.has(opt.value)) {
-            seen.add(opt.value);
-            uniqueOptions.push(opt);
-        }
-    }
-    while (uniqueOptions.length < 4) {
-        const r = getRandomInt(10, 50);
-        const val = `1/${r}`;
-        if (!seen.has(val)) {
-            seen.add(val);
-            uniqueOptions.push({ value: val, label: `$\\frac{1}{${r}}$` });
-        }
-    }
-
     return {
         type: "mcq",
         question: question,
-        topic: "Exponents & Powers",
-        options: uniqueOptions,
+        topic: "Exponents and Powers",
+        options: options,
         answer: answer
     };
 };
+
 
 export const generateSquaresCubes = () => {
     // Table Input: Squares and Square Roots

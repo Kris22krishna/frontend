@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../AreasRelatedToCirclesBranch.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './AreasRelatedToCirclesTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+
+const TERMINOLOGY_QUIZ_NODE_ID = 'a4101012-0010-0000-0000-000000000000';
 
 export default function AreasRelatedToCirclesTerminology() {
     const navigate = useNavigate();
@@ -20,6 +23,18 @@ export default function AreasRelatedToCirclesTerminology() {
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+
+    // Start a fresh session each time the quiz tab is opened
+    useEffect(() => {
+        if (activeTab === 'quiz' && !quizFinished) {
+            startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'practice' });
+            answersPayload.current = [];
+        }
+    }, [activeTab]);
+
     const activeTerm = TERMS[selectedIdx];
     const activeRule = FIVE_RULES[selectedRuleIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
@@ -30,24 +45,46 @@ export default function AreasRelatedToCirclesTerminology() {
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        answersPayload.current = [];
+        startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'practice' });
     };
 
-    const handleQuizSelect = (optIdx) => {
+    const handleQuizSelect = async (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
-            setQuizTotalScore((prev) => prev + 1);
-        }
+        const isCorrect = optIdx === activeQuiz.correct;
+        if (isCorrect) setQuizTotalScore((prev) => prev + 1);
+        // v4 Log
+        const answerData = {
+            question_index: quizIdx + 1,
+            answer_json: { selected: optIdx, text: activeQuiz.options[optIdx] },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0,
+        };
+        answersPayload.current.push(answerData);
+        await logAnswer({
+            questionIndex: answerData.question_index,
+            answerJson: answerData.answer_json,
+            isCorrect: answerData.is_correct,
+        });
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx((prev) => prev + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            // v4 Finish
+            await finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                questionsAnswered: answersPayload.current.length,
+                answersPayload: answersPayload.current,
+            });
         }
     };
 

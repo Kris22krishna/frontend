@@ -1,5 +1,6 @@
 export const skill1 = {
     id: 'circle-regions',
+    nodeId: 'a4101012-0001-0000-0000-000000000000',
     title: 'Understanding Parts of a Circle',
     subtitle: 'Sectors & Segments',
     desc: 'Identify sectors and segments formed by radii, arcs, and chords.',

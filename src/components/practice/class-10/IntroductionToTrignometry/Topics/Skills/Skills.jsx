@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../trigonometry.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { SKILLS } from './TrigonometrySkillsData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
+function QuizEngine({ questions, title, onBack, color, mode = 'practice', nodeId }) {
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [responses, setResponses] = useState({}); // { index: { selected: number, isCorrect: boolean } }
@@ -14,6 +15,18 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
 
     const isAssessment = mode === 'assessment';
     const q = questions[current];
+
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
+
+    // Start v4 session on mount
+    useEffect(() => {
+        if (nodeId) {
+            startSession({ nodeId, sessionType: isAssessment ? 'assessment' : 'practice' });
+            v4Answers.current = [];
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nodeId, mode]);
 
     // Timer logic
     useEffect(() => {
@@ -33,24 +46,28 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
         if (finished) return;
         if (!isAssessment && selected !== null) return; // Lock in practice mode
 
+        const isRight = optIdx === q.correct;
         setSelected(optIdx);
-
         setResponses(prev => ({
             ...prev,
-            [current]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [current]: { selected: optIdx, isCorrect: isRight }
         }));
+        // v4 log
+        const v4Entry = { question_index: current + 1, answer_json: { selected: optIdx }, is_correct: isRight ? 1.0 : 0.0, marks_awarded: isRight ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current[current] = v4Entry;
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 < questions.length) {
             const nextIdx = current + 1;
             setCurrent(nextIdx);
             setSelected(responses[nextIdx]?.selected ?? null);
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
+            // v4 finish
+            const payload = v4Answers.current.filter(Boolean);
+            await finishV4Session({ totalQuestions: questions.length, questionsAnswered: payload.length, answersPayload: payload });
             setFinished(true);
         }
     };
@@ -76,6 +93,10 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
         setFinished(false);
         setTimeElapsed(0);
         setVisited({ 0: true });
+        if (nodeId) {
+            startSession({ nodeId, sessionType: isAssessment ? 'assessment' : 'practice' });
+            v4Answers.current = [];
+        }
     };
 
     if (finished) {
@@ -436,7 +457,11 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
                             </div>
 
                             <button
-                                onClick={() => setFinished(true)}
+                                onClick={async () => {
+                                    const payload = v4Answers.current.filter(Boolean);
+                                    await finishV4Session({ totalQuestions: questions.length, questionsAnswered: payload.length, answersPayload: payload });
+                                    setFinished(true);
+                                }}
                                 style={{
                                     width: '100%', padding: '12px', borderRadius: '12px', border: 'none',
                                     background: '#EF4444', color: '#fff', fontWeight: 900, cursor: 'pointer',
@@ -554,6 +579,7 @@ export default function Skills() {
                             onBack={() => setView('list')}
                             color={skill.color}
                             mode={view}
+                            nodeId={skill.nodeId}
                         />
                     )}
                 </div>

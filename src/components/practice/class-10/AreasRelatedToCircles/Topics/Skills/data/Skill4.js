@@ -1,5 +1,6 @@
 export const skill4 = {
     id: 'segment-area',
+    nodeId: 'a4101012-0004-0000-0000-000000000000',
     title: 'Calculating Segment Area',
     subtitle: 'The Subtraction Method',
     desc: 'Find the area of a minor or major segment by subtracting the triangle from the sector.',

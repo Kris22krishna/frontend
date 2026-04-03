@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
+import { ChevronRight, Check } from 'lucide-react';
 import { LatexText } from '../../../LatexText';
-import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import './NumberSystem.css';
 
 const LawsOfExponents = () => {
@@ -20,13 +19,8 @@ const LawsOfExponents = () => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
 
-    const [sessionId, setSessionId] = useState(null);
-    const questionStartTime = useRef(Date.now());
-    const accumulatedTime = useRef(0);
-    const isTabActive = useRef(true);
-
-    const SKILL_ID = 1245;
-    const SKILL_NAME = "Laws of Exponents";
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const nodeId = NODE_IDS.g9MathNSLawsOfExponents;
     const [answers, setAnswers] = useState({});
 
     const generateQuestions = () => {
@@ -100,12 +94,7 @@ const LawsOfExponents = () => {
 
     useEffect(() => {
         setQuestions(generateQuestions());
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
+        startSession({ nodeId, sessionType: 'practice' });
     }, []);
 
     useEffect(() => {
@@ -148,27 +137,27 @@ const LawsOfExponents = () => {
             [qIndex]: { selectedOption, isCorrect: isRight }
         }));
 
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && sessionId) {
-            api.recordAttempt({
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 7 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10),
-                session_id: sessionId,
-                skill_id: SKILL_ID,
+        logAnswer({
+            question_index: qIndex,
+            answer_json: {
                 question_text: currentQ.text,
+                selected_option: selectedOption,
                 correct_answer: currentQ.correctAnswer,
-                student_answer: selectedOption,
-                is_correct: isRight,
-                solution_text: currentQ.solution,
-                time_spent_seconds: 10
-            }).catch(console.error);
-        }
+                difficulty: qIndex < 3 ? 'Easy' : qIndex < 7 ? 'Medium' : 'Hard'
+            },
+            is_correct: isRight ? 1 : 0
+        });
     };
 
     const handleNext = () => {
         if (qIndex < questions.length - 1) {
             setQIndex(prev => prev + 1);
         } else {
+            finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowReportModal(true);
         }
     };

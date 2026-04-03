@@ -6,7 +6,10 @@ import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
+
+const NODE_ID = 'a4101003-0003-0000-0000-000000000000'; // Identify the number of solutions using algebraic conditions
 
 const ConditionsForConsistency = () => {
     const navigate = useNavigate();
@@ -20,9 +23,11 @@ const ConditionsForConsistency = () => {
     const [questions, setQuestions] = useState([]);
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = useRef([]);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
     const SKILL_ID = 10022; // Identify the number of solutions using algebraic conditions
     const SKILL_NAME = "Algebraic Conditions for Consistency";
     const [answers, setAnswers] = useState({});
@@ -95,17 +100,29 @@ const ConditionsForConsistency = () => {
     const CORRECT_MESSAGES = ["Good job!", "Excellent!", "Perfect!", "Well done!"];
 
     useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && !sessionId) {
-            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
+        startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+        v4Answers.current = [];
+
         let timer;
         if (!showReportModal) {
             timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
         }
-        return () => clearInterval(timer);
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            clearInterval(timer);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, [showReportModal]);
 
     // Restore state when qIndex changes
@@ -144,16 +161,32 @@ const ConditionsForConsistency = () => {
             }
         }));
 
-        if (sessionId) {
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                api.recordAttempt({
-                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
-                    question_text: questions[qIndex].text, correct_answer: questions[qIndex].correctAnswer,
-                    student_answer: selectedOption, is_correct: isRight, solution_text: questions[qIndex].solution,
-                    time_spent_seconds: timeElapsed
-                }).catch(console.error);
-            }
+        // v4 Log
+        let t = accumulatedTime.current;
+        if (isTabActive.current) t += Date.now() - questionStartTime.current;
+        const entry = {
+            question_index: qIndex + 1,
+            answer_json: { selected: selectedOption },
+            is_correct: isRight ? 1.0 : 0.0,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: t
+        };
+        v4Answers.current[qIndex] = entry;
+        logAnswer({
+            questionIndex: entry.question_index,
+            answerJson: entry.answer_json,
+            isCorrect: entry.is_correct
+        });
+
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId) {
+            api.recordAttempt({
+                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: null, skill_id: SKILL_ID,
+                question_text: questions[qIndex].text, correct_answer: questions[qIndex].correctAnswer,
+                student_answer: selectedOption, is_correct: isRight, solution_text: questions[qIndex].solution,
+                time_spent_seconds: Math.round(t / 1000)
+            }).catch(console.error);
         }
     };
 
@@ -171,7 +204,13 @@ const ConditionsForConsistency = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            // v4 finish
+            const payload = v4Answers.current.filter(Boolean);
+            await finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: payload.length,
+                answersPayload: payload
+            });
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
