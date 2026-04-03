@@ -8,12 +8,23 @@
  *   - 'a' prefix: Academic (official curriculum path)
  *   - 'm' prefix: Modules (Math-Branches, IDM, etc.)
  * ────────────────────────────────────────────────────────────────────────── */
+/** ── lib/curriculumIds.js ───────────────────────────────────────────────────
+ * Canonical registry of v4 curriculum UUIDs for Skill100.ai.
+ *
+ * This file acts as the single source of truth for the frontend.
+ * Ensure these match the entries in 'supabase/seeds/curriculum.sql'.
+ *
+ * Structure:
+ *   - 'a' prefix: Academic (official curriculum path)
+ *   - 'm' prefix: Modules (Math-Branches, IDM, etc.)
+ * ────────────────────────────────────────────────────────────────────────── */
 
 export const NODE_IDS = {
   // ── 0. SUBJECTS ───────────────────────────────────────────────────────────
   math: 'a1000000-0000-0000-0000-000000000001',
 
   // ── 1. GRADES ─────────────────────────────────────────────────────────────
+  grade2:  'a2000000-0000-0000-0000-000000000002',
   grade3:  'a2000000-0000-0000-0000-000000000003',
   grade4:  'a2000000-0000-0000-0000-000000000004',
   grade8:  'a2000000-0000-0000-0000-000000000008',
@@ -40,6 +51,13 @@ export const NODE_IDS = {
   g3MathToyJoyBuilding:      'a4031001-0007-0000-0000-000000000000',
   g3MathToyJoySequencing:    'a4031001-0008-0000-0000-000000000000',
   g3MathToyJoyTest:          'a4031001-0010-0000-0000-000000000000',
+
+  // ── GRADE 2: WHAT IS LONG, WHAT IS ROUND (CHAPTER 1) ──────────────────────
+  g2MathLongRound:           'a3021001-0000-0000-0000-000000000001',
+  g2MathLongRoundShapes:     'a4021001-0001-0000-0000-000000000000',
+  g2MathLongRoundComparison:   'a4021001-0002-0000-0000-000000000000',
+  g2MathLongRoundClassification: 'a4021001-0003-0000-0000-000000000000',
+  g2MathLongRoundMixed:      'a4021001-0010-0000-0000-000000000000',
 
   // ── 2. GRADE 8 CHAPTERS ───────────────────────────────────────────────────
   g8MathRationalNumbers:   'a3000000-0000-0000-0000-000000000001',
@@ -499,4 +517,10 @@ export const SLUG_TO_NODE_ID = {
   'g3-math-toy-joy-building': NODE_IDS.g3MathToyJoyBuilding,
   'g3-math-toy-joy-sequencing': NODE_IDS.g3MathToyJoySequencing,
   'g3-math-toy-joy-test': NODE_IDS.g3MathToyJoyTest,
+
+  // GRADE 2: WHAT IS LONG, WHAT IS ROUND
+  'g2-math-long-round-shapes': NODE_IDS.g2MathLongRoundShapes,
+  'g2-math-long-round-comparison': NODE_IDS.g2MathLongRoundComparison,
+  'g2-math-long-round-classification': NODE_IDS.g2MathLongRoundClassification,
+  'g2-math-long-round-mixed': NODE_IDS.g2MathLongRoundMixed,
 };
