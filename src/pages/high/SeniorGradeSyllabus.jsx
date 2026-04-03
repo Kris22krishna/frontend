@@ -971,7 +971,6 @@ const SeniorGradeSyllabus = () => {
                                                         >
                                                             <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                                             <div className="skill-card-footer">
-                                                                <span className="skill-badge">ID: {skill.skill_id}</span>
                                                                 <span className="start-btn">
                                                                     Start <ChevronRight size={16} />
                                                                 </span>
