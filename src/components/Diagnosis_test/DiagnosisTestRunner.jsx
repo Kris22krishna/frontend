@@ -14,7 +14,7 @@ const generateFactorTreeResultsSVG = (tree, userAnswers, correctAnswers) => {
         const vGap = 80;
         const radius = 25;
         let content = "";
-        
+
         if (n.children) {
             n.children.forEach((child, idx) => {
                 const cx = idx === 0 ? x - hGap : x + hGap;
@@ -23,12 +23,12 @@ const generateFactorTreeResultsSVG = (tree, userAnswers, correctAnswers) => {
                 content += getNodes(child, cx, cy, level + 1, answersToShow);
             });
         }
-        
+
         content += `<circle cx="${x}" cy="${y}" r="${radius}" fill="${n.isInput ? "#fff" : "#f1f5f9"}" stroke="${n.isInput ? "#4f46e5" : "#cbd5e1"}" stroke-width="2" />`;
-        
+
         const displayVal = n.isInput ? (answersToShow[n.id] || "?") : n.val;
         content += `<text x="${x}" y="${y + 5}" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="14" fill="#334155">${displayVal}</text>`;
-        
+
         return content;
     };
 
@@ -57,7 +57,6 @@ const DiagnosisTestRunner = () => {
     const [startTime, setStartTime] = useState(null);
     const [showGrid, setShowGrid] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState(null);
 
     const STORAGE_KEY = `diagnosis_test_g${grade}`;
 
@@ -68,7 +67,6 @@ const DiagnosisTestRunner = () => {
         violationMessage,
         dismissWarning,
         requestFullscreen,
-        resetViolations
     } = useViolationTracker(maxViolations);
 
     useEffect(() => {
@@ -327,37 +325,39 @@ const DiagnosisTestRunner = () => {
         );
     };
 
-    const handleSubmit = async () => {
-        if (submitting) return;
+    const handleSubmit = () => {
+        if (submitting || isSubmitted) return;
 
         setSubmitting(true);
-        setSubmitError(null);
 
+        let results;
         try {
-            const results = calculateDetailedResults();
-            const data = {
-                grade: grade,
-                score: results.score,
-                total_questions: results.total,
-                total_correct: results.totalCorrect || 0,
-                total_wrong: results.totalWrong || 0,
-                total_partial: results.totalPartial || 0,
-                time_taken: results.timeTaken,
-                question_results: results.questionResults
-            };
-
-            const response = await api.submitDiagnosisTest(data);
-            console.log('Diagnosis results submitted successfully:', response);
-            setIsSubmitted(true);
+            results = calculateDetailedResults();
         } catch (err) {
-            console.error('Error submitting diagnosis results:', err);
-            setSubmitError('Failed to save your results. Please try clicking "Final Submit" again.');
-            // Even if it fails, we might still want to show results, 
-            // but for reliability let's ask them to retry or handle it gracefully.
-            setIsSubmitted(true); // Still show results so they don't lose work, but logging error
-        } finally {
+            console.error('Error calculating results:', err);
+            setIsSubmitted(true);
             setSubmitting(false);
+            return;
         }
+
+        // Show results immediately — never block the user
+        setIsSubmitted(true);
+        setSubmitting(false);
+
+        // Submit to backend in background (fire and forget)
+        const data = {
+            grade: grade,
+            score: results.score,
+            total_questions: results.total,
+            total_correct: results.totalCorrect || 0,
+            total_wrong: results.totalWrong || 0,
+            total_partial: results.totalPartial || 0,
+            time_taken: results.timeTaken,
+            question_results: results.questionResults
+        };
+        api.submitDiagnosisTest(data).catch(err => {
+            console.error('Background submission failed:', err);
+        });
     };
 
     const normalizeMath = (str) => {
@@ -384,7 +384,7 @@ const DiagnosisTestRunner = () => {
                 return { n: parseFloat(normalized), d: 1 };
             }
             const parts = normalized.split("/");
-            
+
             const parsePart = (p) => {
                 if (p.includes("^")) {
                     const [b, e] = p.split("^").map(parseFloat);
@@ -392,7 +392,7 @@ const DiagnosisTestRunner = () => {
                 }
                 return parseFloat(p);
             };
-            
+
             return { n: parsePart(parts[0]), d: parsePart(parts[1]) };
         };
 
@@ -402,7 +402,7 @@ const DiagnosisTestRunner = () => {
 
             if (isNaN(f1.n) || isNaN(f1.d) || isNaN(f2.n) || isNaN(f2.d)) return false;
             if (f1.d === 0 || f2.d === 0) return false;
-            
+
             return Math.abs((f1.n / f1.d) - (f2.n / f2.d)) < 0.0001;
         } catch (e) {
             return false;
@@ -511,7 +511,7 @@ const DiagnosisTestRunner = () => {
                         return `(${val.x}, ${val.y})`;
                     }
                     if (val["0"] !== undefined && typeof val["0"] !== 'object') return val["0"];
-                    
+
                     const keys = Object.keys(val).filter(k => !k.startsWith('_'));
                     if (keys.length > 0) {
                         return keys.map(k => val[k]).join(', ');
@@ -556,7 +556,7 @@ const DiagnosisTestRunner = () => {
                     const expected = JSON.parse(q.answer);
                     userDisplay = isCorrect ? "All nodes filled correctly" : "Some nodes missing or incorrect";
                     correctDisplay = "Refer to the comparison diagram on the right";
-                    
+
                     // Generate a side-by-side SVG comparison
                     const comparisonSvg = generateFactorTreeResultsSVG(q.tree, userAnswer || {}, expected);
                     q.image = comparisonSvg; // Override q.image so it shows in Results UI
@@ -660,13 +660,13 @@ const DiagnosisTestRunner = () => {
                 grade={grade}
                 onRetake={() => {
                     localStorage.removeItem(STORAGE_KEY);
-                    resetViolations();
-                    setIsSubmitted(false);
-                    setAnswers({});
-                    setCurrentIndex(0);
-                    setTimeLeft(30 * 60);
-                    setStartTime(Date.now());
-                    loadQuestions();
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen().catch(() => {}).finally(() => {
+                            window.location.href = `/diagnosis-test/${grade}`;
+                        });
+                    } else {
+                        window.location.href = `/diagnosis-test/${grade}`;
+                    }
                 }}
             />
         );
@@ -676,8 +676,8 @@ const DiagnosisTestRunner = () => {
     return (
         <div className="diagnosis-runner min-h-screen font-sans relative">
             <ViolationWarning
-                isOpen={showWarning && violationCount < maxViolations}
-                onClose={dismissWarning}
+                show={showWarning && violationCount < maxViolations}
+                onDismiss={dismissWarning}
                 violationCount={violationCount}
                 maxViolations={maxViolations}
                 message={violationMessage}
@@ -695,7 +695,9 @@ const DiagnosisTestRunner = () => {
                         <span className="text-sm sm:text-xl">{formatTime(timeLeft)}</span>
                     </div>
                     <button
-                        className={`px-4 sm:px-8 py-2 sm:py-3 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-base transition-all shadow-lg active:scale-95 flex items-center gap-2 ${submitting ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'}`}
+                        type="button"
+                        style={{ position: 'relative', zIndex: 201, cursor: submitting ? 'not-allowed' : 'pointer' }}
+                        className={`px-4 sm:px-8 py-2 sm:py-3 text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-base transition-all shadow-lg active:scale-95 flex items-center gap-2 ${submitting ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'}`}
                         onClick={handleSubmit}
                         disabled={submitting}
                     >
@@ -1085,16 +1087,8 @@ const DiagnosisTestRunner = () => {
                 </main>
 
 
-            </div >
-
-            <ViolationWarning
-                show={showWarning && !isSubmitted}
-                violationCount={violationCount}
-                maxViolations={maxViolations}
-                message={violationMessage}
-                onDismiss={dismissWarning}
-            />
-        </div >
+            </div>
+        </div>
     );
 };
 
