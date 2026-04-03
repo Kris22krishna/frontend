@@ -24,6 +24,7 @@ export const NODE_IDS = {
   math: 'a1000000-0000-0000-0000-000000000001',
 
   // ── 1. GRADES ─────────────────────────────────────────────────────────────
+  grade1:  'a2000000-0000-0000-0000-000000000001',
   grade2:  'a2000000-0000-0000-0000-000000000002',
   grade3:  'a2000000-0000-0000-0000-000000000003',
   grade4:  'a2000000-0000-0000-0000-000000000004',
@@ -58,6 +59,86 @@ export const NODE_IDS = {
   g2MathLongRoundComparison:   'a4021001-0002-0000-0000-000000000000',
   g2MathLongRoundClassification: 'a4021001-0003-0000-0000-000000000000',
   g2MathLongRoundMixed:      'a4021001-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: SHAPES AND SPACE (CHAPTER 1) ────────────────────────────────
+  g1MathShapesSpace:         'a3011001-0000-0000-0000-000000000001',
+  g1MathShapesSpaceIdentify: 'a4011001-0001-0000-0000-000000000000',
+  g1MathShapesSpacePosition: 'a4011001-0002-0000-0000-000000000000',
+  g1MathShapesSpaceSize:     'a4011001-0003-0000-0000-000000000000',
+  g1MathShapesSpaceMixed:    'a4011001-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: NUMBERS 1-9 (CHAPTER 2) ────────────────────────────────────
+  g1MathNumbers19:           'a3011002-0000-0000-0000-000000000001',
+  g1MathNumbers19Reading:    'a4011002-0001-0000-0000-000000000000',
+  g1MathNumbers19Counting:   'a4011002-0002-0000-0000-000000000000',
+  g1MathNumbers19Sequence:    'a4011002-0003-0000-0000-000000000000',
+  g1MathNumbers19Comparison: 'a4011002-0004-0000-0000-000000000000',
+  g1MathNumbers19Mixed:      'a4011002-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: ADDITION (CHAPTER 3) ───────────────────────────────────────
+  g1MathAddition:           'a3011003-0000-0000-0000-000000000001',
+  g1MathAdditionVisual:     'a4011003-0001-0000-0000-000000000000',
+  g1MathAdditionNumeric:    'a4011003-0002-0000-0000-000000000000',
+  g1MathAdditionNumberLine: 'a4011003-0003-0000-0000-000000000000',
+  g1MathAdditionMixed:      'a4011003-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: SUBTRACTION (CHAPTER 4) ────────────────────────────────────
+  g1MathSubtraction:        'a3011004-0000-0000-0000-000000000001',
+  g1MathSubtractionVisual:  'a4011004-0001-0000-0000-000000000000',
+  g1MathSubtractionNumeric: 'a4011004-0002-0000-0000-000000000000',
+  g1MathSubtractionZero:    'a4011004-0003-0000-0000-000000000000',
+  g1MathSubtractionMixed:    'a4011004-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: NUMBERS 10-20 (CHAPTER 5) ──────────────────────────────────
+  g1MathNumbers1020:           'a3011005-0000-0000-0000-000000000001',
+  g1MathNumbers1020Counting:   'a4011005-0001-0000-0000-000000000000',
+  g1MathNumbers1020TensOnes:   'a4011005-0002-0000-0000-000000000000',
+  g1MathNumbers1020Comparison: 'a4011005-0003-0000-0000-000000000000',
+  g1MathNumbers1020Mixed:      'a4011005-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: TIME (CHAPTER 6) ──────────────────────────────────────────
+  g1MathTime:            'a3011006-0000-0000-0000-000000000001',
+  g1MathTimeDayNight:    'a4011006-0001-0000-0000-000000000000',
+  g1MathTimeDaysWeek:    'a4011006-0002-0000-0000-000000000000',
+  g1MathTimeBeforeAfter: 'a4011006-0003-0000-0000-000000000000',
+  g1MathTimeClock:       'a4011006-0004-0000-0000-000000000000',
+  g1MathTimeMixed:       'a4011006-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: MEASUREMENT (CHAPTER 7) ───────────────────────────────────
+  g1MathMeasurement:             'a3011007-0000-0000-0000-000000000001',
+  g1MathMeasurementLengthHeight: 'a4011007-0001-0000-0000-000000000000',
+  g1MathMeasurementWeight:       'a4011007-0002-0000-0000-000000000000',
+  g1MathMeasurementCapacity:     'a4011007-0003-0000-0000-000000000000',
+  g1MathMeasurementMixed:        'a4011007-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: NUMBERS 21-50 (CHAPTER 8) ─────────────────────────────────
+  g1MathNumbers2150:           'a3011008-0000-0000-0000-000000000001',
+  g1MathNumbers2150Counting:   'a4011008-0001-0000-0000-000000000000',
+  g1MathNumbers2150TensOnes:   'a4011008-0002-0000-0000-000000000000',
+  g1MathNumbers2150Comparison: 'a4011008-0003-0000-0000-000000000000',
+  g1MathNumbers2150Mixed:      'a4011008-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: DATA HANDLING (CHAPTER 9) ────────────────────────────────
+  g1MathDataHandling:                 'a3011009-0000-0000-0000-000000000001',
+  g1MathDataHandlingSorting:          'a4011009-0001-0000-0000-000000000000',
+  g1MathDataHandlingPictograph:       'a4011009-0002-0000-0000-000000000000',
+  g1MathDataHandlingCountingGrouping: 'a4011009-0003-0000-0000-000000000000',
+  g1MathDataHandlingMixed:            'a4011009-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: PATTERNS (CHAPTER 10) ────────────────────────────────────
+  g1MathPatterns:            'a3011010-0000-0000-0000-000000000001',
+  g1MathPatternsIdentifying: 'a4011010-0001-0000-0000-000000000000',
+  g1MathPatternsCreating:    'a4011010-0002-0000-0000-000000000000',
+  g1MathPatternsMixed:       'a4011010-0010-0000-0000-000000000000',
+
+  // ── GRADE 1: NUMBERS 51-100 (CHAPTER 11) ──────────────────────────────
+  g1MathNumbers51100:           'a3011011-0000-0000-0000-000000000001',
+  g1MathNumbers51100Counting:   'a4011011-0001-0000-0000-000000000000',
+  g1MathNumbers51100Writing:    'a4011011-0002-0000-0000-000000000000',
+  g1MathNumbers51100Names:      'a4011011-0003-0000-0000-000000000000',
+  g1MathNumbers51100Comparison: 'a4011011-0004-0000-0000-000000000000',
+  g1MathNumbers51100Skip:       'a4011011-0005-0000-0000-000000000000',
+  g1MathNumbers51100Mixed:      'a4011011-0010-0000-0000-000000000000',
 
   // ── 2. GRADE 8 CHAPTERS ───────────────────────────────────────────────────
   g8MathRationalNumbers:   'a3000000-0000-0000-0000-000000000001',
@@ -523,4 +604,73 @@ export const SLUG_TO_NODE_ID = {
   'g2-math-long-round-comparison': NODE_IDS.g2MathLongRoundComparison,
   'g2-math-long-round-classification': NODE_IDS.g2MathLongRoundClassification,
   'g2-math-long-round-mixed': NODE_IDS.g2MathLongRoundMixed,
+
+  // GRADE 1: SHAPES AND SPACE
+  'g1-math-shapes-space-identify': NODE_IDS.g1MathShapesSpaceIdentify,
+  'g1-math-shapes-space-position': NODE_IDS.g1MathShapesSpacePosition,
+  'g1-math-shapes-space-size':     NODE_IDS.g1MathShapesSpaceSize,
+  'g1-math-shapes-space-mixed':    NODE_IDS.g1MathShapesSpaceMixed,
+
+  // GRADE 1: NUMBERS 1-9
+  'g1-math-numbers-1-9-reading':    NODE_IDS.g1MathNumbers19Reading,
+  'g1-math-numbers-1-9-counting':   NODE_IDS.g1MathNumbers19Counting,
+  'g1-math-numbers-1-9-sequence':   NODE_IDS.g1MathNumbers19Sequence,
+  'g1-math-numbers-1-9-comparison': NODE_IDS.g1MathNumbers19Comparison,
+  'g1-math-numbers-1-9-mixed':      NODE_IDS.g1MathNumbers19Mixed,
+
+  // GRADE 1: ADDITION
+  'g1-math-addition-visual':      NODE_IDS.g1MathAdditionVisual,
+  'g1-math-addition-numeric':     NODE_IDS.g1MathAdditionNumeric,
+  'g1-math-addition-number-line': NODE_IDS.g1MathAdditionNumberLine,
+  'g1-math-addition-mixed':       NODE_IDS.g1MathAdditionMixed,
+
+  // GRADE 1: SUBTRACTION
+  'g1-math-subtraction-visual':  NODE_IDS.g1MathSubtractionVisual,
+  'g1-math-subtraction-numeric': NODE_IDS.g1MathSubtractionNumeric,
+  'g1-math-subtraction-zero':    NODE_IDS.g1MathSubtractionZero,
+  'g1-math-subtraction-mixed':   NODE_IDS.g1MathSubtractionMixed,
+
+  // GRADE 1: NUMBERS 10-20
+  'g1-math-numbers-10-20-counting':   NODE_IDS.g1MathNumbers1020Counting,
+  'g1-math-numbers-10-20-tens-ones':  NODE_IDS.g1MathNumbers1020TensOnes,
+  'g1-math-numbers-10-20-comparison': NODE_IDS.g1MathNumbers1020Comparison,
+  'g1-math-numbers-10-20-mixed':      NODE_IDS.g1MathNumbers1020Mixed,
+
+  // GRADE 1: TIME
+  'g1-math-time-day-night':    NODE_IDS.g1MathTimeDayNight,
+  'g1-math-time-days-week':    NODE_IDS.g1MathTimeDaysWeek,
+  'g1-math-time-before-after': NODE_IDS.g1MathTimeBeforeAfter,
+  'g1-math-time-clock':        NODE_IDS.g1MathTimeClock,
+  'g1-math-time-mixed':        NODE_IDS.g1MathTimeMixed,
+
+  // GRADE 1: MEASUREMENT
+  'g1-math-measurement-length-height': NODE_IDS.g1MathMeasurementLengthHeight,
+  'g1-math-measurement-weight':        NODE_IDS.g1MathMeasurementWeight,
+  'g1-math-measurement-capacity':      NODE_IDS.g1MathMeasurementCapacity,
+  'g1-math-measurement-mixed':         NODE_IDS.g1MathMeasurementMixed,
+
+  // GRADE 1: NUMBERS 21-50
+  'g1-math-numbers-21-50-counting':   NODE_IDS.g1MathNumbers2150Counting,
+  'g1-math-numbers-21-50-tens-ones':   NODE_IDS.g1MathNumbers2150TensOnes,
+  'g1-math-numbers-21-50-comparison':  NODE_IDS.g1MathNumbers2150Comparison,
+  'g1-math-numbers-21-50-mixed':       NODE_IDS.g1MathNumbers2150Mixed,
+
+  // GRADE 1: DATA HANDLING
+  'g1-math-data-handling-sorting':           NODE_IDS.g1MathDataHandlingSorting,
+  'g1-math-data-handling-pictograph':        NODE_IDS.g1MathDataHandlingPictograph,
+  'g1-math-data-handling-counting-grouping': NODE_IDS.g1MathDataHandlingCountingGrouping,
+  'g1-math-data-handling-mixed':             NODE_IDS.g1MathDataHandlingMixed,
+
+  // GRADE 1: PATTERNS
+  'g1-math-patterns-identifying':  NODE_IDS.g1MathPatternsIdentifying,
+  'g1-math-patterns-creating':     NODE_IDS.g1MathPatternsCreating,
+  'g1-math-patterns-mixed':        NODE_IDS.g1MathPatternsMixed,
+
+  // GRADE 1: NUMBERS 51-100
+  'g1-math-numbers-51-100-counting':   NODE_IDS.g1MathNumbers51100Counting,
+  'g1-math-numbers-51-100-writing':    NODE_IDS.g1MathNumbers51100Writing,
+  'g1-math-numbers-51-100-names':      NODE_IDS.g1MathNumbers51100Names,
+  'g1-math-numbers-51-100-comparison': NODE_IDS.g1MathNumbers51100Comparison,
+  'g1-math-numbers-51-100-skip':       NODE_IDS.g1MathNumbers51100Skip,
+  'g1-math-numbers-51-100-mixed':      NODE_IDS.g1MathNumbers51100Mixed,
 };

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -139,10 +139,18 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '301': NODE_IDS.g1MathAdditionVisual,
+    '302': NODE_IDS.g1MathAdditionNumeric,
+    '303': NODE_IDS.g1MathAdditionNumberLine,
+    '304': NODE_IDS.g1MathAdditionMixed,
+};
+
 const Addition = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '304';
@@ -156,13 +164,10 @@ const Addition = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
-
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
-        // Find current grade and skill info
         for (const gradeKey of Object.keys(TOPIC_CONFIGS)) {
             const gradeConfig = TOPIC_CONFIGS[gradeKey];
             for (const [topicName, skills] of Object.entries(gradeConfig)) {
@@ -172,6 +177,8 @@ const Addition = () => {
         }
         return { topicName: 'Addition', skillName: 'Mathematics', grade: '1' };
     };
+
+    const { topicName, skillName } = getTopicInfo();
 
     const getNextSkill = () => {
         const { grade } = getTopicInfo();
@@ -195,7 +202,6 @@ const Addition = () => {
 
         const currentTopicSkills = gradeConfig[topics[currentTopicIdx]];
 
-        // If there's another skill in the same topic
         if (currentSkillIdx < currentTopicSkills.length - 1) {
             return {
                 ...currentTopicSkills[currentSkillIdx + 1],
@@ -203,7 +209,6 @@ const Addition = () => {
             };
         }
 
-        // If it's the last skill in the topic, go to the first skill of the next topic
         if (currentTopicIdx < topics.length - 1) {
             const nextTopicName = topics[currentTopicIdx + 1];
             const nextTopicSkills = gradeConfig[nextTopicName];
@@ -215,11 +220,9 @@ const Addition = () => {
             }
         }
 
-        return null; // No more skills
+        return null;
     };
 
-    const { topicName, skillName } = getTopicInfo();
-    // Helper to always produce exactly 4 unique numeric options including the correct answer
     const makeOptions = (correct) => {
         const opts = new Set([correct]);
         const offsets = [1, -1, 2, -2, 3, -3, 4];
@@ -234,8 +237,6 @@ const Addition = () => {
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'].sort(() => 0.5 - Math.random());
-
-        // Pre-shuffled pools for uniqueness (mostly used in practice, but good for test variety too)
         const visualPairs = [[1, 2], [2, 1], [3, 2], [2, 3], [4, 1], [1, 4], [3, 3], [5, 2], [2, 5], [4, 3]].sort(() => 0.5 - Math.random());
         const numericPairs = [[6, 2], [3, 5], [4, 4], [7, 1], [2, 7], [1, 8], [5, 4], [3, 6], [2, 2], [9, 0]].sort(() => 0.5 - Math.random());
 
@@ -243,10 +244,8 @@ const Addition = () => {
             let question = {};
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
-
             let typeToGen = 'visual';
             if (isTest) {
-                // Balanced test: 3 Visual, 3 Numeric, 3 Number Line, 1 Zero
                 if (i < 3) typeToGen = 'visual';
                 else if (i < 6) typeToGen = 'numeric';
                 else if (i < 9) typeToGen = 'numberline';
@@ -259,12 +258,8 @@ const Addition = () => {
 
             if (typeToGen === 'visual') {
                 let n1, n2;
-                if (isTest) {
-                    [n1, n2] = visualPairs[i % visualPairs.length];
-                } else {
-                    n1 = Math.floor(Math.random() * 5) + 1;
-                    n2 = Math.floor(Math.random() * 4) + 1;
-                }
+                if (isTest) [n1, n2] = visualPairs[i % visualPairs.length];
+                else { n1 = Math.floor(Math.random() * 5) + 1; n2 = Math.floor(Math.random() * 4) + 1; }
                 question = {
                     text: `Count all the circles together!`,
                     options: makeOptions(n1 + n2),
@@ -276,12 +271,8 @@ const Addition = () => {
                 };
             } else if (typeToGen === 'numeric') {
                 let n1, n2;
-                if (isTest) {
-                    [n1, n2] = numericPairs[i % numericPairs.length];
-                } else {
-                    n1 = Math.floor(Math.random() * 9) + 1;
-                    n2 = Math.floor(Math.random() * (10 - n1));
-                }
+                if (isTest) [n1, n2] = numericPairs[i % numericPairs.length];
+                else { n1 = Math.floor(Math.random() * 9) + 1; n2 = Math.floor(Math.random() * (10 - n1)); }
                 question = {
                     text: `What is ${n1} plus ${n2}?`,
                     options: makeOptions(n1 + n2),
@@ -294,13 +285,7 @@ const Addition = () => {
             } else if (typeToGen === 'numberline' || typeToGen === 'zero') {
                 let n1, n2;
                 if (typeToGen === 'numberline') {
-                    if (isTest) {
-                        n1 = Math.floor(Math.random() * 6) + 1;
-                        n2 = Math.floor(Math.random() * (10 - n1)) + 1;
-                    } else {
-                        n1 = Math.floor(Math.random() * 6) + 1;
-                        n2 = Math.floor(Math.random() * (10 - n1)) + 1;
-                    }
+                    n1 = Math.floor(Math.random() * 6) + 1; n2 = Math.floor(Math.random() * (10 - n1)) + 1;
                     question = {
                         text: `Use the number line to find: ${n1} + ${n2}`,
                         options: makeOptions(n1 + n2),
@@ -313,8 +298,7 @@ const Addition = () => {
                 } else {
                     const val = Math.floor(Math.random() * 9) + 1;
                     const withZeroFirst = Math.random() > 0.5;
-                    const z1 = withZeroFirst ? 0 : val;
-                    const z2 = withZeroFirst ? val : 0;
+                    const z1 = withZeroFirst ? 0 : val; const z2 = withZeroFirst ? val : 0;
                     question = {
                         text: `Add zero to the number!`,
                         options: makeOptions(val),
@@ -325,8 +309,6 @@ const Addition = () => {
                         solution: `${z1} + ${z2} = ${val}`
                     };
                 }
-            } else {
-                question = { text: "Add them up!", options: ["2"], correct: "2", type: "numeric", visualData: { n1: 1, n2: 1, color1, color2 }, explanation: "Simple addition!" };
             }
             questions.push(question);
         }
@@ -334,18 +316,11 @@ const Addition = () => {
     };
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 301);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathAdditionMixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
 
     useEffect(() => {
         let interval;
@@ -370,13 +345,6 @@ const Addition = () => {
     }, [qIndex, answers]);
 
     const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
         navigate('/junior/grade/1');
     };
 
@@ -385,58 +353,42 @@ const Addition = () => {
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option === currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!",
+                solution: currentQ.solution
             }
         }));
 
-        // Show modal for all answers in practice mode
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
@@ -446,16 +398,24 @@ const Addition = () => {
 
     const handleSkip = () => {
         if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
             }
         }));
         handleNext();
@@ -465,26 +425,12 @@ const Addition = () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 

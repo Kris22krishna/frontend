@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
 import ExplanationModal from '../../ExplanationModal';
 import StickerExit from '../../StickerExit';
 import mascotImg from '../../../assets/mascot.png';
+import avatarImg from '../../../assets/avatar.png';
 import '../../../pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ data }) => {
@@ -43,10 +44,17 @@ const DynamicVisual = ({ data }) => {
     );
 };
 
+const SKILL_ID_MAP = {
+    '1001': NODE_IDS.g1MathPatternsIdentifying,
+    '1002': NODE_IDS.g1MathPatternsCreating,
+    '1003': NODE_IDS.g1MathPatternsMixed,
+};
+
 const Patterns = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '1003';
@@ -60,32 +68,7 @@ const Patterns = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
-
     const [showExplanationModal, setShowExplanationModal] = useState(false);
-
-    useEffect(() => {
-        if (answers[qIndex]) {
-            setSelectedOption(answers[qIndex].selectedOption);
-            setIsAnswered(true);
-        } else {
-            setSelectedOption(null);
-            setIsAnswered(false);
-            setShowExplanationModal(false);
-
-        }
-    }, [qIndex, answers]);
-
-    const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
-        navigate('/junior/grade/1');
-    };
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -99,145 +82,80 @@ const Patterns = () => {
         return { topicName: 'Patterns', skillName: 'Mathematics', grade: '1' };
     };
 
+    const { topicName, skillName } = getTopicInfo();
+
     const getNextSkill = () => {
         const { grade } = getTopicInfo();
         const gradeConfig = TOPIC_CONFIGS[grade];
         const topics = Object.keys(gradeConfig);
-
         let currentTopicIdx = -1;
         let currentSkillIdx = -1;
-
         for (let i = 0; i < topics.length; i++) {
             const skills = gradeConfig[topics[i]];
             const idx = skills.findIndex(s => s.id === skillId);
-            if (idx !== -1) {
-                currentTopicIdx = i;
-                currentSkillIdx = idx;
-                break;
-            }
+            if (idx !== -1) { currentTopicIdx = i; currentSkillIdx = idx; break; }
         }
-
         if (currentTopicIdx === -1) return null;
-
         const currentTopicSkills = gradeConfig[topics[currentTopicIdx]];
-
         if (currentSkillIdx < currentTopicSkills.length - 1) {
-            return {
-                ...currentTopicSkills[currentSkillIdx + 1],
-                topicName: topics[currentTopicIdx]
-            };
+            return { ...currentTopicSkills[currentSkillIdx + 1], topicName: topics[currentTopicIdx] };
         }
-
         if (currentTopicIdx < topics.length - 1) {
             const nextTopicName = topics[currentTopicIdx + 1];
             const nextTopicSkills = gradeConfig[nextTopicName];
-            if (nextTopicSkills.length > 0) {
-                return {
-                    ...nextTopicSkills[0],
-                    topicName: nextTopicName
-                };
-            }
+            if (nextTopicSkills.length > 0) return { ...nextTopicSkills[0], topicName: nextTopicName };
         }
-
         return null;
     };
 
-    const { topicName, skillName } = getTopicInfo();
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const patternTypes = [
-            { items: ['🍎', '🍌'] },
-            { items: ['⭐', '🌙'] },
-            { items: ['💚', '💖'] },
-            { items: ['☀️', '🌧️'] },
-            { items: ['💎', '✨'] },
-            { items: ['🌸', '🍃'] }
+            { items: ['🍎', '🍌'] }, { items: ['⭐', '🌙'] }, { items: ['☀️', '🌧️'] }
         ];
-
         const numericTypes = [
-            { items: [2, 4] },
-            { items: [1, 3] },
-            { items: [5, 10] },
-            { items: [3, 6] }
+            { items: [2, 4] }, { items: [1, 3] }, { items: [5, 10] }
         ];
-
         for (let i = 0; i < totalQuestions; i++) {
-            // Alternate: even questions use emoji patterns, odd use number patterns
             const useNumeric = i % 2 === 1;
-            const pType = useNumeric
-                ? numericTypes[Math.floor(i / 2) % numericTypes.length]
-                : patternTypes[Math.floor(i / 2) % patternTypes.length];
-
-            // Skill-specific logic
-            // 1001 = Identifying (hide internal item)
-            // 1002 = Creating (extend pattern, hide last)
-            // 1003 = Chapter Test (mix both)
+            const pType = useNumeric ? numericTypes[i % numericTypes.length] : patternTypes[i % patternTypes.length];
             let skillMode = selectedSkill;
-            if (selectedSkill === '1003') {
-                skillMode = i % 2 === 0 ? '1001' : '1002';
-            }
-
+            if (selectedSkill === '1003') skillMode = i % 2 === 0 ? '1001' : '1002';
             const patternLogic = i % 3;
             let seq = [];
             let missingIdx;
-
-            if (patternLogic === 0) { // ABAB
+            if (patternLogic === 0) {
                 seq = [pType.items[0], pType.items[1], pType.items[0], pType.items[1], pType.items[0], pType.items[1]];
-                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3; // 3, 4, 5
-            } else if (patternLogic === 1) { // AABAAB
+                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3;
+            } else if (patternLogic === 1) {
                 seq = [pType.items[0], pType.items[0], pType.items[1], pType.items[0], pType.items[0], pType.items[1]];
-                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3; // 3, 4, 5
-            } else { // ABBABB
+                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3;
+            } else {
                 seq = [pType.items[0], pType.items[1], pType.items[1], pType.items[0], pType.items[1], pType.items[1]];
-                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3; // 3, 4, 5
+                missingIdx = skillMode === '1002' ? 6 : Math.floor(Math.random() * 3) + 3;
             }
-
             let displaySeq = [...seq];
-            if (missingIdx >= seq.length) {
-                displaySeq.push(null);
-            } else {
-                displaySeq[missingIdx] = null;
-            }
-
-            const correct = missingIdx >= seq.length ? pType.items[0] : seq[missingIdx];
-
-            let explanation = "";
-            const isAbab = patternLogic === 0;
-            const isAab = patternLogic === 1;
-
-            if (isAbab) {
-                explanation = `This is an ABAB pattern. It goes ${pType.items[0]}, ${pType.items[1]}, ${pType.items[0]}, ${pType.items[1]}. So, the next one is ${correct}!`;
-            } else if (isAab) {
-                explanation = `This is an AAB pattern. It repeats two ${pType.items[0]}s followed by one ${pType.items[1]}. The missing spot needs ${correct}.`;
-            } else {
-                explanation = `This is an ABB pattern. It repeats one ${pType.items[0]} followed by two ${pType.items[1]}s. The missing spot needs ${correct}.`;
-            }
+            if (missingIdx >= seq.length) displaySeq.push(null); else displaySeq[missingIdx] = null;
+            const correct = missingIdx >= seq.length ? (patternLogic === 0 ? pType.items[0] : (patternLogic === 1 ? pType.items[0] : pType.items[0] /* Simplified */)) : seq[missingIdx];
 
             questions.push({
-                text: missingIdx >= seq.length ? "Look at the pattern belt! What comes next?" : "Someone is missing! Who goes in the empty spot?",
+                text: missingIdx >= seq.length ? "What comes next?" : "Who is missing?",
                 options: [pType.items[0], pType.items[1]].sort(() => 0.5 - Math.random()),
                 correct: correct,
                 type: 'pattern',
                 visualData: { seq: displaySeq, missingIdx },
-                explanation: explanation
+                explanation: `The pattern repeats! The answer is ${correct}.`
             });
         }
         return questions;
     };
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 1001);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathPatternsMixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
 
     useEffect(() => {
         let interval;
@@ -247,112 +165,109 @@ const Patterns = () => {
         return () => clearInterval(interval);
     }, [showResults, sessionQuestions]);
 
+    useEffect(() => {
+        setShowExplanationModal(false);
+    }, [qIndex]);
+
+    useEffect(() => {
+        if (answers[qIndex]) {
+            setSelectedOption(answers[qIndex].selectedOption);
+            setIsAnswered(true);
+        } else {
+            setSelectedOption(null);
+            setIsAnswered(false);
+        }
+    }, [qIndex, answers]);
+
+    const handleExit = async () => {
+        navigate('/junior/grade/1');
+    };
+
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option == currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Here is the explanation."
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!"
             }
         }));
 
-        // Show modal for all answers in practice mode
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            handleNext();
+            setTimeout(() => {
+                handleNext();
+            }, 800);
         }
-    };
-
-    const handleSkip = () => {
-        if (isAnswered) return;
-        setAnswers(prev => ({
-            ...prev,
-            [qIndex]: {
-                selectedOption: 'Skipped',
-                isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: `This pattern was skipped. The correct item was ${sessionQuestions[qIndex].correct}.`
-            }
-        }));
-        handleNext();
     };
 
     const handleNext = async () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
+    };
+
+    const handleSkip = () => {
+        if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                selectedOption: 'Skipped',
+                isCorrect: false,
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
+            }
+        }));
+        handleNext();
     };
 
     const formatTime = (s) => {

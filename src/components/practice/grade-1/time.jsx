@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -189,10 +189,19 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '601': NODE_IDS.g1MathTimeDayNight,
+    '602': NODE_IDS.g1MathTimeDaysWeek,
+    '603': NODE_IDS.g1MathTimeBeforeAfter,
+    '604': NODE_IDS.g1MathTimeClock,
+    '605': NODE_IDS.g1MathTimeMixed,
+};
+
 const Time = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '605';
@@ -206,8 +215,6 @@ const Time = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
-
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -222,54 +229,35 @@ const Time = () => {
         return { topicName: 'Time', skillName: 'Mathematics', grade: '1' };
     };
 
+    const { topicName, skillName } = getTopicInfo();
+
     const getNextSkill = () => {
         const { grade } = getTopicInfo();
         const gradeConfig = TOPIC_CONFIGS[grade];
         const topics = Object.keys(gradeConfig);
-
         let currentTopicIdx = -1;
         let currentSkillIdx = -1;
-
         for (let i = 0; i < topics.length; i++) {
             const skills = gradeConfig[topics[i]];
             const idx = skills.findIndex(s => s.id === skillId);
-            if (idx !== -1) {
-                currentTopicIdx = i;
-                currentSkillIdx = idx;
-                break;
-            }
+            if (idx !== -1) { currentTopicIdx = i; currentSkillIdx = idx; break; }
         }
-
         if (currentTopicIdx === -1) return null;
-
         const currentTopicSkills = gradeConfig[topics[currentTopicIdx]];
-
         if (currentSkillIdx < currentTopicSkills.length - 1) {
-            return {
-                ...currentTopicSkills[currentSkillIdx + 1],
-                topicName: topics[currentTopicIdx]
-            };
+            return { ...currentTopicSkills[currentSkillIdx + 1], topicName: topics[currentTopicIdx] };
         }
-
         if (currentTopicIdx < topics.length - 1) {
             const nextTopicName = topics[currentTopicIdx + 1];
             const nextTopicSkills = gradeConfig[nextTopicName];
-            if (nextTopicSkills.length > 0) {
-                return {
-                    ...nextTopicSkills[0],
-                    topicName: nextTopicName
-                };
-            }
+            if (nextTopicSkills.length > 0) return { ...nextTopicSkills[0], topicName: nextTopicName };
         }
-
         return null;
     };
 
-    const { topicName, skillName } = getTopicInfo();
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const types = ['day-night', 'days-week', 'clock'];
-
         for (let i = 0; i < totalQuestions; i++) {
             let type = '';
             if (isTest) {
@@ -284,9 +272,7 @@ const Time = () => {
                 else if (selectedSkill === '604') type = 'clock';
                 else type = types[i % types.length];
             }
-
             let question = {};
-
             if (type === 'day-night') {
                 const scenarios = [
                     { q: 'When can we see the big yellow Sun?', a: 'Day' },
@@ -305,44 +291,28 @@ const Time = () => {
                 };
             } else if (type === 'days-week') {
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                const dayIdx = Math.floor(Math.random() * days.length);
                 const orderText = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
-
-                // Mix of order and simple identifying
-                const isOrderQ = Math.random() > 0.5;
-                if (isOrderQ) {
-                    const idx = Math.floor(Math.random() * 7);
-                    question = {
-                        text: `If Sunday is the first day, which day is the ${orderText[idx]} day of the week?`,
-                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7], days[(idx + 5) % 7]].sort(() => 0.5 - Math.random()),
-                        correct: days[idx],
-                        type: 'days-week',
-                        visualData: { day: days[idx], isAfter: true, label: 'ORDER' },
-                        explanation: `Counting from Sunday, the ${orderText[idx]} day is ${days[idx]}.`
-                    };
-                } else {
-                    const idx = Math.floor(Math.random() * 7);
-                    question = {
-                        text: `Look at this day! Can you find its name from the options?`,
-                        options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7], days[(idx + 5) % 7]].sort(() => 0.5 - Math.random()),
-                        correct: days[idx],
-                        type: 'days-week',
-                        visualData: { day: days[idx], isAfter: true, label: 'NAME' },
-                        explanation: `The highlighted section corresponds to ${days[idx]}.`
-                    };
-                }
+                const idx = Math.floor(Math.random() * 7);
+                question = {
+                    text: `If Sunday is the first day, which day is the ${orderText[idx]} day of the week?`,
+                    options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7], days[(idx + 5) % 7]].sort(() => 0.5 - Math.random()),
+                    correct: days[idx],
+                    type: 'days-week',
+                    visualData: { day: days[idx], isAfter: true, label: 'ORDER' },
+                    explanation: `Counting from Sunday, the ${orderText[idx]} day is ${days[idx]}.`
+                };
             } else if (type === 'before-after') {
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 const dayIdx = Math.floor(Math.random() * days.length);
                 const isAfter = Math.random() > 0.5;
                 const targetIdx = isAfter ? (dayIdx + 1) % 7 : (dayIdx - 1 + 7) % 7;
                 question = {
-                    text: `Checking the calendar! Which day comes ${isAfter ? 'AFTER' : 'BEFORE'} ${days[dayIdx]}?`,
+                    text: `Which day comes ${isAfter ? 'AFTER' : 'BEFORE'} ${days[dayIdx]}?`,
                     options: [days[targetIdx], days[(targetIdx + 2) % 7], days[(targetIdx + 4) % 7], days[(targetIdx + 5) % 7]].sort(() => 0.5 - Math.random()),
                     correct: days[targetIdx],
                     type: 'days-week',
                     visualData: { day: days[dayIdx], isAfter },
-                    explanation: `Following the standard sequence of days, the day immediately ${isAfter ? 'after' : 'before'} ${days[dayIdx]} is ${days[targetIdx]}.`
+                    explanation: `The day ${isAfter ? 'after' : 'before'} ${days[dayIdx]} is ${days[targetIdx]}.`
                 };
             } else {
                 const hour = Math.floor(Math.random() * 12) + 1;
@@ -361,18 +331,19 @@ const Time = () => {
     };
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 601);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathTimeMixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
+
+    useEffect(() => {
+        let interval;
+        if (!showResults && sessionQuestions.length > 0) {
+            interval = setInterval(() => setTimer(v => v + 1), 1000);
+        }
+        return () => clearInterval(interval);
+    }, [showResults, sessionQuestions]);
 
     useEffect(() => {
         setShowExplanationModal(false);
@@ -389,86 +360,49 @@ const Time = () => {
     }, [qIndex, answers]);
 
     const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
         navigate('/junior/grade/1');
     };
-
-    const handleSkip = () => {
-        if (isAnswered) return;
-        handleNext();
-    };
-
-    useEffect(() => {
-        let interval;
-        if (!showResults && sessionQuestions.length > 0) {
-            interval = setInterval(() => setTimer(v => v + 1), 1000);
-        }
-        return () => clearInterval(interval);
-    }, [showResults, sessionQuestions]);
 
     const handleOptionSelect = (option) => {
         if (isAnswered) return;
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option === currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!"
             }
         }));
 
-        // Show modal for all answers in practice mode
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
@@ -476,30 +410,41 @@ const Time = () => {
         }
     };
 
+    const handleSkip = () => {
+        if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
+        setAnswers(prev => ({
+            ...prev,
+            [qIndex]: {
+                selectedOption: 'Skipped',
+                isCorrect: false,
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
+            }
+        }));
+        handleNext();
+    };
+
     const handleNext = async () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 
