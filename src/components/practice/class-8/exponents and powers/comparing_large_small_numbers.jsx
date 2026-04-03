@@ -59,7 +59,7 @@ const ComparingLargeSmallNumbers = () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             const sid = startSession({
-                nodeId: NODE_IDS.g8MathAlgebraExponentsComparing,
+                nodeId: NODE_IDS.g8MathEPComparingNumbers,
                 sessionType: 'practice'
             });
             if (sid) setSessionId(sid);

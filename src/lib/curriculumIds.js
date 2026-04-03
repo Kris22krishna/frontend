@@ -287,6 +287,15 @@ export const NODE_IDS = {
   g7ScienceEverEvolvingChanges:            'b4071001-0003-0000-0000-000000000000',
   g7ScienceEverEvolvingTerminologyQuiz:    'b4071001-0010-0000-0000-000000000000',
 
+  // Grade 8 Math: Exponents and Powers (Chapter 12)
+  g8MathExponentsPowersChapter:            'a3081012-0000-0000-0000-000000000001',
+  g8MathEPNegativeExponents:               'a4081012-0001-0000-0000-000000000000',
+  g8MathEPLawsOfExponents:                 'a4081012-0002-0000-0000-000000000000',
+  g8MathEPStandardForm:                    'a4081012-0003-0000-0000-000000000000',
+  g8MathEPComparingNumbers:                'a4081012-0004-0000-0000-000000000000',
+  g8MathEPApplications:                    'a4081012-0005-0000-0000-000000000000',
+  g8MathEPChapterTest:                     'a4081012-0010-0000-0000-000000000000',
+
   // Grade 8 Science: Exploring Investigative Science
   g8ScienceInvestigativeScience:           'b3081001-0000-0000-0000-000000000001',
   g8ScienceInvestigativeMethod:            'b4081001-0001-0000-0000-000000000000',

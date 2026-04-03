@@ -59,7 +59,7 @@ const LawsOfExponentsConceptual = () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             const sid = startSession({
-                nodeId: NODE_IDS.g8MathAlgebraExponents,
+                nodeId: NODE_IDS.g8MathEPLawsOfExponents,
                 sessionType: 'practice'
             });
             if (sid) setSessionId(sid);
