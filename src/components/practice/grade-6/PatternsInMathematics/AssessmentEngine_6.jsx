@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 
-export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg', nodeId }) {
+    const { startSession, finishSession, abandonSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -79,7 +82,14 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         setTimeLeft(newQs.length * 60);
         setFinished(false);
         setPaletteOpen(false);
+        isFinishedRef.current = false;
     }, [questions]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!isFinishedRef.current) abandonSession(); };
+    }, [nodeId]);
 
     useEffect(() => {
         if (topRef.current) {
@@ -105,6 +115,20 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         }, 1000);
         return () => clearInterval(timer);
     }, [timeLeft, finished]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || isFinishedRef.current) return;
+        isFinishedRef.current = true;
+        const payload = questionSet.map((question, index) => ({
+            question_index: index,
+            answer_json: { selected: answers[index] ?? null, correct_answer: question.correct ?? question.answer ?? null },
+            is_correct: isAnswerCorrect(question, answers[index]),
+            marks_awarded: isAnswerCorrect(question, answers[index]) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: questionTimes[index] * 1000,
+        }));
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -208,6 +232,8 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                 setTimeLeft(newQs.length * 60);
                                 setFinished(false);
                                 setPaletteOpen(false);
+                                isFinishedRef.current = false;
+                                if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
                             }}
                             style={{ padding: '10px 20px', background: color, border: 'none', color: '#fff', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}
                         >

@@ -251,10 +251,14 @@ export const NODE_IDS = {
   g3MathTimeGoesOnTimeDurations:     'a4031001-0010-0000-0000-000000000000',
   
   // Grade 6 Math: Patterns
-  g6MathPatterns:               'a3061001-0000-0000-0000-000000000001',
-  g6MathPatternsIntro:          'a4061001-0001-0000-0000-000000000000',
-  g6MathPatternsTerminology:    'a4061001-0002-0000-0000-000000000000',
-  g6MathPatternsSkills:         'a4061001-0003-0000-0000-000000000000',
+  g6MathPatterns:                      'a3061001-0000-0000-0000-000000000001',
+  g6MathPatternsIntro:                 'a4061001-0001-0000-0000-000000000000',
+  g6MathPatternsTerminology:           'a4061001-0002-0000-0000-000000000000',
+  g6MathPatternsSkills:                'a4061001-0003-0000-0000-000000000000',
+  g6MathPatternsNumberSequences:       'a4061001-0004-0000-0000-000000000000',
+  g6MathPatternsShapeGeometry:         'a4061001-0005-0000-0000-000000000000',
+  g6MathPatternsSpecialPatterns:       'a4061001-0006-0000-0000-000000000000',
+  g6MathPatternsVocabQuiz:             'a4061001-0010-0000-0000-000000000000',
 
   // Grade 3 EVS Skills
   g3EvsOurFamiliesRoles:        'b4031001-0001-0000-0000-000000000000',

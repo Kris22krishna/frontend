@@ -7,6 +7,7 @@ import {
 export const SKILLS = [
     {
         id: 'pat-6-01',
+        nodeId: 'a4061001-0004-0000-0000-000000000000',
         title: 'Number Sequences',
         subtitle: 'Arithmetic & Rules',
         icon: '🔢',
@@ -36,6 +37,7 @@ export const SKILLS = [
     },
     {
         id: 'pat-6-02',
+        nodeId: 'a4061001-0005-0000-0000-000000000000',
         title: 'Shape & Geometry',
         subtitle: 'Visual Reasoning',
         icon: '🔺',
@@ -58,6 +60,7 @@ export const SKILLS = [
     },
     {
         id: 'pat-6-03',
+        nodeId: 'a4061001-0006-0000-0000-000000000000',
         title: 'Special Patterns',
         subtitle: 'Squares & Triangles',
         icon: '💎',
