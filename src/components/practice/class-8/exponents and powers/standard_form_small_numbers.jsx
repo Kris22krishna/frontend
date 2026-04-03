@@ -59,7 +59,7 @@ const StandardFormSmallNumbers = () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             const sid = startSession({
-                nodeId: NODE_IDS.g8MathAlgebraExponentsStandardForm,
+                nodeId: NODE_IDS.g8MathEPStandardForm,
                 sessionType: 'practice'
             });
             if (sid) setSessionId(sid);

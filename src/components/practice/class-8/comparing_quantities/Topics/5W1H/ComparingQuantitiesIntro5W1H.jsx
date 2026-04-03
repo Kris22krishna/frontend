@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../comparing_quantities.css';
 import { LatexText } from '../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 const CARDS = [
     {
@@ -98,11 +100,22 @@ const CARDS = [
 
 export default function ComparingQuantitiesIntro5W1H() {
     const navigate = useNavigate();
+    const { startSession, finishSession } = useSessionLogger();
     const [openCard, setOpenCard] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+        startSession({ nodeId: NODE_IDS.g8MathCQIntro, sessionType: 'practice' });
+    }, [startSession]);
+
+    const handleNavigate = (path) => {
+        finishSession({
+            totalQuestions: 1,
+            questionsAnswered: 1,
+            answersPayload: { intro_viewed: true }
+        });
+        navigate(path);
+    };
 
     const toggle = (idx) => setOpenCard((prev) => (prev === idx ? null : idx));
 
@@ -110,15 +123,15 @@ export default function ComparingQuantitiesIntro5W1H() {
         <div className="cq-page">
             {/* ── TOP NAV ──────────────────────────────────── */}
             <nav className="cq-nav">
-                <button className="cq-nav-back" onClick={() => navigate('/senior/grade/8/comparing-quantities')}>
+                <button className="cq-nav-back" onClick={() => handleNavigate('/senior/grade/8/comparing-quantities')}>
                     ← Back to Comparing Quantities
                 </button>
                 <div className="cq-nav-links">
                     <button className="cq-nav-link cq-nav-link--active">🌟 Introduction</button>
-                    <button className="cq-nav-link" onClick={() => navigate('/senior/grade/8/comparing-quantities/terminology')}>
+                    <button className="cq-nav-link" onClick={() => handleNavigate('/senior/grade/8/comparing-quantities/terminology')}>
                         📖 Terminology
                     </button>
-                    <button className="cq-nav-link" onClick={() => navigate('/senior/grade/8/comparing-quantities/skills')}>
+                    <button className="cq-nav-link" onClick={() => handleNavigate('/senior/grade/8/comparing-quantities/skills')}>
                         🎯 Skills
                     </button>
                 </div>
@@ -194,7 +207,7 @@ export default function ComparingQuantitiesIntro5W1H() {
                     </p>
                     <button
                         className="cq-btn-primary cq-btn-large"
-                        onClick={() => navigate('/senior/grade/8/comparing-quantities/terminology')}
+                        onClick={() => handleNavigate('/senior/grade/8/comparing-quantities/terminology')}
                     >
                         Next: Terminology →
                     </button>

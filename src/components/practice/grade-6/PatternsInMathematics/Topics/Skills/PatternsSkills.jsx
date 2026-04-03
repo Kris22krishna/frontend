@@ -118,6 +118,7 @@ export default function PatternsSkills() {
                                 color={skill.color}
                                 onBack={() => setView('list')}
                                 prefix="int"
+                                nodeId={skill.nodeId}
                             />
                         )
                     ) : (
@@ -127,6 +128,7 @@ export default function PatternsSkills() {
                             color={skill.color}
                             onBack={() => setView('list')}
                             prefix="int"
+                            nodeId={skill.nodeId}
                         />
                     )}
                 </div>

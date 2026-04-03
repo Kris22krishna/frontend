@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../patterns.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, FOUR_RULES, VOCAB_QUIZ } from './PatternsTerminologyData';
+import { useSessionLogger } from '../../../../../../hooks/useSessionLogger';
+
+const VOCAB_QUIZ_NODE_ID = 'a4061001-0010-0000-0000-000000000000';
 
 export default function PatternsTerminology() {
     const navigate = useNavigate();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const quizAnswersRef = useRef([]);
+    const isQuizFinishedRef = useRef(false);
 
     // Tabs state
     const [activeTab, setActiveTab] = useState('terms');
@@ -25,29 +31,45 @@ export default function PatternsTerminology() {
     const activeRule = FOUR_RULES[selectedRuleIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
 
+    useEffect(() => {
+        if (activeTab === 'quiz') {
+            quizAnswersRef.current = [];
+            isQuizFinishedRef.current = false;
+            startSession({ nodeId: VOCAB_QUIZ_NODE_ID, sessionType: 'practice' });
+        }
+        return () => { if (activeTab === 'quiz' && !isQuizFinishedRef.current) abandonSession(); };
+    }, [activeTab]);
+
     const resetQuiz = () => {
         setQuizIdx(0);
         setQuizSelected(null);
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        quizAnswersRef.current = [];
+        isQuizFinishedRef.current = false;
+        startSession({ nodeId: VOCAB_QUIZ_NODE_ID, sessionType: 'practice' });
     };
 
     const handleQuizSelect = (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
-            setQuizTotalScore(s => s + 1);
-        }
+        const isCorrect = optIdx === activeQuiz.correct;
+        if (isCorrect) setQuizTotalScore(s => s + 1);
+        const entry = { question_index: quizIdx, answer_json: { selected: optIdx, correct_answer: activeQuiz.correct }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        quizAnswersRef.current[quizIdx] = entry;
+        logAnswer(entry);
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx(i => i + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
+            isQuizFinishedRef.current = true;
+            await finishSession({ answers_payload: quizAnswersRef.current.filter(Boolean) });
             setQuizFinished(true);
         }
     };

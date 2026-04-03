@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../shapes-around-us.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 /* ═══════════════════════════════════════════════════════════════
    DATA
@@ -378,6 +380,7 @@ function RuleSteps({ rule }) {
 
 export default function ShapesTerminology() {
     const navigate = useNavigate();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     const [activeTab, setActiveTab] = useState('terms');
     const [selectedIdx, setSelectedIdx] = useState(0);
@@ -391,10 +394,24 @@ export default function ShapesTerminology() {
     const [quizFinished, setQuizFinished] = useState(false);
     const [streak, setStreak] = useState(0);
     const [bestStreak, setBestStreak] = useState(0);
+    const [answersMap, setAnswersMap] = useState({});
 
     const activeTerm = TERMS[selectedIdx];
     const activeRule = FIVE_RULES[selectedRuleIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
+
+    useEffect(() => {
+        startSession({ nodeId: NODE_IDS.g4MathShapesTerminologyQuiz, sessionType: 'practice' });
+    }, [startSession]);
+
+    const handleNavigate = useCallback((path) => {
+        finishSession({
+            totalQuestions: 10,
+            questionsAnswered: Object.keys(answersMap).length,
+            answersPayload: answersMap
+        });
+        navigate(path);
+    }, [answersMap, finishSession, navigate]);
 
     const resetQuiz = () => {
         setQuizIdx(0); setQuizSelected(null); setQuizAnswered(false);
@@ -406,6 +423,21 @@ export default function ShapesTerminology() {
         setQuizSelected(optIdx);
         setQuizAnswered(true);
         const isCorrect = optIdx === activeQuiz.correct;
+        
+        const answerData = {
+            question: activeQuiz.question,
+            selected: activeQuiz.options[optIdx],
+            correct: activeQuiz.options[activeQuiz.correct],
+            isCorrect
+        };
+        setAnswersMap(prev => ({ ...prev, [quizIdx]: answerData }));
+
+        logAnswer({
+            question_index: quizIdx,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
+
         if (isCorrect) {
             setQuizTotalScore(s => s + 1);
             setStreak(s => { const newS = s + 1; if (newS > bestStreak) setBestStreak(newS); return newS; });
@@ -448,11 +480,11 @@ export default function ShapesTerminology() {
             `}</style>
 
             <nav className="sau-nav">
-                <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/shapes-around-us')}>← Back to Shapes Around Us</button>
+                <button className="sau-nav-back" onClick={() => handleNavigate('/junior/grade/4/shapes-around-us')}>← Back to Shapes Around Us</button>
                 <div className="sau-nav-links">
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/introduction')}>🌟 Introduction</button>
+                    <button className="sau-nav-link" onClick={() => handleNavigate('/junior/grade/4/shapes-around-us/introduction')}>🌟 Introduction</button>
                     <button className="sau-nav-link sau-nav-link--active">📖 Terminology</button>
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/skills')}>🎯 Skills</button>
+                    <button className="sau-nav-link" onClick={() => handleNavigate('/junior/grade/4/shapes-around-us/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 
@@ -651,7 +683,7 @@ export default function ShapesTerminology() {
                                 {bestStreak >= 2 && <p style={{ color: '#f59e0b', fontWeight: 800, margin: '0 0 24px' }}>🔥 Best streak: {bestStreak} in a row!</p>}
                                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                                     <button onClick={resetQuiz} style={{ padding: '12px 28px', background: 'linear-gradient(135deg, #6366f1, #a855f7)', color: '#fff', borderRadius: 100, border: 'none', fontWeight: 800, cursor: 'pointer', fontSize: 15, fontFamily: 'Outfit, sans-serif' }}>Play Again 🔄</button>
-                                    <button onClick={() => navigate('/junior/grade/4/shapes-around-us/skills')} style={{ padding: '12px 28px', background: '#f1f5f9', color: '#475569', borderRadius: 100, border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: 15 }}>Skills 🎯</button>
+                                    <button onClick={() => handleNavigate('/junior/grade/4/shapes-around-us/skills')} style={{ padding: '12px 28px', background: '#f1f5f9', color: '#475569', borderRadius: 100, border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: 15 }}>Skills 🎯</button>
                                 </div>
                             </div>
                         )}

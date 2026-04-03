@@ -11,7 +11,6 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
     const { score, total, timeTaken, questionResults } = results;
     const rawPercentage = (score / total) * 100;
     const percentage = rawPercentage > 0 && rawPercentage < 1 ? 1 : Math.round(rawPercentage);
-    const wrongCount = total - score;
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -26,6 +25,16 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
         return "Keep practicing! You can do better next time.";
     };
 
+    const handleBackHome = () => {
+        navigate('/diagnosis-test');
+    };
+
+    const handleRetake = () => {
+        if (typeof onRetake === 'function') {
+            onRetake();
+        }
+    };
+
     const renderAnswer = (ans) => {
         if (typeof ans === 'string' && (ans.startsWith('/assets/') || ans.includes('.jpg') || ans.includes('.png'))) {
             return <img src={ans} alt="Answer" className="max-h-16 object-contain inline-block" />;
@@ -36,15 +45,17 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
     return (
         <div className="diagnosis-runner bg-slate-50 min-h-screen pb-20">
             {/* Global Navbar */}
-            <header className="cbt-header shadow-md px-3 sm:px-10 h-auto sm:h-20 py-2 sm:py-0 flex items-center justify-between gap-2 mb-0">
+            <header className="cbt-header shadow-md px-3 sm:px-10 h-auto sm:h-20 py-2 sm:py-0 flex items-center justify-between gap-2 mb-0" style={{ position: 'sticky', top: 0, zIndex: 200 }}>
                 <div className="flex items-center gap-2 sm:gap-4">
                     <span className="font-extrabold text-sm sm:text-2xl bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
                         Skill Discovery Results • Grade {grade}
                     </span>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-2 sm:gap-4" style={{ position: 'relative', zIndex: 201 }}>
                     {isAdmin ? (
                         <button
+                            type="button"
+                            style={{ position: 'relative', zIndex: 201, cursor: 'pointer' }}
                             className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-slate-900 text-white hover:bg-slate-800 rounded-lg sm:rounded-xl font-bold transition-all shadow-lg active:scale-95 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base"
                             onClick={onClose}
                         >
@@ -54,15 +65,19 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                     ) : (
                         <>
                             <button
-                                className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg sm:rounded-xl font-bold transition-all flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base"
-                                onClick={() => navigate('/')}
+                                type="button"
+                                style={{ position: 'relative', zIndex: 201, cursor: 'pointer' }}
+                                className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg sm:rounded-xl font-bold transition-all flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base active:scale-95"
+                                onClick={handleBackHome}
                             >
                                 <Home size={18} />
                                 Back Home
                             </button>
                             <button
+                                type="button"
+                                style={{ position: 'relative', zIndex: 201, cursor: 'pointer' }}
                                 className="px-3 sm:px-6 py-1.5 sm:py-2.5 bg-indigo-600 text-white rounded-lg sm:rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg active:scale-95 flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base"
-                                onClick={onRetake}
+                                onClick={handleRetake}
                             >
                                 <RotateCcw size={18} />
                                 Retake
@@ -142,7 +157,8 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
                 {/* Question Analysis */}
                 <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 mb-12">
                     <button
-                        className="w-full flex items-center justify-between mb-10 border-b border-slate-100 pb-6 group"
+                        type="button"
+                        className="w-full flex items-center justify-between mb-10 border-b border-slate-100 pb-6 group cursor-pointer"
                         onClick={() => setIsAnalysisExpanded(!isAnalysisExpanded)}
                     >
                         <div className="text-left">
@@ -156,71 +172,71 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
 
                     {isAnalysisExpanded && (
                         <div className="grid grid-cols-1 gap-6">
-                        {questionResults.map((q, idx) => (
-                            <div key={idx} className={`p-6 sm:p-8 rounded-[2rem] border-l-[12px] bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all duration-300 ${q.isCorrect ? 'border-l-green-500' : q.marks > 0 ? 'border-l-amber-500' : 'border-l-red-500'}`}>
-                                <div className={`flex flex-col ${q.type === 'factorTree' ? '' : 'md:flex-row'} gap-8`}>
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <span className="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black text-slate-600 border border-slate-100 shadow-sm">
-                                                {idx + 1}
-                                            </span>
-                                            <span className="px-4 py-1.5 bg-white text-indigo-600 rounded-lg text-xs font-black uppercase tracking-widest border border-indigo-50">
-                                                {q.topic}
-                                            </span>
-                                            {q.isCorrect ? (
-                                                <span className="flex items-center gap-1.5 text-green-600 font-bold text-sm bg-green-50 px-4 py-1 rounded-full">
-                                                    <CheckCircle2 size={16} /> Correct
+                            {questionResults.map((q, idx) => (
+                                <div key={idx} className={`p-6 sm:p-8 rounded-[2rem] border-l-[12px] bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all duration-300 ${q.isCorrect ? 'border-l-green-500' : q.marks > 0 ? 'border-l-amber-500' : 'border-l-red-500'}`}>
+                                    <div className={`flex flex-col ${q.type === 'factorTree' ? '' : 'md:flex-row'} gap-8`}>
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-3 mb-6">
+                                                <span className="w-10 h-10 bg-white rounded-xl flex items-center justify-center font-black text-slate-600 border border-slate-100 shadow-sm">
+                                                    {idx + 1}
                                                 </span>
-                                            ) : q.marks > 0 ? (
-                                                <span className="flex items-center gap-1.5 text-amber-600 font-bold text-sm bg-amber-50 px-4 py-1 rounded-full">
-                                                    <Clock size={16} className="rotate-45" /> Partial ({q.marks.toFixed(1)})
+                                                <span className="px-4 py-1.5 bg-white text-indigo-600 rounded-lg text-xs font-black uppercase tracking-widest border border-indigo-50">
+                                                    {q.topic}
                                                 </span>
-                                            ) : (
-                                                <span className="flex items-center gap-1.5 text-red-600 font-bold text-sm bg-red-50 px-4 py-1 rounded-full">
-                                                    <XCircle size={16} /> Incorrect
-                                                </span>
-                                            )}
-                                        </div>
-                                        
-                                        <div className="text-xl font-bold text-slate-800 leading-snug mb-8">
-                                            <MathRenderer text={q.question} />
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            <div className="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                                                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Your Answer</div>
-                                                <div className={`text-lg font-bold ${q.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
-                                                    {renderAnswer(q.userAnswer || 'Not Answered')}
-                                                </div>
+                                                {q.isCorrect ? (
+                                                    <span className="flex items-center gap-1.5 text-green-600 font-bold text-sm bg-green-50 px-4 py-1 rounded-full">
+                                                        <CheckCircle2 size={16} /> Correct
+                                                    </span>
+                                                ) : q.marks > 0 ? (
+                                                    <span className="flex items-center gap-1.5 text-amber-600 font-bold text-sm bg-amber-50 px-4 py-1 rounded-full">
+                                                        <Clock size={16} className="rotate-45" /> Partial ({q.marks.toFixed(1)})
+                                                    </span>
+                                                ) : (
+                                                    <span className="flex items-center gap-1.5 text-red-600 font-bold text-sm bg-red-50 px-4 py-1 rounded-full">
+                                                        <XCircle size={16} /> Incorrect
+                                                    </span>
+                                                )}
                                             </div>
-                                            {!q.isCorrect && (
-                                                <div className="p-5 bg-green-50/30 rounded-2xl border border-green-100 shadow-sm">
-                                                    <div className="text-[10px] font-black text-green-600 uppercase tracking-widest mb-2">Correct Answer</div>
-                                                    <div className="text-lg font-bold text-green-700">
-                                                        {renderAnswer(q.correctAnswer)}
+
+                                            <div className="text-xl font-bold text-slate-800 leading-snug mb-8">
+                                                <MathRenderer text={q.question} />
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                                                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Your Answer</div>
+                                                    <div className={`text-lg font-bold ${q.isCorrect ? 'text-green-600' : 'text-red-600'}`}>
+                                                        {renderAnswer(q.userAnswer || 'Not Answered')}
                                                     </div>
                                                 </div>
-                                            )}
+                                                {!q.isCorrect && (
+                                                    <div className="p-5 bg-green-50/30 rounded-2xl border border-green-100 shadow-sm">
+                                                        <div className="text-[10px] font-black text-green-600 uppercase tracking-widest mb-2">Correct Answer</div>
+                                                        <div className="text-lg font-bold text-green-700">
+                                                            {renderAnswer(q.correctAnswer)}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {(q.img || q.image) && (
-                                        <div className={`w-full ${q.type === 'factorTree' ? 'mt-4' : 'md:w-80'} h-auto min-h-[12rem] bg-white rounded-3xl flex items-center justify-center p-4 sm:p-8 border border-slate-100 shadow-inner shrink-0 overflow-hidden`}>
-                                            {(q.img || q.image).trim().startsWith('<') ? (
-                                                <div
-                                                    className="w-full h-full flex items-center justify-center svg-container"
-                                                    style={{ maxWidth: q.type === 'factorTree' ? '1000px' : '100%' }}
-                                                    dangerouslySetInnerHTML={{ __html: (q.img || q.image) }}
-                                                />
-                                            ) : (
-                                                <img src={q.img || q.image} alt="Question" className="max-w-full max-h-48 object-contain" />
-                                            )}
-                                        </div>
-                                    )}
+                                        {(q.img || q.image) && (
+                                            <div className={`w-full ${q.type === 'factorTree' ? 'mt-4' : 'md:w-80'} h-auto min-h-[12rem] bg-white rounded-3xl flex items-center justify-center p-4 sm:p-8 border border-slate-100 shadow-inner shrink-0 overflow-hidden`}>
+                                                {(q.img || q.image).trim().startsWith('<') ? (
+                                                    <div
+                                                        className="w-full h-full flex items-center justify-center svg-container"
+                                                        style={{ maxWidth: q.type === 'factorTree' ? '1000px' : '100%' }}
+                                                        dangerouslySetInnerHTML={{ __html: (q.img || q.image) }}
+                                                    />
+                                                ) : (
+                                                    <img src={q.img || q.image} alt="Question" className="max-w-full max-h-48 object-contain" />
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
                     )}
                 </div>
 
@@ -228,17 +244,21 @@ const DiagnosisResults = ({ results, grade, onRetake, isAdmin = false, onClose }
 
                 {/* Actions */}
                 {!isAdmin && (
-                    <div className="flex flex-col md:flex-row gap-4 justify-center items-center mt-12">
+                    <div className="flex flex-col md:flex-row gap-4 justify-center items-center mt-12" style={{ position: 'relative', zIndex: 10 }}>
                         <button
+                            type="button"
+                            style={{ position: 'relative', zIndex: 10, cursor: 'pointer' }}
                             className="w-full md:w-auto px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black shadow-xl shadow-indigo-200 transition-all flex items-center justify-center gap-3 active:scale-95"
-                            onClick={onRetake}
+                            onClick={handleRetake}
                         >
                             <RotateCcw size={20} />
                             Retake Test
                         </button>
                         <button
+                            type="button"
+                            style={{ position: 'relative', zIndex: 10, cursor: 'pointer' }}
                             className="w-full md:w-auto px-10 py-5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-black transition-all flex items-center justify-center gap-3 active:scale-95"
-                            onClick={() => navigate('/')}
+                            onClick={handleBackHome}
                         >
                             <Home size={20} />
                             Back Home
