@@ -14,10 +14,32 @@ export const NODE_IDS = {
   math: 'a1000000-0000-0000-0000-000000000001',
 
   // ── 1. GRADES ─────────────────────────────────────────────────────────────
+  grade3:  'a2000000-0000-0000-0000-000000000003',
   grade4:  'a2000000-0000-0000-0000-000000000004',
   grade8:  'a2000000-0000-0000-0000-000000000008',
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
+
+  // ── GRADE 4: SHAPES AROUND US (CHAPTER 5) ──────────────────────────────────
+  g4MathShapesAroundUs: 'a3041005-0000-0000-0000-000000000001',
+  g4MathShapesIntro:   'a4041005-0000-0000-0000-000000000000',
+  g4MathShapesIdentifying3D: 'a4041005-0001-0000-0000-000000000000',
+  g4MathShapesNets:    'a4041005-0002-0000-0000-000000000000',
+  g4MathShapesAngles:  'a4041005-0003-0000-0000-000000000000',
+  g4MathShapesCircles: 'a4041005-0004-0000-0000-000000000000',
+  g4MathShapesTerminologyQuiz: 'a4041005-0010-0000-0000-000000000000',
+
+  // ── GRADE 3: TOY-JOY (CHAPTER 1) ──────────────────────────────────────────
+  g3MathToyJoy:        'a3031001-0000-0000-0000-000000000001',
+  g3MathToyJoyIdentifying3D: 'a4031001-0001-0000-0000-000000000000',
+  g3MathToyJoyCounting:      'a4031001-0002-0000-0000-000000000000',
+  g3MathToyJoyPosition:      'a4031001-0003-0000-0000-000000000000',
+  g3MathToyJoyProperties:    'a4031001-0004-0000-0000-000000000000',
+  g3MathToyJoyClassifying:   'a4031001-0005-0000-0000-000000000000',
+  g3MathToyJoyOppositeFaces: 'a4031001-0006-0000-0000-000000000000',
+  g3MathToyJoyBuilding:      'a4031001-0007-0000-0000-000000000000',
+  g3MathToyJoySequencing:    'a4031001-0008-0000-0000-000000000000',
+  g3MathToyJoyTest:          'a4031001-0010-0000-0000-000000000000',
 
   // ── 2. GRADE 8 CHAPTERS ───────────────────────────────────────────────────
   g8MathRationalNumbers:   'a3000000-0000-0000-0000-000000000001',
@@ -341,15 +363,6 @@ export const NODE_IDS = {
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
   g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
-  
-  // Grade 4 Math: Shapes Around Us (Chapter 5)
-  g4MathShapesAroundUs:                    'a3041005-0000-0000-0000-000000000001',
-  g4MathShapesIntro:                       'a4041005-0000-0000-0000-000000000000',
-  g4MathShapesIdentifying3D:               'a4041005-0001-0000-0000-000000000000',
-  g4MathShapesNets:                        'a4041005-0002-0000-0000-000000000000',
-  g4MathShapesAngles:                       'a4041005-0003-0000-0000-000000000000',
-  g4MathShapesCircles:                      'a4041005-0004-0000-0000-000000000000',
-  g4MathShapesTerminologyQuiz:              'a4041005-0010-0000-0000-000000000000',
 };
 
 /**
@@ -471,8 +484,19 @@ export const SLUG_TO_NODE_ID = {
   'g4-math-shapes-around-us':           NODE_IDS.g4MathShapesAroundUs,
   'g4-math-shapes-intro':               NODE_IDS.g4MathShapesIntro,
   'g4-math-shapes-identifying-3d':      NODE_IDS.g4MathShapesIdentifying3D,
-  'g4-math-shapes-nets':                NODE_IDS.g4MathShapesNets,
-  'g4-math-shapes-angles':               NODE_IDS.g4MathShapesAngles,
-  'g4-math-shapes-circles':              NODE_IDS.g4MathShapesCircles,
-  'g4-math-shapes-terminology':          NODE_IDS.g4MathShapesTerminologyQuiz,
+  'g4-math-shapes-nets': NODE_IDS.g4MathShapesNets,
+  'g4-math-shapes-angles': NODE_IDS.g4MathShapesAngles,
+  'g4-math-shapes-circles': NODE_IDS.g4MathShapesCircles,
+  'g4-math-shapes-terminology': NODE_IDS.g4MathShapesTerminologyQuiz,
+
+  // GRADE 3: TOY-JOY
+  'g3-math-toy-joy-identifying-3d': NODE_IDS.g3MathToyJoyIdentifying3D,
+  'g3-math-toy-joy-counting': NODE_IDS.g3MathToyJoyCounting,
+  'g3-math-toy-joy-position': NODE_IDS.g3MathToyJoyPosition,
+  'g3-math-toy-joy-properties': NODE_IDS.g3MathToyJoyProperties,
+  'g3-math-toy-joy-classifying': NODE_IDS.g3MathToyJoyClassifying,
+  'g3-math-toy-joy-opposite-faces': NODE_IDS.g3MathToyJoyOppositeFaces,
+  'g3-math-toy-joy-building': NODE_IDS.g3MathToyJoyBuilding,
+  'g3-math-toy-joy-sequencing': NODE_IDS.g3MathToyJoySequencing,
+  'g3-math-toy-joy-test': NODE_IDS.g3MathToyJoyTest,
 };
