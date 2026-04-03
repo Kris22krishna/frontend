@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -119,7 +119,6 @@ const Numbers10to20 = () => {
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
-        const grade1Config = TOPIC_CONFIGS['1'];
         for (const gradeKey of Object.keys(TOPIC_CONFIGS)) {
             const gradeConfig = TOPIC_CONFIGS[gradeKey];
             for (const [topicName, skills] of Object.entries(gradeConfig)) {
@@ -153,12 +152,12 @@ const Numbers10to20 = () => {
         if (currentTopicIdx < topics.length - 1) {
             const nextTopicName = topics[currentTopicIdx + 1];
             const nextTopicSkills = gradeConfig[nextTopicName];
-            if (nextTopicSkills.length > 0) return { ...nextTopicSkills[0], topicName: nextTopicName };
+            if (nextTopicSkills.length > 0) return { ...nextTopicSkills[0], topicName: nextTopicName, route: nextTopicSkills[0].route };
         }
         return null;
     };
 
-    const generateQuestions = (selectedSkill) => {
+    const generateQuestions = useCallback((selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
         const names = { 10: 'Ten', 11: 'Eleven', 12: 'Twelve', 13: 'Thirteen', 14: 'Fourteen', 15: 'Fifteen', 16: 'Sixteen', 17: 'Seventeen', 18: 'Eighteen', 19: 'Nineteen', 20: 'Twenty' };
@@ -177,8 +176,8 @@ const Numbers10to20 = () => {
                 else typeToGen = 'comparison';
             }
             if (typeToGen === 'counting') {
-                const count = isTest ? (10 + i) : (Math.floor(Math.random() * 11) + 10);
-                const isWord = isTest ? (i % 2 === 0) : (Math.random() > 0.5);
+                const count = Math.floor(Math.random() * 11) + 10;
+                const isWord = Math.random() > 0.5;
                 question = {
                     text: isWord ? "Can you pick the name for this number?" : "What number is shown here?",
                     options: isWord ? [names[count], names[(count + 1) % 11 + 10], names[(count - 1) % 11 + 10]].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()) : [count, count + 1, count - 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
@@ -188,7 +187,7 @@ const Numbers10to20 = () => {
                     explanation: `Count one ten-bar and then the single blocks. This gives us ${count}.`
                 };
             } else if (typeToGen === 'tens-ones') {
-                const num = isTest ? (12 + i - 4) : (Math.floor(Math.random() * 11) + 10);
+                const num = Math.floor(Math.random() * 11) + 10;
                 const tens = Math.floor(num / 10);
                 const ones = num % 10;
                 question = {
@@ -200,10 +199,10 @@ const Numbers10to20 = () => {
                     explanation: `${num} is made of ${tens} group of ten and ${ones} single blocks.`
                 };
             } else {
-                const n1 = isTest ? (10 + i) : (Math.floor(Math.random() * 11) + 10);
-                let n2 = isTest ? (20 - i) : (Math.floor(Math.random() * 11) + 10);
+                const n1 = Math.floor(Math.random() * 11) + 10;
+                let n2 = Math.floor(Math.random() * 11) + 10;
                 if (n1 === n2) n2 = 15;
-                const isGreater = isTest ? (i % 2 === 0) : (Math.random() > 0.5);
+                const isGreater = Math.random() > 0.5;
                 const correctAns = isGreater ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 question = {
                     text: `Which group has ${isGreater ? 'MORE' : 'FEWER'} blocks?`,
@@ -217,7 +216,7 @@ const Numbers10to20 = () => {
             questions.push(question);
         }
         return questions;
-    };
+    }, [isTest, totalQuestions]);
 
     const { topicName, skillName } = getTopicInfo();
 
@@ -226,7 +225,7 @@ const Numbers10to20 = () => {
         setSessionQuestions(qs);
         const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathNumbers1020Mixed;
         startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
-    }, [skillId, isTest, startSession]);
+    }, [skillId, isTest, startSession, generateQuestions]);
 
     useEffect(() => {
         let interval;
@@ -250,7 +249,7 @@ const Numbers10to20 = () => {
         }
     }, [qIndex, answers]);
 
-    const handleExit = async () => {
+    const handleExit = () => {
         navigate('/junior/grade/1');
     };
 
@@ -598,8 +597,6 @@ const Numbers10to20 = () => {
                         </div>
                     </div>
 
-
-                    {/* --- INJECTED FOOTER V2 --- */}
                     <div className="g1-navigation-footer">
                         <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>
                             <ChevronLeft size={24} /> Prev
