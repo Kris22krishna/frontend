@@ -303,6 +303,14 @@ export const NODE_IDS = {
   g8ScienceInvestigativeAnalysis:          'b4081001-0003-0000-0000-000000000000',
   g8ScienceInvestigativeTerminologyQuiz:   'b4081001-0010-0000-0000-000000000000',
 
+  // Grade 7 Math: Comparing Quantities (Chapter 8)
+  g7MathComparingQuantities:               'a3071008-0000-0000-0000-000000000001',
+  g7MathCQPercentage:                      'a4071008-0001-0000-0000-000000000000',
+  g7MathCQUseOfPercentages:                'a4071008-0002-0000-0000-000000000000',
+  g7MathCQProfitAndLoss:                   'a4071008-0003-0000-0000-000000000000',
+  g7MathCQSimpleInterest:                  'a4071008-0004-0000-0000-000000000000',
+  g7MathCQChapterTest:                     'a4071008-0010-0000-0000-000000000000',
+
   // Grade 9 Math: Number System (Chapter 1)
   g9MathNumberSystem:                      'a3091001-0000-0000-0000-000000000001',
   g9MathNSClassification:                  'a4091001-0001-0000-0000-000000000000',

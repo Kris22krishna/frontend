@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 // Adjust imports as needed based on file location
 import Whiteboard from '../../../Whiteboard';
 import LatexContent from '../../../LatexContent';
@@ -44,6 +46,9 @@ const Percentage = () => {
     const SKILL_ID = 26; // TODO: Check correct skill ID
     const SKILL_NAME = "Class 7 - Comparing Quantities - Percentage";
     const [answers, setAnswers] = useState({});
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
 
     // Generate random questions
     // Generate random questions
@@ -249,6 +254,7 @@ const Percentage = () => {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
+            startSession({ nodeId: NODE_IDS.g7MathCQPercentage, sessionType: 'practice' });
         }
 
         const timer = setInterval(() => {
@@ -291,6 +297,19 @@ const Percentage = () => {
             timeSpent += Date.now() - questionStartTime.current;
         }
         const seconds = Math.round(timeSpent / 1000);
+        const timeTakenMs = timeSpent;
+
+        // v4 logging
+        const entry = {
+            question_index: qIndex,
+            answer_json: { selected },
+            is_correct: isCorrect,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: timeTakenMs,
+        };
+        answersPayload.current[qIndex] = entry;
+        logAnswer(entry);
 
         try {
             await api.recordAttempt({
@@ -359,6 +378,10 @@ const Percentage = () => {
         } else {
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
+            }
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
             }
 
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
