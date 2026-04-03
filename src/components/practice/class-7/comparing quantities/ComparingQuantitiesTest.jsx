@@ -238,7 +238,11 @@ const ComparingQuantitiesTest = () => {
     const finalizeTest = async () => {
         setIsTestOver(true);
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
-        await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+        await finishSession({ 
+            total_questions: questions.length,
+            questions_answered: Object.keys(responses).length,
+            answers_payload: answersPayload.current.filter(Boolean) 
+        });
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {

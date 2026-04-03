@@ -288,7 +288,10 @@ const SimpleInterest = () => {
             }
             if (!isFinishedRef.current) {
                 isFinishedRef.current = true;
-                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+                await finishSession({ 
+                    total_questions: questions.length,
+                    answers_payload: answersPayload.current.filter(Boolean) 
+                });
             }
 
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
