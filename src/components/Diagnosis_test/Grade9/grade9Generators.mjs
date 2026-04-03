@@ -1,4 +1,4 @@
-import { getRandomInt, shuffleArray, formatLinearExpression } from '../mathUtils.mjs';
+import { getRandomInt, shuffleArray, ensureUniqueOptions, formatLinearExpression } from '../mathUtils.mjs';
 
 // --- Number System ---
 
@@ -38,8 +38,7 @@ export const generateRealNumbers = () => {
         question = `Simplify: $(${base}^{${m}})^{${n}}$`;
         answer = `$${base}^{${m * n}}$`;
 
-        const options = shuffleArray([
-            { value: answer, label: answer },
+        const options = ensureUniqueOptions({ value: answer, label: answer }, [
             { value: `$${base}^{${m + n}}$`, label: `$${base}^{${m + n}}$` },
             { value: `$${base}^{${Math.abs(m - n)}}$`, label: `$${base}^{${Math.abs(m - n)}}$` },
             { value: `$${base * 2}^{${m}}$`, label: `$${base * 2}^{${m}}$` }
@@ -125,7 +124,7 @@ export const generatePolynomialBasics = () => {
 
     return {
         type: "tableInput",
-        question: "",
+        question: "Find the value of the polynomial:",
         topic: "Polynomials / Basics",
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -265,7 +264,8 @@ export const generateLinearEquationSolutions = () => {
         question: `Find the values of x and y that satisfy the equation: </br> ${questionText}`,
         topic: "Linear Equations / Solutions",
         answer: JSON.stringify(answerObj),
-        rows: rows
+        rows: rows,
+        inputKeys: ["x", "y"]
     };
 };
 

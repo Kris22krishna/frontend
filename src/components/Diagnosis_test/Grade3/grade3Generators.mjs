@@ -839,11 +839,12 @@ export const generateTally = () => {
     const count = getRandomInt(1, 10);
     const tallySVG = createTallySVG(count);
 
-    const question = `Count the tally marks:</br> <div style="margin-top: 20px;">${tallySVG}</div>`;
+    const question = `Count the tally marks:`;
 
     return {
         type: "userInput",
         question: question,
+        img: tallySVG,
         topic: "Data Handling / Tally",
         answer: String(count)
     };
