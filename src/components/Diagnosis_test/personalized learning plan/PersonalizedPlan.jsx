@@ -8,7 +8,7 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
     // 1. Identify missing topics
     // Filter out only the questions that were not correct
     const missedQuestions = questionResults.filter(q => !q.isCorrect);
-    
+
     // Get unique topics from those missed questions
     const topicsToLearn = [...new Set(missedQuestions.map(q => q.topic || 'General Foundational Skills'))];
 
@@ -38,12 +38,12 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
     // Generate PDF function
     const downloadPDF = () => {
         const doc = new jsPDF();
-        
+
         // Title
         doc.setFontSize(22);
         doc.setTextColor(79, 70, 229); // indigo-600
         doc.text(`Grade ${grade} Personalized Learning Plan`, 14, 22);
-        
+
         // Subtitle
         doc.setFontSize(12);
         doc.setTextColor(100, 116, 139); // slate-500
@@ -55,8 +55,8 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
             head: [['Day', 'Topic to Learn', 'Suggested Time', 'What to Focus On']],
             body: planData.map(item => [item.day, item.learning, item.time, item.details]),
             theme: 'grid',
-            headStyles: { 
-                fillColor: [79, 70, 229], 
+            headStyles: {
+                fillColor: [79, 70, 229],
                 textColor: [255, 255, 255],
                 fontStyle: 'bold',
                 halign: 'center'
@@ -70,11 +70,11 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
                 2: { cellWidth: 30, halign: 'center' },
                 3: { cellWidth: 85 }
             },
-            styles: { 
-                fontSize: 11, 
-                cellPadding: 8 
+            styles: {
+                fontSize: 11,
+                cellPadding: 8
             },
-            alternateRowStyles: { 
+            alternateRowStyles: {
                 fillColor: [248, 250, 252] // slate-50
             }
         });
@@ -84,7 +84,7 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
         doc.setFontSize(10);
         doc.setTextColor(148, 163, 184); // slate-400
         doc.text(`Keep learning and practicing! You are doing great.`, 14, finalY + 15);
-        
+
         // Save
         doc.save(`Learning_Plan_Grade_${grade}.pdf`);
     };
@@ -108,7 +108,7 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
         <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 p-6 sm:p-10 mb-6 sm:mb-12 mt-6 sm:mt-12">
             {/* Header section with heading and button side-by-side on desktop */}
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                <button 
+                <button
                     onClick={() => setIsPlanExpanded(!isPlanExpanded)}
                     className="flex-1 text-left flex items-start sm:items-center justify-between gap-4 group"
                 >
@@ -145,58 +145,58 @@ const PersonalizedPlan = ({ questionResults, grade }) => {
             </div>
 
             {isPlanExpanded && (
-            <div className="pt-8 mt-6 border-t border-slate-100 animate-in fade-in slide-in-from-top-4 duration-300">
-                {/* Plan Table layout */}
-            <div className="overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white">
-                <div className="grid grid-cols-[100px_1fr_120px] sm:grid-cols-[120px_1fr_150px] bg-slate-50 border-b border-slate-200">
-                    <div className="px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                        <CalendarDays size={14} className="text-slate-400" /> Day
-                    </div>
-                    <div className="px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm font-black text-slate-500 uppercase tracking-widest border-l border-slate-200 flex items-center gap-2">
-                        <BookOpen size={14} className="text-slate-400" /> Topic to Learn
-                    </div>
-                    <div className="px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm font-black text-slate-500 uppercase tracking-widest border-l border-slate-200 text-center flex items-center justify-center gap-2">
-                        <Clock size={14} className="text-slate-400" /> Time
-                    </div>
-                </div>
-
-                <div className="divide-y divide-slate-100">
-                    {planData.map((item, index) => (
-                        <div key={index} className="grid grid-cols-[100px_1fr_120px] sm:grid-cols-[120px_1fr_150px] hover:bg-slate-50 transition-colors group">
-                            {/* Day cell */}
-                            <div className="px-4 py-4 sm:px-6 sm:py-5 flex items-center">
-                                <span className="inline-flex items-center justify-center bg-indigo-100 text-indigo-700 font-black text-sm sm:text-base px-3 py-1 rounded-lg">
-                                    {item.day}
-                                </span>
+                <div className="pt-8 mt-6 border-t border-slate-100 animate-in fade-in slide-in-from-top-4 duration-300">
+                    {/* Plan Table layout */}
+                    <div className="overflow-hidden rounded-xl border border-slate-200 shadow-sm bg-white">
+                        <div className="grid grid-cols-[100px_1fr_120px] sm:grid-cols-[120px_1fr_150px] bg-slate-50 border-b border-slate-200">
+                            <div className="px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                                <CalendarDays size={14} className="text-slate-400" /> Day
                             </div>
-                            
-                            {/* Topic cell */}
-                            <div className="px-4 py-4 sm:px-6 sm:py-4 flex flex-col justify-center border-l border-slate-100">
-                                <span className="text-sm sm:text-lg font-bold text-slate-800 flex items-center gap-3 mb-1.5">
-                                    <ArrowRight size={16} className="text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity -ml-3 shrink-0" />
-                                    {item.learning}
-                                </span>
-                                <span className="text-xs sm:text-sm text-slate-500 font-medium pl-3 ml-2 border-l-2 border-indigo-200">
-                                    {item.details}
-                                </span>
+                            <div className="px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm font-black text-slate-500 uppercase tracking-widest border-l border-slate-200 flex items-center gap-2">
+                                <BookOpen size={14} className="text-slate-400" /> Topic to Learn
                             </div>
-
-                            {/* Time cell */}
-                            <div className="px-4 py-4 sm:px-6 sm:py-5 flex items-center justify-center border-l border-slate-100">
-                                <span className="inline-flex items-center gap-1.5 text-slate-600 font-bold text-xs sm:text-sm bg-slate-100 px-3 py-1.5 rounded-full">
-                                    <Clock size={14} className="text-slate-500" />
-                                    {item.time}
-                                </span>
+                            <div className="px-4 py-3 sm:px-6 sm:py-4 text-xs sm:text-sm font-black text-slate-500 uppercase tracking-widest border-l border-slate-200 text-center flex items-center justify-center gap-2">
+                                <Clock size={14} className="text-slate-400" /> Time
                             </div>
                         </div>
-                    ))}
+
+                        <div className="divide-y divide-slate-100">
+                            {planData.map((item, index) => (
+                                <div key={index} className="grid grid-cols-[100px_1fr_120px] sm:grid-cols-[120px_1fr_150px] hover:bg-slate-50 transition-colors group">
+                                    {/* Day cell */}
+                                    <div className="px-4 py-4 sm:px-6 sm:py-5 flex items-center">
+                                        <span className="inline-flex items-center justify-center bg-indigo-100 text-indigo-700 font-black text-sm sm:text-base px-3 py-1 rounded-lg">
+                                            {item.day}
+                                        </span>
+                                    </div>
+
+                                    {/* Topic cell */}
+                                    <div className="px-4 py-4 sm:px-6 sm:py-4 flex flex-col justify-center border-l border-slate-100">
+                                        <span className="text-sm sm:text-lg font-bold text-slate-800 flex items-center gap-3 mb-1.5">
+                                            <ArrowRight size={16} className="text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity -ml-3 shrink-0" />
+                                            {item.learning}
+                                        </span>
+                                        <span className="text-xs sm:text-sm text-slate-500 font-medium pl-3 ml-2 border-l-2 border-indigo-200">
+                                            {item.details}
+                                        </span>
+                                    </div>
+
+                                    {/* Time cell */}
+                                    <div className="px-4 py-4 sm:px-6 sm:py-5 flex items-center justify-center border-l border-slate-100">
+                                        <span className="inline-flex items-center gap-1.5 text-slate-600 font-bold text-xs sm:text-sm bg-slate-100 px-3 py-1.5 rounded-full">
+                                            <Clock size={14} className="text-slate-500" />
+                                            {item.time}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-6 text-center text-sm text-slate-500 font-medium">
+                        Aim to complete one topic per day to stay on track. You got this!
+                    </div>
                 </div>
-            </div>
-            
-            <div className="mt-6 text-center text-sm text-slate-500 font-medium">
-                Aim to complete one topic per day to stay on track. You got this!
-            </div>
-            </div>
             )}
         </div>
     );
