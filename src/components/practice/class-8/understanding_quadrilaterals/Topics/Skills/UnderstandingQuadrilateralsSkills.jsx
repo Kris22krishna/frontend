@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LatexText } from '@/components/LatexText';
 import styles from '../../understanding_quadrilaterals.module.css';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = {
+    'angle-sum-exterior-angles': NODE_IDS.g8MathUQAngleSumExterior,
+    'kinds-of-quadrilaterals': NODE_IDS.g8MathUQKindsOfQuadrilaterals,
+    'special-parallelograms': NODE_IDS.g8MathUQSpecialParallelograms,
+};
 import {
     angleSumAndExteriorAngles,
     kindsOfQuadrilaterals,
@@ -260,6 +267,7 @@ export default function UnderstandingQuadrilateralsSkills() {
                         title={activeSkill.label}
                         color={activeSkill.color}
                         onBack={backToList}
+                        nodeId={SKILL_NODE_IDS[activeSkill.id]}
                     />
                 </div>
             </div>
@@ -288,6 +296,7 @@ export default function UnderstandingQuadrilateralsSkills() {
                         title={activeSkill.label}
                         color={activeSkill.color}
                         onBack={backToList}
+                        nodeId={SKILL_NODE_IDS[activeSkill.id]}
                     />
                 </div>
             </div>

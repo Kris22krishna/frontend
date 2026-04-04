@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { generateLGScenarios, GraphMini } from './LinearGraphUtils';
 import '../../graphs.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 /**
  * LinearGraphPracticeEngine
  * 20-question flow: [plot, mcq, mcq, mcq] × 5 scenarios
  * Practice mode — immediate feedback on MCQs. Points are validated (must be from table).
  */
-export default function LinearGraphPracticeEngine({ color, onBack }) {
+export default function LinearGraphPracticeEngine({ color, onBack, nodeId }) {
+    const { startSession, finishSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+
     const [scenarios, setScenarios] = useState(() => generateLGScenarios());
     const [scenarioIdx, setScenarioIdx] = useState(0);
     const [xScale, setXScale] = useState(null);
@@ -21,6 +25,17 @@ export default function LinearGraphPracticeEngine({ color, onBack }) {
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'practice' });
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || isFinishedRef.current) return;
+        isFinishedRef.current = true;
+        finishSession({ answers_payload: [] });
+    }, [finished]);
 
     // Count-up timer
     useEffect(() => {
@@ -134,7 +149,7 @@ export default function LinearGraphPracticeEngine({ color, onBack }) {
                 <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 26, fontWeight: 900, color: '#0f172a', margin: '0 0 4px' }}>{msg}</h2>
                 <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 24px' }}>You completed all 5 graph-plotting activities + {score}/15 MCQ questions correct.</p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className="grph-btn-primary" style={{ background: color }} onClick={() => { setScenarioIdx(0); setScore(0); setFinished(false); setTimeTaken(0); }}>Try Again</button>
+                    <button className="grph-btn-primary" style={{ background: color }} onClick={() => { isFinishedRef.current = false; setScenarioIdx(0); setScore(0); setFinished(false); setTimeTaken(0); if (nodeId) startSession({ nodeId, sessionType: 'practice' }); }}>Try Again</button>
                     <button className="grph-btn-secondary" onClick={onBack}>Back to Skills</button>
                 </div>
             </div>

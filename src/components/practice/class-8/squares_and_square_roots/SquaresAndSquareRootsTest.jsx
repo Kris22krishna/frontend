@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import '../../../../pages/high/class8/SquaresAndSquareRoots.css';
@@ -62,11 +64,15 @@ const SquaresAndSquareRootsTest = () => {
     const questionStartTime = useRef(Date.now());
     const [sessionId, setSessionId] = useState(() => getSessionData(`${storageKey}_sessionId`, null));
     const [questions, setQuestions] = useState([]);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
 
     useEffect(() => {
         setQuestions(generateQuestionData());
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
+        startSession({ nodeId: NODE_IDS.g8MathSSRChapterTest, sessionType: 'assessment' });
         if (!isNaN(uid) && !sessionId) {
             api.createPracticeSession(uid, SKILL_ID, 'test').then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
@@ -112,6 +118,18 @@ const SquaresAndSquareRootsTest = () => {
 
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
 
+        const v4Entry = {
+            question_index: qIndex,
+            answer_json: { selected: selectedOption, isSkipped },
+            is_correct: isSkipped ? false : (isCorrect === true),
+            marks_awarded: isCorrect === true ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: timeSpent * 1000,
+        };
+        const existingIdx = answersPayload.current.findIndex(a => a && a.question_index === qIndex);
+        if (existingIdx >= 0) { answersPayload.current[existingIdx] = v4Entry; } else { answersPayload.current.push(v4Entry); }
+        logAnswer(v4Entry);
+
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
@@ -154,6 +172,10 @@ const SquaresAndSquareRootsTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
+        if (!isFinishedRef.current) {
+            isFinishedRef.current = true;
+            await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+        }
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');

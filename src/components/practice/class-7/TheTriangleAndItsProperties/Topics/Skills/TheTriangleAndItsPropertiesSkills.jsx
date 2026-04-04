@@ -135,6 +135,8 @@ export default function TheTriangleAndItsPropertiesSkills() {
                             />
                         ) : (
                             <QuizEngine
+                        nodeId={skill.nodeId}
+                        sessionType="practice"
                                 questions={skill.practice}
                                 title={`Practice: ${skill.title}`}
                                 color={skill.color}
@@ -144,6 +146,8 @@ export default function TheTriangleAndItsPropertiesSkills() {
                         )
                     ) : (
                         <AssessmentEngine
+                        nodeId={skill.nodeId}
+                        sessionType="assessment"
                             questions={skill.assessment}
                             title={skill.title}
                             color={skill.color}

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import FactorTreeInteractive from './Topics/Skills/FactorTreeInteractive';
 import DivisionTableInteractive from './Topics/Skills/DivisionTableInteractive';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 
-export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'pt' }) {
+export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'pt' , nodeId }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
@@ -18,14 +19,27 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         setFinished(false);
         setDraftTextAnswer('');
         setDraftInteractiveAnswer(null);
+        v4Answers.current = [];
+        v4Finished.current = false;
     }, [questions]);
 
     const [timeTaken, setTimeTaken] = useState(0);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const v4Finished = useRef(false);
     useEffect(() => {
         if (finished) return;
         const timer = setInterval(() => setTimeTaken(prev => prev + 1), 1000);
         return () => clearInterval(timer);
     }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4Answers.current = [];
+        v4Finished.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!v4Finished.current) abandonSession(); };
+    }, [nodeId]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -53,6 +67,16 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         if (isAnswered) return;
         const isCorrect = optIdx === q.correct || (q.options && q.options[optIdx] !== undefined && String(q.options[optIdx]) === String(q.correct));
         setAnswersMap(prev => ({ ...prev, [current]: { selectedIdx: optIdx, isCorrect } }));
+        if (nodeId) {
+            v4Answers.current.push({
+                question_index: current,
+                answer_json: JSON.stringify({ selected: optIdx }),
+                is_correct: optIdx === q.correct || (q.options && String(q.options[optIdx]) === String(q.correct)),
+                marks_awarded: (optIdx === q.correct || (q.options && String(q.options[optIdx]) === String(q.correct))) ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            });
+        }
     };
 
     const handleTextSubmit = () => {
@@ -72,8 +96,12 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         setAnswersMap(prev => ({ ...prev, [current]: { interactiveAnswer: draftInteractiveAnswer, isCorrect } }));
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
+            if (nodeId && !v4Finished.current) {
+                v4Finished.current = true;
+                await finishSession({ answers_payload: v4Answers.current });
+            }
             setFinished(true);
         } else {
             setCurrent(c => c + 1);
@@ -129,6 +157,8 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                         onClick={() => {
                             if (typeof questions === 'function') setQuestionSet(questions());
                             setCurrent(0); setAnswersMap({}); setTimeTaken(0); setFinished(false);
+                            v4Answers.current = []; v4Finished.current = false;
+                            if (nodeId) startSession({ nodeId, sessionType: 'practice' });
                         }}
                         style={{ padding: '16px 32px', background: color, color: '#fff', border: 'none', borderRadius: 100, fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: `0 8px 24px ${color}40`, flex: 1, minWidth: 200 }}
                     >

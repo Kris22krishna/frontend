@@ -29,6 +29,7 @@ const generateUniqueQuestions = (generatorFunc, count) => {
 export const SKILLS = [
     {
         id: "seq-forming",
+        nodeId: 'a4071004-0001-0000-0000-000000000000',
         title: "Setting up Equations",
         subtitle: "Main Topic 1",
         desc: "Form expressions and set up simple equations from given conditions.",
@@ -52,6 +53,7 @@ export const SKILLS = [
     },
     {
         id: "seq-meaning",
+        nodeId: 'a4071004-0002-0000-0000-000000000000',
         title: "Algebraic Concepts",
         subtitle: "Main Topic 2",
         desc: "Evaluate expressions and identify equations, LHS, and RHS.",
@@ -75,6 +77,7 @@ export const SKILLS = [
     },
     {
         id: "seq-statements",
+        nodeId: 'a4071004-0003-0000-0000-000000000000',
         title: "Converting Statements",
         subtitle: "Main Topic 3",
         desc: "Convert text statements into equations and vice versa.",
@@ -92,6 +95,7 @@ export const SKILLS = [
     },
     {
         id: "seq-solving",
+        nodeId: 'a4071004-0004-0000-0000-000000000000',
         title: "Solving Equations",
         subtitle: "Main Topic 4",
         desc: "Solve one-step and multi-step equations using balance rules.",
@@ -115,6 +119,7 @@ export const SKILLS = [
     },
     {
         id: "seq-properties",
+        nodeId: 'a4071004-0005-0000-0000-000000000000',
         title: "Transposition",
         subtitle: "Main Topic 5",
         desc: "Use transposition and brackets to solve complex equations.",
@@ -132,6 +137,7 @@ export const SKILLS = [
     },
     {
         id: "seq-applications",
+        nodeId: 'a4071004-0006-0000-0000-000000000000',
         title: "Applications",
         subtitle: "Main Topic 6",
         desc: "Solve word problems, age problems, and real-life situations.",

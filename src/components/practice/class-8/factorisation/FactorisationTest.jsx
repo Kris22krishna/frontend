@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ChevronLeft, Clock, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import '../../../../pages/high/class8/Grade8ChapterTests.css';

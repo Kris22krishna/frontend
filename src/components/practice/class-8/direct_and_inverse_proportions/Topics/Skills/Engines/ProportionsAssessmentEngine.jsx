@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import '../../../proportions.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 function sample(arr, n) {
     const copy = [...arr];
@@ -11,7 +12,10 @@ function sample(arr, n) {
 }
 
 // Receives: questionPool, sampleSize (default 10), title, color, onBack
-export default function ProportionsAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function ProportionsAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack, nodeId }) {
+    const { startSession, finishSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+
     const [questions] = useState(() => sample(questionPool, sampleSize));
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(sampleSize).fill(null));
@@ -19,6 +23,25 @@ export default function ProportionsAssessmentEngine({ questionPool, sampleSize =
     const [finished, setFinished] = useState(false);
 
     const finish = useCallback(() => setFinished(true), []);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || isFinishedRef.current) return;
+        isFinishedRef.current = true;
+        const payload = questions.map((q, i) => ({
+            question_index: i,
+            answer_json: { selected: answers[i] ?? null, correct_answer: q.correct ?? null },
+            is_correct: answers[i] === q.correct,
+            marks_awarded: answers[i] === q.correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0,
+        }));
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     useEffect(() => {
         if (finished) return;

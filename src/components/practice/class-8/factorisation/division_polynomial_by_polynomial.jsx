@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, Pencil, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import Whiteboard from '../../../Whiteboard';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
@@ -43,9 +45,15 @@ const DivisionPolynomialByPolynomialComponent = () => {
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
 
+    // v4 session logging
+    const { startSession, logAnswer, finishSession: finishSessionV4 } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) { api.createPracticeSession(userId, SKILL_ID).then(sess => { if (sess && sess.session_id) setSessionId(sess.session_id); }).catch(err => console.error("Failed to start session", err)); }
+        startSession({ nodeId: NODE_IDS.g8MathFactDivPolyPoly, sessionType: 'practice' });
         const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
         const hvc = () => { if (document.hidden) { accumulatedTime.current += Date.now() - questionStartTime.current; isTabActive.current = false; } else { questionStartTime.current = Date.now(); isTabActive.current = true; } };
         document.addEventListener("visibilitychange", hvc);
