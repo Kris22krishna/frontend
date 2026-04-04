@@ -12,7 +12,7 @@ export const relFuncIntroData = {
             gradFrom: "#0891b2",
             gradTo: "#06b6d4",
             shadow: "rgba(6,182,212,0.35)",
-            content: `A **relation** is a connection between two sets — it's a subset of the Cartesian product $A \\times B$. A **function** is a special relation where every element of the first set maps to exactly one element of the second set. Think of a function as a machine: you feed it an input, and it gives you exactly one output. For example, $f(x) = x^2$ takes any number and squares it — no ambiguity, no surprises!`,
+            content: `A <strong>relation</strong> is a connection between two sets — it's a subset of the Cartesian product $A \\times B$. A <strong></strong> is a special relation where every element of the first set maps to exactly one element of the second set. Think of a function as a machine: you feed it an input, and it gives you exactly one output. For example, $f(x) = x^2$ takes any number and squares it — no ambiguity, no surprises!`,
             fact: 'The modern concept of a function was formalized by Dirichlet in 1837, but the idea of input-output mappings goes back to medieval Islamic mathematicians!',
         },
         {
@@ -62,7 +62,7 @@ export const relFuncIntroData = {
             gradFrom: "#0369a1",
             gradTo: "#3b82f6",
             shadow: "rgba(59,130,246,0.35)",
-            content: `Start with **ordered pairs** $(a, b)$ where order matters. Build the **Cartesian product** $A \\times B$ — all possible pairs. A **relation** picks some of those pairs based on a rule. A **function** is a relation where each input has exactly one output. Then explore special types: identity ($f(x) = x$), constant ($f(x) = c$), modulus ($f(x) = |x|$), and more. Finally, learn to combine functions through addition, subtraction, multiplication, and division!`,
+            content: `Start with <strong></strong> $(a, b)$ where order matters. Build the <strong></strong> $A \\times B$ — all possible pairs. A <strong></strong> picks some of those pairs based on a rule. A <strong></strong> is a relation where each input has exactly one output. Then explore special types: identity ($f(x) = x$), constant ($f(x) = c$), modulus ($f(x) = |x|$), and more. Finally, learn to combine functions through addition, subtraction, multiplication, and division!`,
             fact: "The vertical line test is the quickest way to check if a graph represents a function — if any vertical line crosses the graph more than once, it's NOT a function!",
         }
     ]
