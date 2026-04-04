@@ -496,6 +496,60 @@ export const NODE_IDS = {
   g8ScienceInvestigativeAnalysis:          'b4081001-0003-0000-0000-000000000000',
   g8ScienceInvestigativeTerminologyQuiz:   'b4081001-0010-0000-0000-000000000000',
 
+  // Grade 7 Math: Integers (Chapter 1)
+  g7MathIntegers:                          'a3071001-0000-0000-0000-000000000001',
+  g7MathIntAddSubProperties:               'a4071001-0001-0000-0000-000000000000',
+  g7MathIntMultiplication:                 'a4071001-0002-0000-0000-000000000000',
+  g7MathIntMultiplicationProperties:       'a4071001-0003-0000-0000-000000000000',
+  g7MathIntDivision:                       'a4071001-0004-0000-0000-000000000000',
+  g7MathIntDivisionProperties:             'a4071001-0005-0000-0000-000000000000',
+
+  // Grade 7 Math: Fractions and Decimals (Chapter 2)
+  g7MathFractionsAndDecimals:              'a3071002-0000-0000-0000-000000000001',
+  g7MathFDTypes:                           'a4071002-0001-0000-0000-000000000000',
+  g7MathFDAddSub:                          'a4071002-0002-0000-0000-000000000000',
+  g7MathFDMultiply:                        'a4071002-0003-0000-0000-000000000000',
+  g7MathFDDecimalShift:                    'a4071002-0004-0000-0000-000000000000',
+  g7MathFDDecimalMult:                     'a4071002-0005-0000-0000-000000000000',
+
+  // Grade 7 Math: Data Handling (Chapter 3)
+  g7MathDataHandling:                      'a3071003-0000-0000-0000-000000000001',
+  g7MathDHMean:                            'a4071003-0001-0000-0000-000000000000',
+  g7MathDHRange:                           'a4071003-0002-0000-0000-000000000000',
+  g7MathDHMode:                            'a4071003-0003-0000-0000-000000000000',
+  g7MathDHMedian:                          'a4071003-0004-0000-0000-000000000000',
+  g7MathDHBarGraph:                        'a4071003-0005-0000-0000-000000000000',
+  g7MathDHDoubleBarGraph:                  'a4071003-0006-0000-0000-000000000000',
+
+  // Grade 7 Math: Simple Equations (Chapter 4)
+  g7MathSimpleEquations:                   'a3071004-0000-0000-0000-000000000001',
+  g7MathSEForming:                         'a4071004-0001-0000-0000-000000000000',
+  g7MathSEMeaning:                         'a4071004-0002-0000-0000-000000000000',
+  g7MathSEStatements:                      'a4071004-0003-0000-0000-000000000000',
+  g7MathSESolving:                         'a4071004-0004-0000-0000-000000000000',
+  g7MathSEProperties:                      'a4071004-0005-0000-0000-000000000000',
+  g7MathSEApplications:                    'a4071004-0006-0000-0000-000000000000',
+
+  // Grade 7 Math: Lines and Angles (Chapter 5)
+  g7MathLinesAndAngles:                    'a3071005-0000-0000-0000-000000000001',
+  g7MathLABasicConcepts:                   'a4071005-0001-0000-0000-000000000000',
+  g7MathLARelatedAngles:                   'a4071005-0002-0000-0000-000000000000',
+  g7MathLAPairsOfLines:                    'a4071005-0003-0000-0000-000000000000',
+  g7MathLATransversalProperties:           'a4071005-0004-0000-0000-000000000000',
+  g7MathLACheckParallel:                   'a4071005-0005-0000-0000-000000000000',
+  g7MathLAApplications:                    'a4071005-0006-0000-0000-000000000000',
+
+  // Grade 7 Math: The Triangle and Its Properties (Chapter 6)
+  g7MathTriangle:                          'a3071006-0000-0000-0000-000000000001',
+  g7MathTriElements:                       'a4071006-0001-0000-0000-000000000000',
+  g7MathTriClassifyBySides:                'a4071006-0002-0000-0000-000000000000',
+  g7MathTriClassifyByAngles:               'a4071006-0003-0000-0000-000000000000',
+  g7MathTriMediansAltitudes:               'a4071006-0004-0000-0000-000000000000',
+  g7MathTriExteriorAngle:                  'a4071006-0005-0000-0000-000000000000',
+  g7MathTriAngleSum:                       'a4071006-0006-0000-0000-000000000000',
+  g7MathTriFindUnknownX:                   'a4071006-0007-0000-0000-000000000000',
+  g7MathTriInequality:                     'a4071006-0008-0000-0000-000000000000',
+
   // Grade 7 Math: Comparing Quantities (Chapter 8)
   g7MathComparingQuantities:               'a3071008-0000-0000-0000-000000000001',
   g7MathCQPercentage:                      'a4071008-0001-0000-0000-000000000000',
@@ -503,6 +557,61 @@ export const NODE_IDS = {
   g7MathCQProfitAndLoss:                   'a4071008-0003-0000-0000-000000000000',
   g7MathCQSimpleInterest:                  'a4071008-0004-0000-0000-000000000000',
   g7MathCQChapterTest:                     'a4071008-0010-0000-0000-000000000000',
+
+  // Grade 7 Math: Rational Numbers (Chapter 9)
+  g7MathRationalNumbers:                   'a3071009-0000-0000-0000-000000000001',
+  g7MathRNWhatAre:                         'a4071009-0001-0000-0000-000000000000',
+  g7MathRNNeedFor:                         'a4071009-0002-0000-0000-000000000000',
+  g7MathRNPositiveNegative:                'a4071009-0003-0000-0000-000000000000',
+  g7MathRNNumberLine:                      'a4071009-0004-0000-0000-000000000000',
+  g7MathRNStandardForm:                    'a4071009-0005-0000-0000-000000000000',
+  g7MathRNComparison:                      'a4071009-0006-0000-0000-000000000000',
+  g7MathRNOperations:                      'a4071009-0007-0000-0000-000000000000',
+  g7MathRNBetween:                         'a4071009-0008-0000-0000-000000000000',
+  g7MathRNChapterTest:                     'a4071009-0010-0000-0000-000000000000',
+
+  // Grade 7 Math: Perimeter and Area (Chapter 11)
+  g7MathPerimeterArea:                     'a3071011-0000-0000-0000-000000000001',
+  g7MathPAAreaParallelogram:               'a4071011-0001-0000-0000-000000000000',
+  g7MathPAAreaTriangle:                    'a4071011-0002-0000-0000-000000000000',
+  g7MathPACircles:                         'a4071011-0003-0000-0000-000000000000',
+  g7MathPAChapterTest:                     'a4071011-0010-0000-0000-000000000000',
+
+  // Grade 7 Math: Algebraic Expressions (Chapter 12)
+  g7MathAlgebraicExpressions:              'a3071012-0000-0000-0000-000000000001',
+  g7MathAETermsFactors:                    'a4071012-0001-0000-0000-000000000000',
+  g7MathAECoefficients:                    'a4071012-0002-0000-0000-000000000000',
+  g7MathAELikeUnlikeTerms:                 'a4071012-0003-0000-0000-000000000000',
+  g7MathAEFormation:                       'a4071012-0004-0000-0000-000000000000',
+  g7MathAEFindingValue:                    'a4071012-0005-0000-0000-000000000000',
+  g7MathAEPolynomials:                     'a4071012-0006-0000-0000-000000000000',
+  g7MathAEChapterTest:                     'a4071012-0010-0000-0000-000000000000',
+
+  // Grade 7 Math: Exponents and Powers (Chapter 13)
+  g7MathExponentsPowers:                   'a3071013-0000-0000-0000-000000000001',
+  g7MathEPBasics:                          'a4071013-0001-0000-0000-000000000000',
+  g7MathEPLaws:                            'a4071013-0002-0000-0000-000000000000',
+  g7MathEPDecimalNumberSystem:             'a4071013-0003-0000-0000-000000000000',
+  g7MathEPStandardForm:                    'a4071013-0004-0000-0000-000000000000',
+  g7MathEPChapterTest:                     'a4071013-0010-0000-0000-000000000000',
+
+  // Grade 7 Math: Symmetry (Chapter 14)
+  g7MathSymmetry:                          'a3071014-0000-0000-0000-000000000001',
+  g7MathSymLineSymmetry:                   'a4071014-0001-0000-0000-000000000000',
+  g7MathSymRotational:                     'a4071014-0002-0000-0000-000000000000',
+  g7MathSymLineRotRelationship:            'a4071014-0003-0000-0000-000000000000',
+  g7MathSymMirrorReflection:               'a4071014-0004-0000-0000-000000000000',
+  g7MathSymRegularPolygons:                'a4071014-0005-0000-0000-000000000000',
+  g7MathSymChapterTest:                    'a4071014-0010-0000-0000-000000000000',
+
+  // Grade 7 Math: Visualising Solid Shapes (Chapter 15)
+  g7MathVisualisingSolidShapes:            'a3071015-0000-0000-0000-000000000001',
+  g7MathVSSPlaneFigures:                   'a4071015-0001-0000-0000-000000000000',
+  g7MathVSSFacesEdgesVertices:             'a4071015-0002-0000-0000-000000000000',
+  g7MathVSSNets:                           'a4071015-0003-0000-0000-000000000000',
+  g7MathVSSDrawingSolids:                  'a4071015-0004-0000-0000-000000000000',
+  g7MathVSSViewingSections:                'a4071015-0005-0000-0000-000000000000',
+  g7MathVSSChapterTest:                    'a4071015-0010-0000-0000-000000000000',
 
   // Grade 9 Math: Number System (Chapter 1)
   g9MathNumberSystem:                      'a3091001-0000-0000-0000-000000000001',

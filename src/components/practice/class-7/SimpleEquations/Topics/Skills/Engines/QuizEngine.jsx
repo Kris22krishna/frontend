@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '../../../../../../hooks/useSessionLogger';
 import { LatexText } from '../../../../../../LatexText';
 
-export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'eq' }) {
+export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'eq', nodeId }) {
     const formatMathText = (text) => {
         const value = String(text ?? '');
         const looksLikeMath = value.includes('$')
@@ -30,6 +31,9 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
 
     // Timer state for Practice: Starts at 0, counts up
     const [timeTaken, setTimeTaken] = useState(0);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const v4Finished = useRef(false);
 
     useEffect(() => {
         if (finished) return;
@@ -38,6 +42,14 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         }, 1000);
         return () => clearInterval(timer);
     }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4Answers.current = [];
+        v4Finished.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!v4Finished.current) abandonSession(); };
+    }, [nodeId]);
 
     // Format time (MM:SS)
     const formatTime = (seconds) => {
@@ -54,6 +66,16 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         setSelected(optIdx);
         setAnswered(true);
         if (optIdx === q.correct) setScore(s => s + 1);
+        if (nodeId) {
+            v4Answers.current.push({
+                question_index: current,
+                answer_json: JSON.stringify({ selected: optIdx }),
+                is_correct: optIdx === q.correct,
+                marks_awarded: optIdx === q.correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            });
+        }
     };
 
     const handleNext = () => {

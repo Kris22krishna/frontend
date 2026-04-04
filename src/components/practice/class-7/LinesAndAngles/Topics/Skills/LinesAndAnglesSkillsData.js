@@ -10,6 +10,7 @@ import {
 export const SKILLS = [
     {
         id: 'basic-concepts',
+        nodeId: 'a4071005-0001-0000-0000-000000000000',
         title: 'Basic Concepts of Lines and Angles',
         subtitle: 'Main Topic 1',
         icon: '📐',
@@ -27,6 +28,7 @@ export const SKILLS = [
     },
     {
         id: 'related-angles',
+        nodeId: 'a4071005-0002-0000-0000-000000000000',
         title: 'Related Angles',
         subtitle: 'Main Topic 2',
         icon: '🧩',
@@ -44,6 +46,7 @@ export const SKILLS = [
     },
     {
         id: 'pairs-of-lines',
+        nodeId: 'a4071005-0003-0000-0000-000000000000',
         title: 'Pairs of Lines',
         subtitle: 'Main Topic 3',
         icon: '⚔️',
@@ -61,6 +64,7 @@ export const SKILLS = [
     },
     {
         id: 'transversal-properties',
+        nodeId: 'a4071005-0004-0000-0000-000000000000',
         title: 'Transversal & Parallel Lines',
         subtitle: 'Main Topic 4',
         icon: '⚡',
@@ -79,6 +83,7 @@ export const SKILLS = [
     },
     {
         id: 'check-parallel',
+        nodeId: 'a4071005-0005-0000-0000-000000000000',
         title: 'Checking for Parallel Lines',
         subtitle: 'Main Topic 5',
         icon: '⏸️',
@@ -96,6 +101,7 @@ export const SKILLS = [
     },
     {
         id: 'applications',
+        nodeId: 'a4071005-0006-0000-0000-000000000000',
         title: 'Applications Problem Solving',
         subtitle: 'Main Topic 6',
         icon: '🧠',

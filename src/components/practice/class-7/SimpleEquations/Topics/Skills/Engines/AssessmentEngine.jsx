@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '../../../../../../hooks/useSessionLogger';
 import { LatexText } from '../../../../../../LatexText';
 
-export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'eq' }) {
+export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'eq' , nodeId }) {
     const formatMathText = (text) => {
         const value = String(text ?? '');
         const looksLikeMath = value.includes('$')
@@ -71,7 +72,16 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
     const [finished, setFinished] = useState(false);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
     const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
 
@@ -108,6 +118,24 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         }, 1000);
         return () => clearInterval(timer);
     }, [timeLeft, finished]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questionSet.map((question, index) => {
+            const userAns = answers[index];
+            const correct = isAnswerCorrect(question, userAns);
+            return {
+                question_index: index,
+                answer_json: JSON.stringify({ answer: userAns }),
+                is_correct: correct,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+        });
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);

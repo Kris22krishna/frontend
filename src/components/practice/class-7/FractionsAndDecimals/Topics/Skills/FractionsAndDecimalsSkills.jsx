@@ -23,6 +23,7 @@ import AssessmentEngine from "../../../../../Math-Branches/Algebra/Topics/Skills
 const SKILLS = [
     {
         id: "types",
+        nodeId: 'a4071002-0001-0000-0000-000000000000',
         title: "Types of Fractions",
         subtitle: "Skill 1 · Foundations",
         icon: "🍰",
@@ -59,6 +60,7 @@ const SKILLS = [
     },
     {
         id: "addsub",
+        nodeId: 'a4071002-0002-0000-0000-000000000000',
         title: "Addition & Subtraction",
         subtitle: "Skill 2 · Operations",
         icon: "➕",
@@ -96,6 +98,7 @@ const SKILLS = [
     },
     {
         id: "multiply",
+        nodeId: 'a4071002-0003-0000-0000-000000000000',
         title: "Multiplication & Division",
         subtitle: "Skill 3 · Core",
         icon: "✖️",
@@ -132,6 +135,7 @@ const SKILLS = [
     },
     {
         id: "decimalshift",
+        nodeId: 'a4071002-0004-0000-0000-000000000000',
         title: "Decimal Shifting",
         subtitle: "Skill 4 · Tens",
         icon: "⏩",
@@ -168,6 +172,7 @@ const SKILLS = [
     },
     {
         id: "decimalmult",
+        nodeId: 'a4071002-0005-0000-0000-000000000000',
         title: "Decimal Multiplication",
         subtitle: "Skill 5 · Advanced",
         icon: "🔢",
@@ -590,6 +595,8 @@ export default function FractionsAndDecimalsSkills() {
                             onBack={() => setView("list")}
                             color={skill.color}
                             prefix="frac"
+                            nodeId={skill.nodeId}
+                            sessionType="practice"
                         />
                     ) : (
                         <AssessmentEngine
@@ -598,6 +605,8 @@ export default function FractionsAndDecimalsSkills() {
                             onBack={() => setView("list")}
                             color={skill.color}
                             prefix="frac"
+                            nodeId={skill.nodeId}
+                            sessionType="assessment"
                         />
                     )}
                 </div>
