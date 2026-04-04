@@ -57,6 +57,15 @@ import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/
 import SetsSkills from './components/Math-Branches/Sets/Topics/Skills/SetsSkills';
 import SetsConnectomics from './components/Math-Branches/Sets/Topics/Connectomics/SetsConnectomics';
 import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsExamEdge';
+
+// Class 11 - Maths: Relations & Functions
+import RelFuncDashboard from './components/practice/class-11/maths/RelationsAndFunctions/RelationsAndFunctions';
+import RelFuncIntro from './components/practice/class-11/maths/RelationsAndFunctions/Topics/5W1H/RelFuncIntro5W1H';
+import RelFuncTerminology from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Terminology/RelFuncTerminology';
+import RelFuncSkills from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Skills/RelFuncSkills';
+import RelFuncConnectomics from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Connectomics/RelFuncConnectomics';
+import RelFuncExamEdge from './components/practice/class-11/maths/RelationsAndFunctions/Topics/ExamEdge/RelFuncExamEdge';
+
 import TheCellDashboard from './components/Biology-Branches/The-Cell/TheCellDashboard';
 import TheCellIntro from './components/Biology-Branches/The-Cell/Topics/Introduction/TheCellIntro';
 import TheCellTerminology from './components/Biology-Branches/The-Cell/Topics/Terminology/TheCellTerminology';
@@ -1098,6 +1107,14 @@ function App() {
           <Route path="senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
           <Route path="senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
           <Route path="senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
+
+          {/* Class 11 Maths: Relations & Functions */}
+          <Route path="senior/grade/11/maths/relations-and-functions" element={<RelFuncDashboard />} />
+          <Route path="senior/grade/11/maths/relations-and-functions/introduction" element={<RelFuncIntro />} />
+          <Route path="senior/grade/11/maths/relations-and-functions/terminology" element={<RelFuncTerminology />} />
+          <Route path="senior/grade/11/maths/relations-and-functions/skills" element={<RelFuncSkills />} />
+          <Route path="senior/grade/11/maths/relations-and-functions/connectomics" element={<RelFuncConnectomics />} />
+          <Route path="senior/grade/11/maths/relations-and-functions/exam-edge" element={<RelFuncExamEdge />} />
 
           {/* Class 11 Physics */}
           <Route path="senior/grade/11/physics" element={<PhysicsChapters />} />
