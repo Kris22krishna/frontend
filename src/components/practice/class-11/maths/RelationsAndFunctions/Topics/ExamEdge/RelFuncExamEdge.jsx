@@ -16,9 +16,9 @@ const examData = {
             weightage: '6–8 Marks',
             freq: 'Every Year',
             topics: ['Cartesian Product', 'Domain & Range', 'Types of Functions', 'Algebra of Functions', 'Greatest Integer Function'],
-            strategy: 'Focus on <strong></strong> — this appears every year as a 2-marker. Practice identifying whether a given relation is a function. Know special functions ($|x|$, $[x]$, $\\text{sgn}(x)$) thoroughly — graph-based questions are common. The algebra of functions section usually has a 4-mark problem.',
+            strategy: 'Focus on <strong>finding domain and range</strong> — this appears every year as a 2-marker. Practice identifying whether a given relation is a function. Know special functions ($|x|$, $[x]$, $\\text{sgn}(x)$) thoroughly — graph-based questions are common. The algebra of functions section usually has a 4-mark problem.',
             pitfalls: [
-                'Confusing <strong></strong> with <strong></strong> — range is what is actually mapped to, codomain is the entire target set.',
+                'Confusing <strong>Range</strong> with <strong>Codomain</strong> — range is what is actually mapped to, codomain is the entire target set.',
                 'Forgetting that $[-1.5] = -2$, not $-1$ — the floor function rounds DOWN, even for negatives.',
                 'Writing $A \\times B = B \\times A$ — this is FALSE unless $A = B$ or one is empty.',
                 'Missing domain restrictions for $f/g$ — you must exclude $x$ where $g(x) = 0$.'
@@ -31,9 +31,9 @@ const examData = {
             weightage: '4–8 Marks (1–2 Questions)',
             freq: 'High Frequency',
             topics: ['Number of Relations', 'Domain of Composite Functions', 'Special Functions Graphs', 'Functional Equations'],
-            strategy: 'JEE loves <strong></strong> and <strong></strong>. Master: $2^{mn}$ formula for total relations. Practice domain problems with $\\sqrt{f(x)}$ and $1/f(x)$ — they test edge cases. Know graphs of $|x|$, $[x]$, and $\\{x\\}$ (fractional part) cold.',
+            strategy: 'JEE loves <strong>counting relations</strong> and <strong>domain of rational/radical functions</strong>. Master: $2^{mn}$ formula for total relations. Practice domain problems with $\\sqrt{f(x)}$ and $1/f(x)$ — they test edge cases. Know graphs of $|x|$, $[x]$, and $\\{x\\}$ (fractional part) cold.',
             pitfalls: [
-                'Not handling <strong></strong> for $[x]$ correctly — e.g., $[-0.1] = -1$.',
+                'Not handling <strong>negative inputs</strong> for $[x]$ correctly — e.g., $[-0.1] = -1$.',
                 'Forgetting that $|x|^2 = x^2$ but $|x| \\neq x$ for negative values.',
                 'Assuming every polynomial has domain $\\mathbb{R}$ — rational functions have restrictions!'
             ]
@@ -45,20 +45,20 @@ const examData = {
             weightage: 'Conceptual Foundation',
             freq: 'Always Relevant',
             topics: ['Functional Equations', 'Bijections & Counting', 'Relations on Sets', 'Composition of Functions'],
-            strategy: 'Olympiad problems test <strong></strong>, not computation. Focus on: proving a mapping is/isn\'t a function, counting functions between finite sets ($n(B)^{n(A)}$ total functions), and functional equations like $f(x + y) = f(x) + f(y)$. Build intuition through examples before attempting proofs.',
+            strategy: 'Olympiad problems test <strong>deep understanding</strong>, not computation. Focus on: proving a mapping is/isn\'t a function, counting functions between finite sets ($n(B)^{n(A)}$ total functions), and functional equations like $f(x + y) = f(x) + f(y)$. Build intuition through examples before attempting proofs.',
             pitfalls: [
-                'Assuming <strong></strong> without proof — always verify that every element of the codomain has a preimage.',
-                'Confusing number of <strong></strong> ($2^{mn}$) with number of <strong></strong> ($n^m$).',
-                'Not considering <strong></strong> like empty sets and singleton sets.'
+                'Assuming <strong>surjectivity</strong> without proof — always verify that every element of the codomain has a preimage.',
+                'Confusing number of <strong>relations</strong> ($2^{mn}$) with number of <strong>functions</strong> ($n^m$).',
+                'Not considering <strong>edge cases</strong> like empty sets and singleton sets.'
             ]
         }
     ],
     proTips: [
-        '💡 <strong></strong>: For $\\sqrt{f(x)}$, set $f(x) \\geq 0$. For $1/f(x)$, set $f(x) \\neq 0$. For $\\log f(x)$, set $f(x) > 0$.',
-        '📊 <strong></strong>: Modulus = V-shape at origin. Floor = staircase. Signum = three dots at $y = -1, 0, 1$. Constant = horizontal line.',
-        '🧮 <strong></strong>: Total functions from $A$ to $B = n(B)^{n(A)}$. Total relations = $2^{n(A) \\cdot n(B)}$. One-one functions exist only if $n(A) \\leq n(B)$.',
-        '⚡ <strong></strong>: If you can draw ANY vertical line that hits the graph twice, it\'s NOT a function. Works for every graph problem.',
-        '🎯 <strong></strong>: Range = what is ACTUALLY hit. Codomain = what CAN be hit. If Range = Codomain, the function is <strong></strong>.'
+        '💡 <strong>Quick Domain Check</strong>: For $\\sqrt{f(x)}$, set $f(x) \\geq 0$. For $1/f(x)$, set $f(x) \\neq 0$. For $\\log f(x)$, set $f(x) > 0$.',
+        '📊 <strong>Graph Shortcut</strong>: Modulus = V-shape at origin. Floor = staircase. Signum = three dots at $y = -1, 0, 1$. Constant = horizontal line.',
+        '🧮 <strong>Counting Formula</strong>: Total functions from $A$ to $B = n(B)^{n(A)}$. Total relations = $2^{n(A) \\cdot n(B)}$. One-one functions exist only if $n(A) \\leq n(B)$.',
+        '⚡ <strong>Vertical Line Test</strong>: If you can draw ANY vertical line that hits the graph twice, it\'s NOT a function. Works for every graph problem.',
+        '🎯 <strong>Range vs Codomain</strong>: Range = what is ACTUALLY hit. Codomain = what CAN be hit. If Range = Codomain, the function is <strong>surjective (onto)</strong>.'
     ]
 };
 
