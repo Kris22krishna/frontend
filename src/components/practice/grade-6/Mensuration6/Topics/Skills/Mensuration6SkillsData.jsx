@@ -9,6 +9,7 @@ import {
 export const SKILLS = [
     {
         id: 'perimeter-basics',
+        nodeId: 'a4061012-0001-0000-0000-000000000000',
         title: 'Perimeter Tracing',
         subtitle: 'Skill 1',
         icon: '🔗',
@@ -65,6 +66,7 @@ export const SKILLS = [
     },
     {
         id: 'area-grids',
+        nodeId: 'a4061012-0002-0000-0000-000000000000',
         title: 'Area Grid Shading',
         subtitle: 'Skill 2',
         icon: '🟩',
@@ -123,6 +125,7 @@ export const SKILLS = [
     },
     {
         id: 'shape-decomposition',
+        nodeId: 'a4061012-0003-0000-0000-000000000000',
         title: 'Shape Decomposition',
         subtitle: 'Skill 3',
         icon: '🧩',
@@ -188,6 +191,7 @@ export const SKILLS = [
     },
     {
         id: 'triangle-area',
+        nodeId: 'a4061012-0004-0000-0000-000000000000',
         title: 'Area of a Triangle',
         subtitle: 'Skill 4',
         icon: '📐',

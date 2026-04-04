@@ -7,6 +7,7 @@ import {
 export const SKILLS = [
     {
         id: 'lines-segments-rays',
+        nodeId: 'a4061002-0001-0000-0000-000000000000',
         title: 'Lines, Segments & Rays',
         subtitle: 'Skill 1',
         icon: '↔️',
@@ -26,6 +27,7 @@ export const SKILLS = [
     },
     {
         id: 'classifying-angles',
+        nodeId: 'a4061002-0002-0000-0000-000000000000',
         title: 'Classifying Angles',
         subtitle: 'Skill 2',
         icon: '📐',
@@ -45,6 +47,7 @@ export const SKILLS = [
     },
     {
         id: 'measuring-angles',
+        nodeId: 'a4061002-0003-0000-0000-000000000000',
         title: 'Measuring Rotations',
         subtitle: 'Skill 3',
         icon: '🔄',

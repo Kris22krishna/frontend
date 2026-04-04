@@ -10,6 +10,7 @@ import {
 export const SKILLS = [
     {
         id: 'factors-multiples',
+        nodeId: 'a4061005-0001-0000-0000-000000000000',
         title: 'Factors & Multiples',
         subtitle: 'Skill 1',
         icon: '🐸',
@@ -81,6 +82,7 @@ export const SKILLS = [
     },
     {
         id: 'prime-composite',
+        nodeId: 'a4061005-0002-0000-0000-000000000000',
         title: 'Prime vs Composite',
         subtitle: 'Skill 2',
         icon: '💎',
@@ -148,6 +150,7 @@ export const SKILLS = [
     },
     {
         id: 'divisibility-rules',
+        nodeId: 'a4061005-0003-0000-0000-000000000000',
         title: 'Divisibility Rules',
         subtitle: 'Skill 3',
         icon: '⚡',
@@ -213,6 +216,7 @@ export const SKILLS = [
     },
     {
         id: 'prime-factorization',
+        nodeId: 'a4061005-0004-0000-0000-000000000000',
         title: 'Prime Factorization',
         subtitle: 'Skill 4',
         icon: '🌳',
@@ -288,6 +292,7 @@ export const SKILLS = [
     },
     {
         id: 'hcf-lcm',
+        nodeId: 'a4061005-0005-0000-0000-000000000000',
         title: 'HCF & LCM',
         subtitle: 'Skill 5',
         icon: '🔗',
