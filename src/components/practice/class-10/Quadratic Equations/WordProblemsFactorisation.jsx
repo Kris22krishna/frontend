@@ -25,8 +25,13 @@ const WordProblemsFactorisation = () => {
 
     const { startSession, logAnswer, finishSession } = useSessionLogger();
     const nodeId = NODE_IDS.g10MathQuadraticWordProblemsFactorisation;
+    const SKILL_ID = 1124;
     const sessionType = "practice";
     const [answers, setAnswers] = useState({});
+
+    // Time tracking refs
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
 
     const generateQuestions = () => {
         const newQuestions = [];

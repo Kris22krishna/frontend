@@ -25,8 +25,13 @@ const FoundationsQuadratic = () => {
 
     const { startSession, logAnswer, finishSession } = useSessionLogger();
     const nodeId = NODE_IDS.g10MathQuadraticFoundations;
+    const SKILL_ID = 1120; // Foundations of Quadratic Equations
     const sessionType = "practice";
     const [answers, setAnswers] = useState({});
+    
+    // Time tracking refs
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
 
     const generateQuestions = () => {
         const newQuestions = [];
