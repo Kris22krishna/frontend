@@ -8,25 +8,63 @@ import '../../../../pages/juniors/grade3/House-of-Hundreds-II.css';
 
 // --- Tile Assets (CSS/SVG Shapes) ---
 const Tile100 = ({ className, style }) => (
-    <div className={`tile-100 ${className}`} style={{
-        width: '60px', height: '60px', backgroundColor: '#FFE082', border: '2px solid #FFCA28',
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(4, 1fr)', gap: '1px', padding: '1px',
-        boxShadow: '2px 2px 0px rgba(0,0,0,0.1)', flexShrink: 0, ...style
-    }}>
-        {[...Array(16)].map((_, i) => <div key={i} style={{ backgroundColor: '#FFF8E1', opacity: 0.5 }}></div>)}
+    <div
+        className={`tile-100 ${className}`}
+        style={{
+            width: '80px',
+            height: '80px',
+            backgroundColor: '#FFE082',
+            border: '2px solid #FFCA28',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(10, 1fr)',
+            gridTemplateRows: 'repeat(10, 1fr)',
+            gap: '1px',
+            padding: '2px',
+            boxShadow: '2px 2px 0px rgba(0,0,0,0.1)',
+            flexShrink: 0,
+            ...style
+        }}
+    >
+        {[...Array(100)].map((_, i) => (
+            <div
+                key={i}
+                style={{
+                    backgroundColor: '#FFF8E1',
+                    opacity: 0.7
+                }}
+            />
+        ))}
     </div>
 );
 
 const Tile10 = ({ className, style }) => (
-    <div className={`tile-10 ${className}`} style={{
-        width: '15px', height: '60px', backgroundColor: '#81D4FA', border: '2px solid #29B6F6',
-        display: 'flex', flexDirection: 'column', gap: '1px', padding: '1px',
-        boxShadow: '2px 2px 0px rgba(0,0,0,0.1)', flexShrink: 0, ...style
-    }}>
-        {[...Array(4)].map((_, i) => <div key={i} style={{ flex: 1, backgroundColor: '#E1F5FE', opacity: 0.5 }}></div>)}
+    <div
+        className={`tile-10 ${className}`}
+        style={{
+            width: '20px',
+            height: '80px',
+            backgroundColor: '#81D4FA',
+            border: '2px solid #29B6F6',
+            display: 'grid',
+            gridTemplateRows: 'repeat(10, 1fr)',
+            gap: '1px',
+            padding: '2px',
+            boxShadow: '2px 2px 0px rgba(0,0,0,0.1)',
+            flexShrink: 0,
+            ...style
+        }}
+    >
+        {[...Array(10)].map((_, i) => (
+            <div
+                key={i}
+                style={{
+                    backgroundColor: '#E1F5FE',
+                    opacity: 0.7
+                }}
+            />
+        ))}
     </div>
 );
-
 const Tile1 = ({ className, style }) => (
     <div className={`tile-1 ${className}`} style={{
         width: '35px', height: '35px', backgroundColor: '#A5D6A7', border: '2px solid #66BB6A',
@@ -35,7 +73,7 @@ const Tile1 = ({ className, style }) => (
 );
 
 // --- Draggable Tile Component ---
-const DraggableTile = ({ type, onDrop, constraintsRef }) => {
+const DraggableTile = ({ type, onDrop, constraintsRef, disabled }) => {
     const controls = useDragControls();
     const [isDragging, setIsDragging] = useState(false);
     const ref = useRef(null);
@@ -43,18 +81,22 @@ const DraggableTile = ({ type, onDrop, constraintsRef }) => {
     return (
         <motion.div
             ref={ref}
-            drag
+            drag={!disabled}
             dragControls={controls}
             dragConstraints={constraintsRef} // Confine to container
             dragSnapToOrigin={true} // Always snap back
-            whileDrag={{ scale: 1.2, zIndex: 100, cursor: 'grabbing' }}
+            whileDrag={{ scale: disabled ? 1 : 1.2, zIndex: 100, cursor: disabled ? 'not-allowed' : 'grabbing' }}
             onDragStart={() => setIsDragging(true)}
             onDragEnd={(event, info) => {
                 setIsDragging(false);
-                onDrop(event, info, type);
+                if (!disabled) onDrop(event, info, type);
             }}
-            className="cursor-grab touch-none flex items-center justify-center p-2"
-            style={{ touchAction: 'none' }}
+            className="flex items-center justify-center p-2"
+            style={{ 
+                touchAction: 'none',
+                opacity: disabled ? 0.4 : 1,
+                cursor: disabled ? 'not-allowed' : 'grab'
+            }}
         >
             {type === 100 && <Tile100 />}
             {type === 10 && <Tile10 />}
@@ -106,23 +148,56 @@ const DrawTiles = () => {
 
     const currentQ = questions[currentQIndex];
 
+    const getLimits = (num) => ({
+        100: Math.floor(num / 100),
+        10: Math.floor((num % 100) / 10),
+        1: num % 10
+    });
+
+    const getCurrentValue = () => {
+        return (
+            droppedTiles[100] * 100 +
+            droppedTiles[10] * 10 +
+            droppedTiles[1]
+        );
+    };
+
+    // Auto-complete
+    useEffect(() => {
+        if (currentQ?.type === 'drag-drop' && !isSubmitted) {
+            if (getCurrentValue() === currentQ.target) {
+                setIsSubmitted(true);
+                setIsCorrect(true);
+                setScore(s => s + 1);
+            }
+        }
+    }, [droppedTiles, currentQ, isSubmitted]);
+
     // Helper to handle drops
     const handleDrop = (event, info, type) => {
         if (!dropZoneRef.current || isSubmitted) return;
 
-        // Check collision with drop zone
         const dropZoneRect = dropZoneRef.current.getBoundingClientRect();
-        const point = info.point; // { x, y } relative to viewport
+        const point = info.point;
 
-        if (
+        const isInside =
             point.x >= dropZoneRect.left &&
             point.x <= dropZoneRect.right &&
             point.y >= dropZoneRect.top &&
-            point.y <= dropZoneRect.bottom
-        ) {
-            setDroppedTiles(prev => ({ ...prev, [type]: prev[type] + 1 }));
-            // Play sound effect ideally
-        }
+            point.y <= dropZoneRect.bottom;
+
+        if (!isInside) return;
+
+        const limits = getLimits(currentQ.target);
+
+        setDroppedTiles(prev => {
+            if (prev[type] >= limits[type]) return prev;
+
+            return {
+                ...prev,
+                [type]: prev[type] + 1
+            };
+        });
     };
 
     const removeTile = (type) => {
@@ -137,8 +212,7 @@ const DrawTiles = () => {
         let selected = option;
 
         if (currentQ.type === 'drag-drop') {
-            const currentVal = (droppedTiles[100] * 100) + (droppedTiles[10] * 10) + (droppedTiles[1] * 1);
-            isRight = currentVal === currentQ.target;
+            isRight = getCurrentValue() === currentQ.target;
         } else {
             // If called from footer submit without arg, use state
             if (option === null) selected = selectedMcqOption;
@@ -340,27 +414,27 @@ const DrawTiles = () => {
                                     <div className="relative group">
                                         <div className="absolute inset-0 bg-yellow-200 rounded-lg transform rotate-6 opacity-50"></div>
                                         <div className="absolute inset-0 bg-yellow-200 rounded-lg transform -rotate-3 opacity-50"></div>
-                                        <DraggableTile type={100} onDrop={handleDrop} constraintsRef={containerRef} />
+                                        <DraggableTile type={100} onDrop={handleDrop} constraintsRef={containerRef} disabled={droppedTiles[100] >= getLimits(currentQ.target)[100]} />
                                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-lg text-sm border-2 border-white">
-                                            {droppedTiles[100]}
+                                            {getLimits(currentQ.target)[100] - droppedTiles[100]}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center gap-2">
                                     <span className="font-normal text-slate-400 uppercase tracking-wider text-xs">Tens</span>
                                     <div className="relative group">
-                                        <DraggableTile type={10} onDrop={handleDrop} constraintsRef={containerRef} />
+                                        <DraggableTile type={10} onDrop={handleDrop} constraintsRef={containerRef} disabled={droppedTiles[10] >= getLimits(currentQ.target)[10]} />
                                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-lg text-sm border-2 border-white">
-                                            {droppedTiles[10]}
+                                            {getLimits(currentQ.target)[10] - droppedTiles[10]}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center gap-2">
                                     <span className="font-normal text-slate-400 uppercase tracking-wider text-xs">Ones</span>
                                     <div className="relative group">
-                                        <DraggableTile type={1} onDrop={handleDrop} constraintsRef={containerRef} />
+                                        <DraggableTile type={1} onDrop={handleDrop} constraintsRef={containerRef} disabled={droppedTiles[1] >= getLimits(currentQ.target)[1]} />
                                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-lg text-sm border-2 border-white">
-                                            {droppedTiles[1]}
+                                            {getLimits(currentQ.target)[1] - droppedTiles[1]}
                                         </div>
                                     </div>
                                 </div>
