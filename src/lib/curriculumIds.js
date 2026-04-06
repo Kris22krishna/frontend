@@ -32,6 +32,23 @@ export const NODE_IDS = {
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
 
+  // ── GRADE 4: ELEPHANTS, TIGERS AND LEOPARDS (CHAPTER 3) ───────────────────
+  g4MathElephantsChapter:          'a3041003-0000-0000-0000-000000000001',
+  g4MathETLNimGame:                'a4041003-0001-0000-0000-000000000000',
+  g4MathETLNumberGridPatterns:     'a4041003-0002-0000-0000-000000000000',
+  g4MathETLMagicMirrorNumbers:     'a4041003-0003-0000-0000-000000000000',
+  g4MathETLForestRestorationAdd:   'a4041003-0004-0000-0000-000000000000',
+  g4MathETLJourneySums:            'a4041003-0005-0000-0000-000000000000',
+  g4MathETLEstimationBeforeAdd:    'a4041003-0006-0000-0000-000000000000',
+  g4MathETLRiverCrossingSubtract:  'a4041003-0007-0000-0000-000000000000',
+  g4MathETLHiddenPathDifference:   'a4041003-0008-0000-0000-000000000000',
+  g4MathETLEstimationBeforeSub:    'a4041003-0009-0000-0000-000000000000',
+  g4MathETLBalanceScaleEstimation: 'a4041003-0010-0000-0000-000000000000',
+  g4MathETLQuickCompare:           'a4041003-0011-0000-0000-000000000000',
+  g4MathETLSmartShortcuts:         'a4041003-0012-0000-0000-000000000000',
+  g4MathETLCompensationStrategy:   'a4041003-0013-0000-0000-000000000000',
+  g4MathETLChapterTest:            'a4041003-0014-0000-0000-000000000000',
+
   // ── GRADE 4: DATA HANDLING (CHAPTER 14) ───────────────────────────────────
   g4MathDataHandling:                'a3041014-0000-0000-0000-000000000001',
   g4MathDHCollectingOrganizing:      'a4041014-0001-0000-0000-000000000000',
