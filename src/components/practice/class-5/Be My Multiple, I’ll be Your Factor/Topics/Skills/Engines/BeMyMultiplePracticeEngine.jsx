@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
 import '../../../bemyfactor.css';
 import { LatexText } from '@/components/LatexText';
 import mascotImg from '../../../../../../../assets/mascot.png';
 
-export default function BeMyMultiplePracticeEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function BeMyMultiplePracticeEngine({ questionPool, sampleSize = 10, title, color, onBack , nodeId}) {
     const [questions, setQuestions] = useState([]);
     const [currIdx, setCurrIdx] = useState(0);
     const [selectedOpt, setSelectedOpt] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const v4Finished = useRef(false);
     const [timeTaken, setTimeTaken] = useState(0);
 
     useEffect(() => {
@@ -23,6 +27,14 @@ export default function BeMyMultiplePracticeEngine({ questionPool, sampleSize = 
         return () => clearInterval(t);
     }, [showResults, questions]);
 
+    useEffect(() => {
+        if (!nodeId) return;
+        v4Answers.current = [];
+        v4Finished.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!v4Finished.current) abandonSession(); };
+    }, [nodeId]);
+
     const handleNext = () => {
         if (selectedOpt === questions[currIdx].correct) setScore(s => s + 1);
         
@@ -31,6 +43,20 @@ export default function BeMyMultiplePracticeEngine({ questionPool, sampleSize = 
             setSelectedOpt(null);
             setIsSubmitted(false);
         } else {
+            if (nodeId) {
+                v4Answers.current.push({
+                    question_index: currIdx,
+                    answer_json: JSON.stringify({ selected: selectedOpt }),
+                    is_correct: selectedOpt === questions[currIdx].correct,
+                    marks_awarded: selectedOpt === questions[currIdx].correct ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0,
+                });
+            }
+            if (nodeId && !v4Finished.current) {
+                v4Finished.current = true;
+                finishSession({ answers_payload: v4Answers.current });
+            }
             setShowResults(true);
         }
     };

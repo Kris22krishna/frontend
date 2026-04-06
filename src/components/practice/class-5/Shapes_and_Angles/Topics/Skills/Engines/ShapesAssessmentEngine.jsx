@@ -1,17 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
 import styles from './ShapesEngines.module.css';
 import { LatexText } from '@/components/LatexText';
 
-export default function ShapesAssessmentEngine({ questions, title, color, onBack, onSecondaryBack }) {
+export default function ShapesAssessmentEngine({ questions, title, color, onBack, onSecondaryBack , nodeId}) {
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questions.length).fill(null));
     const [finished, setFinished] = useState(false);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
     const [timeTaken, setTimeTaken] = useState(0);
 
     useEffect(() => {
         if (finished) return;
         const t = setInterval(() => setTimeTaken(s => s + 1), 1000);
         return () => clearInterval(t);
+    }, [finished]);
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questions.map((q, i) => ({
+            question_index: i,
+            answer_json: JSON.stringify({ selected: answers[i] }),
+            is_correct: answers[i] === q.correct,
+            marks_awarded: answers[i] === q.correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0,
+        }));
+        finishSession({ answers_payload: payload });
     }, [finished]);
 
     const formatTime = (sec) => {

@@ -98,6 +98,7 @@ export default function FishTaleSkills() {
                             sampleSize={20}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                         />
                     ) : (
@@ -105,6 +106,7 @@ export default function FishTaleSkills() {
                             questions={skill.assessment}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                             onSecondaryBack={() => navigate('/the-fish-tale')}
                         />

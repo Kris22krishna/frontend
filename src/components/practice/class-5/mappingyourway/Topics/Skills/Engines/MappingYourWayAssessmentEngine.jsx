@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
 import '../../../mappingyourway.css';
 import MathRenderer from '../../../../../../MathRenderer';
 
@@ -11,7 +12,7 @@ function sample(arr, n) {
     return copy.slice(0, n);
 }
 
-export default function MappingYourWayAssessmentEngine({ questions: rawQuestions, title, color, onBack, onSecondaryBack }) {
+export default function MappingYourWayAssessmentEngine({ questions: rawQuestions, title, color, onBack, onSecondaryBack , nodeId}) {
     const [questions] = useState(() => {
         const pool = typeof rawQuestions === 'function' ? rawQuestions() : rawQuestions;
         return sample(pool, Math.min(10, pool.length));
@@ -21,6 +22,29 @@ export default function MappingYourWayAssessmentEngine({ questions: rawQuestions
     const [answers, setAnswers] = useState(Array(questions.length).fill(null));
     const [submitted, setSubmitted] = useState(false);
     const [showSummary, setShowSummary] = useState(false);
+    const { startSession, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!submitted || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questions.map((q, i) => ({
+            question_index: i,
+            answer_json: JSON.stringify({ selected: answers[i] }),
+            is_correct: answers[i] === q.correct,
+            marks_awarded: answers[i] === q.correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0,
+        }));
+        finishSession({ answers_payload: payload });
+    }, [submitted]);
 
     const q = questions[current];
 

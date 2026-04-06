@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
@@ -57,6 +58,9 @@ const SamePerimeterDifferentShapes = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1165;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
     const SKILL_NAME = "Same Perimeter with Different Shapes";
 
     const TOTAL_QUESTIONS = 10;
@@ -69,6 +73,9 @@ const SamePerimeterDifferentShapes = () => {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
+        startSession({ nodeId: 'a4051011-0008-0000-0000-000000000000', sessionType: 'practice' });
+        v4AnswersPayload.current = [];
+        v4IsFinishedRef.current = false;
         }
 
         const handleVisibilityChange = () => {
@@ -183,6 +190,10 @@ const SamePerimeterDifferentShapes = () => {
                         user_id: parseInt(userId, 10)
                     });
                 } catch (err) { console.error(err); }
+            }
+            if (!v4IsFinishedRef.current) {
+                v4IsFinishedRef.current = true;
+                finishSession({ answers_payload: v4AnswersPayload.current });
             }
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
 import styles from './FractionsEngines.module.css';
 import { LatexText } from '@/components/LatexText';
 import mascotImg from '../../../../../../../assets/mascot.png';
 
-export default function FractionsPracticeEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function FractionsPracticeEngine({ questionPool, sampleSize = 10, title, color, onBack , nodeId}) {
     const [questions, setQuestions] = useState([]);
     const [qIndex, setQIndex] = useState(0);
     const [answers, setAnswers] = useState({}); // stores { selectedOption, isCorrect }
@@ -15,6 +16,9 @@ export default function FractionsPracticeEngine({ questionPool, sampleSize = 10,
 
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const v4Finished = useRef(false);
 
     // Initialization
     useEffect(() => {
@@ -28,6 +32,14 @@ export default function FractionsPracticeEngine({ questionPool, sampleSize = 10,
         const t = setInterval(() => setTimeTaken(s => s + 1), 1000);
         return () => clearInterval(t);
     }, [finished, questions]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4Answers.current = [];
+        v4Finished.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!v4Finished.current) abandonSession(); };
+    }, [nodeId]);
 
     // Answer Persistence: Restoration Hook
     useEffect(() => {
@@ -66,6 +78,16 @@ export default function FractionsPracticeEngine({ questionPool, sampleSize = 10,
         }));
 
         setShowExplanationModal(true);
+        if (nodeId) {
+            v4Answers.current.push({
+                question_index: qIndex,
+                answer_json: JSON.stringify({ selected: idx }),
+                is_correct: idx === q.correct,
+                marks_awarded: idx === q.correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            });
+        }
     };
 
     const handlePrevious = () => {
@@ -74,6 +96,10 @@ export default function FractionsPracticeEngine({ questionPool, sampleSize = 10,
 
     const handleNext = () => {
         if (qIndex + 1 >= questions.length) {
+            if (nodeId && !v4Finished.current) {
+                v4Finished.current = true;
+                finishSession({ answers_payload: v4Answers.current });
+            }
             setFinished(true);
         } else {
             setQIndex(i => i + 1);
@@ -86,6 +112,9 @@ export default function FractionsPracticeEngine({ questionPool, sampleSize = 10,
         setQIndex(0);
         setAnswers({});
         setFinished(false);
+        v4Answers.current = [];
+        v4Finished.current = false;
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
         setTimeTaken(0);
         setShowExplanationModal(false);
     };

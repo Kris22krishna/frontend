@@ -5,6 +5,7 @@ import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucid
 import { motion, AnimatePresence } from 'framer-motion';
 // Corrected relative paths based on depth (5 levels up from src)
 import { api } from '../../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 // Use the shared components that the other junior files use
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
@@ -55,6 +56,9 @@ const MultiplicationPracticeMultiple = () => {
     const [consecutiveWrong, setConsecutiveWrong] = useState(0);
 
     const SKILL_ID = 9005;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
     const SKILL_NAME = "Multiply three and four numbers";
     const TOTAL_QUESTIONS = 10;
 
@@ -67,6 +71,9 @@ const MultiplicationPracticeMultiple = () => {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
+        startSession({ nodeId: 'a4051013-0004-0000-0000-000000000000', sessionType: 'practice' });
+        v4AnswersPayload.current = [];
+        v4IsFinishedRef.current = false;
         }
 
         const timer = setInterval(() => {
@@ -218,6 +225,15 @@ const MultiplicationPracticeMultiple = () => {
                 solution_text: String(question.solution || ''),
                 time_spent_seconds: seconds >= 0 ? seconds : 0
             });
+        const _v4t = Date.now() - questionStartTime.current;
+        v4AnswersPayload.current.push({
+            question_index: typeof qIndex !== 'undefined' ? qIndex : 0,
+            answer_json: JSON.stringify({ answer: typeof selectedOption !== 'undefined' ? selectedOption : selected }),
+            is_correct: typeof isRight !== 'undefined' ? isRight : isCorrect,
+            marks_awarded: (typeof isRight !== 'undefined' ? isRight : isCorrect) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: _v4t > 0 ? _v4t : 0,
+        });
         } catch (e) {
             console.error("Failed to record attempt", e);
         }
@@ -297,6 +313,10 @@ const MultiplicationPracticeMultiple = () => {
                 } catch (err) {
                     console.error("Failed to create report", err);
                 }
+            }
+            if (!v4IsFinishedRef.current) {
+                v4IsFinishedRef.current = true;
+                finishSession({ answers_payload: v4AnswersPayload.current });
             }
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
 import styles from './ShapesEngines.module.css';
 import { LatexText } from '@/components/LatexText';
 
@@ -11,7 +12,7 @@ function sample(arr, n) {
     return copy.slice(0, n);
 }
 
-export default function ShapesPracticeEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function ShapesPracticeEngine({ questionPool, sampleSize = 10, title, color, onBack , nodeId}) {
     const [questions, setQuestions] = useState(() => {
         const pool = typeof questionPool === 'function' ? questionPool() : questionPool;
         return sample(pool, sampleSize);
@@ -22,12 +23,23 @@ export default function ShapesPracticeEngine({ questionPool, sampleSize = 10, ti
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const v4Finished = useRef(false);
 
     useEffect(() => {
         if (finished) return;
         const t = setInterval(() => setTimeTaken(s => s + 1), 1000);
         return () => clearInterval(t);
     }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4Answers.current = [];
+        v4Finished.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!v4Finished.current) abandonSession(); };
+    }, [nodeId]);
 
     const formatTime = (sec) => {
         const m = Math.floor(sec / 60);
@@ -43,10 +55,24 @@ export default function ShapesPracticeEngine({ questionPool, sampleSize = 10, ti
         setSelected(idx);
         setAnswered(true);
         if (idx === q.correct) setScore(s => s + 1);
+        if (nodeId) {
+            v4Answers.current.push({
+                question_index: current,
+                answer_json: JSON.stringify({ selected: idx }),
+                is_correct: idx === q.correct,
+                marks_awarded: idx === q.correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            });
+        }
     };
 
     const handleNext = () => {
-        if (current + 1 >= questions.length) { setFinished(true); }
+        if (current + 1 >= questions.length) { if (nodeId && !v4Finished.current) {
+            v4Finished.current = true;
+            finishSession({ answers_payload: v4Answers.current });
+        }
+        setFinished(true); }
         else { setCurrent(c => c + 1); setSelected(null); setAnswered(false); }
     };
 
@@ -54,6 +80,9 @@ export default function ShapesPracticeEngine({ questionPool, sampleSize = 10, ti
         const pool = typeof questionPool === 'function' ? questionPool() : questionPool;
         setQuestions(sample(pool, sampleSize));
         setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); setTimeTaken(0);
+        v4Answers.current = [];
+        v4Finished.current = false;
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     };
 
     if (finished) {

@@ -282,6 +282,7 @@ const generateContinuingPatterns = () => {
 export const SKILLS = [
     {
         id: 'pat-01',
+        nodeId: 'a4051007-0001-0000-0000-000000000000',
         title: 'Number Patterns',
         subtitle: 'Sequences & Jumps',
         icon: '🔢',
@@ -311,6 +312,7 @@ export const SKILLS = [
     },
     {
         id: 'pat-02',
+        nodeId: 'a4051007-0002-0000-0000-000000000000',
         title: 'Shape Patterns',
         subtitle: 'Rotations & Symmetry',
         icon: '🔺',
@@ -333,6 +335,7 @@ export const SKILLS = [
     },
     {
         id: 'pat-03',
+        nodeId: 'a4051007-0003-0000-0000-000000000000',
         title: 'Pattern Rules',
         subtitle: 'Logic & Reasoning',
         icon: '💡',
@@ -355,6 +358,7 @@ export const SKILLS = [
     },
     {
         id: 'pat-04',
+        nodeId: 'a4051007-0004-0000-0000-000000000000',
         title: 'Continuing Patterns',
         subtitle: 'Predictive Reasoning',
         icon: '⏭️',
