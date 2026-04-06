@@ -183,9 +183,9 @@ function ShapeScene({ scene, color }) {
     }
     if (scene.angle) {
         return (
-            <div style={{ textAlign: 'center', padding: 20 }}>
-                <div style={{ fontSize: 48, marginBottom: 16 }}>
-                    {scene.angle === 'Right Angle' ? '📐' : scene.angle === 'Acute Angle' ? '📌' : '👐'}
+                <div style={{ textAlign: 'center', padding: 20 }}>
+                    <div style={{ fontSize: 48, marginBottom: 16 }}>
+                    {scene.angle === 'Right Angle' ? '📐' : scene.angle === 'Acute Angle' ? '🍕' : '👐'}
                 </div>
                 <div style={{ fontSize: 20, fontWeight: 'bold', color }}>{scene.looksLike}</div>
             </div>
