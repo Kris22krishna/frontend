@@ -180,13 +180,19 @@ const QUESTION_POOL = [
         'pos_nextto': 'Shape placed beside another shape',
       }
     },
+    rightItems: [
+      ['The cone is ___ the cylinder', 'The cone is ___ the cylinder'],
+      ['The cuboid is ___ the cylinder', 'The cuboid is ___ the cylinder'],
+      ['The cylinder is ___ the cone and cuboid', 'The cylinder is ___ the cone and cuboid'],
+      ['Shape placed beside another shape', 'Shape placed beside another shape'],
+    ],
     meta: {
       type: 'match',
       totalPairs: 4,
       explanation: "'On top of' → cone on the cylinder. 'Under' → cuboid under the cylinder. 'Between' → cylinder between cone and cuboid. 'Next to' → shape beside another shape.",
       correctLabel: 'All 4 pairs matched correctly',
     },
-    render: (lp) => (
+    render: (lp, ctx) => (
       <div className="toy-joy-qcard">
         <div className="toy-joy-qmeta"><span className="toy-joy-qbadge">Q</span><span className="toy-joy-qtype">Match the Following</span></div>
         <p className="toy-joy-qtext">Look at the model (cone on top, cylinder in middle, cuboid at bottom). Match each position word to the correct sentence. Click a left item, then a right item.</p>
@@ -211,12 +217,7 @@ const QUESTION_POOL = [
             <div className="toy-joy-match-line">→</div>
           </div>
           <div className="toy-joy-match-col">
-            {[
-              ['The cone is ___ the cylinder', 'The cone is ___ the cylinder'],
-              ['The cuboid is ___ the cylinder', 'The cuboid is ___ the cylinder'],
-              ['The cylinder is ___ the cone and cuboid', 'The cylinder is ___ the cone and cuboid'],
-              ['Shape placed beside another shape', 'Shape placed beside another shape'],
-            ].map(([val, label]) => (
+            {ctx.shuffledRight.map(([val, label]) => (
               <div key={val} onClick={() => lp.handleMatch('pos_match_words', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('pos_match_words', 'right', val)}`} style={{ fontSize: '0.78rem' }}>{label}</div>
             ))}
           </div>
@@ -382,7 +383,9 @@ const QUESTION_POOL = [
 const DescribingPosition = () => {
   const selRef = useRef(null);
   if (!selRef.current) {
-    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5);
+    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5).map(q =>
+      q.rightItems ? { ...q, shuffledRight: shuffle([...q.rightItems]) } : q
+    );
   }
   const selected = selRef.current;
 
@@ -390,7 +393,7 @@ const DescribingPosition = () => {
   selected.forEach(q => { if (q.matchAnswers) Object.assign(matchAnswers, q.matchAnswers); });
 
   const logicProps = useToyJoyLogic(matchAnswers);
-  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps)}</React.Fragment>);
+  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps, q)}</React.Fragment>);
   const questionMeta = selected.map(q => q.meta);
 
   return (

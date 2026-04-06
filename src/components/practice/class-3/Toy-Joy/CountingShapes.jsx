@@ -122,13 +122,14 @@ const QUESTION_POOL = [
         'cnt_grey_base': 'Cuboid',
       }
     },
+    rightItems: [['Cylinder', 'Cylinder'], ['Cone', 'Cone'], ['Cuboid', 'Cuboid']],
     meta: {
       type: 'match',
       totalPairs: 3,
       explanation: 'Red boiler → Cylinder. Blue cabin → Cuboid. Yellow tops → Cone. Grey base → Cuboid (both cabin and base are cuboids, so matching either is correct).',
       correctLabel: 'Red boiler→Cylinder, Yellow tops→Cone, Cabin/Base→Cuboid',
     },
-    render: (lp) => (
+    render: (lp, ctx) => (
       <div className="toy-joy-qcard">
         <div className="toy-joy-qmeta"><span className="toy-joy-qbadge">Q</span><span className="toy-joy-qtype">Match the Following</span></div>
         <p className="toy-joy-qtext">Look at Devika's toy engine. Match each <strong> coloured part</strong> to its shape name. Click a left item, then a right item.</p>
@@ -151,7 +152,7 @@ const QUESTION_POOL = [
             <div className="toy-joy-match-line">→</div>
           </div>
           <div className="toy-joy-match-col">
-            {[['Cylinder', 'Cylinder'], ['Cone', 'Cone'], ['Cuboid', 'Cuboid']].map(([val, label]) => (
+            {ctx.shuffledRight.map(([val, label]) => (
               <div key={val} onClick={() => lp.handleMatch('cnt_match_engine', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('cnt_match_engine', 'right', val)}`}>{label}</div>
             ))}
           </div>
@@ -293,7 +294,9 @@ const QUESTION_POOL = [
 const CountingShapes = () => {
   const selRef = useRef(null);
   if (!selRef.current) {
-    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5);
+    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5).map(q =>
+      q.rightItems ? { ...q, shuffledRight: shuffle([...q.rightItems]) } : q
+    );
   }
   const selected = selRef.current;
 
@@ -301,7 +304,7 @@ const CountingShapes = () => {
   selected.forEach(q => { if (q.matchAnswers) Object.assign(matchAnswers, q.matchAnswers); });
 
   const logicProps = useToyJoyLogic(matchAnswers);
-  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps)}</React.Fragment>);
+  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps, q)}</React.Fragment>);
   const questionMeta = selected.map(q => q.meta);
 
   return (

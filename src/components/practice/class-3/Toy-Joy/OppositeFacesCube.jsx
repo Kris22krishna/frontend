@@ -153,13 +153,14 @@ const QUESTION_POOL = [
         '3dot': '4',
       }
     },
+    rightItems: [['4', 'Opposite: 4'], ['5', 'Opposite: 5'], ['6', 'Opposite: 6']],
     meta: {
       type: 'match',
       totalPairs: 3,
       explanation: 'Opposite pairs on a standard die: 1↔6 (sum=7), 2↔5 (sum=7), 3↔4 (sum=7).',
       correctLabel: '1→6, 2→5, 3→4',
     },
-    render: (lp) => (
+    render: (lp, ctx) => (
       <div className="toy-joy-qcard">
         <div className="toy-joy-qmeta"><span className="toy-joy-qbadge">Q</span><span className="toy-joy-qtype">Match the Following</span></div>
         <p className="toy-joy-qtext">Match each face number to its OPPOSITE face number. (Remember: opposite faces add up to 7!)</p>
@@ -180,7 +181,7 @@ const QUESTION_POOL = [
             <div className="toy-joy-match-line">→</div>
           </div>
           <div className="toy-joy-match-col">
-            {[['4', 'Opposite: 4'], ['5', 'Opposite: 5'], ['6', 'Opposite: 6']].map(([val, label]) => (
+            {ctx.shuffledRight.map(([val, label]) => (
               <div key={val} onClick={() => lp.handleMatch('die_match_opp', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('die_match_opp', 'right', val)}`}>{label}</div>
             ))}
           </div>
@@ -319,7 +320,9 @@ const QUESTION_POOL = [
 const OppositeFacesCube = () => {
   const selRef = useRef(null);
   if (!selRef.current) {
-    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5);
+    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5).map(q =>
+      q.rightItems ? { ...q, shuffledRight: shuffle([...q.rightItems]) } : q
+    );
   }
   const selected = selRef.current;
 
@@ -327,7 +330,7 @@ const OppositeFacesCube = () => {
   selected.forEach(q => { if (q.matchAnswers) Object.assign(matchAnswers, q.matchAnswers); });
 
   const logicProps = useToyJoyLogic(matchAnswers);
-  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps)}</React.Fragment>);
+  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps, q)}</React.Fragment>);
   const questionMeta = selected.map(q => q.meta);
 
   return (
