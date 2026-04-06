@@ -26,7 +26,6 @@ import RapidMathPage from './pages/RapidMathPage';
 import Internship from './pages/internship/Internship';
 import NeetMockTest from './pages/NeetMockTest';
 import Algebra from './components/Math-Branches/Algebra/Algebra';
-import AlgebraSparks from './components/Math-Branches/Algebra/AlgebraSparks';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
@@ -1172,7 +1171,6 @@ function App() {
 
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
-          <Route path="algebra/sparks" element={<ProtectedRoute redirectTo="/login"><AlgebraSparks /></ProtectedRoute>} />
           {/* Algebra Topic Pages */}
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />

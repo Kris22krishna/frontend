@@ -124,9 +124,13 @@ function drawGraph(){
   const ctx=canvas.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio);
   const W=canvas.offsetWidth||560,H=180,cx=W/2,cy=H/2,scx=W/12,scy=H/20;
   ctx.clearRect(0,0,W,H);
-  ctx.strokeStyle='rgba(128,128,128,0.15)';ctx.lineWidth=0.5;
+  ctx.strokeStyle='rgba(128,128,128,0.25)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
   ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  ctx.fillStyle='rgba(128,128,128,0.8)';ctx.font='10px Nunito';ctx.textAlign='center';ctx.textBaseline='top';
+  for(let i=-20;i<=20;i++){if(i===0)continue;const px=cx+i*scx;if(px>0&&px<W){ctx.beginPath();ctx.moveTo(px,cy-3);ctx.lineTo(px,cy+3);ctx.stroke();if(scx>20||i%2===0)ctx.fillText(i,px,cy+6);}}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let i=-20;i<=20;i++){if(i===0)continue;const py=cy-i*scy;if(py>0&&py<H){ctx.beginPath();ctx.moveTo(cx-3,py);ctx.lineTo(cx+3,py);ctx.stroke();if(scy>20||i%2===0)ctx.fillText(i,cx-6,py);}}
   ctx.strokeStyle='#534AB7';ctx.lineWidth=2.5;ctx.beginPath();
   for(let px=0;px<W;px++){const x=(px-cx)/scx,y=fns[cur].rule(x),py=cy-y*scy;px===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
   ctx.stroke();

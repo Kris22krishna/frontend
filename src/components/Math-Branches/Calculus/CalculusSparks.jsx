@@ -12,8 +12,8 @@ export default function CalculusSparks() {
     return (
         <SkillSparkCanvas 
             title="Calculus Interactive Sandbox" 
-            returnPath="/calculus/dashboard" 
-            returnLabel="Calculus Dashboard" 
+            returnPath="/calculus" 
+            returnLabel="Master Calculus" 
             tabs={calculusTabs}
         />
     );

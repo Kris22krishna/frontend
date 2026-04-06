@@ -34,7 +34,7 @@ export function genSkill3Q() {
     const questions = [];
     const usedSets = new Set();
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         let type = getRandomInt(1, 4); // 1: Decimal Add/Sub, 2: Decimal Mul, 3: Decimal Div, 4: Mixed (Fraction/Decimal)
         let a = '0', b = '0', q, ans, expl;
 
@@ -97,7 +97,7 @@ export function genSkill3A() {
     const questions = [];
     const usedSets = new Set();
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         let type = getRandomInt(1, 4);
         let a = '0', b = '0', q, ans, expl;
 

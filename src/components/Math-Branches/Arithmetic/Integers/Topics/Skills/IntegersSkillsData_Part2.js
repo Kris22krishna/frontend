@@ -34,7 +34,7 @@ export function genSkill3Q() {
     const questions = [];
     const usedPairs = new Set();
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         let type = getRandomInt(1, 4); // 1: Add, 2: Sub, 3: Mul, 4: Div
         let a, b, q, ans, expl;
 
@@ -94,7 +94,7 @@ export function genSkill3A() {
     const questions = [];
     const usedPairs = new Set();
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         let type = getRandomInt(1, 4);
         let a, b, q, ans, expl;
 

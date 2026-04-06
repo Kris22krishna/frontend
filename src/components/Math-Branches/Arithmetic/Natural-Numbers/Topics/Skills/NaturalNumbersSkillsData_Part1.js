@@ -31,7 +31,7 @@ const mcq = (question, correctAnswer, distractors, explanation = "") => {
 // ----------------------------------------------------
 export function genSkill1Q() {
     const questions = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         const type = getRandomInt(1, 2);
         if (type === 1) { // Identify if natural or not
             const isNatural = Math.random() > 0.5;

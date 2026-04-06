@@ -132,9 +132,16 @@ function drawI(a,b,n){
   const toY=y=>padT+(1-(y-yMin)/(yMax-yMin))*gH;
   ctx.clearRect(0,0,W,H);
   const y0=toY(0);
-  ctx.strokeStyle='rgba(128,128,128,0.2)';ctx.lineWidth=0.5;
+  ctx.strokeStyle='rgba(128,128,128,0.25)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(padL,y0);ctx.lineTo(W-padR,y0);ctx.stroke();
   ctx.beginPath();ctx.moveTo(toX(0),padT);ctx.lineTo(toX(0),H-padB);ctx.stroke();
+  // X-axis tick marks and labels
+  ctx.fillStyle='rgba(128,128,128,0.8)';ctx.font='10px Nunito';ctx.textAlign='center';ctx.textBaseline='top';
+  for(let i=Math.ceil(xMin);i<=Math.floor(xMax);i++){if(i===0)continue;const px=toX(i);if(px>padL&&px<W-padR){ctx.beginPath();ctx.moveTo(px,y0-3);ctx.lineTo(px,y0+3);ctx.stroke();ctx.fillText(i,px,y0+6);}}
+  // Y-axis tick marks and labels
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  const yStep=yMax-yMin>10?2:1;
+  for(let i=Math.ceil(yMin);i<=Math.floor(yMax);i+=yStep){if(i===0)continue;const py=toY(i);if(py>padT&&py<H-padB){ctx.beginPath();ctx.moveTo(toX(0)-3,py);ctx.lineTo(toX(0)+3,py);ctx.stroke();ctx.fillText(i,toX(0)-6,py);}}
   const dx=(b-a)/n;
   for(let i=0;i<n;i++){
     const xi=a+(i+0.5)*dx,yi=fns[cur].fn(xi);

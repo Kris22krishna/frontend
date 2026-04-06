@@ -3,131 +3,501 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unrolling Pi</title>
+    <title>Irrational Numbers Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; padding: 20px; font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        .is-mini body { padding: 0; justify-content: flex-start; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .is-mini .header { display: none; }
-        .container { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 900px; padding: 40px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 30px; }
-        .is-mini .container { box-shadow: none; border: none; padding: 20px; padding-top:40px; max-width: 100%; }
-        
-        .viewport { position: relative; width: 100%; height: 200px; background: #fdf4ff; border-radius: 16px; border: 2px solid #f5d0fe; overflow: hidden; }
-        .number-line { position: absolute; bottom: 40px; left: 10%; width: 80%; height: 4px; background: #c084fc; border-radius: 2px; }
-        
-        .tick { position: absolute; bottom: -8px; width: 4px; height: 20px; background: #a855f7; border-radius: 2px; }
-        .tick-label { position: absolute; bottom: -35px; width: 40px; text-align: center; margin-left: -18px; font-weight: 800; color: #7e22ce; }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',system-ui,sans-serif;background:transparent;padding:20px;min-height:100vh;overflow-x:hidden}
+        .is-mini body{padding:8px}
+        .page{max-width:740px;margin:0 auto}
 
-        .circle-container { position: absolute; left: 10%; bottom: 44px; width: 100px; height: 100px; margin-left: -50px; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center bottom; }
-        
-        /* The literal circle SVG */
-        .circle-svg { width: 100%; height: 100%; animation: none; }
-        
-        /* The unrolled path */
-        .unroll-path { position: absolute; left: 10%; bottom: 44px; height: 6px; background: #ec4899; width: 0; transition: width 2s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 3px; z-index: 5; }
+        .header{text-align:center;margin-bottom:24px}
+        .is-mini .header{display:none}
+        .header h1{font-family:'Outfit',sans-serif;font-size:clamp(24px,5vw,36px);font-weight:900;color:#0f172a;margin-bottom:6px}
+        .header h1 span{background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .header p{color:#64748b;font-size:15px;font-weight:500}
 
-        .btn-panel { display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .btn-unroll { background: linear-gradient(135deg, #d946ef, #a855f7); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-weight: 900; font-size: 18px; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 20px rgba(217, 70, 239, 0.3); }
-        .btn-unroll:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4); }
-        .btn-unroll:active { transform: translateY(0); }
-        .btn-reset { background: transparent; color: #94a3b8; border: none; font-weight: 700; cursor: pointer; padding: 10px; }
+        .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;justify-content:center}
+        .tab{border:2px solid #e2e8f0;border-radius:12px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#64748b;transition:all .2s;font-family:'Inter',sans-serif}
+        .tab:hover{border-color:#a855f7;color:#a855f7}
+        .tab.active{background:#faf5ff;border-color:#a855f7;color:#7c3aed}
 
-        .pi-marker { position: absolute; bottom: 40px; width: 4px; height: 30px; background: #ec4899; margin-left: -2px; z-index: 10; opacity: 0; transition: opacity 0.5s 2s; }
-        .pi-label { position: absolute; bottom: 75px; color: #ec4899; font-weight: 900; font-size: 24px; transform: translateX(-50%); opacity: 0; transition: opacity 0.5s 2s; }
+        .card{background:#fff;border-radius:20px;padding:28px;box-shadow:0 4px 24px rgba(0,0,0,0.06);margin-bottom:16px;border:1.5px solid #e2e8f0}
+        .card-title{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:#0f172a;margin-bottom:4px}
+        .card-sub{font-size:14px;color:#64748b;font-weight:600;margin-bottom:16px}
+        .fact-box{background:#fdf4ff;border:1.5px solid #f5d0fe;border-radius:14px;padding:14px 18px;font-size:14px;color:#86198f;font-weight:600;line-height:1.6;margin-bottom:16px}
 
-        .desc-box { background: #f8fafc; padding: 16px; border-radius: 16px; text-align: center; font-size: 16px; color: #475569; font-weight: 500; border: 1px solid #f1f5f9; }
-        .desc-box span { font-weight: 800; color: #d946ef; font-family: monospace; font-size: 18px; }
+        /* Number line visualizer */
+        .nl-wrap{position:relative;width:100%;height:100px;background:#fdf4ff;border-radius:14px;border:1.5px solid #f5d0fe;margin-bottom:16px;overflow:hidden}
+        .nl-line{position:absolute;bottom:35px;left:8%;width:84%;height:3px;background:#d8b4fe;border-radius:2px}
+        .nl-tick{position:absolute;bottom:27px;width:2px;height:18px;background:#a855f7;border-radius:1px}
+        .nl-tick-lbl{position:absolute;bottom:8px;font-size:11px;font-weight:800;color:#7c3aed;transform:translateX(-50%)}
+        .nl-marker{position:absolute;bottom:38px;width:4px;height:28px;border-radius:2px;z-index:5;transition:opacity 0.4s}
+        .nl-marker-lbl{position:absolute;bottom:70px;font-weight:900;font-size:16px;transform:translateX(-50%);z-index:6;transition:opacity 0.4s}
+
+        /* Visual demo area */
+        .demo-area{position:relative;width:100%;min-height:180px;background:#faf5ff;border-radius:16px;border:1.5px solid #ede9fe;display:flex;align-items:center;justify-content:center;margin-bottom:16px;padding:20px}
+        canvas{display:block;border-radius:12px}
+
+        .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+        .btn-go{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;border:none;padding:12px 28px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(168,85,247,0.3);font-family:'Inter',sans-serif}
+        .btn-go:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(168,85,247,0.4)}
+        .btn-reset{background:transparent;color:#94a3b8;border:1.5px solid #e2e8f0;padding:10px 20px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif}
+
+        .value-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+        .value-card{flex:1;min-width:100px;background:#faf5ff;border-radius:12px;padding:12px;text-align:center;border:1.5px solid #ede9fe}
+        .value-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a855f7;margin-bottom:4px}
+        .value-num{font-family:'Outfit',sans-serif;font-size:28px;font-weight:900;color:#7c3aed}
+
+        /* Quiz */
+        .score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .score-pill{background:#faf5ff;color:#7c3aed;font-size:13px;font-weight:800;padding:5px 12px;border-radius:999px}
+        .quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.5;color:#0f172a}
+        .quiz-opts{display:flex;gap:8px;flex-wrap:wrap}
+        .qbtn{border:2px solid #e2e8f0;border-radius:12px;padding:10px 18px;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;cursor:pointer;background:#fff;color:#334155;transition:all .15s}
+        .qbtn:hover{border-color:#a855f7;color:#7c3aed;transform:translateY(-1px)}
+        .qbtn.ok{background:#dcfce7;border-color:#22c55e;color:#15803d}
+        .qbtn.no{background:#fef2f2;border-color:#ef4444;color:#991b1b}
+        .qfb{margin-top:10px;font-size:14px;font-weight:700;min-height:20px}
+        .qfb.g{color:#16a34a} .qfb.b{color:#dc2626}
+        .nxt{display:none;margin-top:8px;background:#a855f7;color:#fff;border:none;border-radius:10px;padding:9px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:800;cursor:pointer}
     </style>
 </head>
 <body>
+<div class="page">
     <div class="header">
-        <h1 style="margin: 0 0 10px; font-weight: 900; font-size: 32px; color: #0f172a;">Unraveling Pi (π)</h1>
-        <p style="margin: 0; color: #64748b; font-size: 16px;">Watch a circle of diameter 1 unroll completely onto the number line.</p>
+        <h1>Irrational Numbers <span>Explorer</span></h1>
+        <p>Numbers that go on forever without repeating — see them come alive!</p>
     </div>
 
-    <div class="container">
-        <div class="viewport" id="viewport">
-            <div class="number-line" id="numberLine">
-                <!-- Ticks inserted via JS -->
-            </div>
-            
-            <div class="unroll-path" id="unrollPath"></div>
-            
-            <div class="circle-container" id="circleContainer">
-                <svg class="circle-svg" viewBox="0 0 100 100">
-                    <!-- Unit circle diameter = 100px. Circumference = 314.159px -->
-                    <circle cx="50" cy="50" r="47" fill="transparent" stroke="#ec4899" stroke-width="6" stroke-dasharray="10 10" />
-                    <!-- Visual radius line to see rolling -->
-                    <line x1="50" y1="50" x2="50" y2="97" stroke="#d946ef" stroke-width="4" />
-                </svg>
-            </div>
+    <div class="tabs" id="tabs"></div>
 
-            <!-- Absolute Pi marker on line -->
-            <div class="pi-marker" id="piMarker"></div>
-            <div class="pi-label" id="piLabel">π</div>
+    <div class="card" id="main-card">
+        <div class="card-title" id="demo-title">Loading...</div>
+        <div class="card-sub" id="demo-sub"></div>
+        <div class="fact-box" id="fact-box"></div>
+        <div class="nl-wrap" id="nl-wrap">
+            <div class="nl-line" id="nl-line"></div>
         </div>
-
-        <div class="desc-box">
-            A circle of diameter 1 unit has a circumference exactly equal to <span>3.14159265...</span> units.
+        <div class="demo-area" id="demo-area">
+            <canvas id="demoCanvas" width="600" height="160"></canvas>
         </div>
-
-        <div class="btn-panel">
-            <button class="btn-unroll" onclick="unroll()">🟢 Unroll Circle</button>
-            <button class="btn-reset" onclick="reset()">Reset</button>
+        <div class="value-row" id="value-row"></div>
+        <div class="btn-row">
+            <button class="btn-go" id="btn-go" onclick="runDemo()">▶ Show It!</button>
+            <button class="btn-reset" onclick="resetDemo()">Reset</button>
         </div>
     </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('mini') === 'true') { document.documentElement.classList.add('is-mini'); }
+    <div class="card">
+        <div class="score-row">
+            <div class="card-title" style="margin:0;font-size:17px">🧠 Quick Quiz</div>
+            <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+        </div>
+        <div class="quiz-q" id="qq">Loading...</div>
+        <div class="quiz-opts" id="qopts"></div>
+        <div class="qfb" id="qfb"></div>
+        <button class="nxt" id="nxt" onclick="newQuiz()">Next question →</button>
+    </div>
+</div>
 
-        const numberLine = document.getElementById('numberLine');
-        const circleContainer = document.getElementById('circleContainer');
-        const unrollPath = document.getElementById('unrollPath');
-        const piMarker = document.getElementById('piMarker');
-        const piLabel = document.getElementById('piLabel');
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('mini')==='true') document.documentElement.classList.add('is-mini');
 
-        const unitSize = 100; // 1 unit = 100px
-        const maxUnits = 4;
+const examples = [
+    {
+        id:'pi', symbol:'π', name:'Pi (π)', value: Math.PI,
+        sub:'The ratio of a circle\'s circumference to its diameter',
+        fact:'π = 3.14159265358979… It never ends and never repeats! Every circle in the universe obeys this ratio. It was known to ancient Babylonians over 4,000 years ago.',
+        decimal:'3.14159265…',
+        nlRange:[0,4], markerColor:'#ec4899'
+    },
+    {
+        id:'sqrt2', symbol:'√2', name:'Square Root of 2 (√2)', value: Math.SQRT2,
+        sub:'The diagonal of a 1×1 square',
+        fact:'√2 = 1.41421356… The ancient Greeks proved this was irrational — it shocked them! It\'s the length of the diagonal across a unit square (by Pythagoras: 1² + 1² = (√2)²).',
+        decimal:'1.41421356…',
+        nlRange:[0,3], markerColor:'#3b82f6'
+    },
+    {
+        id:'sqrt3', symbol:'√3', name:'Square Root of 3 (√3)', value: Math.sqrt(3),
+        sub:'The height of an equilateral triangle with side 2',
+        fact:'√3 = 1.73205080… It appears everywhere in geometry — the height of an equilateral triangle, the diagonal of a cube face, and in 30-60-90 triangles!',
+        decimal:'1.73205080…',
+        nlRange:[0,3], markerColor:'#10b981'
+    },
+    {
+        id:'sqrt5', symbol:'√5', name:'Square Root of 5 (√5)', value: Math.sqrt(5),
+        sub:'Connected to the Golden Ratio and Fibonacci numbers',
+        fact:'√5 = 2.23606797… It is deeply connected to the Golden Ratio φ = (1+√5)/2. The ratio of consecutive Fibonacci numbers approaches φ, and √5 is hidden inside!',
+        decimal:'2.23606797…',
+        nlRange:[0,3], markerColor:'#f59e0b'
+    },
+    {
+        id:'e', symbol:'e', name:'Euler\'s Number (e)', value: Math.E,
+        sub:'The base of natural growth — found in nature, finance, and physics',
+        fact:'e = 2.71828182… It describes how things grow naturally — compound interest, population growth, radioactive decay. It is the sum: 1 + 1/1! + 1/2! + 1/3! + 1/4! + …',
+        decimal:'2.71828182…',
+        nlRange:[0,4], markerColor:'#ef4444'
+    },
+    {
+        id:'phi', symbol:'φ', name:'Golden Ratio (φ)', value: (1+Math.sqrt(5))/2,
+        sub:'The "most beautiful" number in nature and art',
+        fact:'φ = 1.61803398… It appears in sunflower spirals, seashells, the Parthenon, and DNA. A rectangle with sides in ratio φ:1 is considered the most pleasing shape!',
+        decimal:'1.61803398…',
+        nlRange:[0,3], markerColor:'#d946ef'
+    }
+];
 
-        // Render Ticks (relative to the number-line which starts at 10% left)
-        for(let i=0; i<=maxUnits; i++) {
-            const tickX = i * unitSize;
-            const tick = document.createElement('div');
-            tick.className = 'tick';
-            tick.style.left = tickX + 'px';
-            numberLine.appendChild(tick);
+let curIdx = 0;
+let animated = false;
 
-            const label = document.createElement('div');
-            label.className = 'tick-label';
-            label.style.left = tickX + 'px';
-            label.innerText = i;
-            numberLine.appendChild(label);
-        }
+// Build tabs
+const tabsEl = document.getElementById('tabs');
+examples.forEach((ex,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (i===0?' active':'');
+    btn.textContent = ex.symbol;
+    btn.onclick = ()=>{ curIdx=i; document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); loadExample(); };
+    tabsEl.appendChild(btn);
+});
 
-        // Set Pi Marker Location
-        const piPixels = Math.PI * unitSize; // ~314.159px
-        piMarker.style.left = `calc(10% + ${piPixels}px)`;
-        piLabel.style.left = `calc(10% + ${piPixels}px)`;
+function loadExample(){
+    animated = false;
+    const ex = examples[curIdx];
+    document.getElementById('demo-title').textContent = ex.name;
+    document.getElementById('demo-sub').textContent = ex.sub;
+    document.getElementById('fact-box').textContent = ex.fact;
+    document.getElementById('btn-go').textContent = '▶ Show It!';
+    buildNumberLine(ex);
+    buildValues(ex);
+    drawDemo(ex, false);
+}
 
-        function unroll() {
-            // Unroll path length = Pi * unit
-            unrollPath.style.width = piPixels + 'px';
-            
-            // Move circle center by Pi * unit, and rotate by 360 degrees (since C = Pi*D, 1 full rotation covers Pi*unit distance if D=1)
-            // Wait, circumference = Pi * D. If D = 1 unit, then 1 full rotation covers exactly Pi units.
-            circleContainer.style.transform = `translateX(${piPixels}px) rotate(360deg)`;
+function buildNumberLine(ex){
+    const wrap = document.getElementById('nl-wrap');
+    // Remove old ticks/markers
+    wrap.querySelectorAll('.nl-tick,.nl-tick-lbl,.nl-marker,.nl-marker-lbl').forEach(e=>e.remove());
+    const line = document.getElementById('nl-line');
+    const lineW = 84; // percent
+    const lineL = 8;  // percent
+    const range = ex.nlRange[1] - ex.nlRange[0];
 
-            piMarker.style.opacity = 1;
-            piLabel.style.opacity = 1;
-        }
+    for(let i=ex.nlRange[0]; i<=ex.nlRange[1]; i++){
+        const pct = lineL + ((i-ex.nlRange[0])/range)*lineW;
+        const tick = document.createElement('div');
+        tick.className='nl-tick';
+        tick.style.left = pct+'%';
+        wrap.appendChild(tick);
+        const lbl = document.createElement('div');
+        lbl.className='nl-tick-lbl';
+        lbl.style.left = pct+'%';
+        lbl.textContent = i;
+        wrap.appendChild(lbl);
+    }
 
-        function reset() {
-            unrollPath.style.width = '0px';
-            circleContainer.style.transform = `translateX(0px) rotate(0deg)`;
-            piMarker.style.opacity = 0;
-            piLabel.style.opacity = 0;
-        }
-    </script>
+    // Irrational marker
+    const valPct = lineL + ((ex.value-ex.nlRange[0])/range)*lineW;
+    const marker = document.createElement('div');
+    marker.className='nl-marker';
+    marker.id='nl-marker';
+    marker.style.left = valPct+'%';
+    marker.style.background = ex.markerColor;
+    marker.style.opacity = '0';
+    wrap.appendChild(marker);
+
+    const mlbl = document.createElement('div');
+    mlbl.className='nl-marker-lbl';
+    mlbl.id='nl-marker-lbl';
+    mlbl.style.left = valPct+'%';
+    mlbl.style.color = ex.markerColor;
+    mlbl.textContent = ex.symbol + ' ≈ ' + ex.value.toFixed(4);
+    mlbl.style.opacity = '0';
+    wrap.appendChild(mlbl);
+}
+
+function buildValues(ex){
+    const row = document.getElementById('value-row');
+    row.innerHTML = '';
+    const items = [
+        {lbl:'Symbol', val: ex.symbol},
+        {lbl:'Value', val: ex.decimal},
+        {lbl:'Rational?', val:'Never!'}
+    ];
+    items.forEach(it=>{
+        const d = document.createElement('div');
+        d.className='value-card';
+        d.innerHTML=`<div class="value-lbl">${it.lbl}</div><div class="value-num" style="font-size:${it.val.length>8?'18px':'28px'}">${it.val}</div>`;
+        row.appendChild(d);
+    });
+}
+
+function drawDemo(ex, show){
+    const canvas = document.getElementById('demoCanvas');
+    const W = canvas.parentElement.offsetWidth - 40;
+    canvas.width = Math.max(W,300) * devicePixelRatio;
+    canvas.height = 160 * devicePixelRatio;
+    canvas.style.width = Math.max(W,300)+'px';
+    canvas.style.height = '160px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    const cW = Math.max(W,300), cH = 160;
+    ctx.clearRect(0,0,cW,cH);
+
+    if(ex.id==='pi') drawPi(ctx,cW,cH,show);
+    else if(ex.id==='sqrt2') drawSqrt2(ctx,cW,cH,show);
+    else if(ex.id==='sqrt3') drawSqrt3(ctx,cW,cH,show);
+    else if(ex.id==='sqrt5') drawSqrt5(ctx,cW,cH,show);
+    else if(ex.id==='e') drawE(ctx,cW,cH,show);
+    else if(ex.id==='phi') drawPhi(ctx,cW,cH,show);
+}
+
+function drawPi(ctx,W,H,show){
+    const cx=W*0.3, cy=H*0.5, r=50;
+    // Circle
+    ctx.strokeStyle='#ec4899'; ctx.lineWidth=3; ctx.setLineDash([8,6]);
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+    ctx.setLineDash([]);
+    // Diameter line
+    ctx.strokeStyle='#7c3aed'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(cx-r,cy); ctx.lineTo(cx+r,cy); ctx.stroke();
+    ctx.fillStyle='#7c3aed'; ctx.font='bold 13px Inter'; ctx.textAlign='center';
+    ctx.fillText('d = 1',cx,cy+16);
+
+    if(show){
+        // Unrolled circumference
+        const startX = cx+r+20, lineLen = Math.PI * r * 2 * 0.5; // scaled
+        ctx.strokeStyle='#ec4899'; ctx.lineWidth=4;
+        ctx.beginPath(); ctx.moveTo(startX,cy); ctx.lineTo(startX+lineLen,cy); ctx.stroke();
+        ctx.fillStyle='#ec4899'; ctx.font='bold 14px Inter'; ctx.textAlign='left';
+        ctx.fillText('C = πd = π × 1 = 3.14159…',startX,cy-14);
+        // Arrow
+        ctx.beginPath(); ctx.moveTo(cx+r+4,cy); ctx.lineTo(startX-4,cy); ctx.stroke();
+    } else {
+        ctx.fillStyle='#94a3b8'; ctx.font='500 13px Inter'; ctx.textAlign='center';
+        ctx.fillText('Press "Show It!" to unroll the circumference',W*0.65,cy);
+    }
+}
+
+function drawSqrt2(ctx,W,H,show){
+    const s=90, ox=W*0.25-s/2, oy=H*0.5-s/2;
+    // Square
+    ctx.strokeStyle='#3b82f6'; ctx.lineWidth=3;
+    ctx.strokeRect(ox,oy,s,s);
+    ctx.fillStyle='#3b82f6'; ctx.font='bold 13px Inter'; ctx.textAlign='center';
+    ctx.fillText('1',ox+s/2,oy+s+18);
+    ctx.save(); ctx.translate(ox-14,oy+s/2); ctx.rotate(-Math.PI/2); ctx.fillText('1',0,0); ctx.restore();
+
+    if(show){
+        // Diagonal
+        ctx.strokeStyle='#ef4444'; ctx.lineWidth=3; ctx.setLineDash([6,4]);
+        ctx.beginPath(); ctx.moveTo(ox,oy+s); ctx.lineTo(ox+s,oy); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle='#ef4444'; ctx.font='bold 15px Inter'; ctx.textAlign='left';
+        ctx.fillText('√(1²+1²) = √2 ≈ 1.4142',ox+s+20,oy+s/2);
+        // Pythagorean note
+        ctx.fillStyle='#64748b'; ctx.font='500 12px Inter';
+        ctx.fillText('By Pythagoras: a² + b² = c²',ox+s+20,oy+s/2+20);
+    } else {
+        ctx.fillStyle='#94a3b8'; ctx.font='500 13px Inter'; ctx.textAlign='center';
+        ctx.fillText('Press to reveal the diagonal',W*0.65,H*0.5);
+    }
+}
+
+function drawSqrt3(ctx,W,H,show){
+    const s=100, cx=W*0.3, bot=H*0.85;
+    // Equilateral triangle
+    const x1=cx-s/2, x2=cx+s/2, topY=bot-s*Math.sqrt(3)/2;
+    ctx.strokeStyle='#10b981'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(x1,bot); ctx.lineTo(x2,bot); ctx.lineTo(cx,topY); ctx.closePath(); ctx.stroke();
+    ctx.fillStyle='#10b981'; ctx.font='bold 13px Inter'; ctx.textAlign='center';
+    ctx.fillText('2',cx,bot+18);
+
+    if(show){
+        // Height line
+        ctx.strokeStyle='#ef4444'; ctx.lineWidth=2.5; ctx.setLineDash([6,4]);
+        ctx.beginPath(); ctx.moveTo(cx,bot); ctx.lineTo(cx,topY); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle='#ef4444'; ctx.font='bold 15px Inter'; ctx.textAlign='left';
+        ctx.fillText('h = √3 ≈ 1.7321',cx+s/2+15,H*0.4);
+        ctx.fillStyle='#64748b'; ctx.font='500 12px Inter';
+        ctx.fillText('h² + 1² = 2²  →  h = √3',cx+s/2+15,H*0.4+20);
+    } else {
+        ctx.fillStyle='#94a3b8'; ctx.font='500 13px Inter'; ctx.textAlign='center';
+        ctx.fillText('Press to show the height',W*0.7,H*0.5);
+    }
+}
+
+function drawSqrt5(ctx,W,H,show){
+    const s=70, ox=W*0.2, oy=H*0.25;
+    // 1×2 rectangle
+    ctx.strokeStyle='#f59e0b'; ctx.lineWidth=3;
+    ctx.strokeRect(ox,oy,s*2,s);
+    ctx.fillStyle='#f59e0b'; ctx.font='bold 13px Inter'; ctx.textAlign='center';
+    ctx.fillText('2',ox+s,oy+s+18);
+    ctx.save(); ctx.translate(ox-14,oy+s/2); ctx.rotate(-Math.PI/2); ctx.fillText('1',0,0); ctx.restore();
+
+    if(show){
+        ctx.strokeStyle='#ef4444'; ctx.lineWidth=3; ctx.setLineDash([6,4]);
+        ctx.beginPath(); ctx.moveTo(ox,oy+s); ctx.lineTo(ox+s*2,oy); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle='#ef4444'; ctx.font='bold 15px Inter'; ctx.textAlign='left';
+        ctx.fillText('√(1²+2²) = √5 ≈ 2.2361',ox+s*2+15,H*0.4);
+        ctx.fillStyle='#64748b'; ctx.font='500 12px Inter';
+        ctx.fillText('Also: φ = (1+√5)/2',ox+s*2+15,H*0.4+20);
+    } else {
+        ctx.fillStyle='#94a3b8'; ctx.font='500 13px Inter'; ctx.textAlign='center';
+        ctx.fillText('Press to reveal the diagonal',W*0.7,H*0.5);
+    }
+}
+
+function drawE(ctx,W,H,show){
+    // Visualize partial sums of e = sum 1/n!
+    ctx.fillStyle='#ef4444'; ctx.font='bold 14px Inter'; ctx.textAlign='left';
+    ctx.fillText('e = 1 + 1/1! + 1/2! + 1/3! + 1/4! + …',20,22);
+
+    const terms = [1, 1, 0.5, 1/6, 1/24, 1/120, 1/720, 1/5040];
+    const barW = (W-60)/(show ? terms.length : 3);
+    let cumul = 0;
+    const maxH = H - 60;
+
+    for(let i=0; i<(show?terms.length:3); i++){
+        cumul += terms[i];
+        const bH = (cumul/3)*maxH;
+        const x = 30 + i*barW;
+        // Bar
+        ctx.fillStyle = `hsla(${270+i*15},70%,60%,0.7)`;
+        ctx.fillRect(x+4, H-25-bH, barW-8, bH);
+        ctx.strokeStyle = `hsl(${270+i*15},70%,50%)`;
+        ctx.lineWidth=1.5;
+        ctx.strokeRect(x+4, H-25-bH, barW-8, bH);
+        // Label
+        ctx.fillStyle='#334155'; ctx.font='bold 10px Inter'; ctx.textAlign='center';
+        ctx.fillText('1/'+i+'!', x+barW/2, H-8);
+        // Cumul value
+        ctx.fillStyle='#7c3aed'; ctx.font='bold 11px Inter';
+        ctx.fillText(cumul.toFixed(4), x+barW/2, H-30-bH);
+    }
+
+    if(show){
+        // e line
+        const eY = H-25-(Math.E/3)*maxH;
+        ctx.strokeStyle='#ef4444'; ctx.lineWidth=2; ctx.setLineDash([6,4]);
+        ctx.beginPath(); ctx.moveTo(20,eY); ctx.lineTo(W-20,eY); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle='#ef4444'; ctx.font='bold 13px Inter'; ctx.textAlign='right';
+        ctx.fillText('e ≈ 2.71828…',W-25,eY-8);
+    }
+}
+
+function drawPhi(ctx,W,H,show){
+    // Golden rectangle
+    const s=90, ox=W*0.08, oy=H*0.2;
+    const goldenW = s*((1+Math.sqrt(5))/2);
+    ctx.strokeStyle='#d946ef'; ctx.lineWidth=3;
+    ctx.strokeRect(ox,oy,goldenW,s);
+    // Inner square
+    ctx.strokeStyle='#a855f7'; ctx.lineWidth=2; ctx.setLineDash([5,4]);
+    ctx.strokeRect(ox,oy,s,s);
+    ctx.setLineDash([]);
+    ctx.fillStyle='#a855f7'; ctx.font='bold 12px Inter'; ctx.textAlign='center';
+    ctx.fillText('1',ox+s/2,oy+s+16);
+    ctx.fillStyle='#d946ef'; ctx.font='bold 12px Inter';
+    ctx.fillText('φ ≈ 1.618',ox+goldenW/2,oy-8);
+
+    if(show){
+        // Spiral (quarter arcs)
+        ctx.strokeStyle='#ec4899'; ctx.lineWidth=2.5;
+        let x=ox, y=oy, w=s, h=s;
+        // Draw a few arcs to suggest the golden spiral
+        ctx.beginPath(); ctx.arc(ox+s,oy+s,s,Math.PI,Math.PI*1.5); ctx.stroke();
+        const rem = goldenW-s;
+        ctx.beginPath(); ctx.arc(ox+s,oy,rem,Math.PI*0.5,Math.PI); ctx.stroke();
+
+        ctx.fillStyle='#d946ef'; ctx.font='bold 14px Inter'; ctx.textAlign='left';
+        ctx.fillText('φ = (1+√5)/2 = 1.61803…',ox+goldenW+15,H*0.35);
+        ctx.fillStyle='#64748b'; ctx.font='500 12px Inter';
+        ctx.fillText('φ² = φ + 1  (unique property!)',ox+goldenW+15,H*0.35+20);
+        ctx.fillText('1, 1, 2, 3, 5, 8, 13… → ratios approach φ',ox+goldenW+15,H*0.35+40);
+    } else {
+        ctx.fillStyle='#94a3b8'; ctx.font='500 13px Inter'; ctx.textAlign='center';
+        ctx.fillText('Press to reveal the spiral',W*0.7,H*0.5);
+    }
+}
+
+function runDemo(){
+    animated = true;
+    const ex = examples[curIdx];
+    drawDemo(ex, true);
+    // Show marker on number line
+    const m = document.getElementById('nl-marker');
+    const ml = document.getElementById('nl-marker-lbl');
+    if(m) m.style.opacity='1';
+    if(ml) ml.style.opacity='1';
+    document.getElementById('btn-go').textContent = '✓ Showing!';
+}
+
+function resetDemo(){
+    animated = false;
+    const ex = examples[curIdx];
+    drawDemo(ex, false);
+    const m = document.getElementById('nl-marker');
+    const ml = document.getElementById('nl-marker-lbl');
+    if(m) m.style.opacity='0';
+    if(ml) ml.style.opacity='0';
+    document.getElementById('btn-go').textContent = '▶ Show It!';
+}
+
+// Quiz
+const quizPool = [
+    {q:'Which of these is irrational?', opts:['3/4','0.5','√2','7'], ans:'√2'},
+    {q:'What is π approximately equal to?', opts:['3.14159…','2.71828…','1.41421…','1.61803…'], ans:'3.14159…'},
+    {q:'√2 is the diagonal of a square with side length ___', opts:['2','1','√2','3'], ans:'1'},
+    {q:'Do irrational numbers have decimals that repeat?', opts:['Yes','No, never','Sometimes','Only π'], ans:'No, never'},
+    {q:'Which number is known as Euler\'s number?', opts:['π','e','φ','√3'], ans:'e'},
+    {q:'The Golden Ratio φ ≈ ___', opts:['1.414','2.718','3.141','1.618'], ans:'1.618'},
+    {q:'√3 appears in which type of triangle?', opts:['Right','Equilateral','Isosceles','Scalene'], ans:'Equilateral'},
+    {q:'Is 22/7 exactly equal to π?', opts:['Yes','No — it\'s an approximation','Only in geometry','Sometimes'], ans:'No — it\'s an approximation'},
+    {q:'The sum 1 + 1/1! + 1/2! + 1/3! + … equals ___', opts:['π','√2','e','φ'], ans:'e'},
+    {q:'φ = (1 + √5) / ___', opts:['1','2','3','π'], ans:'2'},
+    {q:'Which is between 1 and 2 on the number line?', opts:['π','√2','e','√5'], ans:'√2'},
+    {q:'Can irrational numbers be written as a fraction p/q?', opts:['Yes','No','Only some','Only π'], ans:'No'},
+];
+
+let sc=0,tq=0,answered=false,cq=null;
+function newQuiz(){
+    answered=false;
+    document.getElementById('qfb').textContent='';
+    document.getElementById('qfb').className='qfb';
+    document.getElementById('nxt').style.display='none';
+    cq=quizPool[Math.floor(Math.random()*quizPool.length)];
+    document.getElementById('qq').textContent=cq.q;
+    const el=document.getElementById('qopts');el.innerHTML='';
+    cq.opts.forEach(o=>{
+        const b=document.createElement('button');
+        b.className='qbtn';b.textContent=o;
+        b.onclick=()=>checkQ(o,b);
+        el.appendChild(b);
+    });
+}
+function checkQ(ans,btn){
+    if(answered)return; answered=true; tq++;
+    document.getElementById('tq').textContent=tq;
+    const fb=document.getElementById('qfb');
+    if(ans===cq.ans){
+        sc++;document.getElementById('sc').textContent=sc;
+        fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');
+    } else {
+        fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');
+        document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});
+    }
+    document.getElementById('nxt').style.display='inline-block';
+}
+
+loadExample();
+newQuiz();
+window.addEventListener('resize',()=>drawDemo(examples[curIdx],animated));
+</script>
 </body>
 </html>
