@@ -191,13 +191,14 @@ const QUESTION_POOL = [
         'cls_pencil_box': 'Cuboid',
       }
     },
+    rightItems: [['Sphere', 'Sphere'], ['Cylinder', 'Cylinder'], ['Cone', 'Cone'], ['Cuboid', 'Cuboid']],
     meta: {
       type: 'match',
       totalPairs: 4,
       explanation: 'Ball of wool → Sphere (round all over). Piece of chalk → Cylinder (long with circular ends). Birthday cap → Cone (pointed top with circular base). Pencil box → Cuboid (rectangular box).',
       correctLabel: 'All 4 pairs matched correctly',
     },
-    render: (lp) => (
+    render: (lp, ctx) => (
       <div className="toy-joy-qcard">
         <div className="toy-joy-qmeta"><span className="toy-joy-qbadge">Q</span><span className="toy-joy-qtype">Match the Following</span></div>
         <p className="toy-joy-qtext">Match each classroom object to its shape group. Click a left item, then a right item.</p>
@@ -232,8 +233,8 @@ const QUESTION_POOL = [
             <div className="toy-joy-match-line">→</div>
           </div>
           <div className="toy-joy-match-col">
-            {['Sphere', 'Cylinder', 'Cone', 'Cuboid'].map(val => (
-              <div key={val} onClick={() => lp.handleMatch('cls_match_objects', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('cls_match_objects', 'right', val)}`}>{val}</div>
+            {ctx.shuffledRight.map(([val, label]) => (
+              <div key={val} onClick={() => lp.handleMatch('cls_match_objects', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('cls_match_objects', 'right', val)}`}>{label}</div>
             ))}
           </div>
         </div>
@@ -370,7 +371,9 @@ const QUESTION_POOL = [
 const ClassifyingShapes = () => {
   const selRef = useRef(null);
   if (!selRef.current) {
-    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5);
+    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5).map(q =>
+      q.rightItems ? { ...q, shuffledRight: shuffle([...q.rightItems]) } : q
+    );
   }
   const selected = selRef.current;
 
@@ -378,7 +381,7 @@ const ClassifyingShapes = () => {
   selected.forEach(q => { if (q.matchAnswers) Object.assign(matchAnswers, q.matchAnswers); });
 
   const logicProps = useToyJoyLogic(matchAnswers);
-  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps)}</React.Fragment>);
+  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps, q)}</React.Fragment>);
   const questionMeta = selected.map(q => q.meta);
 
   return (
