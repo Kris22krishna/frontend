@@ -74,22 +74,107 @@ const DynamicVisual = ({ type, data }) => {
     }
     if (type === 'position') {
         const { pos } = data;
+        
+        // Dynamic shadow logic for larger scale
+        const shadowX = pos === 'outside' ? 35 : (pos === 'far' ? 270 : (pos === 'near' ? 150 : 140));
+        const shadowScale = pos === 'far' ? 0.4 : (pos === 'near' ? 1.5 : 1.2);
+        const shadowOpacity = pos === 'top' ? 0.3 : 0.6;
+
         return (
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{ border: "none" }}>
-                <svg width="100%" height="100%" style={{ maxWidth: '300px' }} viewBox="0 0 220 150">
-                    <rect x="50" y="40" width="100" height="70" rx="10" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="2" />
-                    <text x="100" y="85" textAnchor="middle" fill="#64748B" fontSize="14" fontWeight="600">BOX</text>
-                    {pos === 'on top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'underneath' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="130" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'inside' && <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx="100" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'outside' && <motion.circle initial={{ x: -20 }} animate={{ x: 0 }} cx="25" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'far away' && <motion.circle initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} cx="205" cy="35" r="10" fill="url(#ballGradient)" />}
+                <svg width="100%" height="100%" style={{ maxWidth: '400px' }} viewBox="0 0 300 240">
                     <defs>
-                        <radialGradient id="ballGradient">
-                            <stop offset="0%" stopColor="#FFD54F" />
-                            <stop offset="100%" stopColor="#FB8C00" />
+                        <radialGradient id="soccerGradient" cx="30%" cy="30%" r="50%">
+                            <stop offset="0%" stopColor="#FF8E8E" />
+                            <stop offset="70%" stopColor="#FF6B6B" />
+                            <stop offset="100%" stopColor="#E55B5B" />
                         </radialGradient>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                            <feOffset dx="2" dy="2" result="offsetblur" />
+                            <feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer>
+                            <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
                     </defs>
+                    
+                    {/* Ground plane */}
+                    <ellipse cx="150" cy="190" rx="130" ry="30" fill="#EDF2F7" opacity="0.4" />
+                    
+                    {/* Dynamic Shadow on Ground */}
+                    <motion.ellipse 
+                        animate={{ cx: shadowX, rx: 25 * shadowScale, opacity: shadowOpacity }} 
+                        cy="220" rx={25 * shadowScale} ry={8 * shadowScale} 
+                        fill="#A0AEC0" 
+                    />
+                    
+                    {/* box (Gift Box Style) - Scaled Up */}
+                    <g filter="url(#shadow)">
+                        {/* Side face */}
+                        <path d="M 210 80 L 255 50 L 255 130 L 210 160 Z" fill="#B190D4" stroke="#6B46C1" strokeWidth="1.5" />
+                        {/* Top face */}
+                        <path d="M 70 80 L 115 50 L 255 50 L 210 80 Z" fill="#E2D1F3" stroke="#6B46C1" strokeWidth="1.5" />
+                        {/* Front face */}
+                        <rect x="70" y="80" width="140" height="80" fill="#C9A9E9" stroke="#6B46C1" strokeWidth="1.5" rx="3" />
+                        
+                        {/* Ribbon (Yellow) */}
+                        <rect x="125" y="80" width="30" height="80" fill="#FFE66D" opacity="0.9" />
+                        <rect x="70" y="110" width="140" height="20" fill="#FFE66D" opacity="0.9" />
+                        <path d="M 125 80 L 170 50 L 200 50 L 155 80 Z" fill="#FFE66D" opacity="0.9" />
+                        <path d="M 210 110 L 255 80 L 255 100 L 210 130 Z" fill="#FFE66D" opacity="0.9" />
+                    </g>
+
+                    {/* Ball rendering logic - Scaled Up (r=22) */}
+                    {/* Top Ball */}
+                    {pos === 'top' && (
+                        <motion.g initial={{ y: -40 }} animate={{ y: 0 }} filter="url(#shadow)">
+                            <circle cx="160" cy="50" r="22" fill="url(#soccerGradient)" />
+                            <path d="M 160 37 L 168 43 L 165 52 L 155 52 L 152 43 Z" fill="#1f2937" opacity="0.8" />
+                        </motion.g>
+                    )}
+                    
+                    {/* Bottom Ball */}
+                    {pos === 'bottom' && (
+                        <motion.g initial={{ y: 40 }} animate={{ y: 0 }} filter="url(#shadow)">
+                            <circle cx="140" cy="195" r="22" fill="url(#soccerGradient)" />
+                            <path d="M 140 182 L 148 188 L 145 197 L 135 197 L 132 188 Z" fill="#1f2937" opacity="0.8" />
+                        </motion.g>
+                    )}
+
+                    {/* Inside Ball */}
+                    {pos === 'inside' && (
+                        <g>
+                            <motion.g initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                                <circle cx="140" cy="120" r="22" fill="url(#soccerGradient)" opacity="0.8" />
+                                <path d="M 140 107 L 148 113 L 145 122 L 135 122 L 132 113 Z" fill="#1f2937" opacity="0.6" />
+                            </motion.g>
+                            {/* Semi-transparent front to show inside */}
+                            <rect x="70" y="80" width="140" height="80" fill="rgba(201, 169, 233, 0.4)" stroke="#6B46C1" strokeWidth="1.5" rx="3" style={{ pointerEvents: 'none' }} />
+                        </g>
+                    )}
+
+                    {/* Outside Ball */}
+                    {pos === 'outside' && (
+                        <motion.g initial={{ x: -40 }} animate={{ x: 0 }} filter="url(#shadow)">
+                            <circle cx="35" cy="120" r="22" fill="url(#soccerGradient)" />
+                            <path d="M 35 107 L 43 113 L 40 122 L 30 122 L 27 113 Z" fill="#1f2937" opacity="0.8" />
+                        </motion.g>
+                    )}
+
+                    {/* Near Ball */}
+                    {pos === 'near' && (
+                        <motion.g initial={{ scale: 1.2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} filter="url(#shadow)">
+                            <circle cx="150" cy="210" r="25" fill="url(#soccerGradient)" />
+                            <path d="M 150 195 L 160 203 L 157 215 L 143 215 L 140 203 Z" fill="#1f2937" opacity="0.8" />
+                        </motion.g>
+                    )}
+
+                    {/* Far Ball */}
+                    {pos === 'far' && (
+                        <motion.g initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 0.6, opacity: 1 }} opacity="0.7">
+                            <circle cx="270" cy="40" r="22" fill="url(#soccerGradient)" />
+                            <path d="M 270 27 L 278 33 L 275 42 L 265 42 L 262 33 Z" fill="#1f2937" opacity="0.8" />
+                        </motion.g>
+                    )}
                 </svg>
             </motion.div>
         );
@@ -195,11 +280,12 @@ const ShapesAndSpace = () => {
 
         const shapesPool = ['circle', 'square', 'triangle', 'rectangle', 'oval'].sort(() => 0.5 - Math.random());
         const posPool = [
-            { q: 'Where is the ball located?', a: 'on top' },
+            { q: 'Where is the ball located?', a: 'top' },
             { q: 'Where is the ball located?', a: 'inside' },
-            { q: 'Where is the ball located?', a: 'underneath' },
+            { q: 'Where is the ball located?', a: 'bottom' },
             { q: 'Where is the ball located?', a: 'outside' },
-            { q: 'Where is the ball located?', a: 'far away' }
+            { q: 'Where is the ball located?', a: 'near' },
+            { q: 'Where is the ball located?', a: 'far' }
         ].sort(() => 0.5 - Math.random());
         const sizePool = [
             { q: 'Which bar is HIGHER?', a: 'A', aSize: 120, bSize: 60, orient: 'vertical', exp: 'Bar A has a greater height than Bar B.' },
@@ -238,7 +324,7 @@ const ShapesAndSpace = () => {
                 };
             } else if (typeToGen === 'position') {
                 const item = posPool[i % posPool.length];
-                const pool = ['on top', 'underneath', 'inside', 'outside', 'far away'];
+                const pool = ['top', 'bottom', 'inside', 'outside', 'near', 'far'];
                 const otherOptions = pool.filter(p => p !== item.a);
                 question = {
                     text: item.q,

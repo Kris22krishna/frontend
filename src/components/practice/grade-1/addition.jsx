@@ -14,6 +14,7 @@ import avatarImg from '../../../assets/avatar.png';
 import '../../../pages/juniors/class-1/Grade1Practice.css';
 
 const NumberLine = ({ n1, n2, color1, color2 }) => {
+    const [currentStep, setCurrentStep] = useState(0); // 0: no jumps, 1: n1 jump, 1+i: n2 jumps
     const totalTicks = 10;
     const width = 600;
     const height = 150;
@@ -34,64 +35,106 @@ const NumberLine = ({ n1, n2, color1, color2 }) => {
         arcs2.push(`M ${getX(start)} ${baseY} Q ${(getX(start) + getX(end)) / 2} ${baseY - 30} ${getX(end)} ${baseY}`);
     }
 
+    const nextJump = () => {
+        if (currentStep < 1 + n2) {
+            setCurrentStep(v => v + 1);
+        }
+    };
+
     return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="number-line-visual" style={{ width: '100%', overflow: 'visible' }}>
-            <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', maxWidth: '600px', filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.05))' }}>
-                <defs>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568" />
-                    </marker>
-                </defs>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="number-line-container" style={{ textAlign: 'center' }}>
+            <div style={{ position: 'relative', background: '#fff', borderRadius: '20px', padding: '20px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', marginBottom: '15px' }}>
+                <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: 'auto', maxWidth: '600px', overflow: 'visible' }}>
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#4a5568" />
+                        </marker>
+                    </defs>
 
-                {/* Main Line with Arrow */}
-                <line x1={padding - 30} y1={baseY} x2={width - padding + 30} y2={baseY} stroke="#cbd5e0" strokeWidth="3" strokeLinecap="round" />
-                <path d={`M ${width - padding + 30} ${baseY} L ${width - padding + 40} ${baseY}`} stroke="#cbd5e0" strokeWidth="3" markerEnd="url(#arrowhead)" />
+                    {/* Main Line */}
+                    <line x1={padding - 30} y1={baseY} x2={width - padding + 30} y2={baseY} stroke="#cbd5e0" strokeWidth="3" strokeLinecap="round" />
+                    <path d={`M ${width - padding + 30} ${baseY} L ${width - padding + 40} ${baseY}`} stroke="#cbd5e0" strokeWidth="3" markerEnd="url(#arrowhead)" />
 
-                {/* Ticks and Numbers */}
-                {Array.from({ length: totalTicks + 1 }).map((_, i) => (
-                    <g key={i}>
-                        <line x1={getX(i)} y1={baseY - 8} x2={getX(i)} y2={baseY + 8} stroke="#4a5568" strokeWidth="2" />
-                        <text x={getX(i)} y={baseY + 28} textAnchor="middle" fontSize="14" fill="#64748b" fontWeight="700">{i}</text>
-                    </g>
-                ))}
+                    {/* Ticks */}
+                    {Array.from({ length: totalTicks + 1 }).map((_, i) => (
+                        <g key={i}>
+                            <line x1={getX(i)} y1={baseY - 8} x2={getX(i)} y2={baseY + 8} stroke="#4a5568" strokeWidth="2" />
+                            <text x={getX(i)} y={baseY + 28} textAnchor="middle" fontSize="14" fill="#64748b" fontWeight="700">{i}</text>
+                        </g>
+                    ))}
 
-                {/* First Jump Animation */}
-                {n1 > 0 && (
-                    <>
-                        <motion.path
-                            d={arc1}
-                            fill="none"
-                            stroke={color1}
-                            strokeWidth="4"
-                            strokeLinecap="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                        />
-                        <motion.circle
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.8 }}
-                            cx={getX(n1)} cy={baseY} r="5" fill={color1}
-                        />
-                    </>
+                    {/* First Jump Animation */}
+                    {n1 > 0 && currentStep >= 1 && (
+                        <>
+                            <motion.path
+                                d={arc1}
+                                fill="none"
+                                stroke={color1}
+                                strokeWidth="4"
+                                strokeLinecap="round"
+                                initial={{ pathLength: 0 }}
+                                animate={{ pathLength: 1 }}
+                            />
+                            <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx={getX(n1)} cy={baseY} r="6" fill={color1} />
+                        </>
+                    )}
+
+                    {/* Second Jumps (n2) */}
+                    {arcs2.map((d, i) => (
+                        currentStep >= 2 + i && (
+                            <motion.g key={i}>
+                                <motion.path
+                                    d={d}
+                                    fill="none"
+                                    stroke={color2}
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                />
+                                <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx={getX(n1 + i + 1)} cy={baseY} r="4" fill={color2} />
+                            </motion.g>
+                        )
+                    ))}
+                </svg>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                <button 
+                    onClick={nextJump} 
+                    disabled={currentStep >= 1 + n2}
+                    style={{
+                        padding: '12px 25px',
+                        fontSize: '1.1rem',
+                        background: currentStep >= 1 + n2 ? '#E2E8F0' : '#4C51BF',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '30px',
+                        cursor: currentStep >= 1 + n2 ? 'not-allowed' : 'pointer',
+                        boxShadow: '0 4px 10px rgba(76, 81, 191, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                    }}
+                >
+                    {currentStep === 0 ? `Jump to ${n1}! 🐰` : (currentStep <= n2 ? `Count ${currentStep - 1} more! ➕` : "Done Jumping! 🎉")}
+                </button>
+                {currentStep > 0 && (
+                    <button 
+                        onClick={() => setCurrentStep(0)} 
+                        style={{
+                            padding: '12px 20px',
+                            background: '#EDF2F7',
+                            color: '#4A5568',
+                            border: 'none',
+                            borderRadius: '30px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Reset 🔄
+                    </button>
                 )}
-
-                {/* Second Jumps (n2) */}
-                {arcs2.map((d, i) => (
-                    <motion.path
-                        key={i}
-                        d={d}
-                        fill="none"
-                        stroke={color2}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.4, delay: 0.8 + i * 0.3 }}
-                    />
-                ))}
-            </svg>
+            </div>
         </motion.div>
     );
 };
@@ -105,18 +148,18 @@ const DynamicVisual = ({ type, data }) => {
         return (
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="g1-addition-visual">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(5px, 3vw, 20px)', justifyContent: 'center' }}>
-                    <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '15px', borderRadius: '25px' }}>
-                        <svg width="100%" height="100%" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
+                    <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '20px', borderRadius: '30px' }}>
+                        <svg width="100%" height="100%" style={{ maxWidth: '180px', maxHeight: '180px' }} viewBox="0 0 150 150">
                             {Array.from({ length: n1 }).map((_, i) => (
-                                <circle key={i} cx={(i % 3) * 30 + 20} cy={Math.floor(i / 3) * 30 + 20} r="12" fill={color1} />
+                                <circle key={i} cx={(i % 3) * 45 + 30} cy={Math.floor(i / 3) * 45 + 30} r="18" fill={color1} />
                             ))}
                         </svg>
                     </div>
                     <div style={{ fontSize: 'clamp(2rem, 6vw, 3rem)', fontWeight: 400, color: '#CBD5E0' }}>+</div>
-                    <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '15px', borderRadius: '25px' }}>
-                        <svg width="100%" height="100%" style={{ maxWidth: '100px', maxHeight: '100px' }} viewBox="0 0 100 100">
+                    <div className="g1-group" style={{ background: 'rgba(255,255,255,0.4)', padding: '20px', borderRadius: '30px' }}>
+                        <svg width="100%" height="100%" style={{ maxWidth: '180px', maxHeight: '180px' }} viewBox="0 0 150 150">
                             {Array.from({ length: n2 }).map((_, i) => (
-                                <circle key={i} cx={(i % 3) * 30 + 20} cy={Math.floor(i / 3) * 30 + 20} r="12" fill={color2} />
+                                <circle key={i} cx={(i % 3) * 45 + 30} cy={Math.floor(i / 3) * 45 + 30} r="18" fill={color2} />
                             ))}
                         </svg>
                     </div>
@@ -225,11 +268,15 @@ const Addition = () => {
 
     const makeOptions = (correct) => {
         const opts = new Set([correct]);
-        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        const offsets = [1, -1, 2, -2, 3, -3, 4, -4, 5];
         for (const off of offsets) {
             if (opts.size >= 4) break;
             const v = correct + off;
-            if (v >= 0) opts.add(v);
+            if (v >= 0 && v <= 20) opts.add(v);
+        }
+        // Fallback to ensure 4 options
+        while (opts.size < 4) {
+            opts.add(Math.floor(Math.random() * 20) + 1);
         }
         return [...opts].sort(() => 0.5 - Math.random());
     };
@@ -243,7 +290,7 @@ const Addition = () => {
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
-            const color2 = colors[(i + 1) % colors.length];
+            const color2 = color1; // Both groups same color per question
             let typeToGen = 'visual';
             if (isTest) {
                 if (i < 3) typeToGen = 'visual';
@@ -261,7 +308,7 @@ const Addition = () => {
                 if (isTest) [n1, n2] = visualPairs[i % visualPairs.length];
                 else { n1 = Math.floor(Math.random() * 5) + 1; n2 = Math.floor(Math.random() * 4) + 1; }
                 question = {
-                    text: `Count all the circles together!`,
+                    text: `How many circles are there in total?`,
                     options: makeOptions(n1 + n2),
                     correct: n1 + n2,
                     type: 'visual',
@@ -274,7 +321,7 @@ const Addition = () => {
                 if (isTest) [n1, n2] = numericPairs[i % numericPairs.length];
                 else { n1 = Math.floor(Math.random() * 9) + 1; n2 = Math.floor(Math.random() * (10 - n1)); }
                 question = {
-                    text: `What is ${n1} plus ${n2}?`,
+                    text: `How much is ${n1} plus ${n2}?`,
                     options: makeOptions(n1 + n2),
                     correct: n1 + n2,
                     type: 'numeric',
@@ -287,7 +334,7 @@ const Addition = () => {
                 if (typeToGen === 'numberline') {
                     n1 = Math.floor(Math.random() * 6) + 1; n2 = Math.floor(Math.random() * (10 - n1)) + 1;
                     question = {
-                        text: `Use the number line to find: ${n1} + ${n2}`,
+                        text: `Find the answer using the number line: ${n1} + ${n2}`,
                         options: makeOptions(n1 + n2),
                         correct: n1 + n2,
                         type: 'numberline',
@@ -300,7 +347,7 @@ const Addition = () => {
                     const withZeroFirst = Math.random() > 0.5;
                     const z1 = withZeroFirst ? 0 : val; const z2 = withZeroFirst ? val : 0;
                     question = {
-                        text: `Add zero to the number!`,
+                        text: `How much is ${z1} plus ${z2}?`,
                         options: makeOptions(val),
                         correct: val,
                         type: 'numeric',
@@ -670,7 +717,7 @@ const Addition = () => {
 
                     <div className="g1-content-split">
                         <div className="g1-visual-area">
-                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                            <DynamicVisual key={qIndex} type={currentQ.type} data={currentQ.visualData} />
                         </div>
 
                         <div className="g1-quiz-side">
