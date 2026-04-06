@@ -235,14 +235,6 @@ const MiddleGradeSyllabus = () => {
                 if (gradeNum === '6') {
                     fetched = [
                         {
-                            skill_id: 'local-arithmetic-branch',
-                            skill_name: 'Arithmetic: Interactive Branch',
-                            topic: 'Arithmetic',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/arithmetic/dashboard'
-                        },
-                        {
                             skill_id: 'local-patterns-in-mathematics',
                             skill_name: 'Patterns in Mathematics: Interactive Chapter',
                             topic: 'Patterns',
@@ -296,14 +288,6 @@ const MiddleGradeSyllabus = () => {
                 if (gradeNum === '7') {
                     fetched = [
                         ...fetched,
-                        {
-                            skill_id: 'local-arithmetic-branch-7',
-                            skill_name: 'Arithmetic: Interactive Branch',
-                            topic: 'Arithmetic',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/arithmetic/dashboard'
-                        },
                         {
                             skill_id: 'local-percent',
                             skill_name: 'Percentage',
